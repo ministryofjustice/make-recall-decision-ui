@@ -1,7 +1,7 @@
 {
   "name": "make-recall-decision-ui",
   "version": "0.0.1",
-  "description": "Make Recall Decision Ui",
+  "description": "Make Recall Decision UI",
   "repository": "git@github.com:ministryofjustice/make-recall-decision-ui.git",
   "license": "MIT",
   "scripts": {
