@@ -38,8 +38,6 @@ services:
       # These will need to match new creds in the seed auth service auth
       - API_CLIENT_ID=client-id
       - API_CLIENT_SECRET=client-secret
-      - SYSTEM_CLIENT_ID=system-client-id
-      - SYSTEM_CLIENT_SECRET=system-client-secret
 
 networks:
   hmpps:
