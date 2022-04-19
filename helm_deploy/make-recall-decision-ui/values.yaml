@@ -12,7 +12,7 @@ generic-service:
   ingress:
     enabled: true
     host: app-hostname.local    # override per environment
-    tlsSecretName: make-recall-decision-ui-cert
+    tlsSecretName: make-recall-decision-cert
 
   livenessProbe:
     httpGet:
@@ -60,6 +60,3 @@ generic-service:
   #   cloudplatform-live1-1: "35.178.209.113/32"
   #   cloudplatform-live1-2: "3.8.51.207/32"
   #   cloudplatform-live1-3: "35.177.252.54/32"
-
-generic-prometheus-alerts:
-  targetApplication: make-recall-decision-ui
