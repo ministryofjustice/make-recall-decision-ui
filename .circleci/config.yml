@@ -7,11 +7,11 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: make-recall-decisions-tech
+    default: make-recall-decisions-pipeline
 
   releases-slack-channel:
     type: string
-    default: make-recall-decisions-tech
+    default: make-recall-decisions-pipeline
 
   node-version:
     type: string
@@ -154,9 +154,10 @@ workflows:
             branches:
               only:
                 - main
+
       - hmpps/deploy_env:
           name: deploy_dev
-          env: "dev"
+          env: dev
           context: hmpps-common-vars
           filters:
             branches:
@@ -168,32 +169,25 @@ workflows:
             - integration_test
             - build_docker
 
-#      - request-preprod-approval:
-#          type: approval
-#          requires:
-#            - deploy_dev
-#      - hmpps/deploy_env:
-#          name: deploy_preprod
-#          env: "preprod"
-#          context:
-#            - hmpps-common-vars
-#            - make-recall-decision-ui-preprod
-#          requires:
-#            - request-preprod-approval
-#      - request-prod-approval:
-#          type: approval
-#          requires:
-#            - deploy_preprod
-#      - hmpps/deploy_env:
-#          name: deploy_prod
-#          env: "prod"
-#          slack_notification: true
-#          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
-#          context:
-#            - hmpps-common-vars
-#            - make-recall-decision-ui-prod
-#          requires:
-#            - request-prod-approval
+      - hmpps/deploy_env:
+         name: deploy_preprod
+         env: preprod
+         context:
+           - hmpps-common-vars
+           - make-recall-decision-ui-preprod
+         requires:
+           - deploy_dev
+
+      - hmpps/deploy_env:
+         name: deploy_prod
+         env: prod
+         slack_notification: true
+         slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+         context:
+           - hmpps-common-vars
+           - make-recall-decision-ui-prod
+         requires:
+           - deploy_preprod
 
   security:
     triggers:
