@@ -33,13 +33,17 @@ services:
       - "3000:3000"
     environment:
       - REDIS_HOST=redis
+      - INGRESS_URL=http://localhost:3000
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
+      - MAKE_RECALL_DECISION_API_URL=http://localhost:9091
+      - TOKEN_VERIFICATION_API_URL=http://localhost:9090/verification
       # These will need to match new creds in the seed auth service auth
-      - API_CLIENT_ID=client-id
-      - API_CLIENT_SECRET=client-secret
+      - API_CLIENT_ID=make-recall-decision-ui
+      - API_CLIENT_SECRET=clientsecret
       - SYSTEM_CLIENT_ID=system-client-id
       - SYSTEM_CLIENT_SECRET=system-client-secret
+      - SESSION_SECRET=session-secret
 
 networks:
   hmpps:
