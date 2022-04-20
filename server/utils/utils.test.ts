@@ -1,4 +1,4 @@
-import convertToTitleCase from './utils'
+import convertToTitleCase, { makePageTitle } from './utils'
 
 describe('Convert to title case', () => {
   it('null string', () => {
@@ -27,5 +27,17 @@ describe('Convert to title case', () => {
   })
   it('Hyphenated', () => {
     expect(convertToTitleCase('Robert-John SmiTH-jONes-WILSON')).toEqual('Robert-John Smith-Jones-Wilson')
+  })
+})
+
+describe('makePageTitle', () => {
+  it('suffixes the supplied heading with the app name', () => {
+    const title = makePageTitle('Search', false)
+    expect(title).toEqual('Search - Recall Decisions')
+  })
+
+  it('prefixes the title if there are errors', () => {
+    const title = makePageTitle('Search', true)
+    expect(title).toEqual('Error: Search - Recall Decisions')
   })
 })
