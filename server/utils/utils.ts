@@ -1,3 +1,5 @@
+import config from '../config'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -15,3 +17,8 @@ const convertToTitleCase = (sentence: string): string =>
   isBlank(sentence) ? '' : sentence.split(' ').map(properCaseName).join(' ')
 
 export default convertToTitleCase
+
+export const makePageTitle = (pageHeading: string, hasErrors: boolean) =>
+  `${hasErrors ? 'Error: ' : ''}${pageHeading} - ${config.applicationName}`
+
+export const isString = (val: unknown) => typeof val === 'string'

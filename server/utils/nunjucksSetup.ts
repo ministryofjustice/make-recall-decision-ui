@@ -2,6 +2,9 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
+import { makePageTitle } from './utils'
+import config from '../config'
+import { formatDateFromIsoString } from './dates'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -9,7 +12,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'Make Recall Decision UI'
+  app.locals.applicationName = config.applicationName
 
   // Cachebusting version string
   if (production) {
@@ -37,6 +40,8 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     }
   )
 
+  njkEnv.addFilter('formatDateFromIsoString', formatDateFromIsoString)
+
   njkEnv.addFilter('initialiseName', (fullName: string) => {
     // this check is for the authError page
     if (!fullName) {
@@ -45,4 +50,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     const array = fullName.split(' ')
     return `${array[0][0]}. ${array.reverse()[0]}`
   })
+
+  // globals
+  njkEnv.addGlobal('makePageTitle', makePageTitle)
 }

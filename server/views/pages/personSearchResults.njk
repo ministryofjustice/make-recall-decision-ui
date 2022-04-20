@@ -1,0 +1,34 @@
+{% extends "../partials/layout.njk" %}
+
+    {% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = makePageTitle("Search results", false) %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">Search results</h1>
+    <p class="govuk-body-l">
+        <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>CRN: {{ crn }}</span>
+        <a href="/search" class="govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+    </p>
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">CRN</th>
+            <th scope="col" class="govuk-table__header">Date of birth</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for person in persons %}
+            <tr class="govuk-table__row" data-qa='row-{{ loop.index }}'>
+                <td class="govuk-table__cell">{{ person.name }}</td>
+                <td class="govuk-table__cell">{{ person.crn }}</td>
+                <td class="govuk-table__cell">{{ person.dateOfBirth | formatDateFromIsoString }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -10,16 +10,17 @@
     "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css ./assets/sass/application-ie8.sass:./assets/stylesheets/application-ie8.css --style compressed",
     "watch-ts": "tsc -w",
     "watch-views": "nodemon --watch server/views -e html,njk -x npm run copy-views",
-    "watch-node": "DEBUG=gov-starter-server* nodemon --watch dist/ dist/server.js | bunyan -o short",
+    "watch-node": "DEBUG=gov-starter-server* nodemon --watch dist/ --inspect=0.0.0.0 dist/server.js | bunyan -o short",
     "watch-sass": "npm run compile-sass -- --watch",
     "build": "npm run compile-sass && tsc && npm run copy-views",
     "start": "node $NODE_OPTIONS dist/server.js | bunyan -o short",
-    "start:dev": "npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run watch-node\" \"npm run watch-sass\"",
+    "start:dev": "export $(cat .env) && npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run watch-node\" \"npm run watch-sass\"",
     "start-feature": "export $(cat feature.env) && node $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
-    "watch-node-feature": "export $(cat feature.env) && nodemon --watch dist/ $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
+    "watch-node-feature": "export $(cat feature.env) && nodemon --watch dist/ --inspect=0.0.0.0 $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
     "start-feature:dev": "npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run watch-node-feature\" \"npm run watch-sass\"",
     "record-build-info": "node ./bin/record-build-info",
     "lint": "eslint . --cache --max-warnings 0",
+    "lint:fix": "eslint . --cache --max-warnings 0 --fix",
     "typecheck": "tsc && tsc -p integration_tests",
     "test": "jest",
     "security_audit": "npx audit-ci --config audit-ci.json",
@@ -61,7 +62,8 @@
       "json",
       "node",
       "ts"
-    ]
+    ],
+    "resetMocks": true
   },
   "nodemonConfig": {
     "ignore": [
@@ -105,6 +107,7 @@
     "http-errors": "^2.0.0",
     "jquery": "^3.6.0",
     "jwt-decode": "^3.1.2",
+    "luxon": "^2.3.2",
     "nocache": "^3.0.3",
     "nunjucks": "^3.2.3",
     "passport": "^0.5.2",
@@ -127,6 +130,7 @@
     "@types/http-errors": "^1.8.2",
     "@types/jest": "^27.4.1",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/luxon": "^2.3.1",
     "@types/node": "^16.11.12",
     "@types/nunjucks": "^3.2.1",
     "@types/passport": "^1.0.7",
