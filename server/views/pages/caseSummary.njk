@@ -26,7 +26,7 @@
                 birth: <span data-qa='personDetails-dateOfBirth'>{{ case.personDetails.dateOfBirth | formatDateFromIsoString }}</span> (age <span data-qa='personDetails-age'>{{ case.personDetails.age }}</span>)
                 | Gender: <span data-qa='personDetails-gender'>{{ case.personDetails.gender }}</span>
             </div>
-            <h1 class="govuk-heading-xl">{{ case.personDetails.name }}</h1>
+            <div class="govuk-heading-xl" data-qa='sectionHeading'>{{ case.personDetails.name }}</div>
             {{ mojSubNavigation({
                 label: 'if section ==summary sections',
                 items: [
