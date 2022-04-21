@@ -1,7 +1,18 @@
 import { routes } from '../../api/routes'
 import { stubFor } from './wiremock'
+import { ObjectMap } from '../../server/@types'
 
-const mockGet = ({ urlPathPattern, queryParams, statusCode = 200, response }) =>
+const mockGet = ({
+  urlPathPattern,
+  queryParams,
+  statusCode = 200,
+  response,
+}: {
+  urlPathPattern: string
+  queryParams?: ObjectMap<unknown>
+  statusCode: number
+  response: unknown
+}) =>
   stubFor({
     request: {
       method: 'GET',
@@ -25,6 +36,13 @@ export const getPersonsByCrn = ({ statusCode, response }) =>
         matches: '.*',
       },
     },
+    statusCode,
+    response,
+  })
+
+export const getCase = ({ statusCode, response }) =>
+  mockGet({
+    urlPathPattern: `${routes.getCaseDetails}/(.*)`,
     statusCode,
     response,
   })
