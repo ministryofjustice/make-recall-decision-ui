@@ -2,7 +2,7 @@ import { resetStubs } from '../mockApis/wiremock'
 
 import auth from '../mockApis/auth'
 import tokenVerification from '../mockApis/tokenVerification'
-import { getPersonsByCrn } from '../mockApis/makeRecallDecisionApi'
+import { getPersonsByCrn, getCase } from '../mockApis/makeRecallDecisionApi'
 
 export default (on: (string, Record) => void): void => {
   on('task', {
@@ -16,5 +16,6 @@ export default (on: (string, Record) => void): void => {
 
     stubTokenVerificationPing: tokenVerification.stubPing,
     getPersonsByCrn,
+    getCase,
   })
 }
