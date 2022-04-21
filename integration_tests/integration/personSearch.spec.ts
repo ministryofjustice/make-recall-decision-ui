@@ -11,22 +11,33 @@ context('Search for a person', () => {
 
   it('can search for a person on probation', () => {
     const crnQuery = 'A12345'
-    cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
-    cy.task('getCase', { statusCode: 200, response: getCaseResponse })
     const { name, dateOfBirth, crn } = getPersonSearchResponse[0]
     cy.signIn()
     cy.pageHeading().should('equal', 'Search for a person on probation')
     cy.fillInput('Search', crnQuery)
+
+    // no search results
+    cy.task('getPersonsByCrn', { statusCode: 200, response: [] })
     cy.clickButton('Search')
     cy.pageHeading().should('equal', 'Search results')
     cy.getElement(`CRN: ${crnQuery}`).should('exist')
+    cy.getElement('No results').should('exist')
+
+    // one search result
+    cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
+    cy.clickLink('Change')
+    cy.fillInput('Search', crnQuery)
+    cy.clickButton('Search')
     cy.getRowValuesFromTable({ tableCaption: 'Persons found', rowQaAttr: 'row-1' }).then(([first, second, third]) => {
       expect(first).to.equal(name)
       expect(second).to.equal(crn)
       expect(third).to.equal(formatDateFromIsoString(dateOfBirth))
     })
+
+    // link to case summary
+    cy.task('getCase', { statusCode: 200, response: getCaseResponse })
     cy.clickLink(name)
-    cy.pageHeading().should('equal', name)
+    cy.pageHeading().should('equal', 'Personal details')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Search for a person on probation')
   })
