@@ -1,0 +1,73 @@
+{% extends "../partials/layout.njk" %}
+
+{%- from "moj/components/search/macro.njk" import mojSearch -%}
+
+{% set pageTitle = makePageTitle("if section ==summary", false) %}
+
+{% block headEnd %}
+    <link rel="prefetch" href="{{ pageUrlBase }}overview">
+    <link rel="prefetch" href="{{ pageUrlBase }}risk">
+    <link rel="prefetch" href="{{ pageUrlBase }}licence-history">
+    <link rel="prefetch" href="{{ pageUrlBase }}licence-conditions">
+    <link rel="prefetch" href="{{ pageUrlBase }}contact-log">
+{% endblock %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-caption-l">CRN: <span data-qa='personDetails-crn'>{{ case.personDetails.crn }}</span> | Date of
+                birth: <span data-qa='personDetails-dateOfBirth'>{{ case.personDetails.dateOfBirth | formatDateFromIsoString }}</span> (age <span data-qa='personDetails-age'>{{ case.personDetails.age }}</span>)
+                | Gender: <span data-qa='personDetails-gender'>{{ case.personDetails.gender }}</span>
+            </div>
+            <h1 class="govuk-heading-xl">{{ case.personDetails.name }}</h1>
+            {{ mojSubNavigation({
+                label: 'if section ==summary sections',
+                items: [
+                    {
+                        text: 'Overview',
+                        href: pageUrlBase + 'overview',
+                        active: section == 'overview'
+                    },
+                    {
+                        text: 'Risk',
+                        href: pageUrlBase + 'risk',
+                        active: section == 'risk'
+                    },
+                    {
+                        text: 'Licence history',
+                        href: pageUrlBase + 'licence-history',
+                        active: section == 'licence-history'
+                    },
+                    {
+                        text: 'Licence conditions',
+                        href: pageUrlBase + 'licence-conditions',
+                        active: section == 'licence-conditions'
+                    },
+                    {
+                        text: 'Contact log',
+                        href: pageUrlBase + 'contact-log',
+                        active: section == 'contact-log'
+                    }
+                ]
+            }) }}
+            {% if section =='overview' %}
+                {% include '../partials/caseOverview.njk' %}
+            {% elseif section =='risk' %}
+                {% include '../partials/caseRisk.njk' %}
+            {% elseif section =='licence-history' %}
+                {% include '../partials/caseLicenceHistory.njk' %}
+            {% elseif section =='licence-conditions' %}
+                {% include '../partials/caseLicenceConditions.njk' %}
+            {% elseif section =='contact-log' %}
+                {% include '../partials/caseContactLog.njk' %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
