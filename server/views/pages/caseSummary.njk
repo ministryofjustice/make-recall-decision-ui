@@ -2,7 +2,7 @@
 
 {%- from "moj/components/search/macro.njk" import mojSearch -%}
 
-{% set pageTitle = makePageTitle("if section ==summary", false) %}
+{% set pageTitle = makePageTitle(section.label + " - Case summary", false) %}
 
 {% block headEnd %}
     <link rel="prefetch" href="{{ pageUrlBase }}overview">
@@ -28,44 +28,44 @@
             </div>
             <div class="govuk-heading-xl" data-qa='sectionHeading'>{{ case.personDetails.name }}</div>
             {{ mojSubNavigation({
-                label: 'if section ==summary sections',
+                label: 'Case summary sections',
                 items: [
                     {
                         text: 'Overview',
                         href: pageUrlBase + 'overview',
-                        active: section == 'overview'
+                        active: section.id == 'overview'
                     },
                     {
                         text: 'Risk',
                         href: pageUrlBase + 'risk',
-                        active: section == 'risk'
+                        active: section.id == 'risk'
                     },
                     {
                         text: 'Licence history',
                         href: pageUrlBase + 'licence-history',
-                        active: section == 'licence-history'
+                        active: section.id == 'licence-history'
                     },
                     {
                         text: 'Licence conditions',
                         href: pageUrlBase + 'licence-conditions',
-                        active: section == 'licence-conditions'
+                        active: section.id == 'licence-conditions'
                     },
                     {
                         text: 'Contact log',
                         href: pageUrlBase + 'contact-log',
-                        active: section == 'contact-log'
+                        active: section.id == 'contact-log'
                     }
                 ]
             }) }}
-            {% if section =='overview' %}
+            {% if section.id =='overview' %}
                 {% include '../partials/caseOverview.njk' %}
-            {% elseif section =='risk' %}
+            {% elseif section.id =='risk' %}
                 {% include '../partials/caseRisk.njk' %}
-            {% elseif section =='licence-history' %}
+            {% elseif section.id =='licence-history' %}
                 {% include '../partials/caseLicenceHistory.njk' %}
-            {% elseif section =='licence-conditions' %}
+            {% elseif section.id =='licence-conditions' %}
                 {% include '../partials/caseLicenceConditions.njk' %}
-            {% elseif section =='contact-log' %}
+            {% elseif section.id =='contact-log' %}
                 {% include '../partials/caseContactLog.njk' %}
             {% endif %}
         </div>
