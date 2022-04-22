@@ -38,16 +38,18 @@ Cypress.Commands.add('clickLink', (label, opts = { parent: 'body' }) => {
 })
 
 Cypress.Commands.add('getElement', (selector, opts = { parent: 'body' }) =>
-  selector.qaAttr ? cy.get(`[data-qa="${selector.qaAttr}"]`) : cy.get(opts.parent || 'body').contains(selector)
+  (selector as Cypress.Selector).qaAttr
+    ? cy.get(`[data-qa="${(selector as Cypress.Selector).qaAttr}"]`)
+    : cy.get(opts.parent).contains(selector as string)
 )
 
 Cypress.Commands.add('getLinkHref', (selector, opts = { parent: 'body' }) =>
   cy.getElement(selector, opts).invoke('attr', 'href')
 )
 
-Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr }, opts = {}) =>
+Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr }, opts = { parent: 'body' }) =>
   cy
-    .get(opts.parent || 'body')
+    .get(opts.parent)
     .contains('caption', tableCaption)
     .parent('table')
     .find(`[data-qa="${rowQaAttr}"]`)
@@ -57,7 +59,7 @@ Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr }, opts
 
 Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>
   cy
-    .get(opts.parent || 'body')
+    .get(opts.parent)
     .find(`[data-qa="${qaAttr}"]`)
     .invoke('text')
     .then(text => text.trim())
