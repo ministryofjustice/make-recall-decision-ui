@@ -24,12 +24,12 @@ import { appInsightsOperationId } from './middleware/appInsightsOperationId'
 export default function createApp(userService: UserService): express.Application {
   const app = express()
 
-  app.use(setUpSentry())
   app.set('json spaces', 2)
-  app.use(appInsightsOperationId)
-
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
+
+  app.use(setUpSentry())
+  app.use(appInsightsOperationId)
 
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
