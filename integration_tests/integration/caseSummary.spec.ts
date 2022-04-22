@@ -9,12 +9,12 @@ context('Case summary', () => {
     cy.signIn()
   })
 
-  it('can search for a person on probation', () => {
+  it('can view the case summary sections', () => {
     const crn = 'X34983'
     cy.task('getCase', { statusCode: 200, response: getCaseResponse })
     const { personDetails } = getCaseResponse
     cy.visit(`/cases/${crn}/overview`)
-    cy.pageHeading().should('equal', personDetails.name)
+    cy.pageHeading().should('equal', 'Personal details')
 
     cy.getText('personDetails-crn').should('equal', personDetails.crn)
     cy.getText('personDetails-dateOfBirth').should('equal', formatDateFromIsoString(personDetails.dateOfBirth))
@@ -22,14 +22,14 @@ context('Case summary', () => {
     cy.getText('personDetails-gender').should('equal', formatDateFromIsoString(personDetails.gender))
     // tabs
     cy.clickLink('Risk')
-    cy.getElement('Risk of serious harm (RoSH) summary').should('exist')
+    cy.pageHeading().should('equal', 'Risk of serious harm (RoSH) summary')
     cy.clickLink('Licence history')
-    cy.getElement('Licence history').should('exist')
+    cy.pageHeading().should('equal', 'Licence summary')
     cy.clickLink('Licence conditions')
-    cy.getElement('Licence conditions').should('exist')
+    cy.pageHeading().should('equal', 'Licence conditions')
     cy.clickLink('Contact log')
-    cy.getElement('Contact log').should('exist')
+    cy.pageHeading().should('equal', 'Contact log')
     cy.clickLink('Overview')
-    cy.getElement('Personal details').should('exist')
+    cy.pageHeading().should('equal', 'Personal details')
   })
 })

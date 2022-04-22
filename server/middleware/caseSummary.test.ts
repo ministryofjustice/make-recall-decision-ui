@@ -17,18 +17,33 @@ describe('caseSummary', () => {
 
   it('should return case details for a valid CRN', async () => {
     ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseApiResponse)
-    const req = mockReq({ params: { crn } })
+    const req = mockReq({ params: { crn, section: 'risk' } })
     await caseSummary(req, res)
     expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), token)
     expect(res.render).toHaveBeenCalledWith('pages/caseSummary')
     expect(res.locals.case).toEqual(caseApiResponse)
+    expect(res.locals.section).toEqual({
+      id: 'risk',
+      label: 'Risk',
+    })
   })
 
-  it('should return 400 if invalid CRN submitted', async () => {
+  it('should return 400 for an invalid CRN', async () => {
     const invalidCrn = 50 as unknown as string
-    const req = mockReq({ params: { crn: invalidCrn } })
+    const req = mockReq({ params: { crn: invalidCrn, section: 'contact-log' } })
     await caseSummary(req, res)
     expect(res.sendStatus).toHaveBeenCalledWith(400)
+  })
+
+  it('should throw for an invalid section param', async () => {
+    const invalidSection = 'recalls'
+    ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseApiResponse)
+    const req = mockReq({ params: { crn, section: invalidSection } })
+    try {
+      await caseSummary(req, res)
+    } catch (err) {
+      expect(err.message).toEqual('getCaseSectionLabel: invalid sectionId: recalls')
+    }
   })
 
   it('should throw if the API call errors', async () => {
