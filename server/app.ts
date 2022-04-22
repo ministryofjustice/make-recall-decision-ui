@@ -19,12 +19,15 @@ import setUpSentry from './middleware/setUpSentry'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
+import { appInsightsOperationId } from './middleware/appInsightsOperationId'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
 
   app.use(setUpSentry())
   app.set('json spaces', 2)
+  app.use(appInsightsOperationId)
+
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
