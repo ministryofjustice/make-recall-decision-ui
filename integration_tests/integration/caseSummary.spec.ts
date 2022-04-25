@@ -24,12 +24,16 @@ context('Case summary', () => {
     cy.getText('personDetails-dateOfBirth').should('equal', formatDateFromIsoString(personDetails.dateOfBirth))
     cy.getText('personDetails-age').should('equal', personDetails.age.toString())
     cy.getText('personDetails-gender').should('equal', formatDateFromIsoString(personDetails.gender))
-    // overview section
+    // personal details
     cy.getDefinitionListValue('Current address').should('equal', '5 Anderton Road, Newham, London E15 1UJ')
     cy.getDefinitionListValue('Offender manager').should('contain', 'Jenny Eclair - N07, NPS London')
     cy.getDefinitionListValue('Offender manager').should('contain', 'Telephone: 07824637629')
     cy.getDefinitionListValue('Offender manager').should('contain', 'Email: jenny@probation.com')
     cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
+    // risk flags
+    cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
   it('can switch between case summary pages', () => {
