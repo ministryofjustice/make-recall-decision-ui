@@ -25,21 +25,21 @@ To start the main services excluding the example typescript template app:
 
 `docker compose up --scale=app=0`
 
-Install dependencies using `npm install`, ensuring you are using >= `Node v14.x`
+Install dependencies using `npm install`, ensuring you are using >= `Node v16.x`
 
 And then, to build the assets and start the app with nodemon:
 
 `npm run start:dev`
 
-### Run linter
+### Run linter (and fix issues)
 
-`npm run lint`
+`npm run lint:fix`
 
-### Run tests
+### Run unit tests
 
 `npm run test`
 
-### Running integration tests
+### Run integration tests
 
 For local running, start a test db, redis, and wiremock instance by:
 
@@ -56,6 +56,11 @@ And then either, run tests in headless mode with:
 Or run tests with the cypress UI:
 
 `npm run int-test-ui`
+
+### Run E2E tests
+Run all required services as per [make-recall-decision-api readme](https://github.com/ministryofjustice/make-recall-decision-api#running-the-service-locally)
+Then,
+`npm run e2e`
 
 ### Dependency Checks
 

@@ -1,0 +1,21 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "chromeWebSecurity": false,
+  "testFiles": "**/*.{feature,features}",
+  "video": false,
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "reportDir": "cypress/reports",
+    "charts": true,
+    "reportPageTitle": "Make recall decisions E2E tests",
+    "embeddedScreenshots": true,
+    "reporterEnabled": "spec, mocha-junit-reporter",
+    "reporterOptions": {
+      "mochaFile": "cypress/junit/results-[hash].xml"
+    }
+  },
+  "retries": {
+    "runMode": 2,
+    "openMode": 0
+  }
+}
