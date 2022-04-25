@@ -1,4 +1,5 @@
 import express from 'express'
+import * as Sentry from '@sentry/node'
 
 import path from 'path'
 import createError from 'http-errors'
@@ -14,9 +15,11 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
+import setUpSentry from './middleware/setUpSentry'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
+import { appInsightsOperationId } from './middleware/appInsightsOperationId'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -24,6 +27,9 @@ export default function createApp(userService: UserService): express.Application
   app.set('json spaces', 2)
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
+
+  app.use(setUpSentry())
+  app.use(appInsightsOperationId)
 
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
@@ -38,6 +44,9 @@ export default function createApp(userService: UserService): express.Application
   app.use('/', indexRoutes(standardRouter(userService)))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
+
+  // The error handler must be before any other error middleware and after all controllers
+  app.use(Sentry.Handlers.errorHandler())
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app

@@ -169,6 +169,15 @@ workflows:
             - unit_test
             - integration_test
             - build_docker
+      - hmpps/sentry_release_and_deploy:
+          name: notify_sentry_dev
+          sentry_project: make-recall-decision-ui
+          sentry_environment: DEV
+          sentry_create_release: true
+          requires:
+            - deploy_dev
+          context:
+            - hmpps-common-vars
 
       - hmpps/deploy_env:
          name: deploy_preprod
@@ -178,6 +187,15 @@ workflows:
            - make-recall-decision-ui-preprod
          requires:
            - deploy_dev
+      - hmpps/sentry_release_and_deploy:
+          name: notify_sentry_preprod
+          sentry_project: make-recall-decision-ui
+          sentry_environment: PRE-PROD
+          sentry_create_release: true
+          requires:
+            - deploy_preprod
+          context:
+            - hmpps-common-vars
 
       - hmpps/deploy_env:
          name: deploy_prod
@@ -189,6 +207,15 @@ workflows:
            - make-recall-decision-ui-prod
          requires:
            - deploy_preprod
+      - hmpps/sentry_release_and_deploy:
+          name: notify_sentry_prod
+          sentry_project: make-recall-decision-ui
+          sentry_environment: PROD
+          sentry_create_release: true
+          requires:
+            - deploy_prod
+          context:
+            - hmpps-common-vars
 
   security:
     triggers:
@@ -215,6 +242,7 @@ workflows:
           context:
             - veracode-credentials
             - hmpps-common-vars
+
   security-weekly:
     triggers:
       - schedule:
