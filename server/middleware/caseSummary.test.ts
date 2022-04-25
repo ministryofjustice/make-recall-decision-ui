@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
 import { caseSummary } from './caseSummary'
 import { getCaseDetails } from '../data/makeDecisionApiClient'
-import caseApiResponse from '../../api/responses/get-case.json'
+import caseApiResponse from '../../api/responses/get-case-overview.json'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -17,9 +17,9 @@ describe('caseSummary', () => {
 
   it('should return case details for a valid CRN', async () => {
     ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseApiResponse)
-    const req = mockReq({ params: { crn, section: 'risk' } })
+    const req = mockReq({ params: { crn, sectionId: 'risk' } })
     await caseSummary(req, res)
-    expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), token)
+    expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), 'risk', token)
     expect(res.render).toHaveBeenCalledWith('pages/caseSummary')
     expect(res.locals.case).toEqual(caseApiResponse)
     expect(res.locals.section).toEqual({
@@ -30,7 +30,7 @@ describe('caseSummary', () => {
 
   it('should return 400 for an invalid CRN', async () => {
     const invalidCrn = 50 as unknown as string
-    const req = mockReq({ params: { crn: invalidCrn, section: 'contact-log' } })
+    const req = mockReq({ params: { crn: invalidCrn, sectionId: 'contact-log' } })
     await caseSummary(req, res)
     expect(res.sendStatus).toHaveBeenCalledWith(400)
   })
@@ -38,7 +38,7 @@ describe('caseSummary', () => {
   it('should throw for an invalid section param', async () => {
     const invalidSection = 'recalls'
     ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseApiResponse)
-    const req = mockReq({ params: { crn, section: invalidSection } })
+    const req = mockReq({ params: { crn, sectionId: invalidSection } })
     try {
       await caseSummary(req, res)
     } catch (err) {

@@ -1,6 +1,6 @@
 import { routes } from '../../api/routes'
 import { stubFor } from './wiremock'
-import { ObjectMap } from '../../server/@types'
+import { CaseSectionId, ObjectMap } from '../../server/@types'
 
 const mockGet = ({
   urlPathPattern,
@@ -40,9 +40,9 @@ export const getPersonsByCrn = ({ statusCode, response }) =>
     response,
   })
 
-export const getCase = ({ statusCode, response }) =>
+export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>
   mockGet({
-    urlPathPattern: `${routes.getCaseDetails}/(.*)`,
+    urlPathPattern: `${routes.getCaseDetails}/(.*)/${sectionId}`,
     statusCode,
     response,
   })

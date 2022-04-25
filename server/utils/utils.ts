@@ -1,4 +1,5 @@
 import config from '../config'
+import { Address } from '../@types/make-recall-decision-api/models/Address'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -21,4 +22,24 @@ export default convertToTitleCase
 export const makePageTitle = (pageHeading: string, hasErrors: boolean) =>
   `${hasErrors ? 'Error: ' : ''}${pageHeading} - ${config.applicationName}`
 
+export const isDefined = (val: unknown) => typeof val !== 'undefined'
+
 export const isString = (val: unknown) => typeof val === 'string'
+
+export const formatSingleLineAddress = (address: Address) => {
+  const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
+  return listToString(parts, '')
+}
+
+export const listToString = (list: string[], conjunction?: string) => {
+  if (list.length === 1) {
+    return list[0]
+  }
+  const copy = [...list]
+  if (isDefined(conjunction)) {
+    const lastItem = copy.pop()
+    const conjunctionWithSpace = conjunction === '' ? conjunction : `${conjunction} `
+    return `${copy.join(', ')} ${conjunctionWithSpace}${lastItem}`
+  }
+  return copy.join(', ')
+}

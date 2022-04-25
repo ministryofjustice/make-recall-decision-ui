@@ -1,1 +1,29 @@
-<h1 class='govuk-heading-m'>Personal details</h1>
+<h1 class='govuk-heading-m govuk-visually-hidden'>Overview</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% set offenderManagerHtml %}
+            <div>{{ case.offenderManager.fullName }} - {{ case.offenderManager.probationArea.code }}, {{ case.offenderManager.probationArea.description }}</div>
+            <div>Telephone: {{ case.offenderManager.phoneNumber }}</div>
+            <div>Email: <a href='mailto:{{ case.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ case.offenderManager.email }}</a></div>
+        {% endset %}
+        {{ appSummaryCard({
+            titleText: 'Personal details',
+            classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+            html: govukSummaryList({
+                rows: [
+                    {
+                        key: { html: 'Current address' },
+                        value: { text: formatSingleLineAddress(case.currentAddress) }
+                    },
+                    {
+                        key: { text: 'Offender manager' },
+                        value: { html: offenderManagerHtml }
+                    }
+                ]
+            })
+        }) }}
+    </div>
+    <div class="govuk-grid-column-one-third-from-desktop">
+
+    </div>
+</div>

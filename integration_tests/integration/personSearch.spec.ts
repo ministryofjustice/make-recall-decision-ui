@@ -1,12 +1,17 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import { formatDateFromIsoString } from '../../server/utils/dates'
-import getCaseResponse from '../../api/responses/get-case.json'
+import getCaseResponse from '../../api/responses/get-case-overview.json'
 
 context('Search for a person', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseResponse })
   })
 
   it('can search for a person on probation', () => {
@@ -35,9 +40,8 @@ context('Search for a person', () => {
     })
 
     // link to case summary
-    cy.task('getCase', { statusCode: 200, response: getCaseResponse })
     cy.clickLink(name)
-    cy.pageHeading().should('equal', 'Personal details')
+    cy.pageHeading().should('equal', 'Overview')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Search for a person on probation')
   })

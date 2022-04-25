@@ -33,6 +33,8 @@ declare global {
       getLinkHref(selector: string, opts?: CommandOpts): Chainable<Element>
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>
+
+      getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
     }
   }
 }
