@@ -7,7 +7,7 @@
   "reporterOptions": {
     "reportDir": "cypress/reports",
     "charts": true,
-    "reportPageTitle": "Manage a recall E2E tests",
+    "reportPageTitle": "Make recall decisions E2E tests",
     "embeddedScreenshots": true,
     "reporterEnabled": "spec, mocha-junit-reporter",
     "reporterOptions": {
