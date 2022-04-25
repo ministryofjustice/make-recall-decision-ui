@@ -1,4 +1,4 @@
-import getCaseResponse from '../../api/responses/get-case.json'
+import getCaseResponse from '../../api/responses/get-case-overview.json'
 import { formatDateFromIsoString } from '../../server/utils/dates'
 
 context('Case summary', () => {
@@ -7,19 +7,34 @@ context('Case summary', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.signIn()
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseResponse })
   })
 
-  it('can view the case summary sections', () => {
+  it('can view the case summary overview', () => {
     const crn = 'X34983'
-    cy.task('getCase', { statusCode: 200, response: getCaseResponse })
     const { personDetails } = getCaseResponse
     cy.visit(`/cases/${crn}/overview`)
-    cy.pageHeading().should('equal', 'Personal details')
+    cy.pageHeading().should('equal', 'Overview')
 
     cy.getText('personDetails-crn').should('equal', personDetails.crn)
     cy.getText('personDetails-dateOfBirth').should('equal', formatDateFromIsoString(personDetails.dateOfBirth))
     cy.getText('personDetails-age').should('equal', personDetails.age.toString())
     cy.getText('personDetails-gender').should('equal', formatDateFromIsoString(personDetails.gender))
+    // overview section
+    cy.getDefinitionListValue('Current address').should('equal', '5 Anderton Road, Newham, London E15 1UJ')
+    cy.getDefinitionListValue('Offender manager').should('contain', 'Jenny Eclair - N07, NPS London')
+    cy.getDefinitionListValue('Offender manager').should('contain', 'Telephone: 07824637629')
+    cy.getDefinitionListValue('Offender manager').should('contain', 'Email: jenny@probation.com')
+    cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
+  })
+
+  it('can switch between case summary pages', () => {
+    const crn = 'X34983'
+    cy.visit(`/cases/${crn}/overview`)
     // tabs
     cy.clickLink('Risk')
     cy.pageHeading().should('equal', 'Risk of serious harm (RoSH) summary')
@@ -30,6 +45,6 @@ context('Case summary', () => {
     cy.clickLink('Contact log')
     cy.pageHeading().should('equal', 'Contact log')
     cy.clickLink('Overview')
-    cy.pageHeading().should('equal', 'Personal details')
+    cy.pageHeading().should('equal', 'Overview')
   })
 })

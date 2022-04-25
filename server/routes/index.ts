@@ -10,7 +10,7 @@ export default function routes(router: Router): Router {
 
   get('/', personSearch)
   get('/search-results', personSearchResults)
-  get('/cases/:crn/:section?', caseSummary)
+  get('/cases/:crn/:sectionId', caseSummary)
 
   return router
 }

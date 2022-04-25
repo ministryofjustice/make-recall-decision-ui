@@ -1,3 +1,5 @@
+import { exactMatchIgnoreWhitespace } from './utils'
+
 Cypress.Commands.add('pageHeading', () =>
   cy
     .get('h1')
@@ -56,6 +58,16 @@ Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>
   cy
     .get(opts.parent)
     .find(`[data-qa="${qaAttr}"]`)
+    .invoke('text')
+    .then(text => text.trim())
+)
+
+Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 'body' }) =>
+  cy
+    .get(opts.parent)
+    .find('.govuk-summary-list__key')
+    .contains(exactMatchIgnoreWhitespace(label))
+    .next('.govuk-summary-list__value')
     .invoke('text')
     .then(text => text.trim())
 )

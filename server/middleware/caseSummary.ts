@@ -1,10 +1,9 @@
 import { Request, Response } from 'express'
 import { isString } from '../utils/utils'
 import { getCaseDetails } from '../data/makeDecisionApiClient'
+import { CaseSectionId } from '../@types'
 
-type SectionId = 'overview' | 'risk' | 'licence-history' | 'licence-conditions' | 'contact-log'
-
-const getCaseSectionLabel = (sectionId: SectionId) => {
+const getCaseSectionLabel = (sectionId: CaseSectionId) => {
   switch (sectionId) {
     case 'overview':
       return 'Overview'
@@ -22,14 +21,14 @@ const getCaseSectionLabel = (sectionId: SectionId) => {
 }
 
 export const caseSummary = async (req: Request, res: Response): Promise<Response | void> => {
-  const { crn, section } = req.params
-  if (!isString(crn) || !isString(section)) {
+  const { crn, sectionId } = req.params
+  if (!isString(crn) || !isString(sectionId)) {
     return res.sendStatus(400)
   }
-  res.locals.case = await getCaseDetails((crn as string).trim(), res.locals.user.token)
+  res.locals.case = await getCaseDetails((crn as string).trim(), sectionId as CaseSectionId, res.locals.user.token)
   res.locals.section = {
-    label: getCaseSectionLabel(section as SectionId),
-    id: section,
+    label: getCaseSectionLabel(sectionId as CaseSectionId),
+    id: sectionId,
   }
   res.locals.pageUrlBase = `/cases/${crn}/`
   res.render('pages/caseSummary')
