@@ -2,4 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export { Offender } from './models/Offender'
+export type ProbationTeam = {
+  code: string
+  label: string
+}

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { isString } from '../utils/utils'
 import { getCaseDetails } from '../data/makeDecisionApiClient'
-import { CaseSectionId } from '../@types'
+import { CaseSectionId, ObjectMap } from '../@types'
 
 const getCaseSectionLabel = (sectionId: CaseSectionId) => {
   switch (sectionId) {
@@ -20,12 +20,18 @@ const getCaseSectionLabel = (sectionId: CaseSectionId) => {
   }
 }
 
+const filterIndexOffences = (offences: ObjectMap<unknown>[]) => offences.filter(offence => offence.mainOffence)
+
 export const caseSummary = async (req: Request, res: Response): Promise<Response | void> => {
   const { crn, sectionId } = req.params
   if (!isString(crn) || !isString(sectionId)) {
     return res.sendStatus(400)
   }
-  res.locals.case = await getCaseDetails((crn as string).trim(), sectionId as CaseSectionId, res.locals.user.token)
+  const caseDetails = await getCaseDetails((crn as string).trim(), sectionId as CaseSectionId, res.locals.user.token)
+  res.locals.case = {
+    ...caseDetails,
+    indexOffences: filterIndexOffences(caseDetails.offences),
+  }
   res.locals.section = {
     label: getCaseSectionLabel(sectionId as CaseSectionId),
     id: sectionId,

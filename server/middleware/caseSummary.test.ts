@@ -21,7 +21,15 @@ describe('caseSummary', () => {
     await caseSummary(req, res)
     expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), 'risk', token)
     expect(res.render).toHaveBeenCalledWith('pages/caseSummary')
-    expect(res.locals.case).toEqual(caseApiResponse)
+    expect(res.locals.case).toEqual({
+      ...caseApiResponse,
+      indexOffences: [
+        {
+          description: 'Robbery (other than armed robbery)',
+          mainOffence: true,
+        },
+      ],
+    })
     expect(res.locals.section).toEqual({
       id: 'risk',
       label: 'Risk',

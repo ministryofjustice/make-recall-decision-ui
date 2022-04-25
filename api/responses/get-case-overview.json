@@ -13,7 +13,7 @@
     "postcode": "E15 1UJ"
   },
   "offenderManager": {
-    "fullName": "Jenny Eclair",
+    "name": "Jenny Eclair",
     "phoneNumber": "07824637629",
     "email": "jenny@probation.com",
     "probationTeam": {
@@ -41,6 +41,10 @@
     {
       "mainOffence": true,
       "description": "Robbery (other than armed robbery)"
+    },
+    {
+      "mainOffence": false,
+      "description": "Shoplifting"
     }
   ]
 }

@@ -2,8 +2,18 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Person } from './Person'
+import { Offender } from './Offender'
+import { Address } from './Address'
+import { Offence } from './Offence'
+import { OffenderManager } from './OffenderManager'
+import { RiskFlag } from './Risk'
 
 export type Case = {
-  personDetails: Person
+  personDetails: Offender
+  currentAddress: Address
+  offences: Offence[]
+  offenderManager: OffenderManager
+  risk: {
+    riskFlags: RiskFlag[]
+  }
 }

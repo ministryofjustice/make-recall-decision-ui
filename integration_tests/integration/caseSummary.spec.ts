@@ -34,6 +34,8 @@ context('Case summary', () => {
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    // offence overview
+    cy.getDefinitionListValue('Index offence').should('equal', 'Robbery (other than armed robbery)')
   })
 
   it('can switch between case summary pages', () => {
