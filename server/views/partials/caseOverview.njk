@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set offenderManagerHtml %}
-            <div>{{ case.offenderManager.fullName }} - {{ case.offenderManager.probationArea.code }}, {{ case.offenderManager.probationArea.description }}</div>
+            <div>{{ case.offenderManager.fullName }} - {{ case.offenderManager.probationTeam.code }}, {{ case.offenderManager.probationTeam.label }}</div>
             <div>Telephone: {{ case.offenderManager.phoneNumber }}</div>
             <div>Email: <a href='mailto:{{ case.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ case.offenderManager.email }}</a></div>
         {% endset %}

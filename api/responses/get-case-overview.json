@@ -16,10 +16,9 @@
     "fullName": "Jenny Eclair",
     "phoneNumber": "07824637629",
     "email": "jenny@probation.com",
-    "probationArea": {
+    "probationTeam": {
       "code": "N07",
-      "description": "NPS London",
-      "nps": true
+      "label": "NPS London"
     }
   },
   "risk": {
