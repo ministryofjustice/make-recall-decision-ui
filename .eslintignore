@@ -1,6 +1,6 @@
 node_modules
 public
 assets
-cypress
+e2e_tests
 reporter-config.json
 dist/
