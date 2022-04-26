@@ -18,6 +18,8 @@ context('Search for a person', () => {
     const crnQuery = 'A12345'
     const { name, dateOfBirth, crn } = getPersonSearchResponse[0]
     cy.signIn()
+    cy.pageHeading().should('equal', 'Recall Decisions')
+    cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')
     cy.fillInput('Search', crnQuery)
 
