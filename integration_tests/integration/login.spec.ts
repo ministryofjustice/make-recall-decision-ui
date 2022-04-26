@@ -20,14 +20,14 @@ context('SignIn', () => {
 
   it('User can log out', () => {
     cy.signIn()
-    cy.pageHeading().should('equal', 'Search for a person on probation')
+    cy.pageHeading().should('equal', 'Recall Decisions')
     cy.clickLink('Sign out')
     Page.verifyOnPage(AuthSignInPage)
   })
 
   it('User can manage their details', () => {
     cy.signIn()
-    cy.pageHeading().should('equal', 'Search for a person on probation')
+    cy.pageHeading().should('equal', 'Recall Decisions')
     cy.getLinkHref('J. Smith').should('contain', '/account-details')
   })
 })
