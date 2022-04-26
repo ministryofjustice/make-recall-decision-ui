@@ -4,3 +4,4 @@ assets
 e2e_tests
 reporter-config.json
 dist/
+scripts/
