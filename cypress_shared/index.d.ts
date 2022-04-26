@@ -8,7 +8,8 @@ declare global {
 
     export interface TableRowSelectors {
       tableCaption: string
-      rowQaAttr: string
+      rowQaAttr?: string
+      firstColValue?: string
     }
 
     export interface Selector {

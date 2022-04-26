@@ -7,6 +7,7 @@ import { Address } from './Address'
 import { Offence } from './Offence'
 import { OffenderManager } from './OffenderManager'
 import { RiskFlag } from './Risk'
+import { RiskOfSeriousHarm } from './RiskOfSeriousHarm'
 
 export type Case = {
   personDetails: Offender
@@ -15,5 +16,6 @@ export type Case = {
   offenderManager: OffenderManager
   risk: {
     riskFlags: RiskFlag[]
+    riskOfSeriousHarm: RiskOfSeriousHarm
   }
 }

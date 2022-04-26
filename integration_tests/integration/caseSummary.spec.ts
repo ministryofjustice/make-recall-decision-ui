@@ -14,7 +14,7 @@ context('Case summary', () => {
     cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseResponse })
   })
 
-  it('can view the case summary overview', () => {
+  it('can view the overview page', () => {
     const crn = 'X34983'
     const { personDetails } = getCaseResponse
     cy.visit(`/cases/${crn}/overview`)
@@ -38,12 +38,30 @@ context('Case summary', () => {
     cy.getDefinitionListValue('Index offence').should('equal', 'Robbery (other than armed robbery)')
   })
 
+  it('can view the risk page', () => {
+    const crn = 'X34983'
+    cy.visit(`/cases/${crn}/risk`)
+    cy.pageHeading().should('equal', 'Risk')
+    cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
+      expect(rowValues[0]).to.equal('Low')
+    })
+    cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Public' }).then(rowValues => {
+      expect(rowValues[0]).to.equal('Very high')
+    })
+    cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Known adult' }).then(rowValues => {
+      expect(rowValues[0]).to.equal('Medium')
+    })
+    cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Staff' }).then(rowValues => {
+      expect(rowValues[0]).to.equal('High')
+    })
+  })
+
   it('can switch between case summary pages', () => {
     const crn = 'X34983'
     cy.visit(`/cases/${crn}/overview`)
     // tabs
     cy.clickLink('Risk')
-    cy.pageHeading().should('equal', 'Risk of serious harm (RoSH) summary')
+    cy.pageHeading().should('equal', 'Risk')
     cy.clickLink('Licence history')
     cy.pageHeading().should('equal', 'Licence summary')
     cy.clickLink('Licence conditions')

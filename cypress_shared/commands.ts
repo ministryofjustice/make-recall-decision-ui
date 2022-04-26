@@ -44,13 +44,23 @@ Cypress.Commands.add('getLinkHref', (selector, opts = { parent: 'body' }) =>
   cy.getElement(selector, opts).invoke('attr', 'href')
 )
 
-Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr }, opts = { parent: 'body' }) =>
+Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr, firstColValue }, opts = { parent: 'body' }) =>
   cy
     .get(opts.parent)
     .contains('caption', tableCaption)
     .parent('table')
-    .find(`[data-qa="${rowQaAttr}"]`)
-    .find('.govuk-table__cell')
+    .then($table => {
+      if (rowQaAttr) {
+        return cy.wrap($table).find(`[data-qa="${rowQaAttr}"]`).find('.govuk-table__cell')
+      }
+      if (firstColValue) {
+        return cy
+          .wrap($table)
+          .contains(exactMatchIgnoreWhitespace(firstColValue))
+          .parent('tr')
+          .find('.govuk-table__cell')
+      }
+    })
     .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
 )
 
