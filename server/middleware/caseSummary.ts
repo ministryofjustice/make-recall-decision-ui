@@ -30,7 +30,7 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
   const caseDetails = await getCaseDetails((crn as string).trim(), sectionId as CaseSectionId, res.locals.user.token)
   res.locals.case = {
     ...caseDetails,
-    indexOffences: filterIndexOffences(caseDetails.offences),
+    indexOffences: caseDetails.offences ? filterIndexOffences(caseDetails.offences) : [],
   }
   res.locals.section = {
     label: getCaseSectionLabel(sectionId as CaseSectionId),
