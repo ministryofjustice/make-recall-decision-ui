@@ -36,6 +36,13 @@ describe('caseSummary', () => {
     })
   })
 
+  it('should return empty indexOffences array if case has no offences', async () => {
+    ;(getCaseDetails as jest.Mock).mockReturnValueOnce({ ...caseApiResponse, offences: undefined })
+    const req = mockReq({ params: { crn, sectionId: 'risk' } })
+    await caseSummary(req, res)
+    expect(res.locals.case.indexOffences).toEqual([])
+  })
+
   it('should return 400 for an invalid CRN', async () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ params: { crn: invalidCrn, sectionId: 'contact-log' } })
