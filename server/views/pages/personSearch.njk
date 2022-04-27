@@ -4,23 +4,24 @@
 {% set pageTitle = makePageTitle("Search for a person on probation", false) %}
 
 {% block content %}
+    {% include '../partials/error-summary.njk' %}
     <h1 class="govuk-heading-xl">Search for a person on probation</h1>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half-from-desktop">
             <div class="moj-search">
-
                 <form action="/search-results" method="get">
-
-                    <div class="govuk-form-group">
-                        <label class="govuk-label moj-search__label govuk-!-font-weight-bold" for="query">
-                            Search by Case Reference Number (CRN)
-                        </label>
-                        <div id="search-hint" class="govuk-hint moj-search__hint ">
-                            For example, X12345
-                        </div>
-                        <input class="govuk-input moj-search__input " id="query" name="crn" type="search"
-                               aria-describedby="search-hint">
-                    </div>
+                    {{ govukInput({
+                        label: {
+                            text: "Search by Case Reference Number (CRN)",
+                            classes: "govuk-label--m"
+                        },
+                        id: "crn",
+                        name: "crn",
+                        hint: {
+                            text: 'For example, X12345'
+                        },
+                        errorMessage: errorMessage(errors.crn)
+                    }) }}
 
                     <button class="govuk-button moj-search__button " data-module="govuk-button">
                         Search

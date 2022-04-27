@@ -20,11 +20,12 @@ Cypress.Commands.add('fillInput', (label, text, opts = {}) => {
     )
 })
 
-const clickElement = (label, tagName, opts = { parent: 'body' }) => {
+const clickElement = (label, tagName, opts) => {
+  const parent = opts?.parent || 'body'
   if (label.qaAttr) {
-    cy.get(opts.parent).find(`${tagName}[data-qa="${label.qaAttr}"]`).click()
+    cy.get(parent).find(`${tagName}[data-qa="${label.qaAttr}"]`).click()
   } else {
-    cy.get(opts.parent).find(tagName).contains(label).click()
+    cy.get(parent).find(tagName).contains(label).click()
   }
 }
 
@@ -81,3 +82,19 @@ Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 
     .invoke('text')
     .then(text => text.trim())
 )
+
+Cypress.Commands.add('assertErrorMessage', ({ fieldId, errorText }) => {
+  cy.get(`[href="#${fieldId}"]`).should('have.text', errorText)
+  cy.get(`#${fieldId}-error`)
+    .invoke('text')
+    .then(text => expect(text.trim()).to.contain(errorText))
+})
+
+Cypress.Commands.add('getTextInputValue', (label, opts = {}) => {
+  cy.get(opts.parent || 'body')
+    .contains('label', label)
+    .invoke('attr', 'for')
+    .then(id => cy.get(`#${id}`))
+    .invoke('val')
+    .then(textVal => (textVal as string).trim())
+})

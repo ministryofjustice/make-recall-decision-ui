@@ -4,11 +4,13 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import { personSearch } from '../middleware/personSearch'
 import { personSearchResults } from '../middleware/personSearchResults'
 import { caseSummary } from '../middleware/caseSummary'
+import { getStoredSessionData } from '../middleware/getStoredSessionData'
 import { startPage } from '../middleware/startPage'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
+  router.use(getStoredSessionData)
   get('/', startPage)
   get('/search', personSearch)
   get('/search-results', personSearchResults)
