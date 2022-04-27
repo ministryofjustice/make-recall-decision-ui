@@ -61,7 +61,7 @@ export default class RestClient {
         .set(headers)
         .responseType(responseType)
         .timeout(this.timeoutConfig())
-
+      logger.info(`Response status from: ${path} ${query} - ${result.statusCode}`)
       return raw ? result : result.body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
