@@ -1,5 +1,6 @@
 import config from '../config'
 import { Address } from '../@types/make-recall-decision-api/models/Address'
+import { FormError } from '../@types'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -43,3 +44,5 @@ export const listToString = (list: string[], conjunction?: string) => {
   }
   return copy.join(', ')
 }
+
+export const errorMessage = (field: FormError) => (field ? { html: field.text } : undefined)

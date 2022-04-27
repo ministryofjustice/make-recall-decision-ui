@@ -2,7 +2,7 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import { formatSingleLineAddress, makePageTitle } from './utils'
+import { formatSingleLineAddress, makePageTitle, errorMessage } from './utils'
 import config from '../config'
 import { formatDateFromIsoString } from './dates'
 
@@ -53,5 +53,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   // globals
   njkEnv.addGlobal('makePageTitle', makePageTitle)
+  njkEnv.addGlobal('errorMessage', errorMessage)
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
 }
