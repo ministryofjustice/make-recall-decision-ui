@@ -152,7 +152,7 @@ jobs:
           name: Install Dependencies
           command: npm ci --no-audit
       - run:
-          name: E2E Check - << parameters.environment >>]
+          name: E2E Check - << parameters.environment >>
           command: |
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --split-by=timings | tr "\n" "," | tr " " ",")
             echo "Running feature spec(s): ${SPECS}"
@@ -202,12 +202,6 @@ workflows:
               only:
                 - main
 
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          requires:
-            - build
-
       - hmpps/deploy_env:
           name: deploy_dev
           env: dev
@@ -230,6 +224,11 @@ workflows:
             - deploy_dev
           context:
             - hmpps-common-vars
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          requires:
+            - deploy_dev
 
       - hmpps/deploy_env:
          name: deploy_preprod
@@ -248,6 +247,11 @@ workflows:
             - deploy_preprod
           context:
             - hmpps-common-vars
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          requires:
+            - deploy_preprod
 
       - hmpps/deploy_env:
          name: deploy_prod
