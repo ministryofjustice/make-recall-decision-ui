@@ -237,7 +237,7 @@ workflows:
            - hmpps-common-vars
            - make-recall-decision-ui-preprod
          requires:
-           - deploy_dev
+           - e2e_test_dev
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
           sentry_project: make-recall-decision-ui
@@ -262,7 +262,7 @@ workflows:
            - hmpps-common-vars
            - make-recall-decision-ui-prod
          requires:
-           - deploy_preprod
+           - e2e_test_preprod
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_prod
           sentry_project: make-recall-decision-ui
