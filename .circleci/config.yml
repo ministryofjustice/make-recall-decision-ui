@@ -8,14 +8,18 @@ parameters:
   alerts-slack-channel:
     type: string
     default: make-recall-decisions-pipeline
-
   releases-slack-channel:
     type: string
     default: make-recall-decisions-pipeline
-
   node-version:
     type: string
     default: 16.14-browsers
+  e2e-check-dev:
+    type: boolean
+    default: false
+  e2e-check-preprod:
+    type: boolean
+    default: false
 
 jobs:
   build:
@@ -182,6 +186,11 @@ jobs:
 workflows:
   version: 2
   build-test-and-deploy:
+    when:
+      not:
+        or:
+          - << pipeline.parameters.e2e-check-dev >>
+          - << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - build:
           filters:
@@ -272,6 +281,20 @@ workflows:
             - deploy_prod
           context:
             - hmpps-common-vars
+
+  e2e-check-dev:
+    when: << pipeline.parameters.e2e-check-dev >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+
+  e2e-check-preprod:
+    when: << pipeline.parameters.e2e-check-preprod >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
 
   security:
     triggers:
