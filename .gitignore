@@ -115,8 +115,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
-
 assets/stylesheets/*.css
 .idea
 .vscode
@@ -127,4 +125,6 @@ integration_tests/videos/
 integration_tests/screenshots/
 */*.iml
 **/Chart.lock
-cypress/cucumber-json
+e2e_tests/cucumber-json
+e2e_tests/junit
+e2e_tests/screenshots

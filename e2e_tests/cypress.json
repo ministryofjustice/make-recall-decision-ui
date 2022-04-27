@@ -2,16 +2,23 @@
   "baseUrl": "http://localhost:3000",
   "chromeWebSecurity": false,
   "testFiles": "**/*.{feature,features}",
+  "downloadsFolder": "e2e_tests/downloads",
+  "fixturesFolder": "e2e_tests/fixtures",
+  "integrationFolder": "e2e_tests/integration",
+  "pluginsFile": "e2e_tests/plugins/index.ts",
+  "screenshotsFolder": "e2e_tests/screenshots",
+  "supportFile": "e2e_tests/support/index.ts",
+  "videosFolder": "e2e_tests/videos",
   "video": false,
   "reporter": "cypress-multi-reporters",
   "reporterOptions": {
-    "reportDir": "cypress/reports",
+    "reportDir": "e2e_tests/reports",
     "charts": true,
     "reportPageTitle": "Make recall decisions E2E tests",
     "embeddedScreenshots": true,
     "reporterEnabled": "spec, mocha-junit-reporter",
     "reporterOptions": {
-      "mochaFile": "cypress/junit/results-[hash].xml"
+      "mochaFile": "e2e_tests/junit/results-[hash].xml"
     }
   },
   "retries": {
