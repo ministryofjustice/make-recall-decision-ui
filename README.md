@@ -9,58 +9,94 @@ TODO: Describe project
 
 The easiest way to run the app is to use docker compose to create the service and all dependencies.
 
-`docker compose build`
-`docker compose pull`
-`docker compose up`
+```
+docker compose build
+docker compose pull
+docker compose up
+```
 
 ### Dependencies
 
 The app requires:
-* hmpps-auth - for authentication
-* redis - session store and token caching
+
+- hmpps-auth - for authentication
+- redis - session store and token caching
+- make-recall-decision-api - main API for the app
 
 ### Running the app for development
 
 To start the main services excluding the example typescript template app:
 
-`docker compose up --scale=app=0`
+```
+docker compose up --scale=app=0
+```
 
 Install dependencies using `npm install`, ensuring you are using >= `Node v16.x`
 
 And then, to build the assets and start the app with nodemon:
 
-`npm run start:dev`
+```
+npm run start:dev
+```
 
 ### Run linter (and fix issues)
 
-`npm run lint:fix`
+```
+npm run lint:fix
+```
 
 ### Run unit tests
 
-`npm run test`
+```
+npm run test
+```
 
 ### Run integration tests
 
 For local running, start a test db, redis, and wiremock instance by:
 
-`docker compose -f docker-compose-test.yml up`
+```
+docker compose -f docker-compose-test.yml up
+```
 
 Then run the server in test mode by:
 
-`npm run start-feature` (or `npm run start-feature:dev` to run with nodemon)
+```
+npm run start-feature
+```
+
+(or `npm run start-feature:dev` to run with nodemon)
 
 And then either, run tests in headless mode with:
 
-`npm run int-test`
+```
+npm run int-test
+```
 
 Or run tests with the cypress UI:
 
-`npm run int-test-ui`
+```
+npm run int-test-ui
+```
 
 ### Run E2E tests
+
 Run all required services as per [make-recall-decision-api readme](https://github.com/ministryofjustice/make-recall-decision-api#running-the-service-locally)
 Then,
-`npm run e2e`
+
+```
+npm run e2e
+```
+
+Or run in headless mode:
+
+```
+npm run e2e:ci
+```
+
+#### E2E Tests on CircleCI
+
+The E2E tests are ran against the `dev` and `preprod` environments after deployment. The user credentials they use to log into the service are stored as [environment variables (in CircleCI)](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables) called `CYPRESS_USERNAME_<environment>` and `CYPRESS_PASSWORD_<environment>`.
 
 ### Dependency Checks
 

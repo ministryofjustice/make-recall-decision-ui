@@ -133,6 +133,52 @@ jobs:
       - store_artifacts:
           path: integration-tests/screenshots
 
+  e2e_environment_test:
+    docker:
+      - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+    parallelism: 1
+    parameters:
+      environment:
+        type: string
+        default: dev
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: 'npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci --no-audit
+      - run:
+          name: E2E Check - << parameters.environment >>
+          command: |
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --split-by=timings | tr "\n" "," | tr " " ",")
+            echo "Running feature spec(s): ${SPECS}"
+
+            npx cypress run \
+              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>} \
+              --config-file e2e_tests/cypress.json \
+              --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
+              --browser edge \
+              --record false \
+              --spec $SPECS
+
+            npm run e2e:report
+            node scripts/fix-junit-reports.js
+      - store_artifacts:
+          path: e2e_tests/screenshots
+          destination: screenshots
+      - store_artifacts:
+          path: e2e_tests/reports
+          destination: reports
+      - store_artifacts:
+          path: e2e_tests/junit
+          destination: junit
+      - store_test_results:
+          path: e2e_tests/junit
+
 workflows:
   version: 2
   build-test-and-deploy:
@@ -178,6 +224,11 @@ workflows:
             - deploy_dev
           context:
             - hmpps-common-vars
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          requires:
+            - deploy_dev
 
       - hmpps/deploy_env:
          name: deploy_preprod
@@ -186,7 +237,7 @@ workflows:
            - hmpps-common-vars
            - make-recall-decision-ui-preprod
          requires:
-           - deploy_dev
+           - e2e_test_dev
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
           sentry_project: make-recall-decision-ui
@@ -196,6 +247,11 @@ workflows:
             - deploy_preprod
           context:
             - hmpps-common-vars
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          requires:
+            - deploy_preprod
 
       - hmpps/deploy_env:
          name: deploy_prod
@@ -206,7 +262,7 @@ workflows:
            - hmpps-common-vars
            - make-recall-decision-ui-prod
          requires:
-           - deploy_preprod
+           - e2e_test_preprod
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_prod
           sentry_project: make-recall-decision-ui
