@@ -1,18 +1,17 @@
-import { createClient } from 'redis'
+import redis, { RedisClient } from 'redis'
 
 import config from '../config'
 
-export type RedisClient = ReturnType<typeof createClient>
+let redisClient: RedisClient
 
-const url =
-  config.redis.tls_enabled === 'true'
-    ? `rediss://${config.redis.host}:${config.redis.port}`
-    : `redis://${config.redis.host}:${config.redis.port}`
-
-export const createRedisClient = (legacyMode = false): RedisClient => {
-  return createClient({
-    url,
-    password: config.redis.password,
-    legacyMode,
-  })
+export const createRedisClient = () => {
+  if (!redisClient) {
+    redisClient = redis.createClient({
+      port: config.redis.port,
+      password: config.redis.password,
+      host: config.redis.host,
+      tls: config.redis.tls_enabled === 'true' ? {} : false,
+    })
+  }
+  return redisClient
 }
