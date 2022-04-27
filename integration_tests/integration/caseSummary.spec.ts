@@ -1,5 +1,6 @@
 import getCaseResponse from '../../api/responses/get-case-overview.json'
 import { formatDateFromIsoString } from '../../server/utils/dates'
+import { routeUrls } from '../../server/routes/routeUrls'
 
 context('Case summary', () => {
   beforeEach(() => {
@@ -17,7 +18,7 @@ context('Case summary', () => {
   it('can view the overview page', () => {
     const crn = 'X34983'
     const { personDetails } = getCaseResponse
-    cy.visit(`/cases/${crn}/overview`)
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview')
 
     cy.getText('personDetails-crn').should('equal', personDetails.crn)
@@ -40,7 +41,7 @@ context('Case summary', () => {
 
   it('can view the risk page', () => {
     const crn = 'X34983'
-    cy.visit(`/cases/${crn}/risk`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk')
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
       expect(rowValues[0]).to.equal('Low')
@@ -58,7 +59,7 @@ context('Case summary', () => {
 
   it('can switch between case summary pages', () => {
     const crn = 'X34983'
-    cy.visit(`/cases/${crn}/overview`)
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
     // tabs
     cy.clickLink('Risk')
     cy.pageHeading().should('equal', 'Risk')

@@ -3,7 +3,8 @@ export {}
 declare global {
   namespace Cypress {
     export interface CommandOpts {
-      parent: string
+      parent?: string
+      clearExistingText?: boolean
     }
 
     export interface TableRowSelectors {
@@ -23,7 +24,9 @@ declare global {
 
       getText(qaAttr: string, opts?: CommandOpts): Chainable<string>
 
-      fillInput(label: string, val: string): Chainable<Element>
+      fillInput(label: string, val: string, opts?: CommandOpts): Chainable<Element>
+
+      getTextInputValue(label: string, opts?: CommandOpts): Chainable<string>
 
       clickButton(label: string, opts?: CommandOpts): Chainable<Element>
 
@@ -36,6 +39,8 @@ declare global {
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
+
+      assertErrorMessage(args: { fieldId: string; errorText: string })
     }
   }
 }

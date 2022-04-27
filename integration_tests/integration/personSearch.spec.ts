@@ -21,10 +21,17 @@ context('Search for a person', () => {
     cy.pageHeading().should('equal', 'Recall Decisions')
     cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')
-    cy.fillInput('Search', crnQuery)
+
+    // no search term entered
+    cy.clickButton('Search')
+    cy.assertErrorMessage({
+      fieldId: 'crn',
+      errorText: 'Enter a Case Reference Number (CRN)',
+    })
 
     // no search results
     cy.task('getPersonsByCrn', { statusCode: 200, response: [] })
+    cy.fillInput('Search', crnQuery)
     cy.clickButton('Search')
     cy.pageHeading().should('equal', 'Search results')
     cy.getElement(`CRN: ${crnQuery}`).should('exist')

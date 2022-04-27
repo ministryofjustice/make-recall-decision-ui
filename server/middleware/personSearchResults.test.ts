@@ -30,11 +30,19 @@ describe('personSearchResults', () => {
     expect(res.locals.persons).toEqual(persons)
   })
 
-  it('should return 400 if invalid search query submitted', async () => {
+  it('should return an error if no search query submitted', async () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ query: { crn: invalidCrn } })
     await personSearchResults(req, res)
-    expect(res.sendStatus).toHaveBeenCalledWith(400)
+    expect(res.redirect).toHaveBeenCalledWith(303, '/search')
+    expect(req.session.errors).toEqual([
+      {
+        href: '#crn',
+        name: 'crn',
+        text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+      },
+    ])
+    expect(req.session.unsavedValues).toEqual({ crn: 50 })
   })
 
   it('should throw if the search API call errors', async () => {
