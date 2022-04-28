@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import session from 'express-session'
-import connectRedis, { Client } from 'connect-redis'
+import connectRedis from 'connect-redis'
 import express, { Router } from 'express'
 import { createRedisClient } from '../data/redisClient'
 import config from '../config'
@@ -8,13 +8,10 @@ import config from '../config'
 const RedisStore = connectRedis(session)
 
 export default function setUpWebSession(): Router {
-  const client = createRedisClient(true)
-  client.connect()
-
   const router = express.Router()
   router.use(
     session({
-      store: new RedisStore({ client: client as unknown as Client }),
+      store: new RedisStore({ client: createRedisClient() }),
       cookie: { secure: config.https, sameSite: 'lax', maxAge: config.session.expiryMinutes * 60 * 1000 },
       secret: config.session.secret,
       resave: false, // redis implements touch so shouldn't need this
