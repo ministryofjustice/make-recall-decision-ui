@@ -1,43 +1,51 @@
-version: '3.1'
+version: '3.9'
 services:
 
   redis:
     image: 'bitnami/redis:5.0'
     networks:
       - hmpps
-    container_name: redis 
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+    container_name: redis
     ports:
       - '6379:6379'
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
 
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
       - hmpps
-    container_name: hmpps-auth 
+    container_name: hmpps-auth
     ports:
       - "9090:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/ping"]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  app:
-    build: .
+  make-recall-decision-ui:
+    build:
+      context: .
     networks:
       - hmpps
-    depends_on: [redis]
+    depends_on:
+      - redis
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
     environment:
+      - DEBUG=*
+      - NODE_ENV=development
       - REDIS_HOST=redis
       - INGRESS_URL=http://localhost:3000
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
-      - MAKE_RECALL_DECISION_API_URL=http://localhost:9091
-      - TOKEN_VERIFICATION_API_URL=http://localhost:9090/verification
+      - MAKE_RECALL_DECISION_API_URL=http://make-recall-decision-api:8080
+      - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:9090/verification
       # These will need to match new creds in the seed auth service auth
       - API_CLIENT_ID=make-recall-decision-ui
       - API_CLIENT_SECRET=clientsecret
@@ -47,3 +55,4 @@ services:
 
 networks:
   hmpps:
+    name: hmpps

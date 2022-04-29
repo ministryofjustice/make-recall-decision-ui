@@ -20,6 +20,9 @@ parameters:
   e2e-check-preprod:
     type: boolean
     default: false
+  e2e-parallelism:
+    type: integer
+    default: 1
 
 jobs:
   build:
@@ -140,7 +143,7 @@ jobs:
   e2e_environment_test:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-    parallelism: 1
+    parallelism: << pipeline.parameters.e2e-parallelism >>
     parameters:
       environment:
         type: string
@@ -183,6 +186,50 @@ jobs:
       - store_test_results:
           path: e2e_tests/junit
 
+  e2e_local_test:
+    machine:
+      image: ubuntu-2004:202010-01
+    parallelism: << pipeline.parameters.e2e-parallelism >>
+    steps:
+      - run:
+          name: Checkout/clone make-recall-decision-ui
+          command: |
+            git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
+            cd make-recall-decision-ui
+            git checkout $CIRCLE_BRANCH
+      - run:
+          name: Checkout/clone make-recall-decision-api
+          command: git clone https://github.com/ministryofjustice/make-recall-decision-api.git
+      - run:
+          name: Start components
+          working_directory: make-recall-decision-ui
+          command: ./scripts/start-services-for-e2e-tests.sh
+      - run:
+          name: Run E2E tests
+          working_directory: make-recall-decision-ui
+          command: ./scripts/run-e2e-tests-on-ci.sh
+      - run:
+          when: on_fail
+          name: make-recall-decision-api - docker logs
+          working_directory: make-recall-decision-api
+          command: docker-compose logs
+      - run:
+          when: on_fail
+          name: make-recall-decision-ui - docker logs
+          working_directory: make-recall-decision-ui
+          command: docker-compose logs
+      - store_artifacts:
+          path: make-recall-decision-ui/e2e_tests/screenshots
+          destination: screenshots
+      - store_artifacts:
+          path: make-recall-decision-ui/e2e_tests/reports
+          destination: reports
+      - store_artifacts:
+          path: make-recall-decision-ui/e2e_tests/junit
+          destination: junit
+      - store_test_results:
+          path: make-recall-decision-ui/e2e_tests/junit
+
 workflows:
   version: 2
   build-test-and-deploy:
@@ -202,6 +249,7 @@ workflows:
       - integration_test:
           requires:
             - build
+      - e2e_local_test
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -210,6 +258,7 @@ workflows:
             branches:
               only:
                 - main
+
 
       - hmpps/deploy_env:
           name: deploy_dev
@@ -223,6 +272,7 @@ workflows:
             - helm_lint
             - unit_test
             - integration_test
+            - e2e_local_test
             - build_docker
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_dev
