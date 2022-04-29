@@ -191,9 +191,7 @@ jobs:
       image: ubuntu-2004:202010-01
     parallelism: << pipeline.parameters.e2e-parallelism >>
     steps:
-      - run:
-          name: Checkout/clone make-recall-decision-ui
-          command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
+      - checkout
       - run:
           name: Checkout/clone make-recall-decision-api
           command: git clone https://github.com/ministryofjustice/make-recall-decision-api.git
@@ -255,7 +253,7 @@ workflows:
               only:
                 - main
 
-      # - e2e_local_test
+      - e2e_local_test
 
       - hmpps/deploy_env:
           name: deploy_dev
