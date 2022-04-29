@@ -23,22 +23,9 @@ docker-compose build
 docker-compose up -d
 popd
 
-set -x
-
 function wait_for {
   printf "\n\nWaiting for %s to be ready.\n\n" "${2}"
-  local TRIES=0
-  until curl -s --fail "${1}"; do
-    printf "."
-    ((TRIES++))
-
-    if [ "${TRIES}" -gt 50 ]; then
-      printf "Failed to start %s after 50 tries." "${2}"
-      exit 1
-    fi
-
-    sleep 2
-  done
+  docker run --rm --network host docker.io/jwilder/dockerize -wait "${1}" -wait-retry-interval 2s -timeout 60s
 }
 
 wait_for "http://localhost:9090/auth/health/ping" "hmpps-auth"
