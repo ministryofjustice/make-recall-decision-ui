@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.9'
 services:
 
   redis:
@@ -26,8 +26,9 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  app:
-    build: .
+  make-recall-decision-ui:
+    build:
+      context: .
     networks:
       - hmpps
     depends_on:
@@ -37,12 +38,14 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
     environment:
+      - DEBUG=*
+      - NODE_ENV=development
       - REDIS_HOST=redis
       - INGRESS_URL=http://localhost:3000
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       - MAKE_RECALL_DECISION_API_URL=http://make-recall-decision-api:8080
-      - TOKEN_VERIFICATION_API_URL=http://localhost:9090/verification
+      - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:9090/verification
       # These will need to match new creds in the seed auth service auth
       - API_CLIENT_ID=make-recall-decision-ui
       - API_CLIENT_SECRET=clientsecret
@@ -52,3 +55,4 @@ services:
 
 networks:
   hmpps:
+    name: hmpps

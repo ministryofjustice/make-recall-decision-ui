@@ -11,7 +11,7 @@ readonly API_DIR="${SCRIPT_DIR}/../../${API_NAME}"
 
 pushd "${API_DIR}"
 printf "\n\nStopping API components...\n\n"
-docker-compose down
+docker-compose down || true # ignore the network error, this will be cleared up by the next step
 popd
 
 pushd "${UI_DIR}"
