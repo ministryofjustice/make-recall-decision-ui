@@ -172,7 +172,11 @@ jobs:
           background: true
       - run:
           name: Wait for node app to start
-          command: curl http://localhost:3000/ping
+          command: |
+            until curl -s --fail "http://localhost:3007/ping"; do
+              printf "."
+              sleep 2
+            done
       - run:
           name: accessibility tests
           command: npm run accessibility-test || true
