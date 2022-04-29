@@ -249,6 +249,7 @@ workflows:
       - integration_test:
           requires:
             - build
+      - e2e_local_test
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -258,7 +259,6 @@ workflows:
               only:
                 - main
 
-      - e2e_local_test
 
       - hmpps/deploy_env:
           name: deploy_dev
@@ -272,6 +272,7 @@ workflows:
             - helm_lint
             - unit_test
             - integration_test
+            - e2e_local_test
             - build_docker
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_dev
