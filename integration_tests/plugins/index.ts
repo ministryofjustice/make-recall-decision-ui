@@ -5,7 +5,7 @@ import { resetStubs } from '../mockApis/wiremock'
 
 import auth from '../mockApis/auth'
 import tokenVerification from '../mockApis/tokenVerification'
-import { getPersonsByCrn, getCase } from '../mockApis/makeRecallDecisionApi'
+import { getPersonsByCrn, getCase, getHealthCheck } from '../mockApis/makeRecallDecisionApi'
 
 export default (on: (string, Record) => void): void => {
   on('before:browser:launch', (_browser, launchOptions) => {
@@ -26,5 +26,6 @@ export default (on: (string, Record) => void): void => {
     getCase,
     lighthouse: lighthouse(),
     pa11y: pa11y(),
+    getHealthCheck,
   })
 }
