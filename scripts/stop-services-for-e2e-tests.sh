@@ -16,7 +16,7 @@ popd
 
 pushd "${UI_DIR}"
 printf "\n\nStopping UI components...\n\n"
-docker compose down
+docker-compose down
 popd
 
 printf "\n\nAll services are stopped.\n\n"

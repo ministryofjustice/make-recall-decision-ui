@@ -18,9 +18,9 @@ popd
 
 pushd "${UI_DIR}"
 printf "\n\nBuilding/starting UI components...\n\n"
-docker compose pull
-docker compose build
-docker compose up -d
+docker-compose pull
+docker-compose build
+docker-compose up -d
 popd
 
 function wait_for {
