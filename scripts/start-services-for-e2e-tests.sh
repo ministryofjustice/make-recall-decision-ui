@@ -12,14 +12,14 @@ readonly API_DIR="${SCRIPT_DIR}/../../${API_NAME}"
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 docker-compose pull
-# docker-compose build
+docker-compose build
 docker-compose up -d
 popd
 
 pushd "${UI_DIR}"
 printf "\n\nBuilding/starting UI components...\n\n"
 docker compose pull
-# docker compose build
+docker compose build
 docker compose up -d --scale=hmpps-auth=0
 popd
 
