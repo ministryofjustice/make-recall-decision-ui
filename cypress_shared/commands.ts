@@ -1,3 +1,4 @@
+import 'cypress-audit/commands'
 import { exactMatchIgnoreWhitespace } from './utils'
 
 Cypress.Commands.add('pageHeading', () =>

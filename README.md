@@ -39,66 +39,14 @@ And then, to build the assets and start the app with nodemon:
 npm run start:dev
 ```
 
-### Run linter (and fix issues)
+## Automated tests and linting
+[Doc](./docs/lint-tests.md)
 
-```
-npm run lint:fix
-```
-
-### Run unit tests
-
-```
-npm run test
-```
-
-### Run integration tests
-
-For local running, start a test db, redis, and wiremock instance by:
-
-```
-docker compose -f docker-compose-test.yml up
-```
-
-Then run the server in test mode by:
-
-```
-npm run start-feature
-```
-
-(or `npm run start-feature:dev` to run with nodemon)
-
-And then either, run tests in headless mode with:
-
-```
-npm run int-test
-```
-
-Or run tests with the cypress UI:
-
-```
-npm run int-test-ui
-```
-
-### Run E2E tests
-
-Run all required services as per [make-recall-decision-api readme](https://github.com/ministryofjustice/make-recall-decision-api#running-the-service-locally)
-Then,
-
-```
-npm run e2e
-```
-
-Or run in headless mode:
-
-```
-npm run e2e:ci
-```
-
-#### E2E Tests on CircleCI
+## E2E Tests on CircleCI
 
 The E2E tests are ran against the `dev` and `preprod` environments after deployment. The user credentials they use to log into the service are stored as [environment variables (in CircleCI)](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables) called `CYPRESS_USERNAME_<environment>` and `CYPRESS_PASSWORD_<environment>`.
 
-### Dependency Checks
+## Dependency Checks
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`

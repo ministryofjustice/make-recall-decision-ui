@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  browser-tools: circleci/browser-tools@1.2
   hmpps: ministryofjustice/hmpps@3.14
   slack: circleci/slack@4.4.2
 
@@ -108,6 +109,8 @@ jobs:
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: buster
     steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - checkout
       - attach_workspace:
           at: ~/app
@@ -139,6 +142,42 @@ jobs:
           path: integration-tests/videos
       - store_artifacts:
           path: integration-tests/screenshots
+
+  accessibility_test:
+    executor: integration-tests
+    steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - checkout
+      - node/install-packages
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Install missing OS dependency
+          command: sudo apt-get install libxss1
+      - run:
+          name: Get wiremock
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
+      - run:
+          name: Run wiremock
+          command: java -jar wiremock.jar --port 9091 --root-dir fake-manage-recalls-api/stubs
+          background: true
+      - run:
+          name: Run the node app.
+          command: npm run start:feature
+          background: true
+      - run:
+          name: Wait for node app to start
+          command: sleep 5
+      - run:
+          name: accessibility tests
+          command: npm run accessibility-test || true
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: integration_tests/videos
+      - store_artifacts:
+          path: integration_tests/screenshots
 
   e2e_environment_test:
     docker:
@@ -249,6 +288,11 @@ workflows:
       - integration_test:
           requires:
             - build
+      - accessibility_test:
+          requires:
+            - build
+          context:
+            - hmpps-common-vars
       - e2e_local_test
       - hmpps/helm_lint:
           name: helm_lint
