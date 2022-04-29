@@ -145,7 +145,10 @@ jobs:
           path: integration-tests/screenshots
 
   accessibility_test:
-    executor: integration-tests
+    executor:
+      name: hmpps/node_redis
+      node_tag: << pipeline.parameters.node-version >>
+      redis_tag: buster
     steps:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
