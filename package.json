@@ -27,7 +27,7 @@
     "int-test": "cypress run --config-file integration_tests/cypress.json",
     "int-test-ui": "cypress open --config-file integration_tests/cypress.json",
     "e2e": "npx cypress open --config-file e2e_tests/cypress.json",
-    "e2e:ci": "npx cypress run --browser edge --config-file e2e_tests/cypress.json",
+    "e2e:ci": "npx cypress run --browser chrome --config-file e2e_tests/cypress.json",
     "e2e:report": "node e2e_tests/cucumber-report.js",
     "clean": "rm -rf dist build node_modules stylesheets"
   },
