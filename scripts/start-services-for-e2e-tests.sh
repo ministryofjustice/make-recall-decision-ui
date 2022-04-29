@@ -23,7 +23,7 @@ docker-compose build
 docker-compose up -d
 popd
 
-set +x
+set -x
 
 function wait_for {
   printf "\n\nWaiting for %s to be ready.\n\n" "${2}"
