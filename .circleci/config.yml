@@ -164,15 +164,15 @@ jobs:
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
       - run:
           name: Run wiremock
-          command: java -jar wiremock.jar --port 9091 --root-dir fake-manage-recalls-api/stubs
+          command: java -jar wiremock.jar --port 8080 --root-dir fake-manage-recalls-api/stubs
           background: true
       - run:
           name: Run the node app.
-          command: npm run start:feature
+          command: npm run start-feature
           background: true
       - run:
           name: Wait for node app to start
-          command: sleep 5
+          command: curl http://localhost:3000/ping
       - run:
           name: accessibility tests
           command: npm run accessibility-test || true
@@ -295,8 +295,6 @@ workflows:
       - accessibility_test:
           requires:
             - build
-          context:
-            - hmpps-common-vars
       - e2e_local_test
       - hmpps/helm_lint:
           name: helm_lint
