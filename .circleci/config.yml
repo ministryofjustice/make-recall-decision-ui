@@ -200,7 +200,7 @@ jobs:
       - run:
           name: Start components
           working_directory: make-recall-decision-ui
-          command: pwd && ./scripts/start-services-for-e2e-tests.sh
+          command: ./scripts/start-services-for-e2e-tests.sh
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
@@ -255,7 +255,7 @@ workflows:
               only:
                 - main
 
-      - e2e_local_test
+      # - e2e_local_test
 
       - hmpps/deploy_env:
           name: deploy_dev
