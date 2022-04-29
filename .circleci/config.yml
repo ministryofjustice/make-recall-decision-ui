@@ -198,49 +198,13 @@ jobs:
           name: Checkout/clone make-recall-decision-api
           command: git clone https://github.com/ministryofjustice/make-recall-decision-api.git
       - run:
-          name: Start make-recall-decision-api components
-          working_directory: make-recall-decision-api
-          command: |
-            docker-compose pull
-            docker-compose build
-            docker-compose up -d
-      - run:
-          name: Start make-recall-decision-ui components
+          name: Start components
           working_directory: make-recall-decision-ui
-          command: |
-            docker-compose pull
-            docker-compose build
-            docker-compose up -d --scale=hmpps-auth=0
-      - run:
-          name: Install E2E dependencies
-          working_directory: make-recall-decision-ui
-          command: npm ci --no-audit
-      - run:
-          name: Wait for services to be running
-          command: |
-            function wait_for {
-              printf "\n\nWaiting for ${2} to be ready.\n\n"
-              docker run --network host docker.io/jwilder/dockerize -wait ${1} -wait-retry-interval 2s -timeout 60s
-            }
-
-            wait_for "http://localhost:9090/auth/health/ping" "hmpps-auth"
-            wait_for "http://localhost:3000/ping" "make-recall-decision-ui"
-            wait_for "http://localhost:8080/health/readiness" "make-recall-decision-api"
+          command: ./scripts/start-services-for-e2e-tests.sh
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
-          command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --split-by=timings | tr "\n" "," | tr " " ",")
-            echo "Running feature spec(s): ${SPECS}"
-
-            npx cypress run \
-              --config-file e2e_tests/cypress.json \
-              --browser chrome \
-              --record false \
-              --spec $SPECS
-
-            npm run e2e:report
-            node scripts/fix-junit-reports.js
+          command: ./scripts/run-e2e-tests-on-ci.sh
       - run:
           when: on_fail
           name: make-recall-decision-api - docker logs
