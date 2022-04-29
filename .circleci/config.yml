@@ -4,6 +4,7 @@ orbs:
   browser-tools: circleci/browser-tools@1.2
   hmpps: ministryofjustice/hmpps@3.14
   slack: circleci/slack@4.4.2
+  node: circleci/node@4.5.1
 
 parameters:
   alerts-slack-channel:
