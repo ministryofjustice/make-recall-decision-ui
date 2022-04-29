@@ -2,6 +2,7 @@ import promClient from 'prom-client'
 import { serviceCheckFactory } from '../data/healthCheck'
 import config from '../config'
 import type { AgentConfig } from '../config'
+import { routes } from '../../api/routes'
 
 const healthCheckGauge = new promClient.Gauge({
   name: 'upstream_healthcheck',
@@ -57,6 +58,11 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
 
 const apiChecks = [
   service('hmppsAuth', `${config.apis.hmppsAuth.url}/health/ping`, config.apis.hmppsAuth.agent),
+  service(
+    'makeRecallDecisionApi',
+    `${config.apis.makeRecallDecisionApi.url}${routes.healthCheck}`,
+    config.apis.makeRecallDecisionApi.agent
+  ),
   ...(config.apis.tokenVerification.enabled
     ? [
         service(

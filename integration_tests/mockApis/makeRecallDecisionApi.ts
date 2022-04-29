@@ -46,3 +46,10 @@ export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSe
     statusCode,
     response,
   })
+
+export const getHealthCheck = () =>
+  mockGet({
+    urlPathPattern: routes.healthCheck,
+    statusCode: 200,
+    response: { status: 'UP' },
+  })
