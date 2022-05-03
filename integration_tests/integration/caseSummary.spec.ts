@@ -1,4 +1,5 @@
-import getCaseResponse from '../../api/responses/get-case-overview.json'
+import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
+import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { formatDateFromIsoString } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 
@@ -8,16 +9,16 @@ context('Case summary', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.signIn()
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseResponse })
-    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseResponse })
-    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseResponse })
-    cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseResponse })
-    cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseResponse })
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
+    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseOverviewResponse })
+    cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseOverviewResponse })
+    cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseOverviewResponse })
   })
 
   it('can view the overview page', () => {
     const crn = 'X34983'
-    const { personDetails } = getCaseResponse
+    const { personDetails } = getCaseOverviewResponse
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview')
 
@@ -43,6 +44,8 @@ context('Case summary', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk')
+
+    // RoSH table
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
       expect(rowValues[0]).to.equal('Low')
     })
@@ -55,6 +58,23 @@ context('Case summary', () => {
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Staff' }).then(rowValues => {
       expect(rowValues[0]).to.equal('High')
     })
+
+    // MAPPA level
+    cy.getElement('CAT 2/LEVEL 1').should('exist')
+
+    // predictor graphs
+    cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
+    cy.getElement('OSP/C score - 3.45').should('exist')
+    cy.getElement('OSP/I score - 5.3').should('exist')
+    cy.getElement('OGRS score - 12').should('exist')
+
+    // score history
+    cy.getElement('14 May 2019 at 12:00').should('exist')
+    cy.getElement('12 September 2018 at 12:00').should('exist')
+    cy.getElement('RSR HIGH 18').should('not.be.visible')
+    cy.clickLink('Open all')
+    cy.getElement('RSR HIGH 18').should('be.visible')
+    cy.getElement('RSR MEDIUM 12').should('be.visible')
   })
 
   it('can switch between case summary pages', () => {

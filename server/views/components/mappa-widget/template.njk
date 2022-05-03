@@ -1,0 +1,5 @@
+<div class="mappa-widget">
+    <h3 class="govuk-heading-m"><strong>{{ params.level | default("NO", true) }}</strong> MAPPA</h3>
+    <p class="govuk-body-m">Multi-agency public protection arrangements</p>
+    {% if params.level %}<p class="govuk-hint govuk-body-m">Last updated: {{ params.lastUpdated | default("Not known") }}</p>{% endif %}
+</div>
