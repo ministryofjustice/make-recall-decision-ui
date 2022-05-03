@@ -72,8 +72,9 @@ To get debug output when running cypress:
 
 ## Run E2E tests
 
-Run all required services as per [make-recall-decision-api readme](https://github.com/ministryofjustice/make-recall-decision-api#running-the-service-locally)
-Then,
+Set the PASSWORD env var in the [E2E config file](../e2e_tests/cypress.json).
+
+Run all required services as per the [readme](../README.md). Then,
 
 ```
 npm run e2e

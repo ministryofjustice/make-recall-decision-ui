@@ -20,7 +20,7 @@ pushd "${UI_DIR}"
 printf "\n\nBuilding/starting UI components...\n\n"
 docker-compose pull
 docker-compose build
-docker-compose up -d
+docker-compose up --scale make-recall-decision-ui=0
 popd
 
 function wait_for {
@@ -29,7 +29,7 @@ function wait_for {
 }
 
 wait_for "http://localhost:9090/auth/health/ping" "hmpps-auth"
-wait_for "http://localhost:3000/ping" "${UI_NAME}"
 wait_for "http://localhost:8081/health/readiness" "${API_NAME}"
 
 printf "\n\nAll services are ready.\n\n"
+printf "\n\nNow start up the UI with 'npm run start:dev\n\n"

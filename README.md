@@ -5,17 +5,7 @@
 
 TODO: Describe project
 
-## Running the app
-
-The easiest way to run the app is to use docker compose to create the service and all dependencies.
-
-```
-docker compose build
-docker compose pull
-docker compose up
-```
-
-### Dependencies
+## Dependencies
 
 The app requires:
 
@@ -23,17 +13,20 @@ The app requires:
 - redis - session store and token caching
 - make-recall-decision-api - main API for the app
 
-### Running the app for development
-
-To start the main services excluding the example typescript template app:
-
-```
-docker compose up --scale=app=0
-```
-
+## Setup
 Install dependencies using `npm install`, ensuring you are using >= `Node v16.x`
 
-And then, to build the assets and start the app with nodemon:
+Copy the .env.sample file in the root of this repo and name the copy as .env, then complete with the missing env values (the team will provide them).
+
+## Running the app for local development
+
+To start the main services excluding the UI:
+
+```
+./scripts/start-services-no-ui.sh
+```
+
+And then, to start the app:
 
 ```
 npm run start:dev
