@@ -64,8 +64,8 @@ context('Case summary', () => {
 
     // predictor graphs
     cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
-    cy.getElement('OSP/C score - 3.45').should('exist')
-    cy.getElement('OSP/I score - 5.3').should('exist')
+    cy.getElement('OSP/C score').should('exist')
+    cy.getElement('OSP/I score').should('exist')
     cy.getElement('OGRS score - 12').should('exist')
 
     // score history
