@@ -27,6 +27,6 @@
   },
   "env": {
     "USERNAME": "MAKE_RECALL_DECISION_USER",
-    "PASSWORD": "[NEEDS FILLING IN]"
+    "PASSWORD": "password123456"
   }
 }
