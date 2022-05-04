@@ -1,0 +1,63 @@
+{% from "components/predictor-indicator/macro.njk" import predictorIndicator %}
+
+{% set scoreLabelClass = '' %}
+
+{% if predictorScore.level === 'LOW' and (predictorScore.type  === 'RSR' or predictorScore.type  === 'OSP/I')%}
+    {% set scoreLabelClass = 'score-label-wrapper--low score-label-wrapper--position-one-of-three' %}
+{% elif predictorScore.level === 'MEDIUM' and (predictorScore.type  === 'RSR' or predictorScore.type  === 'OSP/I') %}
+    {% set scoreLabelClass = 'score-label-wrapper--medium score-label-wrapper--position-two-of-three' %}
+{% elif predictorScore.level === 'HIGH' and (predictorScore.type  === 'RSR' or predictorScore.type  === 'OSP/I') %}
+    {% set scoreLabelClass = 'score-label-wrapper--high score-label-wrapper--position-three-of-three' %}
+{% elif predictorScore.level === 'LOW' and predictorScore.type  === 'OSP/C' %}
+    {% set scoreLabelClass = 'score-label-wrapper--medium score-label-wrapper--position-one-of-four' %}
+{% elif predictorScore.level === 'MEDIUM' and predictorScore.type  === 'OSP/C' %}
+    {% set scoreLabelClass = 'score-label-wrapper--medium score-label-wrapper--position-two-of-four' %}
+{% elif predictorScore.level === 'HIGH' and predictorScore.type  === 'OSP/C' %}
+    {% set scoreLabelClass = 'score-label-wrapper--high score-label-wrapper--position-three-of-four' %}
+{% elif predictorScore.level === 'VERY HIGH' and predictorScore.type  === 'OSP/C' %}
+    {% set scoreLabelClass = 'score-label-wrapper--very-high score-label-wrapper--position-four-of-four' %}
+{% endif %}
+
+{% set barTypeClass = '' %}
+
+{% switch predictorScore.type %}
+    {% case 'RSR' %}
+        {% set barTypeClass = 'score-bar'%}
+        {% set showScore = true %}
+    {% case 'OSP/I' %}
+        {% set barTypeClass = 'score-bar--small'%}
+        {% set showScore = false %}
+    {% case 'OSP/C' %}
+        {% set barTypeClass = 'score-bar--small score-bar--small-fourths' %}
+        {% set showScore = false %}
+{% endswitch %}
+
+{% if predictorScore.level === 'NOT APPLICABLE' %}
+<div class="predictor-score govuk-body">
+    <p class="govuk-body">No relevant sexual offences</p>
+</div>
+{% else %}
+<div class="predictor-score govuk-body">
+    <div class="score-label">
+        <div class="{{ scoreLabelClass }}">
+            {{ predictorIndicator(predictorScore, showScore) }}
+        </div>
+    </div>
+    <div class="{{ barTypeClass }}">
+        <div>
+            <span></span>
+        </div>
+        <div>
+            <span></span>
+        </div>
+        <div>
+            <span></span>
+        </div>
+        {% if predictorScore.type === 'OSP/C' %}
+        <div>
+            <span></span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

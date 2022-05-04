@@ -1,9 +1,33 @@
 <h1 class='govuk-heading-m govuk-visually-hidden'>Risk</h1>
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third-from-desktop">
-        {{ roshWidget(case.risk.riskOfSeriousHarm) }}
-    </div>
     <div class="govuk-grid-column-two-thirds-from-desktop">
-        <h2 class='govuk-heading-m'>Risk of serious harm (RoSH) summary</h2>
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+            Risk of serious recidivism (RSR) score - {{ case.predictorScores.current.RSR.score }}
+        </h2>
+        {{ predictorScore(case.predictorScores.current.RSR) }}
+
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+            OSP/C score
+        </h2>
+        {{ predictorScore(case.predictorScores.current.OSPC) }}
+
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+            OSP/I score
+        </h2>
+        {{ predictorScore(case.predictorScores.current.OSPI) }}
+
+         <h2 class="govuk-heading-m score-header">
+         OGRS score - {{ case.predictorScores.current.OGRS.score }}
+         </h2>
+        <img src='/assets/images/risk-ogrs.svg' width='100%'/>
+    </div>
+    <div class="govuk-grid-column-one-third-from-desktop">
+        {{ roshWidget(case.riskOfSeriousHarm) }}
+        {{ mappaWidget(case.mappa) }}
+        <div class="govuk-body predictor-timeline__heading">
+            <h2 class="govuk-heading-m">Score history</h2>
+            <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+        </div>
+        {{ predictorTimeline(case.predictorScores.historical) }}
     </div>
 </div>

@@ -36,16 +36,7 @@ jobs:
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci --no-audit
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-            - ~/.cache
+      - node/install-packages
       - run:
           command: |
             npm run build
@@ -94,8 +85,7 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - node/install-packages
       - run:
           name: unit tests
           command: npm run test
@@ -113,6 +103,7 @@ jobs:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - checkout
+      - node/install-packages
       - attach_workspace:
           at: ~/app
       - run:
@@ -126,23 +117,24 @@ jobs:
           command: java -jar wiremock.jar --port 9091
           background: true
       - run:
+          name: Build the node app.
+          command: npm run build
+      - run:
           name: Run the node app.
           command: npm run start-feature
           background: true
       - run:
           name: Wait for node app to start
           command: sleep 5
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: integration tests
           command: npm run int-test
       - store_test_results:
           path: test_results
       - store_artifacts:
-          path: integration-tests/videos
+          path: integration_tests/videos
       - store_artifacts:
-          path: integration-tests/screenshots
+          path: integration_tests/screenshots
 
   accessibility_test:
     executor:
@@ -166,6 +158,9 @@ jobs:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091 --root-dir fake-manage-recalls-api/stubs
           background: true
+      - run:
+          name: Build the node app.
+          command: npm run build
       - run:
           name: Run the node app.
           command: npm run start-feature
@@ -200,11 +195,7 @@ jobs:
       - run:
           name: Update npm
           command: 'npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci --no-audit
+      - node/install-packages
       - run:
           name: E2E Check - << parameters.environment >>
           command: |

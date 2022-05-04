@@ -1,0 +1,383 @@
+$very-high-score-colour: #942514;
+$very-high-score-colour--light: #ffac9f;
+$very-high-score-colour__text: #711a0d;
+$high-score-colour: #d4351c;
+$high-score-colour--light: #f6d7d2;
+$high-score-colour__text: #942514;
+$medium-score-colour: #f47738;
+$medium-score-colour--light: #f9e8bd;
+$medium-score-colour__text: #a34e00;
+$low-score-colour: #85994b;
+$low-score-colour--light: #dee9bd;
+$low-score-colour__text: #485b10;
+$predictor-score-background-colour: #f3f2f1;
+
+@mixin score-label-card-colour($primary-colour, $secondary-colour, $text-colour) {
+  & .score-label__card {
+    border: 2px solid $primary-colour;
+
+    & .score-label__card-top {
+      & h3,
+      & p {
+        color: $text-colour;
+      }
+    }
+
+    & .score-label__card-bottom {
+      background-color: $secondary-colour;
+    }
+
+    & .score-label__card-pointer {
+      border-top: 16px solid $primary-colour;
+    }
+
+    & .score-label__card-pointer::after {
+      border-top: 14px solid $secondary-colour;
+    }
+  }
+}
+
+@mixin score-bar-label {
+  position: relative;
+  text-align: center;
+  display: block;
+  color: govuk-colour("black");
+}
+
+@mixin score-bar-base {
+  width: 100%;
+
+  &::after {
+    content: "" "";
+    display: block;
+    visibility: hidden;
+    clear: both;
+  }
+
+  & > div > span {
+    height: 15px;
+    display: block;
+  }
+}
+
+@mixin predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
+  outline: 2px solid $primary-colour;
+  padding: 0;
+  display: inline-block;
+
+  &::after {
+    content: "" "";
+    display: block;
+    visibility: hidden;
+    clear: both;
+  }
+
+  & > span {
+    padding: 3px 6px;
+  }
+
+  & .predictor-timeline-item__level {
+    @include govuk-font(14, "regular");
+
+    float: left;
+    color: $text-colour;
+  }
+
+  & .predictor-timeline-item__score {
+    @include govuk-font(14, "bold");
+
+    float: right;
+    color: govuk-colour("black");
+    background-color: $secondary-colour;
+  }
+}
+
+.predictor-timeline-item--very-high {
+  @include predictor-timeline-item-base(
+                  $very-high-score-colour,
+                  $very-high-score-colour--light,
+                  $very-high-score-colour__text
+  );
+}
+
+.predictor-timeline-item--high {
+  @include predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+}
+
+.predictor-timeline-item--medium {
+  @include predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+}
+
+.predictor-timeline-item--low {
+  @include predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+}
+
+.predictor-timeline-section--hidden {
+  visibility: hidden;
+  display: none;
+}
+
+.predictor-timeline__heading {
+  h2,
+  a {
+    display: inline;
+  }
+}
+
+.predictor-score {
+  width: 100%;
+  padding: 30px 40px 10px;
+  box-sizing: border-box;
+  background-color: $predictor-score-background-colour;
+}
+
+.score-label__card-pointer {
+  width: 0;
+  height: 0;
+  border-right: 16px solid transparent;
+  border-left: 16px solid transparent;
+  border-top: 16px solid govuk-colour("black");
+  position: relative;
+  top: 0;
+  left: 23px;
+  float: left;
+}
+
+.score-label__card-pointer--white::after {
+  border-top: 14px solid govuk-colour("white") !important;
+}
+
+.score-label__card-pointer::after {
+  width: 0;
+  height: 0;
+  border-right: 14px solid transparent;
+  border-left: 14px solid transparent;
+  border-top: 14px solid govuk-colour("white");
+  position: absolute;
+  top: -17px;
+  left: -14px;
+  content: "";
+}
+
+.score-label {
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.score-label-wrapper--position-one-of-three,
+.score-label-wrapper--position-two-of-three,
+.score-label-wrapper--position-three-of-three {
+  width: 33%;
+}
+
+.score-label-wrapper--position-one-of-three {
+  margin-left: 0;
+}
+
+.score-label-wrapper--position-two-of-three {
+  margin-left: 67%;
+}
+
+.score-label-wrapper--position-three-of-three {
+  margin-left: 67%;
+}
+
+.score-label-wrapper--position-one-of-four,
+.score-label-wrapper--position-two-of-four,
+.score-label-wrapper--position-three-of-four,
+.score-label-wrapper--position-four-of-four {
+  width: 25%;
+}
+
+.score-label-wrapper--position-one-of-four {
+  margin-left: 0;
+}
+
+.score-label-wrapper--position-two-of-four {
+  margin-left: 25%;
+}
+
+.score-label-wrapper--position-three-of-four {
+  margin-left: 50%;
+}
+
+.score-label-wrapper--position-four-of-four {
+  margin-left: 75%;
+}
+
+.score-label-wrapper--very-high {
+  @include score-label-card-colour(
+                  $very-high-score-colour,
+                  $very-high-score-colour--light,
+                  $very-high-score-colour__text
+  );
+}
+
+.score-label-wrapper--high {
+  @include score-label-card-colour($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+}
+
+.score-label-wrapper--medium {
+  @include score-label-card-colour($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+}
+
+.score-label-wrapper--low {
+  @include score-label-card-colour($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+}
+
+.score-label__card {
+  width: 78px;
+  bottom: 30px;
+  margin: 0 auto;
+  background-color: govuk-colour("white");
+  border: 2px solid govuk-colour("black");
+}
+
+.score-label__card-top {
+  width: 100%;
+
+  & h3,
+  & p {
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  & h3 {
+    @include govuk-font(14, "bold");
+  }
+
+  & p {
+    @include govuk-font(14, "regular");
+  }
+}
+
+.score-label__card-bottom p {
+  @include govuk-font(14, "bold");
+
+  margin: 0;
+}
+
+.score-label__card-top,
+.score-label__card-bottom {
+  padding: 3px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.score-bar--small {
+  @include score-bar-base;
+
+  margin-bottom: 15px;
+
+  & > div {
+    width: 33%;
+    display: inline;
+    float: left;
+    border-right: 1px solid transparent;
+    box-sizing: border-box;
+  }
+
+  & > div:nth-child(4n + 1) > span:first-child {
+    background-color: $low-score-colour;
+  }
+
+  & > div:nth-child(4n + 2) > span:first-child {
+    background-color: $medium-score-colour;
+  }
+
+  & > div:nth-child(4n + 3) > span:first-child {
+    background-color: $high-score-colour;
+  }
+}
+
+.score-bar--small-fourths {
+  & > div {
+    width: 25%;
+  }
+
+  & > div:nth-child(4n + 4) > span:first-child {
+    background-color: $very-high-score-colour;
+  }
+}
+
+.score-bar {
+  @include score-bar-base;
+
+  margin-bottom: 35px;
+
+  & > div {
+    width: 33%;
+    height: 30px;
+    display: inline;
+    float: left;
+    border-right: 1px solid govuk-colour("black");
+    box-sizing: border-box;
+  }
+
+  & > div:first-child {
+    border-left: 1px solid govuk-colour("black");
+  }
+
+  & > div:nth-child(4n + 1) {
+    &::before {
+      @include govuk-font(16, "bold");
+      @include score-bar-label;
+
+      float: left;
+      content: "0%";
+      left: -5%;
+      bottom: -35px;
+    }
+
+    &::after {
+      @include govuk-font(16, "bold");
+      @include score-bar-label;
+
+      float: right;
+      content: "3%";
+      right: -5%;
+      bottom: -20px;
+    }
+
+    & > span:first-child {
+      background-color: $low-score-colour;
+    }
+  }
+
+  & > div:nth-child(4n + 2) {
+    &::after {
+      @include govuk-font(16, "bold");
+      @include score-bar-label;
+
+      content: "6.9%";
+      float: right;
+      right: -11%;
+      bottom: -20px;
+    }
+
+    & > span:first-child {
+      background-color: $medium-score-colour;
+    }
+  }
+
+  & > div:nth-child(4n + 3) {
+    &::after {
+      @include govuk-font(16, "bold");
+      @include score-bar-label;
+
+      float: right;
+      content: "25%+";
+      right: -12%;
+      bottom: -20px;
+    }
+
+    & > span:first-child {
+      background-color: $high-score-colour;
+    }
+  }
+}
+
+.predictor-complete-panel {
+  margin-bottom: 50px;
+}
