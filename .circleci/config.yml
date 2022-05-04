@@ -159,6 +159,9 @@ jobs:
           command: java -jar wiremock.jar --port 9091 --root-dir fake-manage-recalls-api/stubs
           background: true
       - run:
+          name: Build the node app.
+          command: npm run build
+      - run:
           name: Run the node app.
           command: npm run start-feature
           background: true
