@@ -1,8 +1,8 @@
 /// <reference path = "../../cypress_shared/index.d.ts" />
 import '../../cypress_shared/commands'
 
-const userName = Cypress.env('USERNAME') || 'AUTH_USER'
-const password = Cypress.env('PASSWORD') || 'password123456'
+const userName = Cypress.env('USERNAME')
+const password = Cypress.env('PASSWORD')
 
 Cypress.Commands.add('visitPage', url => {
   cy.visit(url)
