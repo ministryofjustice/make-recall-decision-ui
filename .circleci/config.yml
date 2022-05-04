@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   browser-tools: circleci/browser-tools@1.2
-  hmpps: ministryofjustice/hmpps@3.14
+  hmpps: ministryofjustice/hmpps@5.0
   slack: circleci/slack@4.4.2
   node: circleci/node@4.5.1
 
@@ -99,7 +99,7 @@ jobs:
 
   integration_test:
     executor:
-      name: hmpps/node_redis_cimg
+      name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
@@ -141,7 +141,7 @@ jobs:
 
   accessibility_test:
     executor:
-      name: hmpps/node_redis_cimg
+      name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
