@@ -16,6 +16,9 @@ parameters:
   node-version:
     type: string
     default: 16.14-browsers
+  redis-version:
+    type: string
+    default: "6.2"
   e2e-check-dev:
     type: boolean
     default: false
@@ -96,9 +99,9 @@ jobs:
 
   integration_test:
     executor:
-      name: hmpps/node_redis
+      name: hmpps/node_redis_cimg
       node_tag: << pipeline.parameters.node-version >>
-      redis_tag: buster
+      redis_tag: << pipeline.parameters.redis-version >>
     steps:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
@@ -138,9 +141,9 @@ jobs:
 
   accessibility_test:
     executor:
-      name: hmpps/node_redis
+      name: hmpps/node_redis_cimg
       node_tag: << pipeline.parameters.node-version >>
-      redis_tag: buster
+      redis_tag: << pipeline.parameters.redis-version >>
     steps:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
