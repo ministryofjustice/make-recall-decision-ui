@@ -8,19 +8,21 @@ readonly UI_NAME=make-recall-decision-ui
 readonly API_NAME=make-recall-decision-api
 readonly UI_DIR="${SCRIPT_DIR}/../../${UI_NAME}"
 readonly API_DIR="${SCRIPT_DIR}/../../${API_NAME}"
+readonly API_LOGFILE="/tmp/${API_NAME}.log"
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-docker-compose pull
-docker-compose build
-docker-compose up -d
+#docker-compose pull
+#docker-compose build
+#docker-compose up -d
+SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun >>"${API_LOGFILE}" 2>&1 &
 popd
 
 pushd "${UI_DIR}"
 printf "\n\nBuilding/starting UI components...\n\n"
-docker-compose pull
-docker-compose build
-docker-compose up --scale make-recall-decision-ui=0
+docker-compose pull redis hmpps-auth
+docker-compose build  redis hmpps-auth
+docker-compose up redis hmpps-auth
 popd
 
 function wait_for {
