@@ -14,6 +14,7 @@ The app requires:
 - make-recall-decision-api - main API for the app
 
 ## Setup
+
 Install dependencies using `npm install`, ensuring you are using >= `Node v16.x`
 
 Copy the .env.sample file in the root of this repo and name the copy as .env, then complete with the missing env values (the team will provide them).
@@ -32,7 +33,18 @@ And then, to start the app:
 npm run start:dev
 ```
 
+### Notes for M1 Mac Users
+
+If you're using an M1/arm based Mac, you'll need to also have a checkout of [hmpps-auth](https://github.com/ministryofjustice/hmpps-auth) alongside your checkouts of `make-recall-decision-ui` and `make-recall-decision-api`, and pass all of the start scripts the `-a` parameter:
+
+```
+./scripts/start-services-no-ui.sh -a
+```
+
+This will build the `hmpps-auth` container image locally on your machine before starting things up. This is needed as the currently released container for `hmpps-auth` does not run properly on M1 macs.
+
 ## Automated tests and linting
+
 [Doc](./docs/lint-tests.md)
 
 ## E2E Tests on CircleCI

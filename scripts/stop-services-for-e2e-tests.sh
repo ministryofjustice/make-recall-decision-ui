@@ -3,7 +3,6 @@
 set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 readonly UI_NAME=make-recall-decision-ui
 readonly API_NAME=make-recall-decision-api
 readonly UI_DIR="${SCRIPT_DIR}/../../${UI_NAME}"

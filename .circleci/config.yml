@@ -244,7 +244,7 @@ jobs:
       - run:
           name: Start components
           working_directory: make-recall-decision-ui
-          command: ./scripts/start-services-for-e2e-tests.sh
+          command: ./scripts/start-services-for-e2e-tests.sh -p
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
