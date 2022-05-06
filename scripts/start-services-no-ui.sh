@@ -74,7 +74,7 @@ popd
 
 function wait_for {
   printf "\n\nWaiting for %s to be ready.\n\n" "${2}"
-  docker run --rm --network host docker.io/jwilder/dockerize -wait "${1}" -wait-retry-interval 2s -timeout 60s
+  docker run --rm --network host docker.io/jwilder/dockerize -wait "${1}" -wait-retry-interval 2s -timeout 120s
 }
 
 wait_for "http://localhost:9090/auth/health/ping" "${AUTH_NAME}"
