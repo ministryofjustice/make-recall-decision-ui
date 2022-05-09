@@ -34,6 +34,8 @@ declare global {
 
       getElement(selector: string | Selector, opts?: CommandOpts): Chainable<JQuery<HTMLElement>>
 
+      viewDetails(summaryLabel: string, opts?: CommandOpts): Chainable<string>
+
       getLinkHref(selector: string, opts?: CommandOpts): Chainable<Element>
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>

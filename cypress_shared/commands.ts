@@ -98,3 +98,14 @@ Cypress.Commands.add('getTextInputValue', (label, opts = {}) => {
     .invoke('val')
     .then(textVal => (textVal as string).trim())
 })
+
+Cypress.Commands.add('viewDetails', (summaryLabel, opts = { parent: 'body' }) => {
+  cy.get(opts.parent).contains(summaryLabel).click()
+  return cy
+    .get(opts.parent)
+    .contains(summaryLabel)
+    .parent('.govuk-details__summary')
+    .next('.govuk-details__text')
+    .invoke('text')
+    .then(text => text.trim())
+})

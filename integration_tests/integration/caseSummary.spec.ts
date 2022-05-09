@@ -50,6 +50,17 @@ context('Case summary', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk')
 
+    // Content panels
+    cy.viewDetails('View more detail on Details of the risk').should(
+      'contain',
+      getCaseRiskResponse.natureOfRisk.description
+    )
+    cy.viewDetails('View more detail on Who is at risk').should('contain', getCaseRiskResponse.whoIsAtRisk.description)
+    cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
+      'contain',
+      getCaseRiskResponse.circumstancesIncreaseRisk.description
+    )
+
     // RoSH table
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
       expect(rowValues[0]).to.equal('Low')

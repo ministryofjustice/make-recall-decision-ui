@@ -1,6 +1,21 @@
 <h1 class='govuk-heading-m govuk-visually-hidden'>Risk</h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
+        {{ oasysCard({
+            cardHeading: 'Details of the risk',
+            oasysHeading: case.natureOfRisk.oasysHeading,
+            content: case.natureOfRisk.description
+        }) }}
+        {{ oasysCard({
+            cardHeading: 'Who is at risk',
+            oasysHeading: case.whoIsAtRisk.oasysHeading,
+            content: case.whoIsAtRisk.description
+        }) }}
+        {{ oasysCard({
+            cardHeading: 'Circumstances that will increase the risk',
+            oasysHeading: case.circumstancesIncreaseRisk.oasysHeading,
+            content: case.circumstancesIncreaseRisk.description
+        }) }}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
             Risk of serious recidivism (RSR) score - {{ case.predictorScores.current.RSR.score }}
         </h2>
