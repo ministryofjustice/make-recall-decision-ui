@@ -2,7 +2,13 @@ export interface ObjectMap<T> {
   [key: string]: T
 }
 
-export type CaseSectionId = 'overview' | 'risk' | 'licence-history' | 'licence-conditions' | 'contact-log'
+export type CaseSectionId =
+  | 'overview'
+  | 'risk'
+  | 'personal-details'
+  | 'licence-history'
+  | 'licence-conditions'
+  | 'contact-log'
 
 export interface FormError {
   text: string

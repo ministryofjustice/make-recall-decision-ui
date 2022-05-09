@@ -9,6 +9,8 @@ const getCaseSectionLabel = (sectionId: CaseSectionId) => {
       return 'Overview'
     case 'risk':
       return 'Risk'
+    case 'personal-details':
+      return 'Personal details'
     case 'licence-history':
       return 'Licence history'
     case 'licence-conditions':
