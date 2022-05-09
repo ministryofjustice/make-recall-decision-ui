@@ -6,9 +6,7 @@ import getCasePersonalDetailsResponse from '../../api/responses/get-case-persona
 
 context('Search for a person', () => {
   beforeEach(() => {
-    cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubAuthUser')
+    cy.signIn()
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
@@ -20,7 +18,6 @@ context('Search for a person', () => {
   it('can search for a person on probation', () => {
     const crnQuery = 'A12345'
     const { name, dateOfBirth, crn } = getPersonSearchResponse[0]
-    cy.signIn()
     cy.pageHeading().should('equal', 'Recall Decisions')
     cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')

@@ -6,9 +6,6 @@ import { routeUrls } from '../../server/routes/routeUrls'
 
 context('Case summary', () => {
   beforeEach(() => {
-    cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubAuthUser')
     cy.signIn()
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
