@@ -18,12 +18,18 @@ const createToken = () => {
 }
 
 const getSignInUrl = (): Promise<string> =>
-  getRequests().then(data => {
-    const { requests } = data.body
-    const stateParam = requests[0].request.queryParams.state
-    const stateValue = stateParam ? stateParam.values[0] : requests[1].request.queryParams.state.values[0]
-    return `/sign-in/callback?code=codexxxx&state=${stateValue}`
-  })
+  getRequests()
+    .then(data => {
+      const { requests } = data.body
+      const stateParam = requests[0].request.queryParams.state
+      const stateValue = stateParam ? stateParam.values[0] : requests[1].request.queryParams.state.values[0]
+      return `/sign-in/callback?code=codexxxx&state=${stateValue}`
+    })
+    .catch(err => {
+      // eslint-disable-next-line no-console
+      console.log('Error thrown in getSignInUrl', err)
+      return ''
+    })
 
 const favicon = () =>
   stubFor({
