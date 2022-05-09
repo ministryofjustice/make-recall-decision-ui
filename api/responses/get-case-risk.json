@@ -94,5 +94,47 @@
         }
       }
     ]
+  },
+  "natureOfRisk": {
+    "oasysSection": {
+      "number": "10.2",
+      "description": "What is the nature of the risk?"
+    },
+    "description": "Mr Edwin has a pattern of resorting to violent behaviour if he feels humiliated/threatened/stressed. He has been known to use weapons or opportunistically looks for a way to cause the victim maximum harm. His risk increases greatly if he has been taking alcohol or drugs, which is likely to do if he feels like he is 'out of control' of his life. "
+  },
+  "contingencyPlan": {
+    "oasysSection": {
+      "number": "11.9",
+      "description": "Contingency plan"
+    },
+    "description": "If Mr Edwin enters enters pubs in Enfield Town - issue licence compliance letter\nIf Mr Edwin associates with Mr Daniels, Mr Moreland or Mr Barksdale - issue decision not to recall letter or recall. Supervision session to discuss reasons for association.\nIf Mr Edwin loses his accommodation, refer to housing support. \nIf Mr Edwin loses his employment, refer to ETE services to establish alternative employment\nIf Mr Edwin returns to drinking or taking drugs, cosndier increase in MAPPA level, refer to CGL support, increase reporting or recall."
+  },
+  "whoIsAtRisk": {
+    "oasysSection": {
+      "number": "10.1",
+      "description": "Who is at risk?"
+    },
+    "description": "Public:\nMr Edwin poses a very high risk to members of the public, especially if he believes they have mocked him, he has been drinking/taking drugs and is surrounded by his associates in the Westside Gang.\n\nKnown adult:\nMr Edwin poses a medium risk to his victim Wallce Stanfield. He has shown no desire for retribution but is unpredictable and resolves problems through violence if taking drugs and surrounded by peers.\n\nStaff:\nMr Edwin poses a high risk to probation staff as he resorts to violence if he feels undermined or not listed to."
+  },
+  "circumstancesIncreaseRisk": {
+    "oasysSection": {
+      "number": "10.4",
+      "description": "What circumstances are likely to increase the risk?"
+    },
+    "description": "Factors include:\n- relationship breakdown\n- unstable accommodation situation/lack of stable housing\n- association with criminal peers/associates\n- a lack of steady employment which causes him to return to drug dealing to make money\n- drug and alcohol use"
+  },
+  "factorsToReduceRisk": {
+    "oasysSection": {
+      "number": "10.5",
+      "description": "What factors are likely to reduce the risk?"
+    },
+    "description": "Factors include:\n- engagement in interventions related to mood/behaviour control\n- avoidance of drugs and alcohol\n- steady employment\n- stable accommodation\n- sources of support and value that are separate from being part of a gang/maintaining reputation e.g. family engagement, job, education"
+  },
+  "whenRiskHighest": {
+    "oasysSection": {
+      "number": "10.3",
+      "description": "When is the risk likely to be greatest?"
+    },
+    "description": "If Mr Edwin has had recent changes in his life that cause him to take drugs or drink; if he is surrounded by criminal peers/associates; if he is in a public place where he feels like he needs to protect his reputation."
   }
 }

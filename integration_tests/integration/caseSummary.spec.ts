@@ -1,4 +1,5 @@
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
+import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { formatDateFromIsoString } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
@@ -11,6 +12,7 @@ context('Case summary', () => {
     cy.signIn()
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
+    cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
     cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseOverviewResponse })
@@ -18,9 +20,17 @@ context('Case summary', () => {
 
   it('can view the overview page', () => {
     const crn = 'X34983'
-    const { personDetails } = getCaseOverviewResponse
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview')
+    // offence overview
+    cy.getDefinitionListValue('Index offence').should('equal', 'Robbery (other than armed robbery)')
+  })
+
+  it('can view the personal details page', () => {
+    const crn = 'X34983'
+    const { personDetails } = getCaseOverviewResponse
+    cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
+    cy.pageHeading().should('equal', 'Personal details')
 
     cy.getText('personDetails-crn').should('equal', personDetails.crn)
     cy.getText('personDetails-dateOfBirth').should('equal', formatDateFromIsoString(personDetails.dateOfBirth))
@@ -36,8 +46,6 @@ context('Case summary', () => {
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
-    // offence overview
-    cy.getDefinitionListValue('Index offence').should('equal', 'Robbery (other than armed robbery)')
   })
 
   it('can view the risk page', () => {
@@ -83,6 +91,8 @@ context('Case summary', () => {
     // tabs
     cy.clickLink('Risk')
     cy.pageHeading().should('equal', 'Risk')
+    cy.clickLink('Personal details')
+    cy.pageHeading().should('equal', 'Personal details')
     cy.clickLink('Licence history')
     cy.pageHeading().should('equal', 'Licence summary')
     cy.clickLink('Licence conditions')

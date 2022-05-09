@@ -39,6 +39,11 @@
                         active: section.id == 'risk'
                     },
                     {
+                        text: 'Personal details',
+                        href: pageUrlBase + 'personal-details',
+                        active: section.id == 'personal-details'
+                    },
+                    {
                         text: 'Licence history',
                         href: pageUrlBase + 'licence-history',
                         active: section.id == 'licence-history'
@@ -59,6 +64,8 @@
                 {% include '../partials/caseOverview.njk' %}
             {% elseif section.id =='risk' %}
                 {% include '../partials/caseRisk.njk' %}
+            {% elseif section.id =='personal-details' %}
+                {% include '../partials/casePersonalDetails.njk' %}
             {% elseif section.id =='licence-history' %}
                 {% include '../partials/caseLicenceHistory.njk' %}
             {% elseif section.id =='licence-conditions' %}
