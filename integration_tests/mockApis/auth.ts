@@ -26,6 +26,7 @@ const getSignInUrl = (): Promise<string> =>
       return `/sign-in/callback?code=codexxxx&state=${stateValue}`
     })
     .catch(err => {
+      // eslint-disable-next-line no-console
       console.log('Error thrown in getSignInUrl', err)
       return ''
     })
