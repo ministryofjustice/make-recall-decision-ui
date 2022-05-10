@@ -1,0 +1,23 @@
+{% from "govuk/components/details/macro.njk"             import govukDetails %}
+{% from "components/summary-card/macro.njk"             import appSummaryCard %}
+
+{% set contentHtml %}
+  <pre class='govuk-body'>{{ params.content }}</pre>
+{% endset %}
+
+{% set sectionHtml %}
+  <div class="govuk-!-padding-bottom-6 govuk-!-margin-bottom-6 govuk-section-break--visible text-secondary">
+    {{ params.oasysHeading.number }} {{ params.oasysHeading.description }}
+  </div>
+  {{ govukDetails({
+    summaryHtml: "View more detail<span class='govuk-visually-hidden'> on " + params.cardHeading + "</span>",
+    html: contentHtml,
+    open: params.open
+  }) }}
+{% endset %}
+
+{{ appSummaryCard({
+  titleText: params.cardHeading,
+  classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+  html: sectionHtml
+}) }}

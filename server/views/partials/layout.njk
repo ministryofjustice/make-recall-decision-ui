@@ -1,6 +1,7 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "govuk/components/back-link/macro.njk"           import govukBackLink %}
+{% from "govuk/components/details/macro.njk"             import govukDetails %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/error-summary/macro.njk"       import govukErrorSummary %}
@@ -8,6 +9,7 @@
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/search/macro.njk" import mojSearch -%}
 {%- from "moj/components/badge/macro.njk" import mojBadge -%}
+{% from "components/oasys-card/macro.njk"             import oasysCard %}
 {% from "components/summary-card/macro.njk"             import appSummaryCard %}
 {% from "components/rosh-widget/macro.njk" import roshWidget %}
 {% from "components/predictor-indicator/macro.njk" import predictorIndicator %}
