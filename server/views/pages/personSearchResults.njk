@@ -25,7 +25,7 @@
             <tr class="govuk-table__row" data-qa='row-{{ loop.index }}'>
                 <td class="govuk-table__cell"><a href='/cases/{{ person.crn }}/overview'>{{ person.name }}</a></td>
                 <td class="govuk-table__cell">{{ person.crn }}</td>
-                <td class="govuk-table__cell">{{ person.dateOfBirth | formatDateFromIsoString }}</td>
+                <td class="govuk-table__cell">{{ formatDateFromIsoString(person.dateOfBirth) }}</td>
             </tr>
         {% endfor %}
         </tbody>

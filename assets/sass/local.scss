@@ -1,0 +1,17 @@
+.govuk-main-wrapper {
+  min-height: 600px
+}
+
+pre.govuk-body {
+  white-space: pre-line
+}
+
+.text-secondary {
+  color: $govuk-secondary-text-colour
+}
+
+.no-wrap-tablet {
+  @include govuk-media-query($from: tablet ) {
+    white-space: nowrap;
+  }
+}

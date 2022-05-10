@@ -1,1 +1,36 @@
-<h1 class='govuk-heading-m'>Licence summary</h1>
+<h1 class='govuk-heading-m'>Licence history</h1>
+
+{{ govukSummaryList({
+    rows: [
+        {
+            key: { html: 'Last release date' },
+            value: { text: formatDateFromIsoString(case.releaseSummary.lastRelease.date) }
+        },
+        {
+            key: { html: 'Last recall date' },
+            value: { text: formatDateFromIsoString(case.releaseSummary.lastRecall.date) }
+        }
+    ]
+}) }}
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-visually-hidden">Licence history</caption>
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Contact start date</th>
+        <th scope="col" class="govuk-table__header">Description type</th>
+        <th scope="col" class="govuk-table__header">Outcome</th>
+        <th scope="col" class="govuk-table__header">Notes</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    {% for contact in case.contactSummary %}
+        <tr class="govuk-table__row" data-qa='row-{{ loop.index }}'>
+            <td class="govuk-table__cell"><span class='no-wrap-tablet'>{{ formatDateFromIsoString(contact.contactStartDate) }}</span></td>
+            <td class="govuk-table__cell">{{ contact.descriptionType }}</td>
+            <td class="govuk-table__cell">{{ contact.outcome }}</td>
+            <td class="govuk-table__cell"><pre class='govuk-body'>{{ contact.notes }}</pre></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
