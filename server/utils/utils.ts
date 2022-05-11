@@ -46,3 +46,12 @@ export const listToString = (list: string[], conjunction?: string) => {
 }
 
 export const errorMessage = (field: FormError) => (field ? { html: field.text } : undefined)
+
+export const getProperty = <T, U>(obj: T, accessor: string): U => {
+  const listOfKeys = accessor.split('.')
+  let traversed = obj
+  listOfKeys.forEach(key => {
+    traversed = traversed?.[key]
+  })
+  return traversed as unknown as U
+}

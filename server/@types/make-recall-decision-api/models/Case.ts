@@ -8,6 +8,7 @@ import { Offence } from './Offence'
 import { OffenderManager } from './OffenderManager'
 import { RiskFlag } from './Risk'
 import { RiskOfSeriousHarm } from './RiskOfSeriousHarm'
+import { ContactSummary } from './ContactSummary'
 
 export type Case = {
   personDetails: Offender
@@ -18,4 +19,5 @@ export type Case = {
     riskFlags: RiskFlag[]
     riskOfSeriousHarm: RiskOfSeriousHarm
   }
+  contactSummary: ContactSummary[]
 }
