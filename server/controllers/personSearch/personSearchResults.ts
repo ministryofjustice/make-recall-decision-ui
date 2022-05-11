@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { getPersonsByCrn } from '../data/makeDecisionApiClient'
+import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
 import { validatePersonSearch } from './validators/validatePersonSearch'
-import { routeUrls } from '../routes/routeUrls'
+import { routeUrls } from '../../routes/routeUrls'
 
 export const personSearchResults = async (req: Request, res: Response) => {
   const { crn } = req.query

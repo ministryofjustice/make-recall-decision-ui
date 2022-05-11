@@ -1,9 +1,9 @@
 import { Response } from 'express'
-import { mockReq, mockRes } from './testutils/mockRequestUtils'
+import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { personSearchResults } from './personSearchResults'
-import { getPersonsByCrn } from '../data/makeDecisionApiClient'
+import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
 
-jest.mock('../data/makeDecisionApiClient')
+jest.mock('../../data/makeDecisionApiClient')
 
 const crn = ' A1234AB '
 let res: Response

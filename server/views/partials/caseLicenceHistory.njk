@@ -4,11 +4,11 @@
     rows: [
         {
             key: { html: 'Last release date' },
-            value: { text: formatDateFromIsoString(case.releaseSummary.lastRelease.date) }
+            value: { text: formatDateFromIsoString(caseSummary.releaseSummary.lastRelease.date) }
         },
         {
             key: { html: 'Last recall date' },
-            value: { text: formatDateFromIsoString(case.releaseSummary.lastRecall.date) }
+            value: { text: formatDateFromIsoString(caseSummary.releaseSummary.lastRecall.date) }
         }
     ]
 }) }}
@@ -24,7 +24,7 @@
     </tr>
     </thead>
     <tbody class="govuk-table__body">
-    {% for contact in case.contactSummary %}
+    {% for contact in caseSummary.contactSummary %}
         <tr class="govuk-table__row" data-qa='row-{{ loop.index }}'>
             <td class="govuk-table__cell"><span class='no-wrap-tablet'>{{ formatDateFromIsoString(contact.contactStartDate) }}</span></td>
             <td class="govuk-table__cell">{{ contact.descriptionType }}</td>
