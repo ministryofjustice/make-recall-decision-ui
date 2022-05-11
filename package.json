@@ -21,7 +21,7 @@
     "record-build-info": "node ./bin/record-build-info",
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests && tsc --noEmit -p cypress",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests && tsc --noEmit -p e2e_tests",
     "test": "jest",
     "test:coverage": "jest --forceExit --coverage",
     "security_audit": "npx audit-ci --config audit-ci.json",

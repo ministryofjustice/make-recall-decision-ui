@@ -20,6 +20,6 @@ export interface NamedFormError extends FormError {
   name: string
 }
 
-export interface KeyedFormErrors extends ObjectMap<FormError> {
+export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
   list: NamedFormError[]
 }

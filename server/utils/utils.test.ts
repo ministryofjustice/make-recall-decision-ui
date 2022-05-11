@@ -1,4 +1,4 @@
-import convertToTitleCase, { makePageTitle, listToString } from './utils'
+import convertToTitleCase, { makePageTitle, listToString, getProperty } from './utils'
 
 describe('Convert to title case', () => {
   it('null string', () => {
@@ -71,5 +71,35 @@ describe('listToString', () => {
 
   it('returns a list when no conjunction supplied', () => {
     expect(listToString(['year', 'month', 'day', 'minute'])).toEqual('year, month, day, minute')
+  })
+})
+
+describe('getProperty', () => {
+  it('returns a nested property', () => {
+    const obj = {
+      legalRepresentativeInfo: {
+        email: 'davey@crockett.com',
+      },
+    }
+    const val = getProperty(obj, 'legalRepresentativeInfo.email')
+    expect(val).toEqual('davey@crockett.com')
+  })
+
+  it('returns a top level property', () => {
+    const obj = {
+      legalRepresentativeInfo: 'blah',
+    }
+    const val = getProperty(obj, 'legalRepresentativeInfo')
+    expect(val).toEqual('blah')
+  })
+
+  it("returns undefined for a nested property thtaa doesn't exist", () => {
+    const obj = {
+      legalRepresentativeInfo: {
+        email: 'davey@crockett.com',
+      },
+    }
+    const val = getProperty(obj, 'legalRepresentativeInfo.phone')
+    expect(val).toBeUndefined()
   })
 })
