@@ -71,12 +71,14 @@ describe('caseSummary', () => {
           outcome: null,
           notes:
             'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+          enforcementAction: 'action 2',
         },
         {
           contactStartDate: '2022-05-10T11:39:00',
           descriptionType: 'Police Liaison',
           outcome: null,
           notes: null,
+          enforcementAction: 'action 1',
         },
       ],
     })

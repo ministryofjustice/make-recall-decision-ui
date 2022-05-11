@@ -7,4 +7,5 @@ export type ContactSummary = {
   descriptionType: string
   outcome: string
   notes: string
+  enforcementAction: string
 }
