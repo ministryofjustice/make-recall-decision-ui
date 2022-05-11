@@ -20,6 +20,7 @@
         <th scope="col" class="govuk-table__header" aria-sort="descending">Contact start date</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Description type</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Outcome</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Enforcement action</th>
         <th scope="col" class="govuk-table__header">Notes</th>
     </tr>
     </thead>
@@ -29,6 +30,7 @@
             <td class="govuk-table__cell"><span class='no-wrap-tablet'>{{ formatDateFromIsoString(contact.contactStartDate) }}</span></td>
             <td class="govuk-table__cell">{{ contact.descriptionType }}</td>
             <td class="govuk-table__cell">{{ contact.outcome }}</td>
+            <td class="govuk-table__cell">{{ contact.enforcementAction }}</td>
             <td class="govuk-table__cell"><pre class='govuk-body'>{{ contact.notes }}</pre></td>
         </tr>
     {% endfor %}
