@@ -1,6 +1,7 @@
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
+import getCaseLicenceHistoryResponse from '../../api/responses/get-case-licence-history.json'
 import { formatDateFromIsoString } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 
@@ -10,7 +11,7 @@ context('Case summary', () => {
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseOverviewResponse })
+    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
     cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseOverviewResponse })
   })
@@ -93,6 +94,12 @@ context('Case summary', () => {
     cy.getElement('RSR MEDIUM 12').should('be.visible')
   })
 
+  it('can view the licence history page', () => {
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-history`)
+    cy.pageHeading().should('equal', 'Licence history')
+  })
+
   it('can switch between case summary pages', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
@@ -102,7 +109,7 @@ context('Case summary', () => {
     cy.clickLink('Personal details')
     cy.pageHeading().should('equal', 'Personal details')
     cy.clickLink('Licence history')
-    cy.pageHeading().should('equal', 'Licence summary')
+    cy.pageHeading().should('equal', 'Licence history')
     cy.clickLink('Licence conditions')
     cy.pageHeading().should('equal', 'Licence conditions')
     cy.clickLink('Contact log')

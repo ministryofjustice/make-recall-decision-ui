@@ -40,8 +40,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     }
   )
 
-  njkEnv.addFilter('formatDateFromIsoString', formatDateFromIsoString)
-
   njkEnv.addFilter('initialiseName', (fullName: string) => {
     // this check is for the authError page
     if (!fullName) {
@@ -52,6 +50,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   })
 
   // globals
+  njkEnv.addGlobal('formatDateFromIsoString', formatDateFromIsoString)
   njkEnv.addGlobal('makePageTitle', makePageTitle)
   njkEnv.addGlobal('errorMessage', errorMessage)
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
