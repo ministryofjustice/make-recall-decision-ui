@@ -1,6 +1,15 @@
 <h1 class='govuk-heading-m govuk-visually-hidden'>Risk</h1>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds-from-desktop">
+<div class="flex-desktop flex--row-reverse">
+    <div class="flex__item-one-third-desktop">
+        {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
+        {{ mappaWidget(caseSummary.mappa) }}
+        <div class="govuk-body predictor-timeline__heading">
+            <h2 class="govuk-heading-m">Score history</h2>
+            <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+        </div>
+        {{ predictorTimeline(caseSummary.predictorScores.historical) }}
+    </div>
+    <div class="flex__item-two-thirds-desktop">
         {{ oasysCard({
             cardHeading: 'Details of the risk',
             oasysHeading: caseSummary.natureOfRisk.oasysHeading,
@@ -35,14 +44,5 @@
          OGRS score - {{ caseSummary.predictorScores.current.OGRS.score }}
          </h2>
         <img src='/assets/images/risk-ogrs.svg' width='100%'/>
-    </div>
-    <div class="govuk-grid-column-one-third-from-desktop">
-        {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
-        {{ mappaWidget(caseSummary.mappa) }}
-        <div class="govuk-body predictor-timeline__heading">
-            <h2 class="govuk-heading-m">Score history</h2>
-            <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
-        </div>
-        {{ predictorTimeline(caseSummary.predictorScores.historical) }}
     </div>
 </div>
