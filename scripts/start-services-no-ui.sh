@@ -62,8 +62,7 @@ fi
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-# TODO: uncomment the below when we have any API dependencies to run
-#docker-compose up -d
+docker-compose up -d --scale=${API_NAME}=0
 SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun >>"${API_LOGFILE}" 2>&1 &
 popd
 
