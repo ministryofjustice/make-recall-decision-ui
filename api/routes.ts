@@ -1,5 +1,5 @@
 export const routes = {
   personSearch: '/search',
-  getCaseDetails: '/cases',
+  getCaseSummary: '/cases',
   healthCheck: '/health',
 }

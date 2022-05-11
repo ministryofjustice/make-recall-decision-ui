@@ -3,7 +3,7 @@
     <div class="govuk-grid-column-full">
         {% set indexOffenceHtml %}
             <ul class='govuk-list'>
-            {% for offence in case.indexOffences %}
+            {% for offence in caseSummary.indexOffences %}
             <li>{{ offence.description }}</li>
             {% endfor %}
             </ul>

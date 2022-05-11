@@ -1,11 +1,11 @@
 import type { RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { personSearch } from '../middleware/personSearch'
-import { personSearchResults } from '../middleware/personSearchResults'
-import { caseSummary } from '../middleware/caseSummary'
+import { personSearch } from '../controllers/personSearch/personSearch'
+import { personSearchResults } from '../controllers/personSearch/personSearchResults'
+import { caseSummary } from '../controllers/caseSummary/caseSummary'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
-import { startPage } from '../middleware/startPage'
+import { startPage } from '../controllers/startPage/startPage'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))

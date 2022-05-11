@@ -1,6 +1,6 @@
-import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { isString } from '../../utils/utils'
+import { makeErrorObject } from '../../../utils/errors'
+import { strings } from '../../../textStrings/en'
+import { isString } from '../../../utils/utils'
 
 export const validatePersonSearch = (crn?: string) => {
   let errors

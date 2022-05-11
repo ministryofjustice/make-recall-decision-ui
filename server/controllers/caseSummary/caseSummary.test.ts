@@ -1,12 +1,12 @@
 import { Response } from 'express'
-import { mockReq, mockRes } from './testutils/mockRequestUtils'
+import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { caseSummary } from './caseSummary'
-import { getCaseDetails } from '../data/makeDecisionApiClient'
-import caseOverviewApiResponse from '../../api/responses/get-case-overview.json'
-import caseRiskApiResponse from '../../api/responses/get-case-risk.json'
-import caseLicenceHistoryApiResponse from '../../api/responses/get-case-licence-history.json'
+import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
+import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
+import caseLicenceHistoryApiResponse from '../../../api/responses/get-case-licence-history.json'
 
-jest.mock('../data/makeDecisionApiClient')
+jest.mock('../../data/makeDecisionApiClient')
 
 const crn = ' A1234AB '
 let res: Response
@@ -18,12 +18,12 @@ describe('caseSummary', () => {
   })
 
   it('should return case details for a valid CRN', async () => {
-    ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     await caseSummary(req, res)
-    expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), 'risk', token)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'risk', token)
     expect(res.render).toHaveBeenCalledWith('pages/caseSummary')
-    expect(res.locals.case).toEqual(caseRiskApiResponse)
+    expect(res.locals.caseSummary).toEqual(caseRiskApiResponse)
     expect(res.locals.section).toEqual({
       id: 'risk',
       label: 'Risk',
@@ -31,11 +31,11 @@ describe('caseSummary', () => {
   })
 
   it('should return index offences for overview', async () => {
-    ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummary(req, res)
-    expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), 'overview', token)
-    expect(res.locals.case).toEqual({
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'overview', token)
+    expect(res.locals.caseSummary).toEqual({
       ...caseOverviewApiResponse,
       indexOffences: [
         {
@@ -51,18 +51,18 @@ describe('caseSummary', () => {
   })
 
   it('should return empty indexOffences array if case has no offences', async () => {
-    ;(getCaseDetails as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, offences: undefined })
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, offences: undefined })
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummary(req, res)
-    expect(res.locals.case.indexOffences).toEqual([])
+    expect(res.locals.caseSummary.indexOffences).toEqual([])
   })
 
   it('should return sorted dates for licence history', async () => {
-    ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseLicenceHistoryApiResponse)
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseLicenceHistoryApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
     await caseSummary(req, res)
-    expect(getCaseDetails).toHaveBeenCalledWith(crn.trim(), 'licence-history', token)
-    expect(res.locals.case).toEqual({
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-history', token)
+    expect(res.locals.caseSummary).toEqual({
       ...caseLicenceHistoryApiResponse,
       contactSummary: [
         {
@@ -95,18 +95,18 @@ describe('caseSummary', () => {
 
   it('should throw for an invalid section param', async () => {
     const invalidSection = 'recalls'
-    ;(getCaseDetails as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     const req = mockReq({ params: { crn, sectionId: invalidSection } })
     try {
       await caseSummary(req, res)
     } catch (err) {
-      expect(err.message).toEqual('getCaseSectionLabel: invalid sectionId: recalls')
+      expect(err.message).toEqual('getCaseSection: invalid sectionId: recalls')
     }
   })
 
   it('should throw if the API call errors', async () => {
     const apiError = { status: 500 }
-    ;(getCaseDetails as jest.Mock).mockRejectedValue(apiError)
+    ;(getCaseSummary as jest.Mock).mockRejectedValue(apiError)
     const req = mockReq({ query: { crn } })
     try {
       await caseSummary(req, res)

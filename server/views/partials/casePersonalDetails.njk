@@ -2,9 +2,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set offenderManagerHtml %}
-            <div>{{ case.offenderManager.name }} - {{ case.offenderManager.probationTeam.code }}, {{ case.offenderManager.probationTeam.label }}</div>
-            <div>Telephone: {{ case.offenderManager.phoneNumber }}</div>
-            <div>Email: <a href='mailto:{{ case.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ case.offenderManager.email }}</a></div>
+            <div>{{ caseSummary.offenderManager.name }} - {{ caseSummary.offenderManager.probationTeam.code }}, {{ caseSummary.offenderManager.probationTeam.label }}</div>
+            <div>Telephone: {{ caseSummary.offenderManager.phoneNumber }}</div>
+            <div>Email: <a href='mailto:{{ caseSummary.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ caseSummary.offenderManager.email }}</a></div>
         {% endset %}
         {{ appSummaryCard({
             titleText: 'Personal details',
@@ -13,7 +13,7 @@
                 rows: [
                     {
                         key: { html: 'Current address' },
-                        value: { text: formatSingleLineAddress(case.currentAddress) }
+                        value: { text: formatSingleLineAddress(caseSummary.currentAddress) }
                     },
                     {
                         key: { text: 'Offender manager' },
@@ -24,6 +24,6 @@
         }) }}
     </div>
     <div class="govuk-grid-column-one-third-from-desktop" data-qa='riskFlags'>
-        {{ riskFlagWidget(case.risk.flags) }}
+        {{ riskFlagWidget(caseSummary.risk.flags) }}
     </div>
 </div>

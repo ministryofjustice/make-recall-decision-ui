@@ -42,7 +42,7 @@ export const getPersonsByCrn = ({ statusCode, response }) =>
 
 export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>
   mockGet({
-    urlPathPattern: `${routes.getCaseDetails}/(.*)/${sectionId}`,
+    urlPathPattern: `${routes.getCaseSummary}/(.*)/${sectionId}`,
     statusCode,
     response,
   })
