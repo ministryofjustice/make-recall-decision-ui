@@ -4,7 +4,6 @@ import { caseSummary } from './caseSummary'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
-import caseLicenceHistoryApiResponse from '../../../api/responses/get-case-licence-history.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -58,12 +57,7 @@ describe('caseSummary', () => {
   })
 
   it('should return sorted dates for licence history', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseLicenceHistoryApiResponse)
-    const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
-    await caseSummary(req, res)
-    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-history', token)
-    expect(res.locals.caseSummary).toEqual({
-      ...caseLicenceHistoryApiResponse,
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
           contactStartDate: '2022-06-03T08:00:00',
@@ -82,6 +76,26 @@ describe('caseSummary', () => {
         },
       ],
     })
+    const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
+    await caseSummary(req, res)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-history', token)
+    expect(res.locals.caseSummary.contactSummary).toEqual([
+      {
+        contactStartDate: '2022-06-03T08:00:00',
+        descriptionType: 'Registration Review',
+        outcome: null,
+        notes:
+          'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+        enforcementAction: 'action 2',
+      },
+      {
+        contactStartDate: '2022-05-10T11:39:00',
+        descriptionType: 'Police Liaison',
+        outcome: null,
+        notes: null,
+        enforcementAction: 'action 1',
+      },
+    ])
     expect(res.locals.section).toEqual({
       id: 'licence-history',
       label: 'Licence history',

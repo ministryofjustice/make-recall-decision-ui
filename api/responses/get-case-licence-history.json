@@ -8,26 +8,129 @@
   },
   "contactSummary": [
     {
-      "contactStartDate": "2022-05-10T11:39:00",
+      "contactStartDate": "2022-06-03T07:00:00",
+      "descriptionType": "Registration Review",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-05-10T16:37:14",
+      "descriptionType": "Breach Action - Enforcement Letter Requested",
+      "outcome": null,
+      "notes": null,
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-05-10T10:39:00",
       "descriptionType": "Police Liaison",
       "outcome": null,
       "notes": null,
-      "enforcementAction": "action 1"
+      "enforcementAction": null
     },
     {
-      "contactStartDate": "2022-06-03T08:00:00",
-      "descriptionType": "Registration Review",
+      "contactStartDate": "2022-05-04T23:00:00",
+      "descriptionType": "Prison Offender Manager - Automatic Transfer",
       "outcome": null,
-      "notes": "Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.",
-      "enforcementAction": "action 2"
+      "notes": "Comment added by André Petheram on 05/05/2022 at 14:53\nTransfer Reason: Automatic Transfer\nTransfer Date: 05/05/2022",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-05-04T23:00:00",
+      "descriptionType": "Responsible Officer Change",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 14:53\nNew Details:\nResponsible Officer Type: Prison Offender Manager\nResponsible Officer: Unallocated (All Staff, Unallocated)\nStart Date: 05/05/2022 14:53:22\nAllocation Reason: Automatic Transfer",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-05-05T16:45:12",
+      "descriptionType": "Tier Change - Calculated in Auto Tiering Service",
+      "outcome": null,
+      "notes": "Comment added by Tiering Service on 05/05/2022 at 17:45\nTier Change Date: 05/05/2022 17:45:12\nTier: A-2\nTier Change Reason: Calculated in Automated Tiering Service",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-05-05T13:53:32",
+      "descriptionType": "Tier Change - Calculated in Auto Tiering Service",
+      "outcome": null,
+      "notes": "Comment added by Tiering Service on 05/05/2022 at 14:53\nTier Change Date: 05/05/2022 14:53:32\nTier: D-2\nTier Change Reason: Calculated in Automated Tiering Service",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-04-05T13:02:00",
+      "descriptionType": "Management Oversight",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 19:01\nMr Edwin said in our regular meeting that he'd had to go into a pub to charge his phone behind the bar and didn't drink anything. Didn't represent an increase in risk so sending licence compliance letter",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-04-05T12:15:00",
+      "descriptionType": "Recall Discussion SPO/OM",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 06/05/2022 at 13:11\nspoke to SPO about Charles Edwin, recommended against recall because CE was in pub but did not drink anything.",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-04-05T12:08:00",
+      "descriptionType": "Recall Discussion SPO/OM",
+      "outcome": null,
+      "notes": null,
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-04-04T11:32:00",
+      "descriptionType": "Test",
+      "outcome": "Test - Not Clean / Not Acceptable / Unsuitable",
+      "notes": "Comment added by André Petheram on 10/05/2022 at 17:37\nfailed drug test\n\n10/05/2022 17:37\nEnforcement Action: Enforcement Letter Requested",
+      "enforcementAction": "Enforcement Letter Requested"
+    },
+    {
+      "contactStartDate": "2022-03-03T00:00:00",
+      "descriptionType": "New Registration",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nNext Review Date: 03/06/2022 08:00:00\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-03-01T00:00:00",
+      "descriptionType": "Change of Institution / Establishment",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 18:52\nCustodial Status: Sentenced - In Custody\nCustodial Establishment: Wakefield (HMP)\nLocation Change Date: Tue Mar 01 00:00:00 GMT 2022",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2022-03-01T00:00:00",
+      "descriptionType": "Release from Custody",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 18:52\nRelease Type: Adult Licence",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2021-09-30T23:00:00",
+      "descriptionType": "Order/Component Commenced",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 14:53\nOrder: ORA Adult Custody (not PSS)\nLength: 36 Months",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2021-09-30T23:00:00",
+      "descriptionType": "Court Appearance",
+      "outcome": null,
+      "notes": "Comment added by André Petheram on 05/05/2022 at 14:53\nMain Offence: Assaults occasioning actual bodily harm - 00806 (x1) on 01/07/2021\nCourt: Wood Green Crown Court\nAppearance Type: Sentence\nOutcome: ORA Adult Custody (not PSS)",
+      "enforcementAction": null
+    },
+    {
+      "contactStartDate": "2021-08-11T17:36:25",
+      "descriptionType": "Tier Change - Calculated in Auto Tiering Service",
+      "outcome": null,
+      "notes": "Tier Change Date: 11/08/2021 18:36:25\nTier: D-0\nTier Change Reason: Calculated in Automated Tiering Service",
+      "enforcementAction": null
     }
   ],
   "releaseSummary": {
     "lastRelease": {
-      "date": "2017-09-15"
+      "date": "2022-03-01"
     },
-    "lastRecall": {
-      "date": "2020-10-15"
-    }
+    "lastRecall": null
   }
 }
