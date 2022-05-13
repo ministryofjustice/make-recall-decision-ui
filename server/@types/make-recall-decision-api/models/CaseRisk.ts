@@ -5,5 +5,5 @@
 import { Offender } from './Offender'
 
 export type CaseRisk = {
-  personDetails: Offender
+  personalDetailsOverview: Offender
 }

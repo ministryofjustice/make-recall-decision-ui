@@ -8,7 +8,6 @@ import { routeUrls } from '../../server/routes/routeUrls'
 context('Case summary', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
     cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
@@ -16,24 +15,51 @@ context('Case summary', () => {
     cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseOverviewResponse })
   })
 
-  it('can view the overview page', () => {
+  it('can view the overview page with a list of offences', () => {
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview')
     // offence overview
-    cy.getDefinitionListValue('Index offence').should('equal', 'Robbery (other than armed robbery)')
+    cy.getDefinitionListValue('Offences').should('contain', 'Robbery (other than armed robbery)')
+    cy.getDefinitionListValue('Offences').should('contain', 'Shoplifting')
+  })
+
+  it('changes label to Offence if there is only one', () => {
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        offences: [
+          {
+            mainOffence: true,
+            description: 'Robbery (other than armed robbery)',
+          },
+        ],
+      },
+    })
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getDefinitionListValue('Offence').should('contain', 'Robbery (other than armed robbery)')
   })
 
   it('can view the personal details page', () => {
     const crn = 'X34983'
-    const { personDetails } = getCaseOverviewResponse
+    const { personalDetailsOverview } = getCaseOverviewResponse
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
     cy.pageHeading().should('equal', 'Personal details')
 
-    cy.getText('personDetails-crn').should('equal', personDetails.crn)
-    cy.getText('personDetails-dateOfBirth').should('equal', formatDateFromIsoString(personDetails.dateOfBirth))
-    cy.getText('personDetails-age').should('equal', personDetails.age.toString())
-    cy.getText('personDetails-gender').should('equal', formatDateFromIsoString(personDetails.gender))
+    cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
+    cy.getText('personalDetailsOverview-dateOfBirth').should(
+      'equal',
+      formatDateFromIsoString(personalDetailsOverview.dateOfBirth)
+    )
+    cy.getText('personalDetailsOverview-age').should('equal', personalDetailsOverview.age.toString())
+    cy.getText('personalDetailsOverview-gender').should(
+      'equal',
+      formatDateFromIsoString(personalDetailsOverview.gender)
+    )
     // personal details
     cy.getDefinitionListValue('Current address').should('equal', '5 Anderton Road, Newham, London E15 1UJ')
     cy.getDefinitionListValue('Offender manager').should('contain', 'Jenny Eclair - N07, NPS London')
@@ -101,6 +127,7 @@ context('Case summary', () => {
   })
 
   it('can switch between case summary pages', () => {
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     // tabs

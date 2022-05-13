@@ -9,7 +9,7 @@ import { Address } from './Address'
 import { OffenderManager } from './OffenderManager'
 
 export type CasePersonalDetails = {
-  personDetails: Offender
+  personalDetailsOverview: Offender
   currentAddress: Address
   offenderManager: OffenderManager
   risk: {

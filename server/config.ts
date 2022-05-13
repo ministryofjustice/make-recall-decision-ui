@@ -62,10 +62,10 @@ export default {
     makeRecallDecisionApi: {
       url: get('MAKE_RECALL_DECISION_API_URL', 'http://localhost:9091', requiredInProduction),
       timeout: {
-        response: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 10000)),
-        deadline: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_DEADLINE', 10000)),
+        response: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_DEADLINE', 20000)),
       },
-      agent: new AgentConfig(Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 20000))),
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),

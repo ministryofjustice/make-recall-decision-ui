@@ -8,13 +8,6 @@ import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/mo
 import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
 
-const transformOverview = (caseSummary: CaseOverview) => {
-  return {
-    ...caseSummary,
-    indexOffences: caseSummary.offences ? caseSummary.offences.filter(offence => offence.mainOffence) : [],
-  }
-}
-
 const transformLicenceHistory = (caseSummary: CaseLicenceHistory) => {
   return {
     ...caseSummary,
@@ -32,7 +25,6 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
   switch (sectionId) {
     case 'overview':
       caseSummary = await getCaseSummary<CaseOverview>(crn.trim(), sectionId, token)
-      caseSummary = transformOverview(caseSummary)
       sectionLabel = 'Overview'
       break
     case 'risk':
