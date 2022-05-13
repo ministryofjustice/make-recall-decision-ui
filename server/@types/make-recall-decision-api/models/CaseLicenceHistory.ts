@@ -6,6 +6,6 @@ import { Offender } from './Offender'
 import { ContactSummary } from './ContactSummary'
 
 export type CaseLicenceHistory = {
-  personDetails: Offender
+  personalDetailsOverview: Offender
   contactSummary: ContactSummary[]
 }

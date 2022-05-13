@@ -5,5 +5,5 @@
 import { Offender } from './Offender'
 
 export type CaseContactLog = {
-  personDetails: Offender
+  personalDetailsOverview: Offender
 }

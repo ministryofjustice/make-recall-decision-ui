@@ -16,7 +16,7 @@ describe('caseSummary', () => {
     res = mockRes({ token })
   })
 
-  it('should return case details for a valid CRN', async () => {
+  it('should return case details for risk', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     await caseSummary(req, res)
@@ -29,31 +29,16 @@ describe('caseSummary', () => {
     })
   })
 
-  it('should return index offences for overview', async () => {
+  it('should return case details for overview', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'overview', token)
-    expect(res.locals.caseSummary).toEqual({
-      ...caseOverviewApiResponse,
-      indexOffences: [
-        {
-          description: 'Robbery (other than armed robbery)',
-          mainOffence: true,
-        },
-      ],
-    })
+    expect(res.locals.caseSummary).toEqual(caseOverviewApiResponse)
     expect(res.locals.section).toEqual({
       id: 'overview',
       label: 'Overview',
     })
-  })
-
-  it('should return empty indexOffences array if case has no offences', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, offences: undefined })
-    const req = mockReq({ params: { crn, sectionId: 'overview' } })
-    await caseSummary(req, res)
-    expect(res.locals.caseSummary.indexOffences).toEqual([])
   })
 
   it('should return sorted dates for licence history', async () => {
