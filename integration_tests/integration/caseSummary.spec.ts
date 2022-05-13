@@ -2,7 +2,7 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCaseLicenceHistoryResponse from '../../api/responses/get-case-licence-history.json'
-import { formatDateFromIsoString } from '../../server/utils/dates'
+import { formatDateFromIsoString, sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 
 context('Case summary', () => {
@@ -124,6 +124,19 @@ context('Case summary', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-history`)
     cy.pageHeading().should('equal', 'Licence history')
+
+    // contacts
+    const sortedByDate = sortListByDateField({
+      list: getCaseLicenceHistoryResponse.contactSummary,
+      dateKey: 'contactStartDate',
+      newestFirst: true,
+    })
+    sortedByDate.forEach((contact, index) => {
+      const opts = { parent: `[data-qa="contact-${index}"]` }
+      cy.getText('date', opts).should('equal', formatDateFromIsoString(contact.contactStartDate))
+      cy.getText('heading', opts).should('equal', contact.descriptionType)
+      cy.getText('notes', opts).should('equal', contact.notes)
+    })
   })
 
   it('can switch between case summary pages', () => {
@@ -137,10 +150,6 @@ context('Case summary', () => {
     cy.pageHeading().should('equal', 'Personal details')
     cy.clickLink('Licence history')
     cy.pageHeading().should('equal', 'Licence history')
-    cy.clickLink('Licence conditions')
-    cy.pageHeading().should('equal', 'Licence conditions')
-    cy.clickLink('Contact log')
-    cy.pageHeading().should('equal', 'Contact log')
     cy.clickLink('Overview')
     cy.pageHeading().should('equal', 'Overview')
   })
