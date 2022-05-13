@@ -60,24 +60,23 @@ if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
   popd
 fi
 
+pushd "${UI_DIR}"
+printf "\n\nBuilding/starting UI components...\n\n"
+docker-compose up -d redis
+popd
+
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 docker-compose up -d --scale=${API_NAME}=0
-SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun >>"${API_LOGFILE}" 2>&1 &
+./gradlew --stop
+HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth SYSTEM_CLIENT_ID=jon-wyatt SYSTEM_CLIENT_SECRET='yN=PtW"NOiLB5hqryd0=W7eb3XFzDUE$q5;p194n<c9V3h<<vmV5:Oz68LyK' PROBATION_OFFENDER_SEARCH_ENDPOINT_URL=https://probation-offender-search-dev.hmpps.service.justice.gov.uk SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 popd
 
-pushd "${UI_DIR}"
-printf "\n\nBuilding/starting UI components...\n\n"
-docker-compose up -d --scale=${UI_NAME}=0
-popd
 
 function wait_for {
   printf "\n\nWaiting for %s to be ready.\n\n" "${2}"
   docker run --rm --network host docker.io/jwilder/dockerize -wait "${1}" -wait-retry-interval 2s -timeout 120s
 }
-
-wait_for "http://localhost:9090/auth/health/ping" "${AUTH_NAME}"
-wait_for "http://localhost:8081/health/readiness" "${API_NAME}"
 
 printf "\n\nAll services are ready.\n\n"
 printf "\n\nNow start up the UI with 'npm run start:dev\n\n"
