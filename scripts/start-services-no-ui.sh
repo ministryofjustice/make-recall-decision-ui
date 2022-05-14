@@ -69,7 +69,7 @@ pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 docker-compose up -d --scale=${API_NAME}=0
 ./gradlew --stop
-HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth SYSTEM_CLIENT_ID= SYSTEM_CLIENT_SECRET='' PROBATION_OFFENDER_SEARCH_ENDPOINT_URL=https://probation-offender-search-dev.hmpps.service.justice.gov.uk SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
+SYSTEM_CLIENT_ID=$SYSTEM_CLIENT_ID SYSTEM_CLIENT_SECRET=$SYSTEM_CLIENT_SECRET HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth PROBATION_OFFENDER_SEARCH_ENDPOINT_URL=https://probation-offender-search-dev.hmpps.service.justice.gov.uk SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 popd
 
 

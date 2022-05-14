@@ -1,7 +1,7 @@
 import { DateTime, Settings } from 'luxon'
 import { getProperty } from '../utils'
 
-const formattedDateShortMonth = 'd MMM yyyy'
+const formattedDateShortMonth = 'd MMMM yyyy'
 
 Settings.throwOnInvalid = true
 
