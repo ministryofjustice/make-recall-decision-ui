@@ -26,6 +26,8 @@ declare global {
 
       fillInput(label: string, val: string, opts?: CommandOpts): Chainable<Element>
 
+      selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
+
       getTextInputValue(label: string, opts?: CommandOpts): Chainable<string>
 
       clickButton(label: string, opts?: CommandOpts): Chainable<Element>
