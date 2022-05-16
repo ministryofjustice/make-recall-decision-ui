@@ -8,7 +8,7 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
   if (!isString(crn) || !isString(sectionId)) {
     return res.sendStatus(400)
   }
-  const caseSection = await getCaseSection(sectionId as CaseSectionId, crn as string, res.locals.user.token)
+  const caseSection = await getCaseSection(sectionId as CaseSectionId, crn as string, res.locals.user.token, req.query)
   res.locals = {
     ...res.locals,
     ...caseSection,

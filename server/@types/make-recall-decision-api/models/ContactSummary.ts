@@ -8,4 +8,5 @@ export type ContactSummary = {
   outcome: string
   notes: string
   enforcementAction: string
+  systemGenerated: boolean
 }

@@ -124,8 +124,11 @@ context('Case summary', () => {
     cy.pageHeading().should('equal', 'Licence history')
 
     // contacts
+    const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
+      contact => contact.systemGenerated === false
+    )
     const sortedByDate = sortListByDateField({
-      list: getCaseLicenceHistoryResponse.contactSummary,
+      list: systemGeneratedRemoved,
       dateKey: 'contactStartDate',
       newestFirst: true,
     })
