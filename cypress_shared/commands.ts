@@ -109,3 +109,12 @@ Cypress.Commands.add('viewDetails', (summaryLabel, opts = { parent: 'body' }) =>
     .invoke('text')
     .then(text => text.trim())
 })
+
+Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' }) => {
+  cy.get(opts.parent)
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      cy.wrap($fieldset).contains('label', value).click()
+    })
+})
