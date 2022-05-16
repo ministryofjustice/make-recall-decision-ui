@@ -11,10 +11,12 @@
 {% endblock %}
 
 {% block beforeContent %}
+    <nav>
     {{ govukBackLink({
         text: "Back",
         href: '/search'
     }) }}
+    </nav>
 {% endblock %}
 
 {% block content %}
