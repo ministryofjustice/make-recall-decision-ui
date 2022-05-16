@@ -53,6 +53,41 @@
 }) }}
 
 <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third-from-desktop">
+        {%- set filterOptionsHtml %}
+            {{ govukRadios({
+                classes: "govuk-radios--inline govuk-radios--small",
+                idPrefix: "showSystemGenerated",
+                name: "showSystemGenerated",
+                fieldset: {
+                    legend: {
+                        text: "Include system-generated contacts",
+                        classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                items: [
+                    {
+                        value: "YES",
+                        text: "Yes",
+                        checked: filters.showSystemGenerated == 'YES'
+                    },
+                    {
+                        value: "NO",
+                        text: "No",
+                        checked: filters.showSystemGenerated == 'NO'
+                    }
+                ]
+            }) }}
+        {% endset -%}
+        <form>
+        {{ mojFilter({
+            heading: {
+                text: 'Filter'
+            },
+            optionsHtml: filterOptionsHtml
+        }) }}
+        </form>
+    </div>
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% for contact in caseSummary.contactSummary %}
             {% set titleHtml %}
@@ -60,10 +95,12 @@
             {% endset %}
 
             {% set sectionHtml %}
+                <pre class='govuk-body'>Enforcement action: {{ contact.enforcementAction }}</pre>
                 <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
             {% endset %}
             <div data-qa='contact-{{ loop.index0 }}'>
-                <div class='govuk-body govuk-!-margin-bottom-3' data-qa='date'>{{ formatDateFromIsoString(contact.contactStartDate) }}</div>
+                <div class='govuk-body govuk-!-margin-bottom-3'
+                     data-qa='date'>{{ formatDateFromIsoString(contact.contactStartDate) }}</div>
                 {{ appSummaryCard({
                     titleHtml: titleHtml,
                     classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',

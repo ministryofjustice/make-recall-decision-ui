@@ -51,6 +51,7 @@ describe('caseSummary', () => {
           notes:
             'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
           enforcementAction: 'action 2',
+          systemGenerated: false,
         },
         {
           contactStartDate: '2022-05-10T11:39:00',
@@ -58,6 +59,7 @@ describe('caseSummary', () => {
           outcome: null,
           notes: null,
           enforcementAction: 'action 1',
+          systemGenerated: false,
         },
       ],
     })
@@ -72,6 +74,7 @@ describe('caseSummary', () => {
         notes:
           'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
         enforcementAction: 'action 2',
+        systemGenerated: false,
       },
       {
         contactStartDate: '2022-05-10T11:39:00',
@@ -79,6 +82,47 @@ describe('caseSummary', () => {
         outcome: null,
         notes: null,
         enforcementAction: 'action 1',
+        systemGenerated: false,
+      },
+    ])
+    expect(res.locals.section).toEqual({
+      id: 'licence-history',
+      label: 'Licence history',
+    })
+  })
+
+  it('should filter out system generated contacts for licence history if query string set', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
+      contactSummary: [
+        {
+          contactStartDate: '2022-06-03T08:00:00',
+          descriptionType: 'Registration Review',
+          outcome: null,
+          notes:
+            'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+          enforcementAction: 'action 2',
+          systemGenerated: true,
+        },
+        {
+          contactStartDate: '2022-05-10T11:39:00',
+          descriptionType: 'Police Liaison',
+          outcome: null,
+          notes: null,
+          enforcementAction: 'action 1',
+          systemGenerated: false,
+        },
+      ],
+    })
+    const req = mockReq({ params: { crn, sectionId: 'licence-history' }, query: { showSystemGenerated: 'NO' } })
+    await caseSummary(req, res)
+    expect(res.locals.caseSummary.contactSummary).toEqual([
+      {
+        contactStartDate: '2022-05-10T11:39:00',
+        descriptionType: 'Police Liaison',
+        outcome: null,
+        notes: null,
+        enforcementAction: 'action 1',
+        systemGenerated: false,
       },
     ])
     expect(res.locals.section).toEqual({

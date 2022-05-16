@@ -1,3 +1,4 @@
+import { ParsedQs } from 'qs'
 import { CaseSectionId } from '../../../@types'
 import { CaseOverview } from '../../../@types/make-recall-decision-api/models/CaseOverview'
 import { sortListByDateField } from '../../../utils/dates'
@@ -7,21 +8,27 @@ import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRi
 import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/models/CasePersonalDetails'
 import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
+import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
 
-const transformLicenceHistory = (caseSummary: CaseLicenceHistory) => {
+const transformLicenceHistory = (caseSummary: CaseLicenceHistory, showSystemGenerated: boolean) => {
+  const filtered = showSystemGenerated
+    ? caseSummary.contactSummary
+    : caseSummary.contactSummary.filter((contact: ContactSummary) => contact.systemGenerated === false)
   return {
     ...caseSummary,
     contactSummary: sortListByDateField({
-      list: caseSummary.contactSummary,
+      list: filtered,
       dateKey: 'contactStartDate',
       newestFirst: true,
     }),
   }
 }
 
-export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string) => {
+export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
   let caseSummary
+  let props = {}
+  let showSystemGenerated
   switch (sectionId) {
     case 'overview':
       caseSummary = await getCaseSummary<CaseOverview>(crn.trim(), sectionId, token)
@@ -36,8 +43,14 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = 'Personal details'
       break
     case 'licence-history':
-      caseSummary = await getCaseSummary<CaseLicenceHistory>(crn.trim(), sectionId, token)
-      caseSummary = transformLicenceHistory(caseSummary)
+      showSystemGenerated = reqQuery.showSystemGenerated || 'NO'
+      caseSummary = await getCaseSummary<CaseLicenceHistory>(crn.trim(), 'licence-history', token)
+      caseSummary = transformLicenceHistory(caseSummary, showSystemGenerated === 'YES')
+      props = {
+        filters: {
+          showSystemGenerated,
+        },
+      }
       sectionLabel = 'Licence history'
       break
     case 'licence-conditions':
@@ -52,6 +65,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)
   }
   return {
+    ...props,
     caseSummary,
     section: {
       label: sectionLabel,
