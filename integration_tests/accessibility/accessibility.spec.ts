@@ -23,7 +23,7 @@ context('Accessibility (a11y) Checks', () => {
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
+    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
   })
 
   urls.forEach(url => {
