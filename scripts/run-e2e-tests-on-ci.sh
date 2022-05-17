@@ -8,6 +8,7 @@ SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests spl
 echo "Running feature spec(s): ${SPECS}"
 
 npx cypress run \
+  --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
   --config-file e2e_tests/cypress.json \
   --browser chrome \
   --record false \
