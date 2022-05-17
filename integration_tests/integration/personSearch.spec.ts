@@ -42,11 +42,13 @@ context('Search for a person', () => {
     cy.clickLink('Change')
     cy.fillInput('Search', crnQuery)
     cy.clickButton('Search')
-    cy.getRowValuesFromTable({ tableCaption: 'Persons found', rowQaAttr: 'row-1' }).then(([first, second, third]) => {
-      expect(first).to.equal(name)
-      expect(second).to.equal(crn)
-      expect(third).to.equal(formatDateFromIsoString(dateOfBirth))
-    })
+    cy.getRowValuesFromTable({ tableCaption: 'Persons found', rowQaAttr: `row-${crn}` }).then(
+      ([first, second, third]) => {
+        expect(first).to.equal(name)
+        expect(second).to.equal(crn)
+        expect(third).to.equal(formatDateFromIsoString(dateOfBirth))
+      }
+    )
 
     // link to case summary
     cy.clickLink(name)
