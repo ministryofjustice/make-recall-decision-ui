@@ -27,6 +27,10 @@ export default function createApp(userService: UserService): express.Application
   app.set('json spaces', 2)
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
+  app.use((req, res, next) => {
+    res.locals.env = process.env.ENVIRONMENT // DEVELOPMENT/ PRE-PRODUCTION / PRODUCTION
+    next()
+  })
 
   app.use(setUpSentry())
   app.use(appInsightsOperationId)
@@ -47,7 +51,7 @@ export default function createApp(userService: UserService): express.Application
 
   // The error handler must be before any other error middleware and after all controllers
   app.use(Sentry.Handlers.errorHandler())
-  app.use(errorHandler(process.env.NODE_ENV === 'production'))
+  app.use(errorHandler())
 
   return app
 }

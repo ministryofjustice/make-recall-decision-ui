@@ -1,37 +1,36 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import appWithAllRoutes from './routes/testutils/appSetup'
+import { getPersonsByCrn } from './data/makeDecisionApiClient'
+
+jest.mock('./data/makeDecisionApiClient')
 
 let app: Express
 
 beforeEach(() => {
-  app = appWithAllRoutes({})
+  app = appWithAllRoutes()
 })
 
-afterEach(() => {
-  jest.resetAllMocks()
-})
-
-describe('GET 404', () => {
-  it('should render content with stack in dev mode', () => {
+describe('Error pages', () => {
+  it('should render 404 page', () => {
     return request(app)
       .get('/unknown')
       .expect(404)
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).toContain('NotFoundError: Not found')
-        expect(res.text).not.toContain('Something went wrong. The error has been logged. Please try again')
+        expect(res.text).toContain('Page not found')
       })
   })
 
-  it('should render content without stack in production mode', () => {
-    return request(appWithAllRoutes({ production: true }))
-      .get('/unknown')
-      .expect(404)
+  it('should render server error page', () => {
+    const apiError = { status: 500 }
+    ;(getPersonsByCrn as jest.Mock).mockRejectedValue(apiError)
+    return request(appWithAllRoutes())
+      .get('/search-results?crn=123')
+      .expect(500)
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).toContain('Something went wrong. The error has been logged. Please try again')
-        expect(res.text).not.toContain('NotFoundError: Not found')
+        expect(res.text).toContain('Sorry, there is a problem with the service')
       })
   })
 })

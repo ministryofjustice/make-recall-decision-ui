@@ -1,13 +1,19 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Error" %}
+{% set pageTitle = makePageTitle("Sorry, there is a problem with the service") %}
 
 {% block content %}
 
-  <main class="app-container">
-    <h1>{{ message }}</h1>
-    <h2>{{ status }}</h2>
-    <pre>{{ stack }}</pre>
-  </main>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">Sorry, there is a problem with the service</h1>
+            {% if not isProduction %}
+                <hr />
+                <p class='govuk-body'>{{ message }}</p>
+                <p class='govuk-body'>Status: {{ status }}</p>
+                <pre class='govuk-body'>{{ stack }}</pre>
+            {% endif %}
+        </div>
+    </div>
 
 {% endblock %}
