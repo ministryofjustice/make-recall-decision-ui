@@ -72,7 +72,7 @@ To get debug output when running cypress:
 
 ## Run E2E tests
 
-Set the PASSWORD env var in the [E2E config file](../e2e_tests/cypress.json).
+Set the CYPRESS_USERNAME and CYPRESS_PASSWORD env vars in the [.env.sample](./.env.sample) file when you copy it to .env
 
 Run all required services as per the [readme](../README.md). Then,
 
