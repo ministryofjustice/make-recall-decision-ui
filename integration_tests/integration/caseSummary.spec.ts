@@ -10,7 +10,7 @@ context('Case summary', () => {
     cy.signIn()
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
+    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
   })
 
   it('can view the overview page with a list of offences', () => {

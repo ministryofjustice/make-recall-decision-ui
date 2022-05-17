@@ -67,7 +67,7 @@ describe('caseSummary', () => {
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
     await caseSummary(req, res)
-    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-history', token)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'all-licence-history', token)
     expect(res.locals.caseSummary.contactSummary).toEqual([
       {
         contactStartDate: '2022-06-03T08:00:00',
