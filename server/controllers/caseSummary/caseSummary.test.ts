@@ -42,6 +42,13 @@ describe('caseSummary', () => {
     })
   })
 
+  it('should convert the CRN to uppercase', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    const req = mockReq({ params: { crn: 'abc', sectionId: 'overview' } })
+    await caseSummary(req, res)
+    expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
+  })
+
   it('should return sorted dates for licence history', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
