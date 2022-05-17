@@ -127,22 +127,8 @@ context('Case summary', () => {
     const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
       contact => contact.systemGenerated === false
     )
-    let sortedByDate = sortListByDateField({
+    const sortedByDate = sortListByDateField({
       list: systemGeneratedRemoved,
-      dateKey: 'contactStartDate',
-      newestFirst: true,
-    })
-    sortedByDate.forEach((contact, index) => {
-      const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.getText('date', opts).should('equal', formatDateFromIsoString(contact.contactStartDate))
-      cy.getText('heading', opts).should('equal', contact.descriptionType)
-      cy.getText('notes', opts).should('equal', contact.notes)
-    })
-    cy.selectRadio('Include system-generated contacts', 'Yes')
-    cy.clickButton('Apply filters')
-
-    sortedByDate = sortListByDateField({
-      list: getCaseLicenceHistoryResponse.contactSummary,
       dateKey: 'contactStartDate',
       newestFirst: true,
     })
