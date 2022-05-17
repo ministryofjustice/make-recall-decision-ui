@@ -1,7 +1,7 @@
 import { getRedisAsync, createRedisClient } from './redisClient'
 import logger from '../../logger'
 
-const TTL_SECONDS = 60 * 60
+const TTL_SECONDS = 60 * 10
 
 export const fetchFromCacheOrApi = async (fetchDataFn: () => Promise<unknown>, redisKey: string) => {
   const stored = await getRedisAsync(redisKey)
