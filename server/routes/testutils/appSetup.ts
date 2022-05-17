@@ -31,7 +31,7 @@ class MockUserService extends UserService {
   }
 }
 
-function appSetup(route: Router, production: boolean): Express {
+function appSetup(route: Router): Express {
   const app = express()
 
   app.set('view engine', 'njk')
@@ -49,12 +49,12 @@ function appSetup(route: Router, production: boolean): Express {
   app.use(express.urlencoded({ extended: true }))
   app.use('/', route)
   app.use((req, res, next) => next(createError(404, 'Not found')))
-  app.use(errorHandler(production))
+  app.use(errorHandler())
 
   return app
 }
 
-export default function appWithAllRoutes({ production = false }: { production?: boolean }): Express {
+export default function appWithAllRoutes(): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
-  return appSetup(allRoutes(standardRouter(new MockUserService())), production)
+  return appSetup(allRoutes(standardRouter(new MockUserService())))
 }

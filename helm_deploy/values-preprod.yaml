@@ -12,6 +12,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-preprod.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PRE-PROD"
+    ENVIRONMENT: "PRE-PRODUCTION"
 
 generic-prometheus-alerts:
   alertSeverity: make-recall-decision-nonprod
