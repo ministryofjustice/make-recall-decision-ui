@@ -207,7 +207,13 @@ jobs:
             done
       - run:
           name: accessibility tests
-          command: npm run accessibility-test
+          command: |
+            npx cypress run \
+              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
+              --config-file integration_tests/cypress.json \
+              --config integrationFolder=integration_tests/accessibility \
+              --browser edge \
+              --record false
       - store_test_results:
           path: test_results
       - store_artifacts:
