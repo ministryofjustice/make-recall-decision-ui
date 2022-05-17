@@ -2,6 +2,7 @@ import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { caseSummary } from './caseSummary'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import * as redisExports from '../../data/redisClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 
@@ -63,6 +64,7 @@ describe('caseSummary', () => {
         },
       ],
     })
+    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-history', token)
@@ -113,6 +115,7 @@ describe('caseSummary', () => {
         },
       ],
     })
+    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'licence-history' }, query: { showSystemGenerated: 'NO' } })
     await caseSummary(req, res)
     expect(res.locals.caseSummary.contactSummary).toEqual([

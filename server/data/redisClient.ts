@@ -1,4 +1,5 @@
 import redis, { RedisClient } from 'redis'
+import logger from '../../logger'
 
 import config from '../config'
 
@@ -15,3 +16,13 @@ export const createRedisClient = () => {
   }
   return redisClient
 }
+
+export const getRedisAsync = (key: string): Promise<string | null> =>
+  new Promise(resolve => {
+    redisClient.get(key, (err, value) => {
+      if (err) {
+        logger.error(err)
+      }
+      resolve(err ? null : value)
+    })
+  })

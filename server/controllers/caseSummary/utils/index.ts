@@ -9,6 +9,7 @@ import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/mo
 import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
 import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
+import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
 
 const transformLicenceHistory = (caseSummary: CaseLicenceHistory, showSystemGenerated: boolean) => {
   const filtered = showSystemGenerated
@@ -28,23 +29,27 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
   let sectionLabel
   let caseSummary
   let props = {}
+  const trimmedCrn = crn.trim()
   let showSystemGenerated
   switch (sectionId) {
     case 'overview':
-      caseSummary = await getCaseSummary<CaseOverview>(crn.trim(), sectionId, token)
+      caseSummary = await getCaseSummary<CaseOverview>(trimmedCrn, sectionId, token)
       sectionLabel = 'Overview'
       break
     case 'risk':
-      caseSummary = await getCaseSummary<CaseRisk>(crn.trim(), sectionId, token)
+      caseSummary = await getCaseSummary<CaseRisk>(trimmedCrn, sectionId, token)
       sectionLabel = 'Risk'
       break
     case 'personal-details':
-      caseSummary = await getCaseSummary<CasePersonalDetails>(crn.trim(), sectionId, token)
+      caseSummary = await getCaseSummary<CasePersonalDetails>(trimmedCrn, sectionId, token)
       sectionLabel = 'Personal details'
       break
     case 'licence-history':
       showSystemGenerated = reqQuery.showSystemGenerated || 'NO'
-      caseSummary = await getCaseSummary<CaseLicenceHistory>(crn.trim(), 'licence-history', token)
+      caseSummary = await fetchFromCacheOrApi(
+        () => getCaseSummary<CaseLicenceHistory>(trimmedCrn, 'licence-history', token),
+        `licenceHistory:${crn}`
+      )
       caseSummary = transformLicenceHistory(caseSummary, showSystemGenerated === 'YES')
       props = {
         filters: {
@@ -54,11 +59,11 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = 'Licence history'
       break
     case 'licence-conditions':
-      caseSummary = await getCaseSummary<CaseLicenceConditions>(crn.trim(), sectionId, token)
+      caseSummary = await getCaseSummary<CaseLicenceConditions>(trimmedCrn, sectionId, token)
       sectionLabel = 'Licence conditions'
       break
     case 'contact-log':
-      caseSummary = await getCaseSummary<CaseContactLog>(crn.trim(), sectionId, token)
+      caseSummary = await getCaseSummary<CaseContactLog>(trimmedCrn, sectionId, token)
       sectionLabel = 'Contact log'
       break
     default:
