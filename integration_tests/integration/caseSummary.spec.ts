@@ -60,9 +60,9 @@ context('Case summary', () => {
     )
     // personal details
     cy.getDefinitionListValue('Current address').should('equal', '5 Anderton Road, Newham, London E15 1UJ')
-    cy.getDefinitionListValue('Offender manager').should('contain', 'Jenny Eclair - N07, NPS London')
-    cy.getDefinitionListValue('Offender manager').should('contain', 'Telephone: 07824637629')
-    cy.getDefinitionListValue('Offender manager').should('contain', 'Email: jenny@probation.com')
+    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Jenny Eclair - N07, NPS London')
+    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Telephone: 07824637629')
+    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Email: jenny@probation.com')
     cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
     // risk flags
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
