@@ -47,7 +47,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
     case 'licence-history':
       showSystemGenerated = reqQuery.showSystemGenerated || 'NO'
       caseSummary = await fetchFromCacheOrApi(
-        () => getCaseSummary<CaseLicenceHistory>(trimmedCrn, 'licence-history', token),
+        () => getCaseSummary<CaseLicenceHistory>(trimmedCrn, 'all-licence-history', token),
         `licenceHistory:${crn}`
       )
       caseSummary = transformLicenceHistory(caseSummary, showSystemGenerated === 'YES')
