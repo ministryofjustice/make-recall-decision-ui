@@ -55,6 +55,6 @@ describe('fetchFromCacheOrApi', () => {
         lastName: 'Bling',
       })
     )
-    expect(redisExpire).toHaveBeenCalledWith(redisKey, 3600)
+    expect(redisExpire).toHaveBeenCalledWith(redisKey, 600)
   })
 })

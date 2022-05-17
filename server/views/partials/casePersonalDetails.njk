@@ -3,8 +3,8 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set offenderManagerHtml %}
             <div>{{ caseSummary.offenderManager.name }} - {{ caseSummary.offenderManager.probationTeam.code }}, {{ caseSummary.offenderManager.probationTeam.label }}</div>
-            <div>Telephone: {{ caseSummary.offenderManager.phoneNumber }}</div>
-            <div>Email: <a href='mailto:{{ caseSummary.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ caseSummary.offenderManager.email }}</a></div>
+            {% if caseSummary.offenderManager.phoneNumber %}<div>Telephone: {{ caseSummary.offenderManager.phoneNumber }}</div>{% endif %}
+            {% if caseSummary.offenderManager.email %}<div>Email: <a href='mailto:{{ caseSummary.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ caseSummary.offenderManager.email }}</a></div>{% endif %}
         {% endset %}
         {{ appSummaryCard({
             titleText: 'Personal details',

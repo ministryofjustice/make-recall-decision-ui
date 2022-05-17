@@ -43,4 +43,10 @@ describe('validatePersonSearch', () => {
       },
     })
   })
+
+  it('returns the search value, converted to uppercase', () => {
+    expect(validatePersonSearch('abc')).toEqual({
+      searchValue: 'ABC',
+    })
+  })
 })

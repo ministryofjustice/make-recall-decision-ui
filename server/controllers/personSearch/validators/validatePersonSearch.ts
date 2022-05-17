@@ -6,7 +6,7 @@ export const validatePersonSearch = (crn?: string) => {
   let errors
   let unsavedValues
   const invalidType = !isString(crn)
-  let searchValue = invalidType ? crn : (crn as string).trim()
+  let searchValue = invalidType ? crn : (crn as string).trim().toUpperCase()
   const emptyString = searchValue === ''
   if (invalidType || emptyString) {
     errors = []

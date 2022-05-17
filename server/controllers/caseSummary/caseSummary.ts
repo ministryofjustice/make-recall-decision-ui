@@ -8,11 +8,12 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
   if (!isString(crn) || !isString(sectionId)) {
     return res.sendStatus(400)
   }
-  const caseSection = await getCaseSection(sectionId as CaseSectionId, crn as string, res.locals.user.token, req.query)
+  const crnFormatted = (crn as string).toUpperCase()
+  const caseSection = await getCaseSection(sectionId as CaseSectionId, crnFormatted, res.locals.user.token, req.query)
   res.locals = {
     ...res.locals,
     ...caseSection,
   }
-  res.locals.pageUrlBase = `/cases/${crn}/`
+  res.locals.pageUrlBase = `/cases/${crnFormatted}/`
   res.render('pages/caseSummary')
 }

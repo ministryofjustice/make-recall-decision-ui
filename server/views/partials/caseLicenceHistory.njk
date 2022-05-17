@@ -1,105 +1,11 @@
 <h1 class='govuk-heading-m'>Licence history</h1>
-
-{% set contentHtml %}
-    {{ govukSummaryList({
-        rows: [
-            {
-                key: { html: 'Last release date' },
-                value: { text: formatDateFromIsoString(caseSummary.releaseSummary.lastRelease.date) }
-            },
-            {
-                key: { html: 'Last recall date' },
-                value: { text: formatDateFromIsoString(caseSummary.releaseSummary.lastRecall.date) }
-            }
-        ]
-    }) }}
-
-    <table class="govuk-table" id='table-licence-history'>
-        <caption class="govuk-table__caption govuk-visually-hidden">Licence history</caption>
-        <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header" aria-sort="descending">Contact start date</th>
-            <th scope="col" class="govuk-table__header" aria-sort="none">Description type</th>
-            <th scope="col" class="govuk-table__header" aria-sort="none">Outcome</th>
-            <th scope="col" class="govuk-table__header" aria-sort="none">Enforcement action</th>
-            <th scope="col" class="govuk-table__header" aria-sort="none">System generated</th>
-            <th scope="col" class="govuk-table__header">Notes</th>
-        </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-        {% for contact in caseSummary.contactSummary %}
-            <tr class="govuk-table__row" data-qa='row-{{ loop.index }}'>
-                <td class="govuk-table__cell" data-sort-value='{{ contact.contactStartDate }}'><span
-                            class='no-wrap-tablet'>{{ formatDateFromIsoString(contact.contactStartDate) }}</span></td>
-                <td class="govuk-table__cell">{{ contact.descriptionType }}</td>
-                <td class="govuk-table__cell">{{ contact.outcome }}</td>
-                <td class="govuk-table__cell">{{ contact.enforcementAction }}</td>
-                <td class="govuk-table__cell">{{ 'Yes' if contact.systemGenerated else 'No' }}</td>
-                <td class="govuk-table__cell">
-                    <pre class='govuk-body'>{{ contact.notes }}</pre>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <script nonce='{{ cspNonce }}'>
-      new MOJFrontend.SortableTable({
-        table: $('#table-licence-history')[0],
-      })
-    </script>
-{% endset %}
-{{ govukDetails({
-    summaryHtml: "Show table",
-    html: contentHtml,
-    open: params.open
-}) }}
-
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third-from-desktop">
-        {%- set filterOptionsHtml %}
-            {{ govukRadios({
-                classes: "govuk-radios--inline govuk-radios--small",
-                idPrefix: "showSystemGenerated",
-                name: "showSystemGenerated",
-                fieldset: {
-                    legend: {
-                        text: "Include system-generated contacts",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: [
-                    {
-                        value: "YES",
-                        text: "Yes",
-                        checked: filters.showSystemGenerated == 'YES'
-                    },
-                    {
-                        value: "NO",
-                        text: "No",
-                        checked: filters.showSystemGenerated == 'NO'
-                    }
-                ]
-            }) }}
-        {% endset -%}
-        <form>
-        {{ mojFilter({
-            heading: {
-                text: 'Filter'
-            },
-            optionsHtml: filterOptionsHtml
-        }) }}
-        </form>
-    </div>
     <div class="govuk-grid-column-two-thirds-from-desktop">
-        <div class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>{{ caseSummary.contactSummary.length }} contacts</div>
         {% for contact in caseSummary.contactSummary %}
             {% set titleHtml %}
                 <div data-qa='heading'>{{ contact.descriptionType }}</div>
             {% endset %}
-
             {% set sectionHtml %}
-                <pre class='govuk-body'>Enforcement action: {{ contact.enforcementAction if contact.enforcementAction else 'None' }}</pre>
-                <pre class='govuk-body'>System generated: {{ 'Yes' if contact.systemGenerated else 'No' }}</pre>
                 <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
             {% endset %}
             <div data-qa='contact-{{ loop.index0 }}'>
@@ -117,7 +23,6 @@
                     }) if contact.outcome else undefined
                 }) }}
             </div>
-
         {% endfor %}
     </div>
 </div>
