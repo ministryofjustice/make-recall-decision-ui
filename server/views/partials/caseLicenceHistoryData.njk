@@ -20,7 +20,7 @@
             {% for contact in caseSummary.contactSummary %}
                 <tr class="govuk-table__row" data-qa='row-{{ loop.index }}'>
                     <td class="govuk-table__cell" data-sort-value='{{ contact.contactStartDate }}'><span
-                                class='no-wrap-tablet'>{{ formatDateTimeFromIsoString(contact.contactStartDate) }}</span></td>
+                                class='no-wrap-tablet'>{{ formatDateTimeFromIsoString({isoDate: contact.contactStartDate}) }}</span></td>
                     <td class="govuk-table__cell">{{ contact.descriptionType }}</td>
                     <td class="govuk-table__cell">{{ contact.outcome }}</td>
                     <td class="govuk-table__cell">{{ contact.enforcementAction }}</td>

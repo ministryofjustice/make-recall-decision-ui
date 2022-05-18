@@ -135,7 +135,10 @@ context('Case summary', () => {
     })
     sortedByDate.forEach((contact, index) => {
       const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.getText('date', opts).should('equal', formatDateTimeFromIsoString({ isoDate: contact.contactStartDate }))
+      cy.getText('date', opts).should(
+        'equal',
+        formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true })
+      )
       cy.getText('heading', opts).should('equal', contact.descriptionType)
       cy.getText('notes', opts).should('equal', contact.notes)
     })
