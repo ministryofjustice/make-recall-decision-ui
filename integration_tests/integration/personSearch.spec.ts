@@ -1,8 +1,8 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
-import { formatDateFromIsoString } from '../../server/utils/dates'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
+import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 
 context('Search for a person', () => {
   beforeEach(() => {
@@ -46,7 +46,7 @@ context('Search for a person', () => {
       ([first, second, third]) => {
         expect(first).to.equal(name)
         expect(second).to.equal(crn)
-        expect(third).to.equal(formatDateFromIsoString(dateOfBirth))
+        expect(third).to.equal(formatDateTimeFromIsoString({ isoDate: dateOfBirth }))
       }
     )
 

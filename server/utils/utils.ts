@@ -27,6 +27,8 @@ export const isDefined = (val: unknown) => typeof val !== 'undefined'
 
 export const isString = (val: unknown) => typeof val === 'string'
 
+export const isNumber = (val: unknown) => typeof val === 'number'
+
 export const formatSingleLineAddress = (address: Address) => {
   const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
   return listToString(parts, '')

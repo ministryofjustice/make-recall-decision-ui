@@ -2,8 +2,9 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCaseLicenceHistoryResponse from '../../api/responses/get-case-licence-history.json'
-import { formatDateFromIsoString, sortListByDateField } from '../../server/utils/dates'
+import { sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
+import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 
 context('Case summary', () => {
   beforeEach(() => {
@@ -51,12 +52,12 @@ context('Case summary', () => {
     cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
     cy.getText('personalDetailsOverview-dateOfBirth').should(
       'equal',
-      formatDateFromIsoString(personalDetailsOverview.dateOfBirth)
+      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.dateOfBirth })
     )
     cy.getText('personalDetailsOverview-age').should('equal', personalDetailsOverview.age.toString())
     cy.getText('personalDetailsOverview-gender').should(
       'equal',
-      formatDateFromIsoString(personalDetailsOverview.gender)
+      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender })
     )
     // personal details
     cy.getDefinitionListValue('Current address').should('equal', '5 Anderton Road, Newham, London E15 1UJ')
@@ -134,7 +135,7 @@ context('Case summary', () => {
     })
     sortedByDate.forEach((contact, index) => {
       const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.getText('date', opts).should('equal', formatDateFromIsoString(contact.contactStartDate))
+      cy.getText('date', opts).should('equal', formatDateTimeFromIsoString({ isoDate: contact.contactStartDate }))
       cy.getText('heading', opts).should('equal', contact.descriptionType)
       cy.getText('notes', opts).should('equal', contact.notes)
     })
