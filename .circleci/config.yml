@@ -222,6 +222,7 @@ jobs:
           path: integration_tests/screenshots
 
   e2e_environment_test:
+    circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
     parallelism: << pipeline.parameters.e2e-parallelism >>
