@@ -126,7 +126,7 @@
     "express": "^4.17.3",
     "express-prom-bundle": "^6.4.1",
     "express-session": "^1.17.2",
-    "govuk-frontend": "^4.0.1",
+    "govuk-frontend": "^4.1.0",
     "helmet": "^5.0.2",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.0",
