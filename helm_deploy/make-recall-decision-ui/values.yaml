@@ -13,6 +13,8 @@ generic-service:
     enabled: true
     host: app-hostname.local    # override per environment
     tlsSecretName: make-recall-decision-cert
+    annotations:
+      nginx.ingress.kubernetes.io/limit-rpm: "200"
 
   livenessProbe:
     httpGet:
