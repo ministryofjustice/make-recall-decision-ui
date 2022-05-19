@@ -10,7 +10,7 @@
             {% endset %}
             <div data-qa='contact-{{ loop.index0 }}'>
                 <div class='govuk-body govuk-!-margin-bottom-3'
-                     data-qa='date'>{{ formatDateFromIsoString(contact.contactStartDate) }}</div>
+                     data-qa='date'>{{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true}) }}</div>
                 {{ appSummaryCard({
                     titleHtml: titleHtml,
                     classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',

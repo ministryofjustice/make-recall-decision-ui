@@ -1,17 +1,7 @@
 import { DateTime, Settings } from 'luxon'
 import { getProperty } from '../utils'
 
-const formattedDateShortMonth = 'd MMMM yyyy'
-
 Settings.throwOnInvalid = true
-
-export const formatDateFromIsoString = (isoDate: string) => {
-  try {
-    return DateTime.fromISO(isoDate, { zone: 'utc' }).toFormat(formattedDateShortMonth)
-  } catch (err) {
-    return isoDate
-  }
-}
 
 export const getDateProperty = <T>(obj: T, dateKey: string) => {
   const val = getProperty<T, string>(obj, dateKey)
@@ -49,4 +39,13 @@ export const sortListByDateField = <T>({
     }
     return diffDatesForSort(dateA, dateB, newestFirst)
   })
+}
+export const europeLondon = 'Europe/London'
+
+export function getDateTimeUTC(isoDate: string) {
+  return DateTime.fromISO(isoDate, { zone: 'utc' })
+}
+
+export function getDateTimeInEuropeLondon(isoDate: string) {
+  return getDateTimeUTC(isoDate).setZone(europeLondon)
 }

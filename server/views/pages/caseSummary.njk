@@ -22,7 +22,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="govuk-caption-l">CRN: <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span><span class='govuk-!-padding-left-3 govuk-!-padding-right-3'>|</span>Date of
-                birth: <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateFromIsoString(caseSummary.personalDetailsOverview.dateOfBirth) }}</span> (age <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3'>|</span>Gender: <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
+                birth: <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span> (age <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3'>|</span>Gender: <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
             </div>
             <div class="govuk-heading-xl" data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
             {{ mojSubNavigation({

@@ -4,7 +4,7 @@ import express from 'express'
 import * as pathModule from 'path'
 import { formatSingleLineAddress, makePageTitle, errorMessage } from './utils'
 import config from '../config'
-import { formatDateFromIsoString } from './dates'
+import { formatDateTimeFromIsoString } from './dates/format'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -50,7 +50,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   })
 
   // globals
-  njkEnv.addGlobal('formatDateFromIsoString', formatDateFromIsoString)
+  njkEnv.addGlobal('formatDateTimeFromIsoString', formatDateTimeFromIsoString)
   njkEnv.addGlobal('makePageTitle', makePageTitle)
   njkEnv.addGlobal('errorMessage', errorMessage)
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)

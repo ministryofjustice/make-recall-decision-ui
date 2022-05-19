@@ -8,7 +8,7 @@
   },
   "contactSummary": [
     {
-      "contactStartDate": "2022-05-04T13:07:00",
+      "contactStartDate": "2022-05-04T13:07:00Z",
       "descriptionType": "Arrest attempt",
       "outcome": null,
       "notes": "Good afternoon, the police attempted to arrest Mr. Edwin at 18 Serata Street today, they forced entry but he was not present. We have a contractor repairing the door and changing the locks so that Mr. Edwin will not be able to return. Kind regards, PC Street",
@@ -16,7 +16,7 @@
       "systemGenerated": true
     },
     {
-      "contactStartDate": "2022-04-21T10:03:00",
+      "contactStartDate": "2022-04-21T10:03:00Z",
       "descriptionType": "Management Oversight - Recall",
       "outcome": "Decision to Recall",
       "notes": "Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.",
@@ -24,7 +24,7 @@
       "systemGenerated": false
     },
     {
-      "contactStartDate": "2022-04-20T11:30:00",
+      "contactStartDate": "2022-04-20T11:30:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager",
@@ -32,7 +32,7 @@
       "systemGenerated": true
     },
     {
-      "contactStartDate": "2022-04-13T11:30:00",
+      "contactStartDate": "2022-04-13T11:30:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager",
@@ -40,7 +40,7 @@
       "systemGenerated": false
     },
     {
-      "contactStartDate": "2022-03-16T11:30:00",
+      "contactStartDate": "2022-03-16T11:30:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 16/03/2022 at 11:30\nC - attended early R - has relapsed into alcohol abuse recently. I - discussed alcohol consumption. Charles drinks a lot, he says, all day all night. I told him I couldn’t make him the Resolutions referral because of his failures to attend. Discussed importance of attending future appointments S - has relapsed into alcohol abuse S - will refer to Resolutions now I have the right info",
@@ -48,7 +48,7 @@
       "systemGenerated": false
     },
     {
-      "contactStartDate": "2022-03-03T11:30:00",
+      "contactStartDate": "2022-03-03T11:30:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 09/03/2022 at 11:46\nsee next log",
@@ -56,7 +56,7 @@
       "systemGenerated": true
     },
     {
-      "contactStartDate": "2022-03-03T12:00:00",
+      "contactStartDate": "2022-03-03T12:00:00Z",
       "descriptionType": "Licence Compliance Letter",
       "outcome": null,
       "notes": "Comment added by Eliot Prufrock on 03/03/2022 at 12:10\nLicence Improvement Letter sent and uploaded to nDelius",
@@ -64,7 +64,7 @@
       "systemGenerated": true
     },
     {
-      "contactStartDate": "2022-03-02T12:10:00",
+      "contactStartDate": "2022-03-02T12:10:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 02/03/2022 at 12:10\nEnforcement Action: Decision Pending Response From Offender",
@@ -72,7 +72,7 @@
       "systemGenerated": false
     },
     {
-      "contactStartDate": "2022-02-23T11:30:00",
+      "contactStartDate": "2022-02-23T11:30:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 23/02/2022 at 11:30\nC - Charles attended 5 minutes late, first time at the office, introduced ourselves, presented well. R - appointment went fine last week and likes accommodation. I - discussed licence conditions, Charles understands them all. Says his family just want him to sort himself out. Substance misuse - not spoken to Resolutions and doesn’t feel like he needs it. But he says he has said this before and then needed their help but too late. I will make a referral. S - open and engaging, discussed short term goals. S - will refer to Resolutions",
@@ -80,7 +80,7 @@
       "systemGenerated": true
     },
     {
-      "contactStartDate": "2022-02-18T13:30:00",
+      "contactStartDate": "2022-02-18T13:30:00Z",
       "descriptionType": "Initial Appointment - In Office (NS)",
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 18/02/2022 at 13:30\nreported on release went through licence paperwork",
