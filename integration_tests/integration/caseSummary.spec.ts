@@ -151,6 +151,27 @@ context('Case summary', () => {
     })
   })
 
+  it('can view collapsible notes on the licence history page', () => {
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-history?collapsibleNotes=1`)
+
+    // contacts
+    const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
+      contact => contact.systemGenerated === false
+    )
+    const sortedByDate = sortListByDateField({
+      list: systemGeneratedRemoved,
+      dateKey: 'contactStartDate',
+      newestFirst: true,
+    })
+    const dates = []
+    sortedByDate.forEach((contact, index) => {
+      dates.push(contact.contactStartDate.substring(0, 10))
+      const opts = { parent: `[data-qa="contact-${index}"]` }
+      cy.viewDetails('View more detail', opts).should('equal', contact.notes)
+    })
+  })
+
   it('can switch between case summary pages', () => {
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     const crn = 'X34983'
