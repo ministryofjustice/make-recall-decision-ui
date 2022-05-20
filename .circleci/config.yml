@@ -3,8 +3,9 @@ version: 2.1
 orbs:
   browser-tools: circleci/browser-tools@1.2.5
   hmpps: ministryofjustice/hmpps@5.0.4
-  slack: circleci/slack@4.10.1
   node: circleci/node@4.5.2
+  slack: circleci/slack@4.10.1
+  sonarcloud: sonarsource/sonarcloud@1.0.3
 
 parameters:
   alerts-slack-channel:
@@ -121,11 +122,14 @@ jobs:
       - node/install-packages
       - run:
           name: unit tests
-          command: npm run test
+          command: npm run test:coverage
+      - sonarcloud/scan
       - store_test_results:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
+      - store_artifacts:
+          path: coverage
 
   integration_test:
     executor:
