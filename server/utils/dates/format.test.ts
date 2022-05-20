@@ -21,6 +21,21 @@ describe('formatDateTimeFromIsoString', () => {
     expect(formatted).toEqual('22 December 2021')
   })
 
+  it('formats a date-only as a date even if dateOnly param is true', () => {
+    const formatted = formatDateTimeFromIsoString({ isoDate: '2021-12-22', dateOnly: true })
+    expect(formatted).toEqual('22 December 2021')
+  })
+
+  it('formats a date-time as a time if timeOnly param is true', () => {
+    const formatted = formatDateTimeFromIsoString({ isoDate: '2021-12-22T08:43:00.000Z', timeOnly: true })
+    expect(formatted).toEqual('08:43')
+  })
+
+  it('formats a date-time as 24-hour time if timeOnly param is true', () => {
+    const formatted = formatDateTimeFromIsoString({ isoDate: '2021-12-22T19:43:00.000Z', timeOnly: true })
+    expect(formatted).toEqual('19:43')
+  })
+
   it('in case of error, returns the supplied string', () => {
     const formatted = formatDateTimeFromIsoString({ isoDate: '22-1-5' })
     expect(formatted).toEqual('22-1-5')

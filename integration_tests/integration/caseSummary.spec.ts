@@ -5,6 +5,7 @@ import getCaseLicenceHistoryResponse from '../../api/responses/get-case-licence-
 import { sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
+import { dedupeList } from '../../server/utils/utils'
 
 context('Case summary', () => {
   beforeEach(() => {
@@ -133,14 +134,20 @@ context('Case summary', () => {
       dateKey: 'contactStartDate',
       newestFirst: true,
     })
+    const dates = []
     sortedByDate.forEach((contact, index) => {
+      dates.push(contact.contactStartDate.substring(0, 10))
       const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.getText('date', opts).should(
-        'equal',
-        formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true })
-      )
       cy.getText('heading', opts).should('equal', contact.descriptionType)
+      cy.getText('time', opts).should(
+        'contain',
+        formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true })
+      )
       cy.getText('notes', opts).should('equal', contact.notes)
+    })
+    const dedupedDates = dedupeList(dates)
+    dedupedDates.forEach((date, index) => {
+      cy.getText(`date-${index}`).should('equal', formatDateTimeFromIsoString({ isoDate: date, dateOnly: true }))
     })
   })
 

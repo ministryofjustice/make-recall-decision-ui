@@ -49,7 +49,7 @@ describe('caseSummary', () => {
     expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
   })
 
-  it('should return sorted dates for licence history', async () => {
+  it('should return grouped by dates for licence history', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
@@ -75,25 +75,40 @@ describe('caseSummary', () => {
     const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'all-licence-history', token)
-    expect(res.locals.caseSummary.contactSummary).toEqual([
-      {
-        contactStartDate: '2022-06-03T08:00:00',
-        descriptionType: 'Registration Review',
-        outcome: null,
-        notes:
-          'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
-        enforcementAction: 'action 2',
-        systemGenerated: false,
-      },
-      {
-        contactStartDate: '2022-05-10T11:39:00',
-        descriptionType: 'Police Liaison',
-        outcome: null,
-        notes: null,
-        enforcementAction: 'action 1',
-        systemGenerated: false,
-      },
-    ])
+    expect(res.locals.caseSummary.contactSummary).toEqual({
+      groupedByKey: 'startDate',
+      items: [
+        {
+          groupValue: '2022-06-03',
+          items: [
+            {
+              contactStartDate: '2022-06-03T08:00:00',
+              descriptionType: 'Registration Review',
+              enforcementAction: 'action 2',
+              notes:
+                'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+              outcome: null,
+              startDate: '2022-06-03',
+              systemGenerated: false,
+            },
+          ],
+        },
+        {
+          groupValue: '2022-05-10',
+          items: [
+            {
+              contactStartDate: '2022-05-10T11:39:00',
+              descriptionType: 'Police Liaison',
+              enforcementAction: 'action 1',
+              notes: null,
+              outcome: null,
+              startDate: '2022-05-10',
+              systemGenerated: false,
+            },
+          ],
+        },
+      ],
+    })
     expect(res.locals.section).toEqual({
       id: 'licence-history',
       label: 'Licence history',
@@ -125,16 +140,25 @@ describe('caseSummary', () => {
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'licence-history' }, query: { showSystemGenerated: 'NO' } })
     await caseSummary(req, res)
-    expect(res.locals.caseSummary.contactSummary).toEqual([
-      {
-        contactStartDate: '2022-05-10T11:39:00',
-        descriptionType: 'Police Liaison',
-        outcome: null,
-        notes: null,
-        enforcementAction: 'action 1',
-        systemGenerated: false,
-      },
-    ])
+    expect(res.locals.caseSummary.contactSummary).toEqual({
+      groupedByKey: 'startDate',
+      items: [
+        {
+          groupValue: '2022-05-10',
+          items: [
+            {
+              contactStartDate: '2022-05-10T11:39:00',
+              descriptionType: 'Police Liaison',
+              enforcementAction: 'action 1',
+              notes: null,
+              outcome: null,
+              startDate: '2022-05-10',
+              systemGenerated: false,
+            },
+          ],
+        },
+      ],
+    })
     expect(res.locals.section).toEqual({
       id: 'licence-history',
       label: 'Licence history',
