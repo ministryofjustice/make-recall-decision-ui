@@ -110,7 +110,7 @@
     "@sentry/tracing": "^6.19.6",
     "@types/qs": "^6.9.7",
     "agentkeepalive": "^4.2.1",
-    "applicationinsights": "^2.3.1",
+    "applicationinsights": "2.3.3",
     "axe-core": "^4.4.1",
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",
