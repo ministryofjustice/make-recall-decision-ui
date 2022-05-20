@@ -24,12 +24,12 @@
       "systemGenerated": false
     },
     {
-      "contactStartDate": "2022-04-20T11:30:00Z",
+      "contactStartDate": "2022-04-21T11:30:00Z",
       "descriptionType": "Planned Office Visit (NS)",
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager",
       "enforcementAction": "Decision Pending Response from Person on Probation",
-      "systemGenerated": true
+      "systemGenerated": false
     },
     {
       "contactStartDate": "2022-04-13T11:30:00Z",

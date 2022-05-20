@@ -1,4 +1,4 @@
-import convertToTitleCase, { makePageTitle, listToString, getProperty } from './utils'
+import convertToTitleCase, { makePageTitle, listToString, getProperty, groupListByValue, dedupeList } from './utils'
 
 describe('Convert to title case', () => {
   it('null string', () => {
@@ -101,5 +101,65 @@ describe('getProperty', () => {
     }
     const val = getProperty(obj, 'legalRepresentativeInfo.phone')
     expect(val).toBeUndefined()
+  })
+})
+
+describe('groupListByValue', () => {
+  it('groups by value', () => {
+    const list = [
+      {
+        a: 1,
+        b: 2,
+        c: 3,
+      },
+      {
+        a: 5,
+        b: 3,
+        c: 9,
+      },
+      {
+        a: 5,
+        b: 2,
+        c: 9,
+      },
+    ]
+    const grouped = groupListByValue<{ a: number; b: number; c: number }>({ list, groupByKey: 'b' })
+    expect(grouped).toEqual({
+      groupedByKey: 'b',
+      items: [
+        {
+          groupValue: 2,
+          items: [
+            {
+              a: 1,
+              b: 2,
+              c: 3,
+            },
+            {
+              a: 5,
+              b: 2,
+              c: 9,
+            },
+          ],
+        },
+        {
+          groupValue: 3,
+          items: [
+            {
+              a: 5,
+              b: 3,
+              c: 9,
+            },
+          ],
+        },
+      ],
+    })
+  })
+})
+
+describe('dedupeList', () => {
+  it('removes duplicates', () => {
+    const result = dedupeList(['aa', 'bb', 'aa', 'c', 'ddd'])
+    expect(result).toEqual(['aa', 'bb', 'c', 'ddd'])
   })
 })

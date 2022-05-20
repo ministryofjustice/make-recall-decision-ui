@@ -15,19 +15,32 @@ export const padWithZeroes = (value?: number): string => {
   return padded.length < 2 ? `0${padded}` : padded
 }
 
-export const formatDateTimeFromIsoString = ({ isoDate, dateOnly = false }: { isoDate: string; dateOnly?: boolean }) => {
-  const dateAndTimePresentationFormat = `${dateFormat}' at '${timeFormat}`
+export const formatDateTimeFromIsoString = ({
+  isoDate,
+  dateOnly = false,
+  timeOnly = false,
+}: {
+  isoDate: string
+  dateOnly?: boolean
+  timeOnly?: boolean
+}) => {
   if (!isDefined(isoDate)) {
     return undefined
   }
+  const dateAndTimePresentationFormat = `${dateFormat}' at '${timeFormat}`
   try {
-    const includeTime = isoDate.length > 10 && !dateOnly
     const dateTime = getDateTimeInEuropeLondon(isoDate)
 
-    if (includeTime) {
-      return dateTime.toFormat(dateAndTimePresentationFormat)
+    // date only
+    if (dateOnly || isoDate.length === 10) {
+      return dateTime.toFormat(dateFormat)
     }
-    return dateTime.toFormat(dateFormat)
+    // time only
+    if (timeOnly && isoDate.length > 10) {
+      return dateTime.toFormat(timeFormat)
+    }
+    // date and time
+    return dateTime.toFormat(dateAndTimePresentationFormat)
   } catch (err) {
     return isoDate
   }

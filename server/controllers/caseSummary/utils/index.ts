@@ -1,33 +1,19 @@
 import { ParsedQs } from 'qs'
 import { CaseSectionId } from '../../../@types'
 import { CaseOverview } from '../../../@types/make-recall-decision-api/models/CaseOverview'
-import { sortListByDateField } from '../../../utils/dates'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
 import { CaseLicenceHistory } from '../../../@types/make-recall-decision-api/models/CaseLicenceHistory'
 import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRisk'
 import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/models/CasePersonalDetails'
 import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
-import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
-
-const transformLicenceHistory = (caseSummary: CaseLicenceHistory, showSystemGenerated: boolean) => {
-  const filtered = showSystemGenerated
-    ? caseSummary.contactSummary
-    : caseSummary.contactSummary.filter((contact: ContactSummary) => contact.systemGenerated === false)
-  return {
-    ...caseSummary,
-    contactSummary: sortListByDateField({
-      list: filtered,
-      dateKey: 'contactStartDate',
-      newestFirst: true,
-    }),
-  }
-}
+import { transformLicenceHistory } from './licenceHistory'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
   let caseSummary
+  let caseSummaryRaw
   let props = {}
   const trimmedCrn = crn.trim()
   let showSystemGenerated
@@ -47,11 +33,11 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
     case 'licence-history':
     case 'licence-history-data':
       showSystemGenerated = reqQuery.showSystemGenerated || 'NO'
-      caseSummary = await fetchFromCacheOrApi(
+      caseSummaryRaw = await fetchFromCacheOrApi(
         () => getCaseSummary<CaseLicenceHistory>(trimmedCrn, 'all-licence-history', token),
         `licenceHistory:${crn}`
       )
-      caseSummary = transformLicenceHistory(caseSummary, showSystemGenerated === 'YES')
+      caseSummary = transformLicenceHistory(caseSummaryRaw, showSystemGenerated === 'YES')
       props = {
         filters: {
           showSystemGenerated,
@@ -73,6 +59,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
   return {
     ...props,
     caseSummary,
+    caseSummaryRaw,
     section: {
       label: sectionLabel,
       id: sectionId,
