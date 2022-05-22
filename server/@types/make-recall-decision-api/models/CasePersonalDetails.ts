@@ -8,7 +8,7 @@ import { RiskOfSeriousHarm } from './RiskOfSeriousHarm'
 import { Address } from './Address'
 import { OffenderManager } from './OffenderManager'
 
-export type CasePersonalDetails = {
+export type PersonalDetailsResponse = {
   personalDetailsOverview: Offender
   currentAddress: Address
   offenderManager: OffenderManager

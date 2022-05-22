@@ -1,10 +1,10 @@
 import { ParsedQs } from 'qs'
 import { CaseSectionId, ObjectMap } from '../../../@types'
-import { CaseOverview } from '../../../@types/make-recall-decision-api/models/CaseOverview'
+import { CaseSummaryOverviewResponse } from '../../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
 import { CaseLicenceHistory } from '../../../@types/make-recall-decision-api/models/CaseLicenceHistory'
 import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRisk'
-import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/models/CasePersonalDetails'
+import { PersonalDetailsResponse } from '../../../@types/make-recall-decision-api/models/PersonalDetailsResponse'
 import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
@@ -19,7 +19,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
   const trimmedCrn = crn.trim()
   switch (sectionId) {
     case 'overview':
-      caseSummary = await getCaseSummary<CaseOverview>(trimmedCrn, sectionId, token)
+      caseSummary = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Overview'
       break
     case 'risk':
@@ -27,7 +27,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = 'Risk'
       break
     case 'personal-details':
-      caseSummary = await getCaseSummary<CasePersonalDetails>(trimmedCrn, sectionId, token)
+      caseSummary = await getCaseSummary<PersonalDetailsResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Personal details'
       break
     case 'licence-history':

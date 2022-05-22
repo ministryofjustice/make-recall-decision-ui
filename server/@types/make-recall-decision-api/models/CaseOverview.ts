@@ -5,7 +5,7 @@
 import { Offender } from './Offender'
 import { Offence } from './Offence'
 
-export type CaseOverview = {
+export type CaseSummaryOverviewResponse = {
   personalDetailsOverview: Offender
   offences: Offence[]
 }
