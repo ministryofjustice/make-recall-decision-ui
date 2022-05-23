@@ -1,4 +1,5 @@
 import { exactMatchIgnoreWhitespace } from './utils'
+import { splitIsoDateToParts } from '../server/utils/dates/convert'
 
 Cypress.Commands.add('pageHeading', () =>
   cy
@@ -83,9 +84,9 @@ Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 
     .then(text => text.trim())
 )
 
-Cypress.Commands.add('assertErrorMessage', ({ fieldId, errorText }) => {
-  cy.get(`[href="#${fieldId}"]`).should('have.text', errorText)
-  cy.get(`#${fieldId}-error`)
+Cypress.Commands.add('assertErrorMessage', ({ fieldGroupId, fieldName, errorText }) => {
+  cy.get(`[href="#${fieldGroupId || fieldName}"]`).should('have.text', errorText)
+  cy.get(`#${fieldName}-error`)
     .invoke('text')
     .then(text => expect(text.trim()).to.contain(errorText))
 })
@@ -117,4 +118,16 @@ Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' 
     .then($fieldset => {
       cy.wrap($fieldset).contains('label', value).click()
     })
+})
+
+Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-content' }) => {
+  const { day, month, year, hour, minute } = splitIsoDateToParts(isoDateTime)
+  const options = { ...opts, clearExistingText: true }
+  cy.fillInput('Day', day, options)
+  cy.fillInput('Month', month, options)
+  cy.fillInput('Year', year, options)
+  if (isoDateTime.length > 10) {
+    cy.fillInput('Hour', hour, options)
+    cy.fillInput('Minute', minute, options)
+  }
 })

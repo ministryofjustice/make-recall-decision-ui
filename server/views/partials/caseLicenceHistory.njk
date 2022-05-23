@@ -1,7 +1,68 @@
+{% include '../partials/error-summary.njk' %}
 <h1 class='govuk-heading-m'>Licence history</h1>
 <div class="govuk-grid-row">
+    {% if flags.dateFilters %}
+    <div class="govuk-grid-column-one-third-from-desktop">
+        {%- set filterOptionsHtml %}
+            {{ govukDateInput({
+                id: "dateFrom",
+                namePrefix: "dateFrom",
+                fieldset: {
+                    legend: {
+                        html: "Date range<span class='govuk-visually-hidden'> From</span>",
+                        classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
+                errorMessage: errorMessage(errors.dateFrom)
+            }) }}
+            {{ govukDateInput({
+                id: "dateTo",
+                namePrefix: "dateTo",
+                fieldset: {
+                    legend: {
+                        html: "<span class='govuk-visually-hidden'>Date range </span>To",
+                        classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
+                errorMessage: errorMessage(errors.dateTo)
+            }) }}
+        {% endset -%}
+        <form>
+            <input type='hidden' name='dateFilters' value='1' />
+            {{ mojFilter({
+                heading: {
+                    text: 'Filter'
+                },
+                selectedFilters: {
+                    heading: {
+                        text: 'Selected filters'
+                    },
+                    clearLink: {
+                        text: 'Clear filters',
+                        href: urlInfo.path
+                    },
+                    categories: [{
+                        heading: {
+                            text: 'Date range'
+                        },
+                        items: [{
+                            href: urlInfo.path,
+                            text: caseSummary.filters.dateRange.selectedLabel
+                        }]
+                    }]
+                } if caseSummary.filters.dateRange.selectedLabel else undefined,
+                optionsHtml: filterOptionsHtml
+            }) }}
+        </form>
+    </div>
+    {% endif %}
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set innerLoopIndex = 0 %}
+        <div class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>{{ caseSummary.contactCount }}
+            contacts
+        </div>
         {% for group in caseSummary.contactSummary.items %}
             <div class='govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
                 {{ formatDateTimeFromIsoString({ isoDate: group.groupValue, dateOnly: true}) }}

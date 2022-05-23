@@ -7,11 +7,12 @@ import { caseSummary } from '../controllers/caseSummary/caseSummary'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
 import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagDefaults, readFeatureFlags } from '../middleware/featureFlags'
+import { parseUrl } from '../middleware/parseUrl'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  router.use(getStoredSessionData, readFeatureFlags(featureFlagDefaults))
+  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagDefaults))
   get('/', startPage)
   get('/search', personSearch)
   get('/search-results', personSearchResults)
