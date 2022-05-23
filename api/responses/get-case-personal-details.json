@@ -20,8 +20,5 @@
       "code": "N07",
       "label": "NPS London"
     }
-  },
-  "risk": {
-    "flags": ["Victim contact", "Mental health issues", "MAPPA"]
   }
 }

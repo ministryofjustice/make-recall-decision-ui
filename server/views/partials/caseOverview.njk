@@ -1,6 +1,6 @@
 <h1 class='govuk-heading-m govuk-visually-hidden'>Overview</h1>
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set offenceHtml %}
             <ul class='govuk-list'>
             {% for offence in caseSummary.offences %}
@@ -20,5 +20,8 @@
                 ]
             })
         }) }}
+    </div>
+    <div class="govuk-grid-column-one-third-from-desktop" data-qa='riskFlags'>
+        {{ riskFlagWidget(caseSummary.risk.flags) }}
     </div>
 </div>
