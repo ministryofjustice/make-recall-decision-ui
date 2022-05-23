@@ -25,7 +25,7 @@ context('Search for a person', () => {
     // no search term entered
     cy.clickButton('Search')
     cy.assertErrorMessage({
-      fieldGroupId: 'crn',
+      fieldName: 'crn',
       errorText: 'Enter a Case Reference Number (CRN)',
     })
 

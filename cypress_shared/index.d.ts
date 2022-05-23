@@ -46,7 +46,7 @@ declare global {
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 
-      assertErrorMessage(args: { fieldGroupId: string; fieldName?: string; errorText: string })
+      assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
     }
   }
 }
