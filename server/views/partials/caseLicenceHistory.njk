@@ -117,7 +117,7 @@
                     {{ appSummaryCard({
                         titleHtml: titleHtml,
                         classes: 'govuk-!-margin-bottom-3',
-                        html: sectionHtml,
+                        html: sectionHtml if contact.notes else undefined,
                         actionsHtml: actionsHtml
                     }) }}
                 </div>
