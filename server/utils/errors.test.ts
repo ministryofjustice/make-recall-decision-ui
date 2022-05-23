@@ -114,5 +114,10 @@ describe('Error messages', () => {
       const error = formatValidationErrorMessage({ errorId: 'minLengthDateParts' }, 'date of sentence')
       expect(error).toEqual('The date of sentence must be in the correct format, like 06 05 2021')
     })
+
+    it('renders "minValueDateYear" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'minValueDateYear' }, 'date of sentence')
+      expect(error).toEqual('The date of sentence must include a year after 1900')
+    })
   })
 })
