@@ -30,6 +30,8 @@ declare global {
 
       getTextInputValue(label: string, opts?: CommandOpts): Chainable<string>
 
+      enterDateTime(isoDateTime: string, opts?: CommandOpts): Chainable<void>
+
       clickButton(label: string, opts?: CommandOpts): Chainable<Element>
 
       clickLink(label: string, opts?: CommandOpts): Chainable<Element>
@@ -44,7 +46,7 @@ declare global {
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 
-      assertErrorMessage(args: { fieldId: string; errorText: string })
+      assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
     }
   }
 }
