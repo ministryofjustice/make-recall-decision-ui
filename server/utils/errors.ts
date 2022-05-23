@@ -1,6 +1,7 @@
 import { FormError, KeyedFormErrors, NamedFormError, ObjectMap } from '../@types'
 import { ValidationError } from '../@types/dates'
 import { listToString } from './utils'
+import { MIN_VALUE_YEAR } from './dates/convert'
 
 export const makeErrorObject = ({
   id,
@@ -51,6 +52,8 @@ export const formatValidationErrorMessage = (validationError: ValidationError, f
       return `The ${fieldLabel} must include a ${listToString(validationError.invalidParts, 'and')}`
     case 'minLengthDateTimeParts':
       return `The ${fieldLabel} must be in the correct format, like 06 05 2021 09:03`
+    case 'minValueDateYear':
+      return `The ${fieldLabel} must include a year after ${MIN_VALUE_YEAR}`
     case 'minLengthDateParts':
       return `The ${fieldLabel} must be in the correct format, like 06 05 2021`
     case 'fromDateAfterToDate':

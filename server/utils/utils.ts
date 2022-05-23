@@ -20,7 +20,7 @@ const convertToTitleCase = (sentence: string): string =>
 
 export default convertToTitleCase
 
-export const makePageTitle = (pageHeading: string, hasErrors: boolean) =>
+export const makePageTitle = ({ pageHeading, hasErrors }: { pageHeading: string; hasErrors: boolean }) =>
   `${hasErrors ? 'Error: ' : ''}${pageHeading} - ${config.applicationName}`
 
 export const isDefined = (val: unknown) => typeof val !== 'undefined'

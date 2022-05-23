@@ -1,4 +1,4 @@
-{% include '../partials/error-summary.njk' %}
+
 <h1 class='govuk-heading-m'>Licence history</h1>
 <div class="govuk-grid-row">
     {% if flags.dateFilters %}
@@ -29,6 +29,7 @@
                 errorMessage: errorMessage(errors.dateTo)
             }) }}
         {% endset -%}
+        <div class='govuk-!-margin-bottom-4'>
         <form>
             <input type='hidden' name='dateFilters' value='1' />
             {{ mojFilter({
@@ -56,6 +57,7 @@
                 optionsHtml: filterOptionsHtml
             }) }}
         </form>
+        </div>
     </div>
     {% endif %}
     <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -63,6 +65,7 @@
         <div class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>{{ caseSummary.contactCount }}
             contacts
         </div>
+        <div class="filter-toggle"></div>
         {% for group in caseSummary.contactSummary.items %}
             <div class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
                 {{ formatDateTimeFromIsoString({ isoDate: group.groupValue, dateOnly: true}) }}
@@ -114,7 +117,7 @@
                     {{ appSummaryCard({
                         titleHtml: titleHtml,
                         classes: 'govuk-!-margin-bottom-3',
-                        html: sectionHtml,
+                        html: sectionHtml if contact.notes else undefined,
                         actionsHtml: actionsHtml
                     }) }}
                 </div>
@@ -123,3 +126,23 @@
         {% endfor %}
     </div>
 </div>
+
+<script nonce='{{ cspNonce }}'>
+  new MOJFrontend.FilterToggleButton({
+    bigModeMediaQuery: "(min-width: 48.063em)",
+    startHidden: false,
+    toggleButton: {
+      container: $(".filter-toggle"),
+      showText: "Show filter",
+      hideText: "Hide filter",
+      classes: "govuk-button--secondary",
+    },
+    closeButton: {
+      container: $(".moj-filter__header-action"),
+      text: "Close",
+    },
+    filter: {
+      container: $(".moj-filter"),
+    },
+  });
+</script>

@@ -3,7 +3,7 @@ import { ObjectMap } from '../@types'
 
 export const featureFlagDefaults = {
   collapsibleNotes: true,
-  dateFilters: false,
+  dateFilters: true,
 }
 
 export const readFeatureFlags = (flags: ObjectMap<boolean>) => (req: Request, res: Response, next: NextFunction) => {
