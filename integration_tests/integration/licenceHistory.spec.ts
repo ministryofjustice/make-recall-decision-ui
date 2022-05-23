@@ -71,7 +71,7 @@ context('Licence history', () => {
 
   it('can filter licence history contacts by date range', () => {
     const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/licence-history?dateFilters=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/licence-history`)
 
     // apply filters without entering dates
     cy.clickButton('Apply filters')
