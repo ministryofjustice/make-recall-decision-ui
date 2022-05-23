@@ -50,7 +50,7 @@ context('Licence history', () => {
 
   it('can view collapsible notes on the licence history page', () => {
     const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/licence-history?collapsibleNotes=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/licence-history`)
 
     // contacts
     const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
