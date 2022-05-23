@@ -120,7 +120,7 @@ context('Licence history', () => {
     cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
     cy.clickButton('Apply filters')
     cy.getElement('2 contacts').should('exist')
-    cy.getLinkHref('13-03-2022 to 13-04-2022').should('equal', `/cases/${crn}/licence-history`)
+    cy.getLinkHref('13-03-2022 to 13-04-2022').should('equal', `/cases/${crn}/licence-history?dateFilters=1`)
 
     // clear filters
     cy.clickLink('Clear filters')

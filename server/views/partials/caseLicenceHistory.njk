@@ -41,14 +41,14 @@
                     },
                     clearLink: {
                         text: 'Clear filters',
-                        href: urlInfo.path
+                        href: urlInfo.path + '?dateFilters=1'
                     },
                     categories: [{
                         heading: {
                             text: 'Date range'
                         },
                         items: [{
-                            href: urlInfo.path,
+                            href: urlInfo.path + '?dateFilters=1',
                             text: caseSummary.filters.dateRange.selectedLabel
                         }]
                     }]
