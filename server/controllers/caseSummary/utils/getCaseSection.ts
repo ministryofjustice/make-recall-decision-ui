@@ -1,5 +1,5 @@
 import { ParsedQs } from 'qs'
-import { CaseSectionId } from '../../../@types'
+import { CaseSectionId, ObjectMap } from '../../../@types'
 import { CaseOverview } from '../../../@types/make-recall-decision-api/models/CaseOverview'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
 import { CaseLicenceHistory } from '../../../@types/make-recall-decision-api/models/CaseLicenceHistory'
@@ -8,15 +8,15 @@ import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/mo
 import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
-import { transformLicenceHistory } from './licenceHistory'
+import { transformLicenceHistory } from './transformLicenceHistory'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
   let caseSummary
   let caseSummaryRaw
-  let props = {}
+  let transformed
+  let errors
   const trimmedCrn = crn.trim()
-  let showSystemGenerated
   switch (sectionId) {
     case 'overview':
       caseSummary = await getCaseSummary<CaseOverview>(trimmedCrn, sectionId, token)
@@ -32,17 +32,16 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       break
     case 'licence-history':
     case 'licence-history-data':
-      showSystemGenerated = reqQuery.showSystemGenerated || 'NO'
       caseSummaryRaw = await fetchFromCacheOrApi(
         () => getCaseSummary<CaseLicenceHistory>(trimmedCrn, 'all-licence-history', token),
         `licenceHistory:${crn}`
       )
-      caseSummary = transformLicenceHistory(caseSummaryRaw, showSystemGenerated === 'YES')
-      props = {
-        filters: {
-          showSystemGenerated,
-        },
-      }
+      transformed = transformLicenceHistory({
+        caseSummary: caseSummaryRaw,
+        filters: reqQuery as ObjectMap<string>,
+      })
+      errors = transformed.errors
+      caseSummary = transformed.data
       sectionLabel = 'Licence history'
       break
     case 'licence-conditions':
@@ -57,7 +56,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)
   }
   return {
-    ...props,
+    errors,
     caseSummary,
     caseSummaryRaw,
     section: {
