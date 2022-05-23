@@ -19,7 +19,11 @@ The app requires:
 
 Install dependencies using `npm install`, ensuring you are using >= `Node v16.x`
 
-Copy the .env.sample file in the root of this repo and name the copy as .env, then complete with the missing env values (the team will provide them).
+There are 2 .env sample files depending on what you are trying to do:
+- To run the setup pointing at local services, then use the .env.local.sample file in the root of this repo
+- To run the setup pointing at dev services, then use the .env.dev.sample file in the root of this repo
+
+Name the copy as .env, then complete with the missing env values (the team will provide them).
 
 In your shell config eg .zshrc, set:
 ```
