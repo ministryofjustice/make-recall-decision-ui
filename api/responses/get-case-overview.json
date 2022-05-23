@@ -15,5 +15,8 @@
       "mainOffence": false,
       "description": "Shoplifting"
     }
-  ]
+  ],
+  "risk": {
+    "flags": ["Victim contact", "Mental health issues", "MAPPA"]
+  }
 }

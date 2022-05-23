@@ -21,6 +21,10 @@ context('Case summary', () => {
     // offence overview
     cy.getDefinitionListValue('Offences').should('contain', 'Robbery (other than armed robbery)')
     cy.getDefinitionListValue('Offences').should('contain', 'Shoplifting')
+    // risk flags
+    cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
   it('changes label to Offence if there is only one', () => {
@@ -64,10 +68,6 @@ context('Case summary', () => {
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Telephone: 07824637629')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Email: jenny@probation.com')
     cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
-    // risk flags
-    cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
-    cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
-    cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
   it('can view the risk page', () => {
