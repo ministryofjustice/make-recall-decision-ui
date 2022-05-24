@@ -4,7 +4,7 @@ import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc, moveDateToEndOfDay } from '../../../utils/dates/convert'
 import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
 import { dateHasError } from '../../../utils/dates'
-import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/errors'
+import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 
 const parseDateParts = ({
   fieldPrefix,
@@ -48,7 +48,7 @@ export const filterContactsByDateRange = ({
       errors.push(
         makeErrorObject({
           name: 'dateFrom',
-          id: 'dateFrom-day',
+          id: invalidDateInputPart(dateFromIso as ValidationError, 'dateFrom'),
           text: formatValidationErrorMessage(dateFromIso as ValidationError, 'from date'),
         })
       )
@@ -57,7 +57,7 @@ export const filterContactsByDateRange = ({
       errors.push(
         makeErrorObject({
           name: 'dateTo',
-          id: 'dateTo-day',
+          id: invalidDateInputPart(dateToIso as ValidationError, 'dateTo'),
           text: formatValidationErrorMessage(dateToIso as ValidationError, 'to date'),
         })
       )

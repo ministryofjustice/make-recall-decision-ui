@@ -17,7 +17,31 @@ const filterPartsForEmptyStrings = (parts: unknown[]): DatePartNames[] =>
   parts.map(({ name, value }) => (value === '' ? name : undefined)).filter(Boolean)
 
 const filterPartsForMinimumLength = (parts: unknown[]): DatePartNames[] =>
-  parts.map(({ name, value, minLength }) => (value.length < (minLength || 2) ? name : undefined)).filter(Boolean)
+  parts.map(({ name, value, minLength }) => (value.length < minLength ? name : undefined)).filter(Boolean)
+
+const filterPartsForValueRange = (parts: unknown[]): DatePartNames[] =>
+  parts
+    .map(({ name, numberValue, minValue, maxValue }) =>
+      numberValue < minValue || numberValue > maxValue ? name : undefined
+    )
+    .filter(Boolean)
+
+const convertDatePartsToNumbers = (parts: DateTimePart[]) => {
+  return parts.map(part => {
+    let numberValue = parseInt(part.value, 10)
+    if (part.name === 'year') {
+      if (part.value.length === 2) {
+        const currentYear = parseInt(DateTime.now().year.toString().substring(2), 10)
+        if (numberValue < currentYear) {
+          numberValue = 2000 + numberValue
+        } else {
+          numberValue = 1900 + numberValue
+        }
+      }
+    }
+    return { ...part, numberValue }
+  })
+}
 
 export const MIN_VALUE_YEAR = 1900
 
@@ -30,70 +54,63 @@ export const convertGmtDatePartsToUtc = (
       errorId: 'blankDateTime',
     }
   }
-  const dateParts = [
-    { name: 'day', value: day },
-    { name: 'month', value: month },
-    { name: 'year', value: year, minLength: 4 },
-  ]
-  let timeParts = [] as DateTimePart[]
+  let dateParts = [
+    { name: 'day', value: day, minLength: 2, minValue: 1, maxValue: 31 },
+    { name: 'month', value: month, minLength: 2, minValue: 1, maxValue: 12 },
+    { name: 'year', value: year, minLength: 4, minValue: 1900, maxValue: 2200 },
+  ] as DateTimePart[]
   if (options.includeTime) {
-    timeParts = [
-      { name: 'hour', value: hour },
-      { name: 'minute', value: minute },
+    dateParts = [
+      ...dateParts,
+      { name: 'hour', value: hour, minValue: 0, maxValue: 23, minLength: 2 },
+      { name: 'minute', value: minute, minValue: 0, maxValue: 59, minLength: 2 },
     ]
-    let dateTimePartErrors = filterPartsForEmptyStrings([...dateParts, ...timeParts])
-    if (dateTimePartErrors.length) {
-      if (areStringArraysTheSame(dateTimePartErrors, ['day', 'month', 'year'])) {
-        return {
-          errorId: 'missingDate',
-        }
-      }
-      if (areStringArraysTheSame(dateTimePartErrors, ['hour', 'minute'])) {
-        return {
-          errorId: 'missingTime',
-        }
-      }
+  }
+
+  let dateTimePartErrors = filterPartsForEmptyStrings(dateParts)
+  if (dateTimePartErrors.length) {
+    if (areStringArraysTheSame(dateTimePartErrors, ['day', 'month', 'year'])) {
       return {
-        errorId: 'missingDateParts',
+        errorId: 'missingDate',
+      }
+    }
+    if (areStringArraysTheSame(dateTimePartErrors, ['hour', 'minute'])) {
+      return {
+        errorId: 'missingTime',
+      }
+    }
+    return {
+      errorId: 'missingDateParts',
+      invalidParts: dateTimePartErrors,
+    }
+  }
+  if (options.validatePartLengths) {
+    dateTimePartErrors = filterPartsForMinimumLength(dateParts)
+    if (dateTimePartErrors.length) {
+      return {
+        errorId: options.includeTime ? 'minLengthDateTimeParts' : 'minLengthDateParts',
         invalidParts: dateTimePartErrors,
       }
     }
-    if (options.validatePartLengths) {
-      dateTimePartErrors = filterPartsForMinimumLength([...dateParts, ...timeParts])
-      if (dateTimePartErrors.length) {
-        return {
-          errorId: 'minLengthDateTimeParts',
-          invalidParts: dateTimePartErrors,
-        }
-      }
-    }
-  }
-  let datePartErrors = filterPartsForEmptyStrings(dateParts)
-  if (datePartErrors.length) {
-    return {
-      errorId: 'missingDateParts',
-      invalidParts: datePartErrors,
-    }
   }
 
-  if (options.validatePartLengths) {
-    datePartErrors = filterPartsForMinimumLength(dateParts)
-    if (datePartErrors.length) {
-      return {
-        errorId: 'minLengthDateParts',
-        invalidParts: datePartErrors,
-      }
-    }
-  }
+  dateParts = convertDatePartsToNumbers(dateParts)
 
-  const [d, m, y, h, min] = [...dateParts, ...timeParts].map(({ value }) => {
-    return parseInt(value, 10)
-  })
+  const [d, m, y, h, min] = dateParts.map(part => part.numberValue)
+
   if (y < MIN_VALUE_YEAR) {
     return {
       errorId: 'minValueDateYear',
     }
   }
+  dateTimePartErrors = filterPartsForValueRange(dateParts)
+  if (dateTimePartErrors.length) {
+    return {
+      errorId: 'outOfRangeValueDateParts',
+      invalidParts: dateTimePartErrors,
+    }
+  }
+
   try {
     DateTime.fromObject(
       {

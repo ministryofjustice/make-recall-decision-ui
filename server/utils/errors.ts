@@ -50,6 +50,8 @@ export const formatValidationErrorMessage = (validationError: ValidationError, f
       return `The ${fieldLabel} must include a time`
     case 'missingDateParts':
       return `The ${fieldLabel} must include a ${listToString(validationError.invalidParts, 'and')}`
+    case 'outOfRangeValueDateParts':
+      return `The ${fieldLabel} must have a valid value for ${listToString(validationError.invalidParts, 'and')}`
     case 'minLengthDateTimeParts':
       return `The ${fieldLabel} must be in the correct format, like 06 05 2021 09:03`
     case 'minValueDateYear':
@@ -61,4 +63,9 @@ export const formatValidationErrorMessage = (validationError: ValidationError, f
     default:
       return `Error - ${fieldLabel}`
   }
+}
+
+export const invalidDateInputPart = (validationError: ValidationError, fieldLabel?: string): string => {
+  const part = validationError.invalidParts?.length ? validationError.invalidParts[0] : 'day'
+  return `${fieldLabel}-${part}`
 }

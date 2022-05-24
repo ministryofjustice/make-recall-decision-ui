@@ -9,6 +9,7 @@ import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/
 import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
 import { transformLicenceHistory } from './transformLicenceHistory'
+import { countLabel } from '../../../utils/utils'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
@@ -42,7 +43,10 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       })
       errors = transformed.errors
       caseSummary = transformed.data
-      sectionLabel = 'Licence history'
+      sectionLabel = `${countLabel({
+        count: transformed.data.contactCount,
+        noun: 'contact',
+      })} for ${trimmedCrn} - Licence history`
       break
     case 'licence-conditions':
       caseSummary = await getCaseSummary<CaseLicenceConditions>(trimmedCrn, sectionId, token)
