@@ -119,5 +119,13 @@ describe('Error messages', () => {
       const error = formatValidationErrorMessage({ errorId: 'minValueDateYear' }, 'date of sentence')
       expect(error).toEqual('The date of sentence must include a year after 1900')
     })
+
+    it('renders "outOfRangeValueDateParts" error', () => {
+      const error = formatValidationErrorMessage(
+        { errorId: 'outOfRangeValueDateParts', invalidParts: ['year'] },
+        'date of sentence'
+      )
+      expect(error).toEqual('The date of sentence must have a valid value for year')
+    })
   })
 })

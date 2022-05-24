@@ -77,13 +77,13 @@ context('Licence history', () => {
     cy.clickButton('Apply filters')
     cy.getElement('5 contacts').should('exist')
 
-    // invalid dates - part of date missing
+    cy.log('invalid dates - part of date missing')
     cy.fillInput('Day', '12', { parent: '#dateFrom' })
     cy.fillInput('Month', '04', { parent: '#dateFrom' })
     cy.fillInput('Year', '2022', { parent: '#dateTo' })
     cy.clickButton('Apply filters')
     cy.assertErrorMessage({
-      fieldGroupId: 'dateFrom-day',
+      fieldGroupId: 'dateFrom-year',
       fieldName: 'dateFrom',
       errorText: 'The from date must include a year',
     })
@@ -94,7 +94,7 @@ context('Licence history', () => {
     })
     cy.getElement('5 contacts').should('exist')
 
-    // invalid dates - from date after to date
+    cy.log('invalid dates - from date after to date')
     cy.enterDateTime('2022-04-14', { parent: '#dateFrom' })
     cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
     cy.clickButton('Apply filters')
@@ -104,7 +104,7 @@ context('Licence history', () => {
       errorText: 'The from date must be before the to date',
     })
 
-    // invalid date - out of bounds value
+    cy.log('invalid date - out of bounds value')
     cy.fillInput('Day', '36', { parent: '#dateFrom', clearExistingText: true })
     cy.fillInput('Month', '04', { parent: '#dateFrom', clearExistingText: true })
     cy.fillInput('Year', '2021', { parent: '#dateFrom', clearExistingText: true })
@@ -112,15 +112,15 @@ context('Licence history', () => {
     cy.assertErrorMessage({
       fieldGroupId: 'dateFrom-day',
       fieldName: 'dateFrom',
-      errorText: 'The from date must be a real date',
+      errorText: 'The from date must have a valid value for day',
     })
 
-    // successful date filter
+    cy.log('successful date filter')
     cy.enterDateTime('2022-03-13', { parent: '#dateFrom' })
     cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
     cy.clickButton('Apply filters')
     cy.getElement('2 contacts').should('exist')
-    cy.getLinkHref('13-03-2022 to 13-04-2022').should('equal', `/cases/${crn}/licence-history?dateFilters=1`)
+    cy.getLinkHref('13-03-2022 to 13-04-2022').should('equal', `/cases/${crn}/licence-history`)
 
     // clear filters
     cy.clickLink('Clear filters')
