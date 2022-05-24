@@ -2,18 +2,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Offender } from './Offender'
-import { RiskFlag } from './Risk'
-import { RiskOfSeriousHarm } from './RiskOfSeriousHarm'
-import { Address } from './Address'
+import { PersonDetails } from './PersonDetails'
+import { Risk } from './Risk'
+import { CurrentAddress } from './CurrentAddress'
 import { OffenderManager } from './OffenderManager'
 
 export type PersonalDetailsResponse = {
-  personalDetailsOverview: Offender
-  currentAddress: Address
+  personalDetailsOverview: PersonDetails
+  currentAddress: CurrentAddress
   offenderManager: OffenderManager
-  risk: {
-    riskFlags: RiskFlag[]
-    riskOfSeriousHarm: RiskOfSeriousHarm
-  }
+  risk: Risk
 }

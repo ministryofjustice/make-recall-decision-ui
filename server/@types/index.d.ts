@@ -1,4 +1,4 @@
-import { ContactSummary } from './make-recall-decision-api/models/ContactSummary'
+import { ContactSummaryResponse } from './make-recall-decision-api/models/ContactSummaryResponse'
 
 export interface ObjectMap<T> {
   [key: string]: T
@@ -11,8 +11,6 @@ export type CaseSectionId =
   | 'licence-history'
   | 'licence-history-data'
   | 'all-licence-history'
-  | 'licence-conditions'
-  | 'contact-log'
 
 export interface FormError {
   text: string
@@ -28,6 +26,6 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
   list: NamedFormError[]
 }
 
-export interface DecoratedContact extends ContactSummary {
+export interface DecoratedContact extends ContactSummaryResponse {
   startDate: string
 }
