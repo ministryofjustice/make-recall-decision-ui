@@ -87,3 +87,6 @@ export const dedupeList = <T>(list: T[]) => {
   })
   return unique
 }
+
+export const countLabel = ({ count, noun }: { count: number; noun: string }) =>
+  `${count} ${noun}${count !== 1 ? 's' : ''}`

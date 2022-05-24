@@ -1,4 +1,3 @@
-
 <h1 class='govuk-heading-m'>Licence history</h1>
 <div class="govuk-grid-row">
     {% if flags.dateFilters %}
@@ -31,7 +30,6 @@
         {% endset -%}
         <div class='govuk-!-margin-bottom-4'>
         <form>
-            <input type='hidden' name='dateFilters' value='1' />
             {{ mojFilter({
                 heading: {
                     text: 'Filter'
@@ -42,14 +40,14 @@
                     },
                     clearLink: {
                         text: 'Clear filters',
-                        href: urlInfo.path + '?dateFilters=1'
+                        href: urlInfo.path
                     },
                     categories: [{
                         heading: {
                             text: 'Date range'
                         },
                         items: [{
-                            href: urlInfo.path + '?dateFilters=1',
+                            href: urlInfo.path,
                             text: caseSummary.filters.dateRange.selectedLabel
                         }]
                     }]
@@ -62,9 +60,9 @@
     {% endif %}
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set innerLoopIndex = 0 %}
-        <div class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>{{ caseSummary.contactCount }}
-            contacts
-        </div>
+        <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>
+            {{ countLabel({ count: caseSummary.contactCount, noun: 'contact'}) }}
+        </h2>
         <div class="filter-toggle"></div>
         {% for group in caseSummary.contactSummary.items %}
             <div class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
