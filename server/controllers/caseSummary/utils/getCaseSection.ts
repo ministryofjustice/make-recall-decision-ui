@@ -7,6 +7,7 @@ import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRi
 import { PersonDetailsResponse } from '../../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
 import { transformLicenceHistory } from './transformLicenceHistory'
+import { countLabel } from '../../../utils/utils'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
@@ -40,7 +41,10 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       })
       errors = transformed.errors
       caseSummary = transformed.data
-      sectionLabel = 'Licence history'
+      sectionLabel = `${countLabel({
+        count: transformed.data.contactCount,
+        noun: 'contact',
+      })} for ${trimmedCrn} - Licence history`
       break
     default:
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)

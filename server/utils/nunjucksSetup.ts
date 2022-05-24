@@ -2,7 +2,7 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import { formatSingleLineAddress, makePageTitle, errorMessage } from './utils'
+import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
 import { dateTimeItems } from './nunjucks'
@@ -56,4 +56,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('errorMessage', errorMessage)
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
   njkEnv.addGlobal('dateTimeItems', dateTimeItems)
+  njkEnv.addGlobal('countLabel', countLabel)
 }

@@ -138,8 +138,18 @@ describe('filterDates', () => {
       },
     })
     expect(errors).toEqual([
-      { href: '#dateFrom-day', name: 'dateFrom', text: 'The from date must be a real date', values: undefined },
-      { href: '#dateTo-day', name: 'dateTo', text: 'The to date must be a real date', values: undefined },
+      {
+        href: '#dateFrom-day',
+        name: 'dateFrom',
+        text: 'The from date must have a valid value for day',
+        values: undefined,
+      },
+      {
+        href: '#dateTo-month',
+        name: 'dateTo',
+        text: 'The to date must have a valid value for month',
+        values: undefined,
+      },
     ])
     expect(contacts).toEqual(contactList)
   })
