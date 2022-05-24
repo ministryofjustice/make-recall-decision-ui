@@ -1,5 +1,5 @@
 import config from '../config'
-import { Address } from '../@types/make-recall-decision-api/models/Address'
+import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
 import { FormError } from '../@types'
 
 const properCase = (word: string): string =>
@@ -31,7 +31,7 @@ export const isNumber = (val: unknown) => typeof val === 'number'
 
 export const areStringArraysTheSame = (arr1: unknown[], arr2: unknown[]) => arr1.join('') === arr2.join('')
 
-export const formatSingleLineAddress = (address: Address) => {
+export const formatSingleLineAddress = (address: CurrentAddress) => {
   const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
   return listToString(parts, '')
 }

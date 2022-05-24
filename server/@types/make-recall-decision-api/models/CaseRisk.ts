@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Offender } from './Offender'
+import { PersonDetails } from './PersonDetails'
 
 export type CaseRisk = {
-  personalDetailsOverview: Offender
+  personalDetailsOverview: PersonDetails
 }

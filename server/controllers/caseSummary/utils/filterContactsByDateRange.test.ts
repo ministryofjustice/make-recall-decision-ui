@@ -1,4 +1,4 @@
-import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 
 describe('filterDates', () => {
@@ -16,7 +16,7 @@ describe('filterDates', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         descriptionType: 'Planned Office Visit (NS)',
       },
-    ] as ContactSummary[]
+    ] as ContactSummaryResponse[]
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {},
@@ -39,7 +39,7 @@ describe('filterDates', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         descriptionType: 'Planned Office Visit (NS)',
       },
-    ] as ContactSummary[]
+    ] as ContactSummaryResponse[]
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
@@ -66,7 +66,7 @@ describe('filterDates', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         descriptionType: 'Planned Office Visit (NS)',
       },
-    ] as ContactSummary[]
+    ] as ContactSummaryResponse[]
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
@@ -93,7 +93,7 @@ describe('filterDates', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         descriptionType: 'Planned Office Visit (NS)',
       },
-    ] as ContactSummary[]
+    ] as ContactSummaryResponse[]
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
@@ -125,7 +125,7 @@ describe('filterDates', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         descriptionType: 'Planned Office Visit (NS)',
       },
-    ] as ContactSummary[]
+    ] as ContactSummaryResponse[]
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
@@ -168,7 +168,7 @@ describe('filterDates', () => {
         contactStartDate: '2022-04-20T23:30:00Z',
         descriptionType: 'Planned Office Visit (NS)',
       },
-    ] as ContactSummary[]
+    ] as ContactSummaryResponse[]
     const { errors, contacts, selectedLabel } = filterContactsByDateRange({
       contacts: contactList,
       filters: {

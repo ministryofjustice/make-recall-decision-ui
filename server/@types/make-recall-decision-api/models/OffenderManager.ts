@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { ProbationTeam } from './ProbationTeam'
+import type { ProbationTeam } from './ProbationTeam'
 
 export type OffenderManager = {
   name?: string
   phoneNumber?: string
   email?: string
-  probationTeam: ProbationTeam
+  probationTeam?: ProbationTeam
 }

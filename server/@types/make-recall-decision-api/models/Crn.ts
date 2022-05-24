@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Offence = {
-  mainOffence?: boolean
-  description?: string
+export type Crn = {
+  value: string
 }

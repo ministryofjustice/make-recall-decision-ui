@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
 import { europeLondon, sortListByDateField } from '../../../utils/dates'
+import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { groupListByValue } from '../../../utils/utils'
 
-export const groupContactsByStartDate = (contacts: ContactSummary[]) => {
+export const groupContactsByStartDate = (contacts: ContactSummaryResponse[]) => {
   const contactsWithDate = contacts.map(contact => ({
     ...contact,
     startDate: DateTime.fromISO(contact.contactStartDate, { zone: europeLondon }).toISODate(),
@@ -23,4 +24,14 @@ export const groupContactsByStartDate = (contacts: ContactSummary[]) => {
     newestFirst: true,
   })
   return { ...groupedByDate, items: sortedByGroupDate }
+}
+
+export const transformLicenceHistory = (caseSummary: LicenceHistoryResponse, showSystemGenerated: boolean) => {
+  const filtered = showSystemGenerated
+    ? caseSummary.contactSummary
+    : caseSummary.contactSummary.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
+  return {
+    ...caseSummary,
+    contactSummary: groupContactsByStartDate(filtered),
+  }
 }

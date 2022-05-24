@@ -1,5 +1,5 @@
-import { CaseLicenceHistory } from '../../../@types/make-recall-decision-api/models/CaseLicenceHistory'
-import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
+import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
@@ -8,20 +8,20 @@ const filterSystemGenerated = ({
   contacts,
   showSystemGenerated,
 }: {
-  contacts: ContactSummary[]
+  contacts: ContactSummaryResponse[]
   showSystemGenerated?: string
-}): ContactSummary[] => {
+}): ContactSummaryResponse[] => {
   if (showSystemGenerated === 'YES') {
     return contacts
   }
-  return contacts.filter((contact: ContactSummary) => contact.systemGenerated === false)
+  return contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
 }
 
 export const transformLicenceHistory = ({
   caseSummary,
   filters,
 }: {
-  caseSummary: CaseLicenceHistory
+  caseSummary: LicenceHistoryResponse
   filters: ObjectMap<string>
 }) => {
   const filteredBySystemGenerated = filterSystemGenerated({

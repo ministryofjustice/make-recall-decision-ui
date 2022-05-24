@@ -1,4 +1,4 @@
-import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 
 describe('groupContactsByStartDate', () => {
@@ -16,7 +16,7 @@ describe('groupContactsByStartDate', () => {
         contactStartDate: '2022-04-21T10:03:00Z',
         descriptionType: 'Management Oversight - Recall',
       },
-    ] as ContactSummary[])
+    ] as ContactSummaryResponse[])
     expect(result).toEqual({
       groupedByKey: 'startDate',
       items: [
@@ -59,7 +59,7 @@ describe('groupContactsByStartDate', () => {
         contactStartDate: '2022-07-05T13:07:00Z',
         descriptionType: 'Arrest attempt',
       },
-    ] as ContactSummary[])
+    ] as ContactSummaryResponse[])
     expect(result).toEqual({
       groupedByKey: 'startDate',
       items: [

@@ -2,7 +2,7 @@ import { DateTime, Interval } from 'luxon'
 import { NamedFormError, ObjectMap } from '../../../@types'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc, moveDateToEndOfDay } from '../../../utils/dates/convert'
-import { ContactSummary } from '../../../@types/make-recall-decision-api/models/ContactSummary'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { dateHasError } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 
@@ -29,9 +29,9 @@ export const filterContactsByDateRange = ({
   contacts,
   filters,
 }: {
-  contacts: ContactSummary[]
+  contacts: ContactSummaryResponse[]
   filters: ObjectMap<string>
-}): { errors?: NamedFormError[]; contacts: ContactSummary[]; selectedLabel?: string } => {
+}): { errors?: NamedFormError[]; contacts: ContactSummaryResponse[]; selectedLabel?: string } => {
   const dateFromIso = parseDateParts({ fieldPrefix: 'dateFrom', filters })
   const dateToIso = parseDateParts({ fieldPrefix: 'dateTo', filters })
   const dateFromIsBlank = dateHasError(dateFromIso) && (dateFromIso as ValidationError).errorId === 'blankDateTime'

@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Offender = {
+export type SearchByCrnResponse = {
   name?: string
-  dateOfBirth?: string
   crn?: string
+  dateOfBirth?: string
 }

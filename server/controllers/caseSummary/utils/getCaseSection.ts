@@ -1,12 +1,10 @@
 import { ParsedQs } from 'qs'
 import { CaseSectionId, ObjectMap } from '../../../@types'
-import { CaseOverview } from '../../../@types/make-recall-decision-api/models/CaseOverview'
+import { CaseSummaryOverviewResponse } from '../../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
-import { CaseLicenceHistory } from '../../../@types/make-recall-decision-api/models/CaseLicenceHistory'
+import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
 import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRisk'
-import { CasePersonalDetails } from '../../../@types/make-recall-decision-api/models/CasePersonalDetails'
-import { CaseLicenceConditions } from '../../../@types/make-recall-decision-api/models/CaseLicenceConditions'
-import { CaseContactLog } from '../../../@types/make-recall-decision-api/models/CaseContactLog'
+import { PersonDetailsResponse } from '../../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
 import { transformLicenceHistory } from './transformLicenceHistory'
 import { countLabel } from '../../../utils/utils'
@@ -20,7 +18,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
   const trimmedCrn = crn.trim()
   switch (sectionId) {
     case 'overview':
-      caseSummary = await getCaseSummary<CaseOverview>(trimmedCrn, sectionId, token)
+      caseSummary = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Overview'
       break
     case 'risk':
@@ -28,13 +26,13 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = 'Risk'
       break
     case 'personal-details':
-      caseSummary = await getCaseSummary<CasePersonalDetails>(trimmedCrn, sectionId, token)
+      caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Personal details'
       break
     case 'licence-history':
     case 'licence-history-data':
       caseSummaryRaw = await fetchFromCacheOrApi(
-        () => getCaseSummary<CaseLicenceHistory>(trimmedCrn, 'all-licence-history', token),
+        () => getCaseSummary<LicenceHistoryResponse>(trimmedCrn, 'all-licence-history', token),
         `licenceHistory:${crn}`
       )
       transformed = transformLicenceHistory({
@@ -47,14 +45,6 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
         count: transformed.data.contactCount,
         noun: 'contact',
       })} for ${trimmedCrn} - Licence history`
-      break
-    case 'licence-conditions':
-      caseSummary = await getCaseSummary<CaseLicenceConditions>(trimmedCrn, sectionId, token)
-      sectionLabel = 'Licence conditions'
-      break
-    case 'contact-log':
-      caseSummary = await getCaseSummary<CaseContactLog>(trimmedCrn, sectionId, token)
-      sectionLabel = 'Contact log'
       break
     default:
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)
