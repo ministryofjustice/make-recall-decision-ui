@@ -1,4 +1,4 @@
-import { formatDateTimeFromIsoString } from './format'
+import { formatDateRange, formatDateTimeFromIsoString } from './format'
 
 describe('formatDateTimeFromIsoString', () => {
   it('formats a date', () => {
@@ -39,5 +39,23 @@ describe('formatDateTimeFromIsoString', () => {
   it('in case of error, returns the supplied string', () => {
     const formatted = formatDateTimeFromIsoString({ isoDate: '22-1-5' })
     expect(formatted).toEqual('22-1-5')
+  })
+})
+
+describe('formatDateRange', () => {
+  it('formats a date range', () => {
+    const formatted = formatDateRange({
+      dateFromIso: '2021-02-10T00:00:00.000Z',
+      dateToIso: '2021-12-05T00:00:00.000Z',
+    })
+    expect(formatted).toEqual('10 Feb 2021 to 5 Dec 2021')
+  })
+
+  it('adjusts for DST', () => {
+    const formatted = formatDateRange({
+      dateFromIso: '2021-05-22T19:43:00.000Z',
+      dateToIso: '2021-07-22T23:43:00.000Z',
+    })
+    expect(formatted).toEqual('22 May 2021 to 23 Jul 2021')
   })
 })

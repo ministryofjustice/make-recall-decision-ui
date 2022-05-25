@@ -191,6 +191,6 @@ describe('filterDates', () => {
         descriptionType: 'Planned Office Visit (NS)',
       },
     ])
-    expect(selectedLabel).toEqual('03-04-2021 to 21-04-2022')
+    expect(selectedLabel).toEqual('3 Apr 2021 to 21 Apr 2022')
   })
 })

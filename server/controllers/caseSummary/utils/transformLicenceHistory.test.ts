@@ -58,7 +58,7 @@ describe('transformLicenceHistory', () => {
           month: '04',
           year: '2022',
         },
-        selectedLabel: '21-04-2022 to 21-04-2022',
+        selectedLabel: '21 Apr 2022 to 21 Apr 2022',
       },
     })
   })
