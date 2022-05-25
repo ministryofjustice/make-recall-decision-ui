@@ -23,3 +23,13 @@ pre.govuk-body {
 .no-max-width {
   max-width: none;
 }
+
+.govuk-date-input__item:last-child {
+  margin-right: 0;
+}
+
+.filter-toggle {
+  @include govuk-media-query($from: desktop ) {
+    display: none;
+  }
+}

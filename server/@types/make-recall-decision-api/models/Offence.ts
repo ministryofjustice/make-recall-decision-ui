@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type Offence = {
-  mainOffence: boolean
-  description: string
+  mainOffence?: boolean
+  description?: string
 }

@@ -2,9 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Address = {
-  line1: string
+export type CurrentAddress = {
+  line1?: string
   line2?: string
-  town: string
+  town?: string
   postcode?: string
 }

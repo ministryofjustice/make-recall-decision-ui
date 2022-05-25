@@ -1,38 +1,107 @@
 <h1 class='govuk-heading-m'>Licence history</h1>
 <div class="govuk-grid-row">
+    {% if flags.dateFilters %}
+    <div class="govuk-grid-column-one-third-from-desktop">
+        {%- set filterOptionsHtml %}
+            {{ govukDateInput({
+                id: "dateFrom",
+                namePrefix: "dateFrom",
+                fieldset: {
+                    legend: {
+                        html: "Date range<span class='govuk-visually-hidden'> From</span>",
+                        classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
+                errorMessage: errorMessage(errors.dateFrom)
+            }) }}
+            {{ govukDateInput({
+                id: "dateTo",
+                namePrefix: "dateTo",
+                fieldset: {
+                    legend: {
+                        html: "<span class='govuk-visually-hidden'>Date range </span>To",
+                        classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
+                errorMessage: errorMessage(errors.dateTo)
+            }) }}
+        {% endset -%}
+        <div class='govuk-!-margin-bottom-4'>
+        <form>
+            {{ mojFilter({
+                heading: {
+                    text: 'Filter'
+                },
+                selectedFilters: {
+                    heading: {
+                        text: 'Selected filters'
+                    },
+                    clearLink: {
+                        text: 'Clear filters',
+                        href: urlInfo.path
+                    },
+                    categories: [{
+                        heading: {
+                            text: 'Date range'
+                        },
+                        items: [{
+                            href: urlInfo.path,
+                            text: caseSummary.filters.dateRange.selectedLabel
+                        }]
+                    }]
+                } if caseSummary.filters.dateRange.selectedLabel else undefined,
+                optionsHtml: filterOptionsHtml
+            }) }}
+        </form>
+        </div>
+    </div>
+    {% endif %}
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set innerLoopIndex = 0 %}
+        <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>
+            {{ countLabel({ count: caseSummary.contactCount, noun: 'contact'}) }}
+        </h2>
+        <div class="filter-toggle"></div>
         {% for group in caseSummary.contactSummary.items %}
-            <div class='govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
+            <h3 class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
                 {{ formatDateTimeFromIsoString({ isoDate: group.groupValue, dateOnly: true}) }}
-            </div>
+            </h3>
             {% for contact in group.items %}
                 {% set titleHtml %}
                     <div>
-                        <div data-qa='heading'>{{ contact.descriptionType }}</div>
-                        <div class='govuk-body govuk-!-margin-bottom-0' data-qa='time'>
+                        <div class='govuk-!-font-weight-bold' data-qa='heading'>{{ contact.descriptionType }}</div>
+                        <div class='govuk-!-margin-bottom-0' data-qa='time'>
                             At {{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true }) }}</div>
                     </div>
+                {% endset %}
+                {% set actionsHtml %}
+                    {% if contact.outcome or contact.enforcementAction %}
+                        <div>
+                            {% if contact.outcome %}
+                                <div class='govuk-!-margin-bottom-1'>
+                                    {{ mojBadge({
+                                        text: contact.outcome,
+                                        attributes: {
+                                            'data-qa': 'outcome'
+                                        }
+                                    })}}
+                                </div>
+                            {% endif %}
+                            {{ mojBadge({
+                                text: contact.enforcementAction,
+                                attributes: {
+                                    'data-qa': 'enforcementAction'
+                                }
+                            }) if contact.enforcementAction else undefined }}
+                        </div>
+                    {% endif %}
                 {% endset %}
                 {% set notesHtml %}
                     <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
                 {% endset %}
                 {% set sectionHtml %}
-                    <div class="govuk-!-margin-bottom-4">
-                        {{ mojBadge({
-                            text: contact.outcome,
-                            attributes: {
-                                'data-qa': 'outcome'
-                            },
-                            classes: 'govuk-!-margin-right-2'
-                        }) if contact.outcome else undefined }}
-                        {{ mojBadge({
-                            text: contact.enforcementAction,
-                            attributes: {
-                                'data-qa': 'enforcementAction'
-                            }
-                        }) if contact.enforcementAction else undefined }}
-                    </div>
                     {% if flags.collapsibleNotes %}
                         {{ govukDetails({
                             summaryText: "View more detail",
@@ -45,8 +114,10 @@
                 <div data-qa='contact-{{ innerLoopIndex }}'>
                     {{ appSummaryCard({
                         titleHtml: titleHtml,
-                        classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
-                        html: sectionHtml
+                        headingLevel: 4,
+                        classes: 'govuk-!-margin-bottom-3',
+                        html: sectionHtml if contact.notes else undefined,
+                        actionsHtml: actionsHtml
                     }) }}
                 </div>
                 {% set innerLoopIndex = innerLoopIndex + 1 %}
@@ -54,3 +125,23 @@
         {% endfor %}
     </div>
 </div>
+
+<script nonce='{{ cspNonce }}'>
+  new MOJFrontend.FilterToggleButton({
+    bigModeMediaQuery: "(min-width: 48.063em)",
+    startHidden: false,
+    toggleButton: {
+      container: $(".filter-toggle"),
+      showText: "Show filter",
+      hideText: "Hide filter",
+      classes: "govuk-button--secondary",
+    },
+    closeButton: {
+      container: $(".moj-filter__header-action"),
+      text: "Close",
+    },
+    filter: {
+      container: $(".moj-filter"),
+    },
+  });
+</script>

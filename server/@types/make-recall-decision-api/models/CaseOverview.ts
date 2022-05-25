@@ -2,10 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Offender } from './Offender'
+import { PersonDetails } from './PersonDetails'
 import { Offence } from './Offence'
 
-export type CaseOverview = {
-  personalDetailsOverview: Offender
+export type CaseSummaryOverviewResponse = {
+  personalDetailsOverview: PersonDetails
   offences: Offence[]
 }

@@ -2,27 +2,29 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCaseLicenceHistoryResponse from '../../api/responses/get-case-licence-history.json'
-import { sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
-import { dedupeList } from '../../server/utils/utils'
 
 context('Case summary', () => {
   beforeEach(() => {
     cy.signIn()
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
     cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
   })
 
   it('can view the overview page with a list of offences', () => {
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview')
     // offence overview
     cy.getDefinitionListValue('Offences').should('contain', 'Robbery (other than armed robbery)')
     cy.getDefinitionListValue('Offences').should('contain', 'Shoplifting')
+    // risk flags
+    cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
+    cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
   it('changes label to Offence if there is only one', () => {
@@ -61,15 +63,14 @@ context('Case summary', () => {
       formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender })
     )
     // personal details
-    cy.getDefinitionListValue('Current address').should('equal', '5 Anderton Road, Newham, London E15 1UJ')
+    cy.getDefinitionListValue('Current address').should('contain', '5 Anderton Road')
+    cy.getDefinitionListValue('Current address').should('contain', 'Newham')
+    cy.getDefinitionListValue('Current address').should('contain', 'London')
+    cy.getDefinitionListValue('Current address').should('contain', 'E15 1UJ')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Jenny Eclair - N07, NPS London')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Telephone: 07824637629')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Email: jenny@probation.com')
     cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
-    // risk flags
-    cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
-    cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
-    cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
   it('can view the risk page', () => {
@@ -118,58 +119,6 @@ context('Case summary', () => {
     cy.clickLink('Open all')
     cy.getElement('RSR HIGH 18').should('be.visible')
     cy.getElement('RSR MEDIUM 12').should('be.visible')
-  })
-
-  it('can view the licence history page', () => {
-    const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/licence-history`)
-    cy.pageHeading().should('equal', 'Licence history')
-
-    // contacts
-    const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
-      contact => contact.systemGenerated === false
-    )
-    const sortedByDate = sortListByDateField({
-      list: systemGeneratedRemoved,
-      dateKey: 'contactStartDate',
-      newestFirst: true,
-    })
-    const dates = []
-    sortedByDate.forEach((contact, index) => {
-      dates.push(contact.contactStartDate.substring(0, 10))
-      const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.getText('heading', opts).should('equal', contact.descriptionType)
-      cy.getText('time', opts).should(
-        'contain',
-        formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true })
-      )
-      cy.getText('notes', opts).should('equal', contact.notes)
-    })
-    const dedupedDates = dedupeList(dates)
-    dedupedDates.forEach((date, index) => {
-      cy.getText(`date-${index}`).should('equal', formatDateTimeFromIsoString({ isoDate: date, dateOnly: true }))
-    })
-  })
-
-  it('can view collapsible notes on the licence history page', () => {
-    const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/licence-history?collapsibleNotes=1`)
-
-    // contacts
-    const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
-      contact => contact.systemGenerated === false
-    )
-    const sortedByDate = sortListByDateField({
-      list: systemGeneratedRemoved,
-      dateKey: 'contactStartDate',
-      newestFirst: true,
-    })
-    const dates = []
-    sortedByDate.forEach((contact, index) => {
-      dates.push(contact.contactStartDate.substring(0, 10))
-      const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.viewDetails('View more detail', opts).should('equal', contact.notes)
-    })
   })
 
   it('can switch between case summary pages', () => {

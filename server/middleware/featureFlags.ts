@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { ObjectMap } from '../@types'
 
 export const featureFlagDefaults = {
-  collapsibleNotes: false,
+  collapsibleNotes: true,
+  dateFilters: true,
 }
 
 export const readFeatureFlags = (flags: ObjectMap<boolean>) => (req: Request, res: Response, next: NextFunction) => {

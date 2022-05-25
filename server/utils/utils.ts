@@ -1,5 +1,5 @@
 import config from '../config'
-import { Address } from '../@types/make-recall-decision-api/models/Address'
+import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
 import { FormError } from '../@types'
 
 const properCase = (word: string): string =>
@@ -20,7 +20,7 @@ const convertToTitleCase = (sentence: string): string =>
 
 export default convertToTitleCase
 
-export const makePageTitle = (pageHeading: string, hasErrors: boolean) =>
+export const makePageTitle = ({ pageHeading, hasErrors }: { pageHeading: string; hasErrors: boolean }) =>
   `${hasErrors ? 'Error: ' : ''}${pageHeading} - ${config.applicationName}`
 
 export const isDefined = (val: unknown) => typeof val !== 'undefined'
@@ -29,7 +29,9 @@ export const isString = (val: unknown) => typeof val === 'string'
 
 export const isNumber = (val: unknown) => typeof val === 'number'
 
-export const formatSingleLineAddress = (address: Address) => {
+export const areStringArraysTheSame = (arr1: unknown[], arr2: unknown[]) => arr1.join('') === arr2.join('')
+
+export const formatSingleLineAddress = (address: CurrentAddress) => {
   const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
   return listToString(parts, '')
 }
@@ -85,3 +87,6 @@ export const dedupeList = <T>(list: T[]) => {
   })
   return unique
 }
+
+export const countLabel = ({ count, noun }: { count: number; noun: string }) =>
+  `${count} ${noun}${count !== 1 ? 's' : ''}`

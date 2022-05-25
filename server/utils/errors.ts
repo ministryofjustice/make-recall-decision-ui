@@ -1,4 +1,7 @@
 import { FormError, KeyedFormErrors, NamedFormError, ObjectMap } from '../@types'
+import { ValidationError } from '../@types/dates'
+import { listToString } from './utils'
+import { MIN_VALUE_YEAR } from './dates/convert'
 
 export const makeErrorObject = ({
   id,
@@ -27,4 +30,42 @@ export const transformErrorMessages = (errors: NamedFormError[]): KeyedFormError
     list: errors,
     ...errorMap,
   } as KeyedFormErrors
+}
+
+export const formatValidationErrorMessage = (validationError: ValidationError, fieldLabel?: string): string => {
+  switch (validationError.errorId) {
+    case 'blankDateTime':
+      return `Enter the ${fieldLabel}`
+    case 'dateMustBeInPast':
+      return `The ${fieldLabel} must be today or in the past`
+    case 'dateMustBeInFuture':
+      return `The ${fieldLabel} must be in the future`
+    case 'invalidDate':
+      return `The ${fieldLabel} must be a real date`
+    case 'invalidTime':
+      return `The ${fieldLabel} must be a real time`
+    case 'missingDate':
+      return `The ${fieldLabel} must include a date`
+    case 'missingTime':
+      return `The ${fieldLabel} must include a time`
+    case 'missingDateParts':
+      return `The ${fieldLabel} must include a ${listToString(validationError.invalidParts, 'and')}`
+    case 'outOfRangeValueDateParts':
+      return `The ${fieldLabel} must have a valid value for ${listToString(validationError.invalidParts, 'and')}`
+    case 'minLengthDateTimeParts':
+      return `The ${fieldLabel} must be in the correct format, like 06 05 2021 09:03`
+    case 'minValueDateYear':
+      return `The ${fieldLabel} must include a year after ${MIN_VALUE_YEAR}`
+    case 'minLengthDateParts':
+      return `The ${fieldLabel} must be in the correct format, like 06 05 2021`
+    case 'fromDateAfterToDate':
+      return 'The from date must be before the to date'
+    default:
+      return `Error - ${fieldLabel}`
+  }
+}
+
+export const invalidDateInputPart = (validationError: ValidationError, fieldLabel?: string): string => {
+  const part = validationError.invalidParts?.length ? validationError.invalidParts[0] : 'day'
+  return `${fieldLabel}-${part}`
 }

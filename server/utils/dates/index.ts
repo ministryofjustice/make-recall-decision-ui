@@ -1,11 +1,13 @@
 import { DateTime, Settings } from 'luxon'
 import { getProperty } from '../utils'
+import { ValidationError } from '../../@types/dates'
 
 Settings.throwOnInvalid = true
+Settings.defaultZone = 'utc'
 
 export const getDateProperty = <T>(obj: T, dateKey: string) => {
   const val = getProperty<T, string>(obj, dateKey)
-  return val ? DateTime.fromISO(val, { zone: 'utc' }) : undefined
+  return val ? DateTime.fromISO(val) : undefined
 }
 
 export const diffDatesForSort = (dateA: DateTime, dateB: DateTime, newestFirst = true) => {
@@ -40,6 +42,9 @@ export const sortListByDateField = <T>({
     return diffDatesForSort(dateA, dateB, newestFirst)
   })
 }
+
+export const dateHasError = (field: string | ValidationError) => Boolean((field as ValidationError).errorId)
+
 export const europeLondon = 'Europe/London'
 
 export function getDateTimeUTC(isoDate: string) {

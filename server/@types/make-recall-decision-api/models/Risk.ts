@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RiskFlag = {
-  label: string
-  colour: string
+export type Risk = {
+  flags?: Array<string>
 }

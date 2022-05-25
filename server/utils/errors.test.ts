@@ -1,4 +1,4 @@
-import { makeErrorObject, transformErrorMessages } from './errors'
+import { formatValidationErrorMessage, makeErrorObject, transformErrorMessages } from './errors'
 
 describe('Error messages', () => {
   describe('makeErrorObject', () => {
@@ -63,6 +63,69 @@ describe('Error messages', () => {
           },
         ],
       })
+    })
+  })
+
+  describe('formatValidationErrorMessage', () => {
+    it('renders "blankDateTime" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'blankDateTime' }, 'date of sentence')
+      expect(error).toEqual('Enter the date of sentence')
+    })
+
+    it('renders "dateMustBeInPast" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'dateMustBeInPast' }, 'date of sentence')
+      expect(error).toEqual('The date of sentence must be today or in the past')
+    })
+
+    it('renders "dateMustBeInFuture" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'dateMustBeInFuture' }, 'date of sentence')
+      expect(error).toEqual('The date of sentence must be in the future')
+    })
+
+    it('renders "invalidDate" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'invalidDate' }, 'date of sentence')
+      expect(error).toEqual('The date of sentence must be a real date')
+    })
+
+    it('renders "missingDateParts" error', () => {
+      const error = formatValidationErrorMessage(
+        { errorId: 'missingDateParts', invalidParts: ['month'] },
+        'date of sentence'
+      )
+      expect(error).toEqual('The date of sentence must include a month')
+    })
+
+    it('renders "missingDate" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'missingDate' }, 'date and time of email')
+      expect(error).toEqual('The date and time of email must include a date')
+    })
+
+    it('renders "missingTime" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'missingTime' }, 'date and time of email')
+      expect(error).toEqual('The date and time of email must include a time')
+    })
+
+    it('renders "minLengthDateTimeParts" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'minLengthDateTimeParts' }, 'date and time of receipt')
+      expect(error).toEqual('The date and time of receipt must be in the correct format, like 06 05 2021 09:03')
+    })
+
+    it('renders "minLengthDateParts" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'minLengthDateParts' }, 'date of sentence')
+      expect(error).toEqual('The date of sentence must be in the correct format, like 06 05 2021')
+    })
+
+    it('renders "minValueDateYear" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'minValueDateYear' }, 'date of sentence')
+      expect(error).toEqual('The date of sentence must include a year after 1900')
+    })
+
+    it('renders "outOfRangeValueDateParts" error', () => {
+      const error = formatValidationErrorMessage(
+        { errorId: 'outOfRangeValueDateParts', invalidParts: ['year'] },
+        'date of sentence'
+      )
+      expect(error).toEqual('The date of sentence must have a valid value for year')
     })
   })
 })
