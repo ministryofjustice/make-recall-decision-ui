@@ -126,7 +126,7 @@
     "eslint-plugin-no-only-tests": "^2.6.0",
     "express": "^4.17.3",
     "express-prom-bundle": "^6.4.1",
-    "express-session": "^1.17.2",
+    "express-session": "1.17.3",
     "govuk-frontend": "^4.1.0",
     "helmet": "^5.0.2",
     "http-errors": "^2.0.0",
