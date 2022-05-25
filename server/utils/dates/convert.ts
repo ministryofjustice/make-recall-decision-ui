@@ -32,7 +32,7 @@ const convertDatePartsToNumbers = (parts: DateTimePart[]) => {
     if (part.name === 'year') {
       if (part.value.length === 2) {
         const currentYear = parseInt(DateTime.now().year.toString().substring(2), 10)
-        if (numberValue < currentYear) {
+        if (numberValue <= currentYear) {
           numberValue = 2000 + numberValue
         } else {
           numberValue = 1900 + numberValue

@@ -1,10 +1,12 @@
-import { Settings } from 'luxon'
+import { DateTime, Settings } from 'luxon'
 import { isDefined, isNumber } from '../utils'
-import { getDateTimeInEuropeLondon } from './index'
+import { europeLondon, getDateTimeInEuropeLondon } from './index'
 
 Settings.throwOnInvalid = true
+Settings.defaultZone = 'utc'
 
 const dateFormat = 'd MMMM yyyy'
+const dateFormatShortMonth = 'd MMM yyyy'
 const timeFormat = 'HH:mm'
 
 export const padWithZeroes = (value?: number): string => {
@@ -45,3 +47,10 @@ export const formatDateTimeFromIsoString = ({
     return isoDate
   }
 }
+
+export const formatDateRange = ({ dateFromIso, dateToIso }: { dateFromIso: string; dateToIso: string }) =>
+  `${DateTime.fromISO(dateFromIso).setZone(europeLondon).toFormat(dateFormatShortMonth)} to ${DateTime.fromISO(
+    dateToIso
+  )
+    .setZone(europeLondon)
+    .toFormat(dateFormatShortMonth)}`

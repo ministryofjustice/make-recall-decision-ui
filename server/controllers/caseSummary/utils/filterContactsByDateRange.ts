@@ -5,6 +5,7 @@ import { convertGmtDatePartsToUtc, moveDateToEndOfDay } from '../../../utils/dat
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { dateHasError } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
+import { formatDateRange } from '../../../utils/dates/format'
 
 const parseDateParts = ({
   fieldPrefix,
@@ -84,6 +85,6 @@ export const filterContactsByDateRange = ({
   const interval = Interval.fromDateTimes(dateFrom, dateTo)
   return {
     contacts: contacts.filter(contact => interval.contains(DateTime.fromISO(contact.contactStartDate))),
-    selectedLabel: `${dateFrom.toFormat('dd-MM-yyyy')} to ${dateTo.toFormat('dd-MM-yyyy')}`,
+    selectedLabel: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
   }
 }

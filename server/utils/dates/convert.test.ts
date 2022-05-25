@@ -47,11 +47,13 @@ describe('convertGmtDatePartsToUtc', () => {
     })
 
     it('assumes a 2 digit year of between 0 and current year, is this century, if validatePartLengths option is not true', () => {
+      const currentYear = DateTime.now().year.toString()
+      const lastTwoDigits = currentYear.substring(2)
       const result = convertGmtDatePartsToUtc(
-        { year: '21', month: '3', day: '5', hour: '5', minute: '1' },
+        { year: lastTwoDigits, month: '3', day: '5', hour: '5', minute: '1' },
         { includeTime: true }
       )
-      expect(result).toEqual('2021-03-05T05:01:00.000Z')
+      expect(result).toEqual(`${currentYear}-03-05T05:01:00.000Z`)
     })
 
     it('assumes a 2 digit year of greater than current year, is last century, if validatePartLengths option is not true', () => {
