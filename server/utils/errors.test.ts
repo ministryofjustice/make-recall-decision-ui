@@ -125,7 +125,7 @@ describe('Error messages', () => {
         { errorId: 'outOfRangeValueDateParts', invalidParts: ['year'] },
         'date of sentence'
       )
-      expect(error).toEqual('The date of sentence must have a valid value for year')
+      expect(error).toEqual('The date of sentence must have a real year')
     })
   })
 })
