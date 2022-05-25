@@ -6,6 +6,12 @@
             {% if caseSummary.offenderManager.phoneNumber %}<div>Telephone: {{ caseSummary.offenderManager.phoneNumber }}</div>{% endif %}
             {% if caseSummary.offenderManager.email %}<div>Email: <a href='mailto:{{ caseSummary.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ caseSummary.offenderManager.email }}</a></div>{% endif %}
         {% endset %}
+        {% set addressHtml %}
+            {% if caseSummary.currentAddress.line1 %}<div>{{ caseSummary.currentAddress.line1 }}</div>{% endif %}
+            {% if caseSummary.currentAddress.line2 %}<div>{{ caseSummary.currentAddress.line2 }}</div>{% endif %}
+            {% if caseSummary.currentAddress.town %}<div>{{ caseSummary.currentAddress.town }}</div>{% endif %}
+            {% if caseSummary.currentAddress.postcode %}<div>{{ caseSummary.currentAddress.postcode }}</div>{% endif %}
+        {% endset %}
         {{ appSummaryCard({
             titleText: 'Personal details',
             classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
@@ -13,7 +19,7 @@
                 rows: [
                     {
                         key: { html: 'Current address' },
-                        value: { text: formatSingleLineAddress(caseSummary.currentAddress) }
+                        value: { html: addressHtml }
                     },
                     {
                         key: { text: 'Probation practitioner' },
