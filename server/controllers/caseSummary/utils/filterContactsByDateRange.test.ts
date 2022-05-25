@@ -141,13 +141,13 @@ describe('filterDates', () => {
       {
         href: '#dateFrom-day',
         name: 'dateFrom',
-        text: 'The from date must have a valid value for day',
+        text: 'The from date must have a real day',
         values: undefined,
       },
       {
         href: '#dateTo-month',
         name: 'dateTo',
-        text: 'The to date must have a valid value for month',
+        text: 'The to date must have a real month',
         values: undefined,
       },
     ])

@@ -112,7 +112,7 @@ context('Licence history', () => {
     cy.assertErrorMessage({
       fieldGroupId: 'dateFrom-day',
       fieldName: 'dateFrom',
-      errorText: 'The from date must have a valid value for day',
+      errorText: 'The from date must have a real day',
     })
 
     cy.log('successful date filter')
