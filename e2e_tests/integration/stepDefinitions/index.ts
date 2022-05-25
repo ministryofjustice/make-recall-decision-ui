@@ -34,3 +34,15 @@ When('Maria views the licence history page', () => {
   cy.clickLink('Licence history')
   cy.pageHeading().should('equal', 'Licence history')
 })
+
+When('Maria filters contacts by date range', () => {
+  cy.get('.app-summary-card')
+    .its('length')
+    .then(numberOfContacts => {
+      cy.getElement(`${numberOfContacts} contacts`).should('exist')
+    })
+  cy.enterDateTime('2022-03-13', { parent: '#dateFrom' })
+  cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
+  cy.clickButton('Apply filters')
+  cy.getLinkHref('13-03-2022 to 13-04-2022').should('equal', `/cases/${crn}/licence-history`)
+})
