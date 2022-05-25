@@ -44,5 +44,5 @@ When('Maria filters contacts by date range', () => {
   cy.enterDateTime('2022-03-13', { parent: '#dateFrom' })
   cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
   cy.clickButton('Apply filters')
-  cy.getLinkHref('13-03-2022 to 13-04-2022').should('equal', `/cases/${crn}/licence-history`)
+  cy.getLinkHref('13 Mar 2022 to 13 Apr 2022').should('equal', `/cases/${crn}/licence-history`)
 })
