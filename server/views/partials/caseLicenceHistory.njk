@@ -65,9 +65,9 @@
         </h2>
         <div class="filter-toggle"></div>
         {% for group in caseSummary.contactSummary.items %}
-            <div class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
+            <h3 class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
                 {{ formatDateTimeFromIsoString({ isoDate: group.groupValue, dateOnly: true}) }}
-            </div>
+            </h3>
             {% for contact in group.items %}
                 {% set titleHtml %}
                     <div>
@@ -114,6 +114,7 @@
                 <div data-qa='contact-{{ innerLoopIndex }}'>
                     {{ appSummaryCard({
                         titleHtml: titleHtml,
+                        headingLevel: 4,
                         classes: 'govuk-!-margin-bottom-3',
                         html: sectionHtml if contact.notes else undefined,
                         actionsHtml: actionsHtml
