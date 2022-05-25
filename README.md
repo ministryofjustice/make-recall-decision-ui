@@ -57,7 +57,7 @@ If you're using an M1/arm based Mac, you'll need to also have a checkout of [hmp
 
 This will build the `hmpps-auth` container image locally on your machine before starting things up. This is needed as the currently released container for `hmpps-auth` does not run properly on M1 macs.
 
-## Automated tests and linting
+## Automated tests, linting and typescript
 
 [Doc](./docs/lint-tests.md)
 
