@@ -1,9 +1,9 @@
 import { DateTime, Interval } from 'luxon'
 import { NamedFormError, ObjectMap } from '../../../@types'
 import { ValidationError } from '../../../@types/dates'
-import { convertGmtDatePartsToUtc, moveDateToEndOfDay } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
-import { dateHasError } from '../../../utils/dates'
+import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { formatDateRange } from '../../../utils/dates/format'
 
@@ -68,8 +68,8 @@ export const filterContactsByDateRange = ({
       contacts,
     }
   }
-  const dateFrom = DateTime.fromISO(dateFromIso as string)
-  const dateTo = DateTime.fromISO(moveDateToEndOfDay(dateToIso as string))
+  const dateFrom = DateTime.fromISO(dateFromIso as string, { zone: europeLondon })
+  const dateTo = DateTime.fromISO(dateToIso as string, { zone: europeLondon }).endOf('day')
   if (dateFrom.toMillis() > dateTo.toMillis()) {
     return {
       errors: [
@@ -83,8 +83,12 @@ export const filterContactsByDateRange = ({
     }
   }
   const interval = Interval.fromDateTimes(dateFrom, dateTo)
+  const filteredByDateRange = contacts.filter(contact => {
+    const contactStartDate = DateTime.fromISO(contact.contactStartDate)
+    return interval.contains(contactStartDate)
+  })
   return {
-    contacts: contacts.filter(contact => interval.contains(DateTime.fromISO(contact.contactStartDate))),
+    contacts: filteredByDateRange,
     selectedLabel: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
   }
 }

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { convertGmtDatePartsToUtc, moveDateToEndOfDay, splitIsoDateToParts } from './convert'
+import { convertGmtDatePartsToUtc, splitIsoDateToParts } from './convert'
 import { padWithZeroes } from './format'
 
 describe('convertGmtDatePartsToUtc', () => {
@@ -307,17 +307,5 @@ describe('splitIsoDateToParts', () => {
   it('returns undefined if passed an empty date string', () => {
     const result = splitIsoDateToParts()
     expect(result).toBeUndefined()
-  })
-})
-
-describe('moveDateToEndOfDay', () => {
-  it('sets the timestamp for a date to 23:59', () => {
-    const result = moveDateToEndOfDay('2022-10-05')
-    expect(result).toEqual('2022-10-05T23:59:59.999Z')
-  })
-
-  it('adjusts an existing timestamp to 23:59', () => {
-    const result = moveDateToEndOfDay('2022-10-05T08:43:29.000Z')
-    expect(result).toEqual('2022-10-05T23:59:59.999Z')
   })
 })
