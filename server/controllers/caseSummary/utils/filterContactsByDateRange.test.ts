@@ -193,4 +193,48 @@ describe('filterDates', () => {
     ])
     expect(selectedLabel).toEqual('3 Apr 2021 to 21 Apr 2022')
   })
+
+  it('adjusts a contact start date for DST so it falls inside the start of the date range', () => {
+    const contactList = [
+      {
+        contactStartDate: '2018-07-09T23:00:00Z',
+        descriptionType: 'Prison Offender Manager - Automatic Transfer',
+      },
+    ] as ContactSummaryResponse[]
+    const { errors, contacts } = filterContactsByDateRange({
+      contacts: contactList,
+      filters: {
+        'dateFrom-day': '10',
+        'dateFrom-month': '07',
+        'dateFrom-year': '2018',
+        'dateTo-day': '11',
+        'dateTo-month': '07',
+        'dateTo-year': '2018',
+      },
+    })
+    expect(errors).toBeUndefined()
+    expect(contacts).toEqual(contactList)
+  })
+
+  it('adjusts a contact start date for DST so it falls outside the end of the date range', () => {
+    const contactList = [
+      {
+        contactStartDate: '2018-07-09T23:00:00Z',
+        descriptionType: 'Prison Offender Manager - Automatic Transfer',
+      },
+    ] as ContactSummaryResponse[]
+    const { errors, contacts } = filterContactsByDateRange({
+      contacts: contactList,
+      filters: {
+        'dateFrom-day': '09',
+        'dateFrom-month': '07',
+        'dateFrom-year': '2018',
+        'dateTo-day': '09',
+        'dateTo-month': '07',
+        'dateTo-year': '2018',
+      },
+    })
+    expect(errors).toBeUndefined()
+    expect(contacts).toEqual([])
+  })
 })
