@@ -111,7 +111,7 @@ describe('caseSummary', () => {
     })
     expect(res.locals.section).toEqual({
       id: 'licence-history',
-      label: '2 contacts for A1234AB - Licence history',
+      label: '2 contacts for A1234AB - Contact history',
     })
   })
 
@@ -161,7 +161,7 @@ describe('caseSummary', () => {
     })
     expect(res.locals.section).toEqual({
       id: 'licence-history',
-      label: '1 contact for A1234AB - Licence history',
+      label: '1 contact for A1234AB - Contact history',
     })
   })
 

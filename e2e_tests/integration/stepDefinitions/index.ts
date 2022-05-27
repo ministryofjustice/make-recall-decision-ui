@@ -30,9 +30,9 @@ When('Maria views the personal details page', () => {
   cy.pageHeading().should('equal', 'Personal details')
 })
 
-When('Maria views the licence history page', () => {
-  cy.clickLink('Licence history')
-  cy.pageHeading().should('equal', 'Licence history')
+When('Maria views the Contact history page', () => {
+  cy.clickLink('Contact history')
+  cy.pageHeading().should('equal', 'Contact history')
 })
 
 When('Maria filters contacts by date range', () => {

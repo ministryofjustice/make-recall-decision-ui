@@ -44,7 +44,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = `${countLabel({
         count: transformed.data.contactCount,
         noun: 'contact',
-      })} for ${trimmedCrn} - Licence history`
+      })} for ${trimmedCrn} - Contact history`
       break
     default:
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)

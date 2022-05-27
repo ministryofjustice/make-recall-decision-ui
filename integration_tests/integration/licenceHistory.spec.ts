@@ -8,7 +8,7 @@ import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 import { dedupeList } from '../../server/utils/utils'
 
-context('Licence history', () => {
+context('Contact history', () => {
   beforeEach(() => {
     cy.signIn()
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
@@ -20,7 +20,7 @@ context('Licence history', () => {
   it('can view the licence history page', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-history`)
-    cy.pageHeading().should('equal', 'Licence history')
+    cy.pageHeading().should('equal', 'Contact history')
 
     // contacts
     const systemGeneratedRemoved = getCaseLicenceHistoryResponse.contactSummary.filter(
