@@ -1,7 +1,7 @@
 import { DateTime, Interval } from 'luxon'
 import { NamedFormError, ObjectMap } from '../../../@types'
 import { ValidationError } from '../../../@types/dates'
-import { convertGmtDatePartsToUtc, moveDateToEndOfDay } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
