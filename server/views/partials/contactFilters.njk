@@ -1,6 +1,7 @@
-{% if flags.dateFilters %}
+{% if flags.dateFilters or flags.contactTypesFilter %}
     <div class="govuk-grid-column-one-third-from-desktop">
         {%- set filterOptionsHtml %}
+            {% if flags.dateFilters %}
             {{ govukDateInput({
                 id: "dateFrom",
                 namePrefix: "dateFrom",
@@ -25,6 +26,7 @@
                 items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
                 errorMessage: errorMessage(errors.dateTo)
             }) }}
+            {% endif %}
             {% if flags.contactTypesFilter %}
             {{ govukCheckboxes({
                 idPrefix: "contactTypes",
