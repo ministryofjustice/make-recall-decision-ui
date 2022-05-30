@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/node'
 
 import path from 'path'
 import createError from 'http-errors'
+import cookieParser from 'cookie-parser'
 
 import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -31,6 +32,7 @@ export default function createApp(userService: UserService): express.Application
     res.locals.env = process.env.ENVIRONMENT // DEVELOPMENT/ PRE-PRODUCTION / PRODUCTION
     next()
   })
+  app.use(cookieParser())
 
   app.use(setUpSentry())
   app.use(appInsightsOperationId)
