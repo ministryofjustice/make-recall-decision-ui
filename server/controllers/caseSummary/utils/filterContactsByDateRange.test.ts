@@ -1,7 +1,7 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 
-describe('filterDates', () => {
+describe('filterContactsByDateRange', () => {
   it('leaves the list unaltered if no dates supplied', () => {
     const contactList = [
       {
@@ -106,7 +106,7 @@ describe('filterDates', () => {
       },
     })
     expect(errors).toEqual([
-      { href: '#dateFrom-day', name: 'dateFrom', text: 'The from date must be before the to date' },
+      { href: '#dateFrom-day', name: 'dateFrom', text: 'The from date must be on or before the to date' },
     ])
     expect(contacts).toEqual(contactList)
   })
@@ -154,7 +154,7 @@ describe('filterDates', () => {
     expect(contacts).toEqual(contactList)
   })
 
-  it('filters contacts by the supplied from and to dates and returns a label', () => {
+  it('filters contacts by the supplied from and to dates and returns selected filters', () => {
     const contactList = [
       {
         contactStartDate: '2022-05-04T13:07:00Z',
@@ -169,7 +169,7 @@ describe('filterDates', () => {
         descriptionType: 'Planned Office Visit (NS)',
       },
     ] as ContactSummaryResponse[]
-    const { errors, contacts, selectedLabel } = filterContactsByDateRange({
+    const { errors, contacts, selected } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
         'dateFrom-day': '03',
@@ -178,6 +178,7 @@ describe('filterDates', () => {
         'dateTo-day': '21',
         'dateTo-month': '04',
         'dateTo-year': '2022',
+        contactTypes: 'IVSP',
       },
     })
     expect(errors).toBeUndefined()
@@ -191,7 +192,9 @@ describe('filterDates', () => {
         descriptionType: 'Planned Office Visit (NS)',
       },
     ])
-    expect(selectedLabel).toEqual('3 Apr 2021 to 21 Apr 2022')
+    // this will be used to make a 'remove date filter' link, which should remove the date params
+    // but preserve any other existing params, in this case 'contactTypes'
+    expect(selected).toEqual([{ text: '3 Apr 2021 to 21 Apr 2022', href: '?contactTypes=IVSP' }])
   })
 
   it('adjusts a contact start date for DST so it falls inside the start of the date range', () => {

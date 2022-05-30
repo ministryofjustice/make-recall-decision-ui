@@ -3,6 +3,7 @@ import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api
 import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
+import { filterContactsByContactType } from './filterContactsByContactType'
 
 const filterSystemGenerated = ({
   contacts,
@@ -22,25 +23,39 @@ export const transformLicenceHistory = ({
   filters,
 }: {
   caseSummary: LicenceHistoryResponse
-  filters: ObjectMap<string>
+  filters: ObjectMap<string | string[]>
 }) => {
   const filteredBySystemGenerated = filterSystemGenerated({
     contacts: caseSummary.contactSummary,
-    showSystemGenerated: filters.showSystemGenerated,
+    showSystemGenerated: filters.showSystemGenerated as string,
   })
-  const { errors, contacts, selectedLabel } = filterContactsByDateRange({
+  const {
+    errors,
+    contacts: contactsFilteredByDateRange,
+    selected: selectedDateRange,
+  } = filterContactsByDateRange({
     contacts: filteredBySystemGenerated,
+    filters: filters as ObjectMap<string>,
+  })
+  const {
+    contacts: contactsFilteredByContactTypes,
+    selected: selectedContactTypes,
+    contactTypes: allContactTypes,
+  } = filterContactsByContactType({
+    contacts: contactsFilteredByDateRange,
     filters,
   })
+  const hasActiveFilters = Boolean(selectedDateRange || selectedContactTypes?.length)
   return {
     errors,
     data: {
       ...caseSummary,
-      contactSummary: groupContactsByStartDate(contacts),
-      contactCount: contacts.length,
+      contactSummary: groupContactsByStartDate(contactsFilteredByContactTypes),
+      contactCount: contactsFilteredByContactTypes.length,
+      hasActiveFilters,
       filters: {
         dateRange: {
-          selectedLabel,
+          selected: selectedDateRange,
           dateFrom: {
             day: filters[`dateFrom-day`],
             month: filters[`dateFrom-month`],
@@ -51,6 +66,11 @@ export const transformLicenceHistory = ({
             month: filters[`dateTo-month`],
             year: filters[`dateTo-year`],
           },
+        },
+        contactTypes: {
+          allContactTypes,
+          selected: selectedContactTypes,
+          selectedIds: filters.contactTypes,
         },
       },
     },

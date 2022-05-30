@@ -4,6 +4,7 @@ import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api
 describe('transformLicenceHistory', () => {
   const contactSummary = [
     {
+      code: 'IVSP',
       contactStartDate: '2022-05-04T13:07:00Z',
       descriptionType: 'Arrest attempt',
       outcome: null,
@@ -13,6 +14,7 @@ describe('transformLicenceHistory', () => {
       systemGenerated: true,
     },
     {
+      code: 'IVSP',
       contactStartDate: '2022-04-21T10:03:00Z',
       descriptionType: 'Management Oversight - Recall',
       outcome: 'Decision to Recall',
@@ -22,6 +24,7 @@ describe('transformLicenceHistory', () => {
       systemGenerated: false,
     },
     {
+      code: 'IVSP',
       contactStartDate: '2022-04-21T11:30:00Z',
       descriptionType: 'Planned Office Visit (NS)',
       outcome: 'Failed to Attend',
@@ -47,6 +50,17 @@ describe('transformLicenceHistory', () => {
     // contact count is 1 because 1 of the 3 items was filtered out as system-generated, and another by the date range
     expect(data.contactCount).toEqual(1)
     expect(data.filters).toEqual({
+      contactTypes: {
+        allContactTypes: [
+          {
+            count: 1,
+            description: 'IOM 3rd Party Office Visit',
+            html: 'IOM 3rd Party Office Visit (1)',
+            value: 'IVSP',
+          },
+        ],
+        selected: [],
+      },
       dateRange: {
         dateFrom: {
           day: '21',
@@ -58,7 +72,12 @@ describe('transformLicenceHistory', () => {
           month: '04',
           year: '2022',
         },
-        selectedLabel: '21 Apr 2022 to 21 Apr 2022',
+        selected: [
+          {
+            href: '',
+            text: '21 Apr 2022 to 21 Apr 2022',
+          },
+        ],
       },
     })
   })
@@ -73,6 +92,17 @@ describe('transformLicenceHistory', () => {
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(3)
     expect(data.filters).toEqual({
+      contactTypes: {
+        allContactTypes: [
+          {
+            count: 3,
+            description: 'IOM 3rd Party Office Visit',
+            html: 'IOM 3rd Party Office Visit (3)',
+            value: 'IVSP',
+          },
+        ],
+        selected: [],
+      },
       dateRange: {
         dateFrom: {},
         dateTo: {},

@@ -1,6 +1,7 @@
+import qs from 'qs'
 import config from '../config'
 import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
-import { FormError } from '../@types'
+import { FormError, ObjectMap } from '../@types'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -90,3 +91,28 @@ export const dedupeList = <T>(list: T[]) => {
 
 export const countLabel = ({ count, noun }: { count: number; noun: string }) =>
   `${count} ${noun}${count !== 1 ? 's' : ''}`
+
+export const removeParamsFromQueryString = ({
+  paramsToRemove,
+  allParams,
+}: {
+  paramsToRemove: { key: string; value?: string }[]
+  allParams: ObjectMap<string | string[]>
+}) => {
+  const updatedParams = {}
+  Object.entries(allParams)
+    .filter(([key]) => allParams[key] !== '')
+    .forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        const updatedValues = value.filter(val => !paramsToRemove.find(param => param.value === val))
+        updatedParams[key] = updatedValues.length ? updatedValues : undefined
+      } else {
+        const toRemove = paramsToRemove.find(paramToRemove => paramToRemove.key === key)
+        if (!toRemove) {
+          updatedParams[key] = value
+        }
+      }
+    })
+  const queryString = qs.stringify(updatedParams, { arrayFormat: 'repeat' })
+  return queryString ? `?${queryString}` : ''
+}

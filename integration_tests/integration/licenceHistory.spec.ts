@@ -75,7 +75,7 @@ context('Contact history', () => {
 
     // apply filters without entering dates
     cy.clickButton('Apply filters')
-    cy.getElement('5 contacts').should('exist')
+    cy.getElement('10 contacts').should('exist')
 
     cy.log('invalid dates - part of date missing')
     cy.fillInput('Day', '12', { parent: '#dateFrom' })
@@ -92,7 +92,7 @@ context('Contact history', () => {
       fieldName: 'dateTo',
       errorText: 'The to date must include a day and month',
     })
-    cy.getElement('5 contacts').should('exist')
+    cy.getElement('10 contacts').should('exist')
 
     cy.log('invalid dates - from date after to date')
     cy.enterDateTime('2022-04-14', { parent: '#dateFrom' })
@@ -101,7 +101,7 @@ context('Contact history', () => {
     cy.assertErrorMessage({
       fieldGroupId: 'dateFrom-day',
       fieldName: 'dateFrom',
-      errorText: 'The from date must be before the to date',
+      errorText: 'The from date must be on or before the to date',
     })
 
     cy.log('invalid date - out of bounds value')
@@ -124,6 +124,21 @@ context('Contact history', () => {
 
     // clear filters
     cy.clickLink('Clear filters')
-    cy.getElement('5 contacts').should('exist')
+    cy.getElement('10 contacts').should('exist')
+  })
+
+  it('can filter licence history contacts by date and contact types', () => {
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-history?contactTypesFilter=1`)
+
+    cy.enterDateTime('2022-03-16', { parent: '#dateFrom' })
+    cy.enterDateTime('2022-04-21', { parent: '#dateTo' })
+    cy.selectCheckboxes('Contact type', ['IOM 3rd Party Office Visit'])
+    // apply filters without entering dates
+    cy.clickButton('Apply filters')
+    cy.getElement('2 contacts').should('exist')
+    // clear filter
+    cy.clickLink('IOM 3rd Party Office Visit')
+    cy.getElement('4 contacts').should('exist')
   })
 })
