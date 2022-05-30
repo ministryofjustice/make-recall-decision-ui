@@ -6,6 +6,7 @@ export const mockReq = ({
   query = {},
   params = {},
   body = {},
+  cookies = {},
   method = 'GET',
   headers = {},
   session = {} as SessionData,
@@ -17,6 +18,7 @@ export const mockReq = ({
   query?: ObjectMap<string | boolean>
   params?: ObjectMap<string | boolean>
   headers?: ObjectMap<string | boolean>
+  cookies?: ObjectMap<string>
   method?: string
   session?: SessionData
   originalUrl?: string
@@ -28,6 +30,7 @@ export const mockReq = ({
     params,
     body,
     headers,
+    cookies,
     method,
     session,
     originalUrl,
@@ -42,12 +45,14 @@ export const mockRes = ({
   redirect = jest.fn(),
   render = jest.fn(),
   sendStatus = jest.fn(),
+  cookie = jest.fn(),
 }: {
   locals?: ObjectMap<unknown>
   token?: string
   redirect?: jest.Mock
   render?: jest.Mock
   sendStatus?: jest.Mock
+  cookie?: jest.Mock
 } = {}): Response => {
   return {
     locals: {
@@ -60,6 +65,7 @@ export const mockRes = ({
     redirect,
     render,
     sendStatus,
+    cookie,
   } as unknown as Response
 }
 

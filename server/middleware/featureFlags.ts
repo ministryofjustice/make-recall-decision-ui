@@ -4,13 +4,17 @@ import { ObjectMap } from '../@types'
 export const featureFlagDefaults = {
   collapsibleNotes: true,
   dateFilters: true,
+  contactTypesFilter: false,
 }
 
 export const readFeatureFlags = (flags: ObjectMap<boolean>) => (req: Request, res: Response, next: NextFunction) => {
   res.locals.flags = { ...flags }
   Object.keys(flags).forEach(key => {
-    if (req.query[key]) {
-      res.locals.flags[key] = req.query[key] === '1'
+    const flag = req.query[key] || req.cookies[key]
+    if (flag) {
+      const enabled = flag === '1'
+      res.cookie(key, flag)
+      res.locals.flags[key] = enabled
     }
   })
   next()
