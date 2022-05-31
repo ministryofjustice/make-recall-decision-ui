@@ -6,7 +6,7 @@ import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-
 import { europeLondon, sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
-import { dedupeList } from '../../server/utils/utils'
+import { dedupeList } from '../../server/utils/lists'
 
 context('Contact history', () => {
   beforeEach(() => {

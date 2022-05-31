@@ -1,11 +1,36 @@
-import convertToTitleCase, {
-  makePageTitle,
-  listToString,
-  getProperty,
-  groupListByValue,
-  dedupeList,
-  removeParamsFromQueryString,
-} from './utils'
+import convertToTitleCase, { makePageTitle, getProperty, removeParamsFromQueryString, listToString } from './utils'
+
+describe('listToString', () => {
+  it('returns a list for 1 item', () => {
+    expect(listToString(['day'], 'and')).toEqual('day')
+  })
+
+  it('uses the supplied conjunction', () => {
+    expect(listToString(['JPG', 'JPEG'], 'or')).toEqual('JPG or JPEG')
+  })
+
+  it('returns a list for 2 items', () => {
+    expect(listToString(['year', 'day'], 'and')).toEqual('year and day')
+  })
+
+  it('returns a list for 3 items', () => {
+    expect(listToString(['year', 'month', 'day'], 'and')).toEqual('year, month and day')
+  })
+
+  it('returns a list for 4 items', () => {
+    expect(listToString(['year', 'month', 'day', 'minute'], 'and')).toEqual('year, month, day and minute')
+  })
+
+  it('accepts empty string as the conjunction', () => {
+    expect(listToString(['5 Andrew Crescent', 'Southampton', 'S1 8EY'], '')).toEqual(
+      '5 Andrew Crescent, Southampton S1 8EY'
+    )
+  })
+
+  it('returns a list when no conjunction supplied', () => {
+    expect(listToString(['year', 'month', 'day', 'minute'])).toEqual('year, month, day, minute')
+  })
+})
 
 describe('Convert to title case', () => {
   it('null string', () => {
@@ -49,38 +74,6 @@ describe('makePageTitle', () => {
   })
 })
 
-describe('listToString', () => {
-  it('returns a list for 1 item', () => {
-    expect(listToString(['day'], 'and')).toEqual('day')
-  })
-
-  it('uses the supplied conjunction', () => {
-    expect(listToString(['JPG', 'JPEG'], 'or')).toEqual('JPG or JPEG')
-  })
-
-  it('returns a list for 2 items', () => {
-    expect(listToString(['year', 'day'], 'and')).toEqual('year and day')
-  })
-
-  it('returns a list for 3 items', () => {
-    expect(listToString(['year', 'month', 'day'], 'and')).toEqual('year, month and day')
-  })
-
-  it('returns a list for 4 items', () => {
-    expect(listToString(['year', 'month', 'day', 'minute'], 'and')).toEqual('year, month, day and minute')
-  })
-
-  it('accepts empty string as the conjunction', () => {
-    expect(listToString(['5 Andrew Crescent', 'Southampton', 'S1 8EY'], '')).toEqual(
-      '5 Andrew Crescent, Southampton S1 8EY'
-    )
-  })
-
-  it('returns a list when no conjunction supplied', () => {
-    expect(listToString(['year', 'month', 'day', 'minute'])).toEqual('year, month, day, minute')
-  })
-})
-
 describe('getProperty', () => {
   it('returns a nested property', () => {
     const obj = {
@@ -108,66 +101,6 @@ describe('getProperty', () => {
     }
     const val = getProperty(obj, 'legalRepresentativeInfo.phone')
     expect(val).toBeUndefined()
-  })
-})
-
-describe('groupListByValue', () => {
-  it('groups by value', () => {
-    const list = [
-      {
-        a: 1,
-        b: 2,
-        c: 3,
-      },
-      {
-        a: 5,
-        b: 3,
-        c: 9,
-      },
-      {
-        a: 5,
-        b: 2,
-        c: 9,
-      },
-    ]
-    const grouped = groupListByValue<{ a: number; b: number; c: number }>({ list, groupByKey: 'b' })
-    expect(grouped).toEqual({
-      groupedByKey: 'b',
-      items: [
-        {
-          groupValue: 2,
-          items: [
-            {
-              a: 1,
-              b: 2,
-              c: 3,
-            },
-            {
-              a: 5,
-              b: 2,
-              c: 9,
-            },
-          ],
-        },
-        {
-          groupValue: 3,
-          items: [
-            {
-              a: 5,
-              b: 3,
-              c: 9,
-            },
-          ],
-        },
-      ],
-    })
-  })
-})
-
-describe('dedupeList', () => {
-  it('removes duplicates', () => {
-    const result = dedupeList(['aa', 'bb', 'aa', 'c', 'ddd'])
-    expect(result).toEqual(['aa', 'bb', 'c', 'ddd'])
   })
 })
 

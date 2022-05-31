@@ -1,7 +1,7 @@
 import { FormError, KeyedFormErrors, NamedFormError, ObjectMap } from '../@types'
 import { ValidationError } from '../@types/dates'
-import { listToString } from './utils'
 import { MIN_VALUE_YEAR } from './dates/convert'
+import { listToString } from './utils'
 
 export const makeErrorObject = ({
   id,

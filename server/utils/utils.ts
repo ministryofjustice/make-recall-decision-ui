@@ -32,11 +32,6 @@ export const isNumber = (val: unknown) => typeof val === 'number'
 
 export const areStringArraysTheSame = (arr1: unknown[], arr2: unknown[]) => arr1.join('') === arr2.join('')
 
-export const formatSingleLineAddress = (address: CurrentAddress) => {
-  const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
-  return listToString(parts, '')
-}
-
 export const listToString = (list: string[], conjunction?: string) => {
   if (list.length === 1) {
     return list[0]
@@ -50,6 +45,11 @@ export const listToString = (list: string[], conjunction?: string) => {
   return copy.join(', ')
 }
 
+export const formatSingleLineAddress = (address: CurrentAddress) => {
+  const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
+  return listToString(parts, '')
+}
+
 export const errorMessage = (field: FormError) => (field ? { html: field.text } : undefined)
 
 export const getProperty = <T, U>(obj: T, accessor: string): U => {
@@ -59,34 +59,6 @@ export const getProperty = <T, U>(obj: T, accessor: string): U => {
     traversed = traversed?.[key]
   })
   return traversed as unknown as U
-}
-
-export const groupListByValue = <T>({ list, groupByKey }: { list: T[]; groupByKey: string }) => {
-  return list.reduce(
-    (prev, current) => {
-      let group = prev.items.find(item => item.groupValue === current[groupByKey])
-      if (!group) {
-        group = {
-          groupValue: current[groupByKey],
-          items: [],
-        }
-        prev.items.push(group)
-      }
-      group.items.push(current)
-      return prev
-    },
-    { groupedByKey: groupByKey, items: [] }
-  )
-}
-
-export const dedupeList = <T>(list: T[]) => {
-  const unique = [] as T[]
-  list.forEach(element => {
-    if (!unique.includes(element)) {
-      unique.push(element)
-    }
-  })
-  return unique
 }
 
 export const countLabel = ({ count, noun }: { count: number; noun: string }) =>

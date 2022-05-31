@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import { europeLondon, sortListByDateField } from '../../../utils/dates'
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
-import { groupListByValue } from '../../../utils/utils'
+import { groupListByValue } from '../../../utils/lists'
 
 export const groupContactsByStartDate = (contacts: ContactSummaryResponse[]) => {
   const contactsWithDate = contacts.map(contact => ({

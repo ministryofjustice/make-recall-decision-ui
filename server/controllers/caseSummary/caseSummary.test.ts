@@ -119,59 +119,6 @@ describe('caseSummary', () => {
     })
   })
 
-  it('should filter out system generated contacts for contact history if query string set', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
-      contactSummary: [
-        {
-          code: 'IVSP',
-          contactStartDate: '2022-06-03T08:00:00',
-          descriptionType: 'Registration Review',
-          outcome: null,
-          notes:
-            'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
-          enforcementAction: 'action 2',
-          systemGenerated: true,
-        },
-        {
-          code: 'IVSP',
-          contactStartDate: '2022-05-10T11:39:00',
-          descriptionType: 'Police Liaison',
-          outcome: null,
-          notes: null,
-          enforcementAction: 'action 1',
-          systemGenerated: false,
-        },
-      ],
-    })
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    const req = mockReq({ params: { crn, sectionId: 'contact-history' }, query: { showSystemGenerated: 'NO' } })
-    await caseSummary(req, res)
-    expect(res.locals.caseSummary.contactSummary).toEqual({
-      groupedByKey: 'startDate',
-      items: [
-        {
-          groupValue: '2022-05-10',
-          items: [
-            {
-              code: 'IVSP',
-              contactStartDate: '2022-05-10T11:39:00',
-              descriptionType: 'Police Liaison',
-              enforcementAction: 'action 1',
-              notes: null,
-              outcome: null,
-              startDate: '2022-05-10',
-              systemGenerated: false,
-            },
-          ],
-        },
-      ],
-    })
-    expect(res.locals.section).toEqual({
-      id: 'contact-history',
-      label: '1 contact for A1234AB - Contact history',
-    })
-  })
-
   it('should return 400 for an invalid CRN', async () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ params: { crn: invalidCrn, sectionId: 'contact-log' } })
