@@ -1,7 +1,7 @@
-import { transformLicenceHistory } from './transformLicenceHistory'
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { transformContactHistory } from './transformContactHistory'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 
-describe('transformLicenceHistory', () => {
+describe('transformContactHistory', () => {
   const contactSummary = [
     {
       code: 'IVSP',
@@ -35,8 +35,8 @@ describe('transformLicenceHistory', () => {
   ]
 
   it('sets contacts count to the number of filtered items, and returns the selected filters', () => {
-    const { errors, data } = transformLicenceHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+    const { errors, data } = transformContactHistory({
+      caseSummary: { contactSummary } as ContactHistoryResponse,
       filters: {
         'dateFrom-day': '21',
         'dateFrom-month': '04',
@@ -83,8 +83,8 @@ describe('transformLicenceHistory', () => {
   })
 
   it('returns all contacts if system generated are included, and no date filter', () => {
-    const { errors, data } = transformLicenceHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+    const { errors, data } = transformContactHistory({
+      caseSummary: { contactSummary } as ContactHistoryResponse,
       filters: {
         showSystemGenerated: 'YES',
       },

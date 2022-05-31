@@ -49,7 +49,7 @@ describe('caseSummary', () => {
     expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
   })
 
-  it('should return grouped by dates for licence history', async () => {
+  it('should return grouped by dates for contact history', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
@@ -74,7 +74,7 @@ describe('caseSummary', () => {
       ],
     })
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
+    const req = mockReq({ params: { crn, sectionId: 'contact-history' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'all-licence-history', token)
     expect(res.locals.caseSummary.contactSummary).toEqual({
@@ -114,12 +114,12 @@ describe('caseSummary', () => {
       ],
     })
     expect(res.locals.section).toEqual({
-      id: 'licence-history',
+      id: 'contact-history',
       label: '2 contacts for A1234AB - Contact history',
     })
   })
 
-  it('should filter out system generated contacts for licence history if query string set', async () => {
+  it('should filter out system generated contacts for contact history if query string set', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
@@ -144,7 +144,7 @@ describe('caseSummary', () => {
       ],
     })
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    const req = mockReq({ params: { crn, sectionId: 'licence-history' }, query: { showSystemGenerated: 'NO' } })
+    const req = mockReq({ params: { crn, sectionId: 'contact-history' }, query: { showSystemGenerated: 'NO' } })
     await caseSummary(req, res)
     expect(res.locals.caseSummary.contactSummary).toEqual({
       groupedByKey: 'startDate',
@@ -167,7 +167,7 @@ describe('caseSummary', () => {
       ],
     })
     expect(res.locals.section).toEqual({
-      id: 'licence-history',
+      id: 'contact-history',
       label: '1 contact for A1234AB - Contact history',
     })
   })

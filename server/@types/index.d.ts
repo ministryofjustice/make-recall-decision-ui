@@ -8,8 +8,8 @@ export type CaseSectionId =
   | 'overview'
   | 'risk'
   | 'personal-details'
-  | 'licence-history'
-  | 'licence-history-data'
+  | 'contact-history'
+  | 'contact-history-data'
   | 'all-licence-history'
 
 export interface FormError {

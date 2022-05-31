@@ -8,16 +8,16 @@ describe('selectedFilterItems', () => {
         { href: '?contactTypes=BFI', text: 'Test 2' },
       ],
       urlInfo: {
-        path: '/licence-history',
+        path: '/contact-history',
       },
     })
     expect(result).toEqual([
       {
-        href: '/licence-history',
+        href: '/contact-history',
         text: 'Test',
       },
       {
-        href: '/licence-history?contactTypes=BFI',
+        href: '/contact-history?contactTypes=BFI',
         text: 'Test 2',
       },
     ])

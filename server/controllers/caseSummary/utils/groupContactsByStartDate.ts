@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { europeLondon, sortListByDateField } from '../../../utils/dates'
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { groupListByValue } from '../../../utils/utils'
 
@@ -26,7 +26,7 @@ export const groupContactsByStartDate = (contacts: ContactSummaryResponse[]) => 
   return { ...groupedByDate, items: sortedByGroupDate }
 }
 
-export const transformLicenceHistory = (caseSummary: LicenceHistoryResponse, showSystemGenerated: boolean) => {
+export const transformContactHistory = (caseSummary: ContactHistoryResponse, showSystemGenerated: boolean) => {
   const filtered = showSystemGenerated
     ? caseSummary.contactSummary
     : caseSummary.contactSummary.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)

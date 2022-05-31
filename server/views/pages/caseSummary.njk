@@ -6,7 +6,7 @@
     <link rel="prefetch" href="{{ pageUrlBase }}overview">
     <link rel="prefetch" href="{{ pageUrlBase }}risk">
     <link rel="prefetch" href="{{ pageUrlBase }}personal-details">
-    <link rel="prefetch" href="{{ pageUrlBase }}licence-history">
+    <link rel="prefetch" href="{{ pageUrlBase }}contact-history">
 {% endblock %}
 
 {% block beforeContent %}
@@ -46,8 +46,8 @@
                     },
                     {
                         text: 'Contact history',
-                        href: pageUrlBase + 'licence-history',
-                        active: section.id == 'licence-history'
+                        href: pageUrlBase + 'contact-history',
+                        active: section.id == 'contact-history'
                     }
                 ]
             }) }}
@@ -57,8 +57,8 @@
                 {% include '../partials/caseRisk.njk' %}
             {% elseif section.id =='personal-details' %}
                 {% include '../partials/casePersonalDetails.njk' %}
-            {% elseif section.id =='licence-history' %}
-                {% include '../partials/caseLicenceHistory.njk' %}
+            {% elseif section.id =='contact-history' %}
+                {% include '../partials/caseContactHistory.njk' %}
             {% endif %}
         </div>
     </div>

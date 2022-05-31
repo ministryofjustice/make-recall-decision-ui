@@ -1,4 +1,4 @@
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
@@ -18,11 +18,11 @@ const filterSystemGenerated = ({
   return contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
 }
 
-export const transformLicenceHistory = ({
+export const transformContactHistory = ({
   caseSummary,
   filters,
 }: {
-  caseSummary: LicenceHistoryResponse
+  caseSummary: ContactHistoryResponse
   filters: ObjectMap<string | string[]>
 }) => {
   const filteredBySystemGenerated = filterSystemGenerated({
