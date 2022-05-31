@@ -1,7 +1,7 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
-import getCaseLicenceHistoryResponse from '../../api/responses/get-case-licence-history.json'
+import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 
@@ -13,11 +13,11 @@ const urls = [
   `${routeUrls.cases}/123/overview`,
   `${routeUrls.cases}/123/risk`,
   `${routeUrls.cases}/123/personal-details`,
-  `${routeUrls.cases}/123/licence-history`,
+  `${routeUrls.cases}/123/contact-history`,
   // contact filter with valid dates
-  `${routeUrls.cases}/123/licence-history?dateFilters=1&dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
+  `${routeUrls.cases}/123/contact-history?dateFilters=1&dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
   // contact filter with invalid dates and errors
-  `${routeUrls.cases}/123/licence-history?dateFilters=1&dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
+  `${routeUrls.cases}/123/contact-history?dateFilters=1&dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
 ]
 
 context('Accessibility (a11y) Checks', () => {
@@ -27,7 +27,7 @@ context('Accessibility (a11y) Checks', () => {
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseLicenceHistoryResponse })
+    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseContactHistoryResponse })
   })
 
   urls.forEach(url => {
