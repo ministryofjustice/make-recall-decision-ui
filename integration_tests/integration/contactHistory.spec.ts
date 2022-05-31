@@ -127,7 +127,7 @@ context('Contact history', () => {
     cy.getElement('10 contacts').should('exist')
   })
 
-  it('can filter licence history contacts by date and contact types', () => {
+  it('can filter contact history contacts by date and contact types', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1`)
 
