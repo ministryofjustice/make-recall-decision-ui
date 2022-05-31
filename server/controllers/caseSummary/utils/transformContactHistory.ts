@@ -1,22 +1,8 @@
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
-import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
 import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
-
-const filterSystemGenerated = ({
-  contacts,
-  showSystemGenerated,
-}: {
-  contacts: ContactSummaryResponse[]
-  showSystemGenerated?: string
-}): ContactSummaryResponse[] => {
-  if (showSystemGenerated === 'YES') {
-    return contacts
-  }
-  return contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
-}
 
 export const transformContactHistory = ({
   caseSummary,
@@ -25,16 +11,12 @@ export const transformContactHistory = ({
   caseSummary: ContactHistoryResponse
   filters: ObjectMap<string | string[]>
 }) => {
-  const filteredBySystemGenerated = filterSystemGenerated({
-    contacts: caseSummary.contactSummary,
-    showSystemGenerated: filters.showSystemGenerated as string,
-  })
   const {
     errors,
     contacts: contactsFilteredByDateRange,
     selected: selectedDateRange,
   } = filterContactsByDateRange({
-    contacts: filteredBySystemGenerated,
+    contacts: caseSummary.contactSummary,
     filters: filters as ObjectMap<string>,
   })
   const {

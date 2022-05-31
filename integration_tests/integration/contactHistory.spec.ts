@@ -6,7 +6,7 @@ import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-
 import { europeLondon, sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
-import { dedupeList } from '../../server/utils/utils'
+import { dedupeList } from '../../server/utils/lists'
 
 context('Contact history', () => {
   beforeEach(() => {
@@ -127,7 +127,7 @@ context('Contact history', () => {
     cy.getElement('10 contacts').should('exist')
   })
 
-  it('can filter licence history contacts by date and contact types', () => {
+  it('can filter contact history contacts by date and contact types', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1`)
 

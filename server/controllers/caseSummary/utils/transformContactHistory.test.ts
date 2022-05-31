@@ -47,15 +47,15 @@ describe('transformContactHistory', () => {
       },
     })
     expect(errors).toBeUndefined()
-    // contact count is 1 because 1 of the 3 items was filtered out as system-generated, and another by the date range
-    expect(data.contactCount).toEqual(1)
+    // contact count is 2 because 1 of the 3 items was filtered out by the date range
+    expect(data.contactCount).toEqual(2)
     expect(data.filters).toEqual({
       contactTypes: {
         allContactTypes: [
           {
-            count: 1,
+            count: 2,
             description: 'IOM 3rd Party Office Visit',
-            html: 'IOM 3rd Party Office Visit (1)',
+            html: 'IOM 3rd Party Office Visit <span class="text-secondary">(2)</span>',
             value: 'IVSP',
           },
         ],
@@ -82,7 +82,7 @@ describe('transformContactHistory', () => {
     })
   })
 
-  it('returns all contacts if system generated are included, and no date filter', () => {
+  it('returns all contacts if no date filter', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary } as ContactHistoryResponse,
       filters: {
@@ -97,7 +97,7 @@ describe('transformContactHistory', () => {
           {
             count: 3,
             description: 'IOM 3rd Party Office Visit',
-            html: 'IOM 3rd Party Office Visit (3)',
+            html: 'IOM 3rd Party Office Visit <span class="text-secondary">(3)</span>',
             value: 'IVSP',
           },
         ],

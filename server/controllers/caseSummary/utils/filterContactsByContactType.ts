@@ -3,6 +3,7 @@ import getContactTypes from '../../../../api/responses/get-contact-types.json'
 import logger from '../../../../logger'
 import { removeParamsFromQueryString } from '../../../utils/utils'
 import { ObjectMap } from '../../../@types'
+import { sortList } from '../../../utils/lists'
 
 export const filterContactsByContactType = ({
   contacts,
@@ -32,14 +33,16 @@ export const filterContactsByContactType = ({
     logger.error(`contact.code "${contact.code}" not found in contact types`)
     return undefined
   })
+  const transformedContactTypes = allContactTypes
+    .filter(type => type.count > 0)
+    .map(type => ({
+      ...type,
+      html: `${type.description} <span class="text-secondary">(${type.count})</span>`,
+    }))
+  const sortedContactTypes = sortList(transformedContactTypes, 'count', false)
   return {
     contacts: filteredContacts,
-    contactTypes: allContactTypes
-      .filter(type => type.count > 0)
-      .map(type => ({
-        ...type,
-        html: `${type.description} (${type.count})`,
-      })),
+    contactTypes: sortedContactTypes,
     selected: contactTypesFilter
       ? selectedContactTypes.map(id => ({
           text: allContactTypes.find(type => type.value === id)?.description,
