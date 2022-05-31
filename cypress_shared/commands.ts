@@ -131,3 +131,12 @@ Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-cont
     cy.fillInput('Minute', minute, options)
   }
 })
+
+Cypress.Commands.add('selectCheckboxes', (groupLabel, values, opts = {}) => {
+  cy.get(opts.parent || 'body')
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      values.forEach(value => cy.wrap($fieldset).contains('label', value).click())
+    })
+})

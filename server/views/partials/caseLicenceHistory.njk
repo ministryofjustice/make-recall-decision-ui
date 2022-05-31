@@ -1,63 +1,6 @@
 <h1 class='govuk-heading-m'>Contact history</h1>
 <div class="govuk-grid-row">
-    {% if flags.dateFilters %}
-    <div class="govuk-grid-column-one-third-from-desktop">
-        {%- set filterOptionsHtml %}
-            {{ govukDateInput({
-                id: "dateFrom",
-                namePrefix: "dateFrom",
-                fieldset: {
-                    legend: {
-                        html: "Date range<span class='govuk-visually-hidden'> From</span>",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
-                errorMessage: errorMessage(errors.dateFrom)
-            }) }}
-            {{ govukDateInput({
-                id: "dateTo",
-                namePrefix: "dateTo",
-                fieldset: {
-                    legend: {
-                        html: "<span class='govuk-visually-hidden'>Date range </span>To",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
-                errorMessage: errorMessage(errors.dateTo)
-            }) }}
-        {% endset -%}
-        <div class='govuk-!-margin-bottom-4'>
-        <form>
-            {{ mojFilter({
-                heading: {
-                    text: 'Filter'
-                },
-                selectedFilters: {
-                    heading: {
-                        text: 'Selected filters'
-                    },
-                    clearLink: {
-                        text: 'Clear filters',
-                        href: urlInfo.path
-                    },
-                    categories: [{
-                        heading: {
-                            text: 'Date range'
-                        },
-                        items: [{
-                            href: urlInfo.path,
-                            text: caseSummary.filters.dateRange.selectedLabel
-                        }]
-                    }]
-                } if caseSummary.filters.dateRange.selectedLabel else undefined,
-                optionsHtml: filterOptionsHtml
-            }) }}
-        </form>
-        </div>
-    </div>
-    {% endif %}
+    {% include './contactFilters.njk' %}
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set innerLoopIndex = 0 %}
         <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>

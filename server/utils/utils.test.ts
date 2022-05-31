@@ -1,4 +1,11 @@
-import convertToTitleCase, { makePageTitle, listToString, getProperty, groupListByValue, dedupeList } from './utils'
+import convertToTitleCase, {
+  makePageTitle,
+  listToString,
+  getProperty,
+  groupListByValue,
+  dedupeList,
+  removeParamsFromQueryString,
+} from './utils'
 
 describe('Convert to title case', () => {
   it('null string', () => {
@@ -161,5 +168,79 @@ describe('dedupeList', () => {
   it('removes duplicates', () => {
     const result = dedupeList(['aa', 'bb', 'aa', 'c', 'ddd'])
     expect(result).toEqual(['aa', 'bb', 'c', 'ddd'])
+  })
+})
+
+describe('removeParamsFromQueryString', () => {
+  it('removes the specified params', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'contactTypes', value: 'LVSP' }],
+      allParams: {
+        contactTypes: 'LVSP',
+      },
+    })
+    expect(queryString).toEqual('')
+  })
+
+  it('leaves other params intact', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'contactTypes', value: 'LVSP' }],
+      allParams: {
+        contactTypes: 'LVSP',
+        'dateFrom-day': '1',
+      },
+    })
+    expect(queryString).toEqual('?dateFrom-day=1')
+  })
+
+  it('removes the specified params if an array', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'contactTypes', value: 'IVSP' }],
+      allParams: {
+        'dateFrom-day': '',
+        'dateFrom-month': '',
+        'dateFrom-year': '',
+        'dateTo-day': '',
+        'dateTo-month': '',
+        'dateTo-year': '',
+        contactTypes: ['IVSP', 'C191', 'ROC'],
+      },
+    })
+    expect(queryString).toEqual('?contactTypes=C191&contactTypes=ROC')
+  })
+
+  it('removes multiple date params', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [
+        {
+          key: 'dateFrom-day',
+        },
+        {
+          key: 'dateFrom-month',
+        },
+        {
+          key: 'dateFrom-year',
+        },
+        {
+          key: 'dateTo-day',
+        },
+        {
+          key: 'dateTo-month',
+        },
+        {
+          key: 'dateTo-year',
+        },
+      ],
+      allParams: {
+        'dateFrom-day': '13',
+        'dateFrom-month': '4',
+        'dateFrom-year': '22',
+        'dateTo-day': '21',
+        'dateTo-month': '4',
+        'dateTo-year': '22',
+        contactTypes: 'IVSP',
+      },
+    })
+    expect(queryString).toEqual('?contactTypes=IVSP')
   })
 })

@@ -29,3 +29,19 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
 export interface DecoratedContact extends ContactSummaryResponse {
   startDate: string
 }
+
+export interface UiListItem {
+  value: string
+  text: string
+  active?: boolean
+  selected?: boolean
+}
+
+export interface SelectedFilterItem {
+  text: string
+  href: string
+}
+
+export interface UrlInfo {
+  path: string
+}

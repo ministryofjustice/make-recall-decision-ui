@@ -6,6 +6,7 @@ import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api
 import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { formatDateRange } from '../../../utils/dates/format'
+import { removeParamsFromQueryString } from '../../../utils/utils'
 
 const parseDateParts = ({
   fieldPrefix,
@@ -32,7 +33,11 @@ export const filterContactsByDateRange = ({
 }: {
   contacts: ContactSummaryResponse[]
   filters: ObjectMap<string>
-}): { errors?: NamedFormError[]; contacts: ContactSummaryResponse[]; selectedLabel?: string } => {
+}): {
+  errors?: NamedFormError[]
+  contacts: ContactSummaryResponse[]
+  selected?: { text: string; href: string }[]
+} => {
   const dateFromIso = parseDateParts({ fieldPrefix: 'dateFrom', filters })
   const dateToIso = parseDateParts({ fieldPrefix: 'dateTo', filters })
   const dateFromIsBlank = dateHasError(dateFromIso) && (dateFromIso as ValidationError).errorId === 'blankDateTime'
@@ -87,8 +92,24 @@ export const filterContactsByDateRange = ({
     const contactStartDate = DateTime.fromISO(contact.contactStartDate)
     return interval.contains(contactStartDate)
   })
+  const selectedFilterTags = [
+    {
+      href: removeParamsFromQueryString({
+        paramsToRemove: [
+          { key: 'dateFrom-day' },
+          { key: 'dateFrom-month' },
+          { key: 'dateFrom-year' },
+          { key: 'dateTo-day' },
+          { key: 'dateTo-month' },
+          { key: 'dateTo-year' },
+        ],
+        allParams: filters,
+      }),
+      text: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
+    },
+  ]
   return {
     contacts: filteredByDateRange,
-    selectedLabel: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
+    selected: selectedFilterTags,
   }
 }

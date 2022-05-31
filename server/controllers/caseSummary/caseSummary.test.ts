@@ -53,6 +53,7 @@ describe('caseSummary', () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
+          code: 'C191',
           contactStartDate: '2022-06-03T08:00:00',
           descriptionType: 'Registration Review',
           outcome: null,
@@ -62,6 +63,7 @@ describe('caseSummary', () => {
           systemGenerated: false,
         },
         {
+          code: 'IVSP',
           contactStartDate: '2022-05-10T11:39:00',
           descriptionType: 'Police Liaison',
           outcome: null,
@@ -82,6 +84,7 @@ describe('caseSummary', () => {
           groupValue: '2022-06-03',
           items: [
             {
+              code: 'C191',
               contactStartDate: '2022-06-03T08:00:00',
               descriptionType: 'Registration Review',
               enforcementAction: 'action 2',
@@ -97,6 +100,7 @@ describe('caseSummary', () => {
           groupValue: '2022-05-10',
           items: [
             {
+              code: 'IVSP',
               contactStartDate: '2022-05-10T11:39:00',
               descriptionType: 'Police Liaison',
               enforcementAction: 'action 1',
@@ -119,6 +123,7 @@ describe('caseSummary', () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
+          code: 'IVSP',
           contactStartDate: '2022-06-03T08:00:00',
           descriptionType: 'Registration Review',
           outcome: null,
@@ -128,6 +133,7 @@ describe('caseSummary', () => {
           systemGenerated: true,
         },
         {
+          code: 'IVSP',
           contactStartDate: '2022-05-10T11:39:00',
           descriptionType: 'Police Liaison',
           outcome: null,
@@ -147,6 +153,7 @@ describe('caseSummary', () => {
           groupValue: '2022-05-10',
           items: [
             {
+              code: 'IVSP',
               contactStartDate: '2022-05-10T11:39:00',
               descriptionType: 'Police Liaison',
               enforcementAction: 'action 1',
