@@ -14,7 +14,7 @@ context('Contact history', () => {
   it('can view the contact history page', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
-    cy.pageHeading().should('equal', 'Contact history')
+    cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
 
     // contacts
     const systemGeneratedRemoved = getCaseContactHistoryResponse.contactSummary.filter(

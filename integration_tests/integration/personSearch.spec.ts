@@ -52,7 +52,7 @@ context('Search for a person', () => {
 
     // link to case summary
     cy.clickLink(name)
-    cy.pageHeading().should('equal', 'Overview')
+    cy.pageHeading().should('equal', 'Overview for Paula Smith')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Search for a person on probation')
   })
