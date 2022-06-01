@@ -1,4 +1,13 @@
 {
   "extends": ["config:base"],
-  "prConcurrentLimit": 1
+  "prConcurrentLimit": 1,
+  "rangeStrategy": "replace",
+  "prCreation": "status-success",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ],
+  "rebaseWhen": "behind-base-branch"
 }
