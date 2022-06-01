@@ -8,6 +8,7 @@ export type CaseSectionId =
   | 'overview'
   | 'risk'
   | 'personal-details'
+  | 'licence-conditions'
   | 'contact-history'
   | 'contact-history-data'
   | 'all-licence-history'

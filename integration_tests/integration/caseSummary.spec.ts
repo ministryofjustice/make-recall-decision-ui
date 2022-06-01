@@ -1,17 +1,12 @@
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
-import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
-import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 
 context('Case summary', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
-    cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseContactHistoryResponse })
+    cy.mockCaseSummaryData()
   })
 
   it('can view the overview page with a list of offences', () => {
@@ -132,6 +127,8 @@ context('Case summary', () => {
     cy.pageHeading().should('equal', 'Personal details')
     cy.clickLink('Contact history')
     cy.pageHeading().should('equal', 'Contact history')
+    cy.clickLink('Licence conditions')
+    cy.pageHeading().should('equal', 'Licence conditions')
     cy.clickLink('Overview')
     cy.pageHeading().should('equal', 'Overview')
   })

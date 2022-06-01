@@ -1,4 +1,4 @@
-import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
+import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
 import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
@@ -8,7 +8,7 @@ export const transformContactHistory = ({
   caseSummary,
   filters,
 }: {
-  caseSummary: ContactHistoryResponse
+  caseSummary: LicenceHistoryResponse
   filters: ObjectMap<string | string[]>
 }) => {
   const {

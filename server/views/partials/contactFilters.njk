@@ -56,19 +56,19 @@
                             text: 'Clear filters',
                             href: urlInfo.path
                         },
-                        categories: [{
+                        categories: removeUndefinedListItems([{
                             heading: {
                                 text: 'Date range'
                             },
                             items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.dateRange.selected else undefined,
+                        } if caseSummary.filters.dateRange.selected.length else undefined,
                         {
                             heading: {
                                 text: 'Contact type'
                             },
                             items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.contactTypes.selected else undefined
-                        ]
+                        } if caseSummary.filters.contactTypes.selected.length else undefined
+                        ])
                     } if caseSummary.hasActiveFilters else undefined,
                     optionsHtml: filterOptionsHtml
                 }) }}

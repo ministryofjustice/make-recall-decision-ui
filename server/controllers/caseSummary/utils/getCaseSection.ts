@@ -2,12 +2,14 @@ import { ParsedQs } from 'qs'
 import { CaseSectionId, ObjectMap } from '../../../@types'
 import { CaseSummaryOverviewResponse } from '../../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
-import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
+import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
 import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRisk'
 import { PersonDetailsResponse } from '../../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './transformContactHistory'
 import { countLabel } from '../../../utils/utils'
+import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-api'
+import { sortLicenceConditions } from './sortLicenceConditions'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
@@ -29,10 +31,15 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Personal details'
       break
+    case 'licence-conditions':
+      caseSummaryRaw = await getCaseSummary<LicenceConditionsResponse>(trimmedCrn, sectionId, token)
+      caseSummary = sortLicenceConditions(caseSummaryRaw)
+      sectionLabel = 'Licence conditions'
+      break
     case 'contact-history':
     case 'contact-history-data':
       caseSummaryRaw = await fetchFromCacheOrApi(
-        () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'all-licence-history', token),
+        () => getCaseSummary<LicenceHistoryResponse>(trimmedCrn, 'all-licence-history', token),
         `contactHistory:${crn}`
       )
       transformed = transformContactHistory({

@@ -1,5 +1,5 @@
 import { transformContactHistory } from './transformContactHistory'
-import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
+import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
 
 describe('transformContactHistory', () => {
   const contactSummary = [
@@ -36,7 +36,7 @@ describe('transformContactHistory', () => {
 
   it('sets contacts count to the number of filtered items, and returns the selected filters', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary } as ContactHistoryResponse,
+      caseSummary: { contactSummary } as LicenceHistoryResponse,
       filters: {
         'dateFrom-day': '21',
         'dateFrom-month': '04',
@@ -84,7 +84,7 @@ describe('transformContactHistory', () => {
 
   it('returns all contacts if no date filter', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary } as ContactHistoryResponse,
+      caseSummary: { contactSummary } as LicenceHistoryResponse,
       filters: {
         showSystemGenerated: 'YES',
       },

@@ -1,7 +1,4 @@
 import { DateTime } from 'luxon'
-import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
-import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
-import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import { europeLondon, sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
@@ -11,10 +8,7 @@ import { dedupeList } from '../../server/utils/lists'
 context('Contact history', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
-    cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseContactHistoryResponse })
+    cy.mockCaseSummaryData()
   })
 
   it('can view the contact history page', () => {
