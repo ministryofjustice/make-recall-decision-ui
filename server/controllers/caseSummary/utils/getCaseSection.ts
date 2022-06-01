@@ -9,6 +9,7 @@ import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './transformContactHistory'
 import { countLabel } from '../../../utils/utils'
 import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-api'
+import { sortLicenceConditions } from './sortLicenceConditions'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
   let sectionLabel
@@ -31,7 +32,8 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = 'Personal details'
       break
     case 'licence-conditions':
-      caseSummary = await getCaseSummary<LicenceConditionsResponse>(trimmedCrn, sectionId, token)
+      caseSummaryRaw = await getCaseSummary<LicenceConditionsResponse>(trimmedCrn, sectionId, token)
+      caseSummary = sortLicenceConditions(caseSummaryRaw)
       sectionLabel = 'Licence conditions'
       break
     case 'contact-history':

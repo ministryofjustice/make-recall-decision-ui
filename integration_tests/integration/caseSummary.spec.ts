@@ -127,6 +127,8 @@ context('Case summary', () => {
     cy.pageHeading().should('equal', 'Personal details')
     cy.clickLink('Contact history')
     cy.pageHeading().should('equal', 'Contact history')
+    cy.clickLink('Licence conditions')
+    cy.pageHeading().should('equal', 'Licence conditions')
     cy.clickLink('Overview')
     cy.pageHeading().should('equal', 'Overview')
   })

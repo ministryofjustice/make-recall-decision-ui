@@ -1,12 +1,16 @@
+import { getProperty } from './utils'
+
 export const sortList = <T>(list: T[], key: string, asc = true): T[] => {
   if (!Array.isArray(list)) {
     return undefined
   }
   return list.sort((a, b) => {
-    if (a[key] < b[key]) {
+    const valA = getProperty(a, key)
+    const valB = getProperty(b, key)
+    if (valA < valB) {
       return asc ? -1 : 1
     }
-    if (a[key] > b[key]) {
+    if (valA > valB) {
       return asc ? 1 : -1
     }
     return 0
