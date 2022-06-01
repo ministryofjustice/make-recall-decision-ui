@@ -32,16 +32,16 @@
                             value: { text: formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate}) }
                         },
                         {
+                            key: { text: 'Release from custody date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) }
+                        },
+                        {
                             key: { text: 'Licence expiry date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: offence.licenceExpiryDate}) }
                         },
                         {
                             key: { text: 'Post-sentence supervision end date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: offence.postSentenceSupervisionEndDate}) }
-                        },
-                        {
-                            key: { text: 'Last release date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) }
                         }
                     ]
                 }) }}
