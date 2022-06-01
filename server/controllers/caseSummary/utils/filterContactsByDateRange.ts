@@ -1,11 +1,12 @@
 import { DateTime, Interval } from 'luxon'
 import { NamedFormError, ObjectMap } from '../../../@types'
 import { ValidationError } from '../../../@types/dates'
-import { convertGmtDatePartsToUtc, moveDateToEndOfDay } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
-import { dateHasError } from '../../../utils/dates'
+import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { formatDateRange } from '../../../utils/dates/format'
+import { removeParamsFromQueryString } from '../../../utils/utils'
 
 const parseDateParts = ({
   fieldPrefix,
@@ -32,7 +33,11 @@ export const filterContactsByDateRange = ({
 }: {
   contacts: ContactSummaryResponse[]
   filters: ObjectMap<string>
-}): { errors?: NamedFormError[]; contacts: ContactSummaryResponse[]; selectedLabel?: string } => {
+}): {
+  errors?: NamedFormError[]
+  contacts: ContactSummaryResponse[]
+  selected?: { text: string; href: string }[]
+} => {
   const dateFromIso = parseDateParts({ fieldPrefix: 'dateFrom', filters })
   const dateToIso = parseDateParts({ fieldPrefix: 'dateTo', filters })
   const dateFromIsBlank = dateHasError(dateFromIso) && (dateFromIso as ValidationError).errorId === 'blankDateTime'
@@ -68,8 +73,8 @@ export const filterContactsByDateRange = ({
       contacts,
     }
   }
-  const dateFrom = DateTime.fromISO(dateFromIso as string)
-  const dateTo = DateTime.fromISO(moveDateToEndOfDay(dateToIso as string))
+  const dateFrom = DateTime.fromISO(dateFromIso as string, { zone: europeLondon })
+  const dateTo = DateTime.fromISO(dateToIso as string, { zone: europeLondon }).endOf('day')
   if (dateFrom.toMillis() > dateTo.toMillis()) {
     return {
       errors: [
@@ -83,8 +88,28 @@ export const filterContactsByDateRange = ({
     }
   }
   const interval = Interval.fromDateTimes(dateFrom, dateTo)
+  const filteredByDateRange = contacts.filter(contact => {
+    const contactStartDate = DateTime.fromISO(contact.contactStartDate)
+    return interval.contains(contactStartDate)
+  })
+  const selectedFilterTags = [
+    {
+      href: removeParamsFromQueryString({
+        paramsToRemove: [
+          { key: 'dateFrom-day' },
+          { key: 'dateFrom-month' },
+          { key: 'dateFrom-year' },
+          { key: 'dateTo-day' },
+          { key: 'dateTo-month' },
+          { key: 'dateTo-year' },
+        ],
+        allParams: filters,
+      }),
+      text: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
+    },
+  ]
   return {
-    contacts: contacts.filter(contact => interval.contains(DateTime.fromISO(contact.contactStartDate))),
-    selectedLabel: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
+    contacts: filteredByDateRange,
+    selected: selectedFilterTags,
   }
 }

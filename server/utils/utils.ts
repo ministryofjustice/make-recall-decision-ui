@@ -1,6 +1,7 @@
+import qs from 'qs'
 import config from '../config'
 import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
-import { FormError } from '../@types'
+import { FormError, ObjectMap } from '../@types'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -31,11 +32,6 @@ export const isNumber = (val: unknown) => typeof val === 'number'
 
 export const areStringArraysTheSame = (arr1: unknown[], arr2: unknown[]) => arr1.join('') === arr2.join('')
 
-export const formatSingleLineAddress = (address: CurrentAddress) => {
-  const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
-  return listToString(parts, '')
-}
-
 export const listToString = (list: string[], conjunction?: string) => {
   if (list.length === 1) {
     return list[0]
@@ -49,6 +45,11 @@ export const listToString = (list: string[], conjunction?: string) => {
   return copy.join(', ')
 }
 
+export const formatSingleLineAddress = (address: CurrentAddress) => {
+  const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
+  return listToString(parts, '')
+}
+
 export const errorMessage = (field: FormError) => (field ? { html: field.text } : undefined)
 
 export const getProperty = <T, U>(obj: T, accessor: string): U => {
@@ -60,33 +61,30 @@ export const getProperty = <T, U>(obj: T, accessor: string): U => {
   return traversed as unknown as U
 }
 
-export const groupListByValue = <T>({ list, groupByKey }: { list: T[]; groupByKey: string }) => {
-  return list.reduce(
-    (prev, current) => {
-      let group = prev.items.find(item => item.groupValue === current[groupByKey])
-      if (!group) {
-        group = {
-          groupValue: current[groupByKey],
-          items: [],
-        }
-        prev.items.push(group)
-      }
-      group.items.push(current)
-      return prev
-    },
-    { groupedByKey: groupByKey, items: [] }
-  )
-}
-
-export const dedupeList = <T>(list: T[]) => {
-  const unique = [] as T[]
-  list.forEach(element => {
-    if (!unique.includes(element)) {
-      unique.push(element)
-    }
-  })
-  return unique
-}
-
 export const countLabel = ({ count, noun }: { count: number; noun: string }) =>
   `${count} ${noun}${count !== 1 ? 's' : ''}`
+
+export const removeParamsFromQueryString = ({
+  paramsToRemove,
+  allParams,
+}: {
+  paramsToRemove: { key: string; value?: string }[]
+  allParams: ObjectMap<string | string[]>
+}) => {
+  const updatedParams = {}
+  Object.entries(allParams)
+    .filter(([key]) => allParams[key] !== '')
+    .forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        const updatedValues = value.filter(val => !paramsToRemove.find(param => param.value === val))
+        updatedParams[key] = updatedValues.length ? updatedValues : undefined
+      } else {
+        const toRemove = paramsToRemove.find(paramToRemove => paramToRemove.key === key)
+        if (!toRemove) {
+          updatedParams[key] = value
+        }
+      }
+    })
+  const queryString = qs.stringify(updatedParams, { arrayFormat: 'repeat' })
+  return queryString ? `?${queryString}` : ''
+}

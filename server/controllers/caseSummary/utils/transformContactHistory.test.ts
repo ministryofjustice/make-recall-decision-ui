@@ -1,9 +1,10 @@
-import { transformLicenceHistory } from './transformLicenceHistory'
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { transformContactHistory } from './transformContactHistory'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 
-describe('transformLicenceHistory', () => {
+describe('transformContactHistory', () => {
   const contactSummary = [
     {
+      code: 'IVSP',
       contactStartDate: '2022-05-04T13:07:00Z',
       descriptionType: 'Arrest attempt',
       outcome: null,
@@ -13,6 +14,7 @@ describe('transformLicenceHistory', () => {
       systemGenerated: true,
     },
     {
+      code: 'IVSP',
       contactStartDate: '2022-04-21T10:03:00Z',
       descriptionType: 'Management Oversight - Recall',
       outcome: 'Decision to Recall',
@@ -22,6 +24,7 @@ describe('transformLicenceHistory', () => {
       systemGenerated: false,
     },
     {
+      code: 'IVSP',
       contactStartDate: '2022-04-21T11:30:00Z',
       descriptionType: 'Planned Office Visit (NS)',
       outcome: 'Failed to Attend',
@@ -32,8 +35,8 @@ describe('transformLicenceHistory', () => {
   ]
 
   it('sets contacts count to the number of filtered items, and returns the selected filters', () => {
-    const { errors, data } = transformLicenceHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+    const { errors, data } = transformContactHistory({
+      caseSummary: { contactSummary } as ContactHistoryResponse,
       filters: {
         'dateFrom-day': '21',
         'dateFrom-month': '04',
@@ -44,9 +47,20 @@ describe('transformLicenceHistory', () => {
       },
     })
     expect(errors).toBeUndefined()
-    // contact count is 1 because 1 of the 3 items was filtered out as system-generated, and another by the date range
-    expect(data.contactCount).toEqual(1)
+    // contact count is 2 because 1 of the 3 items was filtered out by the date range
+    expect(data.contactCount).toEqual(2)
     expect(data.filters).toEqual({
+      contactTypes: {
+        allContactTypes: [
+          {
+            count: 2,
+            description: 'IOM 3rd Party Office Visit',
+            html: 'IOM 3rd Party Office Visit <span class="text-secondary">(2)</span>',
+            value: 'IVSP',
+          },
+        ],
+        selected: [],
+      },
       dateRange: {
         dateFrom: {
           day: '21',
@@ -58,14 +72,19 @@ describe('transformLicenceHistory', () => {
           month: '04',
           year: '2022',
         },
-        selectedLabel: '21 Apr 2022 to 21 Apr 2022',
+        selected: [
+          {
+            href: '',
+            text: '21 Apr 2022 to 21 Apr 2022',
+          },
+        ],
       },
     })
   })
 
-  it('returns all contacts if system generated are included, and no date filter', () => {
-    const { errors, data } = transformLicenceHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+  it('returns all contacts if no date filter', () => {
+    const { errors, data } = transformContactHistory({
+      caseSummary: { contactSummary } as ContactHistoryResponse,
       filters: {
         showSystemGenerated: 'YES',
       },
@@ -73,6 +92,17 @@ describe('transformLicenceHistory', () => {
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(3)
     expect(data.filters).toEqual({
+      contactTypes: {
+        allContactTypes: [
+          {
+            count: 3,
+            description: 'IOM 3rd Party Office Visit',
+            html: 'IOM 3rd Party Office Visit <span class="text-secondary">(3)</span>',
+            value: 'IVSP',
+          },
+        ],
+        selected: [],
+      },
       dateRange: {
         dateFrom: {},
         dateTo: {},

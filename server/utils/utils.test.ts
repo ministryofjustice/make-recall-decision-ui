@@ -1,4 +1,36 @@
-import convertToTitleCase, { makePageTitle, listToString, getProperty, groupListByValue, dedupeList } from './utils'
+import convertToTitleCase, { makePageTitle, getProperty, removeParamsFromQueryString, listToString } from './utils'
+
+describe('listToString', () => {
+  it('returns a list for 1 item', () => {
+    expect(listToString(['day'], 'and')).toEqual('day')
+  })
+
+  it('uses the supplied conjunction', () => {
+    expect(listToString(['JPG', 'JPEG'], 'or')).toEqual('JPG or JPEG')
+  })
+
+  it('returns a list for 2 items', () => {
+    expect(listToString(['year', 'day'], 'and')).toEqual('year and day')
+  })
+
+  it('returns a list for 3 items', () => {
+    expect(listToString(['year', 'month', 'day'], 'and')).toEqual('year, month and day')
+  })
+
+  it('returns a list for 4 items', () => {
+    expect(listToString(['year', 'month', 'day', 'minute'], 'and')).toEqual('year, month, day and minute')
+  })
+
+  it('accepts empty string as the conjunction', () => {
+    expect(listToString(['5 Andrew Crescent', 'Southampton', 'S1 8EY'], '')).toEqual(
+      '5 Andrew Crescent, Southampton S1 8EY'
+    )
+  })
+
+  it('returns a list when no conjunction supplied', () => {
+    expect(listToString(['year', 'month', 'day', 'minute'])).toEqual('year, month, day, minute')
+  })
+})
 
 describe('Convert to title case', () => {
   it('null string', () => {
@@ -42,38 +74,6 @@ describe('makePageTitle', () => {
   })
 })
 
-describe('listToString', () => {
-  it('returns a list for 1 item', () => {
-    expect(listToString(['day'], 'and')).toEqual('day')
-  })
-
-  it('uses the supplied conjunction', () => {
-    expect(listToString(['JPG', 'JPEG'], 'or')).toEqual('JPG or JPEG')
-  })
-
-  it('returns a list for 2 items', () => {
-    expect(listToString(['year', 'day'], 'and')).toEqual('year and day')
-  })
-
-  it('returns a list for 3 items', () => {
-    expect(listToString(['year', 'month', 'day'], 'and')).toEqual('year, month and day')
-  })
-
-  it('returns a list for 4 items', () => {
-    expect(listToString(['year', 'month', 'day', 'minute'], 'and')).toEqual('year, month, day and minute')
-  })
-
-  it('accepts empty string as the conjunction', () => {
-    expect(listToString(['5 Andrew Crescent', 'Southampton', 'S1 8EY'], '')).toEqual(
-      '5 Andrew Crescent, Southampton S1 8EY'
-    )
-  })
-
-  it('returns a list when no conjunction supplied', () => {
-    expect(listToString(['year', 'month', 'day', 'minute'])).toEqual('year, month, day, minute')
-  })
-})
-
 describe('getProperty', () => {
   it('returns a nested property', () => {
     const obj = {
@@ -104,62 +104,76 @@ describe('getProperty', () => {
   })
 })
 
-describe('groupListByValue', () => {
-  it('groups by value', () => {
-    const list = [
-      {
-        a: 1,
-        b: 2,
-        c: 3,
+describe('removeParamsFromQueryString', () => {
+  it('removes the specified params', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'contactTypes', value: 'LVSP' }],
+      allParams: {
+        contactTypes: 'LVSP',
       },
-      {
-        a: 5,
-        b: 3,
-        c: 9,
+    })
+    expect(queryString).toEqual('')
+  })
+
+  it('leaves other params intact', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'contactTypes', value: 'LVSP' }],
+      allParams: {
+        contactTypes: 'LVSP',
+        'dateFrom-day': '1',
       },
-      {
-        a: 5,
-        b: 2,
-        c: 9,
+    })
+    expect(queryString).toEqual('?dateFrom-day=1')
+  })
+
+  it('removes the specified params if an array', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'contactTypes', value: 'IVSP' }],
+      allParams: {
+        'dateFrom-day': '',
+        'dateFrom-month': '',
+        'dateFrom-year': '',
+        'dateTo-day': '',
+        'dateTo-month': '',
+        'dateTo-year': '',
+        contactTypes: ['IVSP', 'C191', 'ROC'],
       },
-    ]
-    const grouped = groupListByValue<{ a: number; b: number; c: number }>({ list, groupByKey: 'b' })
-    expect(grouped).toEqual({
-      groupedByKey: 'b',
-      items: [
+    })
+    expect(queryString).toEqual('?contactTypes=C191&contactTypes=ROC')
+  })
+
+  it('removes multiple date params', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [
         {
-          groupValue: 2,
-          items: [
-            {
-              a: 1,
-              b: 2,
-              c: 3,
-            },
-            {
-              a: 5,
-              b: 2,
-              c: 9,
-            },
-          ],
+          key: 'dateFrom-day',
         },
         {
-          groupValue: 3,
-          items: [
-            {
-              a: 5,
-              b: 3,
-              c: 9,
-            },
-          ],
+          key: 'dateFrom-month',
+        },
+        {
+          key: 'dateFrom-year',
+        },
+        {
+          key: 'dateTo-day',
+        },
+        {
+          key: 'dateTo-month',
+        },
+        {
+          key: 'dateTo-year',
         },
       ],
+      allParams: {
+        'dateFrom-day': '13',
+        'dateFrom-month': '4',
+        'dateFrom-year': '22',
+        'dateTo-day': '21',
+        'dateTo-month': '4',
+        'dateTo-year': '22',
+        contactTypes: 'IVSP',
+      },
     })
-  })
-})
-
-describe('dedupeList', () => {
-  it('removes duplicates', () => {
-    const result = dedupeList(['aa', 'bb', 'aa', 'c', 'ddd'])
-    expect(result).toEqual(['aa', 'bb', 'c', 'ddd'])
+    expect(queryString).toEqual('?contactTypes=IVSP')
   })
 })

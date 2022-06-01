@@ -181,7 +181,3 @@ export const splitIsoDateToParts = (isoDate?: string): DatePartsParsed | undefin
 }
 
 export const dateHasError = (field: string | ValidationError) => Boolean((field as ValidationError).errorId)
-
-export const moveDateToEndOfDay = (isoDate: string) => {
-  return DateTime.fromISO(isoDate).endOf('day').toISO()
-}

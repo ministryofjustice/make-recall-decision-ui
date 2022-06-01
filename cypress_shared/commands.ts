@@ -43,7 +43,7 @@ Cypress.Commands.add('getElement', (selector, opts = { parent: 'body' }) =>
 )
 
 Cypress.Commands.add('getLinkHref', (selector, opts = { parent: 'body' }) =>
-  cy.getElement(selector, opts).invoke('attr', 'href')
+  cy.getElement(selector as string, opts).invoke('attr', 'href')
 )
 
 Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr, firstColValue }, opts = { parent: 'body' }) =>
@@ -104,7 +104,7 @@ Cypress.Commands.add('viewDetails', (summaryLabel, opts = { parent: 'body' }) =>
   cy.get(opts.parent).contains(summaryLabel).click()
   return cy
     .get(opts.parent)
-    .contains(summaryLabel)
+    .contains(summaryLabel as string)
     .parent('.govuk-details__summary')
     .next('.govuk-details__text')
     .invoke('text')
@@ -130,4 +130,13 @@ Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-cont
     cy.fillInput('Hour', hour, options)
     cy.fillInput('Minute', minute, options)
   }
+})
+
+Cypress.Commands.add('selectCheckboxes', (groupLabel, values, opts = {}) => {
+  cy.get(opts.parent || 'body')
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      values.forEach(value => cy.wrap($fieldset).contains('label', value).click())
+    })
 })

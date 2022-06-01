@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 export type ContactSummaryResponse = {
+  code?: string
   contactStartDate?: string
   descriptionType?: string
   outcome?: string

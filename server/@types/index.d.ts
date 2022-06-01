@@ -8,8 +8,8 @@ export type CaseSectionId =
   | 'overview'
   | 'risk'
   | 'personal-details'
-  | 'licence-history'
-  | 'licence-history-data'
+  | 'contact-history'
+  | 'contact-history-data'
   | 'all-licence-history'
 
 export interface FormError {
@@ -28,4 +28,20 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
 
 export interface DecoratedContact extends ContactSummaryResponse {
   startDate: string
+}
+
+export interface UiListItem {
+  value: string
+  text: string
+  active?: boolean
+  selected?: boolean
+}
+
+export interface SelectedFilterItem {
+  text: string
+  href: string
+}
+
+export interface UrlInfo {
+  path: string
 }

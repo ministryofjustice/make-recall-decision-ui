@@ -30,9 +30,9 @@ When('Maria views the personal details page', () => {
   cy.pageHeading().should('equal', 'Personal details')
 })
 
-When('Maria views the licence history page', () => {
-  cy.clickLink('Licence history')
-  cy.pageHeading().should('equal', 'Licence history')
+When('Maria views the Contact history page', () => {
+  cy.clickLink('Contact history')
+  cy.pageHeading().should('equal', 'Contact history')
 })
 
 When('Maria filters contacts by date range', () => {
@@ -44,5 +44,5 @@ When('Maria filters contacts by date range', () => {
   cy.enterDateTime('2022-03-13', { parent: '#dateFrom' })
   cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
   cy.clickButton('Apply filters')
-  cy.getLinkHref('13 Mar 2022 to 13 Apr 2022').should('equal', `/cases/${crn}/licence-history`)
+  cy.getLinkHref('13 Mar 2022 to 13 Apr 2022').should('equal', `/cases/${crn}/contact-history`)
 })

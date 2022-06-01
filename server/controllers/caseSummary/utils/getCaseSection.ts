@@ -2,11 +2,11 @@ import { ParsedQs } from 'qs'
 import { CaseSectionId, ObjectMap } from '../../../@types'
 import { CaseSummaryOverviewResponse } from '../../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRisk'
 import { PersonDetailsResponse } from '../../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
-import { transformLicenceHistory } from './transformLicenceHistory'
+import { transformContactHistory } from './transformContactHistory'
 import { countLabel } from '../../../utils/utils'
 
 export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
@@ -29,13 +29,13 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Personal details'
       break
-    case 'licence-history':
-    case 'licence-history-data':
+    case 'contact-history':
+    case 'contact-history-data':
       caseSummaryRaw = await fetchFromCacheOrApi(
-        () => getCaseSummary<LicenceHistoryResponse>(trimmedCrn, 'all-licence-history', token),
-        `licenceHistory:${crn}`
+        () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'all-licence-history', token),
+        `contactHistory:${crn}`
       )
-      transformed = transformLicenceHistory({
+      transformed = transformContactHistory({
         caseSummary: caseSummaryRaw,
         filters: reqQuery as ObjectMap<string>,
       })
@@ -44,7 +44,7 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       sectionLabel = `${countLabel({
         count: transformed.data.contactCount,
         noun: 'contact',
-      })} for ${trimmedCrn} - Licence history`
+      })} for ${trimmedCrn} - Contact history`
       break
     default:
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)

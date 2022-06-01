@@ -28,6 +28,8 @@ declare global {
 
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
 
+      selectCheckboxes(groupLabel: string, values: string[], opts?: CommandOpts): Chainable<Element>
+
       getTextInputValue(label: string, opts?: CommandOpts): Chainable<string>
 
       enterDateTime(isoDateTime: string, opts?: CommandOpts): Chainable<void>

@@ -1,4 +1,5 @@
 import { DatePartsParsed } from '../@types/dates'
+import { SelectedFilterItem, UiListItem, UrlInfo } from '../@types'
 
 export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includeTime?: boolean) => {
   const items = [
@@ -57,3 +58,15 @@ export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includ
   }
   return items
 }
+
+export const checkboxItems = ({ items, currentValues }: { items?: UiListItem[]; currentValues?: string[] }) => {
+  return items.map(item => {
+    return {
+      ...item,
+      checked: currentValues?.includes(item.value) || undefined,
+    }
+  })
+}
+
+export const selectedFilterItems = ({ items, urlInfo }: { items: SelectedFilterItem[]; urlInfo: UrlInfo }) =>
+  items.map(item => ({ ...item, href: `${urlInfo.path}${item.href}` }))

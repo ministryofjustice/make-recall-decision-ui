@@ -49,10 +49,11 @@ describe('caseSummary', () => {
     expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
   })
 
-  it('should return grouped by dates for licence history', async () => {
+  it('should return grouped by dates for contact history', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactSummary: [
         {
+          code: 'C191',
           contactStartDate: '2022-06-03T08:00:00',
           descriptionType: 'Registration Review',
           outcome: null,
@@ -62,6 +63,7 @@ describe('caseSummary', () => {
           systemGenerated: false,
         },
         {
+          code: 'IVSP',
           contactStartDate: '2022-05-10T11:39:00',
           descriptionType: 'Police Liaison',
           outcome: null,
@@ -72,7 +74,7 @@ describe('caseSummary', () => {
       ],
     })
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    const req = mockReq({ params: { crn, sectionId: 'licence-history' } })
+    const req = mockReq({ params: { crn, sectionId: 'contact-history' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'all-licence-history', token)
     expect(res.locals.caseSummary.contactSummary).toEqual({
@@ -82,6 +84,7 @@ describe('caseSummary', () => {
           groupValue: '2022-06-03',
           items: [
             {
+              code: 'C191',
               contactStartDate: '2022-06-03T08:00:00',
               descriptionType: 'Registration Review',
               enforcementAction: 'action 2',
@@ -97,6 +100,7 @@ describe('caseSummary', () => {
           groupValue: '2022-05-10',
           items: [
             {
+              code: 'IVSP',
               contactStartDate: '2022-05-10T11:39:00',
               descriptionType: 'Police Liaison',
               enforcementAction: 'action 1',
@@ -110,58 +114,8 @@ describe('caseSummary', () => {
       ],
     })
     expect(res.locals.section).toEqual({
-      id: 'licence-history',
-      label: '2 contacts for A1234AB - Licence history',
-    })
-  })
-
-  it('should filter out system generated contacts for licence history if query string set', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
-      contactSummary: [
-        {
-          contactStartDate: '2022-06-03T08:00:00',
-          descriptionType: 'Registration Review',
-          outcome: null,
-          notes:
-            'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
-          enforcementAction: 'action 2',
-          systemGenerated: true,
-        },
-        {
-          contactStartDate: '2022-05-10T11:39:00',
-          descriptionType: 'Police Liaison',
-          outcome: null,
-          notes: null,
-          enforcementAction: 'action 1',
-          systemGenerated: false,
-        },
-      ],
-    })
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    const req = mockReq({ params: { crn, sectionId: 'licence-history' }, query: { showSystemGenerated: 'NO' } })
-    await caseSummary(req, res)
-    expect(res.locals.caseSummary.contactSummary).toEqual({
-      groupedByKey: 'startDate',
-      items: [
-        {
-          groupValue: '2022-05-10',
-          items: [
-            {
-              contactStartDate: '2022-05-10T11:39:00',
-              descriptionType: 'Police Liaison',
-              enforcementAction: 'action 1',
-              notes: null,
-              outcome: null,
-              startDate: '2022-05-10',
-              systemGenerated: false,
-            },
-          ],
-        },
-      ],
-    })
-    expect(res.locals.section).toEqual({
-      id: 'licence-history',
-      label: '1 contact for A1234AB - Licence history',
+      id: 'contact-history',
+      label: '2 contacts for A1234AB - Contact history',
     })
   })
 
