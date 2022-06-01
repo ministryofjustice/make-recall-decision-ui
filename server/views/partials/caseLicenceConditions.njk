@@ -14,6 +14,9 @@
                 {% endset %}
                 {{ govukSummaryList({
                     classes: 'govuk-summary-list--no-border',
+                    attributes: {
+                      'data-qa': 'summary-' + loop.index
+                    },
                     rows: [
                         {
                             key: { html: 'Offence' },
@@ -34,15 +37,15 @@
                         {
                             key: { text: 'Release from custody date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) }
-                        },
+                        } if loop.index == 1 else undefined,
                         {
                             key: { text: 'Licence expiry date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: offence.licenceExpiryDate}) }
-                        },
+                        } if loop.index == 1 else undefined,
                         {
                             key: { text: 'Post-sentence supervision end date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: offence.postSentenceSupervisionEndDate}) }
-                        }
+                        } if loop.index == 1 else undefined
                     ]
                 }) }}
                 <table class="govuk-table" id='table-licence-conditions-{{ loop.index0 }}'>
