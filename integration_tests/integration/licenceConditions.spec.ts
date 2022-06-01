@@ -14,9 +14,11 @@ context('Licence conditions', () => {
     cy.pageHeading().should('equal', 'Licence conditions')
     cy.getElement('Release from custody date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Licence expiry date', { parent: `[data-qa="summary-1"]` }).should('exist')
+    cy.getElement('Last recall date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Post-sentence supervision end date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Release from custody date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     cy.getElement('Licence expiry date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
+    cy.getElement('Last recall date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     cy.getElement('Post-sentence supervision end date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     getCaseLicenceConditionsResponse.offences.forEach((offence, offenceIndex) => {
       cy.getDefinitionListValue('Offence', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(

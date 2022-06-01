@@ -39,6 +39,10 @@
                             value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) }
                         } if loop.index == 1 else undefined,
                         {
+                            key: { text: 'Last recall date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRecall.date}) }
+                        } if loop.index == 1 else undefined,
+                        {
                             key: { text: 'Licence expiry date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: offence.licenceExpiryDate}) }
                         } if loop.index == 1 else undefined,
