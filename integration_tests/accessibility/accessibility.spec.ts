@@ -1,8 +1,4 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
-import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
-import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
-import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
-import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 
 const urls = [
@@ -13,6 +9,7 @@ const urls = [
   `${routeUrls.cases}/123/overview`,
   `${routeUrls.cases}/123/risk`,
   `${routeUrls.cases}/123/personal-details`,
+  `${routeUrls.cases}/123/licence-conditions`,
   `${routeUrls.cases}/123/contact-history`,
   // contact filter with valid dates
   `${routeUrls.cases}/123/contact-history?dateFilters=1&dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
@@ -24,10 +21,7 @@ context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
-    cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
-    cy.task('getCase', { sectionId: 'all-licence-history', statusCode: 200, response: getCaseContactHistoryResponse })
+    cy.mockCaseSummaryData()
   })
 
   urls.forEach(url => {

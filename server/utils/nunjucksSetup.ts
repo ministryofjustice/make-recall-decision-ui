@@ -5,7 +5,7 @@ import * as pathModule from 'path'
 import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
-import { checkboxItems, dateTimeItems, selectedFilterItems } from './nunjucks'
+import { checkboxItems, dateTimeItems, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -59,4 +59,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('checkboxItems', checkboxItems)
   njkEnv.addGlobal('selectedFilterItems', selectedFilterItems)
   njkEnv.addGlobal('countLabel', countLabel)
+  njkEnv.addGlobal('removeUndefinedListItems', removeUndefinedListItems)
 }

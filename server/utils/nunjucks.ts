@@ -70,3 +70,5 @@ export const checkboxItems = ({ items, currentValues }: { items?: UiListItem[]; 
 
 export const selectedFilterItems = ({ items, urlInfo }: { items: SelectedFilterItem[]; urlInfo: UrlInfo }) =>
   items.map(item => ({ ...item, href: `${urlInfo.path}${item.href}` }))
+
+export const removeUndefinedListItems = (items: unknown[]) => items.filter(Boolean)
