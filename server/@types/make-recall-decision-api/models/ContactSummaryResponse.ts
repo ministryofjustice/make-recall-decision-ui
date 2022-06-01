@@ -3,9 +3,9 @@
 /* eslint-disable */
 
 export type ContactSummaryResponse = {
-  code?: string
   contactStartDate?: string
   descriptionType?: string
+  code?: string
   outcome?: string
   notes?: string
   enforcementAction?: string

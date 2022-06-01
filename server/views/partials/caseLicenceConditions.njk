@@ -1,0 +1,82 @@
+<h1 class='govuk-heading-m'>Licence conditions</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        {% for offence in caseSummary.offences %}
+            <div class='govuk-!-margin-bottom-6'>
+                {% set offenceHtml %}
+                    <ul class='govuk-list'>
+                        {% for offenceItem in offence.offences %}
+                            <li>{{ offenceItem.description }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endset %}
+                {{ govukSummaryList({
+                    rows: [
+                        {
+                            key: { html: 'Offence' },
+                            value: { html: offenceHtml }
+                        },
+                        {
+                            key: { text: 'Sentence description' },
+                            value: { text: offence.sentenceDescription }
+                        },
+                        {
+                            key: { text: 'Sentence length' },
+                            value: { text: offence.sentenceOriginalLength + ' ' + offence.sentenceOriginalLengthUnits }
+                        },
+                        {
+                            key: { text: 'Sentence start date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate}) }
+                        },
+                        {
+                            key: { text: 'Licence expiry date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: offence.licenceExpiryDate}) }
+                        },
+                        {
+                            key: { text: 'Post-sentence supervision end date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: offence.postSentenceSupervisionEndDate}) }
+                        }
+                    ]
+                }) }}
+                <table class="govuk-table" id='table-licence-conditions-{{ loop.index0 }}'>
+                    <caption class="govuk-table__caption govuk-visually-hidden">Licence conditions for offence {{ loop.index }}</caption>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header" aria-sort="descending">Type</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="none">Description</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="none">Notes</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="none">Active</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="none">Start date</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="none">Termination date</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% for licenceCondition in offence.licenceConditions %}
+                        <tr class="govuk-table__row" data-qa='row-{{ loop.index0 }}'>
+                            <td class="govuk-table__cell">{{ licenceCondition.licenceConditionTypeMainCat.code }}
+                                - {{ licenceCondition.licenceConditionTypeMainCat.description }}</td>
+                            <td class="govuk-table__cell">{{ licenceCondition.licenceConditionTypeSubCat.code }}
+                                - {{ licenceCondition.licenceConditionTypeSubCat.description }}</td>
+                            <td class="govuk-table__cell">{{ licenceCondition.licenceConditionNotes }}</td>
+                            <td class="govuk-table__cell">{{ 'Yes' if licenceCondition.active else 'No' }}</td>
+                            <td class="govuk-table__cell" data-sort-value='{{ licenceCondition.startDate }}'>
+                                <span class='no-wrap-tablet'>{{ formatDateTimeFromIsoString({isoDate: licenceCondition.startDate}) }}</span>
+                            </td>
+                            <td class="govuk-table__cell" data-sort-value='{{ licenceCondition.terminationDate }}'>
+                                <span class='no-wrap-tablet'>{{ formatDateTimeFromIsoString({isoDate: licenceCondition.terminationDate}) }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <script nonce='{{ cspNonce }}'>
+                  new MOJFrontend.SortableTable({
+                    table: $('#table-licence-conditions-{{ loop.index0 }}')[0],
+                  })
+                </script>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>

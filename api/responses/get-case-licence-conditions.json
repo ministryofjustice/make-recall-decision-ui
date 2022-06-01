@@ -1,0 +1,113 @@
+{
+  "personalDetailsOverview": {
+    "name": "Charles Edwin",
+    "dateOfBirth": "1980-07-24",
+    "age": 41,
+    "gender": "Male",
+    "crn": "X430109"
+  },
+  "offences": [
+    {
+      "convictionId": 2500605130,
+      "active": true,
+      "offences": [
+        {
+          "mainOffence": true,
+          "description": "(Criminal damage endangering life (excluding arson) - aircraft - 05713)",
+          "code": "05713"
+        }
+      ],
+      "sentenceDescription": "CJA - Indeterminate Public Prot.",
+      "sentenceOriginalLength": 120,
+      "sentenceOriginalLengthUnits": "Months",
+      "sentenceStartDate": "2022-05-11",
+      "licenceExpiryDate": "2023-06-16",
+      "postSentenceSupervisionEndDate": null,
+      "statusCode": "B",
+      "statusDescription": "Released - On Licence",
+      "licenceConditions": [
+        {
+          "startDate": "2022-05-12",
+          "terminationDate": "2022-05-18",
+          "createdDateTime": "2022-05-12T17:22:13",
+          "active": false,
+          "licenceConditionNotes": "Notes",
+          "licenceConditionTypeMainCat": {
+            "code": "NLC8",
+            "description": "Freedom of movement"
+          },
+          "licenceConditionTypeSubCat": {
+            "code": "NST30",
+            "description": "On release to be escorted by police to Approved Premises"
+          }
+        },
+        {
+          "startDate": "2022-05-12",
+          "terminationDate": "2022-05-18",
+          "createdDateTime": "2022-05-12T17:22:51",
+          "active": false,
+          "licenceConditionNotes": null,
+          "licenceConditionTypeMainCat": {
+            "code": "NLC5",
+            "description": "Poss, own, control, inspect specified items /docs"
+          },
+          "licenceConditionTypeSubCat": {
+            "code": "NST14",
+            "description": "Not to own or possess more than one mobile phone or SIM card without the prior approval of your supervising officer and to provide your supervising officer with details of that mobile telephone including the IMEI number and the SIM card that you possess."
+          }
+        },
+        {
+          "startDate": "2022-05-23",
+          "terminationDate": null,
+          "createdDateTime": "2022-05-23T14:59:54",
+          "active": true,
+          "licenceConditionNotes": null,
+          "licenceConditionTypeMainCat": {
+            "code": "NLC4",
+            "description": "Participate or co-op with Programme or Activities"
+          },
+          "licenceConditionTypeSubCat": {
+            "code": "NST20",
+            "description": "Not to delete the usage history on any internet enabled device or computer used and to allow such items to be inspected as required by the police or your supervising officer. Such inspection may include removal of the device for inspection and the installation of monitoring software."
+          }
+        }
+      ]
+    },
+    {
+      "convictionId": 2500505680,
+      "active": true,
+      "offences": [
+        {
+          "mainOffence": true,
+          "description": "Murder - 00100",
+          "code": "00100"
+        }
+      ],
+      "sentenceDescription": "Life imprisonment (Adult)",
+      "sentenceOriginalLength": 2,
+      "sentenceOriginalLengthUnits": "Years",
+      "sentenceStartDate": "2021-07-01",
+      "licenceExpiryDate": null,
+      "postSentenceSupervisionEndDate": null,
+      "statusCode": "B",
+      "statusDescription": "Released - On Licence",
+      "licenceConditions": [
+        {
+          "startDate": "2021-08-12",
+          "terminationDate": null,
+          "createdDateTime": "2021-08-12T16:53:19",
+          "active": true,
+          "licenceConditionNotes": "Must not enter Islington borough.",
+          "licenceConditionTypeMainCat": {
+            "code": "NLC9",
+            "description": "Supervision in the community"
+          },
+          "licenceConditionTypeSubCat": {
+            "code": "NSTT9",
+            "description": "Bespoke Condition (See Notes)"
+          }
+        }
+      ]
+    }
+  ]
+}
