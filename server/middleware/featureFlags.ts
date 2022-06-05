@@ -5,6 +5,7 @@ export const featureFlagDefaults = {
   collapsibleNotes: true,
   dateFilters: true,
   contactTypesFilter: false,
+  flagSearchFilter: false,
 }
 
 export const readFeatureFlags = (flags: ObjectMap<boolean>) => (req: Request, res: Response, next: NextFunction) => {

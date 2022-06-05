@@ -3,6 +3,7 @@ import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
+import { filterContactsBySearch } from './filterContactsSearch'
 
 export const transformContactHistory = ({
   caseSummary,
@@ -12,7 +13,7 @@ export const transformContactHistory = ({
   filters: ObjectMap<string | string[]>
 }) => {
   const {
-    errors,
+    errors: errorsDateRange,
     contacts: contactsFilteredByDateRange,
     selected: selectedDateRange,
   } = filterContactsByDateRange({
@@ -27,13 +28,23 @@ export const transformContactHistory = ({
     contacts: contactsFilteredByDateRange,
     filters,
   })
-  const hasActiveFilters = Boolean(selectedDateRange || selectedContactTypes?.length)
+  const {
+    errors: errorsSearchFilter,
+    contacts: contactsFilteredBySearch,
+    selected: selectedSearch,
+  } = filterContactsBySearch({
+    contacts: contactsFilteredByContactTypes,
+    filters,
+  })
+  const hasActiveFilters = Boolean(selectedDateRange || selectedContactTypes?.length || selectedSearch)
+  const combinedErrors =
+    errorsDateRange || errorsSearchFilter ? [...(errorsDateRange || []), ...(errorsSearchFilter || [])] : undefined
   return {
-    errors,
+    errors: combinedErrors,
     data: {
       ...caseSummary,
-      contactSummary: groupContactsByStartDate(contactsFilteredByContactTypes),
-      contactCount: contactsFilteredByContactTypes.length,
+      contactSummary: groupContactsByStartDate(contactsFilteredBySearch),
+      contactCount: contactsFilteredBySearch.length,
       hasActiveFilters,
       filters: {
         dateRange: {
@@ -53,6 +64,10 @@ export const transformContactHistory = ({
           allContactTypes,
           selected: selectedContactTypes,
           selectedIds: filters.contactTypes,
+        },
+        searchFilter: {
+          selected: selectedSearch,
+          value: filters.searchFilter,
         },
       },
     },

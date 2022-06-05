@@ -1,45 +1,61 @@
 {% if flags.dateFilters or flags.contactTypesFilter %}
     <div class="govuk-grid-column-one-third-from-desktop">
         {%- set filterOptionsHtml %}
+            {% if flags.flagSearchFilter %}
+                {{ govukInput({
+                    label: {
+                        text: "Search contacts",
+                        classes: "govuk-label--s"
+                    },
+                    hint: {
+                        text: 'For example, MAPPA'
+                    },
+                    id: "searchFilter",
+                    name: "searchFilter",
+                    type: 'search',
+                    value: caseSummary.filters.searchFilter.value,
+                    errorMessage: errorMessage(errors.searchFilter)
+                }) }}
+            {% endif %}
             {% if flags.dateFilters %}
-            {{ govukDateInput({
-                id: "dateFrom",
-                namePrefix: "dateFrom",
-                fieldset: {
-                    legend: {
-                        html: "Date range<span class='govuk-visually-hidden'> From</span>",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
-                errorMessage: errorMessage(errors.dateFrom)
-            }) }}
-            {{ govukDateInput({
-                id: "dateTo",
-                namePrefix: "dateTo",
-                fieldset: {
-                    legend: {
-                        html: "<span class='govuk-visually-hidden'>Date range </span>To",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
-                errorMessage: errorMessage(errors.dateTo)
-            }) }}
+                {{ govukDateInput({
+                    id: "dateFrom",
+                    namePrefix: "dateFrom",
+                    fieldset: {
+                        legend: {
+                            html: "Date range<span class='govuk-visually-hidden'> From</span>",
+                            classes: "govuk-fieldset__legend--s"
+                        }
+                    },
+                    items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
+                    errorMessage: errorMessage(errors.dateFrom)
+                }) }}
+                {{ govukDateInput({
+                    id: "dateTo",
+                    namePrefix: "dateTo",
+                    fieldset: {
+                        legend: {
+                            html: "<span class='govuk-visually-hidden'>Date range </span>To",
+                            classes: "govuk-fieldset__legend--s"
+                        }
+                    },
+                    items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
+                    errorMessage: errorMessage(errors.dateTo)
+                }) }}
             {% endif %}
             {% if flags.contactTypesFilter %}
-            {{ govukCheckboxes({
-                idPrefix: "contactTypes",
-                name: "contactTypes",
-                classes: "govuk-checkboxes--small",
-                fieldset: {
-                    legend: {
-                        text: "Contact type",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: checkboxItems({ items: caseSummary.filters.contactTypes.allContactTypes, currentValues: caseSummary.filters.contactTypes.selectedIds })
-            }) }}
+                {{ govukCheckboxes({
+                    idPrefix: "contactTypes",
+                    name: "contactTypes",
+                    classes: "govuk-checkboxes--small",
+                    fieldset: {
+                        legend: {
+                            text: "Contact type",
+                            classes: "govuk-fieldset__legend--s"
+                        }
+                    },
+                    items: checkboxItems({ items: caseSummary.filters.contactTypes.allContactTypes, currentValues: caseSummary.filters.contactTypes.selectedIds })
+                }) }}
             {% endif %}
         {% endset -%}
         <div class='govuk-!-margin-bottom-4'>
@@ -56,18 +72,25 @@
                             text: 'Clear filters',
                             href: urlInfo.path
                         },
-                        categories: removeUndefinedListItems([{
-                            heading: {
-                                text: 'Date range'
-                            },
-                            items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.dateRange.selected.length else undefined,
-                        {
-                            heading: {
-                                text: 'Contact type'
-                            },
-                            items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.contactTypes.selected.length else undefined
+                        categories: removeUndefinedListItems([
+                            {
+                                heading: {
+                                    text: 'Search contacts'
+                                },
+                                items: selectedFilterItems({ items: caseSummary.filters.searchFilter.selected, urlInfo: urlInfo })
+                            } if caseSummary.filters.searchFilter.selected.length else undefined,
+                            {
+                                heading: {
+                                    text: 'Date range'
+                                },
+                                items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
+                            } if caseSummary.filters.dateRange.selected.length else undefined,
+                            {
+                                heading: {
+                                    text: 'Contact type'
+                                },
+                                items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
+                            } if caseSummary.filters.contactTypes.selected.length else undefined
                         ])
                     } if caseSummary.hasActiveFilters else undefined,
                     optionsHtml: filterOptionsHtml

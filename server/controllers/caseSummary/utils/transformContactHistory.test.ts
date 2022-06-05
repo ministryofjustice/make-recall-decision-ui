@@ -49,6 +49,7 @@ describe('transformContactHistory', () => {
     expect(errors).toBeUndefined()
     // contact count is 2 because 1 of the 3 items was filtered out by the date range
     expect(data.contactCount).toEqual(2)
+    expect(data.hasActiveFilters).toEqual(true)
     expect(data.filters).toEqual({
       contactTypes: {
         allContactTypes: [
@@ -79,18 +80,18 @@ describe('transformContactHistory', () => {
           },
         ],
       },
+      searchFilter: {},
     })
   })
 
-  it('returns all contacts if no date filter', () => {
+  it('returns all contacts if no filters', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary } as LicenceHistoryResponse,
-      filters: {
-        showSystemGenerated: 'YES',
-      },
+      filters: {},
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(3)
+    expect(data.hasActiveFilters).toEqual(false)
     expect(data.filters).toEqual({
       contactTypes: {
         allContactTypes: [
@@ -107,6 +108,39 @@ describe('transformContactHistory', () => {
         dateFrom: {},
         dateTo: {},
       },
+      searchFilter: {},
     })
+  })
+
+  it('combines the errors from different filters', () => {
+    const { errors } = transformContactHistory({
+      caseSummary: { contactSummary } as LicenceHistoryResponse,
+      filters: {
+        'dateFrom-day': '21',
+        'dateFrom-month': '04',
+        'dateFrom-year': '2022',
+        searchFilter: 'A',
+      },
+    })
+    expect(errors).toEqual([
+      { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date' },
+      {
+        href: '#searchFilter',
+        name: 'searchFilter',
+        text: 'The search term must be at least two characters long',
+      },
+    ])
+  })
+
+  it('sets hasActiveFilters flag if search filter is successful', () => {
+    const { errors, data } = transformContactHistory({
+      caseSummary: { contactSummary } as LicenceHistoryResponse,
+      filters: {
+        searchFilter: 'Serata Street',
+      },
+    })
+    expect(errors).toBeUndefined()
+    expect(data.contactCount).toEqual(1)
+    expect(data.hasActiveFilters).toEqual(true)
   })
 })
