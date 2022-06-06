@@ -162,11 +162,11 @@ jobs:
           background: true
       - run:
           name: Wait for node app to start
-            command: |
-              until curl -s --fail "http://localhost:3007/ping"; do
-                printf "."
-                sleep 2
-              done
+          command: |
+            until curl -s --fail "http://localhost:3007/ping"; do
+              printf "."
+              sleep 2
+            done
       - run:
           name: integration tests
           command: npm run int-test
