@@ -11,7 +11,7 @@ context('Licence conditions', () => {
   it('can view the licence conditions page', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
-    cy.pageHeading().should('equal', 'Licence conditions')
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     cy.getElement('Release from custody date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Licence expiry date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Last recall date', { parent: `[data-qa="summary-1"]` }).should('exist')
