@@ -44,4 +44,22 @@ context('Licence conditions', () => {
       })
     })
   })
+
+  it('shows a message instead of a table if there are no licence conditions', () => {
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        offences: [
+          {
+            offences: [],
+            licenceConditions: [],
+          },
+        ],
+      },
+    })
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    cy.getElement('There are no licence conditions attached to this event in NDelius.').should('exist')
+  })
 })
