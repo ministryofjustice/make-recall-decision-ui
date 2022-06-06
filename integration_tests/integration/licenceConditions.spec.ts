@@ -11,7 +11,7 @@ context('Licence conditions', () => {
   it('can view the licence conditions page', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
-    cy.pageHeading().should('equal', 'Licence conditions')
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     cy.getElement('Release from custody date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Licence expiry date', { parent: `[data-qa="summary-1"]` }).should('exist')
     cy.getElement('Last recall date', { parent: `[data-qa="summary-1"]` }).should('exist')
@@ -43,5 +43,23 @@ context('Licence conditions', () => {
         })
       })
     })
+  })
+
+  it('shows a message instead of a table if there are no licence conditions', () => {
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        offences: [
+          {
+            offences: [],
+            licenceConditions: [],
+          },
+        ],
+      },
+    })
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    cy.getElement('There are no licence conditions attached to this event in NDelius.').should('exist')
   })
 })

@@ -1,4 +1,4 @@
-import { sortLicenceConditions } from './sortLicenceConditions'
+import { transformLicenceConditions } from './transformLicenceConditions'
 import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-api'
 
 describe('sortLicenceConditions', () => {
@@ -6,6 +6,7 @@ describe('sortLicenceConditions', () => {
     const response = {
       offences: [
         {
+          offences: [],
           licenceConditions: [
             {
               licenceConditionTypeMainCat: {
@@ -26,7 +27,7 @@ describe('sortLicenceConditions', () => {
         },
       ],
     } as LicenceConditionsResponse
-    const result = sortLicenceConditions(response)
+    const result = transformLicenceConditions(response)
     expect(result.offences[0].licenceConditions).toEqual([
       {
         licenceConditionTypeMainCat: {
@@ -44,5 +45,27 @@ describe('sortLicenceConditions', () => {
         },
       },
     ])
+  })
+  it('includes only main offences', () => {
+    const response = {
+      offences: [
+        {
+          offences: [
+            {
+              mainOffence: false,
+            },
+            {
+              mainOffence: true,
+            },
+            {
+              mainOffence: false,
+            },
+          ],
+          licenceConditions: [],
+        },
+      ],
+    } as LicenceConditionsResponse
+    const result = transformLicenceConditions(response)
+    expect(result.offences[0].offences).toEqual([{ mainOffence: true }])
   })
 })
