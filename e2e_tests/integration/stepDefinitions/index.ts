@@ -32,7 +32,7 @@ When('Maria views the personal details page', () => {
 
 When('Maria views the licence conditions page', () => {
   cy.clickLink('Licence conditions')
-  cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+  cy.pageHeading().should('contain', 'Licence conditions')
 })
 
 When('Maria views the Contact history page', () => {
