@@ -1,4 +1,5 @@
 import { RedisClient } from 'redis'
+import waitForExpect from 'wait-for-expect'
 import * as redisExports from './redisClient'
 import { fetchFromCacheOrApi } from './fetchFromCacheOrApi'
 
@@ -14,17 +15,32 @@ describe('fetchFromCacheOrApi', () => {
       .mockReturnValue({ set: redisSet, expire: redisExpire } as unknown as RedisClient)
   })
 
-  it('should return the cached data, if present', async () => {
+  it('should return the cached data, if present, and update the cache', async () => {
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
       JSON.stringify({
         firstName: 'Bobby',
         lastName: 'Badger',
       })
     )
+    fetchFromApi.mockResolvedValue({
+      firstName: 'Brian',
+      lastName: 'Bling',
+    })
     const data = await fetchFromCacheOrApi(fetchFromApi, redisKey)
     expect(data).toEqual({
       firstName: 'Bobby',
       lastName: 'Badger',
+    })
+    // the value was returned from the cache but a fetch was triggered (and not waited for)
+    expect(fetchFromApi).toHaveBeenCalled()
+    await waitForExpect(() => {
+      expect(redisSet).toHaveBeenCalledWith(
+        redisKey,
+        JSON.stringify({
+          firstName: 'Brian',
+          lastName: 'Bling',
+        })
+      )
     })
   })
 
@@ -55,6 +71,6 @@ describe('fetchFromCacheOrApi', () => {
         lastName: 'Bling',
       })
     )
-    expect(redisExpire).toHaveBeenCalledWith(redisKey, 600)
+    expect(redisExpire).toHaveBeenCalledWith(redisKey, 86400)
   })
 })
