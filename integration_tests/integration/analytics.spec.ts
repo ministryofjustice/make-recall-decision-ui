@@ -13,6 +13,6 @@ context('Analytics', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.wait('@collect')
       .then(data => data.request.url)
-      .should('contain', 't=pageview')
+      .should('contain', 't=timing')
   })
 })
