@@ -21,9 +21,12 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: [
             "'self'",
             'code.jquery.com',
+            'www.googletagmanager.com',
             "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
             (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`,
           ],
+          connectSrc: ["'self'", 'www.google-analytics.com'],
+          imgSrc: ["'self'", 'www.google-analytics.com'],
           styleSrc: ["'self'", 'code.jquery.com'],
           fontSrc: ["'self'"],
         },
