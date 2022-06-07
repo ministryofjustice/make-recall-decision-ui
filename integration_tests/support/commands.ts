@@ -12,6 +12,17 @@ Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   cy.task('reset')
   cy.task('stubSignIn')
   cy.task('stubAuthUser')
+  cy.intercept(
+    {
+      method: 'GET',
+      url: 'https://www.google-analytics.com/collect?*',
+      query: {
+        t: 'pageview',
+      },
+    },
+    { statusCode: 200 }
+  ).as('googleAnalytics')
+  cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
   cy.request('/')
   return cy.task('getSignInUrl').then((url: string) => cy.visit(url, options))
 })
