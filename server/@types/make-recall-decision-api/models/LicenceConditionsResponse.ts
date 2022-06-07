@@ -7,5 +7,5 @@ import type { PersonDetails } from './PersonDetails'
 
 export type LicenceConditionsResponse = {
   personalDetailsOverview?: PersonDetails
-  offences?: Array<OffenceWithLicenceConditions>
+  convictions?: Array<OffenceWithLicenceConditions>
 }

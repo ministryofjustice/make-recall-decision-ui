@@ -6,7 +6,7 @@
     "gender": "Male",
     "crn": "X430109"
   },
-  "offences": [
+  "convictions": [
     {
       "convictionId": 2500605130,
       "active": true,

@@ -4,7 +4,7 @@ import { sortList } from '../../../utils/lists'
 export const transformLicenceConditions = (caseSummary: LicenceConditionsResponse) => {
   return {
     ...caseSummary,
-    offences: caseSummary.offences.map(offence => {
+    convictions: caseSummary.convictions.map(offence => {
       return {
         ...offence,
         offences: offence.offences.filter(item => item.mainOffence === true),

@@ -4,7 +4,7 @@ import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-
 describe('sortLicenceConditions', () => {
   it('sorts by licence condition main category code, in descending order', () => {
     const response = {
-      offences: [
+      convictions: [
         {
           offences: [],
           licenceConditions: [
@@ -28,7 +28,7 @@ describe('sortLicenceConditions', () => {
       ],
     } as LicenceConditionsResponse
     const result = transformLicenceConditions(response)
-    expect(result.offences[0].licenceConditions).toEqual([
+    expect(result.convictions[0].licenceConditions).toEqual([
       {
         licenceConditionTypeMainCat: {
           code: 'NLC8',
@@ -48,7 +48,7 @@ describe('sortLicenceConditions', () => {
   })
   it('includes only main offences', () => {
     const response = {
-      offences: [
+      convictions: [
         {
           offences: [
             {
@@ -66,6 +66,6 @@ describe('sortLicenceConditions', () => {
       ],
     } as LicenceConditionsResponse
     const result = transformLicenceConditions(response)
-    expect(result.offences[0].offences).toEqual([{ mainOffence: true }])
+    expect(result.convictions[0].offences).toEqual([{ mainOffence: true }])
   })
 })

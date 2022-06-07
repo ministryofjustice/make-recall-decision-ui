@@ -2,11 +2,11 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        {% for offence in caseSummary.offences %}
+        {% for conviction in caseSummary.convictions %}
             <div class='govuk-!-margin-bottom-8'>
                 <h2 class='govuk-heading-m'>Licence {{ loop.index }}</h2>
                 {% set offenceHtml %}
-                    {% for offenceItem in offence.offences %}
+                    {% for offenceItem in conviction.offences %}
                        <p class='govuk-body'>{{ offenceItem.description }}</p>
                     {% endfor %}
                 {% endset %}
@@ -22,15 +22,15 @@
                         },
                         {
                             key: { text: 'Sentence description' },
-                            value: { text: offence.sentenceDescription if offence.sentenceDescription else 'Not available' }
+                            value: { text: conviction.sentenceDescription if conviction.sentenceDescription else 'Not available' }
                         },
                         {
                             key: { text: 'Sentence length' },
-                            value: { text: (offence.sentenceOriginalLength + ' ' + offence.sentenceOriginalLengthUnits) if offence.sentenceOriginalLength else 'Not available' }
+                            value: { text: (conviction.sentenceOriginalLength + ' ' + conviction.sentenceOriginalLengthUnits) if conviction.sentenceOriginalLength else 'Not available' }
                         },
                         {
                             key: { text: 'Sentence start date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate}) if offence.sentenceStartDate else 'Not available' }
+                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentenceStartDate}) if conviction.sentenceStartDate else 'Not available' }
                         },
                         {
                             key: { text: 'Release from custody date' },
@@ -42,15 +42,15 @@
                         } if loop.index == 1 else undefined,
                         {
                             key: { text: 'Licence expiry date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: offence.licenceExpiryDate}) if offence.licenceExpiryDate else 'Not available' }
+                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.licenceExpiryDate}) if conviction.licenceExpiryDate else 'Not available' }
                         } if loop.index == 1 else undefined,
                         {
                             key: { text: 'Post-sentence supervision end date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: offence.postSentenceSupervisionEndDate}) if offence.postSentenceSupervisionEndDate else 'Not available' }
+                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.postSentenceSupervisionEndDate}) if conviction.postSentenceSupervisionEndDate else 'Not available' }
                         } if loop.index == 1 else undefined
                     ]
                 }) }}
-                {% if offence.licenceConditions.length %}
+                {% if conviction.licenceConditions.length %}
                     <table class="govuk-table" id='table-licence-conditions-{{ loop.index0 }}'>
                         <caption class="govuk-table__caption govuk-visually-hidden">Licence conditions for
                             offence {{ loop.index }}</caption>
@@ -65,7 +65,7 @@
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                        {% for licenceCondition in offence.licenceConditions %}
+                        {% for licenceCondition in conviction.licenceConditions %}
                             <tr class="govuk-table__row" data-qa='row-{{ loop.index0 }}'>
                                 <td class="govuk-table__cell">{{ licenceCondition.licenceConditionTypeMainCat.code }}
                                     - {{ licenceCondition.licenceConditionTypeMainCat.description }}</td>

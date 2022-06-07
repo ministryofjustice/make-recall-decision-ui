@@ -20,7 +20,7 @@ context('Licence conditions', () => {
     cy.getElement('Licence expiry date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     cy.getElement('Last recall date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     cy.getElement('Post-sentence supervision end date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
-    getCaseLicenceConditionsResponse.offences.forEach((offence, offenceIndex) => {
+    getCaseLicenceConditionsResponse.convictions.forEach((offence, offenceIndex) => {
       cy.getDefinitionListValue('Offence', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(
         'contain',
         offence.offences[0].description
@@ -50,7 +50,7 @@ context('Licence conditions', () => {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
-        offences: [
+        convictions: [
           {
             offences: [],
             licenceConditions: [],
