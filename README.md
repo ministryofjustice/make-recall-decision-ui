@@ -23,7 +23,7 @@ There are 2 .env sample files depending on what you are trying to do:
 - To run the setup pointing at local services, then use the .env.local.sample file in the root of this repo
 - To run the setup pointing at dev services, then use the .env.dev.sample file in the root of this repo
 
-Name the copy as .env, then complete with the missing env values (the team will provide them).
+Name the copy as .env, then complete with the missing env values (the team will provide them). NOTE - don't wrap client secrets in quotes.
 
 In your shell config eg .zshrc, set:
 ```
@@ -31,7 +31,9 @@ export SYSTEM_CLIENT_ID=<YOUR DEV CLIENT ID, USUALLY YOUR NAME>
 export SYSTEM_CLIENT_SECRET='<YOUR DEV CLIENT SECRET, INSIDE SINGLE QUOTES>'
 ```
 
-### Run
+### Run against dev env
+
+NOTE - you should be connected to the MoJ digital VPN, because you'll be connecting to services in dev env.
 
 To start the API and local dependencies, excluding the UI:
 
