@@ -127,5 +127,10 @@ describe('Error messages', () => {
       )
       expect(error).toEqual('The date of sentence must have a real year')
     })
+
+    it('renders "minLengthSearchContactsTerm" error', () => {
+      const error = formatValidationErrorMessage({ errorId: 'minLengthSearchContactsTerm' })
+      expect(error).toEqual('The search term must be at least two characters long')
+    })
   })
 })

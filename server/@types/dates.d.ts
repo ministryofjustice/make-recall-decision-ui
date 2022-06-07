@@ -23,6 +23,7 @@ export type ValidationErrorType =
   | 'noSelectionFromList'
   | 'invalidSelectionFromList'
   | 'fromDateAfterToDate'
+  | 'minLengthSearchContactsTerm'
 
 export type DatePartNames = 'year' | 'month' | 'day' | 'hour' | 'minute'
 

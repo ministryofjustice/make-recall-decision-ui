@@ -8,19 +8,8 @@ context('Analytics', () => {
 
   it('sends a page view event to Google Analytics', () => {
     const crn = 'X34983'
-    cy.intercept(
-      {
-        method: 'GET',
-        url: 'https://www.google-analytics.com/collect?*',
-        query: {
-          t: 'pageview',
-        },
-      },
-      { statusCode: 200 }
-    ).as('collect')
-    cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.wait('@collect')
+    cy.wait('@googleAnalytics')
       .then(data => data.request.url)
       .should('contain', 't=pageview')
   })

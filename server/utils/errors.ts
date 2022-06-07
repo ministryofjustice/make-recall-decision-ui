@@ -60,6 +60,8 @@ export const formatValidationErrorMessage = (validationError: ValidationError, f
       return `The ${fieldLabel} must be in the correct format, like 06 05 2021`
     case 'fromDateAfterToDate':
       return 'The from date must be on or before the to date'
+    case 'minLengthSearchContactsTerm':
+      return 'The search term must be at least two characters long'
     default:
       return `Error - ${fieldLabel}`
   }

@@ -63,7 +63,7 @@ context('Contact history', () => {
     })
   })
 
-  it('can filter contact history contacts by date range', () => {
+  it('can filter contacts by date range', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
@@ -121,7 +121,7 @@ context('Contact history', () => {
     cy.getElement('10 contacts').should('exist')
   })
 
-  it('can filter contact history contacts by date and contact types', () => {
+  it('can filter contacts by date and contact types', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1`)
 
@@ -134,5 +134,16 @@ context('Contact history', () => {
     // clear filter
     cy.clickLink('IOM 3rd Party Office Visit')
     cy.getElement('4 contacts').should('exist')
+  })
+
+  it('can filter contacts by free text search', () => {
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagSearchFilter=1`)
+    cy.fillInput('Search contacts', 'Eliot Prufrock')
+    cy.clickButton('Apply filters')
+    cy.getElement('8 contacts').should('exist')
+    // clear filter
+    cy.clickLink('Eliot Prufrock')
+    cy.getElement('10 contacts').should('exist')
   })
 })
