@@ -11,9 +11,9 @@
 {% endblock %}
 
 {% block beforeContent %}
-    <nav>
+    <nav aria-label='Back to person search'>
     {{ govukBackLink({
-        text: "Back",
+        html: "Back<span class='govuk-visually-hidden'> to person search</span>",
         href: '/search'
     }) }}
     </nav>
@@ -23,9 +23,11 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             {% include '../partials/error-summary.njk' %}
-            <div class="govuk-caption-l">CRN: <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span><span class='govuk-!-padding-left-3 govuk-!-padding-right-3'>|</span>Date of
-                birth: <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span> (age <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3'>|</span>Gender: <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
-            </div>
+            <ul class="govuk-list govuk-caption-l inline-list-from-tablet">
+                <li>CRN: <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span><span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span></li>
+                <li>Date of birth: <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span> (age <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span></li>
+                <li>Gender: <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span></li>
+            </ul>
             <div class="govuk-heading-xl" data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
             {{ mojSubNavigation({
                 label: 'Case summary sections',
