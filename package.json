@@ -23,7 +23,7 @@
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
     "swagger-to-ts": "node ./scripts/swagger-to-ts.js",
     "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests && tsc --noEmit -p e2e_tests",
-    "test": "jest",
+    "test": "jest --forceExit --runInBand",
     "test:coverage": "jest --coverage",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.json",

@@ -21,13 +21,13 @@ When('Maria views the overview page', () => {
 
 When('Maria views the risk page', () => {
   cy.clickLink('Risk')
-  cy.pageHeading().should('equal', 'Risk')
+  cy.pageHeading().should('contain', 'Risk')
   cy.getElement('Details of the risk').should('exist')
 })
 
 When('Maria views the personal details page', () => {
   cy.clickLink('Personal details')
-  cy.pageHeading().should('equal', 'Personal details')
+  cy.pageHeading().should('contain', 'Personal details')
 })
 
 When('Maria views the licence conditions page', () => {
@@ -37,7 +37,7 @@ When('Maria views the licence conditions page', () => {
 
 When('Maria views the Contact history page', () => {
   cy.clickLink('Contact history')
-  cy.pageHeading().should('equal', 'Contact history')
+  cy.pageHeading().should('contain', 'Contact history')
 })
 
 When('Maria filters contacts by date range', () => {
