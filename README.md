@@ -17,7 +17,7 @@ The app requires:
 
 ### Setup
 
-Install dependencies using `npm install`, ensuring you are using >= `Node v16.x`
+Install dependencies using `npm install`, ensuring you are using Node v16.x
 
 There are 2 .env sample files depending on what you are trying to do:
 - To run the setup pointing at local services, then use the .env.local.sample file in the root of this repo
