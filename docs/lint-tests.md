@@ -77,18 +77,17 @@ To get debug output when running cypress:
 4. put a break point on the needed line or type the word `debugger` in the cypress code and save if break points are unreliable 
 5. rerun the test 
 
-## Run E2E tests
+## Run E2E tests against local containers
+All dependencies will be mocked, including upstream APIs used by make-recall-decision-api, and HMPPS Auth.
 
-Set the CYPRESS_USERNAME and CYPRESS_PASSWORD env vars in the [.env.sample](./.env.sample) file when you copy it to .env
+Set the CYPRESS_USERNAME and CYPRESS_PASSWORD env vars in the [.env.sample](./.env.sample) file when you copy it to .env. You can obtain the username and password from the team.
 
-Run all required services as per the [readme](../README.md). Then,
+Run all services:
+```
+./scripts/start-services-for-e2e-tests.sh
+```
 
+Open Cypress, from there you can run the tests:
 ```
 npm run e2e
-```
-
-Or run in headless mode:
-
-```
-npm run e2e:ci
 ```
