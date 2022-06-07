@@ -12,7 +12,7 @@ context('Case summary', () => {
   it('can view the overview page with a list of offences', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.pageHeading().should('equal', 'Overview')
+    cy.pageHeading().should('equal', 'Overview for Paula Smith')
     // offence overview
     cy.getDefinitionListValue('Offences').should('contain', 'Robbery (other than armed robbery)')
     cy.getDefinitionListValue('Offences').should('contain', 'Shoplifting')
@@ -45,7 +45,7 @@ context('Case summary', () => {
     const crn = 'X34983'
     const { personalDetailsOverview } = getCaseOverviewResponse
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
-    cy.pageHeading().should('equal', 'Personal details')
+    cy.pageHeading().should('equal', 'Personal details for Paula Smith')
 
     cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
     cy.getText('personalDetailsOverview-dateOfBirth').should(
@@ -71,7 +71,7 @@ context('Case summary', () => {
   it('can view the risk page', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.pageHeading().should('equal', 'Risk')
+    cy.pageHeading().should('equal', 'Risk for Paula Smith')
 
     // Content panels
     cy.viewDetails('View more detail on Details of the risk').should(
@@ -122,14 +122,14 @@ context('Case summary', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     // tabs
     cy.clickLink('Risk')
-    cy.pageHeading().should('equal', 'Risk')
+    cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.clickLink('Personal details')
-    cy.pageHeading().should('equal', 'Personal details')
+    cy.pageHeading().should('equal', 'Personal details for Paula Smith')
     cy.clickLink('Contact history')
-    cy.pageHeading().should('equal', 'Contact history')
+    cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
     cy.clickLink('Licence conditions')
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     cy.clickLink('Overview')
-    cy.pageHeading().should('equal', 'Overview')
+    cy.pageHeading().should('equal', 'Overview for Paula Smith')
   })
 })
