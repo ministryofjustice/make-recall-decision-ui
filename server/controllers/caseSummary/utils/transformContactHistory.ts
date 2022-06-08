@@ -21,19 +21,22 @@ export const transformContactHistory = ({
     filters: filters as ObjectMap<string>,
   })
   const {
-    contacts: contactsFilteredByContactTypes,
-    selected: selectedContactTypes,
-    contactTypes: allContactTypes,
-  } = filterContactsByContactType({
-    contacts: contactsFilteredByDateRange,
-    filters,
-  })
-  const {
     errors: errorsSearchFilter,
     contacts: contactsFilteredBySearch,
     selected: selectedSearch,
   } = filterContactsBySearch({
+    contacts: contactsFilteredByDateRange,
+    filters,
+  })
+  // the contact type filter should always happen last
+  // because it will generate contact counts for each contact type, based on the remaining results
+  // so no further filtering can happen after that
+  const {
     contacts: contactsFilteredByContactTypes,
+    selected: selectedContactTypes,
+    contactTypes: allContactTypes,
+  } = filterContactsByContactType({
+    contacts: contactsFilteredBySearch,
     filters,
   })
   const hasActiveFilters = Boolean(selectedDateRange || selectedContactTypes?.length || selectedSearch)
@@ -43,8 +46,8 @@ export const transformContactHistory = ({
     errors: combinedErrors,
     data: {
       ...caseSummary,
-      contactSummary: groupContactsByStartDate(contactsFilteredBySearch),
-      contactCount: contactsFilteredBySearch.length,
+      contactSummary: groupContactsByStartDate(contactsFilteredByContactTypes),
+      contactCount: contactsFilteredByContactTypes.length,
       hasActiveFilters,
       filters: {
         dateRange: {

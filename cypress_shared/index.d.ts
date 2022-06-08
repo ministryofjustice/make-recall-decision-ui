@@ -48,6 +48,8 @@ declare global {
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 
+      contactTypeFiltersTotalCount(): Chainable<number>
+
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
     }
   }

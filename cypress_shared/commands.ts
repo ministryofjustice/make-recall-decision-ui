@@ -140,3 +140,13 @@ Cypress.Commands.add('selectCheckboxes', (groupLabel, values, opts = {}) => {
       values.forEach(value => cy.wrap($fieldset).contains('label', value).click())
     })
 })
+
+Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
+  return cy.getElement({ qaAttr: 'contact-count' }).then($els =>
+    Cypress.$.makeArray($els)
+      .map(el => parseInt(el.innerText.trim(), 10))
+      .reduce((sum, current) => {
+        return sum + current
+      }, 0)
+  )
+})
