@@ -7,7 +7,10 @@ export const transformLicenceConditions = (caseSummary: LicenceConditionsRespons
     convictions: caseSummary.convictions.map(offence => {
       return {
         ...offence,
-        offences: offence.offences.filter(item => item.mainOffence === true),
+        offences: {
+          main: offence.offences.filter(item => item.mainOffence === true),
+          additional: offence.offences.filter(item => item.mainOffence === false),
+        },
         licenceConditions: sortList(offence.licenceConditions, 'licenceConditionTypeMainCat.code', false),
       }
     }),

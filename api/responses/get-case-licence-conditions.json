@@ -15,6 +15,11 @@
           "mainOffence": true,
           "description": "(Criminal damage endangering life (excluding arson) - aircraft - 05713)",
           "code": "05713"
+        },
+        {
+          "mainOffence": false,
+          "description": "Burglary - 05714",
+          "code": "05714"
         }
       ],
       "sentenceDescription": "CJA - Indeterminate Public Prot.",
