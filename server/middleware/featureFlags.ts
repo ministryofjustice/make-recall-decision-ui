@@ -5,6 +5,7 @@ export const featureFlagDefaults = {
   dateFilters: true,
   contactTypesFilter: false,
   flagSearchFilter: false,
+  flagShowMockedUi: false,
 }
 
 export const readFeatureFlags = (flags: ObjectMap<boolean>) => (req: Request, res: Response, next: NextFunction) => {
