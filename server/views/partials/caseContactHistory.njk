@@ -45,14 +45,11 @@
                     <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
                 {% endset %}
                 {% set sectionHtml %}
-                    {% if flags.collapsibleNotes %}
-                        {{ govukDetails({
-                            summaryText: "View more detail",
-                            html: notesHtml
-                        }) }}
-                    {% else %}
-                        {{ notesHtml | safe }}
-                    {% endif %}
+                    {{ govukDetails({
+                        summaryText: "View more detail",
+                        html: notesHtml,
+                        open: contact.searchTextMatch.notes
+                    }) }}
                 {% endset %}
                 <div data-qa='contact-{{ innerLoopIndex }}'>
                     {{ appSummaryCard({

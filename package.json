@@ -23,7 +23,7 @@
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
     "swagger-to-ts": "node ./scripts/swagger-to-ts.js",
     "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests && tsc --noEmit -p e2e_tests",
-    "test": "jest --forceExit --runInBand --silent",
+    "test": "jest --forceExit --runInBand",
     "test:coverage": "jest --coverage",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.json",
@@ -195,7 +195,7 @@
     "sass": "^1.50.0",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.4",
-    "typescript": "^4.7.2",
+    "typescript": "^4.7.3",
     "wait-for-expect": "^3.0.2",
     "xml2js": "^0.4.23"
   }

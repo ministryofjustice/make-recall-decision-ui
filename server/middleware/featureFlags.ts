@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { ObjectMap } from '../@types'
 
 export const featureFlagDefaults = {
-  collapsibleNotes: true,
   dateFilters: true,
   contactTypesFilter: false,
   flagSearchFilter: false,
