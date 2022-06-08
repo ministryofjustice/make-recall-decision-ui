@@ -121,29 +121,42 @@ context('Contact history', () => {
     cy.getElement('10 contacts').should('exist')
   })
 
-  it('can filter contacts by date and contact types', () => {
-    const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1`)
-
-    cy.enterDateTime('2022-03-16', { parent: '#dateFrom' })
-    cy.enterDateTime('2022-04-21', { parent: '#dateTo' })
-    cy.selectCheckboxes('Contact type', ['IOM 3rd Party Office Visit'])
-    // apply filters without entering dates
-    cy.clickButton('Apply filters')
-    cy.getElement('2 contacts').should('exist')
-    // clear filter
-    cy.clickLink('IOM 3rd Party Office Visit')
-    cy.getElement('4 contacts').should('exist')
-  })
-
   it('can filter contacts by free text search', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagSearchFilter=1`)
-    cy.fillInput('Search contacts', 'Eliot Prufrock')
+    cy.fillInput('Search contacts', 'letter')
     cy.clickButton('Apply filters')
-    cy.getElement('8 contacts').should('exist')
+    cy.getElement('3 contacts').should('exist')
+    // one of the 3 contacts was matched on notes, so check the notes were expanded
+    cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
     // clear filter
-    cy.clickLink('Eliot Prufrock')
+    cy.clickLink('letter')
     cy.getElement('10 contacts').should('exist')
+  })
+
+  it('can filter contacts by date, contact types and text search', () => {
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
+
+    // combine date, contact type and text filters
+    cy.enterDateTime('2022-03-16', { parent: '#dateFrom' })
+    cy.enterDateTime('2022-04-21', { parent: '#dateTo' })
+    cy.selectCheckboxes('Contact type', ['IOM 3rd Party Office Visit'])
+    cy.clickButton('Apply filters')
+    cy.getElement('2 contacts').should('exist')
+    cy.fillInput('Search contacts', 'Failed to attend')
+    cy.clickButton('Apply filters')
+    cy.getElement('1 contact').should('exist')
+
+    // clear the contact type filter
+    cy.clickLink('IOM 3rd Party Office Visit')
+    cy.getElement('2 contacts').should('exist')
+    cy.clickLink('Clear filters')
+    cy.fillInput('Search contacts', 'Planned office visit')
+    cy.clickButton('Apply filters')
+
+    // none of the contact type filters are selected, so the total counts of all filters should match the number of listed contacts
+    cy.getElement('3 contacts').should('exist')
+    cy.contactTypeFiltersTotalCount().should('equal', 3)
   })
 })

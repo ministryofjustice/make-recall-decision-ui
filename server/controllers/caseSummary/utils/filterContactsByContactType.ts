@@ -37,7 +37,7 @@ export const filterContactsByContactType = ({
     .filter(type => type.count > 0)
     .map(type => ({
       ...type,
-      html: `${type.description} <span class="text-secondary">(${type.count})</span>`,
+      html: `${type.description} <span class="text-secondary">(<span data-qa='contact-count'>${type.count}</span>)</span>`,
     }))
   const sortedContactTypes = sortList(transformedContactTypes, 'count', false)
   return {

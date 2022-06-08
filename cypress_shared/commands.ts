@@ -111,6 +111,15 @@ Cypress.Commands.add('viewDetails', (summaryLabel, opts = { parent: 'body' }) =>
     .then(text => text.trim())
 })
 
+Cypress.Commands.add('isDetailsOpen', (summaryLabel, opts = { parent: 'body' }) => {
+  return cy
+    .get(opts.parent)
+    .contains(summaryLabel)
+    .parents('.govuk-details')
+    .invoke('attr', 'open')
+    .then(openAttr => Boolean(openAttr))
+})
+
 Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' }) => {
   cy.get(opts.parent)
     .contains('legend', groupLabel)
@@ -139,4 +148,14 @@ Cypress.Commands.add('selectCheckboxes', (groupLabel, values, opts = {}) => {
     .then($fieldset => {
       values.forEach(value => cy.wrap($fieldset).contains('label', value).click())
     })
+})
+
+Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
+  return cy.getElement({ qaAttr: 'contact-count' }).then($els =>
+    Cypress.$.makeArray($els)
+      .map(el => parseInt(el.innerText.trim(), 10))
+      .reduce((sum, current) => {
+        return sum + current
+      }, 0)
+  )
 })
