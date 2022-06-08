@@ -123,8 +123,6 @@ context('Case summary', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     // tabs
-    cy.clickLink('Risk')
-    cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.clickLink('Personal details')
     cy.pageHeading().should('equal', 'Personal details for Paula Smith')
     cy.clickLink('Contact history')
@@ -133,5 +131,13 @@ context('Case summary', () => {
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     cy.clickLink('Overview')
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
+  })
+
+  it('can switch to risk page if flag is enabled', () => {
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/overview?flagShowMockedUi=1`)
+    cy.clickLink('Risk')
+    cy.pageHeading().should('equal', 'Risk for Paula Smith')
   })
 })
