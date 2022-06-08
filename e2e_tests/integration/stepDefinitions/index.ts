@@ -19,12 +19,6 @@ When('Maria views the overview page', () => {
   cy.getDefinitionListValue('Offences').should('not.be.empty')
 })
 
-When('Maria views the risk page', () => {
-  cy.clickLink('Risk')
-  cy.pageHeading().should('contain', 'Risk')
-  cy.getElement('Details of the risk').should('exist')
-})
-
 When('Maria views the personal details page', () => {
   cy.clickLink('Personal details')
   cy.pageHeading().should('contain', 'Personal details')

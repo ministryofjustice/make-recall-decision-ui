@@ -31,7 +31,7 @@
             <div class="govuk-heading-xl" data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
             {{ mojSubNavigation({
                 label: 'Case summary sections',
-                items: [
+                items: removeUndefinedListItems([
                     {
                         text: 'Overview',
                         href: pageUrlBase + 'overview',
@@ -41,7 +41,7 @@
                         text: 'Risk',
                         href: pageUrlBase + 'risk',
                         active: section.id == 'risk'
-                    },
+                    } if flags.flagShowMockedUi else undefined,
                     {
                         text: 'Personal details',
                         href: pageUrlBase + 'personal-details',
@@ -57,7 +57,7 @@
                         href: pageUrlBase + 'contact-history',
                         active: section.id == 'contact-history'
                     }
-                ]
+                ])
             }) }}
             {% if section.id =='overview' %}
                 {% include '../partials/caseOverview.njk' %}
