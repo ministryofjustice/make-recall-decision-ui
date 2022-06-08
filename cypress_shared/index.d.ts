@@ -42,6 +42,8 @@ declare global {
 
       viewDetails(summaryLabel: string, opts?: CommandOpts): Chainable<string>
 
+      isDetailsOpen(summaryLabel: string, opts?: CommandOpts): Chainable<boolean>
+
       getLinkHref(selector: string, opts?: CommandOpts): Chainable<Element>
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>

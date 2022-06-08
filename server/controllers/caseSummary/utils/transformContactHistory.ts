@@ -3,7 +3,7 @@ import { ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
-import { filterContactsBySearch } from './filterContactsSearch'
+import { filterContactsBySearch } from './filterContactsBySearch'
 
 export const transformContactHistory = ({
   caseSummary,

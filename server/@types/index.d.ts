@@ -29,6 +29,12 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
 
 export interface DecoratedContact extends ContactSummaryResponse {
   startDate: string
+  searchTextMatch?: {
+    notes: boolean
+    description: boolean
+    outcome: boolean
+    enforcementAction: boolean
+  }
 }
 
 export interface UiListItem {

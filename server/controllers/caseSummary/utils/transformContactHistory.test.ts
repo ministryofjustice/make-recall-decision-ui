@@ -79,6 +79,12 @@ describe('transformContactHistory', () => {
               outcome: 'Decision to Recall',
               startDate: '2022-04-21',
               systemGenerated: false,
+              searchTextMatch: {
+                description: true,
+                enforcementAction: false,
+                notes: false,
+                outcome: false,
+              },
             },
           ],
         },

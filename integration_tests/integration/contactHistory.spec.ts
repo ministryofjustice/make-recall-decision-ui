@@ -124,11 +124,13 @@ context('Contact history', () => {
   it('can filter contacts by free text search', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagSearchFilter=1`)
-    cy.fillInput('Search contacts', 'Eliot Prufrock')
+    cy.fillInput('Search contacts', 'letter')
     cy.clickButton('Apply filters')
-    cy.getElement('8 contacts').should('exist')
+    cy.getElement('3 contacts').should('exist')
+    // one of the 3 contacts was matched on notes, so check the notes were expanded
+    cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
     // clear filter
-    cy.clickLink('Eliot Prufrock')
+    cy.clickLink('letter')
     cy.getElement('10 contacts').should('exist')
   })
 

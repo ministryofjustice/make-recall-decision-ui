@@ -1,4 +1,4 @@
-import { filterContactsBySearch } from './filterContactsSearch'
+import { filterContactsBySearch } from './filterContactsBySearch'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 
 describe('filterContactsBySearch', () => {
@@ -57,6 +57,13 @@ describe('filterContactsBySearch', () => {
         notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
+        searchTextMatch: {
+          description: true,
+          enforcementAction: false,
+          notes: false,
+          outcome: false,
+        },
+        startDate: null,
       },
     ])
     expect(selected).toEqual([{ text: 'NS', href: '' }])
@@ -79,6 +86,13 @@ describe('filterContactsBySearch', () => {
           'Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.',
         enforcementAction: null,
         systemGenerated: false,
+        searchTextMatch: {
+          description: false,
+          enforcementAction: false,
+          notes: true,
+          outcome: false,
+        },
+        startDate: null,
       },
     ])
     expect(selected).toEqual([{ text: 'Jane Pavement', href: '' }])
@@ -100,6 +114,13 @@ describe('filterContactsBySearch', () => {
         notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Decision Pending Response from Person on Probation',
         systemGenerated: false,
+        searchTextMatch: {
+          description: false,
+          enforcementAction: false,
+          notes: false,
+          outcome: true,
+        },
+        startDate: null,
       },
       {
         code: 'IVSP',
@@ -109,6 +130,13 @@ describe('filterContactsBySearch', () => {
         notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
+        searchTextMatch: {
+          description: false,
+          enforcementAction: false,
+          notes: false,
+          outcome: true,
+        },
+        startDate: null,
       },
     ])
     expect(selected).toEqual([{ text: 'Failed to Attend', href: '' }])
@@ -130,6 +158,13 @@ describe('filterContactsBySearch', () => {
         notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
+        searchTextMatch: {
+          description: false,
+          enforcementAction: true,
+          notes: false,
+          outcome: false,
+        },
+        startDate: null,
       },
     ])
     expect(selected).toEqual([{ text: 'Enforcement Letter', href: '' }])
