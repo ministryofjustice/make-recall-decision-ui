@@ -21,9 +21,13 @@ context('Licence conditions', () => {
     cy.getElement('Last recall date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     cy.getElement('Post-sentence supervision end date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
     getCaseLicenceConditionsResponse.convictions.forEach((offence, offenceIndex) => {
-      cy.getDefinitionListValue('Offence', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(
+      cy.getDefinitionListValue('Main offence', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(
         'contain',
         offence.offences[0].description
+      )
+      cy.getDefinitionListValue('Additional offences', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(
+        'contain',
+        offence.offences[1] ? offence.offences[1].description : 'None'
       )
       offence.licenceConditions.forEach((condition, conditionIndex) => {
         cy.getRowValuesFromTable({

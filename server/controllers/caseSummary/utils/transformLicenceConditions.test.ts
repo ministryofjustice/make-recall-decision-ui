@@ -66,6 +66,7 @@ describe('sortLicenceConditions', () => {
       ],
     } as LicenceConditionsResponse
     const result = transformLicenceConditions(response)
-    expect(result.convictions[0].offences).toEqual([{ mainOffence: true }])
+    expect(result.convictions[0].offences.main).toEqual([{ mainOffence: true }])
+    expect(result.convictions[0].offences.additional).toEqual([{ mainOffence: false }, { mainOffence: false }])
   })
 })

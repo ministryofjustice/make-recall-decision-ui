@@ -5,10 +5,19 @@
         {% for conviction in caseSummary.convictions %}
             <div class='govuk-!-margin-bottom-8'>
                 <h2 class='govuk-heading-m'>Licence {{ loop.index }}</h2>
-                {% set offenceHtml %}
-                    {% for offenceItem in conviction.offences %}
+                {% set mainOffenceHtml %}
+                    {% for offenceItem in conviction.offences.main %}
                        <p class='govuk-body'>{{ offenceItem.description }}</p>
                     {% endfor %}
+                {% endset %}
+                {% set additionalOffenceHtml %}
+                    {% if conviction.offences.additional.length %}
+                    {% for offenceItem in conviction.offences.additional %}
+                        <p class='govuk-body'>{{ offenceItem.description }}</p>
+                    {% endfor %}
+                    {% else %}
+                    None
+                    {% endif %}
                 {% endset %}
                 {{ govukSummaryList({
                     classes: 'govuk-summary-list--no-border',
@@ -17,8 +26,12 @@
                     },
                     rows: [
                         {
-                            key: { html: 'Offence' },
-                            value: { html: offenceHtml }
+                            key: { html: 'Main offence' },
+                            value: { html: mainOffenceHtml }
+                        },
+                        {
+                            key: { html: 'Additional offences' },
+                            value: { html: additionalOffenceHtml }
                         },
                         {
                             key: { text: 'Sentence description' },
