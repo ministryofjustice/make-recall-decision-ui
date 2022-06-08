@@ -45,7 +45,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
-        searchFilter: 'NS',
+        searchFilters: 'NS',
       },
     })
     expect(contacts).toEqual([
@@ -73,7 +73,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
-        searchFilter: 'Jane Pavement',
+        searchFilters: 'Jane Pavement',
       },
     })
     expect(contacts).toEqual([
@@ -102,7 +102,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
-        searchFilter: 'Failed to Attend',
+        searchFilters: 'Failed to Attend',
       },
     })
     expect(contacts).toEqual([
@@ -146,7 +146,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
-        searchFilter: 'Enforcement Letter',
+        searchFilters: 'Enforcement Letter',
       },
     })
     expect(contacts).toEqual([
@@ -174,15 +174,16 @@ describe('filterContactsBySearch', () => {
     const { contacts, errors, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
-        searchFilter: 'X',
+        searchFilters: 'X',
       },
     })
     expect(contacts).toEqual(contactList)
     expect(errors).toEqual([
       {
-        href: '#searchFilter',
-        name: 'searchFilter',
+        href: '#searchFilters',
+        name: 'searchFilters',
         text: 'The search term must be at least two characters long',
+        values: 'X',
       },
     ])
     expect(selected).toBeUndefined()

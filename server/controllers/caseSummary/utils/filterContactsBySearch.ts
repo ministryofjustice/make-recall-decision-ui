@@ -1,5 +1,5 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
-import { removeParamsFromQueryString } from '../../../utils/utils'
+import { isDefined, removeParamsFromQueryString } from '../../../utils/utils'
 import { DecoratedContact, NamedFormError, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/errors'
 
@@ -16,31 +16,33 @@ export const filterContactsBySearch = ({
   errors?: NamedFormError[]
   selected?: { text: string; href: string }[]
 } => {
-  const { searchFilter } = filters
-  const selectedFilters = Array.isArray(searchFilter) ? searchFilter : [searchFilter]
+  const { searchFilters } = filters
   let filteredContacts = contacts
   let selected
   let errors
-  if (searchFilter) {
-    if (searchFilter.length < MINIMUM_SEARCH_TERM_LENGTH) {
+  if (isDefined(searchFilters)) {
+    const selectedFilters = Array.isArray(searchFilters) ? searchFilters : [searchFilters]
+    const invalidLength = selectedFilters.find(filter => filter.length < MINIMUM_SEARCH_TERM_LENGTH)
+    if (invalidLength) {
       errors = [
         makeErrorObject({
-          id: 'searchFilter',
+          id: 'searchFilters',
           text: formatValidationErrorMessage({ errorId: 'minLengthSearchContactsTerm' }),
+          values: invalidLength,
         }),
       ]
     } else {
-      const pattern = new RegExp(`.*\\b${searchFilter}.*`, 'i')
+      const patterns = selectedFilters.map(filter => new RegExp(`.*\\b${filter}.*`, 'i'))
       filteredContacts = contacts
         .map(contact => {
           return {
             ...contact,
             startDate: null,
             searchTextMatch: {
-              notes: pattern.test(contact.notes),
-              description: pattern.test(contact.descriptionType),
-              outcome: pattern.test(contact.outcome),
-              enforcementAction: pattern.test(contact.enforcementAction),
+              notes: patterns.every(pattern => pattern.test(contact.notes)),
+              description: patterns.every(pattern => pattern.test(contact.descriptionType)),
+              outcome: patterns.every(pattern => pattern.test(contact.outcome)),
+              enforcementAction: patterns.every(pattern => pattern.test(contact.enforcementAction)),
             },
           }
         })
@@ -56,7 +58,7 @@ export const filterContactsBySearch = ({
       selected = selectedFilters.map(searchTerm => ({
         text: searchTerm,
         href: removeParamsFromQueryString({
-          paramsToRemove: [{ key: 'searchFilter', value: searchTerm }],
+          paramsToRemove: [{ key: 'searchFilters', value: searchTerm }],
           allParams: filters,
         }),
       }))
