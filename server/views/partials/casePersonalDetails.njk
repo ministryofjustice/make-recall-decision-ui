@@ -2,9 +2,13 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% set offenderManagerHtml %}
-            <div>{{ caseSummary.offenderManager.name }} - {{ caseSummary.offenderManager.probationTeam.code }}, {{ caseSummary.offenderManager.probationTeam.label }}</div>
-            {% if caseSummary.offenderManager.phoneNumber %}<div>Telephone: {{ caseSummary.offenderManager.phoneNumber }}</div>{% endif %}
-            {% if caseSummary.offenderManager.email %}<div>Email: <a href='mailto:{{ caseSummary.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ caseSummary.offenderManager.email }}</a></div>{% endif %}
+            <ul class='govuk-list'>
+                <li>Name: {{ caseSummary.offenderManager.name }}</li>
+                <li>Team: {{ caseSummary.offenderManager.probationTeam.label }}</li>
+                <li>Code: {{ caseSummary.offenderManager.probationTeam.code }}</li>
+                {% if caseSummary.offenderManager.phoneNumber %}<li>Telephone: {{ caseSummary.offenderManager.phoneNumber }}</li>{% endif %}
+                {% if caseSummary.offenderManager.email %}<li>Email: <a href='mailto:{{ caseSummary.offenderManager.email }}' target='_blank' rel='noopener' data-qa='offenderManagerEmail'>{{ caseSummary.offenderManager.email }}</a></li>{% endif %}
+            </ul>
         {% endset %}
         {% set addressHtml %}
             {% if caseSummary.currentAddress.line1 %}<div>{{ caseSummary.currentAddress.line1 }}</div>{% endif %}

@@ -33,3 +33,17 @@ pre.govuk-body {
     display: none;
   }
 }
+
+.inline-list-from-tablet {
+  > li {
+    @include govuk-media-query($from: tablet) {
+      display: inline;
+    }
+  }
+}
+
+.hide-mobile {
+  @include govuk-media-query($from: mobile, $until: tablet) {
+    display: none;
+  }
+}
