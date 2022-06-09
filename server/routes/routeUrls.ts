@@ -3,4 +3,5 @@ export const routeUrls = {
   search: '/search',
   searchResults: '/search-results',
   cases: '/cases',
+  flags: '/flags',
 }

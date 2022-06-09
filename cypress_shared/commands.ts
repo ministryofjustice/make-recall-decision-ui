@@ -159,3 +159,32 @@ Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
       }, 0)
   )
 })
+
+// ============================ RADIO BUTTONS ===============================
+
+Cypress.Commands.add('selectRadio', (groupLabel, value, opts = {}) => {
+  cy.get(opts.parent || 'body')
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      if (opts.findByValue) {
+        cy.wrap($fieldset).find(`[value=${value}]`).check()
+      } else {
+        cy.wrap($fieldset).contains('label', value).click()
+      }
+    })
+})
+
+Cypress.Commands.add('getRadioOptionByLabel', (groupLabel, value, opts = {}) => {
+  return cy
+    .get(opts.parent || 'body')
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset =>
+      cy
+        .wrap($fieldset)
+        .contains('label', value)
+        .invoke('attr', 'for')
+        .then(id => cy.get(`#${id}`))
+    )
+})
