@@ -20,7 +20,7 @@ export const filterContactsBySearch = ({
   let filteredContacts = contacts
   let selected
   let errors
-  if (isDefined(searchFilters)) {
+  if (isDefined(searchFilters) && searchFilters !== '') {
     const selectedFilters = Array.isArray(searchFilters) ? searchFilters : [searchFilters]
     const invalidLength = selectedFilters.find(filter => filter.length < MINIMUM_SEARCH_TERM_LENGTH)
     if (invalidLength) {
