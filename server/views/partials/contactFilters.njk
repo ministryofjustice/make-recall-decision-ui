@@ -7,7 +7,7 @@
                 {% endfor %}
                 {{ govukInput({
                     label: {
-                        text: "Search contacts",
+                        text: "Search term",
                         classes: "govuk-label--s"
                     },
                     hint: {
@@ -78,7 +78,7 @@
                         categories: removeUndefinedListItems([
                             {
                                 heading: {
-                                    text: 'Search contacts'
+                                    text: 'Search term'
                                 },
                                 items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
                             } if caseSummary.filters.searchFilters.selected.length else undefined,

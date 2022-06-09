@@ -124,12 +124,12 @@ context('Contact history', () => {
   it('can filter contacts by free text search', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagSearchFilter=1`)
-    cy.fillInput('Search contacts', 'letter')
+    cy.fillInput('Search term', 'letter')
     cy.clickButton('Apply filters')
     cy.getElement('3 contacts').should('exist')
     // one of the 3 contacts was matched on notes, so check the notes were expanded
     cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
-    cy.fillInput('Search contacts', 'Licence compliance')
+    cy.fillInput('Search term', 'Licence compliance')
     cy.clickButton('Apply filters')
     cy.getElement('2 contacts').should('exist')
     // clear filters
@@ -149,7 +149,7 @@ context('Contact history', () => {
     cy.selectCheckboxes('Contact type', ['IOM 3rd Party Office Visit'])
     cy.clickButton('Apply filters')
     cy.getElement('2 contacts').should('exist')
-    cy.fillInput('Search contacts', 'Failed to attend')
+    cy.fillInput('Search term', 'Failed to attend')
     cy.clickButton('Apply filters')
     cy.getElement('1 contact').should('exist')
 
@@ -157,7 +157,7 @@ context('Contact history', () => {
     cy.clickLink('IOM 3rd Party Office Visit')
     cy.getElement('2 contacts').should('exist')
     cy.clickLink('Clear filters')
-    cy.fillInput('Search contacts', 'Planned office visit')
+    cy.fillInput('Search term', 'Planned office visit')
     cy.clickButton('Apply filters')
 
     // none of the contact type filters are selected, so the total counts of all filters should match the number of listed contacts
