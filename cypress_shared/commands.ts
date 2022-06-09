@@ -114,19 +114,10 @@ Cypress.Commands.add('viewDetails', (summaryLabel, opts = { parent: 'body' }) =>
 Cypress.Commands.add('isDetailsOpen', (summaryLabel, opts = { parent: 'body' }) => {
   return cy
     .get(opts.parent)
-    .contains(summaryLabel)
+    .contains(summaryLabel as string)
     .parents('.govuk-details')
     .invoke('attr', 'open')
     .then(openAttr => Boolean(openAttr))
-})
-
-Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' }) => {
-  cy.get(opts.parent)
-    .contains('legend', groupLabel)
-    .parent('fieldset')
-    .then($fieldset => {
-      cy.wrap($fieldset).contains('label', value).click()
-    })
 })
 
 Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-content' }) => {
@@ -162,16 +153,12 @@ Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
 
 // ============================ RADIO BUTTONS ===============================
 
-Cypress.Commands.add('selectRadio', (groupLabel, value, opts = {}) => {
-  cy.get(opts.parent || 'body')
+Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' }) => {
+  cy.get(opts.parent)
     .contains('legend', groupLabel)
     .parent('fieldset')
     .then($fieldset => {
-      if (opts.findByValue) {
-        cy.wrap($fieldset).find(`[value=${value}]`).check()
-      } else {
-        cy.wrap($fieldset).contains('label', value).click()
-      }
+      cy.wrap($fieldset).contains('label', value).click()
     })
 })
 

@@ -1,5 +1,4 @@
 import { ContactSummaryResponse } from './make-recall-decision-api/models/ContactSummaryResponse'
-import { strings } from '../textStrings/en'
 
 export interface ObjectMap<T> {
   [key: string]: T
