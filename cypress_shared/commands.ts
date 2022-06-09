@@ -114,19 +114,10 @@ Cypress.Commands.add('viewDetails', (summaryLabel, opts = { parent: 'body' }) =>
 Cypress.Commands.add('isDetailsOpen', (summaryLabel, opts = { parent: 'body' }) => {
   return cy
     .get(opts.parent)
-    .contains(summaryLabel)
+    .contains(summaryLabel as string)
     .parents('.govuk-details')
     .invoke('attr', 'open')
     .then(openAttr => Boolean(openAttr))
-})
-
-Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' }) => {
-  cy.get(opts.parent)
-    .contains('legend', groupLabel)
-    .parent('fieldset')
-    .then($fieldset => {
-      cy.wrap($fieldset).contains('label', value).click()
-    })
 })
 
 Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-content' }) => {
@@ -158,4 +149,29 @@ Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
         return sum + current
       }, 0)
   )
+})
+
+// ============================ RADIO BUTTONS ===============================
+
+Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' }) => {
+  cy.get(opts.parent)
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      cy.wrap($fieldset).contains('label', value).click()
+    })
+})
+
+Cypress.Commands.add('getRadioOptionByLabel', (groupLabel, value, opts = {}) => {
+  return cy
+    .get(opts.parent || 'body')
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset =>
+      cy
+        .wrap($fieldset)
+        .contains('label', value)
+        .invoke('attr', 'for')
+        .then(id => cy.get(`#${id}`))
+    )
 })

@@ -1,0 +1,49 @@
+{% extends "../partials/layout.njk" %}
+
+
+{% set pageTitle = makePageTitle({ pageHeading: "Feature flags" }) %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">Feature flags</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <p class='govuk-body'>Each flag turns a feature on or off, <strong>for yourself only, in this browser only (using cookies)</strong>.</p>
+            <p class='govuk-body'>All other users will continue to get the default values (unless they've overridden them using this page).</p>
+            <form>
+                {% for flag in flagsList %}
+                    <div>
+                        {{ govukRadios({
+                            classes: "govuk-radios--inline govuk-radios--small",
+                            idPrefix: flag.id,
+                            name: flag.id,
+                            fieldset: {
+                                legend: {
+                                    text: flag.label,
+                                    classes: "govuk-fieldset__legend--m"
+                                }
+                            },
+                            hint: {
+                                text: "Default: " + ("On" if flag.default == true else "Off")
+                            },
+                            items: [
+                                {
+                                    value: "1",
+                                    text: "On",
+                                    checked: flag.override == true
+                                },
+                                {
+                                    value: "0",
+                                    text: "Off",
+                                    checked: flag.override == false
+                                }
+                            ]
+                        }) }}
+                    </div>
+                {% endfor %}
+                <button class="govuk-button" data-module="govuk-button">
+                    Save
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

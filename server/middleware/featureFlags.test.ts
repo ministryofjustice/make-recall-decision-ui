@@ -6,7 +6,7 @@ describe('readFeatureFlags', () => {
     const req = mockReq()
     const res = mockRes()
     const next = jest.fn()
-    readFeatureFlags({ testFlag: true })(req, res, next)
+    readFeatureFlags({ testFlag: { default: true, label: 'Test' } })(req, res, next)
     expect(res.locals.flags).toEqual({
       testFlag: true,
     })
@@ -16,7 +16,7 @@ describe('readFeatureFlags', () => {
     const req = mockReq({ query: { testFlag: '0' } })
     const res = mockRes()
     const next = jest.fn()
-    readFeatureFlags({ testFlag: true })(req, res, next)
+    readFeatureFlags({ testFlag: { default: true, label: 'Test' } })(req, res, next)
     expect(res.locals.flags).toEqual({
       testFlag: false,
     })
@@ -26,7 +26,7 @@ describe('readFeatureFlags', () => {
     const req = mockReq({ cookies: { testFlag: '0' } })
     const res = mockRes()
     const next = jest.fn()
-    readFeatureFlags({ testFlag: true })(req, res, next)
+    readFeatureFlags({ testFlag: { default: true, label: 'Test' } })(req, res, next)
     expect(res.locals.flags).toEqual({
       testFlag: false,
     })
@@ -36,7 +36,7 @@ describe('readFeatureFlags', () => {
     const req = mockReq({ query: { testFlag: '0' }, cookies: { testFlag: '1' } })
     const res = mockRes()
     const next = jest.fn()
-    readFeatureFlags({ testFlag: true })(req, res, next)
+    readFeatureFlags({ testFlag: { default: true, label: 'Test' } })(req, res, next)
     expect(res.locals.flags).toEqual({
       testFlag: false,
     })
@@ -46,7 +46,7 @@ describe('readFeatureFlags', () => {
     const req = mockReq({ query: { testFlag: '1' } })
     const res = mockRes()
     const next = jest.fn()
-    readFeatureFlags({ testFlag: false })(req, res, next)
+    readFeatureFlags({ testFlag: { default: false, label: 'Test' } })(req, res, next)
     expect(res.locals.flags).toEqual({
       testFlag: true,
     })

@@ -52,3 +52,8 @@ export interface SelectedFilterItem {
 export interface UrlInfo {
   path: string
 }
+
+export interface FeatureFlag {
+  label: string
+  default: boolean
+}
