@@ -34,11 +34,14 @@ describe('filterContactsBySearch', () => {
   ] as ContactSummaryResponse[]
 
   it('leaves the list unaltered if no search filter supplied', () => {
-    const { contacts } = filterContactsBySearch({
+    const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
-      filters: {},
+      filters: {
+        searchFilters: '',
+      },
     })
     expect(contacts).toEqual(contactList)
+    expect(selected).toBeUndefined()
   })
 
   it('filters contacts by the supplied search filter and returns selected filters', () => {
