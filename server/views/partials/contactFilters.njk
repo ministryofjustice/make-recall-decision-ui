@@ -2,19 +2,22 @@
     <div class="govuk-grid-column-one-third-from-desktop">
         {%- set filterOptionsHtml %}
             {% if flags.flagSearchFilter %}
+                {% for searchFilters in caseSummary.filters.searchFilters.selected %}
+                    <input type='hidden' name='searchFilters' value='{{ searchFilters.text }}' />
+                {% endfor %}
                 {{ govukInput({
                     label: {
-                        text: "Search contacts",
+                        text: "Term",
                         classes: "govuk-label--s"
                     },
                     hint: {
-                        text: 'For example, MAPPA'
+                        text: 'Search contacts, for example, MAPPA'
                     },
-                    id: "searchFilter",
-                    name: "searchFilter",
+                    id: "searchFilters",
+                    name: "searchFilters",
                     type: 'search',
-                    value: caseSummary.filters.searchFilter.value,
-                    errorMessage: errorMessage(errors.searchFilter)
+                    value: errors.searchFilters.values if errors.searchFilters else undefined,
+                    errorMessage: errorMessage(errors.searchFilters)
                 }) }}
             {% endif %}
             {% if flags.dateFilters %}
@@ -75,10 +78,10 @@
                         categories: removeUndefinedListItems([
                             {
                                 heading: {
-                                    text: 'Search contacts'
+                                    text: 'Term'
                                 },
-                                items: selectedFilterItems({ items: caseSummary.filters.searchFilter.selected, urlInfo: urlInfo })
-                            } if caseSummary.filters.searchFilter.selected.length else undefined,
+                                items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
+                            } if caseSummary.filters.searchFilters.selected.length else undefined,
                             {
                                 heading: {
                                     text: 'Date range'

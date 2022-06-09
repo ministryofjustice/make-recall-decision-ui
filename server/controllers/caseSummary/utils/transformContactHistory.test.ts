@@ -55,7 +55,7 @@ describe('transformContactHistory', () => {
         'dateTo-month': '04',
         'dateTo-year': '2022',
         // 2 of those 3 remaining contacts have this search string in their text fields
-        searchFilter: 'Arrest attempt',
+        searchFilters: 'Arrest attempt',
         // 1 of thooe 2 contacts has this contact type
         contactTypes: 'IVSP',
       },
@@ -110,7 +110,7 @@ describe('transformContactHistory', () => {
         ],
         selected: [
           {
-            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilter=Arrest%20attempt',
+            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt',
             text: 'IOM 3rd Party Office Visit',
           },
         ],
@@ -129,12 +129,12 @@ describe('transformContactHistory', () => {
         },
         selected: [
           {
-            href: '?searchFilter=Arrest%20attempt&contactTypes=IVSP',
+            href: '?searchFilters=Arrest%20attempt&contactTypes=IVSP',
             text: '21 Apr 2022 to 21 Apr 2022',
           },
         ],
       },
-      searchFilter: {
+      searchFilters: {
         selected: [
           {
             href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&contactTypes=IVSP',
@@ -176,7 +176,7 @@ describe('transformContactHistory', () => {
         dateFrom: {},
         dateTo: {},
       },
-      searchFilter: {},
+      searchFilters: {},
     })
   })
 
@@ -187,15 +187,16 @@ describe('transformContactHistory', () => {
         'dateFrom-day': '21',
         'dateFrom-month': '04',
         'dateFrom-year': '2022',
-        searchFilter: 'A',
+        searchFilters: 'A',
       },
     })
     expect(errors).toEqual([
       { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date' },
       {
-        href: '#searchFilter',
-        name: 'searchFilter',
+        href: '#searchFilters',
+        name: 'searchFilters',
         text: 'The search term must be at least two characters long',
+        values: 'A',
       },
     ])
   })
@@ -204,7 +205,7 @@ describe('transformContactHistory', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary } as LicenceHistoryResponse,
       filters: {
-        searchFilter: 'Serata Street',
+        searchFilters: 'Serata Street',
       },
     })
     expect(errors).toBeUndefined()

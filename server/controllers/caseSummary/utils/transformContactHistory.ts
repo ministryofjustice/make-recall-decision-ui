@@ -68,9 +68,9 @@ export const transformContactHistory = ({
           selected: selectedContactTypes,
           selectedIds: filters.contactTypes,
         },
-        searchFilter: {
+        searchFilters: {
           selected: selectedSearch,
-          value: filters.searchFilter,
+          value: filters.searchFilters,
         },
       },
     },
