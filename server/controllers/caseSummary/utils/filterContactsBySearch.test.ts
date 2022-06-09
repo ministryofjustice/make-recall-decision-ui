@@ -185,7 +185,7 @@ describe('filterContactsBySearch', () => {
       {
         href: '#searchFilters',
         name: 'searchFilters',
-        text: 'The search term must be at least two characters long',
+        text: 'Search term must be 2 characters or more',
         values: 'X',
       },
     ])
