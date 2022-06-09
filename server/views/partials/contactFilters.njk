@@ -7,11 +7,11 @@
                 {% endfor %}
                 {{ govukInput({
                     label: {
-                        text: "Term",
+                        text: "Search term",
                         classes: "govuk-label--s"
                     },
                     hint: {
-                        text: 'Search contacts, for example, MAPPA'
+                        text: 'For example, MAPPA'
                     },
                     id: "searchFilters",
                     name: "searchFilters",
@@ -78,7 +78,7 @@
                         categories: removeUndefinedListItems([
                             {
                                 heading: {
-                                    text: 'Term'
+                                    text: 'Search term'
                                 },
                                 items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
                             } if caseSummary.filters.searchFilters.selected.length else undefined,

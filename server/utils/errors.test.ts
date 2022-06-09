@@ -130,7 +130,7 @@ describe('Error messages', () => {
 
     it('renders "minLengthSearchContactsTerm" error', () => {
       const error = formatValidationErrorMessage({ errorId: 'minLengthSearchContactsTerm' })
-      expect(error).toEqual('The search term must be at least two characters long')
+      expect(error).toEqual('Search term must be 2 characters or more')
     })
   })
 })
