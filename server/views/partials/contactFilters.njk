@@ -1,4 +1,4 @@
-{% if flags.dateFilters or flags.contactTypesFilter %}
+{% if flags.dateFilters or flags.contactTypesFilter or flags.flagSearchFilter %}
     <div class="govuk-grid-column-one-third-from-desktop">
         {%- set filterOptionsHtml %}
             {% if flags.flagSearchFilter %}
