@@ -2,6 +2,16 @@ import { transformContactHistory } from './transformContactHistory'
 import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
 
 describe('transformContactHistory', () => {
+  const defaultFilters = {
+    'dateFrom-day': '',
+    'dateFrom-month': '',
+    'dateFrom-year': '',
+    'dateTo-day': '',
+    'dateTo-month': '',
+    'dateTo-year': '',
+    contactTypes: '',
+    searchFilters: '',
+  }
   const contactSummary = [
     {
       code: 'IVSP',
@@ -42,10 +52,22 @@ describe('transformContactHistory', () => {
       systemGenerated: true,
     },
   ]
+  const contactTypeGroups = [
+    {
+      groupId: '1',
+      label: 'Accredited programme',
+      contactTypeCodes: ['IVSP'],
+    },
+    {
+      groupId: '2',
+      label: 'Appointments',
+      contactTypeCodes: ['EPOMAT', 'ROC'],
+    },
+  ]
 
   it('combines all filters', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
       filters: {
         // this date range will reduce the result set to 3 contacts
         'dateFrom-day': '21',
@@ -59,6 +81,7 @@ describe('transformContactHistory', () => {
         // 1 of thooe 2 contacts has this contact type
         contactTypes: 'IVSP',
       },
+      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(1)
@@ -94,24 +117,40 @@ describe('transformContactHistory', () => {
     // details about the active filters
     expect(data.filters).toEqual({
       contactTypes: {
-        allContactTypes: [
+        contactTypeGroups: [
           {
-            count: 1,
-            description: 'IOM 3rd Party Office Visit',
-            html: 'IOM 3rd Party Office Visit <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
-            value: 'IVSP',
+            contactCountInGroup: 1,
+            contactTypeCodes: [
+              {
+                count: 1,
+                description: 'Arrest attempt',
+                html: 'Arrest attempt <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
+                value: 'IVSP',
+              },
+            ],
+            groupId: '1',
+            isGroupOpen: true,
+            label: 'Accredited programme',
           },
           {
-            count: 1,
-            description: 'Responsible Officer Change',
-            html: 'Responsible Officer Change <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
-            value: 'ROC',
+            contactCountInGroup: 1,
+            contactTypeCodes: [
+              {
+                count: 1,
+                description: 'Responsible officer change',
+                html: 'Responsible officer change <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
+                value: 'ROC',
+              },
+            ],
+            groupId: '2',
+            isGroupOpen: false,
+            label: 'Appointments',
           },
         ],
         selected: [
           {
             href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt',
-            text: 'IOM 3rd Party Office Visit',
+            text: 'Arrest attempt',
           },
         ],
         selectedIds: 'IVSP',
@@ -148,47 +187,56 @@ describe('transformContactHistory', () => {
 
   it('returns all contacts if no filters', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
-      filters: {},
+      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
+      filters: defaultFilters,
+      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(4)
     expect(data.hasActiveFilters).toEqual(false)
-    expect(data.filters).toEqual({
-      contactTypes: {
-        allContactTypes: [
+    expect(data.filters.contactTypes.contactTypeGroups).toEqual([
+      {
+        contactCountInGroup: 3,
+        contactTypeCodes: [
           {
             count: 3,
-            description: 'IOM 3rd Party Office Visit',
-            html: 'IOM 3rd Party Office Visit <span class="text-secondary">(<span data-qa=\'contact-count\'>3</span>)</span>',
+            description: 'Planned Office Visit (NS)',
+            html: 'Planned Office Visit (NS) <span class="text-secondary">(<span data-qa=\'contact-count\'>3</span>)</span>',
             value: 'IVSP',
           },
+        ],
+        groupId: '1',
+        isGroupOpen: false,
+        label: 'Accredited programme',
+      },
+      {
+        contactCountInGroup: 1,
+        contactTypeCodes: [
           {
             count: 1,
-            description: 'Responsible Officer Change',
-            html: 'Responsible Officer Change <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
+            description: 'Responsible officer change',
+            html: 'Responsible officer change <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
             value: 'ROC',
           },
         ],
-        selected: [],
+        groupId: '2',
+        isGroupOpen: false,
+        label: 'Appointments',
       },
-      dateRange: {
-        dateFrom: {},
-        dateTo: {},
-      },
-      searchFilters: {},
-    })
+    ])
   })
 
   it('combines the errors from different filters', () => {
     const { errors } = transformContactHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
       filters: {
+        ...defaultFilters,
         'dateFrom-day': '21',
         'dateFrom-month': '04',
         'dateFrom-year': '2022',
         searchFilters: 'A',
       },
+      featureFlags: {},
     })
     expect(errors).toEqual([
       { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date' },
@@ -203,10 +251,12 @@ describe('transformContactHistory', () => {
 
   it('sets hasActiveFilters flag if search filter is successful', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
       filters: {
+        ...defaultFilters,
         searchFilters: 'Serata Street',
       },
+      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(1)

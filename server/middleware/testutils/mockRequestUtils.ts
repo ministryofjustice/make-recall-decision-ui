@@ -61,6 +61,7 @@ export const mockRes = ({
         token,
       },
       env: locals.env || 'PRODUCTION',
+      flags: locals.flags || {},
     },
     redirect,
     render,

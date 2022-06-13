@@ -2,6 +2,16 @@ import { filterContactsBySearch } from './filterContactsBySearch'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 
 describe('filterContactsBySearch', () => {
+  const defaultFilters = {
+    'dateFrom-day': '',
+    'dateFrom-month': '',
+    'dateFrom-year': '',
+    'dateTo-day': '',
+    'dateTo-month': '',
+    'dateTo-year': '',
+    contactTypes: '',
+    searchFilters: '',
+  }
   const contactList = [
     {
       code: 'EPOMAT',
@@ -36,9 +46,7 @@ describe('filterContactsBySearch', () => {
   it('leaves the list unaltered if no search filter supplied', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
-      filters: {
-        searchFilters: '',
-      },
+      filters: defaultFilters,
     })
     expect(contacts).toEqual(contactList)
     expect(selected).toBeUndefined()
@@ -48,6 +56,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
+        ...defaultFilters,
         searchFilters: 'NS',
       },
     })
@@ -76,6 +85,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
+        ...defaultFilters,
         searchFilters: 'Jane Pavement',
       },
     })
@@ -105,6 +115,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
+        ...defaultFilters,
         searchFilters: 'Failed to Attend',
       },
     })
@@ -149,6 +160,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
+        ...defaultFilters,
         searchFilters: 'Enforcement Letter',
       },
     })
@@ -177,6 +189,7 @@ describe('filterContactsBySearch', () => {
     const { contacts, errors, selected } = filterContactsBySearch({
       contacts: contactList,
       filters: {
+        ...defaultFilters,
         searchFilters: 'X',
       },
     })

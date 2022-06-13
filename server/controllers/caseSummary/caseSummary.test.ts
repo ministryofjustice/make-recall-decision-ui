@@ -51,6 +51,13 @@ describe('caseSummary', () => {
 
   it('should return grouped by dates for contact history', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
+      contactTypeGroups: [
+        {
+          groupId: '1',
+          label: 'Accredited programme',
+          contactTypeCodes: ['C191', 'IVSP'],
+        },
+      ],
       contactSummary: [
         {
           code: 'C191',

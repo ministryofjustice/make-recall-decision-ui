@@ -47,18 +47,30 @@
                 }) }}
             {% endif %}
             {% if flags.contactTypesFilter %}
-                {{ govukCheckboxes({
-                    idPrefix: "contactTypes",
-                    name: "contactTypes",
-                    classes: "govuk-checkboxes--small",
-                    fieldset: {
-                        legend: {
-                            text: "Contact type",
-                            classes: "govuk-fieldset__legend--s"
-                        }
-                    },
-                    items: checkboxItems({ items: caseSummary.filters.contactTypes.allContactTypes, currentValues: caseSummary.filters.contactTypes.selectedIds })
-                }) }}
+                <div class='govuk-form-group'>
+                <h2 class='govuk-heading-s'>Contact types</h2>
+                {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
+                    <details class='collapsible govuk-!-margin-bottom-2' data-module="govuk-details" {{ "open" if group.isGroupOpen }}>
+                        <summary class="govuk-body">
+                          {{ group.label }} <span class="text-secondary">(<span data-qa='group-contact-count'>{{group.contactCountInGroup}}</span>)</span>
+                        </summary>
+                        <div>
+                            {{ govukCheckboxes({
+                                idPrefix: "contactTypes-" + group.groupId,
+                                name: "contactTypes",
+                                classes: "govuk-checkboxes--small",
+                                fieldset: {
+                                    legend: {
+                                        text: group.label,
+                                        classes: "govuk-visually-hidden"
+                                    }
+                                },
+                                items: checkboxItems({ items: group.contactTypeCodes, currentValues: caseSummary.filters.contactTypes.selectedIds })
+                            }) }}
+                        </div>
+                    </details>
+                {% endfor %}
+                </div>
             {% endif %}
         {% endset -%}
         <div class='govuk-!-margin-bottom-4'>
@@ -78,20 +90,20 @@
                         categories: removeUndefinedListItems([
                             {
                                 heading: {
-                                    text: 'Search term'
-                                },
+                                text: 'Search term'
+                            },
                                 items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
                             } if caseSummary.filters.searchFilters.selected.length else undefined,
                             {
                                 heading: {
-                                    text: 'Date range'
-                                },
+                                text: 'Date range'
+                            },
                                 items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
                             } if caseSummary.filters.dateRange.selected.length else undefined,
                             {
                                 heading: {
-                                    text: 'Contact type'
-                                },
+                                text: 'Contact type'
+                            },
                                 items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
                             } if caseSummary.filters.contactTypes.selected.length else undefined
                         ])
@@ -102,3 +114,4 @@
         </div>
     </div>
 {% endif %}
+
