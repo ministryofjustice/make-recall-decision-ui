@@ -1,17 +1,21 @@
-import { getProperty } from './utils'
+import { getProperty, isString } from './utils'
 
 export const sortList = <T>(list: T[], key: string, asc = true): T[] => {
   if (!Array.isArray(list)) {
     return undefined
   }
   return list.sort((a, b) => {
-    const valA = getProperty(a, key)
-    const valB = getProperty(b, key)
-    if (valA < valB) {
-      return asc ? -1 : 1
-    }
-    if (valA > valB) {
-      return asc ? 1 : -1
+    let valA = getProperty(a, key)
+    let valB = getProperty(b, key)
+    if (valA && valB) {
+      valA = isString(valA) ? (valA as string).toLowerCase() : valA
+      valB = isString(valB) ? (valB as string).toLowerCase() : valB
+      if (valA < valB) {
+        return asc ? -1 : 1
+      }
+      if (valA > valB) {
+        return asc ? 1 : -1
+      }
     }
     return 0
   })

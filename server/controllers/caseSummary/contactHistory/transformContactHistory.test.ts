@@ -124,7 +124,7 @@ describe('transformContactHistory', () => {
               {
                 count: 1,
                 description: 'Arrest attempt',
-                html: 'Arrest attempt <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
+                html: "Arrest attempt <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
                 value: 'IVSP',
               },
             ],
@@ -138,7 +138,7 @@ describe('transformContactHistory', () => {
               {
                 count: 1,
                 description: 'Responsible officer change',
-                html: 'Responsible officer change <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
+                html: "Responsible officer change <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
                 value: 'ROC',
               },
             ],
@@ -201,7 +201,7 @@ describe('transformContactHistory', () => {
           {
             count: 3,
             description: 'Planned Office Visit (NS)',
-            html: 'Planned Office Visit (NS) <span class="text-secondary">(<span data-qa=\'contact-count\'>3</span>)</span>',
+            html: "Planned Office Visit (NS) <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
             value: 'IVSP',
           },
         ],
@@ -215,7 +215,7 @@ describe('transformContactHistory', () => {
           {
             count: 1,
             description: 'Responsible officer change',
-            html: 'Responsible officer change <span class="text-secondary">(<span data-qa=\'contact-count\'>1</span>)</span>',
+            html: "Responsible officer change <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
             value: 'ROC',
           },
         ],

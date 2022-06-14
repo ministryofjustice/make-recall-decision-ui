@@ -11,8 +11,8 @@ export const decorateGroups = ({
   allContactTypes: ContactTypeDecorated[]
   contactTypeGroups: ContactTypeGroup[]
   selectedContactTypes?: string[]
-}) =>
-  contactTypeGroups
+}) => {
+  const groups = contactTypeGroups
     .map(group => {
       const contactTypeCodes = group.contactTypeCodes
         .map(code => {
@@ -20,7 +20,7 @@ export const decorateGroups = ({
           return {
             value: code,
             description,
-            html: `${description} <span class="text-secondary">(<span data-qa='contact-count'>${count}</span>)</span>`,
+            html: `${description} <span class='text-secondary'>(<span data-qa='contact-count'>${count}</span>)</span>`,
             count,
           }
         })
@@ -40,3 +40,5 @@ export const decorateGroups = ({
       }
     })
     .filter(group => group.isGroupOpen || group.contactCountInGroup > 0)
+  return sortList(groups, 'label')
+}

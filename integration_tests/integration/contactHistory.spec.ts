@@ -69,7 +69,7 @@ context('Contact history', () => {
 
     // apply filters without entering dates
     cy.clickButton('Apply filters')
-    cy.getElement('10 contacts').should('exist')
+    cy.getElement('12 contacts').should('exist')
 
     cy.log('invalid dates - part of date missing')
     cy.fillInput('Day', '12', { parent: '#dateFrom' })
@@ -86,7 +86,7 @@ context('Contact history', () => {
       fieldName: 'dateTo',
       errorText: 'The to date must include a day and month',
     })
-    cy.getElement('10 contacts').should('exist')
+    cy.getElement('12 contacts').should('exist')
 
     cy.log('invalid dates - from date after to date')
     cy.enterDateTime('2022-04-14', { parent: '#dateFrom' })
@@ -118,7 +118,7 @@ context('Contact history', () => {
 
     // clear filters
     cy.clickLink('Clear filters')
-    cy.getElement('10 contacts').should('exist')
+    cy.getElement('12 contacts').should('exist')
   })
 
   it('can filter contacts by free text search', () => {
@@ -136,7 +136,7 @@ context('Contact history', () => {
     cy.clickLink('Licence compliance')
     cy.getElement('3 contacts').should('exist')
     cy.clickLink('letter')
-    cy.getElement('10 contacts').should('exist')
+    cy.getElement('12 contacts').should('exist')
   })
 
   it('can filter contacts by contact type group', () => {
