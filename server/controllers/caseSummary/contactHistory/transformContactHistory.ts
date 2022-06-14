@@ -1,5 +1,5 @@
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
 import { ContactHistoryFilters, ObjectMap } from '../../../@types'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
@@ -14,7 +14,7 @@ export const transformContactHistory = ({
   filters,
   featureFlags,
 }: {
-  caseSummary: LicenceHistoryResponse
+  caseSummary: ContactHistoryResponse
   filters: ContactHistoryFilters
   featureFlags: ObjectMap<boolean>
 }) => {

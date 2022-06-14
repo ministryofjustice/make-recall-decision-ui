@@ -25,6 +25,6 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     ...caseSection,
   }
   res.locals.pageUrlBase = `/cases/${crnFormatted}/`
-  const page = sectionId === 'contact-history-data' ? 'pages/contactHistoryData' : 'pages/caseSummary'
+  const page = 'pages/caseSummary'
   res.render(page)
 }

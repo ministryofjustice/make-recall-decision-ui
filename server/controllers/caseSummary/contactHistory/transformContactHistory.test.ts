@@ -1,5 +1,5 @@
 import { transformContactHistory } from './transformContactHistory'
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 
 describe('transformContactHistory', () => {
   const defaultFilters = {
@@ -67,7 +67,7 @@ describe('transformContactHistory', () => {
 
   it('combines all filters', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: {
         // this date range will reduce the result set to 3 contacts
         'dateFrom-day': '21',
@@ -187,7 +187,7 @@ describe('transformContactHistory', () => {
 
   it('returns all contacts if no filters', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: defaultFilters,
       featureFlags: { flagShowSystemGenerated: true },
     })
@@ -228,7 +228,7 @@ describe('transformContactHistory', () => {
 
   it('combines the errors from different filters', () => {
     const { errors } = transformContactHistory({
-      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: {
         ...defaultFilters,
         'dateFrom-day': '21',
@@ -251,7 +251,7 @@ describe('transformContactHistory', () => {
 
   it('sets hasActiveFilters flag if search filter is successful', () => {
     const { errors, data } = transformContactHistory({
-      caseSummary: { contactSummary, contactTypeGroups } as LicenceHistoryResponse,
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: {
         ...defaultFilters,
         searchFilters: 'Serata Street',

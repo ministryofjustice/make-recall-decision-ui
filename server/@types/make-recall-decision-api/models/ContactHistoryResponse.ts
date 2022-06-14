@@ -7,7 +7,7 @@ import type { PersonDetails } from './PersonDetails'
 import type { ReleaseSummaryResponse } from './ReleaseSummaryResponse'
 import { ContactTypeGroup } from './ContactTypeGroup'
 
-export type LicenceHistoryResponse = {
+export type ContactHistoryResponse = {
   personalDetailsOverview?: PersonDetails
   contactTypeGroups?: Array<ContactTypeGroup>
   contactSummary?: Array<ContactSummaryResponse>
