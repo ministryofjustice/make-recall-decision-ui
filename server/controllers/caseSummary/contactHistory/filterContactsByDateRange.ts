@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon'
-import { NamedFormError, ObjectMap } from '../../../@types'
+import { ContactHistoryFilters, NamedFormError, ObjectMap } from '../../../@types'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
@@ -13,7 +13,7 @@ const parseDateParts = ({
   filters,
 }: {
   fieldPrefix: string
-  filters: ObjectMap<string>
+  filters: ContactHistoryFilters
 }): string | ValidationError => {
   const dateTimeParts = {
     day: filters[`${fieldPrefix}-day`],
@@ -32,7 +32,7 @@ export const filterContactsByDateRange = ({
   filters,
 }: {
   contacts: ContactSummaryResponse[]
-  filters: ObjectMap<string>
+  filters: ContactHistoryFilters
 }): {
   errors?: NamedFormError[]
   contacts: ContactSummaryResponse[]
@@ -103,7 +103,7 @@ export const filterContactsByDateRange = ({
           { key: 'dateTo-month' },
           { key: 'dateTo-year' },
         ],
-        allParams: filters,
+        allParams: filters as unknown as ObjectMap<string | string[]>,
       }),
       text: formatDateRange({ dateFromIso: dateFromIso as string, dateToIso: dateToIso as string }),
     },

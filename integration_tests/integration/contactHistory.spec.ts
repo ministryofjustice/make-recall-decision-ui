@@ -139,6 +139,15 @@ context('Contact history', () => {
     cy.getElement('10 contacts').should('exist')
   })
 
+  it('can filter contacts by contact type group', () => {
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
+    cy.contains('Appointments').click()
+    cy.selectCheckboxes('Appointments', ['Responsible Officer Change'])
+    cy.clickButton('Apply filters')
+    cy.getElement('1 contact').should('exist')
+  })
+
   it('can filter contacts by date, contact types and text search', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
@@ -146,7 +155,8 @@ context('Contact history', () => {
     // combine date, contact type and text filters
     cy.enterDateTime('2022-03-16', { parent: '#dateFrom' })
     cy.enterDateTime('2022-04-21', { parent: '#dateTo' })
-    cy.selectCheckboxes('Contact type', ['IOM 3rd Party Office Visit'])
+    cy.contains('Appointments').click()
+    cy.selectCheckboxes('Appointments', ['Planned Office Visit (NS)'])
     cy.clickButton('Apply filters')
     cy.getElement('2 contacts').should('exist')
     cy.fillInput('Search term', 'Failed to attend')
@@ -154,7 +164,7 @@ context('Contact history', () => {
     cy.getElement('1 contact').should('exist')
 
     // clear the contact type filter
-    cy.clickLink('IOM 3rd Party Office Visit')
+    cy.clickLink('Planned Office Visit (NS)')
     cy.getElement('2 contacts').should('exist')
     cy.clickLink('Clear filters')
     cy.fillInput('Search term', 'Planned office visit')
@@ -162,6 +172,7 @@ context('Contact history', () => {
 
     // none of the contact type filters are selected, so the total counts of all filters should match the number of listed contacts
     cy.getElement('3 contacts').should('exist')
+    cy.contains('Appointments').click()
     cy.contactTypeFiltersTotalCount().should('equal', 3)
   })
 })

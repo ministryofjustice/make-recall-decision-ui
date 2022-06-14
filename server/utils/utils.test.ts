@@ -176,4 +176,14 @@ describe('removeParamsFromQueryString', () => {
     })
     expect(queryString).toEqual('?contactTypes=IVSP')
   })
+
+  it('removes search params from an array and ignores empty strings', () => {
+    const queryString = removeParamsFromQueryString({
+      paramsToRemove: [{ key: 'searchFilters', value: 'MAPPA' }],
+      allParams: {
+        searchFilters: ['MAPPA', ''],
+      },
+    })
+    expect(queryString).toEqual('')
+  })
 })

@@ -1,24 +1,33 @@
 import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
-import { ObjectMap } from '../../../@types'
+import { ContactHistoryFilters, ObjectMap } from '../../../@types'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
 import { filterContactsBySearch } from './filterContactsBySearch'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
+
+const removeSystemGenerated = (contacts: ContactSummaryResponse[]): ContactSummaryResponse[] =>
+  contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
 
 export const transformContactHistory = ({
   caseSummary,
   filters,
+  featureFlags,
 }: {
   caseSummary: LicenceHistoryResponse
-  filters: ObjectMap<string | string[]>
+  filters: ContactHistoryFilters
+  featureFlags: ObjectMap<boolean>
 }) => {
+  const allContacts = featureFlags.flagShowSystemGenerated
+    ? caseSummary.contactSummary
+    : removeSystemGenerated(caseSummary.contactSummary)
   const {
     errors: errorsDateRange,
     contacts: contactsFilteredByDateRange,
     selected: selectedDateRange,
   } = filterContactsByDateRange({
-    contacts: caseSummary.contactSummary,
-    filters: filters as ObjectMap<string>,
+    contacts: allContacts,
+    filters,
   })
   const {
     errors: errorsSearchFilter,
@@ -34,9 +43,11 @@ export const transformContactHistory = ({
   const {
     contacts: contactsFilteredByContactTypes,
     selected: selectedContactTypes,
-    contactTypes: allContactTypes,
+    contactTypeGroups,
   } = filterContactsByContactType({
-    contacts: contactsFilteredBySearch,
+    filteredContacts: contactsFilteredBySearch,
+    allContacts,
+    contactTypeGroups: caseSummary.contactTypeGroups,
     filters,
   })
   const hasActiveFilters = Boolean(selectedDateRange || selectedContactTypes?.length || selectedSearch)
@@ -64,7 +75,7 @@ export const transformContactHistory = ({
           },
         },
         contactTypes: {
-          allContactTypes,
+          contactTypeGroups,
           selected: selectedContactTypes,
           selectedIds: filters.contactTypes,
         },

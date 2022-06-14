@@ -14,6 +14,10 @@ export const featureFlagsDefaults = {
     label: 'Contacts text search filter',
     default: false,
   },
+  flagShowSystemGenerated: {
+    label: 'Show system generated contacts',
+    default: false,
+  },
   flagShowMockedUi: {
     label: 'Show UI that uses mocked data',
     default: false,
