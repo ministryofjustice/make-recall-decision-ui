@@ -2,5 +2,9 @@
   summary {
     cursor: pointer;
     margin-bottom: govuk-spacing(2);
+
+    &:focus {
+      @include govuk-focused-text;
+    }
   }
 }

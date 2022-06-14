@@ -2,7 +2,7 @@ import { ParsedQs } from 'qs'
 import { CaseSectionId, ContactHistoryFilters, ObjectMap } from '../../@types'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
-import { LicenceHistoryResponse } from '../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { CaseRisk } from '../../@types/make-recall-decision-api/models/CaseRisk'
 import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
@@ -43,9 +43,8 @@ export const getCaseSection = async (
       sectionLabel = 'Licence conditions'
       break
     case 'contact-history':
-    case 'contact-history-data':
       caseSummaryRaw = await fetchFromCacheOrApi(
-        () => getCaseSummary<LicenceHistoryResponse>(trimmedCrn, 'all-licence-history', token),
+        () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token),
         `contactHistory:${crn}`
       )
       transformed = transformContactHistory({
