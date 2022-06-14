@@ -81,6 +81,35 @@ describe('filterContactsBySearch', () => {
     expect(selected).toEqual([{ text: 'NS', href: '' }])
   })
 
+  it('filters using a saved search filter', () => {
+    const { contacts, selected } = filterContactsBySearch({
+      contacts: contactList,
+      filters: {
+        ...defaultFilters,
+        searchFilters: ['NS', ''], // one saved search filter, and the empty string is from the search input
+      },
+    })
+    expect(contacts).toEqual([
+      {
+        code: 'IVSP',
+        descriptionType: 'Planned Office Visit (NS)',
+        contactStartDate: '2022-04-13T11:30:00Z',
+        outcome: 'Failed to Attend',
+        notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        enforcementAction: 'Second Enforcement Letter Sent',
+        systemGenerated: false,
+        searchTextMatch: {
+          description: true,
+          enforcementAction: false,
+          notes: false,
+          outcome: false,
+        },
+        startDate: null,
+      },
+    ])
+    expect(selected).toEqual([{ text: 'NS', href: '' }])
+  })
+
   it('matches the search string against notes', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,

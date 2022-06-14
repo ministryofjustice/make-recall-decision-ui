@@ -76,7 +76,7 @@ export const removeParamsFromQueryString = ({
     .filter(([key]) => allParams[key] !== '')
     .forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        const updatedValues = value.filter(val => !paramsToRemove.find(param => param.value === val))
+        const updatedValues = value.filter(val => !paramsToRemove.find(param => param.value === val) && val !== '')
         updatedParams[key] = updatedValues.length ? updatedValues : undefined
       } else {
         const toRemove = paramsToRemove.find(paramToRemove => paramToRemove.key === key)

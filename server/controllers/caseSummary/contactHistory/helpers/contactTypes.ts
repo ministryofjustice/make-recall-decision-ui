@@ -47,44 +47,6 @@ export const filterContacts = ({
     return undefined
   })
 
-// add data for each group and its contacts, for display as filter checkboxes
-export const decorateGroups = ({
-  allContactTypes,
-  contactTypeGroups,
-  selectedContactTypes,
-}: {
-  allContactTypes: ContactTypeDecorated[]
-  contactTypeGroups: ContactTypeGroup[]
-  selectedContactTypes?: string[]
-}) =>
-  contactTypeGroups
-    .map(group => {
-      const contactTypeCodes = group.contactTypeCodes
-        .map(code => {
-          const { description, count } = allContactTypes.find(type => type.code === code)
-          return {
-            value: code,
-            description,
-            html: `${description} <span class="text-secondary">(<span data-qa='contact-count'>${count}</span>)</span>`,
-            count,
-          }
-        })
-        .filter(type => type.count > 0)
-      const isGroupOpen = selectedContactTypes
-        ? Boolean(selectedContactTypes.find(selected => group.contactTypeCodes.includes(selected)))
-        : false
-      const contactCountInGroup = contactTypeCodes.reduce((count, type) => {
-        return count + type.count
-      }, 0)
-      return {
-        ...group,
-        contactCountInGroup,
-        isGroupOpen,
-        contactTypeCodes: sortList(contactTypeCodes, 'description'),
-      }
-    })
-    .filter(group => group.isGroupOpen || group.contactCountInGroup > 0)
-
 // details of applied filters, to be shown as 'tags' at the top of the filters panel; click on a tag to remove the filter
 export const decorateSelectedFilters = ({
   selectedContactTypes,

@@ -3,11 +3,11 @@ import { ContactHistoryFilters, ContactTypeGroupDecorated } from '../../../@type
 import { ContactTypeGroup } from '../../../@types/make-recall-decision-api/models/ContactTypeGroup'
 import {
   decorateContactTypes,
-  decorateGroups,
   decorateSelectedFilters,
   filterContacts,
   parseSelectedFilters,
 } from './helpers/contactTypes'
+import { decorateGroups } from './helpers/decorateGroups'
 
 export const filterContactsByContactType = ({
   filteredContacts,
