@@ -13,6 +13,7 @@ export const parseSelectedFilters = ({ filters }: { filters: ContactHistoryFilte
   return Array.isArray(contactTypes) ? contactTypes : ([contactTypes] as string[])
 }
 
+// produce a flat list of all contact types to be used in filtering
 export const decorateContactTypes = ({
   contactTypeGroups,
   allContacts,
@@ -25,6 +26,7 @@ export const decorateContactTypes = ({
     .flat()
     .map(code => ({ code, count: 0, description: allContacts.find(contact => contact.code === code)?.descriptionType }))
 
+// filter the list of contacts using the selected contact types
 export const filterContacts = ({
   allContactTypes,
   filteredContacts,
@@ -45,6 +47,7 @@ export const filterContacts = ({
     return undefined
   })
 
+// add data for each group and its contacts, for display as filter checkboxes
 export const decorateGroups = ({
   allContactTypes,
   contactTypeGroups,
@@ -82,6 +85,7 @@ export const decorateGroups = ({
     })
     .filter(group => group.isGroupOpen || group.contactCountInGroup > 0)
 
+// details of applied filters, to be shown as 'tags' at the top of the filters panel; click on a tag to remove the filter
 export const decorateSelectedFilters = ({
   selectedContactTypes,
   allContactTypes,

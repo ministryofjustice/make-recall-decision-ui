@@ -5,6 +5,8 @@ import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import * as redisExports from '../../data/redisClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
+import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
+import casePersonalDetailsResponse from '../../../api/responses/get-case-personal-details.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -39,6 +41,30 @@ describe('caseSummary', () => {
     expect(res.locals.section).toEqual({
       id: 'overview',
       label: 'Overview',
+    })
+  })
+
+  it('should return case details for licence conditions', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseLicenceConditionsResponse)
+    const req = mockReq({ params: { crn, sectionId: 'licence-conditions' } })
+    await caseSummary(req, res)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
+    expect(res.locals.caseSummary.convictions).toHaveLength(2)
+    expect(res.locals.section).toEqual({
+      id: 'licence-conditions',
+      label: 'Licence conditions',
+    })
+  })
+
+  it('should return case details for personal details', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(casePersonalDetailsResponse)
+    const req = mockReq({ params: { crn, sectionId: 'personal-details' } })
+    await caseSummary(req, res)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'personal-details', token)
+    expect(res.locals.caseSummary).toEqual(casePersonalDetailsResponse)
+    expect(res.locals.section).toEqual({
+      id: 'personal-details',
+      label: 'Personal details',
     })
   })
 

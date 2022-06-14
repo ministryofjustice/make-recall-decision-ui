@@ -46,6 +46,10 @@
     "coveragePathIgnorePatterns": [
       "@types"
     ],
+    "coverageReporters": [
+      "text",
+      "html"
+    ],
     "testMatch": [
       "<rootDir>/(server|job)/**/?(*.)(spec|test).{ts,js,jsx,mjs}"
     ],
@@ -56,12 +60,6 @@
         "jest-junit",
         {
           "outputDirectory": "test_results/jest/"
-        }
-      ],
-      [
-        "./node_modules/jest-html-reporter",
-        {
-          "outputPath": "test_results/unit-test-reports.html"
         }
       ]
     ],
