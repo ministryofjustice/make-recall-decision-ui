@@ -1,7 +1,6 @@
 import { ContactTypeDecorated, ContactHistoryFilters, ObjectMap } from '../../../../@types'
 import { isDefined, removeParamsFromQueryString } from '../../../../utils/utils'
 import { ContactTypeGroup } from '../../../../@types/make-recall-decision-api/models/ContactTypeGroup'
-import { sortList } from '../../../../utils/lists'
 import { ContactSummaryResponse } from '../../../../@types/make-recall-decision-api'
 import logger from '../../../../../logger'
 
