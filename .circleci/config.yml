@@ -323,6 +323,7 @@ workflows:
       not:
         or:
           - << pipeline.parameters.e2e-check-dev >>
+          - << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - build:
           filters:
