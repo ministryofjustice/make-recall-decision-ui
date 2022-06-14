@@ -31,6 +31,11 @@
       "groupId": "5",
       "label": "Recall",
       "contactTypeCodes": ["SPOD02"]
+    },
+    {
+      "groupId": "6",
+      "label": "Communication with PoP",
+      "contactTypeCodes": ["CMOB", "CTOB"]
     }
   ],
   "contactSummary": [
@@ -116,11 +121,29 @@
       "systemGenerated": false
     },
     {
+      "code": "CTOB",
+      "descriptionType": "Phone Contact to PoP",
+      "contactStartDate": "2022-02-21T13:30:00Z",
+      "outcome": null,
+      "notes": "Hi",
+      "enforcementAction": null,
+      "systemGenerated": false
+    },
+    {
       "code": "SPOD02",
       "descriptionType": "Recall Discussion SPO/OM",
       "contactStartDate": "2022-02-18T13:30:00Z",
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 18/02/2022 at 13:30\nreported on release went through licence paperwork",
+      "enforcementAction": null,
+      "systemGenerated": false
+    },
+    {
+      "code": "CMOB",
+      "descriptionType": "eMail / text to PoP",
+      "contactStartDate": "2022-02-20T13:30:00Z",
+      "outcome": null,
+      "notes": "Hello",
       "enforcementAction": null,
       "systemGenerated": false
     }

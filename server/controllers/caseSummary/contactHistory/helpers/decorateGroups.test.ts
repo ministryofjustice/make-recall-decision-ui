@@ -20,14 +20,14 @@ describe('decorateGroups', () => {
   ]
   const contactTypeGroups = [
     {
-      groupId: '1',
-      label: 'Accredited programme',
-      contactTypeCodes: ['IVSP'],
-    },
-    {
       groupId: '2',
       label: 'Appointments',
       contactTypeCodes: ['C191', 'C002'],
+    },
+    {
+      groupId: '1',
+      label: 'Accredited programme',
+      contactTypeCodes: ['IVSP'],
     },
   ]
   const selectedContactTypes = ['C191', 'IVSP']
@@ -42,6 +42,12 @@ describe('decorateGroups', () => {
     const groups = decorateGroups({ allContactTypes, contactTypeGroups, selectedContactTypes: undefined })
     const appointmentsGroup = groups.find(group => group.label === 'Appointments')
     expect(appointmentsGroup.contactTypeCodes.find(type => type.value === 'C002')).toBeUndefined()
+  })
+
+  it('sorts groups by description', () => {
+    const groups = decorateGroups({ allContactTypes, contactTypeGroups, selectedContactTypes })
+    const groupDescriptions = groups.map(group => group.label)
+    expect(groupDescriptions).toEqual(['Accredited programme', 'Appointments'])
   })
 
   it('excludes groups with zero total count, if none of their types are selected', () => {
@@ -92,7 +98,7 @@ describe('decorateGroups', () => {
       {
         count: 0,
         description: 'Arrest attempt',
-        html: 'Arrest attempt <span class="text-secondary">(<span data-qa=\'contact-count\'>0</span>)</span>',
+        html: "Arrest attempt <span class='text-secondary'>(<span data-qa='contact-count'>0</span>)</span>",
         value: 'IVSP',
       },
     ])
@@ -127,7 +133,7 @@ describe('decorateGroups', () => {
         {
           count: 3,
           description: 'Management Oversight - Recall',
-          html: 'Management Oversight - Recall <span class="text-secondary">(<span data-qa=\'contact-count\'>3</span>)</span>',
+          html: "Management Oversight - Recall <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
           value: 'C191',
         },
       ],
@@ -166,7 +172,7 @@ describe('decorateGroups', () => {
         {
           count: 3,
           description: 'Management Oversight - Recall',
-          html: 'Management Oversight - Recall <span class="text-secondary">(<span data-qa=\'contact-count\'>3</span>)</span>',
+          html: "Management Oversight - Recall <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
           value: 'C191',
         },
       ],

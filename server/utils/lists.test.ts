@@ -1,4 +1,5 @@
 import { dedupeList, groupListByValue, sortList } from './lists'
+import { ObjectMap } from '../@types'
 
 describe('List utilities', () => {
   describe('groupListByValue', () => {
@@ -66,6 +67,12 @@ describe('List utilities', () => {
       const list = [{ name: 'bdd' }, { name: 'bbc' }, { name: 'bcc' }]
       const result = sortList(list, 'name', true)
       expect(result).toEqual([{ name: 'bbc' }, { name: 'bcc' }, { name: 'bdd' }])
+    })
+
+    it('sorting is case insensitive', () => {
+      const list = [{ name: 'bdd' }, { name: 'BDE' }]
+      const result = sortList<ObjectMap<string>>(list, 'name', true)
+      expect(result).toEqual([{ name: 'bdd' }, { name: 'BDE' }])
     })
 
     it('sorts descending', () => {
