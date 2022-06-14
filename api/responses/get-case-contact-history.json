@@ -6,6 +6,33 @@
     "gender": "Male",
     "crn": "A12345"
   },
+  "contactTypeGroups": [
+    {
+      "groupId": "1",
+      "label": "Accredited programme",
+      "contactTypeCodes": ["ERGR"]
+    },
+    {
+      "groupId": "2",
+      "label": "Appointments",
+      "contactTypeCodes": ["EPOMAT", "ROC", "IVSP"]
+    },
+    {
+      "groupId": "3",
+      "label": "Letters",
+      "contactTypeCodes": ["C191"]
+    },
+    {
+      "groupId": "4",
+      "label": "Case Discussion",
+      "contactTypeCodes": ["C002"]
+    },
+    {
+      "groupId": "5",
+      "label": "Recall",
+      "contactTypeCodes": ["SPOD02"]
+    }
+  ],
   "contactSummary": [
     {
       "code": "ERGR",
@@ -72,7 +99,7 @@
     },
     {
       "code": "C002",
-      "descriptionType": "Management Oversight",
+      "descriptionType": "Management Oversight - General",
       "contactStartDate": "2022-03-02T12:10:00Z",
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 02/03/2022 at 12:10\nEnforcement Action: Decision Pending Response From Offender",

@@ -18,6 +18,15 @@
     "experimentalDecorators": true,
     "typeRoots": ["./server/@types", "./node_modules/@types"]
   },
-  "exclude": ["node_modules", "assets/**/*.js", "integration_tests", "e2e_tests", "cypress_shared", "dist", "scripts"],
+  "exclude": [
+    "node_modules",
+    "assets/**/*.js",
+    "integration_tests",
+    "e2e_tests",
+    "cypress_shared",
+    "dist",
+    "scripts",
+    "coverage"
+  ],
   "include": ["**/*.js", "**/*.ts"]
 }

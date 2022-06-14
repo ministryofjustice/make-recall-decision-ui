@@ -2,7 +2,7 @@ import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api
 import { filterContactsByContactType } from './filterContactsByContactType'
 
 describe('filterContactsByContactType', () => {
-  const contactList = [
+  const filteredContacts = [
     {
       code: 'IVSP',
       contactStartDate: '2022-05-04T13:07:00Z',
@@ -19,19 +19,47 @@ describe('filterContactsByContactType', () => {
       descriptionType: 'Planned Office Visit (NS)',
     },
   ] as ContactSummaryResponse[]
+  const allContacts = [...filteredContacts] as ContactSummaryResponse[]
+  const contactTypeGroups = [
+    {
+      groupId: '1',
+      label: 'Accredited programme',
+      contactTypeCodes: ['IVSP'],
+    },
+    {
+      groupId: '2',
+      label: 'Appointments',
+      contactTypeCodes: ['C191', 'C002'],
+    },
+  ]
+  const filters = {
+    'dateFrom-day': '',
+    'dateFrom-month': '',
+    'dateFrom-year': '',
+    'dateTo-day': '',
+    'dateTo-month': '',
+    'dateTo-year': '',
+    contactTypes: '',
+    searchFilters: '',
+  }
 
   it('leaves the list unaltered if no contact types filter supplied', () => {
     const { contacts } = filterContactsByContactType({
-      contacts: contactList,
-      filters: {},
+      filteredContacts,
+      allContacts,
+      contactTypeGroups,
+      filters,
     })
-    expect(contacts).toEqual(contactList)
+    expect(contacts).toEqual(filteredContacts)
   })
 
   it('filters contacts by the supplied contact types filter and returns selected filters', () => {
     const { contacts, selected } = filterContactsByContactType({
-      contacts: contactList,
+      filteredContacts,
+      allContacts,
+      contactTypeGroups,
       filters: {
+        ...filters,
         contactTypes: 'IVSP',
       },
     })
@@ -43,6 +71,6 @@ describe('filterContactsByContactType', () => {
       },
     ])
     // this will be used to make a 'remove contact type' link
-    expect(selected).toEqual([{ text: 'IOM 3rd Party Office Visit', href: '' }])
+    expect(selected).toEqual([{ text: 'Arrest attempt', href: '' }])
   })
 })

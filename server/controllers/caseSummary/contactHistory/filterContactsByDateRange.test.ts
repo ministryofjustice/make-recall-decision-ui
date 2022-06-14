@@ -2,6 +2,17 @@ import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 
 describe('filterContactsByDateRange', () => {
+  const filters = {
+    'dateFrom-day': '',
+    'dateFrom-month': '',
+    'dateFrom-year': '',
+    'dateTo-day': '',
+    'dateTo-month': '',
+    'dateTo-year': '',
+    contactTypes: '',
+    searchFilters: '',
+  }
+
   it('leaves the list unaltered if no dates supplied', () => {
     const contactList = [
       {
@@ -19,7 +30,7 @@ describe('filterContactsByDateRange', () => {
     ] as ContactSummaryResponse[]
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
-      filters: {},
+      filters,
     })
     expect(errors).toBeUndefined()
     expect(contacts).toEqual(contactList)
@@ -43,6 +54,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateTo-day': '21',
         'dateTo-month': '04',
         'dateTo-year': '2022',
@@ -70,6 +82,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateFrom-day': '21',
         'dateFrom-month': '04',
         'dateFrom-year': '2022',
@@ -97,6 +110,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateFrom-day': '22',
         'dateFrom-month': '04',
         'dateFrom-year': '2022',
@@ -129,6 +143,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateFrom-day': '32',
         'dateFrom-month': '04',
         'dateFrom-year': '2022',
@@ -172,6 +187,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts, selected } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateFrom-day': '03',
         'dateFrom-month': '04',
         'dateFrom-year': '2021',
@@ -207,6 +223,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateFrom-day': '10',
         'dateFrom-month': '07',
         'dateFrom-year': '2018',
@@ -229,6 +246,7 @@ describe('filterContactsByDateRange', () => {
     const { errors, contacts } = filterContactsByDateRange({
       contacts: contactList,
       filters: {
+        ...filters,
         'dateFrom-day': '09',
         'dateFrom-month': '07',
         'dateFrom-year': '2018',

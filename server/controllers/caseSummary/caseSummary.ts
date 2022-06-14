@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { isString } from '../../utils/utils'
 import { CaseSectionId } from '../../@types'
-import { getCaseSection } from './utils/getCaseSection'
+import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
 
 export const caseSummary = async (req: Request, res: Response): Promise<Response | void> => {
@@ -14,7 +14,8 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     sectionId as CaseSectionId,
     crnFormatted,
     res.locals.user.token,
-    req.query
+    req.query,
+    res.locals.flags
   )
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)

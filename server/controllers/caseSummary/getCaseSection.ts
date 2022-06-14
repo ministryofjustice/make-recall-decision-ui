@@ -1,17 +1,23 @@
 import { ParsedQs } from 'qs'
-import { CaseSectionId, ObjectMap } from '../../../@types'
-import { CaseSummaryOverviewResponse } from '../../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
-import { getCaseSummary } from '../../../data/makeDecisionApiClient'
-import { LicenceHistoryResponse } from '../../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
-import { CaseRisk } from '../../../@types/make-recall-decision-api/models/CaseRisk'
-import { PersonDetailsResponse } from '../../../@types/make-recall-decision-api/models/PersonDetailsResponse'
-import { fetchFromCacheOrApi } from '../../../data/fetchFromCacheOrApi'
-import { transformContactHistory } from './transformContactHistory'
-import { countLabel } from '../../../utils/utils'
-import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-api'
-import { transformLicenceConditions } from './transformLicenceConditions'
+import { CaseSectionId, ContactHistoryFilters, ObjectMap } from '../../@types'
+import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
+import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import { LicenceHistoryResponse } from '../../@types/make-recall-decision-api/models/LicenceHistoryResponse'
+import { CaseRisk } from '../../@types/make-recall-decision-api/models/CaseRisk'
+import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
+import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
+import { transformContactHistory } from './contactHistory/transformContactHistory'
+import { countLabel } from '../../utils/utils'
+import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
+import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 
-export const getCaseSection = async (sectionId: CaseSectionId, crn: string, token: string, reqQuery?: ParsedQs) => {
+export const getCaseSection = async (
+  sectionId: CaseSectionId,
+  crn: string,
+  token: string,
+  reqQuery: ParsedQs,
+  featureFlags: ObjectMap<boolean>
+) => {
   let sectionLabel
   let caseSummary
   let caseSummaryRaw
@@ -44,7 +50,8 @@ export const getCaseSection = async (sectionId: CaseSectionId, crn: string, toke
       )
       transformed = transformContactHistory({
         caseSummary: caseSummaryRaw,
-        filters: reqQuery as ObjectMap<string>,
+        filters: reqQuery as unknown as ContactHistoryFilters,
+        featureFlags,
       })
       errors = transformed.errors
       caseSummary = transformed.data
