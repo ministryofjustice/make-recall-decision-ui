@@ -11,10 +11,14 @@ import { countLabel } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 
+const isCaseRestrictedOrExcluded = (apiResponse: { userRestricted?: boolean; userExcluded?: boolean }) =>
+  apiResponse.userRestricted || apiResponse.userExcluded
+
 export const getCaseSection = async (
   sectionId: CaseSectionId,
   crn: string,
   token: string,
+  userId: string,
   reqQuery: ParsedQs,
   featureFlags: ObjectMap<boolean>
 ) => {
@@ -43,21 +47,28 @@ export const getCaseSection = async (
       sectionLabel = 'Licence conditions'
       break
     case 'contact-history':
-      caseSummaryRaw = await fetchFromCacheOrApi(
-        () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token),
-        `contactHistory:${crn}`
-      )
-      transformed = transformContactHistory({
-        caseSummary: caseSummaryRaw,
-        filters: reqQuery as unknown as ContactHistoryFilters,
-        featureFlags,
+      caseSummaryRaw = await fetchFromCacheOrApi({
+        fetchDataFn: () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token),
+        checkWhetherToCacheDataFn: apiResponse => !isCaseRestrictedOrExcluded(apiResponse),
+        userId,
+        redisKey: `contactHistory:${trimmedCrn}`,
       })
-      errors = transformed.errors
-      caseSummary = transformed.data
-      sectionLabel = `${countLabel({
-        count: transformed.data.contactCount,
-        noun: 'contact',
-      })} for ${trimmedCrn} - Contact history`
+      if (isCaseRestrictedOrExcluded(caseSummaryRaw)) {
+        caseSummary = caseSummaryRaw
+        sectionLabel = 'Contact history'
+      } else {
+        transformed = transformContactHistory({
+          caseSummary: caseSummaryRaw,
+          filters: reqQuery as unknown as ContactHistoryFilters,
+          featureFlags,
+        })
+        errors = transformed.errors
+        caseSummary = transformed.data
+        sectionLabel = `${countLabel({
+          count: transformed.data.contactCount,
+          noun: 'contact',
+        })} for ${trimmedCrn} - Contact history`
+      }
       break
     default:
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)

@@ -3,74 +3,186 @@ import waitForExpect from 'wait-for-expect'
 import * as redisExports from './redisClient'
 import { fetchFromCacheOrApi } from './fetchFromCacheOrApi'
 
+// see test cases at https://dsdmoj.atlassian.net/browse/MRD-254
 describe('fetchFromCacheOrApi', () => {
-  const fetchFromApi = jest.fn()
+  const fetchDataFn = jest.fn()
+  const checkWhetherToCacheDataFn = jest.fn()
   const redisSet = jest.fn()
+  const redisDel = jest.fn()
   const redisExpire = jest.fn()
   const redisKey = 'prefix:123'
+  const currentUserId = 'a123-b456'
 
   beforeEach(() => {
     jest
       .spyOn(redisExports, 'createRedisClient')
-      .mockReturnValue({ set: redisSet, expire: redisExpire } as unknown as RedisClient)
+      .mockReturnValue({ set: redisSet, expire: redisExpire, del: redisDel } as unknown as RedisClient)
   })
 
-  it('should return the cached data, if present, and update the cache', async () => {
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
-      JSON.stringify({
-        firstName: 'Bobby',
-        lastName: 'Badger',
-      })
-    )
-    fetchFromApi.mockResolvedValue({
+  const cachedData = {
+    firstName: 'Bobby',
+    lastName: 'Badger',
+  }
+
+  describe('CRN is not excluded or restricted', () => {
+    const apiData = {
       firstName: 'Brian',
       lastName: 'Bling',
+    }
+
+    beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(true))
+
+    it('should return the cached data, if it has been previously cached for this user. Then update the cache with the API response', async () => {
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+        JSON.stringify({
+          userIds: ['other-user', currentUserId],
+          data: cachedData,
+        })
+      )
+      fetchDataFn.mockResolvedValue(apiData)
+      const data = await fetchFromCacheOrApi({
+        fetchDataFn,
+        checkWhetherToCacheDataFn,
+        userId: currentUserId,
+        redisKey,
+      })
+
+      expect(data).toEqual(cachedData)
+
+      // a fetch was triggered (and not waited for) to refresh the cache (also update the cached user IDs with current user)
+      expect(fetchDataFn).toHaveBeenCalled()
+      await waitForExpect(() => {
+        expect(redisSet).toHaveBeenCalledWith(
+          redisKey,
+          JSON.stringify({
+            userIds: [currentUserId, 'other-user'],
+            data: apiData,
+          })
+        )
+      })
     })
-    const data = await fetchFromCacheOrApi(fetchFromApi, redisKey)
-    expect(data).toEqual({
-      firstName: 'Bobby',
-      lastName: 'Badger',
-    })
-    // the value was returned from the cache but a fetch was triggered (and not waited for)
-    expect(fetchFromApi).toHaveBeenCalled()
-    await waitForExpect(() => {
+
+    it('should return API data and populate the cache with it, if cache is empty', async () => {
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
+      fetchDataFn.mockResolvedValue(apiData)
+      const data = await fetchFromCacheOrApi({
+        fetchDataFn,
+        checkWhetherToCacheDataFn,
+        userId: currentUserId,
+        redisKey,
+      })
+
+      expect(data).toEqual(apiData)
       expect(redisSet).toHaveBeenCalledWith(
         redisKey,
         JSON.stringify({
-          firstName: 'Brian',
-          lastName: 'Bling',
+          userIds: [currentUserId],
+          data: apiData,
+        })
+      )
+      expect(redisExpire).toHaveBeenCalledWith(redisKey, 86400)
+    })
+
+    it('should return the API data, if user has not previously viewed the cached data', async () => {
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+        JSON.stringify({
+          userIds: ['other-user'],
+          data: cachedData,
+        })
+      )
+      fetchDataFn.mockResolvedValue(apiData)
+      const data = await fetchFromCacheOrApi({
+        fetchDataFn,
+        checkWhetherToCacheDataFn,
+        userId: currentUserId,
+        redisKey,
+      })
+      expect(data).toEqual(apiData)
+      expect(redisSet).toHaveBeenCalledWith(
+        redisKey,
+        JSON.stringify({
+          userIds: [currentUserId, 'other-user'],
+          data: apiData,
         })
       )
     })
   })
 
-  it('should return the API data, if cache is empty', async () => {
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    fetchFromApi.mockResolvedValue({
-      firstName: 'Brian',
-      lastName: 'Bling',
-    })
-    const data = await fetchFromCacheOrApi(fetchFromApi, redisKey)
-    expect(data).toEqual({
-      firstName: 'Brian',
-      lastName: 'Bling',
-    })
-  })
+  describe('CRN is excluded or restricted', () => {
+    beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(false))
 
-  it('should populate the cache with the API data, if cache is empty', async () => {
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    fetchFromApi.mockResolvedValue({
-      firstName: 'Brian',
-      lastName: 'Bling',
-    })
-    await fetchFromCacheOrApi(fetchFromApi, redisKey)
-    expect(redisSet).toHaveBeenCalledWith(
-      redisKey,
-      JSON.stringify({
-        firstName: 'Brian',
-        lastName: 'Bling',
+    // describe('User has permission to view', () => {})
+
+    describe('User does not have permission to view', () => {
+      const apiData = {
+        userExcluded: true,
+      }
+
+      it('should return the API response, if user has not previously viewed the cached data, and deletes any existing cache', async () => {
+        jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+          JSON.stringify({
+            userIds: ['x987-y654'],
+            data: cachedData,
+          })
+        )
+        fetchDataFn.mockResolvedValue(apiData)
+        const data = await fetchFromCacheOrApi({
+          fetchDataFn,
+          checkWhetherToCacheDataFn,
+          userId: currentUserId,
+          redisKey,
+        })
+        expect(fetchDataFn).toHaveBeenCalled()
+        expect(data).toEqual(apiData)
+        await waitForExpect(() => {
+          expect(redisSet).not.toHaveBeenCalled()
+          // the new value from the API is uncacheable (eg restricted / excluded), so remove any existing value from the cache
+          expect(redisDel).toHaveBeenCalledWith(redisKey)
+        })
       })
-    )
-    expect(redisExpire).toHaveBeenCalledWith(redisKey, 86400)
+
+      it("should return the cached data if the user has previously viewed it, but then delete the cache and don't update with API response", async () => {
+        jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+          JSON.stringify({
+            userIds: [currentUserId],
+            data: cachedData,
+          })
+        )
+        fetchDataFn.mockResolvedValue({
+          userExcluded: true,
+        })
+        const data = await fetchFromCacheOrApi({
+          fetchDataFn,
+          checkWhetherToCacheDataFn,
+          userId: currentUserId,
+          redisKey,
+        })
+        expect(data).toEqual(cachedData)
+        // the value was returned from the cache but a fetch was triggered (and not waited for)
+        expect(fetchDataFn).toHaveBeenCalled()
+        await waitForExpect(() => {
+          expect(redisSet).not.toHaveBeenCalled()
+          // the new value from the API is uncacheable (eg restricted / excluded), so remove any existing value from the cache
+          expect(redisDel).toHaveBeenCalledWith(redisKey)
+        })
+      })
+
+      it('should return the API response, if the cache is empty, and not update the cache with API response', async () => {
+        jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
+        fetchDataFn.mockResolvedValue(apiData)
+        const data = await fetchFromCacheOrApi({
+          fetchDataFn,
+          checkWhetherToCacheDataFn,
+          userId: currentUserId,
+          redisKey,
+        })
+        expect(fetchDataFn).toHaveBeenCalled()
+        expect(data).toEqual(apiData)
+        await waitForExpect(() => {
+          expect(redisSet).not.toHaveBeenCalled()
+          expect(redisDel).toHaveBeenCalledWith(redisKey)
+        })
+      })
+    })
   })
 })
