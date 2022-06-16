@@ -5,6 +5,14 @@ import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/er
 
 const MINIMUM_SEARCH_TERM_LENGTH = 2
 
+const checkIfAllTermsMatch = ({ patterns, contact }: { patterns: RegExp[]; contact: ContactSummaryResponse }) => {
+  const { notes, descriptionType, outcome, enforcementAction } = contact
+  return patterns.every(
+    pattern =>
+      pattern.test(notes) || pattern.test(descriptionType) || pattern.test(outcome) || pattern.test(enforcementAction)
+  )
+}
+
 export const filterContactsBySearch = ({
   contacts,
   filters,
@@ -40,21 +48,14 @@ export const filterContactsBySearch = ({
             ...contact,
             startDate: null,
             searchTextMatch: {
-              notes: patterns.every(pattern => pattern.test(contact.notes)),
-              description: patterns.every(pattern => pattern.test(contact.descriptionType)),
-              outcome: patterns.every(pattern => pattern.test(contact.outcome)),
-              enforcementAction: patterns.every(pattern => pattern.test(contact.enforcementAction)),
+              notesMatched: patterns.some(pattern => pattern.test(contact.notes)),
+              allTermsMatched: checkIfAllTermsMatch({ patterns, contact }),
             },
           }
         })
         .filter(contact => {
           const { searchTextMatch } = contact
-          return (
-            searchTextMatch.notes ||
-            searchTextMatch.description ||
-            searchTextMatch.outcome ||
-            searchTextMatch.enforcementAction
-          )
+          return searchTextMatch.allTermsMatched
         })
       selected = selectedFilters.map(searchTerm => ({
         text: searchTerm,
