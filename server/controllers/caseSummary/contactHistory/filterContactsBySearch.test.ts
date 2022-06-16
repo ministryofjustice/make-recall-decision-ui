@@ -70,10 +70,8 @@ describe('filterContactsBySearch', () => {
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
-          description: true,
-          enforcementAction: false,
-          notes: false,
-          outcome: false,
+          allTermsMatched: true,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -99,10 +97,8 @@ describe('filterContactsBySearch', () => {
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
-          description: true,
-          enforcementAction: false,
-          notes: false,
-          outcome: false,
+          allTermsMatched: true,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -129,10 +125,8 @@ describe('filterContactsBySearch', () => {
         enforcementAction: null,
         systemGenerated: false,
         searchTextMatch: {
-          description: false,
-          enforcementAction: false,
-          notes: true,
-          outcome: false,
+          allTermsMatched: true,
+          notesMatched: true,
         },
         startDate: null,
       },
@@ -158,10 +152,8 @@ describe('filterContactsBySearch', () => {
         enforcementAction: 'Decision Pending Response from Person on Probation',
         systemGenerated: false,
         searchTextMatch: {
-          description: false,
-          enforcementAction: false,
-          notes: false,
-          outcome: true,
+          allTermsMatched: true,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -174,10 +166,8 @@ describe('filterContactsBySearch', () => {
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
-          description: false,
-          enforcementAction: false,
-          notes: false,
-          outcome: true,
+          allTermsMatched: true,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -203,10 +193,8 @@ describe('filterContactsBySearch', () => {
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
-          description: false,
-          enforcementAction: true,
-          notes: false,
-          outcome: false,
+          allTermsMatched: true,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -232,5 +220,72 @@ describe('filterContactsBySearch', () => {
       },
     ])
     expect(selected).toBeUndefined()
+  })
+
+  it('matches a contact if all search filters match against different fields', () => {
+    const { contacts, selected } = filterContactsBySearch({
+      contacts: [
+        {
+          code: 'ROC',
+          descriptionType: 'Responsible Officer Change',
+          contactStartDate: '2022-04-21T11:30:00Z',
+          outcome: 'Failed to Attend',
+          notes:
+            'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+          enforcementAction: 'Decision Pending Response from Person on Probation',
+          systemGenerated: false,
+        },
+      ],
+      filters: {
+        ...defaultFilters,
+        searchFilters: ['Responsible officer', 'Prufrock'],
+      },
+    })
+    expect(contacts).toEqual([
+      {
+        code: 'ROC',
+        descriptionType: 'Responsible Officer Change',
+        contactStartDate: '2022-04-21T11:30:00Z',
+        outcome: 'Failed to Attend',
+        notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        enforcementAction: 'Decision Pending Response from Person on Probation',
+        systemGenerated: false,
+        searchTextMatch: {
+          allTermsMatched: true,
+          notesMatched: true,
+        },
+        startDate: null,
+      },
+    ])
+    expect(selected).toEqual([
+      { text: 'Responsible officer', href: '?searchFilters=Prufrock' },
+      { text: 'Prufrock', href: '?searchFilters=Responsible%20officer' },
+    ])
+  })
+
+  it('does not match a contact if not all search filters match against different fields', () => {
+    const { contacts, selected } = filterContactsBySearch({
+      contacts: [
+        {
+          code: 'ROC',
+          descriptionType: 'Responsible Officer Change',
+          contactStartDate: '2022-04-21T11:30:00Z',
+          outcome: 'Failed to Attend',
+          notes:
+            'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+          enforcementAction: 'Decision Pending Response from Person on Probation',
+          systemGenerated: false,
+        },
+      ],
+      filters: {
+        ...defaultFilters,
+        searchFilters: ['Responsible officer', 'Derby'],
+      },
+    })
+    expect(contacts).toEqual([])
+    expect(selected).toEqual([
+      { text: 'Responsible officer', href: '?searchFilters=Derby' },
+      { text: 'Derby', href: '?searchFilters=Responsible%20officer' },
+    ])
   })
 })

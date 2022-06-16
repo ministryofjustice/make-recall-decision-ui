@@ -103,10 +103,8 @@ describe('transformContactHistory', () => {
               startDate: '2022-04-21',
               systemGenerated: false,
               searchTextMatch: {
-                description: true,
-                enforcementAction: false,
-                notes: false,
-                outcome: false,
+                allTermsMatched: true,
+                notesMatched: false,
               },
             },
           ],

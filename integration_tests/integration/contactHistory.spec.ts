@@ -129,13 +129,13 @@ context('Contact history', () => {
     cy.getElement('3 contacts').should('exist')
     // one of the 3 contacts was matched on notes, so check the notes were expanded
     cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
-    cy.fillInput('Search term', 'Licence compliance')
+    cy.fillInput('Search term', 'Eliot Prufrock')
     cy.clickButton('Apply filters')
-    cy.getElement('2 contacts').should('exist')
-    // clear filters
-    cy.clickLink('Licence compliance')
     cy.getElement('3 contacts').should('exist')
+    // clear filters
     cy.clickLink('letter')
+    cy.getElement('8 contacts').should('exist')
+    cy.clickLink('Eliot Prufrock')
     cy.getElement('12 contacts').should('exist')
   })
 
