@@ -18,7 +18,7 @@ describe('fetchFromCacheOrApi', () => {
       .mockReturnValue({ set: redisSet, expire: redisExpire, del: redisDel } as unknown as RedisClient)
   })
 
-  describe('data should not be cached', () => {
+  describe('CRN is excluded or restricted', () => {
     beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(false))
 
     it('should return the API response not the cached data, if the userId is not on the whitelist', async () => {
@@ -72,7 +72,7 @@ describe('fetchFromCacheOrApi', () => {
     })
   })
 
-  describe('data should be cached', () => {
+  describe('CRN is not excluded or restricted', () => {
     beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(true))
 
     it("should return the cached data, if the user has previously cached it and they're on the whitelist, and then update the cache", async () => {
