@@ -11,7 +11,7 @@ import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licen
 Cypress.Commands.add('signIn', () => {
   cy.task('stubSignIn')
   cy.task('stubAuthUser')
-  cy.task('mockCaseSummaryData')
+  cy.mockCaseSummaryData()
   cy.intercept(
     {
       method: 'GET',
