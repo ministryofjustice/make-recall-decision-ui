@@ -8,7 +8,7 @@ import getCasePersonalDetailsResponse from '../../api/responses/get-case-persona
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 
-Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
+Cypress.Commands.add('signIn', () => {
   cy.task('reset')
   cy.task('stubSignIn')
   cy.task('stubAuthUser')
@@ -29,7 +29,7 @@ Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   ).as('googleAnalytics')
   cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
   cy.request('/')
-  return cy.task('getSignInUrl').then((url: string) => cy.visit(url, options))
+  return cy.task('getSignInUrl').then(cy.visit)
 })
 
 Cypress.Keyboard.defaults({
