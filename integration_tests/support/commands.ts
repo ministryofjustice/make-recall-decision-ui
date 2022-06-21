@@ -23,6 +23,7 @@ Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
     { statusCode: 200 }
   ).as('googleAnalytics')
   cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
+  cy.mockCaseSummaryData()
   cy.request('/')
   return cy.task('getSignInUrl').then((url: string) => cy.visit(url, options))
 })

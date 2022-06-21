@@ -3,7 +3,6 @@ import { routeUrls } from '../../server/routes/routeUrls'
 context('Feature flags', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.mockCaseSummaryData()
   })
 
   it('override a flag', () => {

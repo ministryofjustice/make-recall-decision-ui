@@ -8,7 +8,6 @@ import { dedupeList } from '../../server/utils/lists'
 context('Contact history', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.mockCaseSummaryData()
   })
 
   it('can view the contact history page', () => {
