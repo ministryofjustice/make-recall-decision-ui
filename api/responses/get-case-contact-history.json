@@ -46,7 +46,8 @@
       "outcome": null,
       "notes": "Good afternoon, the police attempted to arrest Mr. Edwin at 18 Serata Street today, they forced entry but he was not present. We have a contractor repairing the door and changing the locks so that Mr. Edwin will not be able to return. Kind regards, PC Street",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "EPOMAT",
@@ -55,7 +56,8 @@
       "outcome": "Decision to Recall",
       "notes": "Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "ROC",
@@ -64,7 +66,8 @@
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager",
       "enforcementAction": "Decision Pending Response from Person on Probation",
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "IVSP",
@@ -73,7 +76,8 @@
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager",
       "enforcementAction": "Second Enforcement Letter Sent",
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "IVSP",
@@ -82,7 +86,8 @@
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 16/03/2022 at 11:30\nC - attended early R - has relapsed into alcohol abuse recently. I - discussed alcohol consumption. Charles drinks a lot, he says, all day all night. I told him I couldn’t make him the Resolutions referral because of his failures to attend. Discussed importance of attending future appointments S - has relapsed into alcohol abuse S - will refer to Resolutions now I have the right info",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": true
     },
     {
       "code": "IVSP",
@@ -91,7 +96,8 @@
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 09/03/2022 at 11:46\nsee next log",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "C191",
@@ -100,7 +106,8 @@
       "outcome": null,
       "notes": "Comment added by Eliot Prufrock on 03/03/2022 at 12:10\nLicence Improvement Letter sent and uploaded to nDelius",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "C002",
@@ -109,7 +116,8 @@
       "outcome": "Failed to Attend",
       "notes": "Comment added by Eliot Prufrock on 02/03/2022 at 12:10\nEnforcement Action: Decision Pending Response From Offender",
       "enforcementAction": "Licence Compliance Letter Sent",
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "SPOD02",
@@ -118,7 +126,8 @@
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 23/02/2022 at 11:30\nC - Charles attended 5 minutes late, first time at the office, introduced ourselves, presented well. R - appointment went fine last week and likes accommodation. I - discussed licence conditions, Charles understands them all. Says his family just want him to sort himself out. Substance misuse - not spoken to Resolutions and doesn’t feel like he needs it. But he says he has said this before and then needed their help but too late. I will make a referral. S - open and engaging, discussed short term goals. S - will refer to Resolutions",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "CTOB",
@@ -127,7 +136,8 @@
       "outcome": null,
       "notes": "Hi",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     },
     {
       "code": "SPOD02",
@@ -136,7 +146,8 @@
       "outcome": "Attended - Complied",
       "notes": "Comment added by Eliot Prufrock on 18/02/2022 at 13:30\nreported on release went through licence paperwork",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": true
     },
     {
       "code": "CMOB",
@@ -145,7 +156,8 @@
       "outcome": null,
       "notes": "Hello",
       "enforcementAction": null,
-      "systemGenerated": false
+      "systemGenerated": false,
+      "sensitive": false
     }
   ],
   "releaseSummary": {

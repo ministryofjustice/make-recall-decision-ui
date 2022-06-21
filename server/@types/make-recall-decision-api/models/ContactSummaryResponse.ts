@@ -10,4 +10,5 @@ export type ContactSummaryResponse = {
   notes?: string
   enforcementAction?: string
   systemGenerated?: boolean
+  sensitive?: boolean
 }
