@@ -9,7 +9,7 @@ import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 
 Cypress.Commands.add('signIn', () => {
-  cy.task('reset')
+  // cy.task('reset')
   cy.task('stubSignIn')
   cy.task('stubAuthUser')
   cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
