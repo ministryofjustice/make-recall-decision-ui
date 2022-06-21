@@ -129,3 +129,4 @@ e2e_tests/cucumber-json
 e2e_tests/junit
 e2e_tests/screenshots
 e2e_tests/reports
+cypress/downloads

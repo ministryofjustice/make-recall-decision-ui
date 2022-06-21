@@ -14,7 +14,7 @@
             {% for contact in group.items %}
                 {% set titleHtml %}
                     <div>
-                        <div class='govuk-!-font-weight-bold' data-qa='heading'>{{ contact.descriptionType }}</div>
+                        <div class='govuk-!-font-weight-bold' data-qa='heading'>{{ contact.descriptionType }}{% if contact.sensitive %}<span data-qa='sensitive'> (sensitive)</span>{% endif %} </div>
                         <div class='govuk-!-margin-bottom-0' data-qa='time'>
                             At {{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true }) }}</div>
                     </div>

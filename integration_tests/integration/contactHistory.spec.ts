@@ -29,7 +29,10 @@ context('Contact history', () => {
     sortedByDate.forEach((contact, index) => {
       dates.push(DateTime.fromISO(contact.contactStartDate, { zone: europeLondon }).toISODate())
       const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.getText('heading', opts).should('equal', contact.descriptionType)
+      cy.getText('heading', opts).should('contain', contact.descriptionType)
+      if (contact.sensitive) {
+        cy.getText('heading', opts).should('contain', '(sensitive)')
+      }
       cy.getText('time', opts).should(
         'contain',
         formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true })
