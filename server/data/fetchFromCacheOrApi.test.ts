@@ -111,6 +111,8 @@ describe('fetchFromCacheOrApi', () => {
   describe('CRN is excluded or restricted', () => {
     beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(false))
 
+    // if the response changes to include an indication that the case is restricted / excluded for other users
+    // then add tests here to check the cache will be deleted
     // describe('User has permission to view', () => {})
 
     describe('User does not have permission to view', () => {
