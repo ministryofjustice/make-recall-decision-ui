@@ -6,7 +6,6 @@ import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 context('Case summary', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.mockCaseSummaryData()
   })
 
   it('can view the overview page with a list of offences', () => {

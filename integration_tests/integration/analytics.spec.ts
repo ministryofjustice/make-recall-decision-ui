@@ -3,7 +3,6 @@ import { routeUrls } from '../../server/routes/routeUrls'
 context('Analytics', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.mockCaseSummaryData()
   })
 
   it('sends a page view event to Google Analytics', () => {

@@ -5,7 +5,6 @@ import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 context('Licence conditions', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.mockCaseSummaryData()
   })
 
   it('can view the licence conditions page', () => {
