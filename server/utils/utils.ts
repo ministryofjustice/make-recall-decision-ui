@@ -2,6 +2,7 @@ import qs from 'qs'
 import config from '../config'
 import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
 import { FormError, ObjectMap } from '../@types'
+import { UserAccessResponse } from '../@types/make-recall-decision-api/models/UserAccessResponse'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -88,3 +89,6 @@ export const removeParamsFromQueryString = ({
   const queryString = qs.stringify(updatedParams, { arrayFormat: 'repeat' })
   return queryString ? `?${queryString}` : ''
 }
+
+export const isCaseRestrictedOrExcluded = (userAccessResponse: UserAccessResponse) =>
+  userAccessResponse?.userRestricted || userAccessResponse?.userExcluded

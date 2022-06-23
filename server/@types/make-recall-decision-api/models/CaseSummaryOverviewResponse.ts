@@ -5,12 +5,10 @@
 import type { Offence } from './Offence';
 import type { PersonDetails } from './PersonDetails';
 import type { Risk } from './Risk';
+import type { UserAccessResponse } from './UserAccessResponse';
 
 export type CaseSummaryOverviewResponse = {
-    userRestricted?: boolean;
-    userExcluded?: boolean;
-    exclusionMessage?: string;
-    restrictionMessage?: string;
+    userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: PersonDetails;
     offences?: Array<Offence>;
     risk?: Risk;

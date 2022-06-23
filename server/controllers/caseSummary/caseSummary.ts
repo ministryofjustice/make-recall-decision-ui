@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { isString } from '../../utils/utils'
+import { isCaseRestrictedOrExcluded, isString } from '../../utils/utils'
 import { CaseSectionId } from '../../@types'
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
@@ -26,6 +26,8 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     ...caseSection,
   }
   res.locals.pageUrlBase = `/cases/${crnFormatted}/`
-  const page = 'pages/caseSummary'
+  const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)
+    ? 'pages/excludedRestrictedCrn'
+    : 'pages/caseSummary'
   res.render(page)
 }

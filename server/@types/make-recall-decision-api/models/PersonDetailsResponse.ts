@@ -5,12 +5,10 @@
 import type { CurrentAddress } from './CurrentAddress';
 import type { OffenderManager } from './OffenderManager';
 import type { PersonDetails } from './PersonDetails';
+import type { UserAccessResponse } from './UserAccessResponse';
 
 export type PersonDetailsResponse = {
-    userRestricted?: boolean;
-    userExcluded?: boolean;
-    exclusionMessage?: string;
-    restrictionMessage?: string;
+    userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: PersonDetails;
     currentAddress?: CurrentAddress;
     offenderManager?: OffenderManager;
