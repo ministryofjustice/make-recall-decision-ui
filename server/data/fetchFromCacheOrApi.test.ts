@@ -26,8 +26,10 @@ describe('fetchFromCacheOrApi', () => {
 
   describe('CRN is not excluded or restricted', () => {
     const apiData = {
-      firstName: 'Brian',
-      lastName: 'Bling',
+      userAccessResponse: {
+        firstName: 'Brian',
+        lastName: 'Bling',
+      },
     }
 
     beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(true))
@@ -117,7 +119,9 @@ describe('fetchFromCacheOrApi', () => {
 
     describe('User does not have permission to view', () => {
       const apiData = {
-        userExcluded: true,
+        userAccessResponse: {
+          userExcluded: true,
+        },
       }
 
       it('should return the API response, if user has not previously viewed the cached data, and deletes any existing cache', async () => {

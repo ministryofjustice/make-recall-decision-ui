@@ -1,0 +1,7 @@
+{
+  "userAccessResponse": {
+    "userRestricted": true,
+    "userExcluded": false,
+    "restrictionMessage": "You are restricted from viewing this offender record. Please contact OM John Smith"
+  }
+}

@@ -51,25 +51,83 @@ describe('getCaseSection', () => {
     )
   })
 
-  it('does not cache the contact history response in redis if CRN is excluded', async () => {
+  describe('Excluded', () => {
     const apiResponse = {
-      userExcluded: true,
+      userAccessResponse: {
+        userExcluded: true,
+      },
     } as ContactHistoryResponse
-    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    await getCaseSection('contact-history', crn, token, userId, {}, {})
-    expect(redisSet).not.toHaveBeenCalled()
-    expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
+
+    beforeEach(() => {
+      ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    })
+
+    it('does not cache the contact history response in redis if CRN is excluded', async () => {
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
+      const { section } = await getCaseSection('contact-history', crn, token, userId, {}, {})
+      expect(redisSet).not.toHaveBeenCalled()
+      expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
+      expect(section.label).toEqual('Contact history')
+    })
+
+    it('returns excluded data for contact history', async () => {
+      const { caseSummary } = await getCaseSection('contact-history', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
+    it('returns excluded data for licence conditions', async () => {
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
+    it('returns excluded data for personal details', async () => {
+      const { caseSummary } = await getCaseSection('personal-details', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
+    it('returns excluded data for risk', async () => {
+      const { caseSummary } = await getCaseSection('risk', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
   })
 
-  it('does not cache the contact history response in redis if CRN is restricted', async () => {
+  describe('Restricted', () => {
     const apiResponse = {
-      userRestricted: true,
+      userAccessResponse: {
+        userRestricted: true,
+      },
     } as ContactHistoryResponse
-    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
-    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    await getCaseSection('contact-history', crn, token, userId, {}, {})
-    expect(redisSet).not.toHaveBeenCalled()
-    expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
+
+    beforeEach(() => {
+      ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    })
+
+    it('does not cache the contact history response in redis if CRN is restricted', async () => {
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
+      const { section } = await getCaseSection('contact-history', crn, token, userId, {}, {})
+      expect(redisSet).not.toHaveBeenCalled()
+      expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
+      expect(section.label).toEqual('Contact history')
+    })
+
+    it('returns restricted data for contact history', async () => {
+      const { caseSummary } = await getCaseSection('contact-history', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
+    it('returns restricted data for licence conditions', async () => {
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
+    it('returns restricted data for personal details', async () => {
+      const { caseSummary } = await getCaseSection('personal-details', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
+    it('returns restricted data for risk', async () => {
+      const { caseSummary } = await getCaseSection('risk', crn, token, userId, {}, {})
+      expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
   })
 })

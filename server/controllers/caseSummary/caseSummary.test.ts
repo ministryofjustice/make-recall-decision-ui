@@ -7,6 +7,8 @@ import caseOverviewApiResponse from '../../../api/responses/get-case-overview.js
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
 import casePersonalDetailsResponse from '../../../api/responses/get-case-personal-details.json'
+import excludedResponse from '../../../api/responses/get-case-excluded.json'
+import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -179,5 +181,29 @@ describe('caseSummary', () => {
     } catch (err) {
       expect(err).toEqual(apiError)
     }
+  })
+
+  it('should render an excluded CRN', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(excludedResponse)
+    const req = mockReq({ params: { crn, sectionId: 'risk' } })
+    await caseSummary(req, res)
+    expect(res.render).toHaveBeenCalledWith('pages/excludedRestrictedCrn')
+    expect(res.locals.caseSummary).toEqual(excludedResponse)
+    expect(res.locals.section).toEqual({
+      id: 'risk',
+      label: 'Risk',
+    })
+  })
+
+  it('should render a restricted CRN', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(restrictedResponse)
+    const req = mockReq({ params: { crn, sectionId: 'risk' } })
+    await caseSummary(req, res)
+    expect(res.render).toHaveBeenCalledWith('pages/excludedRestrictedCrn')
+    expect(res.locals.caseSummary).toEqual(restrictedResponse)
+    expect(res.locals.section).toEqual({
+      id: 'risk',
+      label: 'Risk',
+    })
   })
 })

@@ -7,12 +7,9 @@ import { CaseRisk } from '../../@types/make-recall-decision-api/models/CaseRisk'
 import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './contactHistory/transformContactHistory'
-import { countLabel } from '../../utils/utils'
+import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
-
-const isCaseRestrictedOrExcluded = (apiResponse: { userRestricted?: boolean; userExcluded?: boolean }) =>
-  apiResponse.userRestricted || apiResponse.userExcluded
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -42,21 +39,21 @@ export const getCaseSection = async (
       sectionLabel = 'Personal details'
       break
     case 'licence-conditions':
-      caseSummaryRaw = await getCaseSummary<LicenceConditionsResponse>(trimmedCrn, sectionId, token)
-      caseSummary = transformLicenceConditions(caseSummaryRaw)
       sectionLabel = 'Licence conditions'
+      caseSummaryRaw = await getCaseSummary<LicenceConditionsResponse>(trimmedCrn, sectionId, token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = transformLicenceConditions(caseSummaryRaw)
+      }
       break
     case 'contact-history':
+      sectionLabel = 'Contact history'
       caseSummaryRaw = await fetchFromCacheOrApi({
         fetchDataFn: () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token),
-        checkWhetherToCacheDataFn: apiResponse => !isCaseRestrictedOrExcluded(apiResponse),
+        checkWhetherToCacheDataFn: apiResponse => !isCaseRestrictedOrExcluded(apiResponse.userAccessResponse),
         userId,
         redisKey: `contactHistory:${trimmedCrn}`,
       })
-      if (isCaseRestrictedOrExcluded(caseSummaryRaw)) {
-        caseSummary = caseSummaryRaw
-        sectionLabel = 'Contact history'
-      } else {
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         transformed = transformContactHistory({
           caseSummary: caseSummaryRaw,
           filters: reqQuery as unknown as ContactHistoryFilters,
@@ -73,10 +70,10 @@ export const getCaseSection = async (
     default:
       throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)
   }
+  caseSummary = caseSummary || caseSummaryRaw
   return {
     errors,
     caseSummary,
-    caseSummaryRaw,
     section: {
       label: sectionLabel,
       id: sectionId,

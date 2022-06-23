@@ -1,0 +1,13 @@
+{% extends "../partials/layout.njk" %}
+
+{% set title = "Excluded case" if caseSummary.userAccessResponse.userExcluded else ("Restricted case" if caseSummary.userAccessResponse.userRestricted else "Unknown") %}
+{% set pageTitle = makePageTitle({ pageHeading: title }) %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">{{ title }}</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <p class='govuk-body'>{{ caseSummary.userAccessResponse.exclusionMessage if caseSummary.userAccessResponse.userExcluded else caseSummary.userAccessResponse.restrictionMessage }}</p>
+        </div>
+    </div>
+{% endblock %}
