@@ -14,6 +14,7 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     sectionId as CaseSectionId,
     crnFormatted,
     res.locals.user.token,
+    res.locals.user.userId,
     req.query,
     res.locals.flags
   )

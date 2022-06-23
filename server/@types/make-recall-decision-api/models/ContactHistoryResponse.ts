@@ -2,14 +2,18 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ContactSummaryResponse } from './ContactSummaryResponse'
-import type { PersonDetails } from './PersonDetails'
-import type { ReleaseSummaryResponse } from './ReleaseSummaryResponse'
-import { ContactTypeGroup } from './ContactTypeGroup'
+import type { ContactGroupResponse } from './ContactGroupResponse';
+import type { ContactSummaryResponse } from './ContactSummaryResponse';
+import type { PersonDetails } from './PersonDetails';
+import type { ReleaseSummaryResponse } from './ReleaseSummaryResponse';
 
 export type ContactHistoryResponse = {
-  personalDetailsOverview?: PersonDetails
-  contactTypeGroups?: Array<ContactTypeGroup>
-  contactSummary?: Array<ContactSummaryResponse>
-  releaseSummary?: ReleaseSummaryResponse
-}
+    userRestricted?: boolean;
+    userExcluded?: boolean;
+    exclusionMessage?: string;
+    restrictionMessage?: string;
+    personalDetailsOverview?: PersonDetails;
+    contactSummary?: Array<ContactSummaryResponse>;
+    contactTypeGroups?: Array<ContactGroupResponse>;
+    releaseSummary?: ReleaseSummaryResponse;
+};

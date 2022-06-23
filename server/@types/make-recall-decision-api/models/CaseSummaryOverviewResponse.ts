@@ -2,12 +2,16 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Offence } from './Offence'
-import type { PersonDetails } from './PersonDetails'
-import type { Risk } from './Risk'
+import type { Offence } from './Offence';
+import type { PersonDetails } from './PersonDetails';
+import type { Risk } from './Risk';
 
 export type CaseSummaryOverviewResponse = {
-  personalDetailsOverview?: PersonDetails
-  offences?: Array<Offence>
-  risk?: Risk
-}
+    userRestricted?: boolean;
+    userExcluded?: boolean;
+    exclusionMessage?: string;
+    restrictionMessage?: string;
+    personalDetailsOverview?: PersonDetails;
+    offences?: Array<Offence>;
+    risk?: Risk;
+};

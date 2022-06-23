@@ -1,6 +1,6 @@
 import { ContactTypeDecorated, ContactHistoryFilters, ObjectMap } from '../../../../@types'
 import { isDefined, removeParamsFromQueryString } from '../../../../utils/utils'
-import { ContactTypeGroup } from '../../../../@types/make-recall-decision-api/models/ContactTypeGroup'
+import { ContactGroupResponse } from '../../../../@types/make-recall-decision-api/models/ContactGroupResponse'
 import { ContactSummaryResponse } from '../../../../@types/make-recall-decision-api'
 import logger from '../../../../../logger'
 
@@ -17,7 +17,7 @@ export const decorateContactTypes = ({
   contactTypeGroups,
   allContacts,
 }: {
-  contactTypeGroups: ContactTypeGroup[]
+  contactTypeGroups: ContactGroupResponse[]
   allContacts: ContactSummaryResponse[]
 }) =>
   contactTypeGroups

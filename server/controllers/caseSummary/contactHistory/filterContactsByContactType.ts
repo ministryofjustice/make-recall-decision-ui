@@ -1,6 +1,6 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { ContactHistoryFilters, ContactTypeGroupDecorated } from '../../../@types'
-import { ContactTypeGroup } from '../../../@types/make-recall-decision-api/models/ContactTypeGroup'
+import { ContactGroupResponse } from '../../../@types/make-recall-decision-api/models/ContactGroupResponse'
 import {
   decorateContactTypes,
   decorateSelectedFilters,
@@ -17,7 +17,7 @@ export const filterContactsByContactType = ({
 }: {
   filteredContacts: ContactSummaryResponse[]
   allContacts: ContactSummaryResponse[]
-  contactTypeGroups: ContactTypeGroup[]
+  contactTypeGroups: ContactGroupResponse[]
   filters: ContactHistoryFilters
 }): {
   contacts: ContactSummaryResponse[]
