@@ -5,8 +5,9 @@ import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
 import { filterContactsBySearch } from './filterContactsBySearch'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
+import { removeFutureContacts } from './removeFutureContacts'
 
-const removeSystemGenerated = (contacts: ContactSummaryResponse[]): ContactSummaryResponse[] =>
+export const removeSystemGenerated = (contacts: ContactSummaryResponse[]): ContactSummaryResponse[] =>
   contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
 
 export const transformContactHistory = ({
@@ -21,12 +22,13 @@ export const transformContactHistory = ({
   const allContacts = featureFlags.flagShowSystemGenerated
     ? caseSummary.contactSummary
     : removeSystemGenerated(caseSummary.contactSummary)
+  const pastContacts = removeFutureContacts(caseSummary.contactSummary)
   const {
     errors: errorsDateRange,
     contacts: contactsFilteredByDateRange,
     selected: selectedDateRange,
   } = filterContactsByDateRange({
-    contacts: allContacts,
+    contacts: pastContacts,
     filters,
   })
   const {

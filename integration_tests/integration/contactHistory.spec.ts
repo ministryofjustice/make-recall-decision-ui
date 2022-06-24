@@ -4,23 +4,23 @@ import { europeLondon, sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 import { dedupeList } from '../../server/utils/lists'
+import { removeSystemGenerated } from '../../server/controllers/caseSummary/contactHistory/transformContactHistory'
+import { removeFutureContacts } from '../../server/controllers/caseSummary/contactHistory/removeFutureContacts'
 
 context('Contact history', () => {
+  const crn = 'X34983'
+
   beforeEach(() => {
     cy.signIn()
   })
 
   it('can view the contact history page', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
     cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
-
     // contacts
-    const systemGeneratedRemoved = getCaseContactHistoryResponse.contactSummary.filter(
-      contact => contact.systemGenerated === false
-    )
+    const filtered = removeSystemGenerated(getCaseContactHistoryResponse.contactSummary)
     const sortedByDate = sortListByDateField({
-      list: systemGeneratedRemoved,
+      list: filtered,
       dateKey: 'contactStartDate',
       newestFirst: true,
     })
@@ -44,8 +44,24 @@ context('Contact history', () => {
     })
   })
 
+  it('does not show future contacts', () => {
+    // add a future contact to the list
+    const responseWithFutureContact = {
+      ...getCaseContactHistoryResponse,
+      contactSummary: [
+        ...getCaseContactHistoryResponse.contactSummary,
+        {
+          ...getCaseContactHistoryResponse.contactSummary[0],
+          contactStartDate: DateTime.now().plus({ minutes: 30 }).toISO(),
+        },
+      ],
+    }
+    cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: responseWithFutureContact })
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+    cy.getElement('12 contacts').should('exist')
+  })
+
   it('can view collapsible notes on the contact history page', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
     // contacts
@@ -66,7 +82,6 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by date range', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
     // apply filters without entering dates
@@ -124,7 +139,6 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by free text search', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagSearchFilter=1`)
     cy.fillInput('Search term', 'letter')
     cy.clickButton('Apply filters')
@@ -142,7 +156,6 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by contact type group', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
     cy.contains('Appointments').click()
     cy.selectCheckboxes('Appointments', ['Responsible Officer Change'])
@@ -151,7 +164,6 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by date, contact types and text search', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
 
     // combine date, contact type and text filters
