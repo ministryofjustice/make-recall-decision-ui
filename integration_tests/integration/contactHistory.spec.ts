@@ -5,7 +5,6 @@ import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 import { dedupeList } from '../../server/utils/lists'
 import { removeSystemGenerated } from '../../server/controllers/caseSummary/contactHistory/transformContactHistory'
-import { removeFutureContacts } from '../../server/controllers/caseSummary/contactHistory/removeFutureContacts'
 
 context('Contact history', () => {
   const crn = 'X34983'
