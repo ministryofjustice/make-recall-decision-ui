@@ -1,48 +1,78 @@
-<h1 class='govuk-heading-m govuk-visually-hidden'>Risk<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
-<div class="flex-desktop flex--row-reverse">
-    <div class="flex__item-one-third-desktop">
-        {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
-        {{ mappaWidget(caseSummary.mappa) }}
-        <div class="govuk-body predictor-timeline__heading">
-            <h2 class="govuk-heading-m">Score history</h2>
-            <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+<h1 class='govuk-heading-m govuk-visually-hidden'>Risk<span
+            class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
+    {% if flags.flagShowMockedUi %}
+    <div class="flex-desktop flex--row-reverse">
+        <div class="flex__item-one-third-desktop">
+    {% else %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third-from-desktop">
+    {% endif %}
+        {% if caseSummary.riskOfSeriousHarm %}
+            {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
+        {% else %}
+            <p class='govuk-body'>No RoSH data available.</p>
+        {% endif %}
+        {% if caseSummary.mappa %}
+            {{ mappaWidget(caseSummary.mappa) }}
+        {% else %}
+            <p class='govuk-body'>No MAPPA data available.</p>
+        {% endif %}
+        {% if flags.flagShowMockedUi and caseSummary.predictorScores.historical %}
+            <div class="govuk-body predictor-timeline__heading">
+                <h2 class="govuk-heading-m">Score history</h2>
+                <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+            </div>
+            {{ predictorTimeline(caseSummary.predictorScores.historical) }}
+        {% endif %}
+    </div>
+    {% if flags.flagShowMockedUi %}
+        <div class="flex__item-two-thirds-desktop">
+            {% if caseSummary.natureOfRisk %}
+                {{ oasysCard({
+                    cardHeading: 'Details of the risk',
+                    oasysHeading: caseSummary.natureOfRisk.oasysHeading,
+                    content: caseSummary.natureOfRisk.description
+                }) }}
+            {% endif %}
+            {% if caseSummary.whoIsAtRisk %}
+                {{ oasysCard({
+                    cardHeading: 'Who is at risk',
+                    oasysHeading: caseSummary.whoIsAtRisk.oasysHeading,
+                    content: caseSummary.whoIsAtRisk.description
+                }) }}
+            {% endif %}
+            {% if caseSummary.circumstancesIncreaseRisk %}
+                {{ oasysCard({
+                    cardHeading: 'Circumstances that will increase the risk',
+                    oasysHeading: caseSummary.circumstancesIncreaseRisk.oasysHeading,
+                    content: caseSummary.circumstancesIncreaseRisk.description
+                }) }}
+            {% endif %}
+            {% if caseSummary.predictorScores.current.RSR %}
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                    Risk of serious recidivism (RSR) score - {{ caseSummary.predictorScores.current.RSR.score }}
+                </h2>
+                {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
+            {% endif %}
+
+            {% if caseSummary.predictorScores.current.OSPC %}
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                    OSP/C score
+                </h2>
+                {{ predictorScore(caseSummary.predictorScores.current.OSPC) }}
+            {% endif %}
+
+            {% if caseSummary.predictorScores.current.OSPI %}
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                    OSP/I score
+                </h2>
+                {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
+            {% endif %}
+
+            <h2 class="govuk-heading-m score-header">
+                OGRS score - {{ caseSummary.predictorScores.current.OGRS.score }}
+            </h2>
+            <img src='/assets/images/risk-ogrs.svg' width='100%' alt='OGRS predictor score' />
         </div>
-        {{ predictorTimeline(caseSummary.predictorScores.historical) }}
-    </div>
-    <div class="flex__item-two-thirds-desktop">
-        {{ oasysCard({
-            cardHeading: 'Details of the risk',
-            oasysHeading: caseSummary.natureOfRisk.oasysHeading,
-            content: caseSummary.natureOfRisk.description
-        }) }}
-        {{ oasysCard({
-            cardHeading: 'Who is at risk',
-            oasysHeading: caseSummary.whoIsAtRisk.oasysHeading,
-            content: caseSummary.whoIsAtRisk.description
-        }) }}
-        {{ oasysCard({
-            cardHeading: 'Circumstances that will increase the risk',
-            oasysHeading: caseSummary.circumstancesIncreaseRisk.oasysHeading,
-            content: caseSummary.circumstancesIncreaseRisk.description
-        }) }}
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            Risk of serious recidivism (RSR) score - {{ caseSummary.predictorScores.current.RSR.score }}
-        </h2>
-        {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
-
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            OSP/C score
-        </h2>
-        {{ predictorScore(caseSummary.predictorScores.current.OSPC) }}
-
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            OSP/I score
-        </h2>
-        {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
-
-         <h2 class="govuk-heading-m score-header">
-         OGRS score - {{ caseSummary.predictorScores.current.OGRS.score }}
-         </h2>
-        <img src='/assets/images/risk-ogrs.svg' width='100%' alt='OGRS predictor score'/>
-    </div>
+    {% endif %}
 </div>
