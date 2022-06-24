@@ -22,7 +22,7 @@ export const transformContactHistory = ({
   const allContacts = featureFlags.flagShowSystemGenerated
     ? caseSummary.contactSummary
     : removeSystemGenerated(caseSummary.contactSummary)
-  const pastContacts = removeFutureContacts(caseSummary.contactSummary)
+  const pastContacts = removeFutureContacts(allContacts)
   const {
     errors: errorsDateRange,
     contacts: contactsFilteredByDateRange,

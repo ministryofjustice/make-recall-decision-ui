@@ -260,4 +260,22 @@ describe('transformContactHistory', () => {
     expect(data.contactCount).toEqual(1)
     expect(data.hasActiveFilters).toEqual(true)
   })
+
+  it('shows system contacts if flag is on', () => {
+    const { data } = transformContactHistory({
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
+      filters: defaultFilters,
+      featureFlags: { flagShowSystemGenerated: true },
+    })
+    expect(data.contactCount).toEqual(4)
+  })
+
+  it('hides system contacts if flag is off', () => {
+    const { data } = transformContactHistory({
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
+      filters: defaultFilters,
+      featureFlags: { flagShowSystemGenerated: false },
+    })
+    expect(data.contactCount).toEqual(1)
+  })
 })
