@@ -9,11 +9,15 @@
   <div class="govuk-!-padding-bottom-6 govuk-!-margin-bottom-6 govuk-section-break--visible text-secondary">
     {{ params.oasysHeading.number }} {{ params.oasysHeading.description }}
   </div>
+  {% if params.content %}
   {{ govukDetails({
     summaryHtml: "View more detail<span class='govuk-visually-hidden'> on " + params.cardHeading + "</span>",
     html: contentHtml,
     open: params.open
   }) }}
+  {% else %}
+  <p class='govuk-body'>Not available</p>
+  {% endif %}
 {% endset %}
 
 {{ appSummaryCard({
