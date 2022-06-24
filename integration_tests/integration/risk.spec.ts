@@ -9,7 +9,7 @@ context('Risk page', () => {
     cy.signIn()
   })
 
-  it('shows RoSH and MAPPA components', () => {
+  it('shows RoSH, MAPPA and predictor scores', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
 
@@ -29,9 +29,14 @@ context('Risk page', () => {
 
     // MAPPA level
     cy.getElement('CAT 2/LEVEL 1').should('exist')
+
+    // predictor graphs
+    cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
+    cy.getElement('OSP/C score').should('exist')
+    cy.getElement('OSP/I score').should('exist')
   })
 
-  it('shows messages if RoSH and MAPPA data is missing', () => {
+  it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
@@ -48,6 +53,9 @@ context('Risk page', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.getElement('No RoSH data available.')
     cy.getElement('No MAPPA data available.')
+    cy.getText('ospc-missing').should('equal', 'Not available.')
+    cy.getText('rsr-missing').should('equal', 'Not available.')
+    cy.getText('ospi-missing').should('equal', 'Not available.')
   })
 
   it('shows risk components using mocked data if flag is enabled', () => {
@@ -63,10 +71,7 @@ context('Risk page', () => {
       'contain',
       getCaseRiskResponse.circumstancesIncreaseRisk.description
     )
-    // predictor graphs
-    cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
-    cy.getElement('OSP/C score').should('exist')
-    cy.getElement('OSP/I score').should('exist')
+
     cy.getElement('OGRS score - 12').should('exist')
 
     // score history
