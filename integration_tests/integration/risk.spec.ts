@@ -1,6 +1,7 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
+import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
 
 context('Risk page', () => {
   const crn = 'X34983'
@@ -40,19 +41,14 @@ context('Risk page', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
-      response: {
-        personalDetailsOverview: {
-          name: 'Paula Smith',
-          dateOfBirth: '2000-11-09',
-          age: 21,
-          gender: 'Male',
-          crn: 'A12345',
-        },
-      },
+      response: getCaseRiskNoDataResponse,
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.getElement('No RoSH data available.')
-    cy.getElement('No MAPPA data available.')
+    cy.getElement('UNKNOWN LEVEL RoSH')
+    cy.getElement(
+      'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
+    )
+    cy.getElement('NO MAPPA')
     cy.getText('ospc-missing').should('equal', 'Not available.')
     cy.getText('rsr-missing').should('equal', 'Not available.')
     cy.getText('ospi-missing').should('equal', 'Not available.')

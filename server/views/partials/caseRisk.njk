@@ -2,16 +2,8 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="flex-desktop flex--row-reverse">
     <div class="flex__item-one-third-desktop">
-        {% if caseSummary.riskOfSeriousHarm %}
             {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
-        {% else %}
-            <p class='govuk-body'>No RoSH data available.</p>
-        {% endif %}
-        {% if caseSummary.mappa %}
             {{ mappaWidget(caseSummary.mappa) }}
-        {% else %}
-            <p class='govuk-body'>No MAPPA data available.</p>
-        {% endif %}
         {% if flags.flagShowMockedUi and caseSummary.predictorScores.historical %}
             <div class="govuk-body predictor-timeline__heading">
                 <h2 class="govuk-heading-m">Score history</h2>
@@ -39,9 +31,9 @@
         }) }}
         {% endif %}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            Risk of serious recidivism (RSR) score - {{ caseSummary.predictorScores.current.RSR.score }}
+            Risk of serious recidivism (RSR) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}{% endif %}
         </h2>
-        {% if caseSummary.predictorScores.current.RSR %}
+        {% if caseSummary.predictorScores.current.RSR.score %}
             {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
         {% else %}
             <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
@@ -50,7 +42,7 @@
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
             OSP/C score
         </h2>
-        {% if caseSummary.predictorScores.current.OSPC %}
+        {% if caseSummary.predictorScores.current.OSPC.score %}
             {{ predictorScore(caseSummary.predictorScores.current.OSPC) }}
         {% else %}
             <p class='govuk-body' data-qa='ospc-missing'>Not available.</p>
@@ -59,7 +51,7 @@
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
             OSP/I score
         </h2>
-        {% if caseSummary.predictorScores.current.OSPI %}
+        {% if caseSummary.predictorScores.current.OSPI.score %}
             {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
         {% else %}
             <p class='govuk-body' data-qa='ospi-missing'>Not available.</p>
