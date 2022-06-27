@@ -1,13 +1,17 @@
 <div class="risk-flag-widget">
     <h3 class="govuk-heading-m">Delius risk flags (registers)</h3>
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    {% if flags %}
-    <ul class="govuk-list">
-    {% for risk in flags %}
-        <li>{{ risk }}</li>
-    {% endfor %}
-    </ul>
+    {% if flags != null %}
+        {% if flags.length %}
+            <ul class="govuk-list">
+            {% for risk in flags %}
+                <li>{{ risk }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No risks</p>
+        {% endif %}
     {% else %}
-    <p>No risks</p>
+        <p>Something went wrong. We are unable to show risk flags at this time. Try again later.</p>
     {% endif %}
 </div>
