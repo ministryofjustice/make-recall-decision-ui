@@ -20,6 +20,17 @@ context('Case summary', () => {
     cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
+  it('shows a message if no risk flags', () => {
+    const crn = 'X34983'
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: { ...getCaseOverviewResponse, risk: { flags: [] } },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getElement('No risks').should('exist')
+  })
+
   it('changes label to Offence if there is only one', () => {
     cy.task('getCase', {
       sectionId: 'overview',

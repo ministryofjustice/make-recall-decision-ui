@@ -1,0 +1,72 @@
+{
+  "personalDetailsOverview": {
+    "name": "Paula Smith",
+    "dateOfBirth": "2000-11-09",
+    "age": 21,
+    "gender": "Male",
+    "crn": "A12345"
+  },
+  "riskOfSeriousHarm": {
+    "overallRisk": "",
+    "riskToChildren": "",
+    "riskToPublic": "",
+    "riskToKnownAdult": "",
+    "riskToStaff": "",
+    "lastUpdated": ""
+  },
+  "mappa": {
+    "level": "",
+    "lastUpdated": ""
+  },
+  "predictorScores": {
+    "current": {
+      "RSR": {
+        "level": "",
+        "score": "",
+        "type": "RSR"
+      },
+      "OSPC": {
+        "level": "",
+        "score": "",
+        "type": "OSP/C"
+      },
+      "OSPI": {
+        "level": "",
+        "score": "",
+        "type": "OSP/I"
+      },
+      "OGRS": {
+        "level": "",
+        "score": "",
+        "type": "OGRS"
+      }
+    },
+    "historical": [
+      {
+        "date": "",
+        "scores": {
+          "RSR": {
+            "level": "",
+            "score": "",
+            "type": "RSR"
+          },
+          "OSPC": {
+            "level": "",
+            "score": "",
+            "type": "OSP/C"
+          },
+          "OSPI": {
+            "level": "",
+            "score": "",
+            "type": "OSP/I"
+          },
+          "OGRS": {
+            "level": "",
+            "score": "",
+            "type": "OGRS"
+          }
+        }
+      }
+    ]
+  }
+}

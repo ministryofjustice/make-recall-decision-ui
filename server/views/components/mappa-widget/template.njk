@@ -1,5 +1,15 @@
 <div class="mappa-widget">
-    <h3 class="govuk-heading-m"><strong>{{ params.level | default("NO", true) }}</strong> MAPPA</h3>
+{% if mappa != null %}
+    <h3 class="govuk-heading-m"><strong>{{ mappa.level | default("NO", true) }}</strong> MAPPA</h3>
     <p class="govuk-body-m">Multi-agency public protection arrangements</p>
-    {% if params.level %}<p class="govuk-hint govuk-body-m">Last updated: {{ params.lastUpdated | default("Not known") }}</p>{% endif %}
+    {% if mappa.level and mappa.lastUpdated %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <p class="govuk-hint govuk-body-m">Last updated: {{ mappa.lastUpdated }}</p>
+    {% endif %}
+{% else %}
+    <h3 class="govuk-heading-m"><strong>UNKNOWN</strong> MAPPA</h3>
+    <p class="govuk-body-m">Multi-agency public protection arrangements</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <p class="govuk-body-m">Something went wrong. We are unable to show MAPPA information at this time. Try again later.</p>
+{% endif %}
 </div>

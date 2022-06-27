@@ -34,13 +34,13 @@ rosh-widget__risk--low
 {% endif %}
 {% endmacro %}
 
-{% if params and params.overallRisk %}
-<div class="rosh-widget {{ getOverallRiskLevelClass(params.overallRisk) }}">
-    <h2 class="govuk-heading-m"><strong>{{ getRiskLevelText(params.overallRisk) | upper }}</strong> RoSH</h2>
+{% if roshSummary and roshSummary.overallRisk %}
+<div class="rosh-widget {{ getOverallRiskLevelClass(roshSummary.overallRisk) }}">
+    <h2 class="govuk-heading-m"><strong>{{ getRiskLevelText(roshSummary.overallRisk) | upper }}</strong> RoSH</h2>
     <table class="govuk-table rosh-widget__table">
         <caption class='govuk-!-text-align-left'>
             <p class="govuk-body-m">Risk of serious harm</p>
-            <p class="govuk-hint govuk-body-m">Last updated: {{ params.lastUpdated | default("Not known") }}</p>
+            <p class="govuk-hint govuk-body-m">Last updated: {{ roshSummary.lastUpdated | default("Not known") }}</p>
         </caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -51,27 +51,33 @@ rosh-widget__risk--low
         <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header">Children</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToChildren) }}">{{ getRiskLevelText(params.riskToChildren) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(roshSummary.riskToChildren) }}">{{ getRiskLevelText(roshSummary.riskToChildren) | default("No data") }}</td>
             </tr>
             <tr>
                 <th class="govuk-table__header">Public</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToPublic) }}">{{ getRiskLevelText(params.riskToPublic) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(roshSummary.riskToPublic) }}">{{ getRiskLevelText(roshSummary.riskToPublic) | default("No data") }}</td>
             </tr>
             <tr>
                 <th class="govuk-table__header">Known adult</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToKnownAdult) }}">{{ getRiskLevelText(params.riskToKnownAdult) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(roshSummary.riskToKnownAdult) }}">{{ getRiskLevelText(roshSummary.riskToKnownAdult) | default("No data") }}</td>
             </tr>
             <tr>
                 <th class="govuk-table__header">Staff</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToStaff) }}">{{ getRiskLevelText(params.riskToStaff) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(roshSummary.riskToStaff) }}">{{ getRiskLevelText(roshSummary.riskToStaff) | default("No data") }}</td>
             </tr>
         </tbody>
     </table>
 </div>
-{% else %}
-<div class="rosh-widget {{ roshWidgetClass }}">
-    <h3 class="govuk-heading-m"><strong>NO</strong> RoSH</h3>
+{% elif roshSummary and not roshSummary.overallRisk %}
+<div class="rosh-widget rosh-widget--unknown">
+    <h3 class="govuk-heading-m"><strong>UNKNOWN LEVEL</strong> RoSH</h3>
     <p class="govuk-body-m">Risk of serious harm</p>
-    <p class="govuk-hint govuk-body-m">A RoSH has not been completed for this individual.</p>
+    <p class="govuk-hint govuk-body-m">A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.</p>
+</div>
+{% else %}
+<div class="rosh-widget">
+    <h3 class="govuk-heading-m"><strong>UNKNOWN LEVEL</strong> RoSH</h3>
+    <p class="govuk-body-m">Risk of serious harm</p>
+    <p class="govuk-hint govuk-body-m">Something went wrong. We are unable to show RoSH information at this time. Try again later.</p>
 </div>
 {% endif %}

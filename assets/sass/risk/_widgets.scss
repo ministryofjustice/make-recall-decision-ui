@@ -6,6 +6,7 @@ $high-score-colour: #942514;
 $high-score-border-colour: #d4351c;
 $very-high-score-colour: #711a0d;
 $very-high-score-border-colour: #942514;
+$unknown-score-border-colour: #fd0;
 $mappa-colour: #4c2c92;
 
 .rosh-widget {
@@ -17,6 +18,10 @@ $mappa-colour: #4c2c92;
     margin-bottom: govuk-spacing(1);
     font-weight: 400;
   }
+}
+
+.rosh-widget--unknown {
+  border: 2px solid $unknown-score-border-colour;
 }
 
 .rosh-widget--low {
