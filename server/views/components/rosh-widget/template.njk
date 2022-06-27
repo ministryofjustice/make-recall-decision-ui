@@ -36,7 +36,7 @@ rosh-widget__risk--low
 
 {% if roshSummary and roshSummary.overallRisk %}
 <div class="rosh-widget {{ getOverallRiskLevelClass(roshSummary.overallRisk) }}">
-    <h3 class="govuk-heading-m"><strong>{{ getRiskLevelText(roshSummary.overallRisk) | upper }}</strong> RoSH</h3>
+    <h2 class="govuk-heading-m"><strong>{{ getRiskLevelText(roshSummary.overallRisk) | upper }}</strong> RoSH</h2>
     <table class="govuk-table rosh-widget__table">
         <caption class='govuk-!-text-align-left'>
             <p class="govuk-body-m">Risk of serious harm</p>
