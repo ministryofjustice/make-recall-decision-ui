@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
-import { getValue } from '../../data/fetchFromCacheOrApi'
+import { getRecommendation } from './utils/persistedRecommendation'
 
 export const selectContactsPage = async (req: Request, res: Response): Promise<Response | void> => {
   const { crn } = req.params
@@ -17,13 +17,14 @@ export const selectContactsPage = async (req: Request, res: Response): Promise<R
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
   }
-  const evidence = await getValue(`evidence:${crn}`)
+  const evidence = await getRecommendation(crn)
   res.locals = {
     ...res.locals,
+    crn: crnFormatted,
     ...caseSection,
     addedContacts: evidence?.contacts,
     isSelectContactsPage: true,
   }
   res.locals.pageUrlBase = `/cases/${crnFormatted}/`
-  res.render('pages/recommendation')
+  res.render('pages/recommendation/selectContacts')
 }

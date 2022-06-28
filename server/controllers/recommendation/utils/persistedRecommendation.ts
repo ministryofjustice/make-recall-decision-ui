@@ -9,6 +9,9 @@ export const getRecommendation = async (crn: string) => {
 }
 
 export const saveRecommendation = async ({ data, crn }: { data: unknown; crn: string }) => {
+  if (!crn) {
+    throw new Error(`saveRecommendation - blank CRN`)
+  }
   const redisClient = createRedisClient()
   redisClient.set(cacheKey(crn), JSON.stringify(data))
 }

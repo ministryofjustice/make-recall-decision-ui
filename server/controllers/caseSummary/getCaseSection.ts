@@ -56,7 +56,10 @@ export const getCaseSection = async (
       })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         if (featureFlags.flagRecommendation) {
-          transformed = await selectContactHistoryDecorations({ contacts: caseSummaryRaw.contactSummary, crn })
+          caseSummaryRaw.contactSummary = await selectContactHistoryDecorations({
+            contacts: caseSummaryRaw.contactSummary,
+            crn,
+          })
         }
         transformed = transformContactHistory({
           caseSummary: caseSummaryRaw,

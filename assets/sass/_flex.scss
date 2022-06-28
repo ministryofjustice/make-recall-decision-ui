@@ -32,13 +32,11 @@
 .flex__item-two-thirds-desktop {
   @include govuk-media-query($from: desktop ) {
     width: 66.66%;
-    padding-right: 15px;
   }
 }
 
 .flex__item-one-third-desktop {
   @include govuk-media-query($from: desktop ) {
     width: 33.33%;
-    padding-left: 15px;
   }
 }

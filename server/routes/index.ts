@@ -24,9 +24,9 @@ export default function routes(router: Router): Router {
   get('/flags', getFeatureFlags)
   get('/search', personSearch)
   get('/search-results', personSearchResults)
-  get('/cases/:crn/select-contacts', selectContactsPage)
   get('/cases/:crn/:sectionId', caseSummary)
 
+  get('/recommendation/:crn/select-contacts', selectContactsPage)
   get('/recommendation/:crn/:sectionId', recommendationFormGet)
   post('/recommendation/:crn/:sectionId', recommendationFormPost)
   post('/select-component', contactSelectedHandler)

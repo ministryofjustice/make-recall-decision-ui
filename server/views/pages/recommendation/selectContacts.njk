@@ -1,4 +1,4 @@
-{% extends "../partials/layout.njk" %}
+{% extends "../../partials/layout.njk" %}
 
 {% set pageTitle = makePageTitle({ pageHeading: section.label + " - Add contacts", hasErrors: errors }) %}
 
@@ -24,7 +24,7 @@
                     <li>any other relevant information</li>
                 </ul>
             </div>
-            {% include '../partials/caseContactHistory.njk' %}
+            {% include '../../partials/caseContactHistory.njk' %}
         </div>
     </div>
     <script type="text/javascript" src="/assets/js/evidence-panel.js"></script>

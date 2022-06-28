@@ -1,8 +1,23 @@
+{% from "components/select-component/macro.njk" import selectComponent %}
+
 {% if addedContacts.length %}
     <ul class='govuk-list'>
         {% for contact in addedContacts %}
-            <li>{{ contact.descriptionType }} <span
-                class='text-secondary'>({{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true, shortDate: true }) }})</span>
+            <li>
+            <div class='flex flex--space-between'>
+                <div>
+                    {{ contact.descriptionType }}
+                    <div class='text-secondary govuk-!-font-size-14'>
+                        {{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true, shortDate: true }) }}
+                    </div>
+                </div>
+                {{ selectComponent({
+                    contact: contact,
+                    componentType: 'contact',
+                    crn: crn,
+                    csrfToken: csrfToken
+                }) }}
+            </div>
             </li>{% endfor %}
     </ul>
     <div>

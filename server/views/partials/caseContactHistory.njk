@@ -1,7 +1,7 @@
 <h1 class='govuk-heading-m govuk-visually-hidden'>Contact history<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
-<div class="govuk-grid-row">
+<div class="flex-desktop flex--space-between">
     {% include './contactFilters.njk' %}
-    <div class="govuk-grid-column-two-thirds-from-desktop">
+    <div class="flex__item-two-thirds-desktop govuk-!-padding-left-4">
         {% set innerLoopIndex = 0 %}
         <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>
             {{ countLabel({ count: caseSummary.contactCount, noun: 'contact'}) }}

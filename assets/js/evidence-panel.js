@@ -22,6 +22,9 @@ window.EvidencePanel = function (options = {}) {
           },
         })
         const json = await response.json()
+        if (json.reloadPage === true) {
+          return window.location.reload()
+        }
         $('#evidencePanel').html(json.success)
         $isSelectedInput.val(body.isSelected === '1' ? '0' : '1')
         const $button = $form.find('[data-id="add-button"]')

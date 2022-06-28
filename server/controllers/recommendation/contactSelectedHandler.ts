@@ -9,15 +9,18 @@ export const contactSelectedHandler = async (req: Request, res: Response): Promi
   const contacts = existing?.contacts || []
   const parsed = JSON.parse(contact)
   const updatedContacts =
-    isSelected === '1' ? contacts.filter((c: SelectableContact) => c.id !== parsed.id) : [...contacts, parsed]
+    isSelected === '1'
+      ? contacts.filter((c: SelectableContact) => c.id !== parsed.id)
+      : [...contacts, { ...parsed, added: true }]
   const data = {
     ...(existing || {}),
     contacts: updatedContacts,
   }
-  saveRecommendation({ data, crn })
+  await saveRecommendation({ data, crn })
   res.render(
     'partials/evidenceContactsList',
     {
+      crn,
       addedContacts: data.contacts,
     },
     (err, html) => {
@@ -27,6 +30,7 @@ export const contactSelectedHandler = async (req: Request, res: Response): Promi
       }
       return res.json({
         success: html,
+        reloadPage: isSelected === '1',
       })
     }
   )
