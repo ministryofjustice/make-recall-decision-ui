@@ -1,0 +1,36 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: section.label + " - Add contacts", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav aria-label='Back to person search'>
+        {{ govukBackLink({
+            html: "Back<span class='govuk-visually-hidden'> TBC</span>",
+            href: '#'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class='govuk-heading-l'>Add contacts</h1>
+            <p class='govuk-body'>Add contacts to your recommendation. Include contacts that show:</p>
+            <div class=' govuk-!-margin-bottom-6'>
+                <ul class='govuk-list govuk-list--bullet'>
+                    <li>further offending</li>
+                    <li>police investigations/charges</li>
+                    <li>court dates</li>
+                    <li>any other relevant information</li>
+                </ul>
+            </div>
+            {% include '../partials/caseContactHistory.njk' %}
+        </div>
+    </div>
+    <script type="text/javascript" src="/assets/js/evidence-panel.js"></script>
+    <script nonce='{{ cspNonce }}'>
+      if (typeof EvidencePanel !== 'undefined') {
+        new EvidencePanel({})
+      }
+    </script>
+{% endblock %}

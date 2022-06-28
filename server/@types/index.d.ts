@@ -30,6 +30,10 @@ export interface DecoratedContact extends ContactSummaryResponse {
   }
 }
 
+export interface SelectableContact extends ContactSummaryResponse {
+  id?: number
+}
+
 export interface UiListItem {
   value: string
   text: string

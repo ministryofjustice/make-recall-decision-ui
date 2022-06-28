@@ -38,7 +38,7 @@ const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userI
   return apiResponse
 }
 
-const getValue = async (redisKey: string) => {
+export const getValue = async (redisKey: string) => {
   const value = await getRedisAsync(redisKey)
   if (value) {
     return JSON.parse(value)

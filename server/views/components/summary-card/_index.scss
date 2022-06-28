@@ -106,3 +106,7 @@ $fontSize: 16;
     display: none;
   }
 }
+
+.app-summary-card--highlight {
+  border: 1px solid govuk-colour("light-blue");
+}

@@ -21,10 +21,12 @@ export const formatDateTimeFromIsoString = ({
   isoDate,
   dateOnly = false,
   timeOnly = false,
+  shortDate = false,
 }: {
   isoDate: string
   dateOnly?: boolean
   timeOnly?: boolean
+  shortDate?: boolean
 }) => {
   if (!isDefined(isoDate)) {
     return undefined
@@ -35,7 +37,7 @@ export const formatDateTimeFromIsoString = ({
 
     // date only
     if (dateOnly || isoDate.length === 10) {
-      return dateTime.toFormat(dateFormat)
+      return dateTime.toFormat(shortDate ? dateFormatShortMonth : dateFormat)
     }
     // time only
     if (timeOnly && isoDate.length > 10) {

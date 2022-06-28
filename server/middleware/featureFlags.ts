@@ -2,6 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlag, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
+  flagRecommendation: {
+    label: 'Make a recall recommendation',
+    default: false,
+  },
   dateFilters: {
     label: 'Contacts date filter',
     default: true,

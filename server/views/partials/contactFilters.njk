@@ -1,5 +1,17 @@
 {% if flags.dateFilters or flags.contactTypesFilter or flags.flagSearchFilter %}
     <div class="govuk-grid-column-one-third-from-desktop">
+        {% if flags.flagRecommendation and isSelectContactsPage %}
+        <div class='evidence-panel'>
+            <div class='moj-filter__header'>
+                <h3 class='govuk-heading-m'>Contacts added</h3>
+            </div>
+            <div class='moj-filter__options'>
+                <div  id='evidencePanel'>
+                    {% include '../partials/evidenceContactsList.njk' %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {%- set filterOptionsHtml %}
             {% if flags.flagSearchFilter %}
                 {% for searchFilters in caseSummary.filters.searchFilters.selected %}

@@ -2,6 +2,11 @@
   min-height: 600px
 }
 
+.govuk-width-container--full-width {
+  max-width: none;
+  position: relative;
+}
+
 pre.govuk-body {
   white-space: pre-line
 }
@@ -46,4 +51,20 @@ pre.govuk-body {
   @include govuk-media-query($from: mobile, $until: tablet) {
     display: none;
   }
+}
+
+.reset-button {
+  appearance: none;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0 none;
+  cursor: pointer;
+}
+.link-button {
+  @extend %govuk-link;
+  color: $govuk-link-colour;
+  text-align: left;
 }
