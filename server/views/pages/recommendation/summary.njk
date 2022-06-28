@@ -1,0 +1,56 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Your recommendation", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href:  '/recommendation/' + crn + '/custody'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>Your recommendation</h1>
+            <p class='govuk-body'>You’re recommending a {{ recommendation.recallType.text }}.</p>
+            {% if recommendation.recallType.value in ['STANDARD', 'FIXED_TERM'] %}
+            <p class='govuk-body'>Complete the following sections of the Part A form. You can do this in any order.</p>
+            {% endif %}
+            <ol class="moj-task-list">
+                <li>
+                    <h2 class="moj-task-list__section">
+                        <span class="moj-task-list__section-number"></span>
+                        Alternatives to recall
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}alternatives">Alternatives tried</a>
+                            <strong class="govuk-tag moj-task-list__task-completed">
+                                completed
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        <span class="moj-task-list__section-number"></span>
+                        Custody
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}custody">Is the person in custody?</a>
+                            <strong class="govuk-tag moj-task-list__task-completed">
+                                completed
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            <p class='govuk-body'>Once all the information above is completed you can send this Part A.</p>
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -25,5 +25,5 @@ export const selectContactsPage = async (req: Request, res: Response): Promise<R
     isSelectContactsPage: true,
   }
   res.locals.pageUrlBase = `/cases/${crnFormatted}/`
-  res.render('pages/selectContacts')
+  res.render('pages/recommendation')
 }
