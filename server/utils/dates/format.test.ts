@@ -6,6 +6,11 @@ describe('formatDateTimeFromIsoString', () => {
     expect(formatted).toEqual('12 November 2021')
   })
 
+  it('formats a date in short format', () => {
+    const formatted = formatDateTimeFromIsoString({ isoDate: '2021-11-12', shortDate: true })
+    expect(formatted).toEqual('12 Nov 2021')
+  })
+
   it('formats a date-time, adjusted if inside daylight saving', () => {
     const formatted = formatDateTimeFromIsoString({ isoDate: '2021-06-22T08:43:00.000Z' })
     expect(formatted).toEqual('22 June 2021 at 09:43')

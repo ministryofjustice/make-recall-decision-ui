@@ -10,6 +10,7 @@ import { transformContactHistory } from './contactHistory/transformContactHistor
 import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
+import { selectContactHistoryDecorations } from '../selectContacts/decorateContactHistory'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -54,6 +55,9 @@ export const getCaseSection = async (
         redisKey: `contactHistory:${trimmedCrn}`,
       })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        if (featureFlags.flagRecommendation) {
+          transformed = await selectContactHistoryDecorations({ contacts: caseSummaryRaw.contactSummary, crn })
+        }
         transformed = transformContactHistory({
           caseSummary: caseSummaryRaw,
           filters: reqQuery as unknown as ContactHistoryFilters,

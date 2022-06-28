@@ -1,0 +1,13 @@
+{% if addedContacts.length %}
+    <ul class='govuk-list govuk-list--bullet'>
+        {% for contact in addedContacts %}
+            <li>{{ contact.descriptionType }} <span
+                class='text-secondary'>({{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true, shortDate: true }) }})</span>
+            </li>{% endfor %}
+    </ul>
+    <div>
+        <button class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'>Continue</button>
+    </div>
+{% else %}
+    <p class='govuk-body'>Click 'Add' on one or more contacts</p>
+{% endif %}

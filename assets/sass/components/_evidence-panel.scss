@@ -1,0 +1,19 @@
+:root {
+  --panel-width: 300px;
+}
+
+.panel-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.evidence-panel {
+  position: sticky;
+  top: 0px;
+  background-color: #fff;
+  z-index: 1;
+  margin-bottom: 20px;
+  width: var(--panel-width)
+}
