@@ -2,19 +2,13 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: "Your recommendation", hasErrors: errors }) %}
 
-{% block beforeContent %}
-    {{ govukBackLink({
-        text: "Back",
-        href:  '/recommendation/' + crn + '/custody'
-    }) }}
-{% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>Your recommendation</h1>
-            <p class='govuk-body'>You’re recommending a {{ recommendation.recallType.text }}.</p>
+            <p class='govuk-body'>You’re recommending a {{ recommendation.recallType.text }} for {{ personalDetailsOverview.name }}.</p>
             {% if recommendation.recallType.value in ['STANDARD', 'FIXED_TERM'] %}
             <p class='govuk-body'>Complete the following sections of the Part A form. You can do this in any order.</p>
             {% endif %}
@@ -29,6 +23,20 @@
                             <a class="moj-task-list__task-name" href="{{pageUrlBase}}alternatives">Alternatives tried</a>
                             <strong class="govuk-tag moj-task-list__task-completed">
                                 completed
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        <span class="moj-task-list__section-number"></span>
+                        {{ personalDetailsOverview.name }}'s details
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}personal-details">Address</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
                             </strong>
                         </li>
                     </ul>
@@ -54,7 +62,19 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}behaviour">How has {{ personalDetailsOverview.name }} behaved on licence?</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                        <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{pageUrlBase}}select-contacts">Add contacts as evidence</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}cause">What has led to this recall?</a>
                             <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
                                 to do
                             </strong>

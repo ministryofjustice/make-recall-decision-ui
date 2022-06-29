@@ -3,11 +3,15 @@ import { getRecommendation, saveRecommendation } from './utils/persistedRecommen
 import { alternativesToRecallRefData } from './refData/alternativesToRecallRefData'
 import { custodyOptions } from './refData/custodyOptions'
 import { recallTypes } from './refData/recallTypes'
+import { yesNo } from './refData/yesNo'
+import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import { PersonDetailsResponse } from '../../@types/make-recall-decision-api'
 
 const getRefData = () => ({
   alternativesToRecall: alternativesToRecallRefData,
   custodyOptions,
   recallTypes,
+  yesNo,
 })
 
 const getPageData = (sectionId: string) => {
@@ -25,6 +29,21 @@ const getPageData = (sectionId: string) => {
     case 'custody':
       return {
         pageTemplate: 'custody',
+        nextPageId: 'summary',
+      }
+    case 'behaviour':
+      return {
+        pageTemplate: 'behaviour',
+        nextPageId: 'select-contacts',
+      }
+    case 'cause':
+      return {
+        pageTemplate: 'cause',
+        nextPageId: 'summary',
+      }
+    case 'personal-details':
+      return {
+        pageTemplate: 'personalDetails',
         nextPageId: 'summary',
       }
     case 'summary':
@@ -49,14 +68,20 @@ interface SavedRecommendation {
   recallType: string
   custodyOption: string
   alternativesTried: string | string[]
+  behaviour: string
+  cause: string
+  addressConfirmed: string
 }
 
 const decorateRecommendation = (recommendation: SavedRecommendation) => {
-  const { recallType, custodyOption, alternativesTried } = recommendation
+  const { recallType, custodyOption, alternativesTried, behaviour, cause, addressConfirmed } = recommendation
   const alternatives = Array.isArray(alternativesTried) || !alternativesTried ? alternativesTried : [alternativesTried]
   return {
     recallType: recallType && recallTypes.find(type => type.value === recallType),
     custodyOption: custodyOptions.find(type => type.value === custodyOption),
+    behaviour,
+    cause,
+    addressConfirmed: yesNo.find(type => type.value === addressConfirmed),
     alternativesTried:
       alternatives &&
       (alternatives as Array<string>).map(alt => ({
@@ -71,9 +96,16 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
   const crnFormatted = (crn as string).toUpperCase()
 
   const recommendation = await getRecommendation(crnFormatted)
+  const caseSummary = await getCaseSummary<PersonDetailsResponse>(
+    crnFormatted,
+    'personal-details',
+    res.locals.user.token
+  )
   res.locals = {
     ...res.locals,
     refData: getRefData(),
+    personalDetailsOverview: caseSummary.personalDetailsOverview,
+    currentAddress: caseSummary.currentAddress,
     crn: crnFormatted,
     pageUrlBase: `/recommendation/${crn}/`,
     recommendation: recommendation && decorateRecommendation(recommendation),
