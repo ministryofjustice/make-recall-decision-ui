@@ -5,7 +5,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: '/recommendation/' + crn + '/recall-type'
+        href: '/cases/' + crn + '/overview'
     }) }}
 {% endblock %}
 
@@ -23,7 +23,7 @@
                             </h1>
                         </legend>
                         <div id="contact-hint" class="govuk-hint">
-                            Give full details, including dates where relevant
+                            Give full details, including dates where relevant.
                         </div>
                         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                             {% for item in refData.alternativesToRecall %}

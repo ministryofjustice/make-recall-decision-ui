@@ -4,12 +4,9 @@
     <ul class='govuk-list'>
         {% for contact in addedContacts %}
             <li>
-            <div class='flex flex--space-between'>
+            <div class='flex flex--space-between border-bottom govuk-!-padding-top-1 govuk-!-padding-bottom-1 govuk-!-margin-bottom-1'>
                 <div>
                     {{ contact.descriptionType }}
-                    <div class='text-secondary govuk-!-font-size-14'>
-                        {{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, dateOnly: true, shortDate: true }) }}
-                    </div>
                 </div>
                 {{ selectComponent({
                     contact: contact,
@@ -20,9 +17,9 @@
             </div>
             </li>{% endfor %}
     </ul>
-    <div>
-        <a href='/recommendation/{{ crn }}/cause' class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'>Continue</a>
-    </div>
 {% else %}
-    <p class='govuk-body'>Click 'Add' on one or more contacts</p>
+    <p class='govuk-body'>None added yet, choose contacts from the list.</p>
 {% endif %}
+<div>
+    <a href='/recommendation/{{ crn }}/cause' class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'>Continue</a>
+</div>
