@@ -5,7 +5,7 @@ import { custodyOptions } from './refData/custodyOptions'
 import { recallTypes } from './refData/recallTypes'
 import { yesNo } from './refData/yesNo'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
-import { PersonDetailsResponse } from '../../@types/make-recall-decision-api'
+import { ContactSummaryResponse, PersonDetailsResponse } from '../../@types/make-recall-decision-api'
 
 const getRefData = () => ({
   alternativesToRecall: alternativesToRecallRefData,
@@ -16,14 +16,14 @@ const getRefData = () => ({
 
 const getPageData = (sectionId: string) => {
   switch (sectionId) {
-    case 'recall-type':
-      return {
-        pageTemplate: 'recallType',
-        nextPageId: 'alternatives',
-      }
     case 'alternatives':
       return {
         pageTemplate: 'alternatives',
+        nextPageId: 'recall-type',
+      }
+    case 'recall-type':
+      return {
+        pageTemplate: 'recallType',
         nextPageId: 'custody',
       }
     case 'custody':
