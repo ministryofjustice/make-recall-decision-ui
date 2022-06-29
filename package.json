@@ -126,7 +126,7 @@
     "express": "^4.17.3",
     "express-prom-bundle": "^6.4.1",
     "express-session": "^1.17.2",
-    "govuk-frontend": "^4.1.0",
+    "govuk-frontend": "^4.2.0",
     "helmet": "^5.0.2",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.0",
@@ -187,14 +187,16 @@
     "mocha-junit-reporter": "^2.0.2",
     "multiple-cucumber-html-reporter": "^1.20.0",
     "nock": "^13.2.4",
-    "nodemon": "^2.0.15",
     "openapi-typescript-codegen": "^0.22.0",
     "prettier": "^2.6.2",
     "sass": "^1.50.0",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.4",
-    "typescript": "^4.7.3",
+    "typescript": "^4.7.4",
     "wait-for-expect": "^3.0.2",
     "xml2js": "^0.4.23"
+  },
+  "optionalDependencies": {
+    "nodemon": "^2.0.18"
   }
 }
