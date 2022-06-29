@@ -6,7 +6,7 @@
     <nav aria-label='Back to person search'>
         {{ govukBackLink({
             html: "Back<span class='govuk-visually-hidden'> TBC</span>",
-            href: '#'
+            href: '/recommendation/' + crn + '/behaviour'
         }) }}
     </nav>
 {% endblock %}
@@ -14,7 +14,8 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <h1 class='govuk-heading-l'>Add contacts</h1>
+            <div class="govuk-caption-l">Compliance</div>
+            <h1 class='govuk-heading-l'>Add contacts as evidence</h1>
             <p class='govuk-body'>Add contacts to your recommendation. Include contacts that show:</p>
             <div class=' govuk-!-margin-bottom-6'>
                 <ul class='govuk-list govuk-list--bullet'>

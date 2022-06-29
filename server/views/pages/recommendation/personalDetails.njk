@@ -1,0 +1,44 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Personal details", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/recommendation/' + crn + '/summary'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>Personal details</h1>
+            <p class='govuk-body'>This is the address for {{ personalDetailsOverview.name }} in NDelius.</p>
+            <ul class='govuk-list'>
+            {% if currentAddress.line1 %}<li>{{ currentAddress.line1 }}</li>{% endif %}
+            {% if currentAddress.line2 %}<li>{{ currentAddress.line2 }}</li>{% endif %}
+            {% if currentAddress.town %}<li>{{ currentAddress.town }}</li>{% endif %}
+            {% if currentAddress.postcode %}<li>{{ currentAddress.postcode }}</li>{% endif %}
+            </ul>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukRadios({
+                    idPrefix: "addressConfirmed",
+                    name: "addressConfirmed",
+                    fieldset: {
+                        legend: {
+                            text: "Is this address correct?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: [{ value: 'YES', text: 'Yes'}, { value: 'NO', text: 'No'}]
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
