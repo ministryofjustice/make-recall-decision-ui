@@ -68,3 +68,14 @@ pre.govuk-body {
   color: $govuk-link-colour;
   text-align: left;
 }
+
+
+.moj-task-list__items {
+  @include govuk-media-query($from: tablet) {
+    padding-left: 0 !important;
+  }
+}
+
+.moj-task-list__item {
+  @include govuk-font($size: 19);
+}

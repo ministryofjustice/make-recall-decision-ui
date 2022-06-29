@@ -2,79 +2,147 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: "Your recommendation", hasErrors: errors }) %}
 
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>Your recommendation</h1>
-            <p class='govuk-body'>You’re recommending a {{ recommendation.recallType.text }} for {{ personalDetailsOverview.name }}.</p>
+            <p class='govuk-body'>You’re recommending a {{ recommendation.recallType.text }}
+                for {{ personalDetailsOverview.name }}.</p>
             {% if recommendation.recallType.value in ['STANDARD', 'FIXED_TERM'] %}
-            <p class='govuk-body'>Complete the following sections of the Part A form. You can do this in any order.</p>
+                <p class='govuk-body'>Complete the following sections of the Part A form. You can do this in any
+                    order.</p>
             {% endif %}
             <ol class="moj-task-list">
                 <li>
                     <h2 class="moj-task-list__section">
-                        <span class="moj-task-list__section-number"></span>
                         Alternatives to recall
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}alternatives">Alternatives tried</a>
-                            <strong class="govuk-tag moj-task-list__task-completed">
-                                completed
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}alternatives">Alternatives
+                                tried</a>
+                            {{ taskStatus({ hasData: recommendation.alternativesTried }) }}
                         </li>
                     </ul>
                 </li>
                 <li>
                     <h2 class="moj-task-list__section">
-                        <span class="moj-task-list__section-number"></span>
                         {{ personalDetailsOverview.name }}'s details
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}personal-details">Address</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}personal-details">Address</a>
+                            {{ taskStatus({ hasData: recommendation.addressConfirmed }) }}
                         </li>
                     </ul>
                 </li>
                 <li>
                     <h2 class="moj-task-list__section">
-                        <span class="moj-task-list__section-number"></span>
-                        Custody
-                    </h2>
-                    <ul class="moj-task-list__items">
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}custody">Is the person in custody?</a>
-                            <strong class="govuk-tag moj-task-list__task-completed">
-                                completed
-                            </strong>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <h2 class="moj-task-list__section">
-                        <span class="moj-task-list__section-number"></span>
                         Compliance
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}behaviour">How has {{ personalDetailsOverview.name }} behaved on licence?</a>
+                            <a class="moj-task-list__task-name" href="#">Select breached licence condition(s)</a>
                             <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
                                 to do
                             </strong>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}select-contacts">Add contacts as evidence</a>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}behaviour">How
+                                has {{ personalDetailsOverview.name }} behaved on licence?</a>
+                            {{ taskStatus({ hasData: recommendation.behaviour }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}select-contacts">Add contacts as
+                                evidence</a>
+                            {{ taskStatus({ hasData: recommendation.contacts }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}cause">What has led to this
+                                recall?</a>
+                            {{ taskStatus({ hasData: recommendation.cause }) }}
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Vulnerability and additional needs
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">Would recall affect vulnerability or additional
+                                needs?</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Custody
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}custody">Is the person in
+                                custody?</a>
+                            <strong class="govuk-tag moj-task-list__task-completed">
+                                completed
+                            </strong>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">Contact information</a>
                             <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
                                 to do
                             </strong>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{pageUrlBase}}cause">What has led to this recall?</a>
+                            <a class="moj-task-list__task-name" href="#">Integrated offender manager information</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">Important arrest information</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">Contraband</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Risk profile
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">MAPPA, RoSH and risk registers</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Management approval
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">Line manager approval</a>
+                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
+                                to do
+                            </strong>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="#">Senior manager approval</a>
                             <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
                                 to do
                             </strong>
@@ -82,7 +150,9 @@
                     </ul>
                 </li>
             </ol>
-            <p class='govuk-body'>Once all the information above is completed you can send this Part A.</p>
+            <div>
+                <a href='#' class='govuk-button govuk-button--primary'>Continue</a>
+            </div>
         </div>
     </div>
 

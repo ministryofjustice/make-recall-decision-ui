@@ -71,10 +71,11 @@ interface SavedRecommendation {
   behaviour: string
   cause: string
   addressConfirmed: string
+  contacts: ContactSummaryResponse[]
 }
 
 const decorateRecommendation = (recommendation: SavedRecommendation) => {
-  const { recallType, custodyOption, alternativesTried, behaviour, cause, addressConfirmed } = recommendation
+  const { recallType, custodyOption, alternativesTried, behaviour, cause, addressConfirmed, contacts } = recommendation
   const alternatives = Array.isArray(alternativesTried) || !alternativesTried ? alternativesTried : [alternativesTried]
   return {
     recallType: recallType && recallTypes.find(type => type.value === recallType),
@@ -88,6 +89,7 @@ const decorateRecommendation = (recommendation: SavedRecommendation) => {
         ...(alternativesToRecallRefData.find(type => type.value === alt) || {}),
         detail: recommendation[`alternativesTriedDetail-${alt}`],
       })),
+    contacts,
   }
 }
 
