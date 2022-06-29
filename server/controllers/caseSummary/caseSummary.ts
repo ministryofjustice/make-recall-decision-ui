@@ -23,6 +23,7 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
   }
   res.locals = {
     ...res.locals,
+    crn: crnFormatted,
     ...caseSection,
   }
   res.locals.pageUrlBase = `/cases/${crnFormatted}/`

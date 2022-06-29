@@ -10,7 +10,7 @@ import { transformContactHistory } from './contactHistory/transformContactHistor
 import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
-import { selectContactHistoryDecorations } from '../selectContacts/decorateContactHistory'
+import { selectContactHistoryDecorations } from '../recommendation/decorateContactHistory'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -56,7 +56,10 @@ export const getCaseSection = async (
       })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         if (featureFlags.flagRecommendation) {
-          transformed = await selectContactHistoryDecorations({ contacts: caseSummaryRaw.contactSummary, crn })
+          caseSummaryRaw.contactSummary = await selectContactHistoryDecorations({
+            contacts: caseSummaryRaw.contactSummary,
+            crn,
+          })
         }
         transformed = transformContactHistory({
           caseSummary: caseSummaryRaw,

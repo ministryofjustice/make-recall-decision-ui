@@ -1,6 +1,6 @@
-import { getValue } from '../../data/fetchFromCacheOrApi'
 import { ContactSummaryResponse } from '../../@types/make-recall-decision-api'
 import { SelectableContact } from '../../@types'
+import { getRecommendation } from './utils/persistedRecommendation'
 
 export const selectContactHistoryDecorations = async ({
   contacts,
@@ -9,7 +9,7 @@ export const selectContactHistoryDecorations = async ({
   contacts: ContactSummaryResponse[]
   crn: string
 }) => {
-  const evidence = await getValue(`evidence:${crn}`)
+  const evidence = await getRecommendation(crn)
   return contacts.map((contact, idx) => ({
     ...contact,
     id: idx,

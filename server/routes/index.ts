@@ -9,8 +9,9 @@ import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
 import { parseUrl } from '../middleware/parseUrl'
 import { getFeatureFlags } from '../controllers/featureFlags'
-import { contactSelectedHandler } from '../controllers/selectContacts/contactSelectedHandler'
-import { selectContactsPage } from '../controllers/selectContacts/selectContactsPage'
+import { contactSelectedHandler } from '../controllers/recommendation/contactSelectedHandler'
+import { selectContactsPage } from '../controllers/recommendation/selectContactsPage'
+import { recommendationFormGet, recommendationFormPost } from '../controllers/recommendation/recommendationForm'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -23,9 +24,11 @@ export default function routes(router: Router): Router {
   get('/flags', getFeatureFlags)
   get('/search', personSearch)
   get('/search-results', personSearchResults)
-  get('/cases/:crn/select-contacts', selectContactsPage)
   get('/cases/:crn/:sectionId', caseSummary)
 
+  get('/recommendation/:crn/select-contacts', selectContactsPage)
+  get('/recommendation/:crn/:sectionId', recommendationFormGet)
+  post('/recommendation/:crn/:sectionId', recommendationFormPost)
   post('/select-component', contactSelectedHandler)
 
   return router

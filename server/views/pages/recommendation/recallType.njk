@@ -1,0 +1,37 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "What is your recommendation?", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/cases/' + crn + '/overview'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukRadios({
+                    idPrefix: "recallType",
+                    name: "recallType",
+                    fieldset: {
+                        legend: {
+                            text: "What is your recommendation?",
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    items: refData.recallTypes
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
