@@ -13,6 +13,8 @@ export const selectContactHistoryDecorations = async ({
   return contacts.map((contact, idx) => ({
     ...contact,
     id: idx,
-    added: Boolean(evidence && evidence.contacts.find((c: SelectableContact) => c.id === idx)),
+    added: Boolean(
+      evidence && Array.isArray(evidence.contacts) && evidence.contacts.find((c: SelectableContact) => c.id === idx)
+    ),
   }))
 }
