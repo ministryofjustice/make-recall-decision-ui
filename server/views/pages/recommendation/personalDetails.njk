@@ -33,7 +33,7 @@
                             classes: "govuk-fieldset__legend--m"
                         }
                     },
-                    items: refData.yesNo
+                    items: checkboxItems({ items: refData.yesNo, currentValues: recommendation.addressConfirmed.value })
                 }) }}
                 {{ formSubmitButton() }}
             </form>

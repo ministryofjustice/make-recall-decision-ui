@@ -1,5 +1,6 @@
 import { DatePartsParsed } from '../@types/dates'
 import { SelectedFilterItem, UiListItem, UrlInfo } from '../@types'
+import { isDefined } from './utils'
 
 export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includeTime?: boolean) => {
   const items = [
@@ -59,11 +60,18 @@ export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includ
   return items
 }
 
-export const checkboxItems = ({ items, currentValues }: { items?: UiListItem[]; currentValues?: string[] }) => {
+export const checkboxItems = ({
+  items,
+  currentValues,
+}: {
+  items?: UiListItem[]
+  currentValues?: string | string[]
+}) => {
+  const valuesToMatch = isDefined(currentValues) && !Array.isArray(currentValues) ? [currentValues] : currentValues
   return items.map(item => {
     return {
       ...item,
-      checked: currentValues?.includes(item.value) || undefined,
+      checked: valuesToMatch ? valuesToMatch.includes(item.value) : false,
     }
   })
 }
