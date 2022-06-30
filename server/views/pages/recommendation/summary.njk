@@ -8,12 +8,23 @@
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>Your recommendation</h1>
             <p class='govuk-body'>You’re recommending a {{ recommendation.recallType.text }}
-                for {{ personalDetailsOverview.name }}.</p>
-            {% if recommendation.recallType.value in ['STANDARD', 'FIXED_TERM'] %}
-                <p class='govuk-body'>Complete the following sections of the Part A form. You can do this in any
-                    order.</p>
-            {% endif %}
+                for {{ personalDetailsOverview.name }}.
+                {% if recommendation.recallType.value in ['STANDARD', 'FIXED'] %}
+                    Complete the following  sections of the Part A form. You can do this in any order.
+                {% endif %}
+            </p>
             <ol class="moj-task-list">
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Recall type
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}recall-type">What is your recommendation?</a>
+                            {{ taskStatus({ hasData: recommendation.recallType }) }}
+                        </li>
+                    </ul>
+                </li>
                 <li>
                     <h2 class="moj-task-list__section">
                         Alternatives to recall

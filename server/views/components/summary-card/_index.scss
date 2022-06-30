@@ -1,5 +1,4 @@
 $fontSize: 16;
-
 .app-summary-card {
   border: 1px solid $govuk-border-colour;
 
@@ -109,4 +108,7 @@ $fontSize: 16;
 
 .app-summary-card--highlight {
   border: 1px solid govuk-colour("light-blue");
+}
+.app-summary-card--white  .app-summary-card__header {
+  background-color: white;
 }

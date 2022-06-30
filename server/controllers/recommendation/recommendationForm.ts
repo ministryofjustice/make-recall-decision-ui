@@ -82,6 +82,7 @@ interface SavedRecommendation {
   behaviour: string
   cause: string
   addressConfirmed: string
+  addressConfirmedDetail: string
   contacts: ContactSummaryResponse[]
   licenceConditions: SelectableLicenceCondition[]
 }
@@ -94,6 +95,7 @@ const decorateRecommendation = (recommendation: SavedRecommendation) => {
     behaviour,
     cause,
     addressConfirmed,
+    addressConfirmedDetail,
     contacts,
     licenceConditions,
   } = recommendation
@@ -104,6 +106,7 @@ const decorateRecommendation = (recommendation: SavedRecommendation) => {
     behaviour,
     cause,
     addressConfirmed: yesNo.find(type => type.value === addressConfirmed),
+    addressConfirmedDetail,
     alternativesTried:
       alternatives &&
       (alternatives as Array<string>).map(alt => ({
