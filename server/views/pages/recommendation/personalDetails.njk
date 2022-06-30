@@ -12,18 +12,36 @@
 {% block content %}
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>Personal details</h1>
             <p class='govuk-body'>This is the address for {{ personalDetailsOverview.name }} in NDelius.</p>
             <ul class='govuk-list'>
-            {% if currentAddress.line1 %}<li>{{ currentAddress.line1 }}</li>{% endif %}
-            {% if currentAddress.line2 %}<li>{{ currentAddress.line2 }}</li>{% endif %}
-            {% if currentAddress.town %}<li>{{ currentAddress.town }}</li>{% endif %}
-            {% if currentAddress.postcode %}<li>{{ currentAddress.postcode }}</li>{% endif %}
+                {% if currentAddress.line1 %}
+                    <li>{{ currentAddress.line1 }}</li>{% endif %}
+                {% if currentAddress.line2 %}
+                    <li>{{ currentAddress.line2 }}</li>{% endif %}
+                {% if currentAddress.town %}
+                    <li>{{ currentAddress.town }}</li>{% endif %}
+                {% if currentAddress.postcode %}
+                    <li>{{ currentAddress.postcode }}</li>{% endif %}
             </ul>
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {% set noHtml %}
+                    {{ govukTextarea({
+                        name: "addressConfirmedDetail",
+                        id: "addressConfirmedDetail",
+                        label: {
+                            text: "Enter the correct address",
+                            classes: "govuk-label--s"
+                        },
+                        hint: {
+                            text: "Note - NDelius will not be updated with this address"
+                        },
+                        value: recommendation.addressConfirmedDetail
+                    }) }}
+                {% endset %}
                 {{ govukRadios({
                     idPrefix: "addressConfirmed",
                     name: "addressConfirmed",
@@ -33,7 +51,17 @@
                             classes: "govuk-fieldset__legend--m"
                         }
                     },
-                    items: checkboxItems({ items: refData.yesNo, currentValues: recommendation.addressConfirmed.value })
+                    items: [
+                        { value: 'YES', text: 'Yes', checked: recommendation.addressConfirmed.value == 'YES' },
+                        {
+                            value: 'NO',
+                            text: 'No',
+                            checked: recommendation.addressConfirmed.value == 'NO',
+                            conditional: {
+                            html: noHtml
+                        }
+                        }
+                    ]
                 }) }}
                 {{ formSubmitButton() }}
             </form>
