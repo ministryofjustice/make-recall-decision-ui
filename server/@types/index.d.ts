@@ -30,7 +30,7 @@ export interface DecoratedContact extends ContactSummaryResponse {
   }
 }
 
-export interface SelectableContact extends ContactSummaryResponse {
+export interface SelectableItem {
   id?: number
 }
 

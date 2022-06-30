@@ -9,9 +9,10 @@ import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
 import { parseUrl } from '../middleware/parseUrl'
 import { getFeatureFlags } from '../controllers/featureFlags'
-import { contactSelectedHandler } from '../controllers/recommendation/contactSelectedHandler'
+import { itemSelectedHandler } from '../controllers/recommendation/itemSelectedHandler'
 import { selectContactsPage } from '../controllers/recommendation/selectContactsPage'
 import { recommendationFormGet, recommendationFormPost } from '../controllers/recommendation/recommendationForm'
+import { selectLicenceConditionsPage } from '../controllers/recommendation/selectLicenceConditionsPage'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -27,9 +28,10 @@ export default function routes(router: Router): Router {
   get('/cases/:crn/:sectionId', caseSummary)
 
   get('/recommendation/:crn/select-contacts', selectContactsPage)
+  get('/recommendation/:crn/select-licence-conditions', selectLicenceConditionsPage)
   get('/recommendation/:crn/:sectionId', recommendationFormGet)
   post('/recommendation/:crn/:sectionId', recommendationFormPost)
-  post('/select-component', contactSelectedHandler)
+  post('/select-component', itemSelectedHandler)
 
   return router
 }

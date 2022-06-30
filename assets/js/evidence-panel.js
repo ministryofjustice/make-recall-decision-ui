@@ -11,7 +11,8 @@ window.EvidencePanel = function (options = {}) {
       try {
         const body = {
           crn: $form.find('[name="crn"]').val(),
-          contact: $form.find('[name="contact"]').val(),
+          item: $form.find('[name="item"]').val(),
+          componentType: $form.find('[name="componentType"]').val(),
           isSelected: $isSelectedInput.val(),
         }
         const response = await fetch(action, {

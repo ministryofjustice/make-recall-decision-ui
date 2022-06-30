@@ -1,0 +1,117 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: section.label + " - Add licence conditions", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav aria-label='Back to person search'>
+        {{ govukBackLink({
+            html: "Back<span class='govuk-visually-hidden'> TBC</span>",
+            href: '/recommendation/' + crn + '/summary'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-caption-l">Compliance</div>
+            <h1 class='govuk-heading-l'>Add breached licence condition(s)</h1>
+            <p class='govuk-body'>Which licence conditions has {{ personalDetailsOverview.name }} breached? Add them to
+                the Part A from this list.</p>
+        </div>
+    </div>
+    <div class="flex-desktop flex--space-between">
+        <div class="flex__item-one-third-desktop">
+            <div class='evidence-panel'>
+                <div class='moj-filter__header'>
+                    <h3 class='govuk-heading-m govuk-!-text-align-left'>Licence conditions added</h3>
+                </div>
+                <div class='moj-filter__options'>
+                    <div id='evidencePanel'>
+                        {% include '../../partials/evidenceLicenceConditionsList.njk' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex__item-two-thirds-desktop govuk-!-padding-left-8">
+            {% set standardLicenceConditionsHtml %}
+                {% for condition in refData.standardLicenceConditions %}
+                    {% set actionsHtml %}
+                        {{ selectComponent({
+                            item: condition,
+                            componentType: 'licenceConditions',
+                            crn: caseSummary.personalDetailsOverview.crn,
+                            csrfToken: csrfToken
+                        }) }}
+                    {% endset %}
+                    {% set descriptionHtml %}
+                        <pre class='govuk-body'>{{ condition.description }}</pre>
+                    {% endset %}
+                    <div>
+                        {{ appSummaryCard({
+                            titleHtml: condition.text,
+                            headingLevel: 4,
+                            classes: 'govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
+                            html: descriptionHtml if condition.description else undefined,
+                            actionsHtml: actionsHtml
+                        }) }}
+                    </div>
+                {% endfor %}
+            {% endset %}
+            {% set additionalLicenceConditionsHtml %}
+                {% for condition in refData.additionalLicenceConditions %}
+                    {% set actionsHtml %}
+                        {{ selectComponent({
+                            item: condition,
+                            componentType: 'licenceConditions',
+                            crn: caseSummary.personalDetailsOverview.crn,
+                            csrfToken: csrfToken
+                        }) }}
+                    {% endset %}
+                    {% set titleHtml %}
+                        <div class='govuk-!-font-weight-bold'>{{ condition.text }}</div>
+                    {% endset %}
+                    {% set descriptionHtml %}
+                        <pre class='govuk-body'>{{ condition.description }}</pre>
+                    {% endset %}
+                    <div>
+                        {{ appSummaryCard({
+                            titleHtml: titleHtml,
+                            headingLevel: 4,
+                            classes: 'govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
+                            html: descriptionHtml if condition.description else undefined,
+                            actionsHtml: actionsHtml
+                        }) }}
+                    </div>
+                {% endfor %}
+            {% endset %}
+            {{ govukAccordion({
+                id: "licenceConditions",
+                items: [
+                    {
+                        heading: {
+                            text: "Standard licence conditions"
+                        },
+                        content: {
+                            html: standardLicenceConditionsHtml
+                        }
+                    },
+                    {
+                        heading: {
+                        text: "Additional licence conditions"
+                    },
+                        content: {
+                        html: additionalLicenceConditionsHtml
+                    }
+                    }
+                ]
+            }) }}
+        </div>
+    </div>
+    <script type="text/javascript" src="/assets/js/evidence-panel.js"></script>
+    <script nonce='{{ cspNonce }}'>
+      if (typeof EvidencePanel !== 'undefined') {
+        new EvidencePanel({})
+      }
+    </script>
+{% endblock %}

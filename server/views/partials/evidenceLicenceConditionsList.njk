@@ -1,16 +1,16 @@
 {% from "components/select-component/macro.njk" import selectComponent %}
 
-{% if contacts.length %}
+{% if licenceConditions.length %}
     <ul class='govuk-list'>
-        {% for contact in contacts %}
+        {% for condition in licenceConditions %}
             <li>
             <div class='flex flex--space-between border-bottom govuk-!-padding-top-1 govuk-!-padding-bottom-1 govuk-!-margin-bottom-1 govuk-!-font-size-16'>
                 <div>
-                    {{ contact.descriptionType }}
+                    {{ condition.text }}
                 </div>
                 {{ selectComponent({
-                    item: contact,
-                    componentType: 'contacts',
+                    item: condition,
+                    componentType: 'licenceConditions',
                     crn: crn,
                     csrfToken: csrfToken
                 }) }}
@@ -18,8 +18,8 @@
             </li>{% endfor %}
     </ul>
 {% else %}
-    <p class='govuk-body'>None added yet, choose contacts from the list.</p>
+    <p class='govuk-body'>None added yet, choose licence conditions from the list.</p>
 {% endif %}
 <div>
-    <a href='/recommendation/{{ crn }}/cause' class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'>Continue</a>
+    <a href='/recommendation/{{ crn }}/summary' class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'>Continue</a>
 </div>

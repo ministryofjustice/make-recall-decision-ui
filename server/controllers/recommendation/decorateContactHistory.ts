@@ -1,5 +1,5 @@
 import { ContactSummaryResponse } from '../../@types/make-recall-decision-api'
-import { SelectableContact } from '../../@types'
+import { SelectableItem } from '../../@types'
 import { getRecommendation } from './utils/persistedRecommendation'
 
 export const selectContactHistoryDecorations = async ({
@@ -14,7 +14,7 @@ export const selectContactHistoryDecorations = async ({
     ...contact,
     id: idx,
     added: Boolean(
-      evidence && Array.isArray(evidence.contacts) && evidence.contacts.find((c: SelectableContact) => c.id === idx)
+      evidence && Array.isArray(evidence.contacts) && evidence.contacts.find((c: SelectableItem) => c.id === idx)
     ),
   }))
 }
