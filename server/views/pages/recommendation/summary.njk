@@ -94,8 +94,8 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}custody">Is the person in
-                                custody?</a>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}custody">Is {{ personalDetailsOverview.name }} in
+                                custody now?</a>
                             {{ taskStatus({ hasData: recommendation.custodyOption }) }}
                         </li>
                         <li class="moj-task-list__item">
