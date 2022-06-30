@@ -5,7 +5,7 @@ import { custodyOptions } from './refData/custodyOptions'
 import { recallTypes } from './refData/recallTypes'
 import { yesNo } from './refData/yesNo'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
-import { ContactSummaryResponse, PersonDetailsResponse } from '../../@types/make-recall-decision-api'
+import { ContactSummaryResponse, LicenceCondition, PersonDetailsResponse } from '../../@types/make-recall-decision-api'
 
 const getRefData = () => ({
   alternativesToRecall: alternativesToRecallRefData,
@@ -69,6 +69,12 @@ const getNextPageUrl = ({ crn, sectionId }: { crn: string; sectionId: string }) 
   return getPageUrl({ crn, sectionId: nextPageId })
 }
 
+interface SelectableLicenceCondition {
+  id: string
+  text: string
+  description: string
+}
+
 interface SavedRecommendation {
   recallType: string
   custodyOption: string
@@ -77,10 +83,20 @@ interface SavedRecommendation {
   cause: string
   addressConfirmed: string
   contacts: ContactSummaryResponse[]
+  licenceConditions: SelectableLicenceCondition[]
 }
 
 const decorateRecommendation = (recommendation: SavedRecommendation) => {
-  const { recallType, custodyOption, alternativesTried, behaviour, cause, addressConfirmed, contacts } = recommendation
+  const {
+    recallType,
+    custodyOption,
+    alternativesTried,
+    behaviour,
+    cause,
+    addressConfirmed,
+    contacts,
+    licenceConditions,
+  } = recommendation
   const alternatives = Array.isArray(alternativesTried) || !alternativesTried ? alternativesTried : [alternativesTried]
   return {
     recallType: recallType && recallTypes.find(type => type.value === recallType),
@@ -100,6 +116,7 @@ const decorateRecommendation = (recommendation: SavedRecommendation) => {
       detail: recommendation[`alternativesTriedDetail-${type.value}`],
     })),
     contacts,
+    licenceConditions,
   }
 }
 

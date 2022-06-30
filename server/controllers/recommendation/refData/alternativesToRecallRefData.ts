@@ -2,7 +2,7 @@ export const alternativesToRecallRefData = [
   {
     text: 'Warnings / licence breach letters',
     value: 'WARNINGS',
-    detailsLabel: 'Details and dates of warning',
+    detailsLabel: 'Details and dates of warnings/letters',
   },
   {
     text: 'Increased frequency of reporting',

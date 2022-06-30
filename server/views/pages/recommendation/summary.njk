@@ -43,10 +43,8 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Select breached licence condition(s)</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}select-licence-conditions">Add breached licence condition(s)</a>
+                            {{ taskStatus({ hasData: recommendation.licenceConditions }) }}
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}behaviour">How

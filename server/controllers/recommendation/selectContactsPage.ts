@@ -17,12 +17,12 @@ export const selectContactsPage = async (req: Request, res: Response): Promise<R
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
   }
-  const recommendation = await getRecommendation(crn)
+  const recommendation = await getRecommendation(crnFormatted)
   res.locals = {
     ...res.locals,
     crn: crnFormatted,
     ...caseSection,
-    addedContacts: recommendation?.contacts,
+    contacts: recommendation?.contacts,
     isSelectContactsPage: true,
   }
   res.locals.pageUrlBase = `/cases/${crnFormatted}/`
