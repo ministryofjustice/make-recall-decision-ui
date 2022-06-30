@@ -5,7 +5,7 @@ import { custodyOptions } from './refData/custodyOptions'
 import { recallTypes } from './refData/recallTypes'
 import { yesNo } from './refData/yesNo'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
-import { ContactSummaryResponse, LicenceCondition, PersonDetailsResponse } from '../../@types/make-recall-decision-api'
+import { ContactSummaryResponse, PersonDetailsResponse } from '../../@types/make-recall-decision-api'
 
 const getRefData = () => ({
   alternativesToRecall: alternativesToRecallRefData,
