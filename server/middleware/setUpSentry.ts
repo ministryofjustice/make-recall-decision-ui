@@ -33,7 +33,7 @@ export default function setUpSentry(): Router {
     Sentry.Handlers.requestHandler({
       // Ensure we don't include `data` to avoid sending any PPI
       request: ['cookies', 'headers', 'method', 'query_string', 'url'],
-      user: ['id', 'username', 'permissions'],
+      user: ['id', 'permissions'],
     })
   )
 
