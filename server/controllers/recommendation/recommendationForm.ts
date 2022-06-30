@@ -50,6 +50,11 @@ const getPageData = (sectionId: string) => {
       return {
         pageTemplate: 'summary',
       }
+    case 'clear-data':
+      return {
+        pageTemplate: 'clearData',
+        nextPageId: 'summary',
+      }
     default:
       throw new Error(`Invalid sectionId: ${sectionId}`)
   }
@@ -89,6 +94,11 @@ const decorateRecommendation = (recommendation: SavedRecommendation) => {
         ...(alternativesToRecallRefData.find(type => type.value === alt) || {}),
         detail: recommendation[`alternativesTriedDetail-${alt}`],
       })),
+    alternativesTriedAllOptions: alternativesToRecallRefData.map(type => ({
+      ...type,
+      checked: Boolean(alternatives && (alternatives as Array<string>).find(alt => alt === type.value)),
+      detail: recommendation[`alternativesTriedDetail-${type.value}`],
+    })),
     contacts,
   }
 }
@@ -120,11 +130,13 @@ export const recommendationFormPost = async (req: Request, res: Response): Promi
   const { crn, sectionId } = req.params
   const { _csrf, ...rest } = req.body
   const crnFormatted = (crn as string).toUpperCase()
-
-  const existing = await getRecommendation(crnFormatted)
-  const updated = {
-    ...(existing || {}),
-    ...rest,
+  let updated = {}
+  if (sectionId !== 'clear-data') {
+    const existing = await getRecommendation(crnFormatted)
+    updated = {
+      ...(existing || {}),
+      ...rest,
+    }
   }
   saveRecommendation({ data: updated, crn: crnFormatted })
   res.redirect(303, getNextPageUrl({ crn: crnFormatted, sectionId }))

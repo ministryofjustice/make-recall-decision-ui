@@ -27,7 +27,8 @@
                         },
                         hint: {
                             text: "Give details of how compliant " + ("he" if personalDetailsOverview.gender == 'Male' else "she") + " has been."
-                        }
+                        },
+                        value: recommendation.behaviour
                     }) }}
                 </div>
                 {{ formSubmitButton() }}

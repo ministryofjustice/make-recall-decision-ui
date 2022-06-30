@@ -26,9 +26,9 @@
                             Give full details, including dates where relevant.
                         </div>
                         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                            {% for item in refData.alternativesToRecall %}
+                            {% for item in recommendation.alternativesTriedAllOptions %}
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="option-{{ item.value }}" name="alternativesTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}">
+                                <input class="govuk-checkboxes__input" id="option-{{ item.value }}" name="alternativesTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if item.checked %}checked{% endif %}>
                                 <label class="govuk-label govuk-checkboxes__label" for="option-{{ item.value }}">
                                     {{ item.text }}
                                 </label>
@@ -41,7 +41,7 @@
                                         text: item.detailsLabel,
                                         classes: "govuk-label--s"
                                     },
-                                    value: formValues["alternativesTriedDetail-" + item.value]
+                                    value: item.detail
                                 }) }}
                             </div>
                             {% endfor %}

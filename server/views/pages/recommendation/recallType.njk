@@ -26,7 +26,7 @@
                             isPageHeading: true
                         }
                     },
-                    items: refData.recallTypes
+                    items: checkboxItems({ items: refData.recallTypes, currentValues: recommendation.recallType.value })
                 }) }}
                 {{ formSubmitButton() }}
             </form>
