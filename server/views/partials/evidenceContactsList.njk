@@ -6,10 +6,12 @@
             <li>
             <div class='flex flex--space-between border-bottom govuk-!-padding-top-1 govuk-!-padding-bottom-1 govuk-!-margin-bottom-1 govuk-!-font-size-16'>
                 <div>
-                    {{ contact.descriptionType }}
+                    {{ contact.text }}
                 </div>
                 {{ selectComponent({
-                    item: contact,
+                    itemId: contact.id,
+                    itemText: contact.text,
+                    added: contact.added,
                     componentType: 'contacts',
                     crn: crn,
                     csrfToken: csrfToken

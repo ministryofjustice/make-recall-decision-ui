@@ -9,7 +9,9 @@
                     {{ condition.text }}
                 </div>
                 {{ selectComponent({
-                    item: condition,
+                    itemId: condition.id,
+                    itemText: condition.text,
+                    added: condition.added,
                     componentType: 'licenceConditions',
                     crn: crn,
                     csrfToken: csrfToken

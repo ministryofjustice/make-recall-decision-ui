@@ -38,7 +38,9 @@
                 {% for condition in refData.standardLicenceConditions %}
                     {% set actionsHtml %}
                         {{ selectComponent({
-                            item: condition,
+                            itemId: condition.id,
+                            itemText: condition.text,
+                            added: condition.added,
                             componentType: 'licenceConditions',
                             crn: caseSummary.personalDetailsOverview.crn,
                             csrfToken: csrfToken
@@ -62,7 +64,9 @@
                 {% for condition in refData.additionalLicenceConditions %}
                     {% set actionsHtml %}
                         {{ selectComponent({
-                            item: condition,
+                            itemId: condition.id,
+                            itemText: condition.text,
+                            added: condition.added,
                             componentType: 'licenceConditions',
                             crn: caseSummary.personalDetailsOverview.crn,
                             csrfToken: csrfToken
@@ -98,11 +102,11 @@
                     },
                     {
                         heading: {
-                        text: "Additional licence conditions"
-                    },
+                            text: "Additional licence conditions"
+                        },
                         content: {
-                        html: additionalLicenceConditionsHtml
-                    }
+                            html: additionalLicenceConditionsHtml
+                        }
                     }
                 ]
             }) }}

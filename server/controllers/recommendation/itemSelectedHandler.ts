@@ -4,14 +4,12 @@ import { SelectableItem } from '../../@types'
 import { getRecommendation, saveRecommendation } from './utils/persistedRecommendation'
 
 export const itemSelectedHandler = async (req: Request, res: Response): Promise<Response | void> => {
-  const { crn, item, isSelected, componentType } = req.body
+  const { crn, itemId, itemText, isSelected, componentType } = req.body
   const existing = await getRecommendation(crn)
   const items = existing ? existing[componentType] || [] : []
-  const parsed = JSON.parse(item)
+  const item = { id: itemId, text: itemText }
   const updated =
-    isSelected === '1'
-      ? items.filter((c: SelectableItem) => c.id !== parsed.id)
-      : [...items, { ...parsed, added: true }]
+    isSelected === '1' ? items.filter((c: SelectableItem) => c.id !== item.id) : [...items, { ...item, added: true }]
   const data = {
     ...(existing || {}),
     ...(componentType === 'contacts' ? { contacts: updated } : { licenceConditions: updated }),
