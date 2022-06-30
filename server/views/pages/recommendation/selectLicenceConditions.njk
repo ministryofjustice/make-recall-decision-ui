@@ -51,7 +51,7 @@
                         {{ appSummaryCard({
                             titleHtml: condition.text,
                             headingLevel: 4,
-                            classes: 'govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
+                            classes: 'app-summary-card--white govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
                             html: descriptionHtml if condition.description else undefined,
                             actionsHtml: actionsHtml
                         }) }}
