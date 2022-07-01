@@ -169,6 +169,7 @@ describe('caseSummary', () => {
       await caseSummary(req, res)
     } catch (err) {
       expect(err.message).toEqual('getCaseSection: invalid sectionId: recalls')
+      expect(err.status).toEqual(404)
     }
   })
 

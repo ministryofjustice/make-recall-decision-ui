@@ -6,6 +6,7 @@ import { recallTypes } from './refData/recallTypes'
 import { yesNo } from './refData/yesNo'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import { ContactSummaryResponse, PersonDetailsResponse } from '../../@types/make-recall-decision-api'
+import { AppError } from '../../AppError'
 
 const getRefData = () => ({
   alternativesToRecall: alternativesToRecallRefData,
@@ -56,7 +57,7 @@ const getPageData = (sectionId: string) => {
         nextPageId: 'summary',
       }
     default:
-      throw new Error(`Invalid sectionId: ${sectionId}`)
+      throw new AppError(`recommendation: invalid sectionId: ${sectionId}`, { status: 404 })
   }
 }
 
