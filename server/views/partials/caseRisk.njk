@@ -4,13 +4,11 @@
     <div class="flex__item-one-third-desktop">
             {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
             {{ mappaWidget(caseSummary.mappa) }}
-        {% if flags.flagShowMockedUi and caseSummary.predictorScores.historical %}
             <div class="govuk-body predictor-timeline__heading">
                 <h2 class="govuk-heading-m">Score history</h2>
                 <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
             </div>
             {{ predictorTimeline(caseSummary.predictorScores.historical) }}
-        {% endif %}
     </div>
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
         {% if flags.flagShowMockedUi %}

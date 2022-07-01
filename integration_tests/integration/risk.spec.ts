@@ -35,6 +35,14 @@ context('Risk page', () => {
     cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
     cy.getElement('OSP/C score').should('exist')
     cy.getElement('OSP/I score').should('exist')
+
+    // score history
+    cy.getElement('14 May 2019 at 12:00').should('exist')
+    cy.getElement('12 September 2018 at 12:00').should('exist')
+    cy.getElement('RSR HIGH 18').should('not.be.visible')
+    cy.clickLink('Open all')
+    cy.getElement('RSR HIGH 18').should('be.visible')
+    cy.getElement('RSR MEDIUM 12').should('be.visible')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
@@ -69,13 +77,5 @@ context('Risk page', () => {
     )
 
     cy.getElement('OGRS score - 12').should('exist')
-
-    // score history
-    cy.getElement('14 May 2019 at 12:00').should('exist')
-    cy.getElement('12 September 2018 at 12:00').should('exist')
-    cy.getElement('RSR HIGH 18').should('not.be.visible')
-    cy.clickLink('Open all')
-    cy.getElement('RSR HIGH 18').should('be.visible')
-    cy.getElement('RSR MEDIUM 12').should('be.visible')
   })
 })
