@@ -11,6 +11,7 @@ import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import { selectContactHistoryDecorations } from '../recommendation/decorateContactHistory'
+import { AppError } from '../../AppError'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -75,7 +76,7 @@ export const getCaseSection = async (
       }
       break
     default:
-      throw new Error(`getCaseSection: invalid sectionId: ${sectionId}`)
+      throw new AppError(`getCaseSection: invalid sectionId: ${sectionId}`, { status: 404 })
   }
   caseSummary = caseSummary || caseSummaryRaw
   return {
