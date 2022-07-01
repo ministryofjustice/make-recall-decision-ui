@@ -60,6 +60,7 @@ context('Risk page', () => {
     cy.getText('ospc-missing').should('equal', 'Not available.')
     cy.getText('rsr-missing').should('equal', 'Not available.')
     cy.getText('ospi-missing').should('equal', 'Not available.')
+    cy.getText('score-history-missing').should('equal', 'Not available.')
   })
 
   it('shows risk components using mocked data if flag is enabled', () => {
