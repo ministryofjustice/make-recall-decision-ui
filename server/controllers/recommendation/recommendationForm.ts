@@ -88,6 +88,11 @@ interface SavedRecommendation {
 }
 
 const decorateRecommendation = (recommendation: SavedRecommendation) => {
+  if (!recommendation) {
+    return {
+      alternativesTriedAllOptions: alternativesToRecallRefData,
+    }
+  }
   const {
     recallType,
     custodyOption,
@@ -140,7 +145,7 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
     currentAddress: caseSummary.currentAddress,
     crn: crnFormatted,
     pageUrlBase: `/recommendation/${crn}/`,
-    recommendation: recommendation && decorateRecommendation(recommendation),
+    recommendation: decorateRecommendation(recommendation),
   }
   const pageData = getPageData(sectionId)
   res.render(`pages/recommendation/${pageData.pageTemplate}`)

@@ -2,9 +2,10 @@
 <form class="select-component" action='/select-component?_csrf={{ params.csrfToken }}' method='post' data-id="select-evidence-form"
   {%- for attribute, value in params.attributes %} {{attribute}}="{{value}}"{% endfor %}>
   <input type='hidden' name='crn' value='{{ params.crn }}' />
-  <input type='hidden' name='item' value='{{ params.item | dump | safe }}' />
+  <input type='hidden' name='itemId' value='{{ params.itemId }}' />
+  <input type='hidden' name='itemText' value='{{ params.itemText }}' />
   <input type='hidden' name='componentType' value='{{ params.componentType }}' />
-  <input type='hidden' name='isSelected' value='{{ "1" if params.item.added else "0" }}' />
-  <button type='submit' class='reset-button link-button' data-id='add-button'>{{ "Remove" if params.item.added else "Add" }}</button>
+  <input type='hidden' name='isSelected' value='{{ "1" if params.added else "0" }}' />
+  <button type='submit' class='reset-button link-button' data-id='add-button'>{{ "Remove" if params.added else "Add" }}</button>
 </form>
 </div>

@@ -24,7 +24,7 @@
         <div class="flex__item-one-third-desktop">
             <div class='evidence-panel'>
                 <div class='moj-filter__header'>
-                    <h3 class='govuk-heading-m govuk-!-text-align-left'>Licence conditions added</h3>
+                    <h3 class='govuk-heading-m govuk-!-text-align-left'>Add licence conditions</h3>
                 </div>
                 <div class='moj-filter__options'>
                     <div id='evidencePanel'>
@@ -38,7 +38,9 @@
                 {% for condition in refData.standardLicenceConditions %}
                     {% set actionsHtml %}
                         {{ selectComponent({
-                            item: condition,
+                            itemId: condition.id,
+                            itemText: condition.text,
+                            added: condition.added,
                             componentType: 'licenceConditions',
                             crn: caseSummary.personalDetailsOverview.crn,
                             csrfToken: csrfToken
@@ -62,7 +64,9 @@
                 {% for condition in refData.additionalLicenceConditions %}
                     {% set actionsHtml %}
                         {{ selectComponent({
-                            item: condition,
+                            itemId: condition.id,
+                            itemText: condition.text,
+                            added: condition.added,
                             componentType: 'licenceConditions',
                             crn: caseSummary.personalDetailsOverview.crn,
                             csrfToken: csrfToken
@@ -98,11 +102,11 @@
                     },
                     {
                         heading: {
-                        text: "Additional licence conditions"
-                    },
+                            text: "Additional licence conditions"
+                        },
                         content: {
-                        html: additionalLicenceConditionsHtml
-                    }
+                            html: additionalLicenceConditionsHtml
+                        }
                     }
                 ]
             }) }}

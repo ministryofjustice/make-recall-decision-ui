@@ -11,7 +11,8 @@ window.EvidencePanel = function (options = {}) {
       try {
         const body = {
           crn: $form.find('[name="crn"]').val(),
-          item: $form.find('[name="item"]').val(),
+          itemId: $form.find('[name="itemId"]').val(),
+          itemText: $form.find('[name="itemText"]').val(),
           componentType: $form.find('[name="componentType"]').val(),
           isSelected: $isSelectedInput.val(),
         }

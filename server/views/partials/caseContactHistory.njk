@@ -22,7 +22,9 @@
                 {% set actionsHtml %}
                     {% if flags.flagRecommendation and isSelectContactsPage %}
                     {{ selectComponent({
-                        item: contact,
+                        itemId: contact.id,
+                        itemText: contact.descriptionType,
+                        added: contact.added,
                         componentType: 'contacts',
                         crn: caseSummary.personalDetailsOverview.crn,
                         csrfToken: csrfToken

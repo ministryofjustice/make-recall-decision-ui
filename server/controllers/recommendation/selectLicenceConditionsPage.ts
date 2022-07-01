@@ -22,6 +22,7 @@ export const selectLicenceConditionsPage = async (req: Request, res: Response): 
     crn: crnFormatted,
     ...caseSection,
     licenceConditions: recommendation?.licenceConditions,
+    personalDetailsOverview: (caseSection.caseSummary as LicenceConditionsResponse).personalDetailsOverview,
     refData: {
       standardLicenceConditions,
       additionalLicenceConditions: newestActiveConviction.licenceConditions.map(cond => ({
