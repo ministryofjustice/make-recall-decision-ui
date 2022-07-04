@@ -12,7 +12,7 @@ export default function setUpSentry(): Router {
       // enable Express.js middleware tracing
       new Tracing.Integrations.Express({ app: router }),
     ],
-    ignoreErrors: ['AbortError', /^Invalid URL$/, /^Redis connection to/],
+    ignoreErrors: ['AbortError', /^Invalid URL$/, /^Redis connection to/, 'Non-Error exception captured'],
     // Quarter of all requests will be used for performance sampling
     tracesSampler: samplingContext => {
       const transactionName =
