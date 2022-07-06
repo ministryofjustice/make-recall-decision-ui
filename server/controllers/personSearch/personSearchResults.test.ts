@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { personSearchResults } from './personSearchResults'
 import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
-import AuditService from '../../services/auditService'
+import { AuditService } from '../../services/auditService'
 
 jest.mock('../../data/makeDecisionApiClient')
 
