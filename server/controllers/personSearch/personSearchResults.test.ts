@@ -2,6 +2,7 @@ import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { personSearchResults } from './personSearchResults'
 import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
+import AuditService from '../../services/auditService'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -11,7 +12,7 @@ const token = 'token'
 
 describe('personSearchResults', () => {
   beforeEach(() => {
-    res = mockRes({ token })
+    res = mockRes({ token, locals: { user: { username: 'Dave' } } })
   })
 
   it('should return results for a valid CRN', async () => {
@@ -54,5 +55,16 @@ describe('personSearchResults', () => {
     } catch (err) {
       expect(err).toEqual(apiError)
     }
+  })
+
+  it('should send an audit event', async () => {
+    ;(getPersonsByCrn as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({ query: { crn: '123' } })
+    jest.spyOn(AuditService.prototype, 'personSearch')
+    await personSearchResults(req, res)
+    expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
+      searchTerm: '123',
+      username: 'Dave',
+    })
   })
 })
