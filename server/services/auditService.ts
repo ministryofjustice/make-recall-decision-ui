@@ -30,16 +30,6 @@ export default class AuditService {
       },
     })
   }
-  //
-  // async pageView(pageName: string, username: string) {
-  //   return this.sendAuditMessage({
-  //     action: 'PAGE_VIEW',
-  //     who: username,
-  //     details: {
-  //       pageName,
-  //     },
-  //   })
-  // }
 
   async sendAuditMessage({
     action,
