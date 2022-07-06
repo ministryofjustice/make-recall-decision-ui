@@ -75,3 +75,6 @@ If these are not desired in the cloned project, remove references to `check_outd
 ## Feature flags
 
 A simple [feature flags mechanism](./docs/feature-flags.md) is available to show or hide new features.
+
+## Deployment / configuration
+- [Environment variables](./docs/env-vars.md)

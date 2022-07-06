@@ -2,6 +2,9 @@ import { Request, Response } from 'express'
 import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
 import { validatePersonSearch } from './validators/validatePersonSearch'
 import { routeUrls } from '../../routes/routeUrls'
+import AuditService from '../../services/auditService'
+
+const auditService = new AuditService()
 
 export const personSearchResults = async (req: Request, res: Response) => {
   const { crn } = req.query
@@ -14,4 +17,5 @@ export const personSearchResults = async (req: Request, res: Response) => {
   res.locals.persons = await getPersonsByCrn(searchValue, res.locals.user.token)
   res.locals.crn = searchValue
   res.render('pages/personSearchResults')
+  auditService.personSearch({ searchTerm: searchValue, username: res.locals.user.username })
 }
