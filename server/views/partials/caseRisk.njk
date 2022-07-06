@@ -4,7 +4,7 @@
     <div class="flex__item-one-third-desktop">
             {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
             {{ mappaWidget(caseSummary.mappa) }}
-        {% if caseSummary.predictorScores.historical[0].date %}
+        {% if flags.flagShowMockedUi and caseSummary.predictorScores.historical[0].date %}
             <div class="govuk-body predictor-timeline__heading">
                 <h2 class="govuk-heading-m">Score history</h2>
                 <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
