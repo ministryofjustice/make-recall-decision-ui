@@ -1,5 +1,5 @@
 import { SQSClient } from '@aws-sdk/client-sqs'
-import AuditService from './auditService'
+import { AuditService } from './auditService'
 
 describe('Audit service', () => {
   let auditService: AuditService

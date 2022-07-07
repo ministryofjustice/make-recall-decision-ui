@@ -2,7 +2,7 @@ import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs'
 import logger from '../../logger'
 import config from '../config'
 
-export default class AuditService {
+export class AuditService {
   private sqsClient: SQSClient
 
   constructor(
@@ -27,6 +27,17 @@ export default class AuditService {
       who: username,
       details: {
         searchTerm,
+      },
+    })
+  }
+
+  async caseSummaryView({ sectionId, crn, username }: { sectionId: string; crn: string; username: string }) {
+    return this.sendAuditMessage({
+      action: 'VIEWED_CASE_SUMMARY',
+      who: username,
+      details: {
+        crn,
+        sectionId,
       },
     })
   }

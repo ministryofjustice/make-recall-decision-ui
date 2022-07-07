@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
 import { validatePersonSearch } from './validators/validatePersonSearch'
 import { routeUrls } from '../../routes/routeUrls'
-import AuditService from '../../services/auditService'
+import { AuditService } from '../../services/auditService'
 
 const auditService = new AuditService()
 

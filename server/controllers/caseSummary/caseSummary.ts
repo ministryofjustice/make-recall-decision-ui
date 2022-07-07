@@ -3,6 +3,9 @@ import { isCaseRestrictedOrExcluded, isString } from '../../utils/utils'
 import { CaseSectionId } from '../../@types'
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
+import { AuditService } from '../../services/auditService'
+
+const auditService = new AuditService()
 
 export const caseSummary = async (req: Request, res: Response): Promise<Response | void> => {
   const { crn, sectionId } = req.params
@@ -31,4 +34,5 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     ? 'pages/excludedRestrictedCrn'
     : 'pages/caseSummary'
   res.render(page)
+  auditService.caseSummaryView({ crn: crnFormatted, sectionId, username: res.locals.user.username })
 }

@@ -9,6 +9,7 @@ import caseLicenceConditionsResponse from '../../../api/responses/get-case-licen
 import casePersonalDetailsResponse from '../../../api/responses/get-case-personal-details.json'
 import excludedResponse from '../../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../../api/responses/get-case-restricted.json'
+import { AuditService } from '../../services/auditService'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -18,7 +19,7 @@ const token = 'token'
 
 describe('caseSummary', () => {
   beforeEach(() => {
-    res = mockRes({ token })
+    res = mockRes({ token, locals: { user: { username: 'Dave' } } })
   })
 
   it('should return case details for risk', async () => {
@@ -205,6 +206,18 @@ describe('caseSummary', () => {
     expect(res.locals.section).toEqual({
       id: 'risk',
       label: 'Risk',
+    })
+  })
+
+  it('should send an audit event', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
+    const req = mockReq({ params: { crn, sectionId: 'risk' } })
+    jest.spyOn(AuditService.prototype, 'caseSummaryView')
+    await caseSummary(req, res)
+    expect(AuditService.prototype.caseSummaryView).toHaveBeenCalledWith({
+      crn,
+      sectionId: 'risk',
+      username: 'Dave',
     })
   })
 })
