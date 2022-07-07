@@ -35,6 +35,8 @@ context('Risk page', () => {
     cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
     cy.getElement('OSP/C score').should('exist')
     cy.getElement('OSP/I score').should('exist')
+    // no score history
+    cy.getElement('Score history').should('not.exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
@@ -43,7 +45,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.getElement('UNKNOWN LEVEL RoSH')
     cy.getElement(
       'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
@@ -72,6 +74,7 @@ context('Risk page', () => {
     cy.getElement('OGRS score - 12').should('exist')
 
     // score history
+    cy.getElement('Score history').should('exist')
     cy.getElement('14 May 2019 at 12:00').should('exist')
     cy.getElement('12 September 2018 at 12:00').should('exist')
     cy.getElement('RSR HIGH 18').should('not.be.visible')
