@@ -37,6 +37,7 @@
             content: caseSummary.circumstancesIncreaseRisk.description
         }) }}
         {% endif %}
+        {% if env not in ['PREPRODUCTION', 'PRODUCTION'] %}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
             Risk of serious recidivism (RSR) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}{% endif %}
         </h2>
@@ -62,6 +63,7 @@
             {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
         {% else %}
             <p class='govuk-body' data-qa='ospi-missing'>Not available.</p>
+        {% endif %}
         {% endif %}
         {% if flags.flagShowMockedUi %}
             <h2 class="govuk-heading-m score-header">
