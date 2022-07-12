@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon'
-import path from 'path'
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import { europeLondon, sortListByDateField } from '../../server/utils/dates'
 import { routeUrls } from '../../server/routes/routeUrls'
