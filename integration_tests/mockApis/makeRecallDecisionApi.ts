@@ -54,12 +54,18 @@ export const getHealthCheck = () =>
     response: { status: 'UP' },
   })
 
-export const getDownloadDocument = ({ contents, fileName }) =>
-  mockGet({
-    urlPathPattern: `${routes.getCaseSummary}/(.*)/documents/(.*)`,
-    statusCode: 200,
+export const getDownloadDocument = ({ contents, fileName, contentType }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: `${routes.getCaseSummary}/(.*)/documents/(.*)`,
+    },
     response: {
-      contents,
-      fileName,
+      status: 200,
+      base64Body: contents,
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename*=UTF-8''${fileName}`,
+      },
     },
   })

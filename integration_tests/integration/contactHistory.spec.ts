@@ -100,9 +100,9 @@ context('Contact history', () => {
       cy.task('getDownloadDocument', {
         contents,
         fileName: pdfFileName,
+        contentType: 'application/pdf',
       })
-      cy.clickLink(pdfFileName)
-      cy.downloadedPdf(pdfFileName).should('contain', 'This is a test PDF document')
+      cy.downloadPdf(pdfFileName).should('contain', 'This is a test PDF document')
     })
 
     cy.log('Download a .docx')
@@ -111,9 +111,10 @@ context('Contact history', () => {
       cy.task('getDownloadDocument', {
         contents,
         fileName: docFileName,
+        contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       })
       cy.clickLink(docFileName)
-      cy.downloadedDocX(docFileName).should('contain', 'Lorem ipsum')
+      cy.downloadDocX(docFileName).should('contain', 'Lorem ipsum')
     })
   })
 

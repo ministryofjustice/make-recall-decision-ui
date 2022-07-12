@@ -3,7 +3,6 @@
   "baseUrl": "http://localhost:3007",
   "ignoreTestFiles": "**/!(*.spec).ts",
   "fixturesFolder": "integration_tests/fixtures",
-  "downloadsFolder": "integration_tests/downloads",
   "integrationFolder": "integration_tests/integration",
   "pluginsFile": "integration_tests/plugins/index.ts",
   "screenshotsFolder": "integration_tests/screenshots",

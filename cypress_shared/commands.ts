@@ -183,15 +183,31 @@ Cypress.Commands.add('getRadioOptionByLabel', (groupLabel, value, opts = {}) => 
 
 Cypress.Commands.add('downloadedPdf', fileName => {
   const downloadPath = path.join(Cypress.config('downloadsFolder'), fileName)
+  cy.readFile(downloadPath, 'binary', { timeout: 15000 }).should(buffer => expect(buffer.length).to.be.gt(100))
   return cy.task('readPdf', downloadPath)
 })
 
-Cypress.Commands.add('downloadedDocX', fileName => {
-  const downloadPath = path.join(Cypress.config('downloadsFolder'), fileName)
-  return cy.task('readDocX', downloadPath).then(({ value }) => {
-    return value
+Cypress.Commands.add('downloadFile', linkText => {
+  return cy.contains('a', linkText).then($link => {
+    const url = $link.attr('href')
+    return cy.request({
+      url,
+      encoding: 'base64',
+      gzip: false,
+    })
   })
 })
+
+Cypress.Commands.add('downloadPdf', linkText =>
+  cy.downloadFile(linkText).then(response => cy.task('readPdf', response.body).then(pdf => pdf.text))
+)
+
+Cypress.Commands.add('downloadDocX', linkText =>
+  cy
+    .downloadFile(linkText)
+    .then(response => cy.task('readDocX', response.body))
+    .then(({ value }) => value)
+)
 
 Cypress.Commands.add('readBase64File', fileName => {
   const filePath = path.join(Cypress.config('fixturesFolder'), fileName)
