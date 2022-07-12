@@ -1,3 +1,4 @@
+import { Response } from 'superagent'
 import RestClient from './restClient'
 import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
@@ -13,3 +14,11 @@ export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetai
 
 export const getCaseSummary = <T>(crn: string, sectionId: CaseSectionId, token: string): Promise<T> =>
   restClient(token).get({ path: `${routes.getCaseSummary}/${crn}/${sectionId}` }) as Promise<T>
+
+export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<Response> => {
+  return restClient(token).get({
+    path: `${routes.getCaseSummary}/${crn}/documents/${documentId}`,
+    raw: true,
+    responseType: 'arraybuffer',
+  }) as Promise<Response>
+}

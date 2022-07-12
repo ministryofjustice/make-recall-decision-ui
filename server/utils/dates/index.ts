@@ -33,6 +33,9 @@ export const sortListByDateField = <T>({
   dateKey: string
   newestFirst?: boolean
 }): T[] => {
+  if (!Array.isArray(list)) {
+    return undefined
+  }
   return list.sort((a, b): number => {
     const dateA = getDateProperty(a, dateKey)
     const dateB = getDateProperty(b, dateKey)

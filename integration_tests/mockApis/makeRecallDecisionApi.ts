@@ -53,3 +53,13 @@ export const getHealthCheck = () =>
     statusCode: 200,
     response: { status: 'UP' },
   })
+
+export const getDownloadDocument = ({ contents, fileName }) =>
+  mockGet({
+    urlPathPattern: `${routes.getCaseSummary}/(.*)/documents/(.*)`,
+    statusCode: 200,
+    response: {
+      contents,
+      fileName,
+    },
+  })

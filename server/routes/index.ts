@@ -13,6 +13,7 @@ import { itemSelectedHandler } from '../controllers/recommendation/itemSelectedH
 import { selectContactsPage } from '../controllers/recommendation/selectContactsPage'
 import { recommendationFormGet, recommendationFormPost } from '../controllers/recommendation/recommendationForm'
 import { selectLicenceConditionsPage } from '../controllers/recommendation/selectLicenceConditionsPage'
+import { downloadDocument } from '../controllers/downloadDocument'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -25,6 +26,7 @@ export default function routes(router: Router): Router {
   get('/flags', getFeatureFlags)
   get('/search', personSearch)
   get('/search-results', personSearchResults)
+  get('/cases/:crn/documents/:documentId', downloadDocument)
   get('/cases/:crn/:sectionId', caseSummary)
 
   get('/recommendation/:crn/select-contacts', selectContactsPage)

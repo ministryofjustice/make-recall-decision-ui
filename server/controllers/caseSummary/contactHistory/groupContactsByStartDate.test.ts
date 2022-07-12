@@ -2,6 +2,38 @@ import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 
 describe('groupContactsByStartDate', () => {
+  it('sorts contact documents by lastModifiedAt date, newest first', () => {
+    const contacts = [
+      {
+        contactStartDate: '2022-05-04T11:30:00Z',
+        descriptionType: 'Planned Office Visit (NS)',
+        contactDocuments: [
+          {
+            lastModifiedAt: '2022-07-01T16:03:38.867',
+          },
+          {
+            lastModifiedAt: '2022-07-03T16:12:23.586',
+          },
+          {
+            lastModifiedAt: '2022-07-01T16:57:47.575',
+          },
+        ],
+      },
+    ]
+    const result = groupContactsByStartDate(contacts)
+    expect(result.items[0].items[0].contactDocuments).toEqual([
+      {
+        lastModifiedAt: '2022-07-03T16:12:23.586',
+      },
+      {
+        lastModifiedAt: '2022-07-01T16:57:47.575',
+      },
+      {
+        lastModifiedAt: '2022-07-01T16:03:38.867',
+      },
+    ])
+  })
+
   it('returns a list grouped by start date', () => {
     const result = groupContactsByStartDate([
       {

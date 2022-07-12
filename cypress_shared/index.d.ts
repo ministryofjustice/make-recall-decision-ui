@@ -24,6 +24,8 @@ declare global {
 
       getText(qaAttr: string, opts?: CommandOpts): Chainable<string>
 
+      getListLabels(labelQaAttr: string, opts?: CommandOpts): Chainable<string[]>
+
       fillInput(label: string, val: string, opts?: CommandOpts): Chainable<Element>
 
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
@@ -55,6 +57,12 @@ declare global {
       contactTypeFiltersTotalCount(): Chainable<number>
 
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
+
+      downloadedPdf(fileName: string): Chainable<string>
+
+      downloadedDocX(fileName: string): Chainable<string>
+
+      readBase64File(fileName: string): Chainable<string>
     }
   }
 }
