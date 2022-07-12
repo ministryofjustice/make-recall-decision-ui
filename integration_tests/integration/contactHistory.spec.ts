@@ -95,16 +95,6 @@ context('Contact history', () => {
       'v1.txt',
     ])
 
-    cy.log('Download a text document')
-    const textFileName = 'v1.txt'
-    const textFileContents = 'Text file'
-    cy.task('getDownloadDocument', {
-      contents: textFileContents,
-      fileName: textFileName,
-    })
-    cy.clickLink(textFileName)
-    cy.readFile(path.join(Cypress.config('downloadsFolder'), textFileName)).should('equal', textFileContents)
-
     cy.log('Download a PDF')
     const pdfFileName = 'v1-1.pdf'
     cy.readBase64File('test.pdf').then(contents => {
