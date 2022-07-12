@@ -123,6 +123,7 @@ dist/
 test_results/
 integration_tests/videos/
 integration_tests/screenshots/
+integration_tests/downloads/
 */*.iml
 **/Chart.lock
 e2e_tests/cucumber-json
