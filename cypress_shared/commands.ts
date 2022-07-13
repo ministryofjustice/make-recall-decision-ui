@@ -181,12 +181,6 @@ Cypress.Commands.add('getRadioOptionByLabel', (groupLabel, value, opts = {}) => 
     )
 })
 
-Cypress.Commands.add('downloadedPdf', fileName => {
-  const downloadPath = path.join(Cypress.config('downloadsFolder'), fileName)
-  cy.readFile(downloadPath, 'binary', { timeout: 15000 }).should(buffer => expect(buffer.length).to.be.gt(100))
-  return cy.task('readPdf', downloadPath)
-})
-
 Cypress.Commands.add('downloadFile', linkText => {
   return cy.contains('a', linkText).then($link => {
     const url = $link.attr('href')

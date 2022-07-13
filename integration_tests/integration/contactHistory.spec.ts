@@ -85,7 +85,7 @@ context('Contact history', () => {
   })
 
   it('can download contact documents', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagContactDocuments=1`)
 
     cy.log('Documents sorted by last modified date (newest first)')
     cy.getListLabels('contact-document-label', { parent: '[data-qa="contact-2"]' }).should('deep.equal', [
