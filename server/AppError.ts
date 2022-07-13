@@ -1,11 +1,16 @@
-import { ObjectMap } from './@types'
+type AppErrorType = 'INVALID_CRN'
+
+export interface AppErrorData {
+  [key: string]: unknown
+  errorType?: AppErrorType
+}
 
 export class AppError extends Error {
-  public data = {}
+  public data: AppErrorData = {}
 
   public status: number
 
-  constructor(message: string, data?: ObjectMap<unknown>) {
+  constructor(message: string, data?: AppErrorData) {
     super(message)
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, AppError)
