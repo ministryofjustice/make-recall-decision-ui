@@ -193,6 +193,7 @@ Cypress.Commands.add('downloadFile', linkText => {
 })
 
 Cypress.Commands.add('downloadPdf', linkText =>
+  // @ts-ignore
   cy.downloadFile(linkText).then(response => cy.task('readPdf', response.body).then(pdf => pdf.text))
 )
 
@@ -204,6 +205,6 @@ Cypress.Commands.add('downloadDocX', linkText =>
 )
 
 Cypress.Commands.add('readBase64File', fileName => {
-  const filePath = path.join(Cypress.config('fixturesFolder'), fileName)
+  const filePath = path.join(Cypress.config('fixturesFolder') as string, fileName)
   return cy.task('readBase64File', filePath)
 })
