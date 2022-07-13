@@ -58,7 +58,7 @@ declare global {
 
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
 
-      downloadFile(linkText: string): Chainable<Response<any>>
+      downloadFile(linkText: string): Chainable<Response<unknown>>
 
       downloadPdf(linkText: string): Chainable<string>
 
