@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type ProbationTeam = {
-  code?: string
-  label?: string
-}
+    code?: string;
+    label?: string;
+};

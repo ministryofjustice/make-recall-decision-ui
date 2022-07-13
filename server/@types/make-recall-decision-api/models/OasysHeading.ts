@@ -2,8 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Offence = {
-    mainOffence?: boolean;
+export type OasysHeading = {
+    number?: string;
     description?: string;
-    code?: string;
 };
