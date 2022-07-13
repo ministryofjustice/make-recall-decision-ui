@@ -54,10 +54,51 @@
       "descriptionType": "Prison Offender Manager - Automatic Transfer",
       "contactStartDate": "2022-04-21T10:03:00Z",
       "outcome": "Decision to Recall",
-      "notes": "Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.",
+      "notes": null,
       "enforcementAction": null,
       "systemGenerated": false,
-      "sensitive": false
+      "sensitive": false,
+      "contactDocuments": [
+        {
+          "id": "4fe0f8f5-e34e-4a15-9c00-cb3ad924bea4",
+          "documentName": "v1.txt",
+          "author": "André Petheram",
+          "type": {
+            "code": "CONTACT_DOCUMENT",
+            "description": "Contact related document"
+          },
+          "extendedDescription": "Contact on 01/07/2022 for eMail/Text from Offender",
+          "lastModifiedAt": "2022-07-01T16:03:38.867",
+          "createdAt": "2022-07-01T16:03:38",
+          "parentPrimaryKeyId": 2504858325
+        },
+        {
+          "id": "4d542521-3091-4ce9-ac36-11ca1161ffb0",
+          "documentName": "v1-1.pdf",
+          "author": "André Petheram",
+          "type": {
+            "code": "CONTACT_DOCUMENT",
+            "description": "Contact related document"
+          },
+          "extendedDescription": "Contact on 01/07/2022 for eMail/Text from Offender",
+          "lastModifiedAt": "2022-07-01T16:12:23.586",
+          "createdAt": "2022-07-01T16:12:23",
+          "parentPrimaryKeyId": 2504858325
+        },
+        {
+          "id": "e1ed91b5-e81c-4f61-8666-8498dc961416",
+          "documentName": "view.docx",
+          "author": "André Petheram",
+          "type": {
+            "code": "CONTACT_DOCUMENT",
+            "description": "Contact related document"
+          },
+          "extendedDescription": "Contact on 01/07/2022 for eMail/Text from Offender",
+          "lastModifiedAt": "2022-07-01T16:57:47.575",
+          "createdAt": "2022-07-01T16:57:47",
+          "parentPrimaryKeyId": 2504858325
+        }
+      ]
     },
     {
       "code": "ROC",

@@ -8,6 +8,11 @@ export const groupContactsByStartDate = (contacts: ContactSummaryResponse[]) => 
   const contactsWithDate = contacts.map(contact => ({
     ...contact,
     startDate: DateTime.fromISO(contact.contactStartDate, { zone: europeLondon }).toISODate(),
+    contactDocuments: sortListByDateField({
+      list: contact.contactDocuments,
+      dateKey: 'lastModifiedAt',
+      newestFirst: true,
+    }),
   }))
   const sortedByDate = sortListByDateField({
     list: contactsWithDate,

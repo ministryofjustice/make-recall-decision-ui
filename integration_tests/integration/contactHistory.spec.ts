@@ -35,7 +35,9 @@ context('Contact history', () => {
         'contain',
         formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true })
       )
-      cy.getText('notes', opts).should('equal', contact.notes)
+      if (contact.notes) {
+        cy.getText('notes', opts).should('equal', contact.notes)
+      }
     })
     const dedupedDates = dedupeList(dates)
     dedupedDates.forEach((date, index) => {
@@ -76,7 +78,43 @@ context('Contact history', () => {
     sortedByDate.forEach((contact, index) => {
       dates.push(contact.contactStartDate.substring(0, 10))
       const opts = { parent: `[data-qa="contact-${index}"]` }
-      cy.viewDetails('View more detail', opts).should('equal', contact.notes)
+      if (contact.notes) {
+        cy.viewDetails('View more detail', opts).should('equal', contact.notes)
+      }
+    })
+  })
+
+  it('can download contact documents', () => {
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagContactDocuments=1`)
+
+    cy.log('Documents sorted by last modified date (newest first)')
+    cy.getListLabels('contact-document-label', { parent: '[data-qa="contact-2"]' }).should('deep.equal', [
+      'view.docx',
+      'v1-1.pdf',
+      'v1.txt',
+    ])
+
+    cy.log('Download a PDF')
+    const pdfFileName = 'v1-1.pdf'
+    cy.readBase64File('test.pdf').then(contents => {
+      cy.task('getDownloadDocument', {
+        contents,
+        fileName: pdfFileName,
+        contentType: 'application/pdf',
+      })
+      cy.downloadPdf(pdfFileName).should('contain', 'This is a test PDF document')
+    })
+
+    cy.log('Download a .docx')
+    const docFileName = 'view.docx'
+    cy.readBase64File('test.docx').then(contents => {
+      cy.task('getDownloadDocument', {
+        contents,
+        fileName: docFileName,
+        contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      })
+      cy.clickLink(docFileName)
+      cy.downloadDocX(docFileName).should('contain', 'Lorem ipsum')
     })
   })
 

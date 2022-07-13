@@ -79,6 +79,10 @@ $fontSize: 16;
     margin-bottom: 0;
   }
 
+  .govuk-link {
+    @include govuk-font($size: $fontSize);
+  }
+
   .govuk-table,
   .govuk-summary-list,
   .govuk-table {

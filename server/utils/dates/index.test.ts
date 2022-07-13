@@ -20,4 +20,9 @@ describe('sortListByDateField', () => {
       { a: { b: { c: '2021-02-13' } } },
     ])
   })
+
+  it('returns undefined if the list is undefined', () => {
+    const result = sortListByDateField({ list: undefined, dateKey: 'date' })
+    expect(result).toBeUndefined()
+  })
 })

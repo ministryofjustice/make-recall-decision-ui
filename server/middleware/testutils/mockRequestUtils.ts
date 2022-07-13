@@ -46,6 +46,10 @@ export const mockRes = ({
   render = jest.fn(),
   sendStatus = jest.fn(),
   cookie = jest.fn(),
+  contentType = jest.fn(),
+  header = jest.fn(),
+  send = jest.fn(),
+  set = jest.fn(),
 }: {
   locals?: ObjectMap<unknown>
   token?: string
@@ -53,6 +57,10 @@ export const mockRes = ({
   render?: jest.Mock
   sendStatus?: jest.Mock
   cookie?: jest.Mock
+  contentType?: jest.Mock
+  header?: jest.Mock
+  send?: jest.Mock
+  set?: jest.Mock
 } = {}): Response => {
   return {
     locals: {
@@ -67,6 +75,10 @@ export const mockRes = ({
     render,
     sendStatus,
     cookie,
+    contentType,
+    header,
+    send,
+    set,
   } as unknown as Response
 }
 

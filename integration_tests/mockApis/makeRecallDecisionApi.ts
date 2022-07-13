@@ -53,3 +53,19 @@ export const getHealthCheck = () =>
     statusCode: 200,
     response: { status: 'UP' },
   })
+
+export const getDownloadDocument = ({ contents, fileName, contentType }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: `${routes.getCaseSummary}/(.*)/documents/(.*)`,
+    },
+    response: {
+      status: 200,
+      base64Body: contents,
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename*=UTF-8''${fileName}`,
+      },
+    },
+  })

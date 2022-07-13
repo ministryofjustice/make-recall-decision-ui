@@ -79,3 +79,7 @@ pre.govuk-body {
 .moj-task-list__item {
   @include govuk-font($size: 19);
 }
+
+.valign-middle {
+  vertical-align: middle;
+}

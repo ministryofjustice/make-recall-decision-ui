@@ -1,3 +1,4 @@
+import path from 'path'
 import { exactMatchIgnoreWhitespace } from './utils'
 import { splitIsoDateToParts } from '../server/utils/dates/convert'
 
@@ -82,6 +83,10 @@ Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 
     .next('.govuk-summary-list__value')
     .invoke('text')
     .then(text => text.trim())
+)
+
+Cypress.Commands.add('getListLabels', (labelQaAttr: string, opts = { parent: 'body' }) =>
+  cy.getElement({ qaAttr: labelQaAttr }, opts).then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
 )
 
 Cypress.Commands.add('assertErrorMessage', ({ fieldGroupId, fieldName, errorText }) => {
@@ -174,4 +179,31 @@ Cypress.Commands.add('getRadioOptionByLabel', (groupLabel, value, opts = {}) => 
         .invoke('attr', 'for')
         .then(id => cy.get(`#${id}`))
     )
+})
+
+Cypress.Commands.add('downloadFile', linkText => {
+  return cy.contains('a', linkText).then($link => {
+    const url = $link.attr('href')
+    return cy.request({
+      url,
+      encoding: 'base64',
+      gzip: false,
+    })
+  })
+})
+
+Cypress.Commands.add('downloadPdf', linkText =>
+  cy.downloadFile(linkText).then(response => cy.task('readPdf', response.body).then(pdf => pdf.text))
+)
+
+Cypress.Commands.add('downloadDocX', linkText =>
+  cy
+    .downloadFile(linkText)
+    .then(response => cy.task('readDocX', response.body))
+    .then(({ value }) => value)
+)
+
+Cypress.Commands.add('readBase64File', fileName => {
+  const filePath = path.join(Cypress.config('fixturesFolder'), fileName)
+  return cy.task('readBase64File', filePath)
 })

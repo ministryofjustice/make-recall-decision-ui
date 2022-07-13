@@ -55,18 +55,34 @@
                     <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
                 {% endset %}
                 {% set sectionHtml %}
+                    {% if contact.notes %}
                     {{ govukDetails({
                         summaryText: "View more detail",
                         html: notesHtml,
                         open: contact.searchTextMatch.notesMatched
                     }) }}
+                    {% endif %}
+                    {% if flags.flagContactDocuments and contact.contactDocuments.length %}
+                    <div class='govuk-!-margin-top-1'>
+                        <ul class='govuk-list govuk-!-margin-bottom-0'>
+                        {% for document in contact.contactDocuments %}
+                            <li>
+                                <a href='{{ pageUrlBase }}documents/{{ document.id }}' class='govuk-link' download>
+                                    <img aria-hidden='true' class='valign-middle govuk-!-margin-right-2' src="/assets/images/download-icon.svg" width="15" height="21" />
+                                    <span class='govuk-visually-hidden'>Download document </span><span data-qa='contact-document-label'>{{ document.documentName }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
                 {% endset %}
                 <div data-qa='contact-{{ innerLoopIndex }}'>
                     {{ appSummaryCard({
                         titleHtml: titleHtml,
                         headingLevel: 4,
                         classes: 'govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
-                        html: sectionHtml if contact.notes else undefined,
+                        html: sectionHtml if (contact.notes or (flags.flagContactDocuments and contact.contactDocuments.length)) else undefined,
                         actionsHtml: actionsHtml
                     }) }}
                 </div>
