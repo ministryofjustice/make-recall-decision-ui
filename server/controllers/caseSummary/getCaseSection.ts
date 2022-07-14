@@ -56,7 +56,7 @@ export const getCaseSection = async (
         redisKey: `contactHistory:${trimmedCrn}`,
       })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        if (featureFlags.flagRecommendation) {
+        if (featureFlags.flagRecommendationPrototype) {
           caseSummaryRaw.contactSummary = await selectContactHistoryDecorations({
             contacts: caseSummaryRaw.contactSummary,
             crn,

@@ -20,7 +20,7 @@
                     </div>
                 {% endset %}
                 {% set actionsHtml %}
-                    {% if flags.flagRecommendation and isSelectContactsPage %}
+                    {% if flags.flagRecommendationPrototype and isSelectContactsPage %}
                     {{ selectComponent({
                         itemId: contact.id,
                         itemText: contact.descriptionType,
