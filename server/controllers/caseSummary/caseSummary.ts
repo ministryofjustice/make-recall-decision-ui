@@ -1,21 +1,22 @@
 import { Request, Response } from 'express'
-import { isCaseRestrictedOrExcluded, isString } from '../../utils/utils'
+import { isCaseRestrictedOrExcluded, isString, validateCrn } from '../../utils/utils'
 import { CaseSectionId } from '../../@types'
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
 import { AuditService } from '../../services/auditService'
+import { AppError } from '../../AppError'
 
 const auditService = new AuditService()
 
 export const caseSummary = async (req: Request, res: Response): Promise<Response | void> => {
   const { crn, sectionId } = req.params
-  if (!isString(crn) || !isString(sectionId)) {
-    return res.sendStatus(400)
+  if (!isString(sectionId)) {
+    throw new AppError('Invalid section ID', { status: 404 })
   }
-  const crnFormatted = (crn as string).toUpperCase()
+  const normalizedCrn = validateCrn(crn)
   const { errors, ...caseSection } = await getCaseSection(
     sectionId as CaseSectionId,
-    crnFormatted,
+    normalizedCrn,
     res.locals.user.token,
     res.locals.user.userId,
     req.query,
@@ -26,13 +27,13 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
   }
   res.locals = {
     ...res.locals,
-    crn: crnFormatted,
+    crn: normalizedCrn,
     ...caseSection,
   }
-  res.locals.pageUrlBase = `/cases/${crnFormatted}/`
+  res.locals.pageUrlBase = `/cases/${normalizedCrn}/`
   const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)
     ? 'pages/excludedRestrictedCrn'
     : 'pages/caseSummary'
   res.render(page)
-  auditService.caseSummaryView({ crn: crnFormatted, sectionId, username: res.locals.user.username })
+  auditService.caseSummaryView({ crn: normalizedCrn, sectionId, username: res.locals.user.username })
 }

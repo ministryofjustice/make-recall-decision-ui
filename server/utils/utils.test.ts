@@ -1,4 +1,10 @@
-import convertToTitleCase, { makePageTitle, getProperty, removeParamsFromQueryString, listToString } from './utils'
+import convertToTitleCase, {
+  makePageTitle,
+  getProperty,
+  removeParamsFromQueryString,
+  listToString,
+  validateCrn,
+} from './utils'
 
 describe('listToString', () => {
   it('returns a list for 1 item', () => {
@@ -185,5 +191,32 @@ describe('removeParamsFromQueryString', () => {
       },
     })
     expect(queryString).toEqual('')
+  })
+})
+
+describe('validateCrn', () => {
+  const errorData = {
+    errorType: 'INVALID_CRN',
+    status: 400,
+  }
+  it('throws if CRN is not a string', () => {
+    try {
+      validateCrn(true as unknown as string)
+    } catch (err) {
+      expect(err.data).toEqual(errorData)
+    }
+  })
+
+  it('throws if CRN is an empty string', () => {
+    try {
+      validateCrn('')
+    } catch (err) {
+      expect(err.data).toEqual(errorData)
+    }
+  })
+
+  it('returns a normalized CRN if valid', () => {
+    const result = validateCrn(' x12345 ')
+    expect(result).toEqual('X12345')
   })
 })
