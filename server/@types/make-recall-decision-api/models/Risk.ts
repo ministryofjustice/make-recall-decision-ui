@@ -3,5 +3,5 @@
 /* eslint-disable */
 
 export type Risk = {
-  flags?: Array<string>
-}
+    flags?: Array<string>;
+};

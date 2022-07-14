@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PersonDetails = {
+export type RiskPersonalDetails = {
     name?: string;
     dateOfBirth?: string;
     age?: number;
