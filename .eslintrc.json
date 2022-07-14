@@ -56,7 +56,9 @@
             "semi": false,
             "arrowParens": "avoid"
           }
-        ]
+        ],
+        "no-shadow": "off", // replaced by ts-eslint rule below
+        "@typescript-eslint/no-shadow": "error"
       }
     }
   ],
