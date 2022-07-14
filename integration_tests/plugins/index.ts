@@ -4,7 +4,13 @@ import { resetStubs } from '../mockApis/wiremock'
 
 import auth from '../mockApis/auth'
 import tokenVerification from '../mockApis/tokenVerification'
-import { getPersonsByCrn, getCase, getHealthCheck, getDownloadDocument } from '../mockApis/makeRecallDecisionApi'
+import {
+  getPersonsByCrn,
+  getCase,
+  getHealthCheck,
+  getDownloadDocument,
+  createRecommendation,
+} from '../mockApis/makeRecallDecisionApi'
 import { readPdf, readBase64File, readDocX } from './readFiles'
 
 export default (on: (string, Record) => void): void => {
@@ -22,6 +28,7 @@ export default (on: (string, Record) => void): void => {
     getCase,
     getHealthCheck,
     getDownloadDocument,
+    createRecommendation,
     readPdf,
     readBase64File,
     readDocX,

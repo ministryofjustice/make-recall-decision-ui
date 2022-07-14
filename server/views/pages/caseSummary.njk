@@ -41,7 +41,13 @@
                     <div class="govuk-heading-xl"
                          data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
                 </div>
-                {% if flags.flagRecommendation %}
+                {% if flags.flagRecommendationProd %}
+                    <form method='post' action='/recommendations'>
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                        <input type="hidden" name="crn" value="{{ caseSummary.personalDetailsOverview.crn }}" />
+                        <button class='govuk-button no-wrap-tablet'>Make a recommendation</button>
+                    </form>
+                {% elseif flags.flagRecommendationPrototype %}
                 <div>
                     <a href='/recommendation/{{ caseSummary.personalDetailsOverview.crn }}/alternatives' class='govuk-button no-wrap-tablet'>Make a recommendation</a>
                 </div>

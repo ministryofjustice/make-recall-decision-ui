@@ -14,6 +14,7 @@ import { selectContactsPage } from '../controllers/recommendation/selectContacts
 import { recommendationFormGet, recommendationFormPost } from '../controllers/recommendation/recommendationForm'
 import { selectLicenceConditionsPage } from '../controllers/recommendation/selectLicenceConditionsPage'
 import { downloadDocument } from '../controllers/downloadDocument'
+import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -29,6 +30,9 @@ export default function routes(router: Router): Router {
   get('/cases/:crn/documents/:documentId', downloadDocument)
   get('/cases/:crn/:sectionId', caseSummary)
 
+  post('/recommendations', createRecommendationController)
+
+  // user research prototype
   get('/recommendation/:crn/select-contacts', selectContactsPage)
   get('/recommendation/:crn/select-licence-conditions', selectLicenceConditionsPage)
   get('/recommendation/:crn/:sectionId', recommendationFormGet)
