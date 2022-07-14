@@ -1,7 +1,6 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs'
 import logger from '../../logger'
 import config from '../config'
-import { isPreprodOrProd } from '../utils/utils'
 
 export class AuditService {
   private sqsClient: SQSClient
