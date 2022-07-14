@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { isCaseRestrictedOrExcluded, isString, validateCrn } from '../../utils/utils'
+import { isCaseRestrictedOrExcluded, isPreprodOrProd, isString, validateCrn } from '../../utils/utils'
 import { CaseSectionId } from '../../@types'
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
@@ -35,5 +35,10 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     ? 'pages/excludedRestrictedCrn'
     : 'pages/caseSummary'
   res.render(page)
-  auditService.caseSummaryView({ crn: normalizedCrn, sectionId, username: res.locals.user.username })
+  auditService.caseSummaryView({
+    crn: normalizedCrn,
+    sectionId,
+    username: res.locals.user.username,
+    logErrors: isPreprodOrProd(res.locals.env),
+  })
 }
