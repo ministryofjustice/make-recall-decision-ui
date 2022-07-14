@@ -3,7 +3,9 @@
 /* eslint-disable */
 
 export type SearchByCrnResponse = {
-  name?: string
-  crn?: string
-  dateOfBirth?: string
-}
+    userExcluded?: boolean;
+    userRestricted?: boolean;
+    name?: string;
+    crn?: string;
+    dateOfBirth?: string;
+};

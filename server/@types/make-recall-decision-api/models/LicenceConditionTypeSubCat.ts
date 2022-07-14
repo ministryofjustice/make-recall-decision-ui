@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type LicenceConditionTypeSubCat = {
-  code: string
-  description: string
-}
+    code: string;
+    description: string;
+};
