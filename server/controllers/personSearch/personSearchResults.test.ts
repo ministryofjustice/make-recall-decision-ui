@@ -65,6 +65,7 @@ describe('personSearchResults', () => {
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
       searchTerm: '123',
       username: 'Dave',
+      logErrors: true,
     })
   })
 })

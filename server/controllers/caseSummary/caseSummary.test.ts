@@ -221,6 +221,7 @@ describe('caseSummary', () => {
       crn: 'A1234AB',
       sectionId: 'risk',
       username: 'Dave',
+      logErrors: true,
     })
   })
 })

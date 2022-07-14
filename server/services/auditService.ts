@@ -1,6 +1,7 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs'
 import logger from '../../logger'
 import config from '../config'
+import { isPreprodOrProd } from '../utils/utils'
 
 export class AuditService {
   private sqsClient: SQSClient
@@ -21,17 +22,36 @@ export class AuditService {
     })
   }
 
-  async personSearch({ searchTerm, username }: { searchTerm: string; username: string }) {
+  async personSearch({
+    searchTerm,
+    username,
+    logErrors,
+  }: {
+    searchTerm: string
+    username: string
+    logErrors: boolean
+  }) {
     return this.sendAuditMessage({
       action: 'SEARCHED_PERSONS',
       who: username,
       details: {
         searchTerm,
       },
+      logErrors,
     })
   }
 
-  async caseSummaryView({ sectionId, crn, username }: { sectionId: string; crn: string; username: string }) {
+  async caseSummaryView({
+    sectionId,
+    crn,
+    username,
+    logErrors,
+  }: {
+    sectionId: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
     return this.sendAuditMessage({
       action: 'VIEWED_CASE_SUMMARY',
       who: username,
@@ -39,6 +59,7 @@ export class AuditService {
         crn,
         sectionId,
       },
+      logErrors,
     })
   }
 
@@ -47,11 +68,13 @@ export class AuditService {
     who,
     timestamp = new Date(),
     details,
+    logErrors,
   }: {
     action: string
     who: string
     timestamp?: Date
     details: object
+    logErrors: boolean
   }) {
     try {
       const message = JSON.stringify({
@@ -71,7 +94,9 @@ export class AuditService {
 
       logger.info(`SQS message sent (${messageResponse.MessageId})`)
     } catch (error) {
-      logger.error('Problem sending message to SQS queue', error)
+      if (logErrors) {
+        logger.error('Problem sending message to SQS queue', error)
+      }
     }
   }
 }

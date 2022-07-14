@@ -4,6 +4,7 @@ import convertToTitleCase, {
   removeParamsFromQueryString,
   listToString,
   validateCrn,
+  isPreprodOrProd,
 } from './utils'
 
 describe('listToString', () => {
@@ -218,5 +219,23 @@ describe('validateCrn', () => {
   it('returns a normalized CRN if valid', () => {
     const result = validateCrn(' x12345 ')
     expect(result).toEqual('X12345')
+  })
+})
+
+describe('isPreprodOrProd', () => {
+  it('returns false if given undefined', () => {
+    expect(isPreprodOrProd()).toEqual(false)
+  })
+
+  it('returns false if given DEVELOPMENT', () => {
+    expect(isPreprodOrProd('DEVELOPMENT')).toEqual(false)
+  })
+
+  it('returns true if given PREPRODUCTION', () => {
+    expect(isPreprodOrProd('PREPRODUCTION')).toEqual(true)
+  })
+
+  it('returns true if given PRODUCTION', () => {
+    expect(isPreprodOrProd('PRODUCTION')).toEqual(true)
   })
 })
