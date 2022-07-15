@@ -28,18 +28,20 @@ const mockGet = ({
     },
   })
 
-const mockPost = ({
+const mockUpdate = ({
   urlPathPattern,
   statusCode = 200,
   response,
+  method = 'POST',
 }: {
   urlPathPattern: string
   statusCode: number
   response: unknown
+  method?: 'POST' | 'PATCH'
 }) =>
   stubFor({
     request: {
-      method: 'POST',
+      method,
       urlPathPattern,
     },
     response: {
@@ -94,8 +96,23 @@ export const getDownloadDocument = ({ contents, fileName, contentType }) =>
   })
 
 export const createRecommendation = ({ statusCode, response }: { statusCode: number; response?: ObjectMap<unknown> }) =>
-  mockPost({
+  mockUpdate({
     urlPathPattern: routes.recommendations,
+    statusCode,
+    response,
+  })
+
+export const getRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.recommendations}/(.*)`,
+    statusCode,
+    response,
+  })
+
+export const updateRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)`,
+    method: 'PATCH',
     statusCode,
     response,
   })

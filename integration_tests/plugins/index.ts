@@ -10,6 +10,8 @@ import {
   getHealthCheck,
   getDownloadDocument,
   createRecommendation,
+  getRecommendation,
+  updateRecommendation,
 } from '../mockApis/makeRecallDecisionApi'
 import { readPdf, readBase64File, readDocX } from './readFiles'
 
@@ -29,6 +31,8 @@ export default (on: (string, Record) => void): void => {
     getHealthCheck,
     getDownloadDocument,
     createRecommendation,
+    getRecommendation,
+    updateRecommendation,
     readPdf,
     readBase64File,
     readDocX,

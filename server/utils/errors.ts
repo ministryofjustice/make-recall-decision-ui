@@ -2,6 +2,8 @@ import { FormError, KeyedFormErrors, NamedFormError, ObjectMap } from '../@types
 import { ValidationError } from '../@types/dates'
 import { MIN_VALUE_YEAR } from './dates/convert'
 import { listToString } from './utils'
+import { strings } from '../textStrings/en'
+import { SanitisedError } from '../sanitisedError'
 
 export const makeErrorObject = ({
   id,
@@ -70,4 +72,19 @@ export const formatValidationErrorMessage = (validationError: ValidationError, f
 export const invalidDateInputPart = (validationError: ValidationError, fieldLabel?: string): string => {
   const part = validationError.invalidParts?.length ? validationError.invalidParts[0] : 'day'
   return `${fieldLabel}-${part}`
+}
+
+export const saveErrorObject = {
+  name: 'saveError',
+  text: strings.errors.saveChanges,
+}
+
+export const saveErrorWithDetails = ({ err, isProduction }: { err: SanitisedError; isProduction: boolean }) => {
+  if (isProduction) {
+    return saveErrorObject
+  }
+  return {
+    name: 'saveError',
+    text: err.text || err.stack,
+  }
 }
