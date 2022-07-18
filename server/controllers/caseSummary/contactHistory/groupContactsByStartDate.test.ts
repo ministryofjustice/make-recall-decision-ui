@@ -2,7 +2,7 @@ import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 
 describe('groupContactsByStartDate', () => {
-  it('sorts contact documents by lastModifiedAt date, newest first', () => {
+  it('sorts contact documents by lastModifiedAt date, newest first; and adds filenames without extensions', () => {
     const contacts = [
       {
         contactStartDate: '2022-05-04T11:30:00Z',
@@ -10,12 +10,15 @@ describe('groupContactsByStartDate', () => {
         contactDocuments: [
           {
             lastModifiedAt: '2022-07-01T16:03:38.867',
+            documentName: 'v1.txt',
           },
           {
             lastModifiedAt: '2022-07-03T16:12:23.586',
+            documentName: 'my.document.pdf',
           },
           {
             lastModifiedAt: '2022-07-01T16:57:47.575',
+            documentName: 'ANOTHER.docx',
           },
         ],
       },
@@ -24,12 +27,18 @@ describe('groupContactsByStartDate', () => {
     expect(result.items[0].items[0].contactDocuments).toEqual([
       {
         lastModifiedAt: '2022-07-03T16:12:23.586',
+        documentName: 'my.document.pdf',
+        documentNameNoExtension: 'my.document',
       },
       {
         lastModifiedAt: '2022-07-01T16:57:47.575',
+        documentName: 'ANOTHER.docx',
+        documentNameNoExtension: 'ANOTHER',
       },
       {
         lastModifiedAt: '2022-07-01T16:03:38.867',
+        documentName: 'v1.txt',
+        documentNameNoExtension: 'v1',
       },
     ])
   })
