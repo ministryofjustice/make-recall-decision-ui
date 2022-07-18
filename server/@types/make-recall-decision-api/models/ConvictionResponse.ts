@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { CaseDocument } from './CaseDocument';
 import type { LicenceCondition } from './LicenceCondition';
 import type { Offence } from './Offence';
 
@@ -18,4 +19,5 @@ export type ConvictionResponse = {
     statusCode?: string;
     statusDescription?: string;
     licenceConditions?: Array<LicenceCondition>;
+    licenceDocuments?: Array<CaseDocument>;
 };

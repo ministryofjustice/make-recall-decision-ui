@@ -3,7 +3,7 @@ import { CaseSectionId, ContactHistoryFilters, ObjectMap } from '../../@types'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/models/ContactHistoryResponse'
-import { CaseRisk } from '../../@types/make-recall-decision-api/models/CaseRisk'
+import { RiskResponse } from '../../@types/make-recall-decision-api/models/RiskResponse'
 import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './contactHistory/transformContactHistory'
@@ -33,7 +33,7 @@ export const getCaseSection = async (
       sectionLabel = 'Overview'
       break
     case 'risk':
-      caseSummary = await getCaseSummary<CaseRisk>(trimmedCrn, sectionId, token)
+      caseSummary = await getCaseSummary<RiskResponse>(trimmedCrn, sectionId, token)
       sectionLabel = 'Risk'
       break
     case 'personal-details':
@@ -56,7 +56,7 @@ export const getCaseSection = async (
         redisKey: `contactHistory:${trimmedCrn}`,
       })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        if (featureFlags.flagRecommendation) {
+        if (featureFlags.flagRecommendationPrototype) {
           caseSummaryRaw.contactSummary = await selectContactHistoryDecorations({
             contacts: caseSummaryRaw.contactSummary,
             crn,

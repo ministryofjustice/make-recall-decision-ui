@@ -3,6 +3,7 @@ import config from '../config'
 import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
 import { FormError, ObjectMap } from '../@types'
 import { UserAccessResponse } from '../@types/make-recall-decision-api/models/UserAccessResponse'
+import { AppError } from '../AppError'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -92,3 +93,21 @@ export const removeParamsFromQueryString = ({
 
 export const isCaseRestrictedOrExcluded = (userAccessResponse: UserAccessResponse) =>
   userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
+
+export const validateCrn = (crn: unknown) => {
+  try {
+    if (!isString(crn)) {
+      throw new Error()
+    }
+    if ((crn as string).trim() === '') {
+      throw new Error()
+    }
+    return normalizeCrn(crn as string)
+  } catch (err) {
+    throw new AppError('Invalid CRN', { status: 400, errorType: 'INVALID_CRN' })
+  }
+}
+
+export const normalizeCrn = (crn: string) => crn.trim().toUpperCase()
+
+export const isPreprodOrProd = (env?: string) => ['PREPRODUCTION', 'PRODUCTION'].includes(env)

@@ -28,6 +28,31 @@ const mockGet = ({
     },
   })
 
+const mockUpdate = ({
+  urlPathPattern,
+  statusCode = 200,
+  response,
+  method = 'POST',
+}: {
+  urlPathPattern: string
+  statusCode: number
+  response: unknown
+  method?: 'POST' | 'PATCH'
+}) =>
+  stubFor({
+    request: {
+      method,
+      urlPathPattern,
+    },
+    response: {
+      status: statusCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: response,
+    },
+  })
+
 export const getPersonsByCrn = ({ statusCode, response }) =>
   mockGet({
     urlPathPattern: routes.personSearch,
@@ -68,4 +93,26 @@ export const getDownloadDocument = ({ contents, fileName, contentType }) =>
         'Content-Disposition': `attachment; filename*=UTF-8''${fileName}`,
       },
     },
+  })
+
+export const createRecommendation = ({ statusCode, response }: { statusCode: number; response?: ObjectMap<unknown> }) =>
+  mockUpdate({
+    urlPathPattern: routes.recommendations,
+    statusCode,
+    response,
+  })
+
+export const getRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.recommendations}/(.*)`,
+    statusCode,
+    response,
+  })
+
+export const updateRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)`,
+    method: 'PATCH',
+    statusCode,
+    response,
   })

@@ -2,6 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Crn = {
-  value: string
+export type CreateRecommendationResponse = {
+  id: string
 }

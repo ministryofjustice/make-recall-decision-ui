@@ -33,11 +33,4 @@ describe('downloadDocument', () => {
     expect(res.set).toHaveBeenCalledWith(headers)
     expect(res.send).toHaveBeenCalledWith(downloadFileContents)
   })
-
-  it('calls next middleware if document fetch fails', async () => {
-    const err = new Error('API error')
-    ;(getDocumentContents as jest.Mock).mockRejectedValue(err)
-    await downloadDocument(req, res, next)
-    expect(next).toHaveBeenCalledWith(err)
-  })
 })

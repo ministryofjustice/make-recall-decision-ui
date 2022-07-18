@@ -155,11 +155,14 @@ describe('caseSummary', () => {
     })
   })
 
-  it('should return 400 for an invalid CRN', async () => {
+  it('should throw for an invalid CRN', async () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ params: { crn: invalidCrn, sectionId: 'contact-log' } })
-    await caseSummary(req, res)
-    expect(res.sendStatus).toHaveBeenCalledWith(400)
+    try {
+      await caseSummary(req, res)
+    } catch (err) {
+      expect(err.status).toEqual(400)
+    }
   })
 
   it('should throw for an invalid section param', async () => {
@@ -177,7 +180,7 @@ describe('caseSummary', () => {
   it('should throw if the API call errors', async () => {
     const apiError = { status: 500 }
     ;(getCaseSummary as jest.Mock).mockRejectedValue(apiError)
-    const req = mockReq({ query: { crn } })
+    const req = mockReq({ params: { crn, sectionId: 'risk' } })
     try {
       await caseSummary(req, res)
     } catch (err) {
@@ -215,9 +218,10 @@ describe('caseSummary', () => {
     jest.spyOn(AuditService.prototype, 'caseSummaryView')
     await caseSummary(req, res)
     expect(AuditService.prototype.caseSummaryView).toHaveBeenCalledWith({
-      crn,
+      crn: 'A1234AB',
       sectionId: 'risk',
       username: 'Dave',
+      logErrors: true,
     })
   })
 })

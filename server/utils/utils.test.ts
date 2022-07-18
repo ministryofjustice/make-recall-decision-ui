@@ -1,4 +1,11 @@
-import convertToTitleCase, { makePageTitle, getProperty, removeParamsFromQueryString, listToString } from './utils'
+import convertToTitleCase, {
+  makePageTitle,
+  getProperty,
+  removeParamsFromQueryString,
+  listToString,
+  validateCrn,
+  isPreprodOrProd,
+} from './utils'
 
 describe('listToString', () => {
   it('returns a list for 1 item', () => {
@@ -185,5 +192,50 @@ describe('removeParamsFromQueryString', () => {
       },
     })
     expect(queryString).toEqual('')
+  })
+})
+
+describe('validateCrn', () => {
+  const errorData = {
+    errorType: 'INVALID_CRN',
+    status: 400,
+  }
+  it('throws if CRN is not a string', () => {
+    try {
+      validateCrn(true as unknown as string)
+    } catch (err) {
+      expect(err.data).toEqual(errorData)
+    }
+  })
+
+  it('throws if CRN is an empty string', () => {
+    try {
+      validateCrn('')
+    } catch (err) {
+      expect(err.data).toEqual(errorData)
+    }
+  })
+
+  it('returns a normalized CRN if valid', () => {
+    const result = validateCrn(' x12345 ')
+    expect(result).toEqual('X12345')
+  })
+})
+
+describe('isPreprodOrProd', () => {
+  it('returns false if given undefined', () => {
+    expect(isPreprodOrProd()).toEqual(false)
+  })
+
+  it('returns false if given DEVELOPMENT', () => {
+    expect(isPreprodOrProd('DEVELOPMENT')).toEqual(false)
+  })
+
+  it('returns true if given PREPRODUCTION', () => {
+    expect(isPreprodOrProd('PREPRODUCTION')).toEqual(true)
+  })
+
+  it('returns true if given PRODUCTION', () => {
+    expect(isPreprodOrProd('PRODUCTION')).toEqual(true)
   })
 })
