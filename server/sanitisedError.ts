@@ -1,6 +1,6 @@
 import type { ResponseError } from 'superagent'
 
-interface SanitisedError {
+export interface SanitisedError {
   text?: string
   status?: number
   headers?: unknown

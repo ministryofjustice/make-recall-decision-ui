@@ -20,6 +20,25 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
   list: NamedFormError[]
 }
 
+export interface PageMetaData {
+  templateName: PageTemplateName
+  validator: FormValidator
+  pageHeading: string
+}
+
+export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
+
+export interface FormValidatorArgs {
+  requestBody: ObjectMap<string>
+}
+
+export interface FormValidatorReturn {
+  errors?: NamedFormError[]
+  valuesToSave?: ObjectMap<unknown>
+  unsavedValues?: ObjectMap<unknown>
+  nextPagePath: string
+}
+
 export interface DecoratedContact extends ContactSummaryResponse {
   startDate: string
   searchTextMatch?: {
@@ -82,3 +101,7 @@ export interface ContactHistoryFilters {
   contactTypes: string | string[]
   searchFilters: string | string[]
 }
+
+export type PageTemplateName = 'recallType'
+
+export type PageId = 'recall-type'

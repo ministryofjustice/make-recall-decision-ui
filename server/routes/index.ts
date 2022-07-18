@@ -15,6 +15,9 @@ import { recommendationFormGet, recommendationFormPost } from '../controllers/re
 import { selectLicenceConditionsPage } from '../controllers/recommendation/selectLicenceConditionsPage'
 import { downloadDocument } from '../controllers/downloadDocument'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
+import { getRecommendationPage } from '../controllers/recommendations/getRecommendationPage'
+import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
+import { routeUrls } from './routeUrls'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -24,13 +27,15 @@ export default function routes(router: Router): Router {
 
   router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
   get('/', startPage)
-  get('/flags', getFeatureFlags)
-  get('/search', personSearch)
-  get('/search-results', personSearchResults)
-  get('/cases/:crn/documents/:documentId', downloadDocument)
-  get('/cases/:crn/:sectionId', caseSummary)
+  get(routeUrls.flags, getFeatureFlags)
+  get(routeUrls.search, personSearch)
+  get(routeUrls.searchResults, personSearchResults)
+  get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
+  get(`${routeUrls.cases}/:crn/:sectionId`, caseSummary)
 
-  post('/recommendations', createRecommendationController)
+  post(routeUrls.recommendations, createRecommendationController)
+  get(`${routeUrls.recommendations}/:recommendationId/:pageId`, getRecommendationPage)
+  post(`${routeUrls.recommendations}/:recommendationId/:pageId`, postRecommendationForm)
 
   // user research prototype
   get('/recommendation/:crn/select-contacts', selectContactsPage)
