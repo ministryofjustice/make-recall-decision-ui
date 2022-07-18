@@ -111,7 +111,7 @@
     "@types/qs": "^6.9.7",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.3.3",
-    "axe-core": "4.4.2",
+    "axe-core": "4.4.3",
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
