@@ -1,4 +1,4 @@
-import { dedupeList, groupListByValue, sortList } from './lists'
+import { dedupeList, groupListByValue, radioCheckboxItems, sortList } from './lists'
 import { ObjectMap } from '../@types'
 
 describe('List utilities', () => {
@@ -79,6 +79,43 @@ describe('List utilities', () => {
       const list = [{ name: 'Licence.pdf' }, { name: 'Part A.pdf' }, { name: 'OASys.pdf' }]
       const result = sortList(list, 'name', false)
       expect(result).toEqual([{ name: 'Part A.pdf' }, { name: 'OASys.pdf' }, { name: 'Licence.pdf' }])
+    })
+  })
+
+  describe('radioCheckboxItems function', () => {
+    it('marks the selected items as checked', () => {
+      const items = [
+        {
+          text: 'Fixed term',
+          value: 'FIXED_TERM',
+        },
+        {
+          text: 'Standard',
+          value: 'STANDARD',
+        },
+        {
+          text: 'No recall',
+          value: 'NO_RECALL',
+        },
+      ]
+      const result = radioCheckboxItems({ items, currentValues: 'FIXED_TERM' })
+      expect(result).toEqual([
+        {
+          checked: true,
+          text: 'Fixed term',
+          value: 'FIXED_TERM',
+        },
+        {
+          checked: false,
+          text: 'Standard',
+          value: 'STANDARD',
+        },
+        {
+          checked: false,
+          text: 'No recall',
+          value: 'NO_RECALL',
+        },
+      ])
     })
   })
 })

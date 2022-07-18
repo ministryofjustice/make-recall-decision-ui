@@ -6,7 +6,8 @@ import { routeUrls } from '../../routes/routeUrls'
 export const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
   const normalizedCrn = validateCrn(req.body.crn)
   try {
-    await createRecommendation(normalizedCrn, res.locals.user.token)
+    const recommendation = await createRecommendation(normalizedCrn, res.locals.user.token)
+    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/recall-type`)
   } catch (err) {
     req.session.errors = [
       {
@@ -14,7 +15,6 @@ export const createRecommendationController = async (req: Request, res: Response
         text: 'An error occurred creating a new recommendation',
       },
     ]
-  } finally {
     res.redirect(303, `${routeUrls.cases}/${normalizedCrn}/overview`)
   }
 }
