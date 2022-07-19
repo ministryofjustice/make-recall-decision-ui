@@ -25,9 +25,10 @@ context('SignIn', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
-  it('User can manage their details', () => {
+  it('User can manage their details and give feedback', () => {
     cy.signIn()
     cy.pageHeading().should('equal', 'Recall Decisions')
     cy.getLinkHref('J. Smith').should('contain', '/account-details')
+    cy.getText('feedback-form-link').should('equal', 'feedback')
   })
 })
