@@ -36,7 +36,7 @@ context('Risk page', () => {
     cy.getElement('OSP/C score').should('exist')
     cy.getElement('OSP/I score').should('exist')
     // no score history
-    cy.getElement('Score history').should('not.exist')
+    cy.getElement('Score history').should('exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
