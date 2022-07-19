@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "govuk/components/tag/macro.njk"                import govukTag %}
 {% from "govuk/components/back-link/macro.njk"           import govukBackLink %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/details/macro.njk"             import govukDetails %}
@@ -57,6 +58,7 @@
 
 {% block header %}
   {% include "./header.njk" %}
+  {% include "./phaseBanner.njk" %}
 {% endblock %}
 
 {% block bodyStart %}
