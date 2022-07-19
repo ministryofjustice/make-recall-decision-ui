@@ -1,0 +1,35 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Stop and think", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/alternatives'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {% set infoHtml %}
+                <p class='info-panel__body'>Public safety is vital. But make sure recall is the right thing to do.</p>
+
+                <p class='info-panel__body'>Think about these questions:</p>
+                <ul class='info-panel__body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
+                    <li>What does the Risk Management Plan say?</li>
+                    <li>What does the Contingency Plan say?</li>
+                    <li>Can the risk be managed in the community?</li>
+                    <li>What else can you do to manage the risk?</li>
+                </ul>
+                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0' href='/rec-prototype/{{ crn }}/recall-type'>Continue</a>
+            {% endset %}
+            {{ infoPanel({
+                titleText: "Stop and think",
+                html: infoHtml
+            }) }}
+
+        </div>
+    </div>
+{% endblock %}
+

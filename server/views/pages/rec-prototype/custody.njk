@@ -1,11 +1,11 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "What is your recommendation?", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "Is the person in custody now?", hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: '/recommendation/' + crn + '/alternatives'
+        href:  '/rec-prototype/' + crn + '/recall-type'
     }) }}
 {% endblock %}
 
@@ -16,17 +16,18 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-caption-l">Custody</div>
                 {{ govukRadios({
-                    idPrefix: "recallType",
-                    name: "recallType",
+                    idPrefix: "custodyOption",
+                    name: "custodyOption",
                     fieldset: {
                         legend: {
-                            text: "What is your recommendation?",
+                            text: "Is " + personalDetailsOverview.name + " in custody now?",
                             classes: "govuk-fieldset__legend--l",
                             isPageHeading: true
                         }
                     },
-                    items: checkboxItems({ items: refData.recallTypes, currentValues: recommendation.recallType.value })
+                    items: radioCheckboxItems({ items: refData.custodyOptions, currentValues: recommendation.custodyOption.value })
                 }) }}
                 {{ formSubmitButton() }}
             </form>

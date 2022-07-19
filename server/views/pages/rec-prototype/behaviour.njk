@@ -5,7 +5,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: '/recommendation/' + crn + '/summary'
+        href: '/cases/' + crn + '/overview'
     }) }}
 {% endblock %}
 
@@ -13,7 +13,6 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <div class="govuk-caption-l">Compliance</div>
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <div class="govuk-form-group">
@@ -26,7 +25,7 @@
                             isPageHeading: true
                         },
                         hint: {
-                            text: "Give details of how compliant " + ("he" if personalDetailsOverview.gender == 'Male' else "she") + " has been."
+                            text: "Give details of overall compliance"
                         },
                         value: recommendation.behaviour
                     }) }}

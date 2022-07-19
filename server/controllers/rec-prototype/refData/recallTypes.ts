@@ -8,7 +8,7 @@ export const recallTypes = [
     text: 'Fixed term recall',
   },
   {
-    value: 'NONE',
+    value: 'NO_RECALL',
     text: 'No recall',
   },
 ]

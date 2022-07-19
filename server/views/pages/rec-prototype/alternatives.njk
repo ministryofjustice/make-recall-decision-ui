@@ -1,11 +1,11 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "What alternatives to recall have been tried?", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "What alternatives to recall have been tried already?", hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: '/cases/' + crn + '/overview'
+        href: '/rec-prototype/' + crn + '/licence-conditions'
     }) }}
 {% endblock %}
 
@@ -19,7 +19,7 @@
                     <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
-                                What alternatives to recall have been tried?
+                                What alternatives to recall have been tried already?
                             </h1>
                         </legend>
                         <div id="contact-hint" class="govuk-hint">
@@ -45,6 +45,24 @@
                                 }) }}
                             </div>
                             {% endfor %}
+                            <div class="govuk-checkboxes__divider">or</div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="alternativesTried-NONE" name="alternativesTried" type="checkbox" value="NONE" data-behaviour="exclusive" data-aria-controls="conditional-NONE">
+                                <label class="govuk-label govuk-checkboxes__label" for="alternativesTried-NONE">
+                                    None
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-NONE">
+                                {{ govukTextarea({
+                                    name: "alternativesTriedDetail-NONE",
+                                    id: "alternativesTriedDetail-NONE",
+                                    label: {
+                                        text: "Explain why",
+                                        classes: "govuk-label--s"
+                                    },
+                                    value: ""
+                                }) }}
+                            </div>
                         </div>
 
                     </fieldset>
