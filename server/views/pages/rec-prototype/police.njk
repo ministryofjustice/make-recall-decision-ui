@@ -1,0 +1,72 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Local police contact details", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/summary'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <div class="govuk-caption-l">Custody</div>
+            <h1 class='govuk-heading-l'>Local police contact details</h1>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukInput({
+                    label: {
+                        text: "Police contact name",
+                        classes: "govuk-label--s"
+                    },
+                    id: "policeName",
+                    name: "policeName",
+                    classes: "govuk-input--width-20",
+                    value: recommendation.policeName
+                }) }}
+
+                {{ govukInput({
+                    label: {
+                        text: "Phone number",
+                        classes: "govuk-label--s"
+                    },
+                    id: "policePhoneNumber",
+                    name: "policePhoneNumber",
+                    type: 'tel',
+                    classes: "govuk-input--width-20",
+                    value: recommendation.policePhoneNumber
+                }) }}
+                {{ govukInput({
+                    label: {
+                        text: "Fax number",
+                        classes: "govuk-label--s"
+                    },
+                    id: "policeFaxNumber",
+                    name: "policeFaxNumber",
+                    type: 'tel',
+                    classes: "govuk-input--width-20",
+                    value: recommendation.policeFaxNumber
+                }) }}
+
+                {{ govukInput({
+                    label: {
+                        text: "Email address",
+                        classes: "govuk-label--s"
+                    },
+                    id: "policeEmail",
+                    name: "policeEmail",
+                    type: 'email',
+                    classes: "govuk-input--width-20",
+                    value: recommendation.policeEmail
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+

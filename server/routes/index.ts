@@ -9,10 +9,7 @@ import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
 import { parseUrl } from '../middleware/parseUrl'
 import { getFeatureFlags } from '../controllers/featureFlags'
-import { itemSelectedHandler } from '../controllers/recommendation/itemSelectedHandler'
-import { selectContactsPage } from '../controllers/recommendation/selectContactsPage'
-import { recommendationFormGet, recommendationFormPost } from '../controllers/recommendation/recommendationForm'
-import { selectLicenceConditionsPage } from '../controllers/recommendation/selectLicenceConditionsPage'
+import { recommendationFormGet, recommendationFormPost } from '../controllers/rec-prototype/recommendationForm'
 import { downloadDocument } from '../controllers/downloadDocument'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 import { getRecommendationPage } from '../controllers/recommendations/getRecommendationPage'
@@ -38,11 +35,8 @@ export default function routes(router: Router): Router {
   post(`${routeUrls.recommendations}/:recommendationId/:pageId`, postRecommendationForm)
 
   // user research prototype
-  get('/recommendation/:crn/select-contacts', selectContactsPage)
-  get('/recommendation/:crn/select-licence-conditions', selectLicenceConditionsPage)
-  get('/recommendation/:crn/:sectionId', recommendationFormGet)
-  post('/recommendation/:crn/:sectionId', recommendationFormPost)
-  post('/select-component', itemSelectedHandler)
+  get('/rec-prototype/:crn/:sectionId', recommendationFormGet)
+  post('/rec-prototype/:crn/:sectionId', recommendationFormPost)
 
   return router
 }

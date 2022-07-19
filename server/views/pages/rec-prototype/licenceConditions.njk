@@ -1,0 +1,58 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "What licence conditions have been breached?", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav aria-label='Back to person search'>
+        {{ govukBackLink({
+            html: "Back<span class='govuk-visually-hidden'> TBC</span>",
+            href: '/rec-prototype/' + crn + '/behaviour'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>What licence conditions has {{ personalDetailsOverview.name }} breached?</h1>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukCheckboxes({
+                    idPrefix: "standardLicenceConditions",
+                    name: "standardLicenceConditions",
+                    fieldset: {
+                        legend: {
+                            text: "Standard licence conditions",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: refData.standardLicenceConditions
+                }) }}
+                {% if additionalLicenceConditions.length %}
+                {{ govukCheckboxes({
+                    idPrefix: "additionalLicenceConditions",
+                    name: "additionalLicenceConditions",
+                    fieldset: {
+                        legend: {
+                            text: "Additional licence conditions",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: recommendation.additionalLicenceConditions
+                }) }}
+                {% else %}
+                    {{ govukTextarea({
+                        name: "additionalLicenceConditionsDetail",
+                        id: "additionalLicenceConditionsDetail",
+                        label: {
+                            text: item.detailsLabel,
+                            classes: "govuk-label--s"
+                        },
+                        value: recommendation.additionalLicenceConditionsDetail
+                    }) }}
+                {% endif %}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

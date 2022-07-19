@@ -1,4 +1,4 @@
-export const standardLicenceConditions = [
+export const standardLicenceConditionsRefData = [
   {
     id: 1,
     value: 'GOOD_BEHAVIOUR',

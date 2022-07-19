@@ -1,11 +1,11 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Personal details", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "Address details", hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: '/recommendation/' + crn + '/summary'
+        href: '/rec-prototype/' + crn + '/summary'
     }) }}
 {% endblock %}
 
@@ -14,8 +14,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <h1 class='govuk-heading-l'>Personal details</h1>
-            <p class='govuk-body'>This is the address for {{ personalDetailsOverview.name }} in NDelius.</p>
+            <h1 class='govuk-heading-l'>Address details</h1>
+            <p class='govuk-body'>This is the last known address for {{ personalDetailsOverview.name }} in NDelius.</p>
             <ul class='govuk-list'>
                 {% if currentAddress.line1 %}
                     <li>{{ currentAddress.line1 }}</li>{% endif %}
@@ -33,11 +33,8 @@
                         name: "addressConfirmedDetail",
                         id: "addressConfirmedDetail",
                         label: {
-                            text: "Enter the correct address",
+                            text: "Give the correct location",
                             classes: "govuk-label--s"
-                        },
-                        hint: {
-                            text: "This will not update NDelius"
                         },
                         value: recommendation.addressConfirmedDetail
                     }) }}
@@ -47,7 +44,7 @@
                     name: "addressConfirmed",
                     fieldset: {
                         legend: {
-                            text: "Is this address correct?",
+                            text: "Is this where the police can find " + personalDetailsOverview.name + "?",
                             classes: "govuk-fieldset__legend--m"
                         }
                     },

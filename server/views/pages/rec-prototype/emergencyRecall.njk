@@ -1,37 +1,35 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Is the person in custody now?", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "Is this an emergency recall?", hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href:  '/recommendation/' + crn + '/recall-type'
+        href:  '/rec-prototype/' + crn + '/recall-type'
     }) }}
 {% endblock %}
 
 {% block content %}
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {{ govukRadios({
-                    idPrefix: "custodyOption",
-                    name: "custodyOption",
+                    idPrefix: "emergencyRecall",
+                    name: "emergencyRecall",
                     fieldset: {
                         legend: {
-                            text: "Is " + personalDetailsOverview.name + " in custody now?",
+                            text: "Is this an emergency recall?",
                             classes: "govuk-fieldset__legend--l",
                             isPageHeading: true
                         }
                     },
-                    items: checkboxItems({ items: refData.custodyOptions, currentValues: recommendation.custodyOption.value })
+                    items: radioCheckboxItems({ items: refData.yesNo })
                 }) }}
                 {{ formSubmitButton() }}
             </form>
         </div>
     </div>
-
 {% endblock %}
 

@@ -1,0 +1,60 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Is there anything the police should know before they arrest the person?", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/summary'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <div class="govuk-caption-l">Custody</div>
+                            <h1 class="govuk-fieldset__heading">
+                                Is there anything the police should know before they arrest {{ personalDetailsOverview.name }}?
+                            </h1>
+                        </legend>
+                        <div class="govuk-radios" data-module="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="arrestIssues-yes"
+                                       name="arrestIssues" type="radio" value="YES"
+                                       data-aria-controls="conditional-yes">
+                                <label class="govuk-label govuk-radios__label" for="arrestIssues-yes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                 id="conditional-yes">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label" for="detail-yes">
+                                        Give details. Include information about any vulnerable children and adults.
+                                    </label>
+                                    <textarea class="govuk-textarea" id="detail-yes" name="arrestIssuesDetailYes" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="arrestIssues-no"
+                                       name="arrestIssues" type="radio" value="NO">
+                                <label class="govuk-label govuk-radios__label" for="arrestIssues-no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+

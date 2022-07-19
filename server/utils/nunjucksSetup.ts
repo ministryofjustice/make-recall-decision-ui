@@ -57,7 +57,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('errorMessage', errorMessage)
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
   njkEnv.addGlobal('dateTimeItems', dateTimeItems)
-  njkEnv.addGlobal('checkboxItems', radioCheckboxItems)
+  njkEnv.addGlobal('radioCheckboxItems', radioCheckboxItems)
   njkEnv.addGlobal('selectedFilterItems', selectedFilterItems)
   njkEnv.addGlobal('countLabel', countLabel)
   njkEnv.addGlobal('removeUndefinedListItems', removeUndefinedListItems)

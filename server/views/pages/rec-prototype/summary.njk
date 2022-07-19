@@ -2,6 +2,13 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: "Your recommendation", hasErrors: errors }) %}
 
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href:  '/rec-prototype/' + crn + '/custody'
+    }) }}
+{% endblock %}
+
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -14,17 +21,6 @@
                 {% endif %}
             </p>
             <ol class="moj-task-list govuk-!-margin-top-8">
-                <li>
-                    <h2 class="moj-task-list__section">
-                        Recall type
-                    </h2>
-                    <ul class="moj-task-list__items">
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}recall-type">What is your recommendation?</a>
-                            {{ taskStatus({ hasData: recommendation.recallType }) }}
-                        </li>
-                    </ul>
-                </li>
                 <li>
                     <h2 class="moj-task-list__section">
                         Alternatives to recall
@@ -43,7 +39,7 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}personal-details">Address</a>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}address">Address</a>
                             {{ taskStatus({ hasData: recommendation.addressConfirmed }) }}
                         </li>
                     </ul>
@@ -54,21 +50,25 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}select-licence-conditions">Add breached licence condition(s)</a>
-                            {{ taskStatus({ hasData: recommendation.licenceConditions }) }}
-                        </li>
-                        <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}behaviour">How
-                                has {{ personalDetailsOverview.name }} behaved on licence?</a>
+                                has {{ personalDetailsOverview.name }} behaved on licence so far?</a>
                             {{ taskStatus({ hasData: recommendation.behaviour }) }}
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}select-contacts">What has led to this recall?</a>
-                            {{ taskStatus({ hasData: recommendation.contacts }) }}
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}licence-conditions">Breached licence condition(s)</a>
+                            {{ taskStatus({ hasData: recommendation.standardLicenceConditions or recommendation.additionalLicenceConditions or recommendation.additionalLicenceConditionsDetail }) }}
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}cause">Explain your recommendation</a>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}cause">What has led to this recall?</a>
                             {{ taskStatus({ hasData: recommendation.cause }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}emergency-recall">Is this an emergency recall?</a>
+                            {{ taskStatus({ hasData: recommendation.emergencyRecall }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}recall-type">What type of recall do you recommend?</a>
+                            {{ taskStatus({ hasData: recommendation.recallType }) }}
                         </li>
                     </ul>
                 </li>
@@ -78,11 +78,9 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Would recall affect vulnerability or additional
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}vulnerability">Would recall affect vulnerability or additional
                                 needs?</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            {{ taskStatus({ hasData: recommendation.vulnerability }) }}
                         </li>
                     </ul>
                 </li>
@@ -97,28 +95,20 @@
                             {{ taskStatus({ hasData: recommendation.custodyOption }) }}
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Contact information</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}police">Local police contact details</a>
+                            {{ taskStatus({ hasData: recommendation.policeName }) }}
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Integrated offender manager information</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}iom">Is {{ personalDetailsOverview.name }} under Integrated Offender Management (IOM)?</a>
+                            {{ taskStatus({ hasData: recommendation.iom }) }}
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Important arrest information</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}arrest-issues">Is there anything the police should know before they arrest {{ personalDetailsOverview.name }}?</a>
+                            {{ taskStatus({ hasData: recommendation.arrestIssues }) }}
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Contraband</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}contraband">Do you think {{ personalDetailsOverview.name }} is using recall to bring contraband into prison?</a>
+                            {{ taskStatus({ hasData: recommendation.contraband }) }}
                         </li>
                     </ul>
                 </li>
@@ -128,26 +118,7 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">MAPPA, RoSH and risk registers</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <h2 class="moj-task-list__section">
-                        Management approval
-                    </h2>
-                    <ul class="moj-task-list__items">
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Line manager approval</a>
-                            <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
-                                to do
-                            </strong>
-                        </li>
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="#">Senior manager approval</a>
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}risk-profile">OAsys R6.1, R6.2 and RoSH</a>
                             <strong class="govuk-tag govuk-tag--grey moj-task-list__task-completed">
                                 to do
                             </strong>
@@ -156,7 +127,7 @@
                 </li>
             </ol>
             <div>
-                <a href='#' class='govuk-button govuk-button--primary'>Continue</a>
+                <a href='/rec-prototype/{{ crn }}/confirmation-recall' class='govuk-button govuk-button--primary'>Create Part A</a>
             </div>
         </div>
     </div>

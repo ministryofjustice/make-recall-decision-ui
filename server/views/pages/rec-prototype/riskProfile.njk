@@ -1,0 +1,31 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Risk information", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/summary'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-caption-l">Risk profile</div>
+                <h1 class='govuk-heading-l'>Risk information for {{ personalDetailsOverview.name }}</h1>
+                <p class='govuk-body'>All this information will be added to the Part A.</p>
+                {{ formSubmitButton() }}
+            </form>
+            <h2 class='govuk-heading-m'>OASys R6.1</h2>
+            <p class='govuk-body'>tbc...</p>
+            <h2 class='govuk-heading-m'>OASys R6.2</h2>
+            {{ roshWidget(risk.riskOfSeriousHarm) }}
+            <p class='govuk-body'>tbc...</p>
+        </div>
+    </div>
+{% endblock %}
+
