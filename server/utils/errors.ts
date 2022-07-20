@@ -10,16 +10,19 @@ export const makeErrorObject = ({
   name,
   text,
   values,
+  errorId,
 }: {
   id: string
   name?: string
   text: string
   values?: ObjectMap<string> | string
+  errorId?: string
 }): NamedFormError => ({
   name: name || id,
   text,
   href: `#${id}`,
   values,
+  errorId,
 })
 
 export const transformErrorMessages = (errors: NamedFormError[]): KeyedFormErrors => {

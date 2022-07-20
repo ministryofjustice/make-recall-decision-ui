@@ -6,4 +6,13 @@
             'data-qa': 'error-list'
         }
     }) }}
+    <script nonce='{{ cspNonce }}'>
+        {% for error in errors.list %}
+        gtag('event', 'form_error', {
+          'event_category': '{{ error.errorId }}',
+          'event_label': '{{ error.name }}',
+          'non_interaction': true
+          });
+        {% endfor %}
+    </script>
 {% endif %}

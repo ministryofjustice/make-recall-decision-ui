@@ -8,6 +8,7 @@ describe('validatePersonSearch', () => {
           href: '#crn',
           name: 'crn',
           text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+          errorId: 'invalidCrnFormat',
         },
       ],
       unsavedValues: {},
@@ -21,6 +22,7 @@ describe('validatePersonSearch', () => {
           href: '#crn',
           name: 'crn',
           text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+          errorId: 'invalidCrnFormat',
         },
       ],
       unsavedValues: {
@@ -36,6 +38,7 @@ describe('validatePersonSearch', () => {
           href: '#crn',
           name: 'crn',
           text: 'Enter a Case Reference Number (CRN)',
+          errorId: 'missingCrn',
         },
       ],
       unsavedValues: {
