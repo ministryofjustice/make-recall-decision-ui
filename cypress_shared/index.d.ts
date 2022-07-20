@@ -56,6 +56,8 @@ declare global {
 
       contactTypeFiltersTotalCount(): Chainable<number>
 
+      interceptGoogleAnalyticsEvent(): Chainable<void>
+
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
 
       downloadFile(linkText: string): Chainable<Response<unknown>>

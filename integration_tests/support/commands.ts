@@ -21,7 +21,7 @@ Cypress.Commands.add('signIn', () => {
       },
     },
     { statusCode: 200 }
-  ).as('googleAnalytics')
+  ).as('googleAnalyticsPageView')
   cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
   cy.request('/')
   return cy.task('getSignInUrl').then(cy.visit)

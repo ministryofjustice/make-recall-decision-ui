@@ -38,6 +38,7 @@ export const filterContactsBySearch = ({
           id: 'searchFilters',
           text: formatValidationErrorMessage({ errorId: 'minLengthSearchContactsTerm' }),
           values: invalidLength,
+          errorId: 'minLengthSearchContactsTerm',
         }),
       ]
     } else {

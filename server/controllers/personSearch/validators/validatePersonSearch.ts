@@ -10,11 +10,12 @@ export const validatePersonSearch = (crn?: string) => {
   const emptyString = searchValue === ''
   if (invalidType || emptyString) {
     errors = []
-    const errorMessage = invalidType ? strings.errors.invalidCrnFormat : strings.errors.missingCrn
+    const errorId = invalidType ? 'invalidCrnFormat' : 'missingCrn'
     errors = [
       makeErrorObject({
         id: 'crn',
-        text: errorMessage,
+        text: strings.errors[errorId],
+        errorId,
       }),
     ]
     unsavedValues = { crn }

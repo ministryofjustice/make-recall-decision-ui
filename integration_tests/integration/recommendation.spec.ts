@@ -23,7 +23,7 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('equal', 'What do you recommend?')
     // validation error
     cy.clickButton('Continue')
-    cy.assertErrorMessage({ fieldName: 'recallType', errorText: 'Select an option' })
+    cy.assertErrorMessage({ fieldName: 'recallType', errorText: 'Select a recommendation' })
     cy.selectRadio('What do you recommend?', 'Fixed term')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Overview for Paula Smith')

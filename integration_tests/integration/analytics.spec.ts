@@ -5,11 +5,15 @@ context('Analytics', () => {
     cy.signIn()
   })
 
-  it('sends a page view event to Google Analytics', () => {
-    const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.wait('@googleAnalytics')
+  it('sends page view and form error events to Google Analytics', () => {
+    cy.interceptGoogleAnalyticsEvent()
+    cy.visit(`${routeUrls.searchResults}?crn=`)
+    cy.wait('@googleAnalyticsPageView')
       .then(data => data.request.url)
       .should('contain', 't=pageview')
+    // form validation error ('missingCrn')
+    cy.wait('@googleAnalyticsEvent')
+      .then(data => data.request.url)
+      .should('contain', 'ec=missingCrn&ea=form_error&el=crn')
   })
 })

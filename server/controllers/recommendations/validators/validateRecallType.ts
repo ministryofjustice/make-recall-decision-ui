@@ -11,10 +11,12 @@ export const validateRecallType = ({ requestBody }: FormValidatorArgs): FormVali
 
   const { recallType } = requestBody
   if (!recallType) {
+    const errorId = 'noRecallTypeSelected'
     errors = [
       makeErrorObject({
         id: 'recallType',
-        text: strings.errors.selectOption,
+        text: strings.errors[errorId],
+        errorId,
       }),
     ]
   }

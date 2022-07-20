@@ -209,3 +209,16 @@ Cypress.Commands.add('readBase64File', fileName => {
   const filePath = path.join(Cypress.config('fixturesFolder') as string, fileName)
   return cy.task('readBase64File', filePath)
 })
+
+Cypress.Commands.add('interceptGoogleAnalyticsEvent', () => {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: 'https://www.google-analytics.com/collect?*',
+      query: {
+        t: 'event',
+      },
+    },
+    { statusCode: 200 }
+  ).as('googleAnalyticsEvent')
+})

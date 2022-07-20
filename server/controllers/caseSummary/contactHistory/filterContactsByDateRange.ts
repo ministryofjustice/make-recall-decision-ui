@@ -56,6 +56,7 @@ export const filterContactsByDateRange = ({
           name: 'dateFrom',
           id: invalidDateInputPart(dateFromIso as ValidationError, 'dateFrom'),
           text: formatValidationErrorMessage(dateFromIso as ValidationError, 'from date'),
+          errorId: (dateFromIso as ValidationError).errorId,
         })
       )
     }
@@ -65,6 +66,7 @@ export const filterContactsByDateRange = ({
           name: 'dateTo',
           id: invalidDateInputPart(dateToIso as ValidationError, 'dateTo'),
           text: formatValidationErrorMessage(dateToIso as ValidationError, 'to date'),
+          errorId: (dateToIso as ValidationError).errorId,
         })
       )
     }
@@ -82,6 +84,7 @@ export const filterContactsByDateRange = ({
           name: 'dateFrom',
           id: 'dateFrom-day',
           text: formatValidationErrorMessage({ errorId: 'fromDateAfterToDate' } as ValidationError),
+          errorId: 'fromDateAfterToDate',
         }),
       ],
       contacts,
