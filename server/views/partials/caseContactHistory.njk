@@ -59,7 +59,12 @@
                     {{ govukDetails({
                         summaryText: "View more detail",
                         html: notesHtml,
-                        open: contact.searchTextMatch.notesMatched
+                        open: contact.searchTextMatch.notesMatched,
+                        attributes: {
+                            'data-qa': 'detailsSummary',
+                            'data-analytics-category': 'contactNotes',
+                            'data-analytics-label': contact.descriptionType  if not contact.sensitive else 'Sensitive'
+                        }
                     }) }}
                     {% endif %}
                     {% if flags.flagContactDocuments and contact.contactDocuments.length %}
