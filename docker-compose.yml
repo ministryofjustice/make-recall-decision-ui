@@ -14,7 +14,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   hmpps-auth:
-    image: quay.io/hmpps/hmpps-auth:latest
+    image: quay.io/hmpps/hmpps-auth:2022-07-19.16018.cf96cd0
     networks:
       - hmpps
     container_name: hmpps-auth
