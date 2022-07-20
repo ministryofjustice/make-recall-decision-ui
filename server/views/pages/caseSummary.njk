@@ -22,7 +22,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             {% include '../partials/error-summary.njk' %}
-            <div class='flex flex--space-between'>
+            <div class='flex flex--space-between flex--align-center govuk-!-margin-bottom-8'>
                 <div>
                     <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
                         <li>CRN: <span
@@ -37,19 +37,23 @@
                                     data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
                         </li>
                     </ul>
-                    <div class="govuk-heading-xl"
+                    <div class="govuk-heading-xl govuk-!-margin-bottom-0"
                          data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
                 </div>
                 {% if flags.flagRecommendationProd %}
+                    {% if caseSummary.activeRecommendation.recommendationId %}
+                        <a class='govuk-button' href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/recall-type'>Update recommendation</a>
+                    {% else %}
                     <form method='post' action='/recommendations'>
                         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                         <input type="hidden" name="crn" value="{{ caseSummary.personalDetailsOverview.crn }}" />
                         <button class='govuk-button no-wrap-tablet'>Make a recommendation</button>
                     </form>
+                    {% endif %}
                 {% elseif flags.flagRecommendationPrototype %}
-                <div>
-                    <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/behaviour' class='govuk-button no-wrap-tablet'>Make a recommendation</a>
-                </div>
+                    <div>
+                        <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/behaviour' class='govuk-button no-wrap-tablet'>Make a recommendation</a>
+                    </div>
                 {% endif %}
             </div>
             {{ mojSubNavigation({
