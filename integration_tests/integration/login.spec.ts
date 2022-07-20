@@ -30,5 +30,9 @@ context('SignIn', () => {
     cy.pageHeading().should('equal', 'Recall Decisions')
     cy.getLinkHref('J. Smith').should('contain', '/account-details')
     cy.getText('feedback-form-link').should('equal', 'feedback')
+    cy.getLinkHref({ qaAttr: 'feedback-form-link' }).should(
+      'contain',
+      'https://docs.google.com/forms/d/1ZJPD40s-tzr9Uf0HwrrF0YP9bUilCe228Xk-2d2quNE/edit?ts=62d7ca55'
+    )
   })
 })
