@@ -237,12 +237,13 @@ describe('transformContactHistory', () => {
       featureFlags: {},
     })
     expect(errors).toEqual([
-      { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date' },
+      { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date', errorId: 'blankDateTime' },
       {
         href: '#searchFilters',
         name: 'searchFilters',
         text: 'Search term must be 2 characters or more',
         values: 'A',
+        errorId: 'minLengthSearchContactsTerm',
       },
     ])
   })

@@ -60,7 +60,9 @@ describe('filterContactsByDateRange', () => {
         'dateTo-year': '2022',
       },
     })
-    expect(errors).toEqual([{ href: '#dateFrom-day', name: 'dateFrom', text: 'Enter the from date' }])
+    expect(errors).toEqual([
+      { href: '#dateFrom-day', name: 'dateFrom', text: 'Enter the from date', errorId: 'blankDateTime' },
+    ])
     expect(contacts).toEqual(contactList)
   })
 
@@ -88,7 +90,9 @@ describe('filterContactsByDateRange', () => {
         'dateFrom-year': '2022',
       },
     })
-    expect(errors).toEqual([{ href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date' }])
+    expect(errors).toEqual([
+      { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date', errorId: 'blankDateTime' },
+    ])
     expect(contacts).toEqual(contactList)
   })
 
@@ -120,7 +124,12 @@ describe('filterContactsByDateRange', () => {
       },
     })
     expect(errors).toEqual([
-      { href: '#dateFrom-day', name: 'dateFrom', text: 'The from date must be on or before the to date' },
+      {
+        href: '#dateFrom-day',
+        name: 'dateFrom',
+        text: 'The from date must be on or before the to date',
+        errorId: 'fromDateAfterToDate',
+      },
     ])
     expect(contacts).toEqual(contactList)
   })
@@ -158,12 +167,14 @@ describe('filterContactsByDateRange', () => {
         name: 'dateFrom',
         text: 'The from date must have a real day',
         values: undefined,
+        errorId: 'outOfRangeValueDateParts',
       },
       {
         href: '#dateTo-month',
         name: 'dateTo',
         text: 'The to date must have a real month',
         values: undefined,
+        errorId: 'outOfRangeValueDateParts',
       },
     ])
     expect(contacts).toEqual(contactList)

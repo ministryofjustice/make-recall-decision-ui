@@ -217,6 +217,7 @@ describe('filterContactsBySearch', () => {
         name: 'searchFilters',
         text: 'Search term must be 2 characters or more',
         values: 'X',
+        errorId: 'minLengthSearchContactsTerm',
       },
     ])
     expect(selected).toBeUndefined()

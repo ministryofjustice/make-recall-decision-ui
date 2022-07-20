@@ -10,6 +10,7 @@ export interface FormError {
   text: string
   href?: string
   values?: ObjectMap<unknown> | string
+  errorId?: string
 }
 
 export interface NamedFormError extends FormError {

@@ -48,13 +48,15 @@ declare global {
 
       isDetailsOpen(summaryLabel: string, opts?: CommandOpts): Chainable<boolean>
 
-      getLinkHref(selector: string, opts?: CommandOpts): Chainable<Element>
+      getLinkHref(selector: string | Selector, opts?: CommandOpts): Chainable<Element>
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 
       contactTypeFiltersTotalCount(): Chainable<number>
+
+      interceptGoogleAnalyticsEvent(): Chainable<void>
 
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
 

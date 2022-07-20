@@ -41,6 +41,7 @@ describe('personSearchResults', () => {
         href: '#crn',
         name: 'crn',
         text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+        errorId: 'invalidCrnFormat',
       },
     ])
     expect(req.session.unsavedValues).toEqual({ crn: 50 })

@@ -48,7 +48,8 @@ describe('postRecommendationForm', () => {
       {
         href: '#recallType',
         name: 'recallType',
-        text: 'Select an option',
+        text: 'Select a recommendation',
+        errorId: 'noRecallTypeSelected',
       },
     ])
   })
