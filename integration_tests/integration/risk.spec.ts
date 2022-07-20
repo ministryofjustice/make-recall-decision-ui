@@ -11,7 +11,7 @@ context('Risk page', () => {
   })
 
   it('shows RoSH, MAPPA and predictor scores', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
 
     // RoSH table
@@ -36,7 +36,7 @@ context('Risk page', () => {
     cy.getElement('OSP/C score').should('exist')
     cy.getElement('OSP/I score').should('exist')
     // no score history
-    cy.getElement('Score history').should('not.exist')
+    cy.getElement('Score history').should('exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
