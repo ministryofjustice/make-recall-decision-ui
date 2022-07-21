@@ -68,6 +68,10 @@ export const getCaseSection = async (
         })} for ${trimmedCrn} - Contact history`
       }
       break
+    case 'prototype-recommendations':
+      sectionLabel = 'Recommendations'
+      caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, 'personal-details', token)
+      break
     default:
       throw new AppError(`getCaseSection: invalid sectionId: ${sectionId}`, { status: 404 })
   }
