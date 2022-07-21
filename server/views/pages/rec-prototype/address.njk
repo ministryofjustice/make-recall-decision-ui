@@ -16,16 +16,7 @@
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>Address details</h1>
             <p class='govuk-body'>This is the last known address for {{ personalDetailsOverview.name }} in NDelius.</p>
-            <ul class='govuk-list'>
-                {% if currentAddress.line1 %}
-                    <li>{{ currentAddress.line1 }}</li>{% endif %}
-                {% if currentAddress.line2 %}
-                    <li>{{ currentAddress.line2 }}</li>{% endif %}
-                {% if currentAddress.town %}
-                    <li>{{ currentAddress.town }}</li>{% endif %}
-                {% if currentAddress.postcode %}
-                    <li>{{ currentAddress.postcode }}</li>{% endif %}
-            </ul>
+            {{ address({ address: currentAddress }) }}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% set noHtml %}

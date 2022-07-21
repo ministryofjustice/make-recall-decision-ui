@@ -11,6 +11,7 @@ import {
   PersonDetailsResponse,
   LicenceConditionsResponse,
   RiskResponse,
+  ConvictionResponse,
 } from '../../@types/make-recall-decision-api'
 import { standardLicenceConditionsRefData } from './refData/licenceConditions'
 import { AppError } from '../../AppError'
@@ -20,11 +21,11 @@ const getRefData = () => ({
   custodyOptions,
   recallTypes,
   yesNo,
-  standardLicenceConditionsRefData,
+  standardLicenceConditions: standardLicenceConditionsRefData,
   vulnerability: vulnerabilityRefData,
 })
 
-const getPageData = (sectionId: string) => {
+const getPageData = (sectionId: string, recommendation: SavedRecommendation) => {
   switch (sectionId) {
     case 'behaviour':
       return {
@@ -49,7 +50,7 @@ const getPageData = (sectionId: string) => {
     case 'recall-type':
       return {
         pageTemplate: 'recallType',
-        nextPageId: 'emergency-recall',
+        nextPageId: recommendation.recallType === 'NO_RECALL' ? 'no-recall-letter-start' : 'emergency-recall',
       }
     case 'emergency-recall':
       return {
@@ -109,6 +110,30 @@ const getPageData = (sectionId: string) => {
       return {
         pageTemplate: 'confirmationRecall',
       }
+    case 'no-recall-letter-start':
+      return {
+        pageTemplate: 'noRecallLetterStart',
+        nextPageId: 'no-recall-reasons',
+      }
+    case 'no-recall-reasons':
+      return {
+        pageTemplate: 'noRecallReasons',
+        nextPageId: 'no-recall-appointment',
+      }
+    case 'no-recall-appointment':
+      return {
+        pageTemplate: 'noRecallAppointment',
+        nextPageId: 'no-recall-preview',
+      }
+    case 'no-recall-preview':
+      return {
+        pageTemplate: 'noRecallPreview',
+        nextPageId: 'no-recall-confirmation',
+      }
+    case 'no-recall-confirmation':
+      return {
+        pageTemplate: 'noRecallConfirmation',
+      }
     case 'clear-data':
       return {
         pageTemplate: 'clearData',
@@ -123,8 +148,16 @@ const getPageUrl = ({ crn, sectionId }: { crn: string; sectionId: string }) => {
   return `/rec-prototype/${crn}/${sectionId}`
 }
 
-const getNextPageUrl = ({ crn, sectionId }: { crn: string; sectionId: string }) => {
-  const { nextPageId } = getPageData(sectionId)
+const getNextPageUrl = ({
+  crn,
+  sectionId,
+  recommendation,
+}: {
+  crn: string
+  sectionId: string
+  recommendation: SavedRecommendation
+}) => {
+  const { nextPageId } = getPageData(sectionId, recommendation)
   return getPageUrl({ crn, sectionId: nextPageId })
 }
 
@@ -160,7 +193,7 @@ interface SavedRecommendation {
   contrabandDetailYes: string
 }
 
-const decorateRecommendation = (recommendation: SavedRecommendation) => {
+const decorateRecommendation = (recommendation: SavedRecommendation, newestActiveConviction: ConvictionResponse) => {
   if (!recommendation) {
     return {
       alternativesTriedAllOptions: alternativesToRecallRefData,
@@ -222,6 +255,16 @@ const decorateRecommendation = (recommendation: SavedRecommendation) => {
     standardLicenceConditions,
     additionalLicenceConditions,
     additionalLicenceConditionsDetail,
+    additionalLicenceConditionsAllOptions: newestActiveConviction.licenceConditions.map(cond => ({
+      id: cond.licenceConditionTypeSubCat.code,
+      text: cond.licenceConditionTypeMainCat.description,
+      label: {
+        classes: 'govuk-!-font-weight-bold',
+      },
+      hint: {
+        text: cond.licenceConditionTypeSubCat.description,
+      },
+    })),
     policeName,
     policeEmail,
     policePhoneNumber,
@@ -240,37 +283,28 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
   const crnFormatted = (crn as string).toUpperCase()
 
   const recommendation = await getRecommendation(crnFormatted)
-  const caseSummary = await getCaseSummary<PersonDetailsResponse>(
-    crnFormatted,
-    'licence-conditions',
-    res.locals.user.token
-  )
+  const [licenceResponse, personalResponse] = await Promise.allSettled([
+    getCaseSummary<LicenceConditionsResponse>(crnFormatted, 'licence-conditions', res.locals.user.token),
+    getCaseSummary<PersonDetailsResponse>(crnFormatted, 'personal-details', res.locals.user.token),
+  ])
+  const personalDetails = (personalResponse as PromiseFulfilledResult<PersonDetailsResponse>).value
   let risk
   if (sectionId === 'risk-profile') {
     risk = await getCaseSummary<RiskResponse>(crnFormatted, 'risk', res.locals.user.token)
   }
-  const newestActiveConviction = (caseSummary as LicenceConditionsResponse).convictions[0]
+  const newestActiveConviction = (licenceResponse as PromiseFulfilledResult<LicenceConditionsResponse>).value
+    .convictions[0]
   res.locals = {
     ...res.locals,
     refData: getRefData(),
-    personalDetailsOverview: caseSummary.personalDetailsOverview,
-    currentAddress: caseSummary.currentAddress,
+    personalDetailsOverview: personalDetails.personalDetailsOverview,
+    currentAddress: personalDetails.currentAddress,
     crn: crnFormatted,
     pageUrlBase: `/rec-prototype/${crn}/`,
-    recommendation: decorateRecommendation(recommendation),
-    additionalLicenceConditions: newestActiveConviction.licenceConditions.map(cond => ({
-      id: cond.licenceConditionTypeSubCat.code,
-      text: cond.licenceConditionTypeMainCat.description,
-      label: {
-        classes: 'govuk-!-font-weight-bold',
-      },
-      hint: {
-        text: cond.licenceConditionTypeSubCat.description,
-      },
-    })),
+    recommendation: decorateRecommendation(recommendation, newestActiveConviction),
     risk,
   }
-  const pageData = getPageData(sectionId)
+  const pageData = getPageData(sectionId, recommendation)
   res.render(`pages/rec-prototype/${pageData.pageTemplate}`)
 }
 
@@ -287,5 +321,5 @@ export const recommendationFormPost = async (req: Request, res: Response): Promi
     }
   }
   saveRecommendation({ data: updated, crn: crnFormatted })
-  res.redirect(303, getNextPageUrl({ crn: crnFormatted, sectionId }))
+  res.redirect(303, getNextPageUrl({ crn: crnFormatted, sectionId, recommendation: rest }))
 }

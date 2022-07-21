@@ -1,0 +1,10 @@
+<ul class='govuk-list'>
+    {% if params.address.line1 %}
+        <li>{{ params.address.line1 }}</li>{% endif %}
+    {% if params.address.line2 %}
+        <li>{{ params.address.line2 }}</li>{% endif %}
+    {% if params.address.town %}
+        <li>{{ params.address.town }}</li>{% endif %}
+    {% if params.address.postcode %}
+        <li>{{ params.address.postcode }}</li>{% endif %}
+</ul>
