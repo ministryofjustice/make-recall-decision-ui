@@ -1,0 +1,61 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Start the Decision not to Recall letter", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/alternatives'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <div class="govuk-caption-l">Decision not to Recall</div>
+                            <h1 class="govuk-fieldset__heading">
+                                Start the Decision not to Recall letter
+                            </h1>
+                        </legend>
+                        <p class='govuk-body'>The letter explains your decision not to recall and what happens next. The
+                            first line says why you considered recall in the first place.</p>
+                        <p class='govuk-body'>Choose the text for the first line:</p>
+                        <div class="govuk-radios" data-module="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="noRecallFirstLineIncreased"
+                                       name="noRecallLetterFirstLine" type="radio" value="FIRST_LINE_INCREASED">
+                                <label class="govuk-label govuk-radios__label" for="noRecallFirstLineIncreased">
+                                    Your risk is assessed as increased
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="noRecallFirstLineContact"
+                                       name="noRecallLetterFirstLine" type="radio" value="FIRST_LINE_CONTACT">
+                                <label class="govuk-label govuk-radios__label" for="noRecallFirstLineContact">
+                                    Contact with your probation practitioner has broken down
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="noRecallFirstLineIncreasedAndContact"
+                                       name="noRecallLetterFirstLine" type="radio" value="FIRST_LINE_INCREASED_AND_CONTACT">
+                                <label class="govuk-label govuk-radios__label" for="noRecallFirstLineIncreasedAndContact">
+                                    Your risk is assessed as increased and contact with your probation practitioner has broken down
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -1,0 +1,76 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Next appointment for the person", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/alternatives'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <div class="govuk-caption-l">Decision not to Recall</div>
+            <h1 class='govuk-heading-l'>Preview your Decision not to Recall letter</h1>
+            <p class='govuk-body'>This is the letter that {{ personalDetailsOverview.name }} will get.</p>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class='flex flex--space-between'>
+                    <a href='#' class='govuk-button govuk-button--secondary'>Edit letter</a>
+                    <button class="govuk-button">
+                        Continue
+                    </button>
+                </div>
+            </form>
+            <div class='border'>
+                <div class='flex flex--space-between'>
+                    <div>
+                        {{ personalDetailsOverview.name }}
+                        {{ address({ address: currentAddress }) }}
+                    </div>
+                    <div class='govuk-!-text-align-right'>
+                        Greater Manchester HMPPS<br />
+                        12 Main street<br />
+                        High road<br />
+                        Townsville
+                    </div>
+                </div>
+                <div class='govuk-!-text-align-right'>
+                    File ref: B345678
+                </div>
+                <div>
+                    Dear {{ personalDetailsOverview.name }}
+                </div>
+                <div class='govuk-!-text-align-centre govuk-!-font-weight-bold'>DECISION NOT TO RECALL</div>
+
+                <div>
+                    <p class='govuk-body'>I am writing to you because you have breached your licence conditions in such a way that your risk is assessed as increased.</p>
+
+                    <p class='govuk-body'>This breach has been discussed with a Probation manager and a decision has been made that you will not be recalled to prison. This letter explains this decision.  If you have any questions, please contact me.</p>
+
+                    <p class='govuk-body'>On 25/04/2022 I was made aware of a Police Log detailing an allegation of assault, committed by yourself. During our previous meeting on 20/04/2022, you disclosed to me an argument you had with the same gentleman and admitted using bad language but denied there having been any form of confrontation. Faced with the full details of the allegation, you maintain there was no physical violence. Taking into consideration the circumstances of this matter, it is my view you have breached the following licence condition; ‘be of good behaviour and not behave in a way which undermines the purpose of the licence period’.</p>
+
+                    <p class='govuk-body'>It has been decided on this occasion not to recall you to prison. You have made considerable progress since your initial release. You have settled well into the community and have been positively focused on looking after your dog Puppy. Providing you continue to work with me, comply with your licence and are more mindful of your behaviour within the community, I feel we can continue to manage your case in the community.</p>
+
+                    <p class='govuk-body'>Going forward then, I hope we can move on from this situation in a positive manner. I am going to be adding a licence condition for you to not have contact with the victim of the alleged assault. This is to prevent any further disputes between you. I would encourage you to be more mindful of your behaviour and recognise how you may present to members in your community. I would also ask that you re-engage with Together drug and alcohol service so you can be supported to reduce your alcohol consumption as this has a negative impact on your mood as well as your thinking and behaviour. If there are ongoing concerns about your alcohol use, appointments with Together will be made mandatory and Alcohol Monitoring Licence conditions may be added in due course.</p>
+
+                    <p class='govuk-body'>I hope our conversation and/or this letter has helped to clarify what is required of you going forward and that we can continue to work together to enable you to successfully complete your licence period.</p>
+
+                    <p class='govuk-body'>Your next appointment is by telephone/video call/office visit/home visit on:
+                    Monday 9th August 202X at 2:00pm</p>
+
+                    <p class='govuk-body'>You must please contact me immediately if you are not able to keep this appointment. Should you wish to discuss anything before then, please contact me by the telephone number above.
+
+                    <p class='govuk-body'>Yours sincerely,<br />
+                    Probation Officer name
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

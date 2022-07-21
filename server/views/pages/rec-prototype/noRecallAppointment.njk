@@ -1,0 +1,67 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Next appointment for the person", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/alternatives'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <div class="govuk-caption-l">Decision not to Recall</div>
+            <h1 class='govuk-heading-l'>Next appointment for {{ personalDetailsOverview.name }}</h1>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h2 class="govuk-fieldset__heading">
+                                How will the appointment happen?
+                            </h2>
+                        </legend>
+                        <p class='govuk-body'>This appointment will go into the Decision not to Recall letter.</p>
+                        <div class="govuk-radios" data-module="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="telephone"
+                                       name="noRecallAppointmentType" type="radio" value="TELEPHONE">
+                                <label class="govuk-label govuk-radios__label" for="telephone">
+                                    Telephone
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="videoCall"
+                                       name="noRecallAppointmentType" type="radio" value="VIDEO_CALL">
+                                <label class="govuk-label govuk-radios__label" for="videoCall">
+                                    Video call
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="officeVisit"
+                                       name="noRecallAppointmentType" type="radio" value="OFFICE_VISIT">
+                                <label class="govuk-label govuk-radios__label" for="officeVisit">
+                                    Office visit
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="homeVisit"
+                                       name="noRecallAppointmentType" type="radio" value="HOME_VISIT">
+                                <label class="govuk-label govuk-radios__label" for="homeVisit">
+                                    Home visit
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
