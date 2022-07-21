@@ -20,7 +20,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             <h2 class="govuk-fieldset__heading">
                                 How will the appointment happen?
                             </h2>
@@ -57,7 +57,82 @@
                             </div>
                         </div>
                     </fieldset>
+
                 </div>
+                <fieldset class="govuk-fieldset" role="group"
+                          aria-describedby="appointment-date-hint appointment-time-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">
+                            Date and time of the appointment
+                        </h2>
+                    </legend>
+                    <div id="appointment-date-hint" class="govuk-hint">
+                        For example, 31 3 1980
+                    </div>
+                    <div class="govuk-form-group">
+                        <div class="govuk-date-input" id="appointment-date">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label govuk-date-input__label" for="appointment-date-day">
+                                        Day
+                                    </label>
+                                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                           id="appointment-date-day" name="appointmentDateDay" type="text"
+                                           inputmode="numeric">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label govuk-date-input__label" for="appointment-date-month">
+                                        Month
+                                    </label>
+                                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                           id="appointment-date-month" name="appointmentDateMonth" type="text"
+                                           inputmode="numeric">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label govuk-date-input__label" for="appointment-date-year">
+                                        Year
+                                    </label>
+                                    <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                           id="appointment-date-year" name="appointmentDateYear" type="text"
+                                           inputmode="numeric">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="appointment-time-hint" class="govuk-hint">
+                        Use the 24 hour clock
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <div class="govuk-date-input" id="appointment-date">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label govuk-date-input__label" for="appointment-date-hours">
+                                        Hours
+                                    </label>
+                                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                           id="appointment-date-hours" name="appointmentDateHours" type="text"
+                                           inputmode="numeric">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label govuk-date-input__label" for="appointment-date-minutes">
+                                        Minutes
+                                    </label>
+                                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                           id="appointment-date-minutes" name="appointmentDateMinutes" type="text"
+                                           inputmode="numeric">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
                 {{ formSubmitButton() }}
             </form>
         </div>

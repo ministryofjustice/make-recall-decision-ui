@@ -28,7 +28,7 @@
                     },
                     items: refData.standardLicenceConditions
                 }) }}
-                {% if additionalLicenceConditions.length %}
+                {% if recommendation.additionalLicenceConditionsAllOptions.length %}
                 {{ govukCheckboxes({
                     idPrefix: "additionalLicenceConditions",
                     name: "additionalLicenceConditions",
@@ -38,15 +38,15 @@
                             classes: "govuk-fieldset__legend--m"
                         }
                     },
-                    items: recommendation.additionalLicenceConditions
+                    items: recommendation.additionalLicenceConditionsAllOptions
                 }) }}
                 {% else %}
                     {{ govukTextarea({
                         name: "additionalLicenceConditionsDetail",
                         id: "additionalLicenceConditionsDetail",
                         label: {
-                            text: item.detailsLabel,
-                            classes: "govuk-label--s"
+                            text: "Additional licence conditions",
+                            classes: "govuk-label--m"
                         },
                         value: recommendation.additionalLicenceConditionsDetail
                     }) }}
