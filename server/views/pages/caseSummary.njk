@@ -83,7 +83,12 @@
                         text: 'Contact history',
                         href: pageUrlBase + 'contact-history',
                         active: section.id == 'contact-history'
-                    }
+                    },
+                    {
+                        text: 'Recommendations',
+                        href: pageUrlBase + 'prototype-recommendations',
+                        active: section.id == 'prototype-recommendations'
+                    } if flags.flagRecommendationPrototype else undefined
                 ])
             }) }}
             {% if section.id =='overview' %}
@@ -96,6 +101,8 @@
                 {% include '../partials/caseLicenceConditions.njk' %}
             {% elseif section.id =='contact-history' %}
                 {% include '../partials/caseContactHistory.njk' %}
+            {% elseif section.id =='prototype-recommendations' %}
+                {% include '../partials/caseRecommendations.njk' %}
             {% endif %}
         </div>
     </div>
