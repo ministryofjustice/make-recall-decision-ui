@@ -12,9 +12,9 @@ const urls = [
   `${routeUrls.cases}/123/licence-conditions`,
   `${routeUrls.cases}/123/contact-history`,
   // contact filter with valid dates
-  `${routeUrls.cases}/123/contact-history?dateFilters=1&dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
+  `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
   // contact filter with invalid dates and errors
-  `${routeUrls.cases}/123/contact-history?dateFilters=1&dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
+  `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
 ]
 
 context('Accessibility (a11y) Checks', () => {

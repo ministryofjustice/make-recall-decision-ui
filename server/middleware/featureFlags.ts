@@ -10,10 +10,6 @@ export const featureFlagsDefaults = {
     label: 'Make a recommendation (prototype journey for user research)',
     default: false,
   },
-  dateFilters: {
-    label: 'Contacts date filter',
-    default: true,
-  },
   contactTypesFilter: {
     label: 'Contact types filter',
     default: false,

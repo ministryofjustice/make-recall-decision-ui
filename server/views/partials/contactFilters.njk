@@ -1,70 +1,69 @@
-{% if flags.dateFilters or flags.contactTypesFilter or flags.flagSearchFilter %}
-    <div class="flex__item-one-third-desktop">
-        {% if flags.flagRecommendationPrototype and isSelectContactsPage %}
+<div class="flex__item-one-third-desktop">
+    {% if flags.flagRecommendationPrototype and isSelectContactsPage %}
         <div class='evidence-panel'>
             <div class='moj-filter__header'>
                 <h3 class='govuk-heading-m'>Add contacts</h3>
             </div>
             <div class='moj-filter__options'>
-                <div  id='evidencePanel'>
+                <div id='evidencePanel'>
                     {% include '../partials/evidenceContactsList.njk' %}
                 </div>
             </div>
         </div>
+    {% endif %}
+    {%- set filterOptionsHtml %}
+        {% if flags.flagSearchFilter %}
+        {% for searchFilters in caseSummary.filters.searchFilters.selected %}
+            <input type='hidden' name='searchFilters' value='{{ searchFilters.text }}' />
+        {% endfor %}
+        {{ govukInput({
+            label: {
+                text: "Search term",
+                classes: "govuk-label--s"
+            },
+            hint: {
+                text: 'For example, MAPPA'
+            },
+            id: "searchFilters",
+            name: "searchFilters",
+            type: 'search',
+            value: errors.searchFilters.values if errors.searchFilters else undefined,
+            errorMessage: errorMessage(errors.searchFilters)
+        }) }}
         {% endif %}
-        {%- set filterOptionsHtml %}
-            {% if flags.flagSearchFilter %}
-                {% for searchFilters in caseSummary.filters.searchFilters.selected %}
-                    <input type='hidden' name='searchFilters' value='{{ searchFilters.text }}' />
-                {% endfor %}
-                {{ govukInput({
-                    label: {
-                        text: "Search term",
-                        classes: "govuk-label--s"
-                    },
-                    hint: {
-                        text: 'For example, MAPPA'
-                    },
-                    id: "searchFilters",
-                    name: "searchFilters",
-                    type: 'search',
-                    value: errors.searchFilters.values if errors.searchFilters else undefined,
-                    errorMessage: errorMessage(errors.searchFilters)
-                }) }}
-            {% endif %}
-            {% if flags.dateFilters %}
-                {{ govukDateInput({
-                    id: "dateFrom",
-                    namePrefix: "dateFrom",
-                    fieldset: {
-                        legend: {
-                            html: "Date range<span class='govuk-visually-hidden'> From</span>",
-                            classes: "govuk-fieldset__legend--s"
-                        }
-                    },
-                    items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
-                    errorMessage: errorMessage(errors.dateFrom)
-                }) }}
-                {{ govukDateInput({
-                    id: "dateTo",
-                    namePrefix: "dateTo",
-                    fieldset: {
-                        legend: {
-                            html: "<span class='govuk-visually-hidden'>Date range </span>To",
-                            classes: "govuk-fieldset__legend--s"
-                        }
-                    },
-                    items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
-                    errorMessage: errorMessage(errors.dateTo)
-                }) }}
-            {% endif %}
-            {% if flags.contactTypesFilter %}
-                <div class='govuk-form-group'>
+        {{ govukDateInput({
+            id: "dateFrom",
+            namePrefix: "dateFrom",
+            fieldset: {
+                legend: {
+                    html: "Date range<span class='govuk-visually-hidden'> From</span>",
+                    classes: "govuk-fieldset__legend--s"
+                }
+            },
+            items: dateTimeItems("dateFrom", caseSummary.filters.dateRange.dateFrom),
+            errorMessage: errorMessage(errors.dateFrom)
+        }) }}
+        {{ govukDateInput({
+            id: "dateTo",
+            namePrefix: "dateTo",
+            fieldset: {
+                legend: {
+                    html: "<span class='govuk-visually-hidden'>Date range </span>To",
+                    classes: "govuk-fieldset__legend--s"
+                }
+            },
+            items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
+            errorMessage: errorMessage(errors.dateTo)
+        }) }}
+        {% if flags.contactTypesFilter %}
+            <div class='govuk-form-group'>
                 <h2 class='govuk-heading-s'>Contact types</h2>
                 {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
-                    <details class='collapsible govuk-!-margin-bottom-2' data-module="govuk-details" {{ "open" if group.isGroupOpen }}>
+                    <details class='collapsible govuk-!-margin-bottom-2'
+                             data-module="govuk-details" {{ "open" if group.isGroupOpen }}>
                         <summary class="govuk-body">
-                          {{ group.label }} <span class="text-secondary">(<span data-qa='group-contact-count'>{{group.contactCountInGroup}}</span>)</span>
+                            {{ group.label }} <span class="text-secondary">(<span
+                                        data-qa='group-contact-count'>{{ group.contactCountInGroup }}</span>)</span>
                         </summary>
                         <div>
                             {{ govukCheckboxes({
@@ -82,48 +81,47 @@
                         </div>
                     </details>
                 {% endfor %}
-                </div>
-            {% endif %}
-        {% endset -%}
-        <div class='govuk-!-margin-bottom-4'>
-            <form>
-                {{ mojFilter({
+            </div>
+        {% endif %}
+    {% endset -%}
+    <div class='govuk-!-margin-bottom-4'>
+        <form>
+            {{ mojFilter({
+                heading: {
+                    text: 'Filter'
+                },
+                selectedFilters: {
                     heading: {
-                        text: 'Filter'
+                        text: 'Selected filters'
                     },
-                    selectedFilters: {
-                        heading: {
-                            text: 'Selected filters'
+                    clearLink: {
+                        text: 'Clear filters',
+                        href: urlInfo.path
+                    },
+                    categories: removeUndefinedListItems([
+                        {
+                            heading: {
+                            text: 'Search term'
                         },
-                        clearLink: {
-                            text: 'Clear filters',
-                            href: urlInfo.path
+                            items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
+                        } if caseSummary.filters.searchFilters.selected.length else undefined,
+                        {
+                            heading: {
+                            text: 'Date range'
                         },
-                        categories: removeUndefinedListItems([
-                            {
-                                heading: {
-                                text: 'Search term'
-                            },
-                                items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
-                            } if caseSummary.filters.searchFilters.selected.length else undefined,
-                            {
-                                heading: {
-                                text: 'Date range'
-                            },
-                                items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
-                            } if caseSummary.filters.dateRange.selected.length else undefined,
-                            {
-                                heading: {
-                                text: 'Contact type'
-                            },
-                                items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
-                            } if caseSummary.filters.contactTypes.selected.length else undefined
-                        ])
-                    } if caseSummary.hasActiveFilters else undefined,
-                    optionsHtml: filterOptionsHtml
-                }) }}
-            </form>
-        </div>
+                            items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
+                        } if caseSummary.filters.dateRange.selected.length else undefined,
+                        {
+                            heading: {
+                            text: 'Contact type'
+                        },
+                            items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
+                        } if caseSummary.filters.contactTypes.selected.length else undefined
+                    ])
+                } if caseSummary.hasActiveFilters else undefined,
+                optionsHtml: filterOptionsHtml
+            }) }}
+        </form>
     </div>
-{% endif %}
+</div>
 
