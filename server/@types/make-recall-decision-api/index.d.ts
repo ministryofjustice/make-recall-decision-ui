@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export type { ActiveRecommendation } from './models/ActiveRecommendation';
 export type { CaseDocument } from './models/CaseDocument';
 export type { CaseDocumentType } from './models/CaseDocumentType';
 export type { CaseSummaryOverviewResponse } from './models/CaseSummaryOverviewResponse';
@@ -11,6 +12,7 @@ export type { ContactHistoryResponse } from './models/ContactHistoryResponse';
 export type { ContactSummaryResponse } from './models/ContactSummaryResponse';
 export type { ContingencyPlan } from './models/ContingencyPlan';
 export type { ConvictionResponse } from './models/ConvictionResponse';
+export type { CreateRecommendationRequest } from './models/CreateRecommendationRequest';
 export type { CurrentAddress } from './models/CurrentAddress';
 export type { FactorsToReduceRisk } from './models/FactorsToReduceRisk';
 export type { HistoricalScore } from './models/HistoricalScore';
@@ -33,8 +35,9 @@ export type { PersonDetailsResponse } from './models/PersonDetailsResponse';
 export type { PredictorScores } from './models/PredictorScores';
 export type { ProbationTeam } from './models/ProbationTeam';
 export type { Reason } from './models/Reason';
-export type { RecommendationRequest } from './models/RecommendationRequest';
-export type { RecommendationResponse } from './models/RecommendationResponse';
+export { RecallType } from './models/RecallType';
+export type { RecallTypeOption } from './models/RecallTypeOption';
+export { RecommendationResponse } from './models/RecommendationResponse';
 export type { ReleaseSummaryResponse } from './models/ReleaseSummaryResponse';
 export type { Risk } from './models/Risk';
 export type { RiskOfSeriousHarm } from './models/RiskOfSeriousHarm';
@@ -43,6 +46,7 @@ export type { RiskResponse } from './models/RiskResponse';
 export type { RSR } from './models/RSR';
 export type { Scores } from './models/Scores';
 export type { SearchByCrnResponse } from './models/SearchByCrnResponse';
+export { UpdateRecommendationRequest } from './models/UpdateRecommendationRequest';
 export type { UserAccessResponse } from './models/UserAccessResponse';
 export type { WhenRiskHighest } from './models/WhenRiskHighest';
 export type { WhoIsAtRisk } from './models/WhoIsAtRisk';

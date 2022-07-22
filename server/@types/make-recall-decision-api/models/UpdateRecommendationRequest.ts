@@ -4,14 +4,12 @@
 
 import type { RecallType } from './RecallType';
 
-export type RecommendationResponse = {
-    id?: number;
-    status?: RecommendationResponse.status;
-    crn?: string;
+export type UpdateRecommendationRequest = {
     recallType?: RecallType;
+    status?: UpdateRecommendationRequest.status;
 };
 
-export namespace RecommendationResponse {
+export namespace UpdateRecommendationRequest {
 
     export enum status {
         DRAFT = 'DRAFT',

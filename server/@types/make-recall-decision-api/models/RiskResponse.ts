@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { ActiveRecommendation } from './ActiveRecommendation';
 import type { CircumstancesIncreaseRisk } from './CircumstancesIncreaseRisk';
 import type { ContingencyPlan } from './ContingencyPlan';
 import type { FactorsToReduceRisk } from './FactorsToReduceRisk';
@@ -26,4 +27,5 @@ export type RiskResponse = {
     circumstancesIncreaseRisk?: CircumstancesIncreaseRisk;
     factorsToReduceRisk?: FactorsToReduceRisk;
     whenRiskHighest?: WhenRiskHighest;
+    activeRecommendation?: ActiveRecommendation;
 };
