@@ -10,7 +10,6 @@ import {
   ContactSummaryResponse,
   PersonDetailsResponse,
   LicenceConditionsResponse,
-  RiskResponse,
   ConvictionResponse,
 } from '../../@types/make-recall-decision-api'
 import { standardLicenceConditionsRefData } from './refData/licenceConditions'
@@ -50,7 +49,11 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'recall-type':
       return {
         pageTemplate: 'recallType',
-        nextPageId: recommendation.recallType === 'NO_RECALL' ? 'no-recall-letter-start' : 'emergency-recall',
+        nextPageId: recommendation.recallType === 'NO_RECALL' ? 'no-recall-letter-start' : 'sensitive',
+      }
+    case 'sensitive':
+      return {
+        pageTemplate: 'sensitive',
       }
     case 'emergency-recall':
       return {
@@ -94,6 +97,16 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'arrest-issues':
       return {
         pageTemplate: 'arrestIssues',
+        nextPageId: 'summary',
+      }
+    case 'victim-contact-scheme':
+      return {
+        pageTemplate: 'victimContactScheme',
+        nextPageId: 'victim-liaison-officer',
+      }
+    case 'victim-liaison-officer':
+      return {
+        pageTemplate: 'victimLiaisonOfficer',
         nextPageId: 'summary',
       }
     case 'contraband':
@@ -288,10 +301,6 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
     getCaseSummary<PersonDetailsResponse>(crnFormatted, 'personal-details', res.locals.user.token),
   ])
   const personalDetails = (personalResponse as PromiseFulfilledResult<PersonDetailsResponse>).value
-  let risk
-  if (sectionId === 'risk-profile') {
-    risk = await getCaseSummary<RiskResponse>(crnFormatted, 'risk', res.locals.user.token)
-  }
   const newestActiveConviction = (licenceResponse as PromiseFulfilledResult<LicenceConditionsResponse>).value
     .convictions[0]
   res.locals = {
@@ -302,7 +311,6 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
     crn: crnFormatted,
     pageUrlBase: `/rec-prototype/${crn}/`,
     recommendation: decorateRecommendation(recommendation, newestActiveConviction),
-    risk,
   }
   const pageData = getPageData(sectionId, recommendation)
   res.render(`pages/rec-prototype/${pageData.pageTemplate}`)

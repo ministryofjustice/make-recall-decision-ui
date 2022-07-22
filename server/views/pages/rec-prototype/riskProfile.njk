@@ -21,10 +21,33 @@
                 {{ formSubmitButton() }}
             </form>
             <h2 class='govuk-heading-m'>OASys R6.1</h2>
-            <p class='govuk-body'>tbc...</p>
+            <p class='govuk-body'>Current relationship with close family members</p>
+            <div class="govuk-inset-text">
+                <p class='govuk-body'>Duncann has a good relationship with his mother but is estranged from his father. He also has a brother he is close to and sometimes stays with for extended periods. Duncann is separated from his wife, and they are no longer on speaking terms. Duncann no longer sees or speaks to his three children, aged 10, 12 and 15.</p>
+            </div>
             <h2 class='govuk-heading-m'>OASys R6.2</h2>
-            {{ roshWidget(risk.riskOfSeriousHarm) }}
-            <p class='govuk-body'>tbc...</p>
+            <p class='govuk-body'>Previous behaviour. Offence indicative of risk of serious harm.</p>
+            <div class="govuk-inset-text">
+                <h3 class='govuk-heading-s'>What exactly did s/he do?</h3>
+                <p class='govuk-body'>Duncann was drinking all day at the old cock tavern before going down to the vitims garage to break in and steal the equipment once confronted he.</p>
+                <h3 class='govuk-heading-s'>Where and When did s/he do it?</h3>
+                <p class='govuk-body'>The assult happened at night with the long day of drinking unere duncann’s belt whihc lead to poor decision making.</p>
+                <h3 class='govuk-heading-s'>How did s/he do it (was there any pre planning, use of weapon, tool etc)</h3>
+                <p class='govuk-body'>The was a long history of disgruntled atitude between the vistom and Duncann over pay and employment disputes from years back.</p>
+            </div>
+            {{ roshWidget({
+                "overallRisk": "VERY_HIGH",
+                "riskToChildren": "LOW",
+                "riskToPublic": "VERY_HIGH",
+                "riskToKnownAdult": "MEDIUM",
+                "riskToStaff": "HIGH",
+                "lastUpdated": "2021-10-09"
+            }) }}
+            {{ mappaWidget({
+                "level": "CAT 2/LEVEL 1",
+                "isNominal": false,
+                "lastUpdated": "10th October 2021"
+            }) }}
         </div>
     </div>
 {% endblock %}
