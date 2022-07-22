@@ -28,7 +28,7 @@
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}alternatives">Alternatives
-                                tried</a>
+                                tried already</a>
                             {{ taskStatus({ hasData: recommendation.alternativesTried }) }}
                         </li>
                     </ul>
@@ -81,6 +81,17 @@
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}vulnerability">Would recall affect vulnerability or additional
                                 needs?</a>
                             {{ taskStatus({ hasData: recommendation.vulnerability }) }}
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Victim liaison
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}victim-contact-scheme">Are there any victims in the victim contact scheme?</a>
+                            {{ taskStatus({ hasData: recommendation.victimContactScheme }) }}
                         </li>
                     </ul>
                 </li>

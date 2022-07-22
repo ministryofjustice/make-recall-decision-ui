@@ -26,6 +26,23 @@
                             Give full details, including dates where relevant.
                         </div>
                         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="alternativesTried-NONE" name="alternativesTried" type="checkbox" value="NONE" data-behaviour="exclusive" data-aria-controls="conditional-NONE">
+                                <label class="govuk-label govuk-checkboxes__label" for="alternativesTried-NONE">
+                                    None
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-NONE">
+                                {{ govukTextarea({
+                                    name: "alternativesTriedDetail-NONE",
+                                    id: "alternativesTriedDetail-NONE",
+                                    label: {
+                                        text: "Explain why"
+                                    },
+                                    value: ""
+                                }) }}
+                            </div>
+                            <div class="govuk-checkboxes__divider">or</div>
                             {% for item in recommendation.alternativesTriedAllOptions %}
                             <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input" id="option-{{ item.value }}" name="alternativesTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if item.checked %}checked{% endif %}>
@@ -38,31 +55,12 @@
                                     name: "alternativesTriedDetail-" + item.value,
                                     id: "alternativesTriedDetail-" + item.value,
                                     label: {
-                                        text: item.detailsLabel,
-                                        classes: "govuk-label--s"
+                                        text: item.detailsLabel
                                     },
                                     value: item.detail
                                 }) }}
                             </div>
                             {% endfor %}
-                            <div class="govuk-checkboxes__divider">or</div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="alternativesTried-NONE" name="alternativesTried" type="checkbox" value="NONE" data-behaviour="exclusive" data-aria-controls="conditional-NONE">
-                                <label class="govuk-label govuk-checkboxes__label" for="alternativesTried-NONE">
-                                    None
-                                </label>
-                            </div>
-                            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-NONE">
-                                {{ govukTextarea({
-                                    name: "alternativesTriedDetail-NONE",
-                                    id: "alternativesTriedDetail-NONE",
-                                    label: {
-                                        text: "Explain why",
-                                        classes: "govuk-label--s"
-                                    },
-                                    value: ""
-                                }) }}
-                            </div>
                         </div>
 
                     </fieldset>

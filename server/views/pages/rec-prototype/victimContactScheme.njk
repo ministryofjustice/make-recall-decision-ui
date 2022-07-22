@@ -1,26 +1,27 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Is this an emergency recall?", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "Are there any victims in the victim contact scheme?", hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href:  '/rec-prototype/' + crn + '/sensitive'
+        href:  '/rec-prototype/' + crn + '/summary'
     }) }}
 {% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-caption-l">Victim liaison</div>
                 {{ govukRadios({
-                    idPrefix: "emergencyRecall",
-                    name: "emergencyRecall",
+                    idPrefix: "victimContactScheme",
+                    name: "victimContactScheme",
                     fieldset: {
                         legend: {
-                            text: "Is this an emergency recall?",
+                            text: "Are there any victims in the victim contact scheme?",
                             classes: "govuk-fieldset__legend--l",
                             isPageHeading: true
                         }
