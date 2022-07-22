@@ -1,15 +1,32 @@
 import { getFormValues } from './getFormValues'
+import { RecallType } from '../../../@types/make-recall-decision-api'
 
 describe('getFormValues', () => {
+  const apiValues = {
+    recallType: {
+      value: 'STANDARD' as RecallType.value.STANDARD,
+      options: [
+        {
+          text: 'Fixed term',
+          value: 'FIXED_TERM',
+        },
+        {
+          text: 'Standard',
+          value: 'STANDARD',
+        },
+        {
+          text: 'No recall',
+          value: 'NO_RECALL',
+        },
+      ],
+    },
+  }
   it("should not mark an option as checked if there's an error", () => {
     const errors = {
       recallType: {
         text: 'Select an option',
         href: '#recallType',
       },
-    }
-    const apiValues = {
-      recallType: 'STANDARD',
     }
     const formValues = getFormValues({ errors, apiValues })
     expect(formValues).toEqual({
@@ -35,9 +52,6 @@ describe('getFormValues', () => {
 
   it('should use the API value if there is no error or unsaved value', () => {
     const errors = {}
-    const apiValues = {
-      recallType: 'STANDARD',
-    }
     const formValues = getFormValues({ errors, apiValues })
     expect(formValues).toEqual({
       recallType: [
