@@ -10,7 +10,6 @@ import {
   ContactSummaryResponse,
   PersonDetailsResponse,
   LicenceConditionsResponse,
-  RiskResponse,
   ConvictionResponse,
 } from '../../@types/make-recall-decision-api'
 import { standardLicenceConditionsRefData } from './refData/licenceConditions'
