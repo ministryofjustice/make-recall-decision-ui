@@ -1,0 +1,27 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Stop and think", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/rec-prototype/' + crn + '/recall-type'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>Sensitive information</h1>
+            <p class='govuk-body'>You’re about to complete a Part A form. {{ personalDetailsOverview.name }} will see
+                the form.</p>
+            <p class='govuk-body'>You must submit sensitive information separately if you do not
+                want {{ personalDetailsOverview.name }} to see it. Scan and email it with the Non-Disclosure Application
+                Form (Annex A Pro-forma - attached to PI14/2016).</p>
+            <div class='govuk-!-margin-top-6'>
+                <a href='/rec-prototype/{{ crn }}/emergency-recall' class='govuk-button'>Continue</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
