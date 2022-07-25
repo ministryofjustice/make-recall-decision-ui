@@ -20,16 +20,6 @@
       "licenceExpiryDate": "2023-06-16"
     }
   ],
-  "offences": [
-    {
-      "mainOffence": true,
-      "description": "Robbery (other than armed robbery)"
-    },
-    {
-      "mainOffence": false,
-      "description": "Shoplifting"
-    }
-  ],
   "risk": {
     "flags": ["Victim contact", "Mental health issues", "MAPPA"]
   },

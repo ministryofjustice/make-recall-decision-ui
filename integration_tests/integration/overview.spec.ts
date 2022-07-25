@@ -7,7 +7,7 @@ context('Overview', () => {
     cy.signIn()
   })
 
-  it('shows licence information and a list of offences', () => {
+  it('shows licence information', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
@@ -21,9 +21,6 @@ context('Overview', () => {
       'equal',
       formatDateTimeFromIsoString({ isoDate: convictions[0].licenceExpiryDate })
     )
-    // offence overview
-    cy.getDefinitionListValue('Offences').should('contain', 'Robbery (other than armed robbery)')
-    cy.getDefinitionListValue('Offences').should('contain', 'Shoplifting')
     // risk flags
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
@@ -68,25 +65,6 @@ context('Overview', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getElement('No risks').should('exist')
-  })
-
-  it('changes label to Offence if there is only one', () => {
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: {
-        ...getCaseOverviewResponse,
-        offences: [
-          {
-            mainOffence: true,
-            description: 'Robbery (other than armed robbery)',
-          },
-        ],
-      },
-    })
-    const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getDefinitionListValue('Offence').should('contain', 'Robbery (other than armed robbery)')
   })
 
   it('can switch between case summary pages', () => {
