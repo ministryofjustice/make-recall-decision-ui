@@ -4,7 +4,7 @@ export const transformOverview = (caseSummary: CaseSummaryOverviewResponse) => {
   return {
     ...caseSummary,
     convictions: {
-      active: caseSummary.convictions.filter(conviction => conviction.active),
+      active: caseSummary.convictions ? caseSummary.convictions.filter(conviction => conviction.active) : [],
     },
   }
 }
