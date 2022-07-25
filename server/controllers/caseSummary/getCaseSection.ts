@@ -30,7 +30,9 @@ export const getCaseSection = async (
   switch (sectionId) {
     case 'overview':
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
-      caseSummary = transformOverview(caseSummaryRaw)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = transformOverview(caseSummaryRaw)
+      }
       sectionLabel = 'Overview'
       break
     case 'risk':
