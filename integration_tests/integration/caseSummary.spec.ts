@@ -2,15 +2,25 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 
-context('Case summary', () => {
+context('Overview', () => {
   beforeEach(() => {
     cy.signIn()
   })
 
-  it('can view the overview page with a list of offences', () => {
+  it('shows licence information and a list of offences', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
+    // licence info
+    const { releaseSummary, convictions } = getCaseOverviewResponse
+    cy.getText('lastReleaseDate').should(
+      'equal',
+      formatDateTimeFromIsoString({ isoDate: releaseSummary.lastRelease.date })
+    )
+    cy.getText('licenceExpiryDate-1').should(
+      'equal',
+      formatDateTimeFromIsoString({ isoDate: convictions[0].licenceExpiryDate })
+    )
     // offence overview
     cy.getDefinitionListValue('Offences').should('contain', 'Robbery (other than armed robbery)')
     cy.getDefinitionListValue('Offences').should('contain', 'Shoplifting')
@@ -18,6 +28,35 @@ context('Case summary', () => {
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
+  })
+
+  it('shows multiple licence expiry dates', () => {
+    const crn = 'X34983'
+    const convictions = [
+      {
+        active: true,
+        licenceExpiryDate: '2023-06-17',
+      },
+      {
+        active: false,
+        licenceExpiryDate: '2020-07-16',
+      },
+      {
+        active: true,
+        licenceExpiryDate: '2020-06-16',
+      },
+    ]
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        convictions,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('licenceExpiryDate-1').should('equal', '17 June 2023')
+    cy.getText('licenceExpiryDate-2').should('equal', '16 June 2020')
   })
 
   it('shows a message if no risk flags', () => {
@@ -48,35 +87,6 @@ context('Case summary', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getDefinitionListValue('Offence').should('contain', 'Robbery (other than armed robbery)')
-  })
-
-  it('can view the personal details page', () => {
-    const crn = 'X34983'
-    const { personalDetailsOverview } = getCaseOverviewResponse
-    cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
-    cy.pageHeading().should('equal', 'Personal details for Paula Smith')
-
-    cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
-    cy.getText('personalDetailsOverview-dateOfBirth').should(
-      'equal',
-      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.dateOfBirth })
-    )
-    cy.getText('personalDetailsOverview-age').should('equal', personalDetailsOverview.age.toString())
-    cy.getText('personalDetailsOverview-gender').should(
-      'equal',
-      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender })
-    )
-    // personal details
-    cy.getDefinitionListValue('Current address').should('contain', '5 Anderton Road')
-    cy.getDefinitionListValue('Current address').should('contain', 'Newham')
-    cy.getDefinitionListValue('Current address').should('contain', 'London')
-    cy.getDefinitionListValue('Current address').should('contain', 'E15 1UJ')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Name: Jenny Eclair')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Code: N07')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Team: NPS London')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Telephone: 07824637629')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Email: jenny@probation.com')
-    cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
   })
 
   it('can switch between case summary pages', () => {

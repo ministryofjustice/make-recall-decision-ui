@@ -6,6 +6,20 @@
     "gender": "Male",
     "crn": "A12345"
   },
+  "convictions": [
+    {
+      "active": true,
+      "licenceExpiryDate": "2023-06-16"
+    },
+    {
+      "active": false,
+      "licenceExpiryDate": "2021-03-24"
+    },
+    {
+      "active": false,
+      "licenceExpiryDate": "2023-06-16"
+    }
+  ],
   "offences": [
     {
       "mainOffence": true,
@@ -18,5 +32,10 @@
   ],
   "risk": {
     "flags": ["Victim contact", "Mental health issues", "MAPPA"]
+  },
+  "releaseSummary": {
+    "lastRelease": {
+      "date": "2022-05-23"
+    }
   }
 }

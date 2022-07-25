@@ -39,6 +39,6 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     crn: normalizedCrn,
     sectionId,
     username: res.locals.user.username,
-    logErrors: isPreprodOrProd(res.locals.env),
+    logErrors: isPreprodOrProd(res.locals.env) && process.env.NODE_ENV !== 'test',
   })
 }

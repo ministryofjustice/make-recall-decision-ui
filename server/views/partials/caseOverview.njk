@@ -1,11 +1,36 @@
-<h1 class='govuk-heading-m govuk-visually-hidden'>Overview<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
+<h1 class='govuk-heading-m govuk-visually-hidden'>Overview<span
+            class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% set licenceHtml %}
+            <div class='flex flex--space-between'>
+                <div>
+                    <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Last release date</h3>
+                    <div class='govuk-heading-m govuk-!-margin-top-0' data-qa='lastReleaseDate'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) }}</div>
+                </div>
+                <div>
+                    <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Licence expiry date{% if caseSummary.convictions.active.length > 1 %}s{% endif %}</h3>
+                    <div class='govuk-heading-m govuk-!-margin-top-0'>
+                        <ol class='govuk-list'>
+                            {% for conviction in caseSummary.convictions.active %}
+                                <li class='govuk-heading-m' data-qa='licenceExpiryDate-{{ loop.index }}'>{{ formatDateTimeFromIsoString({isoDate: conviction.licenceExpiryDate }) }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        {% endset %}
+        {{ appSummaryCard({
+            titleText: 'Licence',
+            classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+            html: licenceHtml
+        }) }}
+
         {% set offenceHtml %}
             <ul class='govuk-list'>
-            {% for offence in caseSummary.offences %}
-            <li>{{ offence.description }}</li>
-            {% endfor %}
+                {% for offence in caseSummary.offences %}
+                    <li>{{ offence.description }}</li>
+                {% endfor %}
             </ul>
         {% endset %}
         {{ appSummaryCard({
