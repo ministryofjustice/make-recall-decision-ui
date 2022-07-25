@@ -11,6 +11,7 @@ import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import { AppError } from '../../AppError'
+import { transformOverview } from './overview/transformOverview'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -28,7 +29,10 @@ export const getCaseSection = async (
   const trimmedCrn = crn.trim()
   switch (sectionId) {
     case 'overview':
-      caseSummary = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
+      caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = transformOverview(caseSummaryRaw)
+      }
       sectionLabel = 'Overview'
       break
     case 'risk':

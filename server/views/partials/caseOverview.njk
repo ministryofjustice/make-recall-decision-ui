@@ -1,24 +1,32 @@
-<h1 class='govuk-heading-m govuk-visually-hidden'>Overview<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
+<h1 class='govuk-heading-m govuk-visually-hidden'>Overview<span
+            class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% set offenceHtml %}
-            <ul class='govuk-list'>
-            {% for offence in caseSummary.offences %}
-            <li>{{ offence.description }}</li>
-            {% endfor %}
-            </ul>
+        {% set licenceHtml %}
+            <div class='flex flex--space-between'>
+                <div>
+                    <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Last release date</h3>
+                    <div class='govuk-heading-m govuk-!-margin-top-0'
+                         data-qa='lastReleaseDate'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if caseSummary.releaseSummary.lastRelease.date else 'Not available' }}</div>
+                </div>
+                <div>
+                    <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Licence expiry
+                        date{% if caseSummary.convictions.active.length > 1 %}s{% endif %}</h3>
+                    <div class='govuk-heading-m govuk-!-margin-top-0'>
+                        <ol class='govuk-list'>
+                            {% for conviction in caseSummary.convictions.active %}
+                                <li class='govuk-heading-m'
+                                    data-qa='licenceExpiryDate-{{ loop.index }}'>{{ formatDateTimeFromIsoString({isoDate: conviction.licenceExpiryDate }) if conviction.licenceExpiryDate else 'Not available' }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+            </div>
         {% endset %}
         {{ appSummaryCard({
-            titleText: 'Offence overview',
+            titleText: 'Licence',
             classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
-            html: govukSummaryList({
-                rows: [
-                    {
-                        key: { html: 'Offences' if caseSummary.offences.length > 1 else 'Offence' },
-                        value: { html: offenceHtml }
-                    }
-                ]
-            })
+            html: licenceHtml
         }) }}
     </div>
     <div class="govuk-grid-column-one-third-from-desktop" data-qa='riskFlags'>

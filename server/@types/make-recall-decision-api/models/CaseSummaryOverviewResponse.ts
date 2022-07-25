@@ -7,6 +7,7 @@ import type { Offence } from './Offence';
 import type { PersonDetails } from './PersonDetails';
 import type { Risk } from './Risk';
 import type { UserAccessResponse } from './UserAccessResponse';
+import { ConvictionResponse } from './ConvictionResponse'
 
 export type CaseSummaryOverviewResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -14,4 +15,5 @@ export type CaseSummaryOverviewResponse = {
     offences?: Array<Offence>;
     risk?: Risk;
     activeRecommendation?: ActiveRecommendation;
+    convictions?: Array<ConvictionResponse>;
 };

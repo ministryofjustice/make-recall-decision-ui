@@ -40,7 +40,17 @@ describe('caseSummary', () => {
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'overview', token)
-    expect(res.locals.caseSummary).toEqual(caseOverviewApiResponse)
+    expect(res.locals.caseSummary).toEqual({
+      ...caseOverviewApiResponse,
+      convictions: {
+        active: [
+          {
+            active: true,
+            licenceExpiryDate: '2023-06-16',
+          },
+        ],
+      },
+    })
     expect(res.locals.section).toEqual({
       id: 'overview',
       label: 'Overview',
@@ -109,6 +119,7 @@ describe('caseSummary', () => {
         },
       ],
     })
+    jest.spyOn(redisExports, 'createRedisClient').mockReturnValue(null)
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'contact-history' } })
     await caseSummary(req, res)
@@ -221,7 +232,7 @@ describe('caseSummary', () => {
       crn: 'A1234AB',
       sectionId: 'risk',
       username: 'Dave',
-      logErrors: true,
+      logErrors: false,
     })
   })
 })

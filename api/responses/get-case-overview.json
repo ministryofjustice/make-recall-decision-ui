@@ -6,17 +6,26 @@
     "gender": "Male",
     "crn": "A12345"
   },
-  "offences": [
+  "convictions": [
     {
-      "mainOffence": true,
-      "description": "Robbery (other than armed robbery)"
+      "active": true,
+      "licenceExpiryDate": "2023-06-16"
     },
     {
-      "mainOffence": false,
-      "description": "Shoplifting"
+      "active": false,
+      "licenceExpiryDate": "2021-03-24"
+    },
+    {
+      "active": false,
+      "licenceExpiryDate": "2023-06-16"
     }
   ],
   "risk": {
     "flags": ["Victim contact", "Mental health issues", "MAPPA"]
+  },
+  "releaseSummary": {
+    "lastRelease": {
+      "date": "2022-05-23"
+    }
   }
 }
