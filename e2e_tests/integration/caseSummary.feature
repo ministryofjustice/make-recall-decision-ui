@@ -10,3 +10,5 @@ Feature: Case summary
     And Maria views the licence conditions page
     And Maria views the Contact history page
     And Maria filters contacts by date range
+    And Maria starts a new recommendation
+    And Maria recommends a fixed term recall

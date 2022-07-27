@@ -72,7 +72,7 @@ export const getCaseSection = async (
         })} for ${trimmedCrn} - Contact history`
       }
       break
-    case 'prototype-recommendations':
+    case 'recommendations':
       sectionLabel = 'Recommendations'
       caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, 'personal-details', token)
       break

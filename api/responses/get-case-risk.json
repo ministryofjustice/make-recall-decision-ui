@@ -136,5 +136,10 @@
       "description": "When is the risk likely to be greatest?"
     },
     "description": "If Mr Edwin has had recent changes in his life that cause him to take drugs or drink; if he is surrounded by criminal peers/associates; if he is in a public place where he feels like he needs to protect his reputation."
+  },
+  "activeRecommendation": {
+    "recommendationId": 1,
+    "lastModifiedDate": "2022-05-03T13.34.23.000Z",
+    "lastModifiedBy": "Belinda Davies"
   }
 }
