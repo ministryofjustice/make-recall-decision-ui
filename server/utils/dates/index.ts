@@ -28,10 +28,12 @@ export const sortListByDateField = <T>({
   list,
   dateKey,
   newestFirst = true,
+  undefinedValuesLast = false,
 }: {
   list: T[]
   dateKey: string
   newestFirst?: boolean
+  undefinedValuesLast?: boolean
 }): T[] => {
   if (!Array.isArray(list)) {
     return undefined
@@ -40,6 +42,12 @@ export const sortListByDateField = <T>({
     const dateA = getDateProperty(a, dateKey)
     const dateB = getDateProperty(b, dateKey)
     if (!dateA || !dateB) {
+      if (dateA || dateB) {
+        if (!dateA) {
+          return undefinedValuesLast ? 1 : -1
+        }
+        return undefinedValuesLast ? -1 : 1
+      }
       return 0
     }
     return diffDatesForSort(dateA, dateB, newestFirst)

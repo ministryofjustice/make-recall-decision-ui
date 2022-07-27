@@ -3,17 +3,17 @@
 /* eslint-disable */
 
 import type { ActiveRecommendation } from './ActiveRecommendation';
-import type { Offence } from './Offence';
+import type { ConvictionResponse } from './ConvictionResponse';
 import type { PersonDetails } from './PersonDetails';
+import type { ReleaseSummaryResponse } from './ReleaseSummaryResponse';
 import type { Risk } from './Risk';
 import type { UserAccessResponse } from './UserAccessResponse';
-import { ConvictionResponse } from './ConvictionResponse'
 
 export type CaseSummaryOverviewResponse = {
     userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: PersonDetails;
-    offences?: Array<Offence>;
+    convictions?: Array<ConvictionResponse>;
+    releaseSummary?: ReleaseSummaryResponse;
     risk?: Risk;
     activeRecommendation?: ActiveRecommendation;
-    convictions?: Array<ConvictionResponse>;
 };

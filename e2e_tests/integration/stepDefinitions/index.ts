@@ -16,8 +16,8 @@ When('Maria searches for a case', () => {
 
 When('Maria views the overview page', () => {
   cy.get('@offenderName').then(offenderName => cy.getText('sectionHeading').should('equal', offenderName))
-  // cy.getText('lastReleaseDate').should('not.be.empty')
-  // cy.getText('licenceExpiryDate-1').should('not.be.empty')
+  cy.getText('lastReleaseDate').should('not.be.empty')
+  cy.getText('licenceExpiryDate').should('not.be.empty')
 })
 
 When('Maria views the risk page', () => {

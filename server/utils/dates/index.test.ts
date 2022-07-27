@@ -25,4 +25,16 @@ describe('sortListByDateField', () => {
     const result = sortListByDateField({ list: undefined, dateKey: 'date' })
     expect(result).toBeUndefined()
   })
+
+  it('places undefined values at the end if param is true', () => {
+    const list = [{ a: null }, { a: '2021-02-13' }, { a: undefined }, { a: '2022-02-11' }]
+    const sorted = sortListByDateField({ list, dateKey: 'a', newestFirst: true, undefinedValuesLast: true })
+    expect(sorted).toEqual([{ a: '2022-02-11' }, { a: '2021-02-13' }, { a: null }, { a: undefined }])
+  })
+
+  it('places undefined values at the start if param is false', () => {
+    const list = [{ a: null }, { a: '2021-02-13' }, { a: undefined }, { a: '2022-02-11' }]
+    const sorted = sortListByDateField({ list, dateKey: 'a', newestFirst: true, undefinedValuesLast: false })
+    expect(sorted).toEqual([{ a: null }, { a: undefined }, { a: '2022-02-11' }, { a: '2021-02-13' }])
+  })
 })

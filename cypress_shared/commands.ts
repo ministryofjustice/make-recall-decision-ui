@@ -79,7 +79,7 @@ Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 
   cy
     .get(opts.parent)
     .find('.govuk-summary-list__key')
-    .contains(exactMatchIgnoreWhitespace(label))
+    .contains(label)
     .next('.govuk-summary-list__value')
     .invoke('text')
     .then(text => text.trim())
