@@ -9,15 +9,56 @@
   "convictions": [
     {
       "active": true,
-      "licenceExpiryDate": "2023-06-16"
+      "isCustodial": true,
+      "licenceExpiryDate": "2023-06-16",
+      "sentenceExpiryDate": "2021-11-23",
+      "sentenceDescription": "ORA Adult Custody (inc PSS)",
+      "sentenceOriginalLength": 16,
+      "sentenceOriginalLengthUnits": "weeks",
+      "offences": [
+        {
+          "mainOffence": true,
+          "description": "Robbery (other than armed robbery)"
+        },
+        {
+          "mainOffence": false,
+          "description": "Shoplifting"
+        },
+        {
+          "mainOffence": false,
+          "description": "Burglary"
+        }
+      ]
     },
     {
       "active": false,
-      "licenceExpiryDate": "2021-03-24"
+      "isCustodial": true,
+      "licenceExpiryDate": "2021-03-24",
+      "offences": [
+        {
+          "mainOffence": true,
+          "description": "Grievous bodily harm"
+        },
+        {
+          "mainOffence": false,
+          "description": "Assault"
+        }
+      ]
     },
     {
-      "active": false,
-      "licenceExpiryDate": "2023-06-16"
+      "active": true,
+      "isCustodial": false,
+      "licenceExpiryDate": "2021-11-24",
+      "sentenceExpiryDate": "2022-06-18",
+      "sentenceDescription": "Prison",
+      "sentenceOriginalLength": 9,
+      "sentenceOriginalLengthUnits": "months",
+      "offences": [
+        {
+          "mainOffence": true,
+          "description": "Grievous bodily harm"
+        }
+      ]
     }
   ],
   "risk": {

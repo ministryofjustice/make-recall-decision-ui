@@ -9,11 +9,13 @@ import type { Offence } from './Offence';
 export type ConvictionResponse = {
     convictionId?: number;
     active?: boolean;
+    isCustodial?: boolean;
     offences?: Array<Offence>;
     sentenceDescription?: string;
     sentenceOriginalLength?: number;
     sentenceOriginalLengthUnits?: string;
     sentenceStartDate?: string;
+    sentenceExpiryDate?: string;
     licenceExpiryDate?: string;
     postSentenceSupervisionEndDate?: string;
     statusCode?: string;

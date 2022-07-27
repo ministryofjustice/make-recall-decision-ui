@@ -7,7 +7,7 @@ context('Overview', () => {
     cy.signIn()
   })
 
-  it('shows licence information', () => {
+  it('shows licence and offence information', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
@@ -17,30 +17,48 @@ context('Overview', () => {
       'equal',
       formatDateTimeFromIsoString({ isoDate: releaseSummary.lastRelease.date })
     )
-    cy.getText('licenceExpiryDate-1').should(
+    cy.getText('licenceExpiryDate').should(
       'equal',
       formatDateTimeFromIsoString({ isoDate: convictions[0].licenceExpiryDate })
     )
+    // offence and sentence
+    let opts = { parent: '[data-qa="conviction-1"]' }
+    cy.getDefinitionListValue('Main offence', opts).should('contain', 'Grievous bodily harm')
+    cy.getElement('Additional offence(s)', opts).should('not.exist')
+    cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Prison (9 months)')
+    cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', '18 June 2022')
+    opts = { parent: '[data-qa="conviction-2"]' }
+    cy.getDefinitionListValue('Main offence', opts).should('contain', 'Robbery (other than armed robbery)')
+    cy.getDefinitionListValue('Additional offence(s)', opts).should('contain', 'Shoplifting')
+    cy.getDefinitionListValue('Additional offence(s)', opts).should('contain', 'Burglary')
+    cy.getDefinitionListValue('Sentence type', opts).should('contain', 'ORA Adult Custody (inc PSS) (16 weeks)')
+    cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', '23 November 2021')
+
     // risk flags
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
   })
 
-  it('shows multiple licence expiry dates', () => {
+  it('shows "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
     const crn = 'X34983'
     const convictions = [
       {
-        active: true,
-        licenceExpiryDate: '2023-06-17',
-      },
-      {
         active: false,
         licenceExpiryDate: '2020-07-16',
+        offences: [],
       },
       {
         active: true,
+        isCustodial: true,
         licenceExpiryDate: '2020-06-16',
+        offences: [],
+      },
+      {
+        active: true,
+        isCustodial: true,
+        licenceExpiryDate: '2023-06-17',
+        offences: [],
       },
     ]
     cy.task('getCase', {
@@ -52,8 +70,45 @@ context('Overview', () => {
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('licenceExpiryDate-1').should('equal', '17 June 2023')
-    cy.getText('licenceExpiryDate-2').should('equal', '16 June 2020')
+    cy.getText('lastReleaseDate').should('equal', 'Not available')
+    cy.getText('licenceExpiryDate').should('equal', 'Not available')
+
+    // offence and sentence
+    let opts = { parent: '[data-qa="conviction-1"]' }
+    cy.getDefinitionListValue('Main offence', opts).should('contain', 'Not available')
+    cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Not available')
+    cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', 'Not available')
+    opts = { parent: '[data-qa="conviction-2"]' }
+    cy.getDefinitionListValue('Main offence', opts).should('contain', 'Not available')
+    cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Not available')
+    cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', 'Not available')
+  })
+
+  it('shows a message in offence panel if no active custodial convictions', () => {
+    const crn = 'X34983'
+    const convictions = [
+      {
+        active: false,
+        licenceExpiryDate: '2020-07-16',
+        offences: [],
+      },
+      {
+        active: false,
+        isCustodial: true,
+        licenceExpiryDate: '2020-06-16',
+        offences: [],
+      },
+    ]
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        convictions,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getElement('This person has no active offences or convictions.').should('exist')
   })
 
   it('shows a message if no risk flags', () => {
