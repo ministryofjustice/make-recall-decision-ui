@@ -78,3 +78,4 @@ A simple [feature flags mechanism](./docs/feature-flags.md) is available to show
 
 ## Deployment / configuration
 - [Environment variables](./docs/env-vars.md)
+- [Deployment / Helm](./docs/helm-deploy.md)
