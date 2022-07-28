@@ -76,6 +76,7 @@ describe('transformOverview', () => {
         main: [],
       },
     })
+    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sets activeCustodial property to undefined there are no active custodial convictions', () => {
@@ -100,6 +101,23 @@ describe('transformOverview', () => {
     })
     expect(transformed.convictions.activeCustodial).toBeUndefined()
     expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(true)
+  })
+
+  it('sets hasMultipleActiveCustodial to false if one active custodial conviction', () => {
+    const transformed = transformOverview({
+      convictions: [{ convictionId: 3, active: true, isCustodial: true, offences: [] }],
+    })
+    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+  })
+
+  it('sets hasMultipleActiveCustodial to false if no active convictions', () => {
+    const transformed = transformOverview({
+      convictions: [
+        { convictionId: 3, active: false, offences: [] },
+        { convictionId: 3, active: false, offences: [] },
+      ],
+    })
+    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sorts active convictions by sentence expiry date', () => {
