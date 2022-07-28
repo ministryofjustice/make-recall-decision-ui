@@ -9,6 +9,20 @@
   "convictions": [
     {
       "active": true,
+      "isCustodial": false,
+      "licenceExpiryDate": "2021-11-24",
+      "sentenceDescription": "ORA Suspended Sentence Order",
+      "sentenceOriginalLength": 2,
+      "sentenceOriginalLengthUnits": "months",
+      "offences": [
+        {
+          "mainOffence": true,
+          "description": "Shoplifting"
+        }
+      ]
+    },
+    {
+      "active": true,
       "isCustodial": true,
       "licenceExpiryDate": "2023-06-16",
       "sentenceExpiryDate": "2021-11-23",
@@ -37,26 +51,11 @@
       "offences": [
         {
           "mainOffence": true,
-          "description": "Grievous bodily harm"
+          "description": "Fraud"
         },
         {
           "mainOffence": false,
           "description": "Assault"
-        }
-      ]
-    },
-    {
-      "active": true,
-      "isCustodial": false,
-      "licenceExpiryDate": "2021-11-24",
-      "sentenceExpiryDate": "2022-06-18",
-      "sentenceDescription": "Prison",
-      "sentenceOriginalLength": 9,
-      "sentenceOriginalLengthUnits": "months",
-      "offences": [
-        {
-          "mainOffence": true,
-          "description": "Grievous bodily harm"
         }
       ]
     }
