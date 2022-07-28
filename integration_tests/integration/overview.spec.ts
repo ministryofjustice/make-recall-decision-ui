@@ -92,6 +92,38 @@ context('Overview', () => {
     )
   })
 
+  it('shows "Not available" for last release and licence expiry date if dates are missing', () => {
+    const crn = 'X34983'
+    const convictions = [
+      {
+        active: false,
+        isCustodial: false,
+        offences: [],
+      },
+      {
+        active: true,
+        isCustodial: true,
+        offences: [],
+      },
+    ]
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        convictions,
+        releaseSummary: {
+          lastRelease: {
+            date: null,
+          },
+        },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('lastReleaseDate').should('equal', 'Not available')
+    cy.getText('licenceExpiryDate').should('equal', 'Not available')
+  })
+
   it('shows "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
     const crn = 'X34983'
     const convictions = [
