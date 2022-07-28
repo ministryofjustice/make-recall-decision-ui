@@ -16,6 +16,11 @@ context('Make a recommendation', () => {
       ...response,
       recallType: 'FIXED_TERM',
     }
+    const caseResponse = {
+      ...getCaseOverviewResponse,
+      activeRecommendation: undefined,
+    }
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
     cy.task('createRecommendation', { statusCode: 201, response })
     cy.task('getRecommendation', { statusCode: 200, response })
     cy.task('updateRecommendation', { statusCode: 200, response: updatedResponse })
@@ -32,6 +37,11 @@ context('Make a recommendation', () => {
 
   it('shows an error if creation fails', () => {
     const crn = 'X34983'
+    const caseResponse = {
+      ...getCaseOverviewResponse,
+      activeRecommendation: undefined,
+    }
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
     cy.task('createRecommendation', { statusCode: 500, response: 'API save error' })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickButton('Make a recommendation')
