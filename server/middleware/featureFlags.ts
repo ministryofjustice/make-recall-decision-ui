@@ -6,6 +6,10 @@ export const featureFlagsDefaults = {
     label: 'Make a recommendation (production feature)',
     default: false,
   },
+  flagRecommendationsPageProd: {
+    label: 'Recommendations list (production feature)',
+    default: false,
+  },
   flagRecommendationPrototype: {
     label: 'Make a recommendation (prototype journey for user research)',
     default: false,

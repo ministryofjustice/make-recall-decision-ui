@@ -86,9 +86,9 @@
                     },
                     {
                         text: 'Recommendations',
-                        href: pageUrlBase + 'prototype-recommendations',
-                        active: section.id == 'prototype-recommendations'
-                    } if flags.flagRecommendationPrototype else undefined
+                        href: pageUrlBase + 'recommendations',
+                        active: section.id == 'recommendations'
+                    } if flags.flagRecommendationsPageProd else undefined
                 ])
             }) }}
             {% if section.id =='overview' %}
@@ -101,7 +101,7 @@
                 {% include '../partials/caseLicenceConditions.njk' %}
             {% elseif section.id =='contact-history' %}
                 {% include '../partials/caseContactHistory.njk' %}
-            {% elseif section.id =='prototype-recommendations' %}
+            {% elseif section.id =='recommendations' %}
                 {% include '../partials/caseRecommendations.njk' %}
             {% endif %}
         </div>

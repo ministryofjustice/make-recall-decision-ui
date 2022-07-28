@@ -3,33 +3,36 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
+        {% if caseSummary.activeRecommendation.recommendationId %}
         <table class="govuk-table" id='table-recommendations-{{ loop.index0 }}'>
             <caption class="govuk-table__caption govuk-visually-hidden">Recommendations</caption>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Date started</th>
-                <th scope="col" class="govuk-table__header">Date document created</th>
+                <th scope="col" class="govuk-table__header">Last modified</th>
                 <th scope="col" class="govuk-table__header">Recommendation</th>
+                <th scope="col" class="govuk-table__header"></th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell">18 July 2022</td>
-                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: caseSummary.activeRecommendation.lastModifiedDate})}}</td>
                 <td class="govuk-table__cell">
-                    <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/behaviour'
-                       class='govuk-link'>Update draft</a>
+                    <a href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/recall-type' class='govuk-link'>Update draft</a>
                 </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">12 December 2020</td>
-                <td class="govuk-table__cell">13 December 2020</td>
                 <td class="govuk-table__cell">
-                    <a href='#' class='govuk-link'>View</a>
+                    <form method='post' action='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/status'>
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                        <input type='hidden' name='crn' value='{{ caseSummary.personalDetailsOverview.crn }}' />
+                        <input type="hidden" name="status" value="DOCUMENT_CREATED" />
+                        <button class='reset-button link-button' data-qa='delete-recommendation'>Delete</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
         </table>
+        {% else %}
+        <p class='govuk-body'>No active recommendation.</p>
+        {% endif %}
 
     </div>
 </div>

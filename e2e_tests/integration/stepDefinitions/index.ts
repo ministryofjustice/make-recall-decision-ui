@@ -3,7 +3,7 @@ import { When } from 'cypress-cucumber-preprocessor/steps'
 export const crn = Cypress.env('CRN') || 'X098092'
 
 When('Maria signs in', () => {
-  cy.visitPage('/')
+  cy.visitPage('/?flagRecommendationProd=1&flagRecommendationsPageProd=1')
 })
 
 When('Maria searches for a case', () => {
@@ -50,4 +50,22 @@ When('Maria filters contacts by date range', () => {
   cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
   cy.clickButton('Apply filters')
   cy.getLinkHref('13 Mar 2022 to 13 Apr 2022').should('equal', `/cases/${crn}/contact-history`)
+})
+
+When('Maria starts a new recommendation', () => {
+  cy.clickLink('Recommendations')
+  cy.get('body').then($body => {
+    if ($body.find('[data-qa="delete-recommendation"]').length) {
+      cy.clickButton('Delete')
+    }
+  })
+  cy.clickButton('Make a recommendation')
+})
+
+When('Maria recommends a fixed term recall', () => {
+  cy.selectRadio('What do you recommend?', 'Fixed term')
+  cy.clickButton('Continue')
+  cy.pageHeading().should('contain', 'Overview')
+  cy.clickLink('Update recommendation')
+  cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term').should('be.checked')
 })
