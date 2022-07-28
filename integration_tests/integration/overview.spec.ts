@@ -162,14 +162,15 @@ context('Overview', () => {
 
     // banner
     cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('exist')
-    cy.getElement('This person has two or more custodial convictions showing as active in NDelius').should('exist')
+    cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
   })
 
-  it('shows a message in offence panel if no active custodial convictions', () => {
+  it('shows a message in offence panel, and not available for licence dates, if no active custodial convictions', () => {
     const crn = 'X34983'
     const convictions = [
       {
         active: false,
+        isCustodial: false,
         licenceExpiryDate: '2020-07-16',
         offences: [],
       },
@@ -190,6 +191,8 @@ context('Overview', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getElement('This person has no active offences or convictions.').should('exist')
+    cy.getText('lastReleaseDate').should('equal', 'Not available')
+    cy.getText('licenceExpiryDate').should('equal', 'Not available')
   })
 
   it('shows a message if no risk flags', () => {
