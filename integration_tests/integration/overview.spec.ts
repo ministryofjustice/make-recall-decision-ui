@@ -40,6 +40,9 @@ context('Overview', () => {
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('MAPPA', { parent: '[data-qa="riskFlags"]' }).should('exist')
+
+    // warning banner should not be there
+    cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('not.exist')
   })
 
   it('sort by sentence expiry date; missing data', () => {
@@ -124,7 +127,7 @@ context('Overview', () => {
     cy.getText('licenceExpiryDate').should('equal', 'Not available')
   })
 
-  it('shows "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
+  it('shows banner and "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
     const crn = 'X34983'
     const convictions = [
       {
@@ -156,6 +159,10 @@ context('Overview', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getText('lastReleaseDate').should('equal', 'Not available')
     cy.getText('licenceExpiryDate').should('equal', 'Not available')
+
+    // banner
+    cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('exist')
+    cy.getElement('This person has two or more custodial convictions showing as active in NDelius').should('exist')
   })
 
   it('shows a message in offence panel if no active custodial convictions', () => {
