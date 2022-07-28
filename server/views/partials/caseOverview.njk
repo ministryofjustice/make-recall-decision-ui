@@ -2,6 +2,21 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if caseSummary.convictions.hasMultipleActiveCustodial %}
+            {% set html %}
+                <p class="govuk-notification-banner__heading">
+                    This person has 2 or more active convictions in NDelius. Double-check that the information in NDelius is correct.
+                </p>
+            {% endset %}
+
+            {{ govukNotificationBanner({
+                html: html,
+                attributes: {
+                  'data-qa': 'banner-multiple-active-custodial'
+                },
+                classes: "govuk-notification-banner--error"
+            }) }}
+        {% endif %}
         {% set licenceHtml %}
             <div class='flex flex--space-between'>
                 <div class='flex__item-half-width'>
