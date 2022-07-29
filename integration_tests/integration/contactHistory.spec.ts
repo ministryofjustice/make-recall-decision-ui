@@ -175,7 +175,7 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by free text search', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagSearchFilter=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
     cy.fillInput('Search term', 'letter')
     cy.clickButton('Apply filters')
     cy.getElement('3 contacts').should('exist')
@@ -192,7 +192,7 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by contact type group', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1`)
     cy.contains('Appointments').click()
     cy.selectCheckboxes('Appointments', ['Responsible Officer Change'])
     cy.clickButton('Apply filters')
@@ -200,7 +200,7 @@ context('Contact history', () => {
   })
 
   it('can filter contacts by date, contact types and text search', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1&flagSearchFilter=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/contact-history?contactTypesFilter=1`)
 
     // combine date, contact type and text filters
     cy.enterDateTime('2022-03-16', { parent: '#dateFrom' })

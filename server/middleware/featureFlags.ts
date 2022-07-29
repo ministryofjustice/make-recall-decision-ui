@@ -18,10 +18,6 @@ export const featureFlagsDefaults = {
     label: 'Contact types filter',
     default: false,
   },
-  flagSearchFilter: {
-    label: 'Contacts text search filter',
-    default: false,
-  },
   flagContactDocuments: {
     label: 'Show contact documents',
     default: false,
