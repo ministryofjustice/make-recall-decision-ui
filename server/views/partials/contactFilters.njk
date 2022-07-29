@@ -1,6 +1,5 @@
 <div class="flex__item-one-third-desktop">
     {%- set filterOptionsHtml %}
-        {% if flags.flagSearchFilter %}
         {% for searchFilters in caseSummary.filters.searchFilters.selected %}
             <input type='hidden' name='searchFilters' value='{{ searchFilters.text }}' />
         {% endfor %}
@@ -18,7 +17,6 @@
             value: errors.searchFilters.values if errors.searchFilters else undefined,
             errorMessage: errorMessage(errors.searchFilters)
         }) }}
-        {% endif %}
         {{ govukDateInput({
             id: "dateFrom",
             namePrefix: "dateFrom",
