@@ -193,6 +193,8 @@ context('Overview', () => {
     cy.getElement('This person has no active offences or convictions.').should('exist')
     cy.getText('lastReleaseDate').should('equal', 'Not available')
     cy.getText('licenceExpiryDate').should('equal', 'Not available')
+    // warning banner should not be there
+    cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('not.exist')
   })
 
   it('shows a message if no risk flags', () => {
