@@ -17,6 +17,7 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
     const { user } = res.locals
     const { errors, valuesToSave, nextPagePath } = validator({
       requestBody: req.body,
+      recommendationId,
     })
     if (errors) {
       req.session.errors = errors

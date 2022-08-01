@@ -31,12 +31,14 @@ export interface PageMetaData {
   templateName: PageTemplateName
   validator: FormValidator
   pageHeading: string
+  pageTitle: string
 }
 
 export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
 
 export interface FormValidatorArgs {
   requestBody: ObjectMap<string>
+  recommendationId: string
 }
 
 export interface FormValidatorReturn {
@@ -109,6 +111,6 @@ export interface ContactHistoryFilters {
   searchFilters: string | string[]
 }
 
-export type PageTemplateName = 'recallType'
+export type PageTemplateName = 'recallType' | 'custodyStatus'
 
-export type PageId = 'recall-type'
+export type PageId = 'recall-type' | 'custody-status'

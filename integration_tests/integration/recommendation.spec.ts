@@ -32,6 +32,8 @@ context('Make a recommendation', () => {
     cy.assertErrorMessage({ fieldName: 'recallType', errorText: 'Select a recommendation' })
     cy.selectRadio('What do you recommend?', 'Fixed term')
     cy.clickButton('Continue')
+    cy.selectRadio('Is the person in custody now?', 'No')
+    cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Overview for Paula Smith')
   })
 

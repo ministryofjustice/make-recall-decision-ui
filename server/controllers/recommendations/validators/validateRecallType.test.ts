@@ -1,12 +1,14 @@
 import { validateRecallType } from './validateRecallType'
 
 describe('validateRecallType', () => {
+  const recommendationId = '456'
+
   it('returns valuesToSave and no errors if valid', () => {
     const requestBody = {
-      recallType: 'FIXED',
+      recallType: 'FIXED_TERM',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = validateRecallType({ requestBody })
+    const { errors, valuesToSave, nextPagePath } = validateRecallType({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       recallType: {
@@ -24,10 +26,10 @@ describe('validateRecallType', () => {
             value: 'NO_RECALL',
           },
         ],
-        value: 'FIXED',
+        value: 'FIXED_TERM',
       },
     })
-    expect(nextPagePath).toEqual('/cases/X34534/overview')
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/custody-status`)
   })
 
   it('returns an error for the decision, if not set, and no valuesToSave', () => {
@@ -35,7 +37,24 @@ describe('validateRecallType', () => {
       recallType: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateRecallType({ requestBody })
+    const { errors, valuesToSave } = validateRecallType({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
+      {
+        href: '#recallType',
+        name: 'recallType',
+        text: 'Select a recommendation',
+        errorId: 'noRecallTypeSelected',
+      },
+    ])
+  })
+
+  it('returns an error, if set to an invalid value, and no valuesToSave', () => {
+    const requestBody = {
+      recallType: 'BANANA',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = validateRecallType({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
