@@ -8,7 +8,9 @@ import { formOptions } from '../../recommendations/formOptions'
 import { sortList } from '../../../utils/lists'
 
 const transformConviction = (conviction: ConvictionResponse) => {
-  const licenceConditions = conviction.licenceConditions.filter(condition => condition.active === true)
+  const licenceConditions = conviction.licenceConditions
+    ? conviction.licenceConditions.filter(condition => condition.active === true)
+    : []
   return {
     ...conviction,
     offences: {
