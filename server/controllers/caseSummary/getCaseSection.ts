@@ -9,9 +9,8 @@ import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './contactHistory/transformContactHistory'
 import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
-import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import { AppError } from '../../AppError'
-import { transformOverview } from './overview/transformOverview'
+import { transformLicenceConditions } from './licence-conditions/transformLicenceConditions'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -31,7 +30,7 @@ export const getCaseSection = async (
     case 'overview':
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        caseSummary = transformOverview(caseSummaryRaw)
+        caseSummary = transformLicenceConditions(caseSummaryRaw)
       }
       sectionLabel = 'Overview'
       break

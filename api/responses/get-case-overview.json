@@ -19,6 +19,23 @@
           "mainOffence": true,
           "description": "Shoplifting"
         }
+      ],
+      "licenceConditions": [
+        {
+          "startDate": "2022-05-12",
+          "terminationDate": "2022-05-18",
+          "createdDateTime": "2022-05-12T17:22:13",
+          "active": false,
+          "licenceConditionNotes": "Notes",
+          "licenceConditionTypeMainCat": {
+            "code": "NLC8",
+            "description": "Freedom of movement"
+          },
+          "licenceConditionTypeSubCat": {
+            "code": "NST30",
+            "description": "On release to be escorted by police to Approved Premises"
+          }
+        }
       ]
     },
     {
@@ -42,7 +59,8 @@
           "mainOffence": false,
           "description": "Burglary"
         }
-      ]
+      ],
+      "licenceConditions": []
     },
     {
       "active": false,
@@ -57,7 +75,8 @@
           "mainOffence": false,
           "description": "Assault"
         }
-      ]
+      ],
+      "licenceConditions": []
     }
   ],
   "risk": {

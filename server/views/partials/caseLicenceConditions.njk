@@ -1,111 +1,81 @@
 <h1 class='govuk-heading-m govuk-visually-hidden'>Licence conditions<span
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        {% for conviction in caseSummary.convictions %}
-            <div class='govuk-!-margin-bottom-8'>
-                <h2 class='govuk-heading-m'>Licence {{ loop.index }}</h2>
-                {% set mainOffenceHtml %}
-                    {% for offenceItem in conviction.offences.main %}
-                       <p class='govuk-body'>{{ offenceItem.description }}</p>
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% include './multipleActiveCustodialBanner.njk' %}
+        {% if caseSummary.convictions.active.length %}
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-0">
+                          Standard licence conditions
+                        </span>
+                    </h2>
+                </div>
+                <div id="accordion-with-summary-sections-content-0"
+                     class="govuk-accordion__section-content"
+                     aria-labelledby="accordion-with-summary-sections-heading-0">
+                    {% for condition in caseSummary.standardLicenceConditions %}
+                        {% set descriptionHtml %}
+                            <pre class='govuk-body'>{{ condition.description }}</pre>
+                        {% endset %}
+                        {{ appSummaryCard({
+                            titleHtml: condition.text,
+                            headingLevel: 4,
+                            classes: 'app-summary-card--white govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
+                            html: descriptionHtml if condition.description else undefined
+                        }) }}
                     {% endfor %}
-                {% endset %}
-                {% set additionalOffenceHtml %}
-                    {% if conviction.offences.additional.length %}
-                    {% for offenceItem in conviction.offences.additional %}
-                        <p class='govuk-body'>{{ offenceItem.description }}</p>
-                    {% endfor %}
-                    {% else %}
-                    None
-                    {% endif %}
-                {% endset %}
-                {{ govukSummaryList({
-                    classes: 'govuk-summary-list--no-border',
-                    attributes: {
-                        'data-qa': 'summary-' + loop.index
-                    },
-                    rows: [
-                        {
-                            key: { html: 'Main offence' },
-                            value: { html: mainOffenceHtml }
-                        },
-                        {
-                            key: { html: 'Additional offences' },
-                            value: { html: additionalOffenceHtml }
-                        },
-                        {
-                            key: { text: 'Sentence description' },
-                            value: { text: conviction.sentenceDescription if conviction.sentenceDescription else 'Not available' }
-                        },
-                        {
-                            key: { text: 'Sentence length' },
-                            value: { text: (conviction.sentenceOriginalLength + ' ' + conviction.sentenceOriginalLengthUnits) if conviction.sentenceOriginalLength else 'Not available' }
-                        },
-                        {
-                            key: { text: 'Sentence start date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentenceStartDate}) if conviction.sentenceStartDate else 'Not available' }
-                        },
-                        {
-                            key: { text: 'Release from custody date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if caseSummary.releaseSummary.lastRelease.date else 'Not available' }
-                        } if loop.index == 1 else undefined,
-                        {
-                            key: { text: 'Last recall date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRecall.date}) if caseSummary.releaseSummary.lastRecall.date else 'Not available'}
-                        } if loop.index == 1 else undefined,
-                        {
-                            key: { text: 'Licence expiry date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.licenceExpiryDate}) if conviction.licenceExpiryDate else 'Not available' }
-                        } if loop.index == 1 else undefined,
-                        {
-                            key: { text: 'Post-sentence supervision end date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.postSentenceSupervisionEndDate}) if conviction.postSentenceSupervisionEndDate else 'Not available' }
-                        } if loop.index == 1 else undefined
-                    ]
-                }) }}
-                {% if conviction.licenceConditions.length %}
-                    <table class="govuk-table" id='table-licence-conditions-{{ loop.index0 }}'>
-                        <caption class="govuk-table__caption govuk-visually-hidden">Licence conditions for
-                            offence {{ loop.index }}</caption>
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header" aria-sort="descending">Type</th>
-                            <th scope="col" class="govuk-table__header" aria-sort="none">Description</th>
-                            <th scope="col" class="govuk-table__header" aria-sort="none">Notes</th>
-                            <th scope="col" class="govuk-table__header" aria-sort="none">Active</th>
-                            <th scope="col" class="govuk-table__header" aria-sort="none">Start date</th>
-                            <th scope="col" class="govuk-table__header" aria-sort="none">Termination date</th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        {% for licenceCondition in conviction.licenceConditions %}
-                            <tr class="govuk-table__row" data-qa='row-{{ loop.index0 }}'>
-                                <td class="govuk-table__cell">{{ licenceCondition.licenceConditionTypeMainCat.code }}
-                                    - {{ licenceCondition.licenceConditionTypeMainCat.description }}</td>
-                                <td class="govuk-table__cell">{{ licenceCondition.licenceConditionTypeSubCat.code }}
-                                    - {{ licenceCondition.licenceConditionTypeSubCat.description }}</td>
-                                <td class="govuk-table__cell">{{ licenceCondition.licenceConditionNotes }}</td>
-                                <td class="govuk-table__cell">{{ 'Yes' if licenceCondition.active else 'No' }}</td>
-                                <td class="govuk-table__cell" data-sort-value='{{ licenceCondition.startDate }}'>
-                                    <span class='no-wrap-tablet'>{{ formatDateTimeFromIsoString({isoDate: licenceCondition.startDate}) }}</span>
-                                </td>
-                                <td class="govuk-table__cell" data-sort-value='{{ licenceCondition.terminationDate }}'>
-                                    <span class='no-wrap-tablet'>{{ formatDateTimeFromIsoString({isoDate: licenceCondition.terminationDate}) }}</span>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <script nonce='{{ cspNonce }}'>
-                      new MOJFrontend.SortableTable({
-                        table: $('#table-licence-conditions-{{ loop.index0 }}')[0],
-                      })
-                    </script>
-                {% else %}
-                    <p class='govuk-body'>There are no licence conditions attached to this event in NDelius.</p>
-                {% endif %}
+                </div>
             </div>
-        {% endfor %}
-
+            <div class="govuk-accordion__section govuk-accordion__section--expanded">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-1">
+                          Additional licence conditions
+                        </span>
+                    </h2>
+                    <div class="govuk-accordion__section-summary govuk-body"
+                         id="accordion-with-summary-sections-summary-1">
+                        {% for conviction in caseSummary.convictions.activeCustodial %}
+                            {% for mainOffence in conviction.offences.main %}
+                                <div class='govuk-caption-m'>{{ mainOffence }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div id="accordion-with-summary-sections-content-1"
+                     class="govuk-accordion__section-content"
+                     aria-labelledby="accordion-with-summary-sections-heading-1">
+                    {% for conviction in caseSummary.convictions.activeCustodial %}
+                        {% if caseSummary.convictions.hasMultipleActiveCustodial %}<h3 class='govuk-heading-s'>{% for mainOffence in conviction.offences.main %}{{ mainOffence }}{% endfor %}</h3>{% endif %}
+                        {% if conviction.licenceConditions.length %}
+                            {% for licenceCondition in conviction.licenceConditions %}
+                                {% set conditionHtml %}
+                                    <p class='govuk-body' data-qa='condition-description'>{{ licenceCondition.licenceConditionTypeSubCat.description }}</p>
+                                    <h5 class='govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-1'>Further note</h5>
+                                    <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.licenceConditionNotes if licenceCondition.licenceConditionNotes else 'There are no notes relating to this licence condition' }}</p>
+                                {% endset %}
+                                {{ appSummaryCard({
+                                    titleText: licenceCondition.licenceConditionTypeMainCat.description,
+                                    headingLevel: 4,
+                                    classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
+                                    html: conditionHtml,
+                                    attributes: {
+                                        'data-qa': 'additional-condition'
+                                    }
+                                }) }}
+                            {% endfor %}
+                        {% else %}
+                            <p class='govuk-body'>None available.</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class='govuk-body'>There are no licence conditions available.</p>
+        {% endif %}
     </div>
 </div>

@@ -1,13 +1,21 @@
-import { CaseSummaryOverviewResponse, ConvictionResponse } from '../../../@types/make-recall-decision-api'
+import {
+  CaseSummaryOverviewResponse,
+  ConvictionResponse,
+  LicenceCondition,
+} from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
+import { formOptions } from '../../recommendations/formOptions'
+import { sortList } from '../../../utils/lists'
 
 const transformConviction = (conviction: ConvictionResponse) => {
+  const licenceConditions = conviction.licenceConditions.filter(condition => condition.active === true)
   return {
     ...conviction,
     offences: {
       main: conviction.offences.filter(offence => offence.mainOffence).map(offence => offence.description),
       additional: conviction.offences.filter(offence => !offence.mainOffence).map(offence => offence.description),
     },
+    licenceConditions: sortList(licenceConditions, 'licenceConditionTypeMainCat.description', true),
   }
 }
 
@@ -20,9 +28,10 @@ interface DecoratedConviction {
     main: string[]
     additional: string[]
   }
+  licenceConditions?: LicenceCondition[]
 }
 
-export const transformOverview = (caseSummary: CaseSummaryOverviewResponse) => {
+export const transformLicenceConditions = (caseSummary: CaseSummaryOverviewResponse) => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
   if (caseSummary.convictions) {
@@ -41,8 +50,9 @@ export const transformOverview = (caseSummary: CaseSummaryOverviewResponse) => {
     ...caseSummary,
     convictions: {
       active: activeConvictions,
-      activeCustodial: activeCustodialConvictions.length === 1 ? activeCustodialConvictions[0] : undefined,
+      activeCustodial: activeCustodialConvictions,
       hasMultipleActiveCustodial: activeCustodialConvictions.length > 1,
     },
+    standardLicenceConditions: formOptions.standardLicenceConditions,
   }
 }

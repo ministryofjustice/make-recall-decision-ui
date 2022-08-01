@@ -10,6 +10,7 @@
     {
       "convictionId": 2500605130,
       "active": true,
+      "isCustodial": false,
       "offences": [
         {
           "mainOffence": true,
@@ -81,6 +82,7 @@
     {
       "convictionId": 2500505680,
       "active": true,
+      "isCustodial": true,
       "offences": [
         {
           "mainOffence": true,
