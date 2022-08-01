@@ -52,24 +52,28 @@ context('Overview', () => {
         active: true,
         isCustodial: false,
         offences: [{ mainOffence: true, description: 'Non-custodial' }],
+        licenceConditions: [],
       },
       {
         active: true,
         isCustodial: true,
         sentenceExpiryDate: '2020-06-16',
         offences: [{ mainOffence: true, description: 'Custodial' }],
+        licenceConditions: [],
       },
       {
         active: true,
         isCustodial: true,
         sentenceExpiryDate: null,
         offences: [{ mainOffence: true, description: 'Custodial' }],
+        licenceConditions: [],
       },
       {
         active: true,
         isCustodial: true,
         sentenceExpiryDate: '2023-06-17',
         offences: [{ mainOffence: true, description: 'Custodial' }],
+        licenceConditions: [],
       },
     ]
     cy.task('getCase', {
@@ -102,11 +106,13 @@ context('Overview', () => {
         active: false,
         isCustodial: false,
         offences: [],
+        licenceConditions: [],
       },
       {
         active: true,
         isCustodial: true,
         offences: [],
+        licenceConditions: [],
       },
     ]
     cy.task('getCase', {
@@ -134,18 +140,21 @@ context('Overview', () => {
         active: false,
         licenceExpiryDate: '2020-07-16',
         offences: [],
+        licenceConditions: [],
       },
       {
         active: true,
         isCustodial: true,
         licenceExpiryDate: '2020-06-16',
         offences: [],
+        licenceConditions: [],
       },
       {
         active: true,
         isCustodial: true,
         licenceExpiryDate: '2023-06-17',
         offences: [],
+        licenceConditions: [],
       },
     ]
     cy.task('getCase', {
@@ -173,12 +182,14 @@ context('Overview', () => {
         isCustodial: false,
         licenceExpiryDate: '2020-07-16',
         offences: [],
+        licenceConditions: [],
       },
       {
         active: false,
         isCustodial: true,
         licenceExpiryDate: '2020-06-16',
         offences: [],
+        licenceConditions: [],
       },
     ]
     cy.task('getCase', {

@@ -31,7 +31,7 @@ export const standardLicenceConditions = [
   },
   {
     id: 7,
-    value: 'APPROVED_WORK',
+    value: 'APPROVED_TRAVEL',
     text: 'not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
   },
   {

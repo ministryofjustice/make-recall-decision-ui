@@ -8,7 +8,7 @@
                 <div class='flex__item-half-width'>
                     <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Last release date</h3>
                     <div class='govuk-heading-m govuk-!-margin-top-0' data-qa='lastReleaseDate'>
-                        {{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if (not caseSummary.convictions.hasMultipleActiveCustodial) and caseSummary.releaseSummary.lastRelease.date else 'Not available' }}
+                        {{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if (not caseSummary.convictions.hasMultipleActiveCustodial) and caseSummary.convictions.activeCustodial.length and caseSummary.releaseSummary.lastRelease.date else 'Not available' }}
                     </div>
                 </div>
                 <div class='flex__item-half-width'>
