@@ -1,68 +1,155 @@
-import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 import { routeUrls } from '../../server/routes/routeUrls'
-import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
+import { formOptions } from '../../server/controllers/recommendations/formOptions'
 
 context('Licence conditions', () => {
   beforeEach(() => {
+    cy.window().then(win => win.sessionStorage.clear())
     cy.signIn()
   })
 
-  it('can view the licence conditions page', () => {
+  it('shows conditions for a single active custodial conviction', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
-    cy.getElement('Release from custody date', { parent: `[data-qa="summary-1"]` }).should('exist')
-    cy.getElement('Licence expiry date', { parent: `[data-qa="summary-1"]` }).should('exist')
-    cy.getElement('Last recall date', { parent: `[data-qa="summary-1"]` }).should('exist')
-    cy.getElement('Post-sentence supervision end date', { parent: `[data-qa="summary-1"]` }).should('exist')
-    cy.getElement('Release from custody date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
-    cy.getElement('Licence expiry date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
-    cy.getElement('Last recall date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
-    cy.getElement('Post-sentence supervision end date', { parent: `[data-qa="summary-2"]` }).should('not.exist')
-    getCaseLicenceConditionsResponse.convictions.forEach((offence, offenceIndex) => {
-      cy.getDefinitionListValue('Main offence', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(
-        'contain',
-        offence.offences[0].description
-      )
-      cy.getDefinitionListValue('Additional offences', { parent: `[data-qa="summary-${offenceIndex + 1}"]` }).should(
-        'contain',
-        offence.offences[1] ? offence.offences[1].description : 'None'
-      )
-      offence.licenceConditions.forEach((condition, conditionIndex) => {
-        cy.getRowValuesFromTable({
-          tableCaption: `Licence conditions for offence ${offenceIndex + 1}`,
-          rowQaAttr: `row-${conditionIndex}`,
-        }).then(([type, description, notes, active, startDate, terminationDate]) => {
-          expect(type).to.equal(
-            `${condition.licenceConditionTypeMainCat.code} - ${condition.licenceConditionTypeMainCat.description}`
-          )
-          expect(description).to.equal(
-            `${condition.licenceConditionTypeSubCat.code} - ${condition.licenceConditionTypeSubCat.description}`
-          )
-          expect(notes).to.equal(condition.licenceConditionNotes || '')
-          expect(active).to.equal(condition.active ? 'Yes' : 'No')
-          expect(startDate).to.equal(formatDateTimeFromIsoString({ isoDate: condition.startDate }))
-          expect(terminationDate).to.equal(formatDateTimeFromIsoString({ isoDate: condition.terminationDate }) || '')
-        })
-      })
-    })
+    // Standard licence conditions
+    cy.clickButton('Show this section')
+    formOptions.standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
+    // Additional licence conditions
+    cy.getElement('Murder - 00100').should('exist')
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
+    cy.getElement('Supervision in the community').should('exist')
+    cy.getText('condition-description').should('equal', 'Bespoke Condition (See Notes)')
+    cy.getText('condition-note').should('equal', 'Must not enter Islington borough.')
   })
 
-  it('shows a message instead of a table if there are no licence conditions', () => {
+  it('shows a message for an active conviction with no licence conditions', () => {
     cy.task('getCase', {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
         convictions: [
           {
-            offences: [],
-            licenceConditions: [],
+            active: true,
+            isCustodial: true,
+            offences: [
+              {
+                mainOffence: true,
+                description: 'Burglary - 05714',
+              },
+            ],
+            licenceConditions: [{ active: false }],
           },
         ],
       },
     })
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
-    cy.getElement('There are no licence conditions attached to this event in NDelius.').should('exist')
+    cy.getElement('Burglary - 05714').should('exist')
+    cy.getElement('There are no additional licence conditions in NDelius.').should('exist')
+  })
+
+  it('shows a message if there are no active custodial convictions', () => {
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        convictions: [
+          {
+            active: true,
+            isCustodial: false,
+            offences: [],
+            licenceConditions: [{ active: false }],
+          },
+        ],
+      },
+    })
+    const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    cy.getElement('There are no licence conditions.').should('exist')
+  })
+
+  it('shows conditions for multiple active custodial convictions, and a banner', () => {
+    const crn = 'X34983'
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        convictions: [
+          {
+            active: true,
+            isCustodial: true,
+            offences: [
+              {
+                mainOffence: true,
+                description: 'Burglary - 05714',
+              },
+            ],
+            licenceConditions: [
+              {
+                active: true,
+                licenceConditionTypeMainCat: {
+                  description: 'Supervision in the community',
+                },
+                licenceConditionTypeSubCat: {
+                  description: 'On release to be escorted by police to Approved Premises',
+                },
+              },
+              {
+                active: true,
+                licenceConditionTypeMainCat: {
+                  description: 'Poss, own, control, inspect specified items /docs',
+                },
+                licenceConditionTypeSubCat: {
+                  description: 'tbc',
+                },
+              },
+            ],
+          },
+          {
+            active: true,
+            isCustodial: true,
+            offences: [
+              {
+                mainOffence: true,
+                description: 'Robbery',
+              },
+            ],
+            licenceConditions: [
+              {
+                active: true,
+                licenceConditionTypeMainCat: {
+                  description: 'Participate or co-op with Programme or Activities',
+                },
+                licenceConditionTypeSubCat: {
+                  description: 'Bespoke',
+                },
+              },
+            ],
+          },
+        ],
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    // Additional licence conditions
+    cy.getElement('Burglary - 05714').should('exist')
+    cy.getElement('Robbery').should('exist')
+    cy.getElement({ qaAttr: 'offence-heading' }).should('have.length', 2)
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 3)
+
+    cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+
+    // first condition
+    cy.getElement('Poss, own, control, inspect specified items /docs', {
+      parent: '[data-qa="additional-condition-1"]',
+    }).should('exist')
+    cy.getElement('Supervision in the community', { parent: '[data-qa="additional-condition-2"]' }).should('exist')
+    cy.getElement('Participate or co-op with Programme or Activities', {
+      parent: '[data-qa="additional-condition-3"]',
+    }).should('exist')
+
+    // if no notes
+    cy.getElement('Notes', {
+      parent: '[data-qa="additional-condition-3"]',
+    }).should('not.exist')
   })
 })

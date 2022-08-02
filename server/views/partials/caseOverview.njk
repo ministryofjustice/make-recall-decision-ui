@@ -2,34 +2,20 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% if caseSummary.convictions.hasMultipleActiveCustodial %}
-            {% set html %}
-                <p class="govuk-notification-banner__heading">
-                    This person has 2 or more active convictions in NDelius. Double-check that the information in NDelius is correct.
-                </p>
-            {% endset %}
-
-            {{ govukNotificationBanner({
-                html: html,
-                attributes: {
-                  'data-qa': 'banner-multiple-active-custodial'
-                },
-                classes: "govuk-notification-banner--error"
-            }) }}
-        {% endif %}
+        {% include './multipleActiveCustodialBanner.njk' %}
         {% set licenceHtml %}
             <div class='flex flex--space-between'>
                 <div class='flex__item-half-width'>
                     <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Last release date</h3>
                     <div class='govuk-heading-m govuk-!-margin-top-0' data-qa='lastReleaseDate'>
-                        {{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if caseSummary.convictions.activeCustodial and caseSummary.releaseSummary.lastRelease.date else 'Not available' }}
+                        {{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if (not caseSummary.convictions.hasMultipleActiveCustodial) and caseSummary.convictions.activeCustodial.length and caseSummary.releaseSummary.lastRelease.date else 'Not available' }}
                     </div>
                 </div>
                 <div class='flex__item-half-width'>
                     <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Licence expiry
                         date</h3>
                     <div class='govuk-heading-m govuk-!-margin-top-0' data-qa='licenceExpiryDate'>
-                        {{ formatDateTimeFromIsoString({isoDate: caseSummary.convictions.activeCustodial.licenceExpiryDate }) if caseSummary.convictions.activeCustodial.licenceExpiryDate else 'Not available' }}</li>
+                        {{ formatDateTimeFromIsoString({isoDate: caseSummary.convictions.activeCustodial[0].licenceExpiryDate }) if (not caseSummary.convictions.hasMultipleActiveCustodial) and caseSummary.convictions.activeCustodial[0].licenceExpiryDate else 'Not available' }}</li>
                     </div>
                 </div>
             </div>

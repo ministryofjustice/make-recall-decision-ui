@@ -96,6 +96,10 @@ $fontSize: 16;
   }
 }
 
+.app-summary-card--medium-title .app-summary-card__title {
+  @include govuk-font($size: 19, $weight: bold);
+}
+
 .app-summary-card--large-title .app-summary-card__title {
   @include govuk-font($size: 24, $weight: bold);
 }
