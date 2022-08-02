@@ -29,4 +29,9 @@ export const standardLicenceConditions = [
     value: 'APPROVED_WORK',
     text: 'not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
   },
+  {
+    id: 7,
+    value: 'APPROVED_TRAVEL',
+    text: 'not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
+  },
 ]

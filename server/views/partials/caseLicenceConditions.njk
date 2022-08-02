@@ -55,8 +55,10 @@
                             {% for licenceCondition in conviction.licenceConditions %}
                                 {% set conditionHtml %}
                                     <p class='govuk-body' data-qa='condition-description'>{{ licenceCondition.licenceConditionTypeSubCat.description }}</p>
-                                    <h4 class='govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-1'>Further note</h4>
+                                    {% if licenceCondition.licenceConditionNotes %}
+                                    <h4 class='govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-1'>Notes</h4>
                                     <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.licenceConditionNotes if licenceCondition.licenceConditionNotes else 'There are no notes relating to this licence condition' }}</p>
+                                    {% endif %}
                                 {% endset %}
                                 {{ appSummaryCard({
                                     titleText: licenceCondition.licenceConditionTypeMainCat.description,
@@ -71,14 +73,14 @@
                                 {% set conditionNumber = conditionNumber + 1 %}
                             {% endfor %}
                         {% else %}
-                            <p class='govuk-body'>There are no licence conditions available.</p>
+                            <p class='govuk-body'>There are no additional licence conditions in NDelius.</p>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </div>
         {% else %}
-        <p class='govuk-body'>There are no licence conditions available.</p>
+        <p class='govuk-body'>There are no licence conditions.</p>
         {% endif %}
     </div>
 </div>
