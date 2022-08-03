@@ -19,7 +19,7 @@ describe('validateCustodyStatus', () => {
         value: 'YES_POLICE',
       },
     })
-    expect(nextPagePath).toEqual('/cases/X34534/overview')
+    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
   })
 
   it('returns an error, if not set, and no valuesToSave', () => {

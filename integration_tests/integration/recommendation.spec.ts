@@ -1,5 +1,6 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
+import { formOptions } from '../../server/controllers/recommendations/formOptions'
 
 context('Make a recommendation', () => {
   beforeEach(() => {
@@ -9,7 +10,7 @@ context('Make a recommendation', () => {
   it('can create a recommendation', () => {
     const crn = 'X34983'
     const response = {
-      recommendationId: '123',
+      id: '123',
       crn,
     }
     const updatedResponse = {
@@ -30,11 +31,15 @@ context('Make a recommendation', () => {
     // validation error
     cy.clickButton('Continue')
     cy.assertErrorMessage({ fieldName: 'recallType', errorText: 'Select a recommendation' })
-    cy.selectRadio('What do you recommend?', 'Fixed term')
+    cy.selectRadio('What do you recommend?', 'Fixed term recall')
     cy.clickButton('Continue')
     cy.selectRadio('Is the person in custody now?', 'No')
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...response, recallType: { value: 'STANDARD', options: formOptions.recallType } },
+    })
     cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Overview for Paula Smith')
+    cy.pageHeading().should('contain', 'Part A created')
   })
 
   it('shows an error if creation fails', () => {

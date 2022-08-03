@@ -4,7 +4,7 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateCustodyStatus = ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
+export const validateCustodyStatus = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -27,7 +27,7 @@ export const validateCustodyStatus = ({ requestBody }: FormValidatorArgs): FormV
         options: formOptions.custodyStatus,
       },
     }
-    nextPagePath = `${routeUrls.cases}/${requestBody.crn}/overview`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`
   }
   return {
     errors,
