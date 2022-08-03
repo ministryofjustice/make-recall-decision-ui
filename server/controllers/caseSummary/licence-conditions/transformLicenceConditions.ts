@@ -1,5 +1,4 @@
 import {
-  CaseSummaryOverviewResponse,
   ConvictionResponse,
   LicenceCondition,
   LicenceConditionsResponse,
