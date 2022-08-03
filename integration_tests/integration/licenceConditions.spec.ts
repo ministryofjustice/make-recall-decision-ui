@@ -45,7 +45,7 @@ context('Licence conditions', () => {
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement('Burglary - 05714').should('exist')
-    cy.getElement('There are no additional licence conditions in NDelius.').should('exist')
+    cy.getElement('There are no additional licence conditions in NDelius. Check the licence document.').should('exist')
   })
 
   it('shows a message if there are no active custodial convictions', () => {
