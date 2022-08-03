@@ -65,7 +65,7 @@ context('Licence conditions', () => {
     })
     const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
-    cy.getElement('There are no licence conditions.').should('exist')
+    cy.getElement('This person has no active convictions.').should('exist')
   })
 
   it('shows conditions for multiple active custodial convictions, and a banner', () => {
