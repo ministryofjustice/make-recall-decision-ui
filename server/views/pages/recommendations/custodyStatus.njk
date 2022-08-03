@@ -1,14 +1,13 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageHeading, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
     {{ govukBackLink({
         text: "Back",
-        href: '/cases/' + recommendation.crn + '/overview'
-    }) }}
-    </nav>
+        href: '/recommendations/' + recommendation.id + '/recall-type'
+    }) }}</nav>
 {% endblock %}
 
 {% block content %}
@@ -19,8 +18,8 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 {{ govukRadios({
-                    idPrefix: "recallType",
-                    name: "recallType",
+                    idPrefix: "custodyStatus",
+                    name: "custodyStatus",
                     fieldset: {
                         legend: {
                             text: pageHeading,
@@ -28,8 +27,8 @@
                             isPageHeading: true
                         }
                     },
-                    items: formValues.recallType,
-                    errorMessage: errorMessage(errors.recallType)
+                    items: formValues.custodyStatus,
+                    errorMessage: errorMessage(errors.custodyStatus)
                 }) }}
                 {{ formSubmitButton() }}
             </form>

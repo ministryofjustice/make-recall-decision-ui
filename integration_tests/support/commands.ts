@@ -35,6 +35,10 @@ Cypress.Commands.add('mockCaseSummaryData', () => {
   cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })
 })
 
+Cypress.Commands.add('mockRecommendationData', () => {
+  cy.task('getRecommendation', { statusCode: 200, response: { recommendationId: '456', crn: '123' } })
+})
+
 Cypress.Keyboard.defaults({
   keystrokeDelay: 0,
 })

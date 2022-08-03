@@ -11,14 +11,12 @@ describe('transformLicenceConditions', () => {
           licenceExpiryDate: '2023-06-16',
           sentenceExpiryDate: '2021-11-23',
           offences: [],
-          licenceConditions: [],
         },
         {
           active: false,
           isCustodial: true,
           licenceExpiryDate: '2021-03-24',
           offences: [],
-          licenceConditions: [],
         },
         {
           active: true,
@@ -26,7 +24,6 @@ describe('transformLicenceConditions', () => {
           licenceExpiryDate: '2021-11-24',
           sentenceExpiryDate: '2022-06-18',
           offences: [],
-          licenceConditions: [],
         },
       ],
     } as CaseSummaryOverviewResponse

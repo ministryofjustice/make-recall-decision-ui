@@ -4,17 +4,17 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateRecallType = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+export const validateCustodyStatus = ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
 
-  const { recallType } = requestBody
-  if (!recallType || !isValueValid(recallType, 'recallType')) {
-    const errorId = 'noRecallTypeSelected'
+  const { custodyStatus } = requestBody
+  if (!custodyStatus || !isValueValid(custodyStatus, 'custodyStatus')) {
+    const errorId = 'noCustodyStatusSelected'
     errors = [
       makeErrorObject({
-        id: 'recallType',
+        id: 'custodyStatus',
         text: strings.errors[errorId],
         errorId,
       }),
@@ -22,12 +22,12 @@ export const validateRecallType = ({ requestBody, recommendationId }: FormValida
   }
   if (!errors) {
     valuesToSave = {
-      recallType: {
-        value: recallType,
-        options: formOptions.recallType,
+      custodyStatus: {
+        value: custodyStatus,
+        options: formOptions.custodyStatus,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/custody-status`
+    nextPagePath = `${routeUrls.cases}/${requestBody.crn}/overview`
   }
   return {
     errors,

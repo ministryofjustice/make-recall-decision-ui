@@ -13,11 +13,11 @@ export const getFormValues = ({ errors = {}, apiValues }: GetFormValuesArgs) => 
   const values = {} as ObjectMap<unknown>
 
   // radio / checkbox options
-  ;['recallType'].forEach((key: string) => {
+  ;['recallType', 'custodyStatus'].forEach((key: string) => {
     const value = isDefined(errors[key])
       ? errors[key].values || ''
       : getProperty<RecommendationResponse, RecallType>(apiValues, key)?.value
-    values[key] = radioCheckboxItems({ items: formOptions.recallType, currentValues: value as string })
+    values[key] = radioCheckboxItems({ items: formOptions[key], currentValues: value as string })
   })
 
   return values

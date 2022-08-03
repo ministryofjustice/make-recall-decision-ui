@@ -12,3 +12,4 @@ Feature: Case summary
     And Maria filters contacts by date range
     And Maria starts a new recommendation
     And Maria recommends a fixed term recall
+    And Maria selects a custody status

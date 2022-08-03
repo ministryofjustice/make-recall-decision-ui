@@ -2,19 +2,28 @@ import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 
 const urls = [
-  '/',
-  '/search',
-  '/search-results',
-  '/search-results?crn=123',
-  `${routeUrls.cases}/123/overview`,
-  `${routeUrls.cases}/123/risk`,
-  `${routeUrls.cases}/123/personal-details`,
-  `${routeUrls.cases}/123/licence-conditions`,
-  `${routeUrls.cases}/123/contact-history`,
+  { url: '/' },
+  { url: '/search' },
+  { url: '/search-results' },
+  { url: '/search-results?crn=123' },
+  { url: `${routeUrls.cases}/123/overview` },
+  { url: `${routeUrls.cases}/123/risk` },
+  { url: `${routeUrls.cases}/123/personal-details` },
+  { url: `${routeUrls.cases}/123/licence-conditions` },
+  { url: `${routeUrls.cases}/123/contact-history?flagRecommendationProd=1` },
   // contact filter with valid dates
-  `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
+  {
+    url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
+  },
   // contact filter with invalid dates and errors
-  `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
+  {
+    url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
+  },
+  // recommendation flow
+  { url: `${routeUrls.recommendations}/456/recall-type` },
+  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true },
+  { url: `${routeUrls.recommendations}/456/custody-status` },
+  { url: `${routeUrls.recommendations}/456/custody-status`, validationError: true },
 ]
 
 context('Accessibility (a11y) Checks', () => {
@@ -22,11 +31,15 @@ context('Accessibility (a11y) Checks', () => {
     cy.signIn()
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
     cy.mockCaseSummaryData()
+    cy.mockRecommendationData()
   })
 
-  urls.forEach(url => {
-    it(url, () => {
-      cy.visit(url)
+  urls.forEach(item => {
+    it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
+      cy.visit(item.url)
+      if (item.validationError) {
+        cy.clickButton('Continue')
+      }
       cy.injectAxe()
       cy.checkA11y()
     })

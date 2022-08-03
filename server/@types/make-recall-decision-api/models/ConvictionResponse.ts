@@ -9,7 +9,6 @@ import type { Offence } from './Offence';
 export type ConvictionResponse = {
     convictionId?: number;
     active?: boolean;
-    isCustodial?: boolean;
     offences?: Array<Offence>;
     sentenceDescription?: string;
     sentenceOriginalLength?: number;
@@ -22,4 +21,5 @@ export type ConvictionResponse = {
     statusDescription?: string;
     licenceConditions?: Array<LicenceCondition>;
     licenceDocuments?: Array<CaseDocument>;
+    isCustodial?: boolean;
 };

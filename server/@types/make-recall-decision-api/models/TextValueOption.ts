@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type RecallTypeOption = {
+export type TextValueOption = {
     value?: string;
     text?: string;
 };

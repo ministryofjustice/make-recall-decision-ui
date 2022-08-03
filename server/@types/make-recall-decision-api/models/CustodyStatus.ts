@@ -4,7 +4,7 @@
 
 import type { TextValueOption } from './TextValueOption';
 
-export type RecallType = {
+export type CustodyStatus = {
     value?: string;
     options?: Array<TextValueOption>;
 };
