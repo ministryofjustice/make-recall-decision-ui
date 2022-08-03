@@ -57,7 +57,7 @@
                                     <p class='govuk-body' data-qa='condition-description'>{{ licenceCondition.licenceConditionTypeSubCat.description }}</p>
                                     {% if licenceCondition.licenceConditionNotes %}
                                     <h4 class='govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-1'>Notes</h4>
-                                    <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.licenceConditionNotes if licenceCondition.licenceConditionNotes else 'There are no notes relating to this licence condition' }}</p>
+                                    <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.licenceConditionNotes }}</p>
                                     {% endif %}
                                 {% endset %}
                                 {{ appSummaryCard({
@@ -73,7 +73,7 @@
                                 {% set conditionNumber = conditionNumber + 1 %}
                             {% endfor %}
                         {% else %}
-                            <p class='govuk-body'>There are no additional licence conditions in NDelius.</p>
+                            <p class='govuk-body'>There are no additional licence conditions in NDelius. Check the licence document.</p>
                         {% endif %}
                     {% endfor %}
                 </div>
