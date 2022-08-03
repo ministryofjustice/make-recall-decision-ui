@@ -1,0 +1,27 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set html %}
+                {{ getDisplayValueForOption(recommendation.recallType) }}
+            {% endset %}
+            {{ govukPanel({
+                titleText: "Part A created",
+                html: html
+            }) }}
+            <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
+            <p class='govuk-body'>
+                <form method='post' action='/recommendations/{{ recommendation.id }}/part-a'>
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <p class='govuk-body'><button class='reset-button link-button'>Download the Part A</button>. Then you can upload it to NDelius.</p>
+                </form>
+            </p>
+            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to case overview</a></p>
+        </div>
+    </div>
+{% endblock %}
+

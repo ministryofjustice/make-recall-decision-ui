@@ -9,9 +9,11 @@ export const strings = {
   pageHeadings: {
     recallType: 'What do you recommend?',
     custodyStatus: 'Is the person in custody now?',
+    confirmationPartA: 'Part A created',
   },
   pageTitles: {
     recallType: 'What do you recommend?',
     custodyStatus: 'Is the person in custody now?',
+    confirmationPartA: 'Part A created',
   },
 }

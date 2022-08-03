@@ -14,11 +14,11 @@ describe('validateRecallType', () => {
       recallType: {
         options: [
           {
-            text: 'Fixed term',
+            text: 'Fixed term recall',
             value: 'FIXED_TERM',
           },
           {
-            text: 'Standard',
+            text: 'Standard recall',
             value: 'STANDARD',
           },
           {

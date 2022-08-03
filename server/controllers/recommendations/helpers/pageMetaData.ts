@@ -20,6 +20,12 @@ export const getPageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.custodyStatus,
         pageTitle: strings.pageTitles.custodyStatus,
       }
+    case 'confirmation-part-a':
+      return {
+        templateName: 'confirmationPartA',
+        pageHeading: strings.pageHeadings.confirmationPartA,
+        pageTitle: strings.pageTitles.confirmationPartA,
+      }
     default:
       throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })
   }

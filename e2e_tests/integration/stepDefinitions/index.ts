@@ -63,16 +63,25 @@ When('Maria starts a new recommendation', () => {
 })
 
 When('Maria recommends a fixed term recall', () => {
-  cy.selectRadio('What do you recommend?', 'Fixed term')
+  cy.selectRadio('What do you recommend?', 'Fixed term recall')
   cy.clickButton('Continue')
 })
 
 When('Maria selects a custody status', () => {
   cy.selectRadio('Is the person in custody now?', 'No')
   cy.clickButton('Continue')
+})
+
+When('Maria sees a confirmation page', () => {
+  cy.pageHeading().should('contain', 'Part A created')
+})
+
+When('Maria updates the recommendation', () => {
+  cy.clickLink('Back to case overview')
+  // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
-  cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term').should('be.checked')
+  cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
   cy.getRadioOptionByLabel('Is the person in custody now?', 'No').should('be.checked')
 })

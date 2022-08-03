@@ -86,11 +86,11 @@ describe('List utilities', () => {
     it('marks the selected items as checked', () => {
       const items = [
         {
-          text: 'Fixed term',
+          text: 'Fixed term recall',
           value: 'FIXED_TERM',
         },
         {
-          text: 'Standard',
+          text: 'Standard recall',
           value: 'STANDARD',
         },
         {
@@ -102,12 +102,12 @@ describe('List utilities', () => {
       expect(result).toEqual([
         {
           checked: true,
-          text: 'Fixed term',
+          text: 'Fixed term recall',
           value: 'FIXED_TERM',
         },
         {
           checked: false,
-          text: 'Standard',
+          text: 'Standard recall',
           value: 'STANDARD',
         },
         {

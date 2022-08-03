@@ -6,11 +6,11 @@ describe('getFormValues', () => {
       value: 'STANDARD',
       options: [
         {
-          text: 'Fixed term',
+          text: 'Fixed term recall',
           value: 'FIXED_TERM',
         },
         {
-          text: 'Standard',
+          text: 'Standard recall',
           value: 'STANDARD',
         },
         {
@@ -39,12 +39,12 @@ describe('getFormValues', () => {
     expect(formValues.recallType).toEqual([
       {
         checked: false,
-        text: 'Fixed term',
+        text: 'Fixed term recall',
         value: 'FIXED_TERM',
       },
       {
         checked: false,
-        text: 'Standard',
+        text: 'Standard recall',
         value: 'STANDARD',
       },
       {
@@ -62,12 +62,12 @@ describe('getFormValues', () => {
       recallType: [
         {
           checked: false,
-          text: 'Fixed term',
+          text: 'Fixed term recall',
           value: 'FIXED_TERM',
         },
         {
           checked: true,
-          text: 'Standard',
+          text: 'Standard recall',
           value: 'STANDARD',
         },
         {
