@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type CustodyStatusOption = {
+export type TextValueOption = {
     value?: string;
     text?: string;
 };

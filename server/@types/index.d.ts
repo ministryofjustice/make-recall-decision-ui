@@ -29,7 +29,7 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
 
 export interface PageMetaData {
   templateName: PageTemplateName
-  validator: FormValidator
+  validator?: FormValidator
   pageHeading: string
   pageTitle: string
 }
@@ -111,6 +111,6 @@ export interface ContactHistoryFilters {
   searchFilters: string | string[]
 }
 
-export type PageTemplateName = 'recallType' | 'custodyStatus'
+export type PageTemplateName = 'recallType' | 'custodyStatus' | 'confirmationPartA'
 
 export type PageId = 'recall-type' | 'custody-status'

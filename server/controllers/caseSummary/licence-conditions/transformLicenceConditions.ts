@@ -2,6 +2,7 @@ import {
   CaseSummaryOverviewResponse,
   ConvictionResponse,
   LicenceCondition,
+  LicenceConditionsResponse,
 } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
 import { formOptions } from '../../recommendations/formOptions'
@@ -33,7 +34,7 @@ interface DecoratedConviction {
   licenceConditions?: LicenceCondition[]
 }
 
-export const transformLicenceConditions = (caseSummary: CaseSummaryOverviewResponse) => {
+export const transformLicenceConditions = (caseSummary: LicenceConditionsResponse) => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
   if (caseSummary.convictions) {

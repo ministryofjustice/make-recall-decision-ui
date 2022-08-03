@@ -2,20 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { CustodyStatusOption } from './CustodyStatusOption';
+import type { TextValueOption } from './TextValueOption';
 
 export type CustodyStatus = {
-    value?: CustodyStatus.value;
-    options?: Array<CustodyStatusOption>;
+    value?: string;
+    options?: Array<TextValueOption>;
 };
-
-export namespace CustodyStatus {
-
-    export enum value {
-        YES_PRISON = 'YES_PRISON',
-        YES_POLICE = 'YES_POLICE',
-        NO = 'NO',
-    }
-
-
-}
