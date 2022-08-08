@@ -10,10 +10,12 @@ export const strings = {
     recallType: 'What do you recommend?',
     custodyStatus: 'Is the person in custody now?',
     confirmationPartA: 'Part A created',
+    startNoRecall: 'Start the Decision not to Recall letter',
   },
   pageTitles: {
     recallType: 'What do you recommend?',
     custodyStatus: 'Is the person in custody now?',
     confirmationPartA: 'Part A created',
+    startNoRecall: 'Start the Decision not to Recall letter',
   },
 }

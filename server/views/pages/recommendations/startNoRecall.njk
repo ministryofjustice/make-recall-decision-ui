@@ -1,0 +1,22 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/recall-type'
+        }) }}</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+            <p class='govuk-body'>The letter explains your decision not to recall and what happens next. The first line
+                says why you considered recall in the first place.</p>
+        </div>
+    </div>
+{% endblock %}
+
