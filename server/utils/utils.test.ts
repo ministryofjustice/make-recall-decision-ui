@@ -72,12 +72,12 @@ describe('Convert to title case', () => {
 describe('makePageTitle', () => {
   it('suffixes the supplied heading with the app name', () => {
     const title = makePageTitle({ pageHeading: 'Search', hasErrors: false })
-    expect(title).toEqual('Search - Recall Decisions')
+    expect(title).toEqual('Search - Decide if someone should be recalled or not')
   })
 
   it('prefixes the title if there are errors', () => {
     const title = makePageTitle({ pageHeading: 'Search', hasErrors: true })
-    expect(title).toEqual('Error: Search - Recall Decisions')
+    expect(title).toEqual('Error: Search - Decide if someone should be recalled or not')
   })
 })
 

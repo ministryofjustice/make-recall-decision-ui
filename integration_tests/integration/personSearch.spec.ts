@@ -18,7 +18,6 @@ context('Search for a person', () => {
   it('can search for a person on probation', () => {
     const crnQuery = 'A12345'
     const { name, dateOfBirth, crn } = getPersonSearchResponse[0]
-    cy.pageHeading().should('equal', 'Recall Decisions')
     cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')
 

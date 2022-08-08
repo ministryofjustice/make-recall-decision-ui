@@ -33,7 +33,7 @@ export interface ApiConfig {
 
 export default {
   https: production,
-  applicationName: 'Recall Decisions',
+  applicationName: 'Decide if someone should be recalled or not',
   staticResourceCacheDuration: 20,
   redis: {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
