@@ -116,3 +116,10 @@ export const updateRecommendation = ({ statusCode = 200, response }: { statusCod
     statusCode,
     response,
   })
+
+export const createPartA = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)/part-a`,
+    statusCode,
+    response,
+  })

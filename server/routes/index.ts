@@ -16,6 +16,7 @@ import { getRecommendationPage } from '../controllers/recommendations/getRecomme
 import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
 import { routeUrls } from './routeUrls'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
+import { createAndDownloadPartA } from '../controllers/recommendations/createAndDownloadPartA'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -32,6 +33,7 @@ export default function routes(router: Router): Router {
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummary)
 
   post(routeUrls.recommendations, createRecommendationController)
+  get(`${routeUrls.recommendations}/:recommendationId/documents/part-a`, createAndDownloadPartA)
   post(`${routeUrls.recommendations}/:recommendationId/status`, updateRecommendationStatus)
   get(`${routeUrls.recommendations}/:recommendationId/:pageId`, getRecommendationPage)
   post(`${routeUrls.recommendations}/:recommendationId/:pageId`, postRecommendationForm)

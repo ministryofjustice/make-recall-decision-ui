@@ -12,6 +12,7 @@ import {
   createRecommendation,
   getRecommendation,
   updateRecommendation,
+  createPartA,
 } from '../mockApis/makeRecallDecisionApi'
 import { readPdf, readBase64File, readDocX } from './readFiles'
 
@@ -36,5 +37,6 @@ export default (on: (string, Record) => void): void => {
     readPdf,
     readBase64File,
     readDocX,
+    createPartA,
   })
 }
