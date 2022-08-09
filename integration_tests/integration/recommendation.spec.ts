@@ -33,13 +33,25 @@ context('Make a recommendation', () => {
     cy.assertErrorMessage({ fieldName: 'recallType', errorText: 'Select a recommendation' })
     cy.selectRadio('What do you recommend?', 'Fixed term recall')
     cy.clickButton('Continue')
-    cy.selectRadio('Is the person in custody now?', 'No')
+    cy.selectRadio('Is the person in custody now?', 'Yes, police custody')
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...response, recallType: { value: 'STANDARD', options: formOptions.recallType } },
     })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Part A created')
+
+    cy.log('Download Part A')
+    const fileName = 'NAT_Recall_Part_A_X514364.docx'
+    cy.readBase64File(fileName).then(fileContents => {
+      cy.task('createPartA', {
+        response: {
+          fileContents,
+          fileName,
+        },
+      })
+      cy.downloadDocX('Download the Part A').should('contain', 'PART A: Recall Report')
+    })
   })
 
   it('can create a recommendation', () => {

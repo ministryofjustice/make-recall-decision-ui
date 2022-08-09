@@ -12,8 +12,10 @@ import {
   createRecommendation,
   getRecommendation,
   updateRecommendation,
+  createPartA,
 } from '../mockApis/makeRecallDecisionApi'
-import { readPdf, readBase64File, readDocX } from './readFiles'
+import { readPdf, readBase64File } from './readFiles'
+import { readDocX } from '../../cypress_shared/plugins'
 
 export default (on: (string, Record) => void): void => {
   on('task', {
@@ -36,5 +38,6 @@ export default (on: (string, Record) => void): void => {
     readPdf,
     readBase64File,
     readDocX,
+    createPartA,
   })
 }

@@ -5,6 +5,7 @@ import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonD
 import { routes } from '../../api/routes'
 import { CaseSectionId } from '../@types'
 import { RecommendationResponse, UpdateRecommendationRequest } from '../@types/make-recall-decision-api'
+import { PartAResponse } from '../@types/make-recall-decision-api/models/PartAResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -39,3 +40,8 @@ export const getDocumentContents = (crn: string, documentId: string, token: stri
     responseType: 'arraybuffer',
   }) as Promise<Response>
 }
+
+export const createPartA = (recommendationId: string, token: string): Promise<PartAResponse> =>
+  restClient(token).post({
+    path: `${routes.recommendations}/${recommendationId}/part-a`,
+  }) as Promise<PartAResponse>
