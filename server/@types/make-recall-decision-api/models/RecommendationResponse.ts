@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import type { CustodyStatus } from './CustodyStatus';
+import type { PersonOnProbation } from './PersonOnProbation';
 import type { RecallType } from './RecallType';
 
 export type RecommendationResponse = {
@@ -11,6 +12,7 @@ export type RecommendationResponse = {
     custodyStatus?: CustodyStatus;
     crn?: string;
     recallType?: RecallType;
+    personOnProbation?: PersonOnProbation;
 };
 
 export namespace RecommendationResponse {

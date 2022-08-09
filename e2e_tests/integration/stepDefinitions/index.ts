@@ -68,12 +68,19 @@ When('Maria recommends a fixed term recall', () => {
 })
 
 When('Maria selects a custody status', () => {
-  cy.selectRadio('Is the person in custody now?', 'No')
+  cy.selectRadio('Is the person in custody now?', 'Yes, police custody')
   cy.clickButton('Continue')
 })
 
 When('Maria sees a confirmation page', () => {
   cy.pageHeading().should('contain', 'Part A created')
+})
+
+When('Maria downloads the Part A', () => {
+  cy.downloadDocX('Download the Part A').should(
+    'contain',
+    'Is the offender currently in police custody or prison custody? Police Custody'
+  )
 })
 
 When('Maria updates the recommendation', () => {
@@ -83,5 +90,5 @@ When('Maria updates the recommendation', () => {
   cy.clickLink('Update recommendation')
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
-  cy.getRadioOptionByLabel('Is the person in custody now?', 'No').should('be.checked')
+  cy.getRadioOptionByLabel('Is the person in custody now?', 'Yes, police custody').should('be.checked')
 })

@@ -14,4 +14,5 @@ Feature: Case summary
     And Maria recommends a fixed term recall
     And Maria selects a custody status
     Then Maria sees a confirmation page
+    And Maria downloads the Part A
     And Maria updates the recommendation
