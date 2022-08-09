@@ -8,7 +8,7 @@ describe('validateRecallType', () => {
       recallType: 'FIXED_TERM',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = validateRecallType({ requestBody, recommendationId })
+    const { errors, valuesToSave } = validateRecallType({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       recallType: {
@@ -29,7 +29,33 @@ describe('validateRecallType', () => {
         value: 'FIXED_TERM',
       },
     })
+  })
+
+  it('redirects to custody status if Fixed term recall is selected', () => {
+    const requestBody = {
+      recallType: 'FIXED_TERM',
+      crn: 'X34534',
+    }
+    const { nextPagePath } = validateRecallType({ requestBody, recommendationId })
     expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/custody-status`)
+  })
+
+  it('redirects to custody status if Standard recall is selected', () => {
+    const requestBody = {
+      recallType: 'STANDARD',
+      crn: 'X34534',
+    }
+    const { nextPagePath } = validateRecallType({ requestBody, recommendationId })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/custody-status`)
+  })
+
+  it('redirects to no recall letter page if No recall is selected', () => {
+    const requestBody = {
+      recallType: 'NO_RECALL',
+      crn: 'X34534',
+    }
+    const { nextPagePath } = validateRecallType({ requestBody, recommendationId })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
   })
 
   it('returns an error for the decision, if not set, and no valuesToSave', () => {

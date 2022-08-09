@@ -54,6 +54,25 @@ context('Make a recommendation', () => {
     })
   })
 
+  it('can create a recommendation', () => {
+    const crn = 'X34983'
+    const recommendationId = '123'
+    const response = {
+      id: recommendationId,
+      crn,
+    }
+    const updatedResponse = {
+      ...response,
+      recallType: 'NO_RECALL',
+    }
+    cy.task('getRecommendation', { statusCode: 200, response })
+    cy.task('updateRecommendation', { statusCode: 200, response: updatedResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type?flagRecommendationProd=1`)
+    cy.selectRadio('What do you recommend?', 'No recall')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
+  })
+
   it('shows an error if creation fails', () => {
     const crn = 'X34983'
     const caseResponse = {
