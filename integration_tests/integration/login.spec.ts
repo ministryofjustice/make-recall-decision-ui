@@ -20,14 +20,13 @@ context('SignIn', () => {
 
   it('User can log out', () => {
     cy.signIn()
-    cy.pageHeading().should('equal', 'Recall Decisions')
+    cy.pageHeading().should('equal', 'Decide if someone should be recalled or not')
     cy.clickLink('Sign out')
     Page.verifyOnPage(AuthSignInPage)
   })
 
   it('User can manage their details and give feedback', () => {
     cy.signIn()
-    cy.pageHeading().should('equal', 'Recall Decisions')
     cy.getLinkHref('J. Smith').should('contain', '/account-details')
     cy.getText('feedback-form-link').should('equal', 'feedback')
     cy.getLinkHref({ qaAttr: 'feedback-form-link' }).should(

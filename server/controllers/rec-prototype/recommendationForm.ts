@@ -102,11 +102,6 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'victim-contact-scheme':
       return {
         pageTemplate: 'victimContactScheme',
-        nextPageId: 'victim-liaison-officer',
-      }
-    case 'victim-liaison-officer':
-      return {
-        pageTemplate: 'victimLiaisonOfficer',
         nextPageId: 'summary',
       }
     case 'contraband':

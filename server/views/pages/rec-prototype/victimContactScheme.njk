@@ -10,6 +10,60 @@
 {% endblock %}
 
 {% block content %}
+    {% set yesHtml %}
+        <p class='govuk-body'>You must tell the victim liaison officer (VLO) about the recall request.</p>
+        <p class='govuk-body'>You must also tell them that the victim can:</p>
+        <ul class='govuk-list govuk-list--bullet govuk-!-margin-bottom-6'>
+            <li>submit a victim personal statement</li>
+            <li>ask for a copy of the parole board decision summary</li>
+            <li>ask for a copy of the Secretary of State executive release decision summary</li>
+        </ul>
+        <fieldset class="govuk-fieldset" role="group"
+                  aria-describedby="vlo-date-hint">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h2 class="govuk-fieldset__heading">
+                    When did you tell the VLO about these things?
+                </h2>
+            </legend>
+            <div id="vlo-date-hint" class="govuk-hint">
+                For example, 31 3 1980
+            </div>
+            <div class="govuk-form-group">
+                <div class="govuk-date-input" id="vlo-date">
+                    <div class="govuk-date-input__item">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="vlo-date-day">
+                                Day
+                            </label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                   id="vlo-date-day" name="vloDateDay" type="text"
+                                   inputmode="numeric">
+                        </div>
+                    </div>
+                    <div class="govuk-date-input__item">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="vlo-date-month">
+                                Month
+                            </label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                   id="vlo-date-month" name="vloDateMonth" type="text"
+                                   inputmode="numeric">
+                        </div>
+                    </div>
+                    <div class="govuk-date-input__item">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="vlo-date-year">
+                                Year
+                            </label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                   id="vlo-date-year" name="vloDateYear" type="text"
+                                   inputmode="numeric">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    {% endset %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
@@ -26,7 +80,12 @@
                             isPageHeading: true
                         }
                     },
-                    items: radioCheckboxItems({ items: refData.yesNo })
+                    items: radioCheckboxItems({ items: [
+                        { value: 'YES', text: 'Yes', conditional: {
+                            html: yesHtml
+                        } },
+                        { value: 'NO', text: 'No' }
+                    ] })
                 }) }}
                 {{ formSubmitButton() }}
             </form>
