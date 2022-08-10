@@ -17,7 +17,7 @@ context('Make a recommendation', () => {
         allOptions: formOptions.recallType,
       },
       custodyStatus: {
-        options: formOptions.custodyStatus,
+        allOptions: formOptions.custodyStatus,
       },
     }
     const caseResponse = {

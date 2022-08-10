@@ -5,6 +5,6 @@
 import type { TextValueOption } from './TextValueOption';
 
 export type CustodyStatus = {
-    value?: string;
-    options?: Array<TextValueOption>;
+    selected?: string;
+    allOptions?: Array<TextValueOption>;
 };

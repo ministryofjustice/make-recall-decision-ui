@@ -7,7 +7,7 @@ export const inputDisplayValuesCustodyStatus = ({ errors = {}, apiValues }: Inpu
     value: '',
   }
   if (!isDefined(errors.custodyStatus)) {
-    inputDisplayValues.value = getProperty<RecommendationResponse, CustodyStatus>(apiValues, 'custodyStatus')?.value
+    inputDisplayValues.value = getProperty<RecommendationResponse, CustodyStatus>(apiValues, 'custodyStatus')?.selected
   }
   return inputDisplayValues
 }
