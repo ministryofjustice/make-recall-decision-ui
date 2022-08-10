@@ -12,6 +12,7 @@ describe('postRecommendationForm', () => {
   const currentPageUrl = `/recommendations/${recommendationId}/recall-type`
   const requestBody = {
     recallType: 'STANDARD',
+    recallTypeDetailsStandard: 'Details...',
     crn,
   }
   let res: Response
@@ -39,6 +40,7 @@ describe('postRecommendationForm', () => {
       method: 'POST',
       params: { recommendationId, pageId },
       body: {
+        recallType: 'STANDARD',
         crn,
       },
     })
@@ -46,12 +48,14 @@ describe('postRecommendationForm', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, currentPageUrl)
     expect(req.session.errors).toEqual([
       {
-        href: '#recallType',
-        name: 'recallType',
-        text: 'Select a recommendation',
-        errorId: 'noRecallTypeSelected',
+        errorId: 'missingRecallTypeDetail',
+        fieldText: 'Enter more detail',
+        href: '#recallTypeDetailsStandard',
+        name: 'recallTypeDetailsStandard',
+        text: 'Why do you recommend this recall type?',
       },
     ])
+    expect(req.session.unsavedValues).toEqual({ recallType: 'STANDARD' })
   })
 
   it('should reload the page if the API errors', async () => {

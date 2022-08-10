@@ -27,7 +27,10 @@
                             isPageHeading: true
                         }
                     },
-                    items: formValues.custodyStatus,
+                    items: radioCheckboxItems({
+                        items: formOptions.custodyStatus,
+                        currentValues: inputDisplayValues.value
+                    }),
                     errorMessage: errorMessage(errors.custodyStatus)
                 }) }}
                 {{ formSubmitButton() }}

@@ -1,4 +1,4 @@
-import { validateCustodyStatus } from './validateCustodyStatus'
+import { validateCustodyStatus } from './formValidator'
 
 describe('validateCustodyStatus', () => {
   const recommendationId = '34'

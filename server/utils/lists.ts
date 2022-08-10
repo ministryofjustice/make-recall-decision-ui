@@ -1,5 +1,5 @@
 import { getProperty, isDefined, isString } from './utils'
-import { UiListItem } from '../@types'
+import { ObjectMap, UiListItem } from '../@types'
 
 export const sortList = <T>(list: T[], key: string, asc = true): T[] => {
   if (!Array.isArray(list)) {
@@ -53,15 +53,19 @@ export const dedupeList = <T>(list: T[]) => {
 export const radioCheckboxItems = ({
   items,
   currentValues,
+  conditionalContent,
 }: {
   items?: UiListItem[]
   currentValues?: string | string[]
+  conditionalContent?: ObjectMap<string>
 }) => {
   const valuesToMatch = isDefined(currentValues) && !Array.isArray(currentValues) ? [currentValues] : currentValues
   return items.map(item => {
     return {
       ...item,
       checked: valuesToMatch ? valuesToMatch.includes(item.value) : false,
+      conditional:
+        conditionalContent && conditionalContent[item.value] ? { html: conditionalContent[item.value] } : undefined,
     }
   })
 }

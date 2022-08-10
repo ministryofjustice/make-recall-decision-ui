@@ -4,7 +4,9 @@ export const strings = {
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
     saveChanges: 'An error occurred saving your changes',
     noRecallTypeSelected: 'Select a recommendation',
+    missingRecallTypeDetail: 'Why do you recommend this recall type?',
     noCustodyStatusSelected: 'Select an option',
+    missingDetail: 'Enter more detail',
   },
   pageHeadings: {
     recallType: 'What do you recommend?',

@@ -1,5 +1,6 @@
 import { dedupeList, groupListByValue, radioCheckboxItems, sortList } from './lists'
 import { ObjectMap } from '../@types'
+import { formOptions } from '../controllers/recommendations/helpers/formOptions'
 
 describe('List utilities', () => {
   describe('groupListByValue', () => {
@@ -104,6 +105,37 @@ describe('List utilities', () => {
           checked: true,
           text: 'Fixed term recall',
           value: 'FIXED_TERM',
+        },
+        {
+          checked: false,
+          text: 'Standard recall',
+          value: 'STANDARD',
+        },
+        {
+          checked: false,
+          text: 'No recall',
+          value: 'NO_RECALL',
+        },
+      ])
+    })
+
+    it('includes any provided conditional content', () => {
+      const items = formOptions.recallType
+      const result = radioCheckboxItems({
+        items,
+        currentValues: ['FIXED_TERM'],
+        conditionalContent: {
+          FIXED_TERM: '<div>test</div>',
+        },
+      })
+      expect(result).toEqual([
+        {
+          text: 'Fixed term recall',
+          value: 'FIXED_TERM',
+          checked: true,
+          conditional: {
+            html: '<div>test</div>',
+          },
         },
         {
           checked: false,

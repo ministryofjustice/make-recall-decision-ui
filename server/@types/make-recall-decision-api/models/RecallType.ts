@@ -5,6 +5,9 @@
 import type { TextValueOption } from './TextValueOption';
 
 export type RecallType = {
-    value?: string;
-    options?: Array<TextValueOption>;
+    selected?: {
+        value: string
+        details?: string
+    };
+    allOptions?: Array<TextValueOption>;
 };

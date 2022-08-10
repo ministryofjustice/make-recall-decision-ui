@@ -1,3 +1,24 @@
 {
-  "recallType": "STANDARD"
+  "id": 1,
+  "status": "DRAFT",
+  "crn": "X12345",
+  "recallType": {
+    "selected": {
+      "value": "STANDARD",
+      "details": "Details..."
+    },
+    "allOptions": [
+      { "value": "FIXED_TERM", "text": "Fixed term recall" },
+      { "value": "STANDARD", "text": "Standard recall" },
+      { "value": "NO_RECALL", "text": "No recall" }
+    ]
+  },
+  "custodyStatus": {
+    "value": "YES_PRISON",
+    "options": [
+      { "value": "YES_PRISON", "text": "Yes, prison custody" },
+      { "value": "YES_POLICE", "text": "Yes, police custody" },
+      { "value": "NO", "text": "No" }
+    ]
+  }
 }

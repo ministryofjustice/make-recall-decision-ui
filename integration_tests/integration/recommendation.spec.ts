@@ -1,6 +1,6 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
-import { formOptions } from '../../server/controllers/recommendations/formOptions'
+import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
 
 context('Make a recommendation', () => {
   beforeEach(() => {
@@ -9,35 +9,44 @@ context('Make a recommendation', () => {
 
   it('can create a recommendation', () => {
     const crn = 'X34983'
-    const response = {
+    const recommendationResponse = {
       id: '123',
       crn,
-    }
-    const updatedResponse = {
-      ...response,
-      recallType: 'FIXED_TERM',
+      recallType: {
+        selected: {},
+        allOptions: formOptions.recallType,
+      },
+      custodyStatus: {
+        options: formOptions.custodyStatus,
+      },
     }
     const caseResponse = {
       ...getCaseOverviewResponse,
       activeRecommendation: undefined,
     }
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-    cy.task('createRecommendation', { statusCode: 201, response })
-    cy.task('getRecommendation', { statusCode: 200, response })
-    cy.task('updateRecommendation', { statusCode: 200, response: updatedResponse })
+    cy.task('createRecommendation', { statusCode: 201, response: recommendationResponse })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickButton('Make a recommendation')
     cy.pageHeading().should('equal', 'What do you recommend?')
     // validation error
     cy.clickButton('Continue')
-    cy.assertErrorMessage({ fieldName: 'recallType', errorText: 'Select a recommendation' })
+    cy.assertErrorMessage({
+      fieldName: 'recallType',
+      errorText: 'Select a recommendation',
+    })
     cy.selectRadio('What do you recommend?', 'Fixed term recall')
     cy.clickButton('Continue')
-    cy.selectRadio('Is the person in custody now?', 'Yes, police custody')
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...response, recallType: { value: 'STANDARD', options: formOptions.recallType } },
+    cy.assertErrorMessage({
+      fieldName: 'recallTypeDetailsFixedTerm',
+      errorText: 'Why do you recommend this recall type?',
+      fieldError: 'Enter more detail',
     })
+    cy.fillInput('Why do you recommend this recall type?', 'Details...')
+    cy.clickButton('Continue')
+    cy.selectRadio('Is the person in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Part A created')
 
@@ -61,12 +70,8 @@ context('Make a recommendation', () => {
       id: recommendationId,
       crn,
     }
-    const updatedResponse = {
-      ...response,
-      recallType: 'NO_RECALL',
-    }
     cy.task('getRecommendation', { statusCode: 200, response })
-    cy.task('updateRecommendation', { statusCode: 200, response: updatedResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type?flagRecommendationProd=1`)
     cy.selectRadio('What do you recommend?', 'No recall')
     cy.clickButton('Continue')
