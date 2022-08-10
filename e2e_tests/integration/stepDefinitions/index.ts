@@ -78,10 +78,13 @@ When('Maria sees a confirmation page', () => {
 })
 
 When('Maria downloads the Part A', () => {
-  cy.downloadDocX('Download the Part A').should(
-    'contain',
-    'Is the offender currently in police custody or prison custody? Police Custody'
-  )
+  cy.downloadDocX('Download the Part A').then(contents => {
+    cy.log('Q6')
+    expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
+    cy.log('Q22')
+    expect(contents).to.contain('Select the proposed recall type, having considered the information above: Standard')
+    expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')
+  })
 })
 
 When('Maria updates the recommendation', () => {
