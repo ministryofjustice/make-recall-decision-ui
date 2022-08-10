@@ -23,8 +23,8 @@ export const validateCustodyStatus = ({ requestBody, recommendationId }: FormVal
   if (!errors) {
     valuesToSave = {
       custodyStatus: {
-        value: custodyStatus,
-        options: formOptions.custodyStatus,
+        selected: custodyStatus,
+        allOptions: formOptions.custodyStatus,
       },
     }
     nextPagePath = `${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`

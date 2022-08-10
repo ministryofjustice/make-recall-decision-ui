@@ -4,8 +4,8 @@ import { formOptions } from '../helpers/formOptions'
 describe('inputDisplayValuesCustodyStatus', () => {
   const apiValues = {
     custodyStatus: {
-      value: 'YES_POLICE',
-      options: formOptions.custodyStatus,
+      selected: 'YES_POLICE',
+      allOptions: formOptions.custodyStatus,
     },
   }
 

@@ -11,12 +11,12 @@ describe('validateCustodyStatus', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       custodyStatus: {
-        options: [
+        allOptions: [
           { value: 'YES_PRISON', text: 'Yes, prison custody' },
           { value: 'YES_POLICE', text: 'Yes, police custody' },
           { value: 'NO', text: 'No' },
         ],
-        value: 'YES_POLICE',
+        selected: 'YES_POLICE',
       },
     })
     expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
