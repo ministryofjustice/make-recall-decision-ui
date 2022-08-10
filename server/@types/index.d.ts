@@ -1,4 +1,5 @@
 import { ContactSummaryResponse } from './make-recall-decision-api/models/ContactSummaryResponse'
+import { RecommendationResponse } from './make-recall-decision-api'
 
 export interface ObjectMap<T> {
   [key: string]: T
@@ -14,6 +15,7 @@ export type CaseSectionId =
 
 export interface FormError {
   text: string
+  fieldText?: string
   href?: string
   values?: ObjectMap<unknown> | string
   errorId?: string
@@ -30,6 +32,7 @@ export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
 export interface PageMetaData {
   templateName: PageTemplateName
   validator?: FormValidator
+  inputDisplayValues?: InputDisplayValues
   pageHeading: string
   pageTitle: string
 }
@@ -45,8 +48,16 @@ export interface FormValidatorReturn {
   errors?: NamedFormError[]
   valuesToSave?: ObjectMap<unknown>
   unsavedValues?: ObjectMap<unknown>
-  nextPagePath: string
+  nextPagePath?: string
 }
+
+export interface InputDisplayValuesArgs {
+  errors: ObjectMap<FormError>
+  unsavedValues: ObjectMap<unknown>
+  apiValues: RecommendationResponse
+}
+
+export type InputDisplayValues = (args: InputDisplayValuesArgs) => unknown
 
 export interface DecoratedContact extends ContactSummaryResponse {
   startDate: string

@@ -64,6 +64,7 @@ When('Maria starts a new recommendation', () => {
 
 When('Maria recommends a fixed term recall', () => {
   cy.selectRadio('What do you recommend?', 'Fixed term recall')
+  cy.fillInput('Why do you recommend this recall type?', 'Details...')
   cy.clickButton('Continue')
 })
 

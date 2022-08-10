@@ -7,7 +7,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
-                {{ getDisplayValueForOption(recommendation.recallType) }}
+                {{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: recommendation.recallType.allOptions }) }}
             {% endset %}
             {{ govukPanel({
                 titleText: "Part A created",

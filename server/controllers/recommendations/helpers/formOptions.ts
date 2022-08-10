@@ -1,7 +1,7 @@
-import { recallType } from './recallType'
-import { custodyStatus } from './custodyStatus'
+import { recallType } from '../recallType/formOptions'
+import { custodyStatus } from '../custodyStatus/formOptions'
 import { UiListItem } from '../../../@types'
-import { standardLicenceConditions } from './licenceConditions'
+import { standardLicenceConditions } from '../formOptions/licenceConditions'
 
 export const formOptions = {
   recallType,

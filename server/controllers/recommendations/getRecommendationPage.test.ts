@@ -23,7 +23,8 @@ describe('getRecommendationPage', () => {
     expect(res.locals.recommendation).toEqual(recommendationApiResponse)
     expect(res.locals.pageHeading).toEqual('What do you recommend?')
     expect(res.locals.pageTitle).toEqual('What do you recommend?')
-    expect(res.locals.formValues.recallType).toBeDefined()
+    expect(res.locals.inputDisplayValues.value).toBeDefined()
+    expect(res.locals.inputDisplayValues.details).toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
   })
 

@@ -1,10 +1,12 @@
 import { UiListItem } from '../../../@types'
 
-interface ValueWithOptions {
+export const getDisplayValueForOption = ({
+  value,
+  allOptions,
+}: {
   value: string
-  options: UiListItem[]
-}
-export const getDisplayValueForOption = (valueWithOptions: ValueWithOptions): string => {
-  const item = valueWithOptions.options.find(valueWithOption => valueWithOption.value === valueWithOptions.value)
-  return item ? item.text : valueWithOptions.value
+  allOptions: UiListItem[]
+}): string => {
+  const item = allOptions.find(valueWithOption => valueWithOption.value === value)
+  return item ? item.text : value
 }

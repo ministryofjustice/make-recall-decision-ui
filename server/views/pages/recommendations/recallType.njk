@@ -4,10 +4,10 @@
 
 {% block beforeContent %}
     <nav>
-    {{ govukBackLink({
-        text: "Back",
-        href: '/cases/' + recommendation.crn + '/overview'
-    }) }}
+        {{ govukBackLink({
+            text: "Back",
+            href: '/cases/' + recommendation.crn + '/overview'
+        }) }}
     </nav>
 {% endblock %}
 
@@ -15,6 +15,30 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
+            {% set standardDetailHtml %}
+                {{ govukTextarea({
+                    name: "recallTypeDetailsStandard",
+                    id: "recallTypeDetailsStandard",
+                    label: {
+                        text: "Why do you recommend this recall type?",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.details if inputDisplayValues.value === 'STANDARD',
+                    errorMessage: errorMessage(errors.recallTypeDetailsStandard)
+                }) }}
+            {% endset %}
+            {% set fixedTermDetailHtml %}
+                {{ govukTextarea({
+                    name: "recallTypeDetailsFixedTerm",
+                    id: "recallTypeDetailsFixedTerm",
+                    label: {
+                        text: "Why do you recommend this recall type?",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.details if inputDisplayValues.value === 'FIXED_TERM',
+                    errorMessage: errorMessage(errors.recallTypeDetailsFixedTerm)
+                }) }}
+            {% endset %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
@@ -28,7 +52,14 @@
                             isPageHeading: true
                         }
                     },
-                    items: formValues.recallType,
+                    items: radioCheckboxItems({
+                        items: formOptions.recallType,
+                        currentValues: inputDisplayValues.value,
+                        conditionalContent: {
+                            STANDARD: standardDetailHtml,
+                            FIXED_TERM: fixedTermDetailHtml
+                        }
+                    }),
                     errorMessage: errorMessage(errors.recallType)
                 }) }}
                 {{ formSubmitButton() }}

@@ -1,15 +1,18 @@
 import { PageMetaData } from '../../../@types'
 import { AppError } from '../../../AppError'
-import { validateRecallType } from '../validators/validateRecallType'
 import { strings } from '../../../textStrings/en'
-import { validateCustodyStatus } from '../validators/validateCustodyStatus'
+import { validateRecallType } from '../recallType/formValidator'
+import { validateCustodyStatus } from '../custodyStatus/formValidator'
+import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
+import { inputDisplayValuesCustodyStatus } from '../custodyStatus/inputDisplayValues'
 
-export const getPageMetaData = (pageId?: unknown): PageMetaData => {
+export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
     case 'recall-type':
       return {
         templateName: 'recallType',
         validator: validateRecallType,
+        inputDisplayValues: inputDisplayValuesRecallType,
         pageHeading: strings.pageHeadings.recallType,
         pageTitle: strings.pageHeadings.recallType,
       }
@@ -17,6 +20,7 @@ export const getPageMetaData = (pageId?: unknown): PageMetaData => {
       return {
         templateName: 'custodyStatus',
         validator: validateCustodyStatus,
+        inputDisplayValues: inputDisplayValuesCustodyStatus,
         pageHeading: strings.pageHeadings.custodyStatus,
         pageTitle: strings.pageTitles.custodyStatus,
       }

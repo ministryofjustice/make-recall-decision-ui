@@ -4,7 +4,7 @@ import {
   LicenceConditionsResponse,
 } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
-import { formOptions } from '../../recommendations/formOptions'
+import { formOptions } from '../../recommendations/helpers/formOptions'
 import { sortList } from '../../../utils/lists'
 
 const transformConviction = (conviction: ConvictionResponse) => {

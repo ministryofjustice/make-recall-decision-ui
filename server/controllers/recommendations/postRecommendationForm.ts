@@ -4,7 +4,7 @@ import logger from '../../../logger'
 import { saveErrorWithDetails } from '../../utils/errors'
 import { AppError } from '../../AppError'
 import { routeUrls } from '../../routes/routeUrls'
-import { getPageMetaData } from './helpers/pageMetaData'
+import { pageMetaData } from './helpers/pageMetaData'
 
 export const postRecommendationForm = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageId } = req.params
@@ -13,14 +13,15 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
     if (!req.body.crn) {
       throw new AppError(`Invalid CRN: ${req.body.crn}`, { status: 400 })
     }
-    const { validator } = getPageMetaData(pageId)
+    const { validator } = pageMetaData(pageId)
     const { user } = res.locals
-    const { errors, valuesToSave, nextPagePath } = validator({
+    const { errors, valuesToSave, unsavedValues, nextPagePath } = validator({
       requestBody: req.body,
       recommendationId,
     })
     if (errors) {
       req.session.errors = errors
+      req.session.unsavedValues = unsavedValues
       return res.redirect(303, currentPagePath)
     }
     await updateRecommendation(recommendationId, valuesToSave, user.token)

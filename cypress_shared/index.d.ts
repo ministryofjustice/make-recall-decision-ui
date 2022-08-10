@@ -58,7 +58,7 @@ declare global {
 
       interceptGoogleAnalyticsEvent(): Chainable<void>
 
-      assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string })
+      assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string; fieldError?: string })
 
       downloadFile(linkText: string): Chainable<Response<unknown>>
 
