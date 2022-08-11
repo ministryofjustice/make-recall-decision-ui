@@ -15,6 +15,12 @@ generic-service:
     ENVIRONMENT: "PRODUCTION"
 
   allowlist:
+    kettering_user: "194.33.196.4/24"
+    norwich_user: "194.33.192.0/24"
+    dxc_webproxy1: "195.92.38.20/32"
+    dxc_webproxy2: "195.92.38.21/32"
+    dxc_webproxy3: "195.92.38.22/32"
+    dxc_webproxy4: "195.92.38.23/32"
     office: "217.33.148.210/32"
     health-kick: "35.177.252.195/32"
     petty-france-wifi: "213.121.161.112/28"
