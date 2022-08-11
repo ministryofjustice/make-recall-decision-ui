@@ -1,4 +1,4 @@
-import { formatValidationErrorMessage, makeErrorObject, transformErrorMessages } from './errors'
+import { formatValidationErrorMessage, makeErrorObject, renderErrorMessages, transformErrorMessages } from './errors'
 
 describe('Error messages', () => {
   describe('makeErrorObject', () => {
@@ -131,6 +131,51 @@ describe('Error messages', () => {
     it('renders "minLengthSearchContactsTerm" error', () => {
       const error = formatValidationErrorMessage({ errorId: 'minLengthSearchContactsTerm' })
       expect(error).toEqual('Search term must be 2 characters or more')
+    })
+  })
+
+  describe('renderErrorMessages', () => {
+    it('returns error messages with placeholders filled with data', () => {
+      const errors = [
+        {
+          href: '#additionalLicenceConditionsDetail',
+          name: 'additionalLicenceConditionsDetail',
+          text: 'Provide detail on additional licence conditions',
+        },
+        {
+          text: 'Enter the NOMIS number {{ fullName }} is being held under',
+          href: '#differentNomsNumberDetail',
+          name: 'differentNomsNumberDetail',
+          values: 'A123',
+        },
+      ]
+      const result = renderErrorMessages(transformErrorMessages(errors), {
+        fullName: 'Dave Angel',
+      })
+      expect(result).toEqual({
+        additionalLicenceConditionsDetail: {
+          href: '#additionalLicenceConditionsDetail',
+          text: 'Provide detail on additional licence conditions',
+        },
+        differentNomsNumberDetail: {
+          text: 'Enter the NOMIS number Dave Angel is being held under',
+          href: '#differentNomsNumberDetail',
+          values: 'A123',
+        },
+        list: [
+          {
+            href: '#additionalLicenceConditionsDetail',
+            name: 'additionalLicenceConditionsDetail',
+            html: 'Provide detail on additional licence conditions',
+          },
+          {
+            href: '#differentNomsNumberDetail',
+            name: 'differentNomsNumberDetail',
+            html: 'Enter the NOMIS number Dave Angel is being held under',
+            values: 'A123',
+          },
+        ],
+      })
     })
   })
 })

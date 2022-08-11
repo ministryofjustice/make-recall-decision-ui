@@ -4,6 +4,7 @@ import { MIN_VALUE_YEAR } from './dates/convert'
 import { listToString } from './utils'
 import { strings } from '../textStrings/en'
 import { SanitisedError } from '../sanitisedError'
+import { renderTemplateString } from './nunjucks'
 
 export const makeErrorObject = ({
   id,
@@ -93,4 +94,30 @@ export const saveErrorWithDetails = ({ err, isProduction }: { err: SanitisedErro
     name: 'saveError',
     text: err.text || err.stack,
   }
+}
+
+export const renderErrorMessages = (
+  errors: KeyedFormErrors,
+  locals: ObjectMap<unknown>
+): KeyedFormErrors | undefined => {
+  if (!errors) {
+    return undefined
+  }
+  return Object.entries(errors).reduce(
+    (acc, [key, val]) => {
+      if (key === 'list') {
+        acc.list = (val as unknown as NamedFormError[]).map(err => {
+          const { text, ...rest } = err
+          return {
+            ...rest,
+            html: renderTemplateString(err.text, locals),
+          }
+        })
+      } else {
+        acc[key] = { ...val, text: renderTemplateString(val.text, locals) }
+      }
+      return acc
+    },
+    { list: [] }
+  ) as KeyedFormErrors
 }
