@@ -90,7 +90,7 @@ When('Maria downloads the Part A', () => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
     cy.log('Q20')
-    expect(contents).to.contain(/Provide details of how the offender has responded to supervision to date\?(.*)Re-offending has occurred/)
+    expect(contents).to.contain(/Provide details of how the offender has responded to supervision to date?(.*)Re-offending has occurred/)
 
       cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
