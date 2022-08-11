@@ -68,6 +68,11 @@ When('Maria recommends a fixed term recall', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria explains how the person has responded to probation so far', () => {
+  cy.fillInput('How has Duncann Cardours responded to probation so far?', 'Re-offending has occurred')
+  cy.clickButton('Continue')
+})
+
 When('Maria selects a custody status', () => {
   cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody'))
   cy.clickButton('Continue')
@@ -81,6 +86,8 @@ When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
+    cy.log('Q20')
+    expect(contents).to.contain('Provide details of how the offender has responded to supervision to date? Re-offending has occurred')
     cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
     expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')

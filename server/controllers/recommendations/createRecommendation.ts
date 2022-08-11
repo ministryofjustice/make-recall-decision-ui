@@ -7,7 +7,7 @@ export const createRecommendationController = async (req: Request, res: Response
   const normalizedCrn = validateCrn(req.body.crn)
   try {
     const recommendation = await createRecommendation(normalizedCrn, res.locals.user.token)
-    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/recall-type`)
+    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
   } catch (err) {
     req.session.errors = [
       {

@@ -13,6 +13,7 @@ export type RecommendationResponse = {
     crn?: string;
     recallType?: RecallType;
     personOnProbation?: PersonOnProbation;
+    responseToProbation?: string;
 };
 
 export namespace RecommendationResponse {

@@ -33,6 +33,18 @@ context('Make a recommendation', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickButton('Make a recommendation')
+
+    cy.log('===== Response to probation')
+    // validation error
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'responseToProbation',
+      errorText: 'You must explain how Paula Smith has responded to probation',
+    })
+    cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
+    cy.clickButton('Continue')
+
+    cy.log('===== What do you recommend?')
     cy.pageHeading().should('equal', 'What do you recommend?')
     // validation error
     cy.clickButton('Continue')
@@ -49,11 +61,13 @@ context('Make a recommendation', () => {
     })
     cy.fillInput('Why do you recommend this recall type?', 'Details...')
     cy.clickButton('Continue')
+
+    cy.log('===== Custody status')
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Part A created')
 
-    cy.log('Download Part A')
+    cy.log('===== Download Part A')
     const fileName = 'NAT_Recall_Part_A_X514364.docx'
     cy.readBase64File(fileName).then(fileContents => {
       cy.task('createPartA', {
@@ -118,6 +132,6 @@ context('Make a recommendation', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendation })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickLink('Update recommendation')
-    cy.pageHeading().should('equal', 'What do you recommend?')
+    cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
   })
 })

@@ -126,6 +126,11 @@ export interface ContactHistoryFilters {
   searchFilters: string | string[]
 }
 
-export type PageTemplateName = 'recallType' | 'custodyStatus' | 'confirmationPartA' | 'startNoRecall'
+export type PageTemplateName =
+  | 'responseToProbation'
+  | 'recallType'
+  | 'custodyStatus'
+  | 'confirmationPartA'
+  | 'startNoRecall'
 
 export type PageId = 'recall-type' | 'custody-status'

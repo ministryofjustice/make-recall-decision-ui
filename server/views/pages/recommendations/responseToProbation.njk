@@ -1,0 +1,40 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/cases/' + recommendation.crn + '/overview'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                {{ govukTextarea({
+                    name: "responseToProbation",
+                    id: "responseToProbation",
+                    label: {
+                        text: pageHeading,
+                        classes: "govuk-label--l",
+                        isPageHeading: true
+                    },
+                    hint: {
+                        text: "Give details of overall compliance. This includes good behaviour. Your answer will go into a Part A form if you decide to recall " + personalDetailsOverview.name + ". " + personalDetailsOverview.name + " will see the Part A."
+                    },
+                    value: inputDisplayValues.value,
+                    errorMessage: errorMessage(errors.responseToProbation)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
