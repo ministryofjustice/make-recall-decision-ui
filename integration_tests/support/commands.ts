@@ -36,7 +36,16 @@ Cypress.Commands.add('mockCaseSummaryData', () => {
 })
 
 Cypress.Commands.add('mockRecommendationData', () => {
-  cy.task('getRecommendation', { statusCode: 200, response: { recommendationId: '456', crn: '123' } })
+  cy.task('getRecommendation', {
+    statusCode: 200,
+    response: {
+      recommendationId: '456',
+      crn: '123',
+      personOnProbation: {
+        name: 'Paula Smith',
+      },
+    },
+  })
 })
 
 Cypress.Keyboard.defaults({
