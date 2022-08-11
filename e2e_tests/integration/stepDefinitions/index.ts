@@ -69,7 +69,10 @@ When('Maria recommends a fixed term recall', () => {
 })
 
 When('Maria explains how the person has responded to probation so far', () => {
-  cy.fillInput('How has Duncann Cardours responded to probation so far?', 'Re-offending has occurred')
+  cy.get('@offenderName')
+    .then(offenderName =>
+      cy.fillInput(`How has ${offenderName} responded to probation so far?`, 'Re-offending has occurred')
+    )
   cy.clickButton('Continue')
 })
 
