@@ -13,19 +13,18 @@ let res: Response
 
 describe('getRecommendationPage', () => {
   beforeEach(() => {
-    req = mockReq({ params: { recommendationId, pageId: 'recall-type' } })
+    req = mockReq({ params: { recommendationId, pageId: 'custody-status' } })
     res = mockRes({ token: accessToken })
   })
 
-  it('should return recommendation data', async () => {
+  it('should fetch data and render a recommendation page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     await getRecommendationPage(req, res)
     expect(res.locals.recommendation).toEqual(recommendationApiResponse)
-    expect(res.locals.pageHeading).toEqual('What do you recommend?')
-    expect(res.locals.pageTitle).toEqual('What do you recommend?')
+    expect(res.locals.pageHeading).toEqual('Is Paula Smith in custody now?')
+    expect(res.locals.pageTitle).toEqual('Is the person in custody now?')
     expect(res.locals.inputDisplayValues.value).toBeDefined()
-    expect(res.locals.inputDisplayValues.details).toBeDefined()
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/custodyStatus')
   })
 
   it('should throw on an API error', async () => {

@@ -19,6 +19,9 @@ context('Make a recommendation', () => {
       custodyStatus: {
         allOptions: formOptions.custodyStatus,
       },
+      personOnProbation: {
+        name: 'Paula Smith',
+      },
     }
     const caseResponse = {
       ...getCaseOverviewResponse,
@@ -46,7 +49,7 @@ context('Make a recommendation', () => {
     })
     cy.fillInput('Why do you recommend this recall type?', 'Details...')
     cy.clickButton('Continue')
-    cy.selectRadio('Is the person in custody now?', 'Yes, police custody')
+    cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Part A created')
 
@@ -69,6 +72,9 @@ context('Make a recommendation', () => {
     const response = {
       id: recommendationId,
       crn,
+      personOnProbation: {
+        name: 'Paula Smith',
+      },
     }
     cy.task('getRecommendation', { statusCode: 200, response })
     cy.task('updateRecommendation', { statusCode: 200, response })
@@ -96,6 +102,9 @@ context('Make a recommendation', () => {
     const recommendation = {
       recommendationId: '123',
       crn,
+      personOnProbation: {
+        name: 'Paula Smith',
+      },
     }
     const caseResponse = {
       ...getCaseOverviewResponse,
@@ -106,7 +115,7 @@ context('Make a recommendation', () => {
       },
     }
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-    cy.task('getRecommendation', { statusCode: 200, recommendation })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendation })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickLink('Update recommendation')
     cy.pageHeading().should('equal', 'What do you recommend?')

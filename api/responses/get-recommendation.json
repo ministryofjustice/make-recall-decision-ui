@@ -20,5 +20,10 @@
       { "value": "YES_POLICE", "text": "Yes, police custody" },
       { "value": "NO", "text": "No" }
     ]
+  },
+  "personOnProbation": {
+    "name": "Paula Smith",
+    "firstName": "Paula",
+    "surname": "Smith"
   }
 }

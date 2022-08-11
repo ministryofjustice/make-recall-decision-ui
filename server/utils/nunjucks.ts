@@ -1,5 +1,6 @@
+import nunjucks from 'nunjucks'
 import { DatePartsParsed } from '../@types/dates'
-import { SelectedFilterItem, UrlInfo } from '../@types'
+import { ObjectMap, SelectedFilterItem, UrlInfo } from '../@types'
 
 export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includeTime?: boolean) => {
   const items = [
@@ -63,3 +64,8 @@ export const selectedFilterItems = ({ items, urlInfo }: { items: SelectedFilterI
   items.map(item => ({ ...item, href: `${urlInfo.path}${item.href}` }))
 
 export const removeUndefinedListItems = (items: unknown[]) => items.filter(Boolean)
+
+export const renderTemplateString = (str: string, data: ObjectMap<unknown>): string => {
+  const env = nunjucks.configure({ autoescape: false })
+  return env.renderString(str, data)
+}

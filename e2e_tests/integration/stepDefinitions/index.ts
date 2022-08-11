@@ -69,7 +69,7 @@ When('Maria recommends a fixed term recall', () => {
 })
 
 When('Maria selects a custody status', () => {
-  cy.selectRadio('Is the person in custody now?', 'Yes, police custody')
+  cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody'))
   cy.clickButton('Continue')
 })
 
@@ -94,5 +94,8 @@ When('Maria updates the recommendation', () => {
   cy.clickLink('Update recommendation')
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
-  cy.getRadioOptionByLabel('Is the person in custody now?', 'Yes, police custody').should('be.checked')
+  cy.get('@offenderName')
+    .then(offenderName =>
+       cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
+    )
 })

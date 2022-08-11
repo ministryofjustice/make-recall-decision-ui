@@ -25,9 +25,13 @@ export interface NamedFormError extends FormError {
   name: string
 }
 
-export interface KeyedFormErrors extends ObjectMap<NamedFormError[]> {
+interface KeyedErrors {
+  [key: string]: FormError
+}
+interface ListErrors {
   list: NamedFormError[]
 }
+export type KeyedFormErrors = KeyedErrors & ListErrors
 
 export interface PageMetaData {
   templateName: PageTemplateName
