@@ -90,7 +90,7 @@ When('Maria downloads the Part A', () => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
     cy.log('Q20')
-    expect(contents).to.contain(/Provide details of how the offender has responded to supervision to date?.*Re-offending has occurred/)
+    expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
     expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')
@@ -102,6 +102,11 @@ When('Maria updates the recommendation', () => {
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
+  cy.get('@offenderName')
+    .then(offenderName =>
+      cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should('equal', 'Re-offending has occurred')
+    )
+  cy.clickButton('Continue')
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
   cy.get('@offenderName')
