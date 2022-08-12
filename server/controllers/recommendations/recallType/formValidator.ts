@@ -59,7 +59,7 @@ export const validateRecallType = ({ requestBody, recommendationId }: FormValida
       allOptions: formOptions.recallType,
     },
   }
-  const nextPageId = recallType === 'NO_RECALL' ? 'start-no-recall' : 'custody-status'
+  const nextPageId = recallType === 'NO_RECALL' ? 'start-no-recall' : 'emergency-recall'
   return {
     valuesToSave,
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`,

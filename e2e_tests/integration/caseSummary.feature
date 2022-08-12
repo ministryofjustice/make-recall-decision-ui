@@ -13,6 +13,7 @@ Feature: Case summary
     And Maria starts a new recommendation
     And Maria explains how the person has responded to probation so far
     And Maria recommends a fixed term recall
+    And Maria states that it's not an emergency recall
     And Maria selects a custody status
     Then Maria sees a confirmation page
     And Maria downloads the Part A

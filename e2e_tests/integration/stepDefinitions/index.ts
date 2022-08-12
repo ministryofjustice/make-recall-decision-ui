@@ -76,6 +76,11 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria states that it\'s not an emergency recall', () => {
+  cy.selectRadio('Is this an emergency recall?', 'No')
+  cy.clickButton('Continue')
+})
+
 When('Maria selects a custody status', () => {
   cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody'))
   cy.clickButton('Continue')
@@ -108,6 +113,8 @@ When('Maria updates the recommendation', () => {
     )
   cy.clickButton('Continue')
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
+  cy.clickButton('Continue')
+  cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
   cy.get('@offenderName')
     .then(offenderName =>

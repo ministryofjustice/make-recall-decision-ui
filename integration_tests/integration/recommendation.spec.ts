@@ -62,6 +62,15 @@ context('Make a recommendation', () => {
     cy.fillInput('Why do you recommend this recall type?', 'Details...')
     cy.clickButton('Continue')
 
+    cy.log('===== Emergency recall')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'isThisAnEmergencyRecall',
+      errorText: 'You must indicate if this is an emergency recall',
+    })
+    cy.selectRadio('Is this an emergency recall?', 'No')
+    cy.clickButton('Continue')
+
     cy.log('===== Custody status')
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
