@@ -22,6 +22,7 @@
     ]
   },
   "responseToProbation": "Missed appointments\nRe-offending ",
+  "isThisAnEmergencyRecall": false,
   "personOnProbation": {
     "name": "Paula Smith",
     "firstName": "Paula",

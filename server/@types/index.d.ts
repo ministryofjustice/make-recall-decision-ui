@@ -129,6 +129,7 @@ export interface ContactHistoryFilters {
 export type PageTemplateName =
   | 'responseToProbation'
   | 'recallType'
+  | 'emergencyRecall'
   | 'custodyStatus'
   | 'confirmationPartA'
   | 'startNoRecall'
