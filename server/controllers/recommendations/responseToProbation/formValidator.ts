@@ -26,7 +26,7 @@ export const validateResponseToProbation = ({
     valuesToSave = {
       responseToProbation,
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/recall-type`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/stop-think`
   }
   return {
     errors,

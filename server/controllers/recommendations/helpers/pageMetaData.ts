@@ -20,6 +20,12 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.responseToProbation,
         pageTitle: strings.pageTitles.responseToProbation,
       }
+    case 'stop-think':
+      return {
+        templateName: 'stopThink',
+        pageHeading: strings.pageHeadings.stopThink,
+        pageTitle: strings.pageHeadings.stopThink,
+      }
     case 'recall-type':
       return {
         templateName: 'recallType',

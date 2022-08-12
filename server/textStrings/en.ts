@@ -12,6 +12,7 @@ export const strings = {
   },
   pageHeadings: {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
+    stopThink: 'Stop and think',
     recallType: 'What do you recommend?',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
@@ -20,6 +21,7 @@ export const strings = {
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
+    stopThink: 'Stop and think',
     recallType: 'What do you recommend?',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is the person in custody now?',

@@ -128,6 +128,7 @@ export interface ContactHistoryFilters {
 
 export type PageTemplateName =
   | 'responseToProbation'
+  | 'stopThink'
   | 'recallType'
   | 'emergencyRecall'
   | 'custodyStatus'

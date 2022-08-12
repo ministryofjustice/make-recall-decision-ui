@@ -44,6 +44,10 @@ context('Make a recommendation', () => {
     cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
     cy.clickButton('Continue')
 
+    cy.log('===== Stop and think')
+    cy.pageHeading().should('equal', 'Stop and think')
+    cy.clickLink('Continue')
+
     cy.log('===== What do you recommend?')
     cy.pageHeading().should('equal', 'What do you recommend?')
     // validation error
@@ -89,7 +93,7 @@ context('Make a recommendation', () => {
     })
   })
 
-  it('can create a recommendation', () => {
+  it('directs "no recall" to the letter page', () => {
     const crn = 'X34983'
     const recommendationId = '123'
     const response = {
