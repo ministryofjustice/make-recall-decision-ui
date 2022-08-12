@@ -5,9 +5,19 @@ import { validateRecallType } from '../recallType/formValidator'
 import { validateCustodyStatus } from '../custodyStatus/formValidator'
 import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
 import { inputDisplayValuesCustodyStatus } from '../custodyStatus/inputDisplayValues'
+import { validateResponseToProbation } from '../responseToProbation/formValidator'
+import { inputDisplayValuesResponseToProbation } from '../responseToProbation/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
+    case 'response-to-probation':
+      return {
+        templateName: 'responseToProbation',
+        validator: validateResponseToProbation,
+        inputDisplayValues: inputDisplayValuesResponseToProbation,
+        pageHeading: strings.pageHeadings.responseToProbation,
+        pageTitle: strings.pageTitles.responseToProbation,
+      }
     case 'recall-type':
       return {
         templateName: 'recallType',

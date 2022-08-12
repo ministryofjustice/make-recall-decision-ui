@@ -7,14 +7,17 @@ export const strings = {
     missingRecallTypeDetail: 'Why do you recommend this recall type?',
     noCustodyStatusSelected: 'Select an option',
     missingDetail: 'Enter more detail',
+    missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
   },
   pageHeadings: {
+    responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     recallType: 'What do you recommend?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
     confirmationPartA: 'Part A created',
     startNoRecall: 'Start the Decision not to Recall letter',
   },
   pageTitles: {
+    responseToProbation: 'How has the person responded to probation so far?',
     recallType: 'What do you recommend?',
     custodyStatus: 'Is the person in custody now?',
     confirmationPartA: 'Part A created',

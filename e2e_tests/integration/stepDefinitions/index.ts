@@ -68,6 +68,14 @@ When('Maria recommends a fixed term recall', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria explains how the person has responded to probation so far', () => {
+  cy.get('@offenderName')
+    .then(offenderName =>
+      cy.fillInput(`How has ${offenderName} responded to probation so far?`, 'Re-offending has occurred')
+    )
+  cy.clickButton('Continue')
+})
+
 When('Maria selects a custody status', () => {
   cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody'))
   cy.clickButton('Continue')
@@ -81,6 +89,8 @@ When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
+    cy.log('Q20')
+    expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
     expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')
@@ -92,6 +102,11 @@ When('Maria updates the recommendation', () => {
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
+  cy.get('@offenderName')
+    .then(offenderName =>
+      cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should('equal', 'Re-offending has occurred')
+    )
+  cy.clickButton('Continue')
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
   cy.get('@offenderName')

@@ -19,7 +19,7 @@ describe('createRecommendationController', () => {
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
     expect(createRecommendation).toHaveBeenCalledWith(crn.trim(), token)
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/recall-type')
+    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
   })
 
