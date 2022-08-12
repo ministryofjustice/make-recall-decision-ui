@@ -116,6 +116,7 @@ When('Maria updates the recommendation', () => {
       cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should('equal', 'Re-offending has occurred')
     )
   cy.clickButton('Continue')
+  cy.clickLink('Continue') // stop and think page
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
