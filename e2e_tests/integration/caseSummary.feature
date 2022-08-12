@@ -12,6 +12,7 @@ Feature: Case summary
     And Maria filters contacts by date range
     And Maria starts a new recommendation
     And Maria explains how the person has responded to probation so far
+    And Maria continues from the Stop and Think page
     And Maria recommends a fixed term recall
     And Maria states that it's not an emergency recall
     And Maria selects a custody status

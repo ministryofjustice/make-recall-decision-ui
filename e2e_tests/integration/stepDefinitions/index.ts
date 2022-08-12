@@ -76,6 +76,10 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria continues from the Stop and Think page', () => {
+  cy.clickLink('Continue')
+})
+
 When('Maria states that it\'s not an emergency recall', () => {
   cy.selectRadio('Is this an emergency recall?', 'No')
   cy.clickButton('Continue')
