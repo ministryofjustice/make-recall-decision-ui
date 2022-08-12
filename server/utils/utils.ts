@@ -112,3 +112,9 @@ export const validateCrn = (crn: unknown) => {
 export const normalizeCrn = (crn: string) => crn.trim().toUpperCase()
 
 export const isPreprodOrProd = (env?: string) => ['PREPRODUCTION', 'PRODUCTION'].includes(env)
+
+export const booleanToYesNo = (val: boolean) => {
+  if (val === true) return 'YES'
+  if (val === false) return 'NO'
+  return undefined
+}

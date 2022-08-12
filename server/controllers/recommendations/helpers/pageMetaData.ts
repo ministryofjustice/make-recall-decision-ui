@@ -7,6 +7,8 @@ import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
 import { inputDisplayValuesCustodyStatus } from '../custodyStatus/inputDisplayValues'
 import { validateResponseToProbation } from '../responseToProbation/formValidator'
 import { inputDisplayValuesResponseToProbation } from '../responseToProbation/inputDisplayValues'
+import { validateEmergencyRecall } from '../emergencyRecall/formValidator'
+import { inputDisplayValuesEmergencyRecall } from '../emergencyRecall/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -25,6 +27,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesRecallType,
         pageHeading: strings.pageHeadings.recallType,
         pageTitle: strings.pageHeadings.recallType,
+      }
+    case 'emergency-recall':
+      return {
+        templateName: 'emergencyRecall',
+        validator: validateEmergencyRecall,
+        inputDisplayValues: inputDisplayValuesEmergencyRecall,
+        pageHeading: strings.pageHeadings.emergencyRecall,
+        pageTitle: strings.pageHeadings.emergencyRecall,
       }
     case 'custody-status':
       return {

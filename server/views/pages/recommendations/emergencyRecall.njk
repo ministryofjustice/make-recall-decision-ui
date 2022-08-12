@@ -6,7 +6,7 @@
     <nav>
     {{ govukBackLink({
         text: "Back",
-        href: '/recommendations/' + recommendation.id + '/emergency-recall'
+        href: '/recommendations/' + recommendation.id + '/recall-type'
     }) }}</nav>
 {% endblock %}
 
@@ -18,8 +18,8 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 {{ govukRadios({
-                    idPrefix: "custodyStatus",
-                    name: "custodyStatus",
+                    idPrefix: "isThisAnEmergencyRecall",
+                    name: "isThisAnEmergencyRecall",
                     fieldset: {
                         legend: {
                             text: pageHeading,
@@ -28,10 +28,10 @@
                         }
                     },
                     items: radioCheckboxItems({
-                        items: formOptions.custodyStatus,
+                        items: formOptions.isThisAnEmergencyRecall,
                         currentValues: inputDisplayValues.value
                     }),
-                    errorMessage: errorMessage(errors.custodyStatus)
+                    errorMessage: errorMessage(errors.isThisAnEmergencyRecall)
                 }) }}
                 {{ formSubmitButton() }}
             </form>

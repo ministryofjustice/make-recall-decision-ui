@@ -14,6 +14,7 @@ export type RecommendationResponse = {
     recallType?: RecallType;
     personOnProbation?: PersonOnProbation;
     responseToProbation?: string;
+    isThisAnEmergencyRecall?: boolean;
 };
 
 export namespace RecommendationResponse {

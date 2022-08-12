@@ -67,7 +67,7 @@ describe('validateRecallType', () => {
         crn: 'X34534',
       }
       const { nextPagePath } = validateRecallType({ requestBody, recommendationId })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/custody-status`)
+      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
     })
 
     it('redirects to custody status if Standard recall is selected', () => {
@@ -77,7 +77,7 @@ describe('validateRecallType', () => {
         crn: 'X34534',
       }
       const { nextPagePath } = validateRecallType({ requestBody, recommendationId })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/custody-status`)
+      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
     })
 
     it('redirects to no recall letter page if No recall is selected', () => {

@@ -30,7 +30,7 @@ describe('postRecommendationForm', () => {
       body: requestBody,
     })
     await postRecommendationForm(req, res)
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/custody-status`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/emergency-recall`)
   })
 
   it('should reload the page and save errors if the user input is invalid', async () => {
