@@ -28,7 +28,8 @@
                             isPageHeading: true
                         }
                     },
-                    items: radioCheckboxItems({ items: formOptions.hasVictimsInContactScheme })
+                    items: radioCheckboxItems({ items: formOptions.hasVictimsInContactScheme,
+                        currentValues: inputDisplayValues.value })
                 }) }}
                 {{ formSubmitButton() }}
             </form>
