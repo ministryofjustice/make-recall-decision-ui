@@ -4,17 +4,17 @@
 
 import type { TextValueOption } from './TextValueOption';
 
-export type CustodyStatus = {
-    selected?: CustodyStatus.selected;
+export type VictimsInContactScheme = {
+    selected?: VictimsInContactScheme.selected;
     allOptions?: Array<TextValueOption>;
 };
 
-export namespace CustodyStatus {
+export namespace VictimsInContactScheme {
 
     export enum selected {
-        YES_POLICE = 'YES_POLICE',
-        YES_PRISON = 'YES_PRISON',
+        YES = 'YES',
         NO = 'NO',
+        NOT_APPLICABLE = 'NOT_APPLICABLE',
     }
 
 

@@ -4,4 +4,6 @@
 
 export type PersonOnProbation = {
     name?: string;
+    firstName?: string;
+    surname?: string;
 };

@@ -40,6 +40,7 @@ export type { PredictorScores } from './models/PredictorScores';
 export type { ProbationTeam } from './models/ProbationTeam';
 export type { Reason } from './models/Reason';
 export type { RecallType } from './models/RecallType';
+export { RecallTypeSelectedValue } from './models/RecallTypeSelectedValue';
 export { RecommendationResponse } from './models/RecommendationResponse';
 export type { ReleaseSummaryResponse } from './models/ReleaseSummaryResponse';
 export type { Risk } from './models/Risk';
@@ -52,6 +53,6 @@ export type { SearchByCrnResponse } from './models/SearchByCrnResponse';
 export type { TextValueOption } from './models/TextValueOption';
 export { UpdateRecommendationRequest } from './models/UpdateRecommendationRequest';
 export type { UserAccessResponse } from './models/UserAccessResponse';
-export type { VictimContactScheme } from './models/VictimContactScheme'
+export { VictimsInContactScheme } from './models/VictimsInContactScheme';
 export type { WhenRiskHighest } from './models/WhenRiskHighest';
 export type { WhoIsAtRisk } from './models/WhoIsAtRisk';

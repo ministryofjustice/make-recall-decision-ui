@@ -29,7 +29,8 @@
                         }
                     },
                     items: radioCheckboxItems({ items: formOptions.hasVictimsInContactScheme,
-                        currentValues: inputDisplayValues.value })
+                        currentValues: inputDisplayValues.value }),
+                    errorMessage: errorMessage(errors.hasVictimsInContactScheme)
                 }) }}
                 {{ formSubmitButton() }}
             </form>

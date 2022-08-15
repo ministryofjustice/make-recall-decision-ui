@@ -1,10 +1,11 @@
 import { inputDisplayValuesVictimContactScheme } from './inputDisplayValues'
 import { formOptions } from '../helpers/formOptions'
+import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesVictimContactScheme', () => {
   const apiValues = {
     hasVictimsInContactScheme: {
-      selected: 'NO',
+      selected: 'NO' as VictimsInContactScheme.selected,
       allOptions: formOptions.hasVictimsInContactScheme,
     },
   }

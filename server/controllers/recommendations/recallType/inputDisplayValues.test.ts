@@ -1,11 +1,12 @@
 import { inputDisplayValuesRecallType } from './inputDisplayValues'
 import { formOptions } from '../helpers/formOptions'
+import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesRecallType', () => {
   const apiValues = {
     recallType: {
       selected: {
-        value: 'FIXED_TERM',
+        value: 'FIXED_TERM' as RecallTypeSelectedValue.value,
         details: 'Details...',
       },
       allOptions: formOptions.recallType,

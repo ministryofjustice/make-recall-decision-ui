@@ -1,0 +1,46 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+    {{ govukBackLink({
+        text: "Back",
+        href: '/recommendations/' + recommendation.id + '/victim-contact-scheme'
+    }) }}</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Victim liaison</div>
+                <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+                <p class='govuk-body'>You must tell the victim liaison officer (VLO) about the recall request.</p>
+                <p class='govuk-body'>You must also tell them that the victim can:</p>
+                <ul class='govuk-list govuk-list--bullet'>
+                    <li>submit a victim personal statement</li>
+                    <li>ask for a copy of the parole board decision summary</li>
+                    <li>ask for a copy of the Secretary of State executive release decision summary</li>
+                </ul>
+                {{ govukDateInput({
+                    id: "dateVloInformed",
+                    namePrefix: "dateVloInformed",
+                    fieldset: {
+                        legend: {
+                            html: "When did you tell the VLO about these things?",
+                            classes: "govuk-fieldset__legend--s"
+                        }
+                    },
+                    items: dateTimeItems("dateVloInformed", inputDisplayValues.value),
+                    errorMessage: errorMessage(errors.dateVloInformed)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

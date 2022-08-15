@@ -1,10 +1,11 @@
 import { inputDisplayValuesCustodyStatus } from './inputDisplayValues'
 import { formOptions } from '../helpers/formOptions'
+import { CustodyStatus } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesCustodyStatus', () => {
   const apiValues = {
     custodyStatus: {
-      selected: 'YES_POLICE',
+      selected: 'YES_POLICE' as CustodyStatus.selected,
       allOptions: formOptions.custodyStatus,
     },
   }

@@ -133,6 +133,7 @@ export type PageTemplateName =
   | 'emergencyRecall'
   | 'custodyStatus'
   | 'victimContactScheme'
+  | 'victimLiaisonOfficer'
   | 'confirmationPartA'
   | 'startNoRecall'
 
