@@ -145,6 +145,6 @@ When('Maria updates the recommendation', () => {
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
   cy.getTextInputValue('Day').should('equal', '14')
-  cy.getTextInputValue('Month').should('equal', '4')
+  cy.getTextInputValue('Month').should('equal', '04')
   cy.getTextInputValue('Year').should('equal', '2022')
 })
