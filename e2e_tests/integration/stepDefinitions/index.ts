@@ -142,7 +142,7 @@ When('Maria updates the recommendation', () => {
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
   )
   cy.clickButton('Continue')
-  cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'No').should('be.checked')
+  cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
   cy.getTextInputValue('Day').should('equal', '14')
   cy.getTextInputValue('Month').should('equal', '4')
