@@ -78,9 +78,13 @@ context('Make a recommendation', () => {
     cy.log('===== Custody status')
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Part A created')
+
+    cy.log('===== Victim contact scheme')
+    cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
+    cy.clickButton('Continue')
 
     cy.log('===== Download Part A')
+    cy.pageHeading().should('contain', 'Part A created')
     const fileName = 'NAT_Recall_Part_A_X514364.docx'
     cy.readBase64File(fileName).then(fileContents => {
       cy.task('createPartA', {

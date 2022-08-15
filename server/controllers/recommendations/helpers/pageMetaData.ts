@@ -9,6 +9,8 @@ import { validateResponseToProbation } from '../responseToProbation/formValidato
 import { inputDisplayValuesResponseToProbation } from '../responseToProbation/inputDisplayValues'
 import { validateEmergencyRecall } from '../emergencyRecall/formValidator'
 import { inputDisplayValuesEmergencyRecall } from '../emergencyRecall/inputDisplayValues'
+import { validateVictimContactScheme } from '../victimContactScheme/formValidator'
+import { inputDisplayValuesVictimContactScheme } from '../victimContactScheme/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -49,6 +51,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesCustodyStatus,
         pageHeading: strings.pageHeadings.custodyStatus,
         pageTitle: strings.pageTitles.custodyStatus,
+      }
+    case 'victim-contact-scheme':
+      return {
+        templateName: 'victimContactScheme',
+        validator: validateVictimContactScheme,
+        inputDisplayValues: inputDisplayValuesVictimContactScheme,
+        pageHeading: strings.pageHeadings.victimContactScheme,
+        pageTitle: strings.pageTitles.victimContactScheme,
       }
     case 'confirmation-part-a':
       return {

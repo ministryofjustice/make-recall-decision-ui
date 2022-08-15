@@ -132,6 +132,7 @@ export type PageTemplateName =
   | 'recallType'
   | 'emergencyRecall'
   | 'custodyStatus'
+  | 'victimContactScheme'
   | 'confirmationPartA'
   | 'startNoRecall'
 

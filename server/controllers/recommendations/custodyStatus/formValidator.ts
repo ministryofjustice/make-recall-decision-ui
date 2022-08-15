@@ -27,7 +27,7 @@ export const validateCustodyStatus = ({ requestBody, recommendationId }: FormVal
         allOptions: formOptions.custodyStatus,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`
   }
   return {
     errors,

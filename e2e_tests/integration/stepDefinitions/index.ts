@@ -90,6 +90,11 @@ When('Maria selects a custody status', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria states there are victims in the victim contact scheme', () => {
+  cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
+  cy.clickButton('Continue')
+})
+
 When('Maria sees a confirmation page', () => {
   cy.pageHeading().should('contain', 'Part A created')
 })
@@ -98,6 +103,8 @@ When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
+    cy.log('Q14')
+    expect(contents).to.contain('Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? No')
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q22')
@@ -125,4 +132,6 @@ When('Maria updates the recommendation', () => {
     .then(offenderName =>
        cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
     )
+  cy.clickButton('Continue')
+  cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'No').should('be.checked')
 })

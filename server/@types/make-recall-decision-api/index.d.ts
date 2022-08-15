@@ -52,5 +52,6 @@ export type { SearchByCrnResponse } from './models/SearchByCrnResponse';
 export type { TextValueOption } from './models/TextValueOption';
 export { UpdateRecommendationRequest } from './models/UpdateRecommendationRequest';
 export type { UserAccessResponse } from './models/UserAccessResponse';
+export type { VictimContactScheme } from './models/VictimContactScheme'
 export type { WhenRiskHighest } from './models/WhenRiskHighest';
 export type { WhoIsAtRisk } from './models/WhoIsAtRisk';
