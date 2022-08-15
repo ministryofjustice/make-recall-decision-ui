@@ -19,7 +19,7 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_POLICE',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
+    expect(nextPagePath).toEqual('/recommendations/34/victim-contact-scheme')
   })
 
   it('returns an error, if not set, and no valuesToSave', () => {
