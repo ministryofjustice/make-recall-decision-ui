@@ -104,7 +104,7 @@ When('Maria downloads the Part A', () => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
     cy.log('Q14')
-    expect(contents).to.contain('Is there a victim(s) involved in  the victim contact scheme (contact must be made with the VLO if there is victim involvement)? No')
+    expect(contents).to.contain('Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? No')
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q22')
