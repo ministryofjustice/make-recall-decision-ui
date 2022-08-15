@@ -16,6 +16,7 @@ Feature: Case summary
     And Maria recommends a fixed term recall
     And Maria states that it's not an emergency recall
     And Maria selects a custody status
+    And Maria states there are victims in the victim contact scheme
     Then Maria sees a confirmation page
     And Maria downloads the Part A
     And Maria updates the recommendation

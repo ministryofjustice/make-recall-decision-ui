@@ -5,6 +5,7 @@
 import type { CustodyStatus } from './CustodyStatus';
 import type { PersonOnProbation } from './PersonOnProbation';
 import type { RecallType } from './RecallType';
+import { VictimContactScheme } from './VictimContactScheme'
 
 export type RecommendationResponse = {
     id?: number;
@@ -13,6 +14,7 @@ export type RecommendationResponse = {
     crn?: string;
     recallType?: RecallType;
     personOnProbation?: PersonOnProbation;
+    hasVictimsInContactScheme?: VictimContactScheme;
     responseToProbation?: string;
     isThisAnEmergencyRecall?: boolean;
 };
