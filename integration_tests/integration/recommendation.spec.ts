@@ -46,6 +46,20 @@ context('Make a recommendation', () => {
     cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
     cy.clickButton('Continue')
 
+    cy.log('===== Alternatives to recall tried')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'alternativesToRecallTried',
+      errorText: 'You must indicate which alternatives to recall have been tried already',
+    })
+    cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+      'Increased frequency of reporting',
+      'Drug testing',
+    ])
+    cy.fillInput('Give details', 'Details on reporting', { parent: '#conditional-INCREASED_FREQUENCY' })
+    cy.fillInput('Give details', 'Details on drug testing', { parent: '#conditional-DRUG_TESTING' })
+    cy.clickButton('Continue')
+
     cy.log('===== Stop and think')
     cy.pageHeading().should('equal', 'Stop and think')
     cy.clickLink('Continue')

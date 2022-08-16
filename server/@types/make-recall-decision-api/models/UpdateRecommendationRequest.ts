@@ -2,6 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { AlternativesToRecallTried } from './AlternativesToRecallTried';
+import type { ArrestIssues } from './ArrestIssues';
 import type { CustodyStatus } from './CustodyStatus';
 import type { RecallType } from './RecallType';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
@@ -14,6 +16,8 @@ export type UpdateRecommendationRequest = {
     isThisAnEmergencyRecall?: boolean;
     hasVictimsInContactScheme?: VictimsInContactScheme;
     dateVloInformed?: string;
+    alternativesToRecallTried?: AlternativesToRecallTried;
+    hasArrestIssues?: ArrestIssues;
 };
 
 export namespace UpdateRecommendationRequest {

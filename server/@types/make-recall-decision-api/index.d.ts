@@ -3,6 +3,8 @@
 /* eslint-disable */
 
 export type { ActiveRecommendation } from './models/ActiveRecommendation';
+export type { AlternativesToRecallTried } from './models/AlternativesToRecallTried';
+export type { ArrestIssues } from './models/ArrestIssues';
 export type { CaseDocument } from './models/CaseDocument';
 export type { CaseDocumentType } from './models/CaseDocumentType';
 export type { CaseSummaryOverviewResponse } from './models/CaseSummaryOverviewResponse';
@@ -50,6 +52,7 @@ export type { RiskResponse } from './models/RiskResponse';
 export type { RSR } from './models/RSR';
 export type { Scores } from './models/Scores';
 export type { SearchByCrnResponse } from './models/SearchByCrnResponse';
+export type { SelectedAlternative } from './models/SelectedAlternative';
 export type { TextValueOption } from './models/TextValueOption';
 export { UpdateRecommendationRequest } from './models/UpdateRecommendationRequest';
 export type { UserAccessResponse } from './models/UserAccessResponse';

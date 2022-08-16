@@ -15,8 +15,7 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                <div class="govuk-form-group"> <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 What alternatives to recall have been tried already?
@@ -44,26 +43,27 @@
                             </div>
                             <div class="govuk-checkboxes__divider">or</div>
                             {% for item in recommendation.alternativesTriedAllOptions %}
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="option-{{ item.value }}" name="alternativesTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if item.checked %}checked{% endif %}>
-                                <label class="govuk-label govuk-checkboxes__label" for="option-{{ item.value }}">
-                                    {{ item.text }}
-                                </label>
-                            </div>
-                            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-{{ item.value }}">
-                                {{ govukTextarea({
-                                    name: "alternativesTriedDetail-" + item.value,
-                                    id: "alternativesTriedDetail-" + item.value,
-                                    label: {
-                                        text: item.detailsLabel
-                                    },
-                                    value: item.detail
-                                }) }}
-                            </div>
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="option-{{ item.value }}" name="alternativesTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if item.checked %}checked{% endif %}>
+                                    <label class="govuk-label govuk-checkboxes__label" for="option-{{ item.value }}">
+                                        {{ item.text }}
+                                    </label>
+                                </div>
+                                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-{{ item.value }}">
+                                    {{ govukTextarea({
+                                        name: "alternativesTriedDetail-" + item.value,
+                                        id: "alternativesTriedDetail-" + item.value,
+                                        label: {
+                                            text: item.detailsLabel
+                                        },
+                                        value: item.detail
+                                    }) }}
+                                </div>
                             {% endfor %}
                         </div>
 
                     </fieldset>
+
                 </div>
                 {{ formSubmitButton() }}
             </form>

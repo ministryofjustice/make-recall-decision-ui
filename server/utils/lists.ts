@@ -69,3 +69,9 @@ export const radioCheckboxItems = ({
     }
   })
 }
+
+interface ItemWithValue {
+  value: string
+}
+export const findListItemByValue = <T>({ items = [], value }: { items: ItemWithValue[]; value: string }) =>
+  items.find(item => item.value === value) as unknown as T

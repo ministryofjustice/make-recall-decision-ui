@@ -28,9 +28,11 @@ export interface NamedFormError extends FormError {
 interface KeyedErrors {
   [key: string]: FormError
 }
+
 interface ListErrors {
   list: NamedFormError[]
 }
+
 export type KeyedFormErrors = KeyedErrors & ListErrors
 
 export interface PageMetaData {
@@ -44,7 +46,7 @@ export interface PageMetaData {
 export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
 
 export interface FormValidatorArgs {
-  requestBody: ObjectMap<string>
+  requestBody: ObjectMap<string | string[]>
   recommendationId: string
 }
 
@@ -82,6 +84,16 @@ export interface UiListItem {
   text: string
   active?: boolean
   selected?: boolean
+}
+
+export interface ValueWithDetails {
+  value?: string
+  details?: string
+}
+
+export interface FormOption extends UiListItem {
+  detailsLabel?: string
+  behaviour?: string
 }
 
 export interface SelectedFilterItem {
@@ -128,6 +140,7 @@ export interface ContactHistoryFilters {
 
 export type PageTemplateName =
   | 'responseToProbation'
+  | 'alternativesToRecallTried'
   | 'stopThink'
   | 'recallType'
   | 'emergencyRecall'

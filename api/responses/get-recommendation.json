@@ -23,6 +23,60 @@
   },
   "responseToProbation": "Missed appointments\nRe-offending ",
   "isThisAnEmergencyRecall": false,
+  "alternativesToRecallTried": {
+    "selected": [
+      {
+        "value": "WARNINGS_LETTER",
+        "details": "We sent a warning letter on 27th July 2022"
+      },
+      {
+        "value": "DRUG_TESTING",
+        "Details": "Failed drug test on 15th June 2022"
+      }
+    ],
+    "allOptions": [
+      {
+        "text": "Warnings / licence breach letters",
+        "value": "WARNINGS_LETTER"
+      },
+      {
+        "text": "Increased frequency of reporting",
+        "value": "INCREASED_FREQUENCY"
+      },
+      {
+        "text": "Additional licence conditions",
+        "value": "EXTRA_LICENCE_CONDITIONS"
+      },
+      {
+        "text": "Referral to other teams (for example, IOM, MAPPA, Gangs Unit)",
+        "value": "REFERRAL_TO_OTHER_TEAMS"
+      },
+      {
+        "text": "Referral to partnership agencies",
+        "value": "REFERRAL_TO_PARTNERSHIP_AGENCIES"
+      },
+      {
+        "text": "Risk Escalation (CRC cases)",
+        "value": "RISK_ESCALATION"
+      },
+      {
+        "text": "Referral to approved premises",
+        "value": "REFERRAL_TO_APPROVED_PREMISES"
+      },
+      {
+        "text": "Drug testing",
+        "value": "DRUG_TESTING"
+      },
+      {
+        "text": "Other",
+        "value": "ALTERNATIVE_TO_RECALL_OTHER"
+      },
+      {
+        "text": "None",
+        "value": "NONE"
+      }
+    ]
+  },
   "personOnProbation": {
     "name": "Paula Smith",
     "firstName": "Paula",

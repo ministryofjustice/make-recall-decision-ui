@@ -13,6 +13,8 @@ import { validateVictimContactScheme } from '../victimContactScheme/formValidato
 import { inputDisplayValuesVictimContactScheme } from '../victimContactScheme/inputDisplayValues'
 import { validateVictimLiaisonOfficer } from '../victimLiaisonOfficer/formValidator'
 import { inputDisplayValuesVictimLiaisonOfficer } from '../victimLiaisonOfficer/inputDisplayValues'
+import { validateAlternativesTried } from '../alternativesToRecallTried/formValidator'
+import { inputDisplayValuesAlternativesToRecallTried } from '../alternativesToRecallTried/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -23,6 +25,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesResponseToProbation,
         pageHeading: strings.pageHeadings.responseToProbation,
         pageTitle: strings.pageTitles.responseToProbation,
+      }
+    case 'alternatives-tried':
+      return {
+        templateName: 'alternativesToRecallTried',
+        validator: validateAlternativesTried,
+        inputDisplayValues: inputDisplayValuesAlternativesToRecallTried,
+        pageHeading: strings.pageHeadings.alternativesToRecallTried,
+        pageTitle: strings.pageTitles.alternativesToRecallTried,
       }
     case 'stop-think':
       return {
