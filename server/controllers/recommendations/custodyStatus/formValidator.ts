@@ -10,7 +10,7 @@ export const validateCustodyStatus = ({ requestBody, recommendationId }: FormVal
   let nextPagePath
 
   const { custodyStatus } = requestBody
-  if (!custodyStatus || !isValueValid(custodyStatus, 'custodyStatus')) {
+  if (!custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')) {
     const errorId = 'noCustodyStatusSelected'
     errors = [
       makeErrorObject({

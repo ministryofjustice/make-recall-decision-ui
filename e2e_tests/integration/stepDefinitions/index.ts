@@ -75,6 +75,16 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria selects the alternatives to recall that have been tried', () => {
+  cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+    'Increased frequency of reporting',
+    'Drug testing',
+  ])
+  cy.fillInput('Give details', 'Details on reporting', { parent: '#conditional-INCREASED_FREQUENCY' })
+  cy.fillInput('Give details', 'Details on drug testing', { parent: '#conditional-DRUG_TESTING' })
+  cy.clickButton('Continue')
+})
+
 When('Maria continues from the Stop and Think page', () => {
   cy.clickLink('Continue')
 })
@@ -116,6 +126,9 @@ When('Maria downloads the Part A', () => {
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
+    cy.log('Q21')
+    expect(contents).to.contain('Details on reporting')
+    expect(contents).to.contain('Details on drug testing')
     cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
     expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')
@@ -132,7 +145,21 @@ When('Maria updates the recommendation', () => {
       .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
       .should('equal', 'Re-offending has occurred')
   )
-  cy.clickButton('Continue')
+  cy.clickButton('Continue') // responded to probation
+  cy.getRadioOptionByLabel(
+    'What alternatives to recall have been tried already?',
+    'Increased frequency of reporting'
+  ).should('be.checked')
+  cy.getRadioOptionByLabel('What alternatives to recall have been tried already?', 'Drug testing').should('be.checked')
+  cy.getTextInputValue('Give details', { parent: '#conditional-INCREASED_FREQUENCY' }).should(
+    'equal',
+    'Details on reporting'
+  )
+  cy.getTextInputValue('Give details', { parent: '#conditional-DRUG_TESTING' }).should(
+    'equal',
+    'Details on drug testing'
+  )
+  cy.clickButton('Continue') // alternatives to recall
   cy.clickLink('Continue') // stop and think page
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')

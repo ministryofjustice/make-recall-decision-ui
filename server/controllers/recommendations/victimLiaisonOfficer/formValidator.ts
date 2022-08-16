@@ -1,4 +1,4 @@
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
+import { FormValidatorArgs, FormValidatorReturn, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
@@ -18,7 +18,7 @@ export const validateVictimLiaisonOfficer = ({
     month: requestBody['dateVloInformed-month'],
     year: requestBody['dateVloInformed-year'],
   }
-  const dateVloInformedIso = convertGmtDatePartsToUtc(dateVloInformedParts, {
+  const dateVloInformedIso = convertGmtDatePartsToUtc(dateVloInformedParts as ObjectMap<string>, {
     includeTime: false,
     dateMustBeInPast: true,
     validatePartLengths: true,
@@ -33,7 +33,7 @@ export const validateVictimLiaisonOfficer = ({
         id: invalidDateInputPart(dateVloInformedIso as ValidationError, 'dateVloInformed'),
         text: formatValidationErrorMessage(dateVloInformedIso as ValidationError, 'date you told the VLO'),
         errorId: (dateVloInformedIso as ValidationError).errorId,
-        values: dateVloInformedParts,
+        values: dateVloInformedParts as ObjectMap<string>,
       })
     )
     const unsavedValues = {

@@ -10,7 +10,7 @@ export const validateEmergencyRecall = ({ requestBody, recommendationId }: FormV
   let nextPagePath
 
   const { isThisAnEmergencyRecall } = requestBody
-  if (!isThisAnEmergencyRecall || !isValueValid(isThisAnEmergencyRecall, 'isThisAnEmergencyRecall')) {
+  if (!isThisAnEmergencyRecall || !isValueValid(isThisAnEmergencyRecall as string, 'isThisAnEmergencyRecall')) {
     const errorId = 'noEmergencyRecallSelected'
     errors = [
       makeErrorObject({

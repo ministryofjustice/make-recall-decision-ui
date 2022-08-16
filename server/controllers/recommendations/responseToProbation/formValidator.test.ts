@@ -12,7 +12,7 @@ describe('validateResponseToProbation', () => {
     expect(valuesToSave).toEqual({
       responseToProbation: 'Re-offending',
     })
-    expect(nextPagePath).toEqual('/recommendations/34/stop-think')
+    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
   })
 
   it('returns an error, if not set, and no valuesToSave', () => {

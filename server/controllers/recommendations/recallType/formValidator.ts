@@ -6,7 +6,7 @@ import { strings } from '../../../textStrings/en'
 
 export const validateRecallType = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
-  const invalidRecallType = !isValueValid(recallType, 'recallType')
+  const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const missingDetailFixedTerm = recallType === 'FIXED_TERM' && !recallTypeDetailsFixedTerm
   const missingDetailStandard = recallType === 'STANDARD' && !recallTypeDetailsStandard
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard

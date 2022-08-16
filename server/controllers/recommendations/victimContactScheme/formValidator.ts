@@ -13,7 +13,7 @@ export const validateVictimContactScheme = ({
   let nextPagePath
 
   const { hasVictimsInContactScheme } = requestBody
-  if (!hasVictimsInContactScheme || !isValueValid(hasVictimsInContactScheme, 'hasVictimsInContactScheme')) {
+  if (!hasVictimsInContactScheme || !isValueValid(hasVictimsInContactScheme as string, 'hasVictimsInContactScheme')) {
     const errorId = 'noVictimContactSchemeSelected'
     errors = [
       makeErrorObject({

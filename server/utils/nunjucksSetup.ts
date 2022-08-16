@@ -6,7 +6,7 @@ import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel } from
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
 import { dateTimeItems, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
-import { radioCheckboxItems } from './lists'
+import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
 
 const production = process.env.NODE_ENV === 'production'
@@ -59,6 +59,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
   njkEnv.addGlobal('dateTimeItems', dateTimeItems)
   njkEnv.addGlobal('radioCheckboxItems', radioCheckboxItems)
+  njkEnv.addGlobal('findListItemByValue', findListItemByValue)
   njkEnv.addGlobal('selectedFilterItems', selectedFilterItems)
   njkEnv.addGlobal('countLabel', countLabel)
   njkEnv.addGlobal('removeUndefinedListItems', removeUndefinedListItems)

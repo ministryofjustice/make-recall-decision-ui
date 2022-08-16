@@ -8,11 +8,13 @@ export const strings = {
     noCustodyStatusSelected: 'Select an option',
     noEmergencyRecallSelected: 'You must indicate if this is an emergency recall',
     noVictimContactSchemeSelected: 'Select whether there are any victims in the victim contact scheme',
+    noAlternativesTriedSelected: 'You must indicate which alternatives to recall have been tried already',
     missingDetail: 'Enter more detail',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
   },
   pageHeadings: {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
+    alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
     recallType: 'What do you recommend?',
     emergencyRecall: 'Is this an emergency recall?',
@@ -24,6 +26,7 @@ export const strings = {
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
+    alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
     recallType: 'What do you recommend?',
     emergencyRecall: 'Is this an emergency recall?',
