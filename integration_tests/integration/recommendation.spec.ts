@@ -7,22 +7,24 @@ context('Make a recommendation', () => {
     cy.signIn()
   })
 
+  const crn = 'X34983'
+  const recommendationId = '123'
+  const recommendationResponse = {
+    id: recommendationId,
+    crn,
+    recallType: {
+      selected: {},
+      allOptions: formOptions.recallType,
+    },
+    custodyStatus: {
+      allOptions: formOptions.custodyStatus,
+    },
+    personOnProbation: {
+      name: 'Paula Smith',
+    },
+  }
+
   it('can create a recommendation', () => {
-    const crn = 'X34983'
-    const recommendationResponse = {
-      id: '123',
-      crn,
-      recallType: {
-        selected: {},
-        allOptions: formOptions.recallType,
-      },
-      custodyStatus: {
-        allOptions: formOptions.custodyStatus,
-      },
-      personOnProbation: {
-        name: 'Paula Smith',
-      },
-    }
     const caseResponse = {
       ...getCaseOverviewResponse,
       activeRecommendation: undefined,
@@ -112,26 +114,25 @@ context('Make a recommendation', () => {
     })
   })
 
-  it('directs "no recall" to the letter page', () => {
-    const crn = 'X34983'
-    const recommendationId = '123'
-    const response = {
-      id: recommendationId,
-      crn,
-      personOnProbation: {
-        name: 'Paula Smith',
-      },
-    }
-    cy.task('getRecommendation', { statusCode: 200, response })
-    cy.task('updateRecommendation', { statusCode: 200, response })
+  it('recall type - directs "no recall" to the letter page', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type?flagRecommendationProd=1`)
     cy.selectRadio('What do you recommend?', 'No recall')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
   })
 
+  it('victim contact scheme - directs "no" to the confirmation page', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagRecommendationProd=1`)
+    cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('contain', 'Part A created')
+  })
+
   it('shows an error if creation fails', () => {
-    const crn = 'X34983'
     const caseResponse = {
       ...getCaseOverviewResponse,
       activeRecommendation: undefined,
@@ -144,14 +145,6 @@ context('Make a recommendation', () => {
   })
 
   it('can update a draft recommendation', () => {
-    const crn = 'X34983'
-    const recommendation = {
-      recommendationId: '123',
-      crn,
-      personOnProbation: {
-        name: 'Paula Smith',
-      },
-    }
     const caseResponse = {
       ...getCaseOverviewResponse,
       activeRecommendation: {
@@ -161,7 +154,7 @@ context('Make a recommendation', () => {
       },
     }
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-    cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickLink('Update recommendation')
     cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')

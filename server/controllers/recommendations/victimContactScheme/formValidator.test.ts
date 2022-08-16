@@ -19,6 +19,26 @@ describe('validateVictimContactScheme', () => {
     expect(nextPagePath).toEqual('/recommendations/34/victim-liaison-officer')
   })
 
+  it('redirects to confirmation page if No selected', () => {
+    const requestBody = {
+      hasVictimsInContactScheme: 'NO',
+      crn: 'X34534',
+    }
+    const { errors, nextPagePath } = validateVictimContactScheme({ requestBody, recommendationId })
+    expect(errors).toBeUndefined()
+    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
+  })
+
+  it('redirects to confirmation page if Not applicable selected', () => {
+    const requestBody = {
+      hasVictimsInContactScheme: 'NOT_APPLICABLE',
+      crn: 'X34534',
+    }
+    const { errors, nextPagePath } = validateVictimContactScheme({ requestBody, recommendationId })
+    expect(errors).toBeUndefined()
+    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
+  })
+
   it('returns an error, if not set, and no valuesToSave', () => {
     const requestBody = {
       hasVictimsInContactScheme: '',
