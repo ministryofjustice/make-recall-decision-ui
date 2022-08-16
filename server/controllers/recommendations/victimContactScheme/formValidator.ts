@@ -29,6 +29,7 @@ export const validateVictimContactScheme = ({
         selected: hasVictimsInContactScheme,
         allOptions: formOptions.hasVictimsInContactScheme,
       },
+      dateVloInformed: hasVictimsInContactScheme !== 'YES' ? null : undefined,
     }
     const nextPageId = hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'confirmation-part-a'
     nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`

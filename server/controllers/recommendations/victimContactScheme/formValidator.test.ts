@@ -19,12 +19,19 @@ describe('validateVictimContactScheme', () => {
     expect(nextPagePath).toEqual('/recommendations/34/victim-liaison-officer')
   })
 
-  it('redirects to confirmation page if No selected', () => {
+  it('sets VLO date to blank value and redirects to confirmation page if No selected', () => {
     const requestBody = {
       hasVictimsInContactScheme: 'NO',
       crn: 'X34534',
     }
-    const { errors, nextPagePath } = validateVictimContactScheme({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = validateVictimContactScheme({ requestBody, recommendationId })
+    expect(valuesToSave).toEqual({
+      hasVictimsInContactScheme: {
+        allOptions: formOptions.hasVictimsInContactScheme,
+        selected: 'NO',
+      },
+      dateVloInformed: null,
+    })
     expect(errors).toBeUndefined()
     expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
   })
@@ -34,7 +41,14 @@ describe('validateVictimContactScheme', () => {
       hasVictimsInContactScheme: 'NOT_APPLICABLE',
       crn: 'X34534',
     }
-    const { errors, nextPagePath } = validateVictimContactScheme({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = validateVictimContactScheme({ requestBody, recommendationId })
+    expect(valuesToSave).toEqual({
+      hasVictimsInContactScheme: {
+        allOptions: formOptions.hasVictimsInContactScheme,
+        selected: 'NOT_APPLICABLE',
+      },
+      dateVloInformed: null,
+    })
     expect(errors).toBeUndefined()
     expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
   })
