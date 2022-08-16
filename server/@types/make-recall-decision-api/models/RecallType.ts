@@ -2,12 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { RecallTypeSelectedValue } from './RecallTypeSelectedValue';
 import type { TextValueOption } from './TextValueOption';
 
 export type RecallType = {
-    selected?: {
-        value: string
-        details?: string
-    };
+    selected?: RecallTypeSelectedValue;
     allOptions?: Array<TextValueOption>;
 };

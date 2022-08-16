@@ -16,7 +16,7 @@ describe('validateVictimContactScheme', () => {
         selected: 'YES',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
+    expect(nextPagePath).toEqual('/recommendations/34/victim-liaison-officer')
   })
 
   it('returns an error, if not set, and no valuesToSave', () => {

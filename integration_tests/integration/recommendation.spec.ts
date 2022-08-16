@@ -80,7 +80,22 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Victim contact scheme')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'hasVictimsInContactScheme',
+      errorText: 'Select whether there are any victims in the victim contact scheme',
+    })
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
+    cy.clickButton('Continue')
+
+    cy.log('===== Victim liaison officer')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'dateVloInformed',
+      fieldGroupId: 'dateVloInformed-day',
+      errorText: 'Enter the date you told the VLO',
+    })
+    cy.enterDateTime('2022-04-14', { parent: '#dateVloInformed' })
     cy.clickButton('Continue')
 
     cy.log('===== Download Part A')

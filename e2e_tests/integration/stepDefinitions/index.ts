@@ -69,10 +69,9 @@ When('Maria recommends a fixed term recall', () => {
 })
 
 When('Maria explains how the person has responded to probation so far', () => {
-  cy.get('@offenderName')
-    .then(offenderName =>
-      cy.fillInput(`How has ${offenderName} responded to probation so far?`, 'Re-offending has occurred')
-    )
+  cy.get('@offenderName').then(offenderName =>
+    cy.fillInput(`How has ${offenderName} responded to probation so far?`, 'Re-offending has occurred')
+  )
   cy.clickButton('Continue')
 })
 
@@ -80,18 +79,25 @@ When('Maria continues from the Stop and Think page', () => {
   cy.clickLink('Continue')
 })
 
-When('Maria states that it\'s not an emergency recall', () => {
+When("Maria states that it's not an emergency recall", () => {
   cy.selectRadio('Is this an emergency recall?', 'No')
   cy.clickButton('Continue')
 })
 
 When('Maria selects a custody status', () => {
-  cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody'))
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody')
+  )
   cy.clickButton('Continue')
 })
 
 When('Maria states there are victims in the victim contact scheme', () => {
-  cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
+  cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
+  cy.clickButton('Continue')
+})
+
+When('Maria enters the date the VLO was informed', () => {
+  cy.enterDateTime('2022-04-14', { parent: '#dateVloInformed' })
   cy.clickButton('Continue')
 })
 
@@ -104,7 +110,10 @@ When('Maria downloads the Part A', () => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
     cy.log('Q14')
-    expect(contents).to.contain('Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? No')
+    expect(contents).to.contain(
+      'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
+    )
+    expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q22')
@@ -118,20 +127,24 @@ When('Maria updates the recommendation', () => {
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
-  cy.get('@offenderName')
-    .then(offenderName =>
-      cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should('equal', 'Re-offending has occurred')
-    )
+  cy.get('@offenderName').then(offenderName =>
+    cy
+      .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
+      .should('equal', 'Re-offending has occurred')
+  )
   cy.clickButton('Continue')
   cy.clickLink('Continue') // stop and think page
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
-  cy.get('@offenderName')
-    .then(offenderName =>
-       cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
-    )
+  cy.get('@offenderName').then(offenderName =>
+    cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
+  )
   cy.clickButton('Continue')
-  cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'No').should('be.checked')
+  cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
+  cy.clickButton('Continue')
+  cy.getTextInputValue('Day').should('equal', '14')
+  cy.getTextInputValue('Month').should('equal', '04')
+  cy.getTextInputValue('Year').should('equal', '2022')
 })

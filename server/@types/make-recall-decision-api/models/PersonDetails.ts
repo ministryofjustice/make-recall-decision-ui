@@ -4,6 +4,8 @@
 
 export type PersonDetails = {
     name?: string;
+    firstName?: string;
+    surname?: string;
     dateOfBirth?: string;
     age?: number;
     gender?: string;
