@@ -30,7 +30,8 @@ export const validateVictimContactScheme = ({
         allOptions: formOptions.hasVictimsInContactScheme,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/victim-liaison-officer`
+    const nextPageId = hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'confirmation-part-a'
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
   }
   return {
     errors,
