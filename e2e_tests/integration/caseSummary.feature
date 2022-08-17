@@ -19,6 +19,7 @@ Feature: Case summary
     And Maria selects a custody status
     And Maria states there are victims in the victim contact scheme
     And Maria enters the date the VLO was informed
+    And Maria enters any arrest issues
     Then Maria sees a confirmation page
     And Maria downloads the Part A
     And Maria updates the recommendation

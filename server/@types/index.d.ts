@@ -86,7 +86,7 @@ export interface UiListItem {
 }
 
 export interface ValueWithDetails {
-  value?: string
+  value?: string | boolean
   details?: string
 }
 
@@ -146,6 +146,7 @@ export type PageTemplateName =
   | 'custodyStatus'
   | 'victimContactScheme'
   | 'victimLiaisonOfficer'
+  | 'arrestIssues'
   | 'confirmationPartA'
   | 'startNoRecall'
 

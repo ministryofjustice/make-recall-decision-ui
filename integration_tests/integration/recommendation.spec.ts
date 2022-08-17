@@ -118,6 +118,24 @@ context('Make a recommendation', () => {
     cy.enterDateTime('2022-04-14', { parent: '#dateVloInformed' })
     cy.clickButton('Continue')
 
+    cy.log('===== Arrest issues')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'arrestIssues',
+      errorText: "Select whether there's anything the police should know",
+    })
+    cy.selectRadio('Is there anything the police should know before they arrest Paula Smith?', 'Yes')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'arrestIssuesDetailsYes',
+      errorText: 'You must enter details of the arrest issues',
+    })
+    cy.fillInput(
+      'Give details. Include information about any vulnerable children and adults',
+      'Arrest issues details...'
+    )
+    cy.clickButton('Continue')
+
     cy.log('===== Download Part A')
     cy.pageHeading().should('contain', 'Part A created')
     const fileName = 'NAT_Recall_Part_A_X514364.docx'

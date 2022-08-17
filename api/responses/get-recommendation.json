@@ -77,6 +77,10 @@
       }
     ]
   },
+  "hasArrestIssues": {
+    "selected": true,
+    "details": "Arrest issues..."
+  },
   "personOnProbation": {
     "name": "Paula Smith",
     "firstName": "Paula",

@@ -15,6 +15,8 @@ import { validateVictimLiaisonOfficer } from '../victimLiaisonOfficer/formValida
 import { inputDisplayValuesVictimLiaisonOfficer } from '../victimLiaisonOfficer/inputDisplayValues'
 import { validateAlternativesTried } from '../alternativesToRecallTried/formValidator'
 import { inputDisplayValuesAlternativesToRecallTried } from '../alternativesToRecallTried/inputDisplayValues'
+import { validateArrestIssues } from '../arrestIssues/formValidator'
+import { inputDisplayValuesArrestIssues } from '../arrestIssues/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -79,6 +81,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesVictimLiaisonOfficer,
         pageHeading: strings.pageHeadings.victimLiaisonOfficer,
         pageTitle: strings.pageTitles.victimLiaisonOfficer,
+      }
+    case 'arrest-issues':
+      return {
+        templateName: 'arrestIssues',
+        validator: validateArrestIssues,
+        inputDisplayValues: inputDisplayValuesArrestIssues,
+        pageHeading: strings.pageHeadings.arrestIssues,
+        pageTitle: strings.pageHeadings.arrestIssues,
       }
     case 'confirmation-part-a':
       return {

@@ -5,6 +5,7 @@ import { UiListItem } from '../../../@types'
 import { standardLicenceConditions } from '../formOptions/licenceConditions'
 import { hasVictimsInContactScheme } from '../victimContactScheme/formOptions'
 import { alternativesToRecallTried } from '../alternativesToRecallTried/formOptions'
+import { hasArrestIssues } from '../arrestIssues/formOptions'
 
 export const formOptions = {
   recallType,
@@ -13,6 +14,7 @@ export const formOptions = {
   custodyStatus,
   hasVictimsInContactScheme,
   alternativesToRecallTried,
+  hasArrestIssues,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

@@ -31,7 +31,7 @@ export const validateVictimContactScheme = ({
       },
       dateVloInformed: hasVictimsInContactScheme !== 'YES' ? null : undefined,
     }
-    const nextPageId = hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'confirmation-part-a'
+    const nextPageId = hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'arrest-issues'
     nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
   }
   return {

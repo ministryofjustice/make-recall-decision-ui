@@ -19,7 +19,7 @@ describe('validateVictimContactScheme', () => {
     expect(nextPagePath).toEqual('/recommendations/34/victim-liaison-officer')
   })
 
-  it('sets VLO date to blank value and redirects to confirmation page if No selected', () => {
+  it('sets VLO date to blank value and redirects to arrest issues if No selected', () => {
     const requestBody = {
       hasVictimsInContactScheme: 'NO',
       crn: 'X34534',
@@ -33,10 +33,10 @@ describe('validateVictimContactScheme', () => {
       dateVloInformed: null,
     })
     expect(errors).toBeUndefined()
-    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
+    expect(nextPagePath).toEqual('/recommendations/34/arrest-issues')
   })
 
-  it('redirects to confirmation page if Not applicable selected', () => {
+  it('redirects to arrest issues page if Not applicable selected', () => {
     const requestBody = {
       hasVictimsInContactScheme: 'NOT_APPLICABLE',
       crn: 'X34534',
@@ -50,7 +50,7 @@ describe('validateVictimContactScheme', () => {
       dateVloInformed: null,
     })
     expect(errors).toBeUndefined()
-    expect(nextPagePath).toEqual('/recommendations/34/confirmation-part-a')
+    expect(nextPagePath).toEqual('/recommendations/34/arrest-issues')
   })
 
   it('returns an error, if not set, and no valuesToSave', () => {
