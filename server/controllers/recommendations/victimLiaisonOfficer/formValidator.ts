@@ -49,7 +49,7 @@ export const validateVictimLiaisonOfficer = ({
     valuesToSave = {
       dateVloInformed: dateVloInformedIso,
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/arrest-issues`
     return {
       valuesToSave,
       nextPagePath,

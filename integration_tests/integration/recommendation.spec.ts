@@ -118,6 +118,24 @@ context('Make a recommendation', () => {
     cy.enterDateTime('2022-04-14', { parent: '#dateVloInformed' })
     cy.clickButton('Continue')
 
+    cy.log('===== Arrest issues')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'hasArrestIssues',
+      errorText: "Select whether there's anything the police should know",
+    })
+    cy.selectRadio('Is there anything the police should know before they arrest Paula Smith?', 'Yes')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'hasArrestIssuesDetailsYes',
+      errorText: 'You must enter details of the arrest issues',
+    })
+    cy.fillInput(
+      'Give details. Include information about any vulnerable children and adults',
+      'Arrest issues details...'
+    )
+    cy.clickButton('Continue')
+
     cy.log('===== Download Part A')
     cy.pageHeading().should('contain', 'Part A created')
     const fileName = 'NAT_Recall_Part_A_X514364.docx'
@@ -141,13 +159,13 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
   })
 
-  it('victim contact scheme - directs "no" to the confirmation page', () => {
+  it('victim contact scheme - directs "no" to the arrest issues page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagRecommendationProd=1`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Part A created')
+    cy.pageHeading().should('contain', 'Is there anything the police should know before they arrest Paula Smith?')
   })
 
   it('shows an error if creation fails', () => {

@@ -1,0 +1,57 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageHeading, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/' + ('victim-liaison-officer' if recommendation.hasVictimsInContactScheme === 'YES' else 'victim-contact-scheme')
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set yesDetailHtml %}
+                {{ govukTextarea({
+                    name: "hasArrestIssuesDetailsYes",
+                    id: "hasArrestIssuesDetailsYes",
+                    label: {
+                        text: "Give details. Include information about any vulnerable children and adults.",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.details,
+                    errorMessage: errorMessage(errors.hasArrestIssuesDetailsYes)
+                }) }}
+            {% endset %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                {{ govukRadios({
+                    idPrefix: "hasArrestIssues",
+                    name: "hasArrestIssues",
+                    fieldset: {
+                        legend: {
+                            text: pageHeading,
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.hasArrestIssues,
+                        currentValues: inputDisplayValues.value,
+                        conditionalContent: {
+                            YES: yesDetailHtml
+                        }
+                    }),
+                    errorMessage: errorMessage(errors.hasArrestIssues)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

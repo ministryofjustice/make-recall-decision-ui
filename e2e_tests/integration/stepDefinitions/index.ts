@@ -111,6 +111,14 @@ When('Maria enters the date the VLO was informed', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria enters any arrest issues', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is there anything the police should know before they arrest ${offenderName}?`, 'Yes')
+  )
+  cy.fillInput('Give details. Include information about any vulnerable children and adults', 'Arrest issues details...')
+  cy.clickButton('Continue')
+})
+
 When('Maria sees a confirmation page', () => {
   cy.pageHeading().should('contain', 'Part A created')
 })
@@ -119,6 +127,9 @@ When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
+    cy.log('Q8')
+    expect(contents).to.contain('Are there any arrest issues of which police should be aware?  Yes')
+    expect(contents).to.contain('Arrest issues details...')
     cy.log('Q14')
     expect(contents).to.contain(
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
@@ -174,4 +185,14 @@ When('Maria updates the recommendation', () => {
   cy.getTextInputValue('Day').should('equal', '14')
   cy.getTextInputValue('Month').should('equal', '04')
   cy.getTextInputValue('Year').should('equal', '2022')
+  cy.clickButton('Continue')
+  cy.get('@offenderName').then(offenderName =>
+    cy
+      .getRadioOptionByLabel(`Is there anything the police should know before they arrest ${offenderName}?`, 'Yes')
+      .should('be.checked')
+  )
+  cy.getTextInputValue('Give details. Include information about any vulnerable children and adults').should(
+    'equal',
+    'Arrest issues details...'
+  )
 })

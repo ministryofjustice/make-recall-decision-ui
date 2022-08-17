@@ -3,8 +3,8 @@ import RestClient from './restClient'
 import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
-import { CaseSectionId } from '../@types'
-import { RecommendationResponse, UpdateRecommendationRequest } from '../@types/make-recall-decision-api'
+import { CaseSectionId, ObjectMap } from '../@types'
+import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { PartAResponse } from '../@types/make-recall-decision-api/models/PartAResponse'
 
 function restClient(token?: string): RestClient {
@@ -25,7 +25,7 @@ export const getRecommendation = (recommendationId: string, token: string): Prom
 
 export const updateRecommendation = (
   recommendationId: string,
-  updatedFields: UpdateRecommendationRequest,
+  updatedFields: ObjectMap<unknown>,
   token: string
 ): Promise<RecommendationResponse> =>
   restClient(token).patch({
