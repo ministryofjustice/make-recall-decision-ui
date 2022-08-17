@@ -56,7 +56,7 @@
                                         text: item.detailsLabel
                                     },
                                     value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
-                                    errorMessage: errorMessage(errors.recallTypeDetailsStandard)
+                                    errorMessage: errorMessage(errors["alternativesToRecallTriedDetail-" + item.value])
                                 }) }}
                             </div>
                         {% endif %}

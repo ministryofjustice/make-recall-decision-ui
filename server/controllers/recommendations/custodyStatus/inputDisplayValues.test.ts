@@ -13,7 +13,7 @@ describe('inputDisplayValuesCustodyStatus', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       custodyStatus: {
-        text: 'Select an option',
+        text: 'Select whether the person is in custody or not',
         href: '#custodyStatus',
       },
     }

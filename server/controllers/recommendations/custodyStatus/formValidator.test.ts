@@ -33,7 +33,7 @@ describe('validateCustodyStatus', () => {
       {
         href: '#custodyStatus',
         name: 'custodyStatus',
-        text: 'Select an option',
+        text: 'Select whether the person is in custody or not',
         errorId: 'noCustodyStatusSelected',
       },
     ])
@@ -50,7 +50,7 @@ describe('validateCustodyStatus', () => {
       {
         href: '#custodyStatus',
         name: 'custodyStatus',
-        text: 'Select an option',
+        text: 'Select whether the person is in custody or not',
         errorId: 'noCustodyStatusSelected',
       },
     ])

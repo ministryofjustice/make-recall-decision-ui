@@ -50,12 +50,17 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'alternativesToRecallTried',
-      errorText: 'You must indicate which alternatives to recall have been tried already',
+      errorText: 'You must select which alternatives to recall have been tried already',
     })
     cy.selectCheckboxes('What alternatives to recall have been tried already?', [
       'Increased frequency of reporting',
       'Drug testing',
     ])
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'alternativesToRecallTriedDetail-INCREASED_FREQUENCY',
+      errorText: 'Enter more detail for increased frequency of reporting',
+    })
     cy.fillInput('Give details', 'Details on reporting', { parent: '#conditional-INCREASED_FREQUENCY' })
     cy.fillInput('Give details', 'Details on drug testing', { parent: '#conditional-DRUG_TESTING' })
     cy.clickButton('Continue')
@@ -70,14 +75,13 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: 'Select a recommendation',
+      errorText: 'You must select a recommendation',
     })
     cy.selectRadio('What do you recommend?', 'Fixed term recall')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallTypeDetailsFixedTerm',
-      errorText: 'Why do you recommend this recall type?',
-      fieldError: 'Enter more detail',
+      errorText: 'You must explain why you recommend this recall type',
     })
     cy.fillInput('Why do you recommend this recall type?', 'Details...')
     cy.clickButton('Continue')
@@ -86,7 +90,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isThisAnEmergencyRecall',
-      errorText: 'You must indicate if this is an emergency recall',
+      errorText: 'You must select whether this is an emergency recall or not',
     })
     cy.selectRadio('Is this an emergency recall?', 'No')
     cy.clickButton('Continue')
@@ -99,7 +103,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasVictimsInContactScheme',
-      errorText: 'Select whether there are any victims in the victim contact scheme',
+      errorText: 'You must select whether there are any victims in the victim contact scheme',
     })
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
     cy.clickButton('Continue')

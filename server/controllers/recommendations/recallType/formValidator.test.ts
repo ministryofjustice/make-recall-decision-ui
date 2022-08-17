@@ -106,8 +106,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsFixedTerm',
           name: 'recallTypeDetailsFixedTerm',
-          text: 'Why do you recommend this recall type?',
-          fieldText: 'Enter more detail',
+          text: 'You must explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -128,8 +127,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsFixedTerm',
           name: 'recallTypeDetailsFixedTerm',
-          text: 'Why do you recommend this recall type?',
-          fieldText: 'Enter more detail',
+          text: 'You must explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -150,8 +148,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsStandard',
           name: 'recallTypeDetailsStandard',
-          text: 'Why do you recommend this recall type?',
-          fieldText: 'Enter more detail',
+          text: 'You must explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -172,8 +169,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsStandard',
           name: 'recallTypeDetailsStandard',
-          text: 'Why do you recommend this recall type?',
-          fieldText: 'Enter more detail',
+          text: 'You must explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -190,7 +186,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select a recommendation',
+          text: 'You must select a recommendation',
           errorId: 'noRecallTypeSelected',
         },
       ])
@@ -207,7 +203,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select a recommendation',
+          text: 'You must select a recommendation',
           errorId: 'noRecallTypeSelected',
         },
       ])

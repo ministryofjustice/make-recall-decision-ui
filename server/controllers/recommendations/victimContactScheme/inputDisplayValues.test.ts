@@ -13,7 +13,7 @@ describe('inputDisplayValuesVictimContactScheme', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       hasVictimsInContactScheme: {
-        text: 'Select whether there are any victims in the victim contact scheme',
+        text: 'You must select whether there are any victims in the victim contact scheme',
         href: '#hasVictimsInContactScheme',
       },
     }

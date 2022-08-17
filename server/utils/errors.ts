@@ -10,20 +10,17 @@ export const makeErrorObject = ({
   id,
   name,
   text,
-  fieldText,
   values,
   errorId,
 }: {
   id: string
   name?: string
   text: string
-  fieldText?: string
   values?: ObjectMap<string> | string
   errorId?: string
 }): NamedFormError => ({
   name: name || id,
   text,
-  fieldText,
   href: `#${id}`,
   values,
   errorId,

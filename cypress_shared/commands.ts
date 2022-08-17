@@ -89,11 +89,11 @@ Cypress.Commands.add('getListLabels', (labelQaAttr: string, opts = { parent: 'bo
   cy.getElement({ qaAttr: labelQaAttr }, opts).then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
 )
 
-Cypress.Commands.add('assertErrorMessage', ({ fieldGroupId, fieldName, errorText, fieldError }) => {
+Cypress.Commands.add('assertErrorMessage', ({ fieldGroupId, fieldName, errorText }) => {
   cy.get(`[href="#${fieldGroupId || fieldName}"]`).should('have.text', errorText)
   cy.get(`#${fieldName}-error`)
     .invoke('text')
-    .then(text => expect(text.trim()).to.contain(fieldError || errorText))
+    .then(text => expect(text.trim()).to.contain(errorText))
 })
 
 Cypress.Commands.add('getTextInputValue', (label, opts = {}) => {

@@ -15,7 +15,6 @@ export type CaseSectionId =
 
 export interface FormError {
   text: string
-  fieldText?: string
   href?: string
   values?: ObjectMap<unknown> | string
   errorId?: string
