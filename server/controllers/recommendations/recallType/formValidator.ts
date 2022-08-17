@@ -29,7 +29,6 @@ export const validateRecallType = ({ requestBody, recommendationId }: FormValida
         makeErrorObject({
           id: missingDetailFixedTerm ? 'recallTypeDetailsFixedTerm' : 'recallTypeDetailsStandard',
           text: strings.errors[errorId],
-          fieldText: strings.errors.missingDetail,
           errorId,
         })
       )

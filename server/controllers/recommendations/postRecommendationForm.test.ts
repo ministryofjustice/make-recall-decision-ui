@@ -49,10 +49,9 @@ describe('postRecommendationForm', () => {
     expect(req.session.errors).toEqual([
       {
         errorId: 'missingRecallTypeDetail',
-        fieldText: 'Enter more detail',
         href: '#recallTypeDetailsStandard',
         name: 'recallTypeDetailsStandard',
-        text: 'Why do you recommend this recall type?',
+        text: 'You must explain why you recommend this recall type',
       },
     ])
     expect(req.session.unsavedValues).toEqual({ recallType: 'STANDARD' })

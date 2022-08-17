@@ -52,8 +52,7 @@ export const formatSingleLineAddress = (address: CurrentAddress) => {
   return listToString(parts, '')
 }
 
-export const errorMessage = (formError: FormError) =>
-  formError ? { html: formError.fieldText || formError.text } : undefined
+export const errorMessage = (formError: FormError) => (formError ? { html: formError.text } : undefined)
 
 export const getProperty = <T, U>(obj: T, accessor: string): U => {
   const listOfKeys = accessor.split('.')

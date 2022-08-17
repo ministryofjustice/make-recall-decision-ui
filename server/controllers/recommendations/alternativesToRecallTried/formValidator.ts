@@ -51,7 +51,7 @@ export const validateAlternativesTried = ({
             text: `${strings.errors.missingDetail} for ${optionTextFromValue(
               alternativeId,
               'alternativesToRecallTried'
-            )}`,
+            ).toLowerCase()}`,
             errorId,
           })
         )
