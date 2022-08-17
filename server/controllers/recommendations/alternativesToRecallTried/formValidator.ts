@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid, optionTextFromValue } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { findListItemByValue } from '../../../utils/lists'
+import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 
 export const validateAlternativesTried = ({
   requestBody,
@@ -76,7 +76,7 @@ export const validateAlternativesTried = ({
         value: alternative,
         details: requestBody[`alternativesToRecallTriedDetail-${alternative}`],
       })),
-      allOptions: formOptions.alternativesToRecallTried,
+      allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
     },
   }
   return {

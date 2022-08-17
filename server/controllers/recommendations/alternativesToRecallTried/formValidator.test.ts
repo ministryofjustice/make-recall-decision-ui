@@ -1,5 +1,6 @@
 import { validateAlternativesTried } from './formValidator'
 import { formOptions } from '../helpers/formOptions'
+import { cleanseUiList } from '../../../utils/lists'
 
 describe('validateAlternativesTried', () => {
   const recommendationId = '34'
@@ -14,7 +15,7 @@ describe('validateAlternativesTried', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {
-        allOptions: formOptions.alternativesToRecallTried,
+        allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
         selected: [
           {
             details: 'Info..',
@@ -87,7 +88,7 @@ describe('validateAlternativesTried', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {
-        allOptions: formOptions.alternativesToRecallTried,
+        allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
         selected: [
           {
             value: 'NONE',
