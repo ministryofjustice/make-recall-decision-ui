@@ -75,3 +75,5 @@ interface ItemWithValue {
 }
 export const findListItemByValue = <T>({ items = [], value }: { items: ItemWithValue[]; value: string }) =>
   items.find(item => item.value === value) as unknown as T
+
+export const cleanseUiList = (items: UiListItem[]) => items.map(({ value, text }: UiListItem) => ({ value, text }))
