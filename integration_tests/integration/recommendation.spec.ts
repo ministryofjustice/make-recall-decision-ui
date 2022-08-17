@@ -24,7 +24,7 @@ context('Make a recommendation', () => {
     },
   }
 
-  it.only('can create a recommendation', () => {
+  it('can create a recommendation', () => {
     const caseResponse = {
       ...getCaseOverviewResponse,
       activeRecommendation: undefined,
