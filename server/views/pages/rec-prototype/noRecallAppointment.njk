@@ -5,7 +5,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: '/rec-prototype/' + crn + '/alternatives'
+        href: '/rec-prototype/' + crn + '/no-recall-reasons'
     }) }}
 {% endblock %}
 
@@ -18,6 +18,7 @@
             <h1 class='govuk-heading-l'>Next appointment for {{ personalDetailsOverview.name }}</h1>
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <p class='govuk-body'>This appointment will go into the Decision not to Recall letter.</p>
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -25,32 +26,31 @@
                                 How will the appointment happen?
                             </h2>
                         </legend>
-                        <p class='govuk-body'>This appointment will go into the Decision not to Recall letter.</p>
                         <div class="govuk-radios" data-module="govuk-radios">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="telephone"
-                                       name="noRecallAppointmentType" type="radio" value="TELEPHONE">
+                                       name="noRecallAppointmentType" type="radio" value="TELEPHONE" {% if recommendation.noRecallAppointmentType == 'TELEPHONE' %} checked{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="telephone">
                                     Telephone
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="videoCall"
-                                       name="noRecallAppointmentType" type="radio" value="VIDEO_CALL">
+                                       name="noRecallAppointmentType" type="radio" value="VIDEO_CALL" {% if recommendation.noRecallAppointmentType == 'VIDEO_CALL' %} checked{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="videoCall">
                                     Video call
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="officeVisit"
-                                       name="noRecallAppointmentType" type="radio" value="OFFICE_VISIT">
+                                       name="noRecallAppointmentType" type="radio" value="OFFICE_VISIT" {% if recommendation.noRecallAppointmentType == 'OFFICE_VISIT' %} checked{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="officeVisit">
                                     Office visit
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="homeVisit"
-                                       name="noRecallAppointmentType" type="radio" value="HOME_VISIT">
+                                       name="noRecallAppointmentType" type="radio" value="HOME_VISIT" {% if recommendation.noRecallAppointmentType == 'HOME_VISIT' %} checked{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="homeVisit">
                                     Home visit
                                 </label>
@@ -78,7 +78,7 @@
                                     </label>
                                     <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                            id="appointment-date-day" name="appointmentDateDay" type="text"
-                                           inputmode="numeric">
+                                           inputmode="numeric" value='{{ recommendation.appointmentDateDay }}'>
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
@@ -88,7 +88,7 @@
                                     </label>
                                     <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                            id="appointment-date-month" name="appointmentDateMonth" type="text"
-                                           inputmode="numeric">
+                                           inputmode="numeric" value='{{ recommendation.appointmentDateMonth }}'>
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
@@ -98,7 +98,7 @@
                                     </label>
                                     <input class="govuk-input govuk-date-input__input govuk-input--width-4"
                                            id="appointment-date-year" name="appointmentDateYear" type="text"
-                                           inputmode="numeric">
+                                           inputmode="numeric" value='{{ recommendation.appointmentDateYear }}'>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                                     </label>
                                     <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                            id="appointment-date-hours" name="appointmentDateHours" type="text"
-                                           inputmode="numeric">
+                                           inputmode="numeric" value='{{ recommendation.appointmentDateHours }}'>
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
@@ -127,7 +127,7 @@
                                     </label>
                                     <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                            id="appointment-date-minutes" name="appointmentDateMinutes" type="text"
-                                           inputmode="numeric">
+                                           inputmode="numeric" value='{{ recommendation.appointmentDateMinutes }}'>
                                 </div>
                             </div>
                         </div>

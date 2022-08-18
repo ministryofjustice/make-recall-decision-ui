@@ -60,14 +60,18 @@ if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
   popd
 fi
 
+pushd "${API_DIR}"
+docker-compose stop
+popd
+
 pushd "${UI_DIR}"
 docker-compose stop
+docker-compose -f docker-compose-test.yml stop
 printf "\n\nBuilding/starting UI components...\n\n"
 docker-compose up -d redis
 popd
 
 pushd "${API_DIR}"
-docker-compose stop
 printf "\n\nBuilding/starting API components...\n\n"
 docker-compose up -d --scale=${API_NAME}=0
 ./gradlew --stop
