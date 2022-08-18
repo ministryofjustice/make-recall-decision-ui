@@ -4,23 +4,8 @@
     <div class="flex__item-one-third-desktop">
             {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
             {{ mappaWidget(caseSummary.mappa) }}
-        {% if flags.flagShowMockedUi %}
-        {% if caseSummary.predictorScores.historical[0].date %}
-            <div class="govuk-body predictor-timeline__heading">
-                <h2 class="govuk-heading-m">Score history</h2>
-                <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
-            </div>
-            {{ predictorTimeline(caseSummary.predictorScores.historical) }}
-        {% else %}
-        <div class="govuk-body">
-            <h2 class="govuk-heading-m">Score history</h2>
-            <p class='govuk-body' data-qa='score-history-missing'>Not available.</p>
-        </div>
-        {% endif %}
-        {% endif %}
     </div>
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
-        {% if flags.flagShowMockedUi %}
         {{ oasysCard({
             cardHeading: 'Details of the risk',
             oasysHeading: caseSummary.natureOfRisk.oasysHeading,
@@ -36,8 +21,6 @@
             oasysHeading: caseSummary.circumstancesIncreaseRisk.oasysHeading,
             content: caseSummary.circumstancesIncreaseRisk.description
         }) }}
-        {% endif %}
-        {% if env not in ['PREPRODUCTION', 'PRODUCTION'] %}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
             Risk of serious recidivism (RSR) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}{% endif %}
         </h2>
@@ -45,31 +28,6 @@
             {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
         {% else %}
             <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
-        {% endif %}
-
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            OSP/C score
-        </h2>
-        {% if caseSummary.predictorScores.current.OSPC.score %}
-            {{ predictorScore(caseSummary.predictorScores.current.OSPC) }}
-        {% else %}
-            <p class='govuk-body' data-qa='ospc-missing'>Not available.</p>
-        {% endif %}
-
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            OSP/I score
-        </h2>
-        {% if caseSummary.predictorScores.current.OSPI.score %}
-            {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
-        {% else %}
-            <p class='govuk-body' data-qa='ospi-missing'>Not available.</p>
-        {% endif %}
-        {% endif %}
-        {% if flags.flagShowMockedUi %}
-            <h2 class="govuk-heading-m score-header">
-                OGRS score - {{ caseSummary.predictorScores.current.OGRS.score }}
-            </h2>
-            <img src='/assets/images/risk-ogrs.svg' width='100%' alt='OGRS predictor score' />
         {% endif %}
     </div>
 </div>
