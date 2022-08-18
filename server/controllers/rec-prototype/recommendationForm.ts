@@ -14,6 +14,8 @@ import {
 } from '../../@types/make-recall-decision-api'
 import { standardLicenceConditionsRefData } from './refData/licenceConditions'
 import { AppError } from '../../AppError'
+import { appointmentTypeOptions } from './refData/appointmentTypes'
+import { convertGmtDatePartsToUtc } from '../../utils/dates/convert'
 
 const getRefData = () => ({
   alternativesToRecall: alternativesToRecallRefData,
@@ -22,6 +24,7 @@ const getRefData = () => ({
   yesNo,
   standardLicenceConditions: standardLicenceConditionsRefData,
   vulnerability: vulnerabilityRefData,
+  appointmentTypeOptions,
 })
 
 const getPageData = (sectionId: string, recommendation: SavedRecommendation) => {
@@ -131,6 +134,11 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'no-recall-appointment':
       return {
         pageTemplate: 'noRecallAppointment',
+        nextPageId: 'no-recall-cya',
+      }
+    case 'no-recall-cya':
+      return {
+        pageTemplate: 'noRecallCheckYourAnswers',
         nextPageId: 'no-recall-preview',
       }
     case 'no-recall-preview':
@@ -199,6 +207,17 @@ interface SavedRecommendation {
   arrestIssuesDetailYes: string
   contraband: string
   contrabandDetailYes: string
+  noRecallAppointmentType: string
+  appointmentDateDay: string
+  appointmentDateMonth: string
+  appointmentDateYear: string
+  appointmentDateHours: string
+  appointmentDateMinutes: string
+  appointmentDate: string
+  noRecallBreach: string
+  noRecallRationale: string
+  noRecallProgress: string
+  noRecallFuture: string
 }
 
 const decorateRecommendation = (recommendation: SavedRecommendation, newestActiveConviction: ConvictionResponse) => {
@@ -231,6 +250,17 @@ const decorateRecommendation = (recommendation: SavedRecommendation, newestActiv
     arrestIssuesDetailYes,
     contraband,
     contrabandDetailYes,
+    noRecallAppointmentType,
+    appointmentDateDay,
+    appointmentDateMonth,
+    appointmentDateYear,
+    appointmentDateHours,
+    appointmentDateMinutes,
+    appointmentDate,
+    noRecallBreach,
+    noRecallRationale,
+    noRecallProgress,
+    noRecallFuture,
   } = recommendation
   const alternatives = Array.isArray(alternativesTried) || !alternativesTried ? alternativesTried : [alternativesTried]
   const vulnerabilityList = Array.isArray(vulnerability) || !vulnerability ? vulnerability : [vulnerability]
@@ -283,6 +313,18 @@ const decorateRecommendation = (recommendation: SavedRecommendation, newestActiv
     arrestIssuesDetailYes,
     contraband,
     contrabandDetailYes,
+    noRecallAppointmentType,
+    noRecallAppointmentTypeLabel: appointmentTypeOptions.find(type => type.value === noRecallAppointmentType),
+    appointmentDateDay,
+    appointmentDateMonth,
+    appointmentDateYear,
+    appointmentDateHours,
+    appointmentDateMinutes,
+    appointmentDate,
+    noRecallBreach,
+    noRecallRationale,
+    noRecallProgress,
+    noRecallFuture,
   }
 }
 
@@ -318,6 +360,18 @@ export const recommendationFormPost = async (req: Request, res: Response): Promi
   let updated = {}
   if (sectionId !== 'clear-data') {
     const existing = await getRecommendation(crnFormatted)
+    if (rest.appointmentDateYear) {
+      rest.appointmentDate = convertGmtDatePartsToUtc(
+        {
+          year: rest.appointmentDateYear,
+          month: rest.appointmentDateMonth,
+          day: rest.appointmentDateDay,
+          hour: rest.appointmentDateHours,
+          minute: rest.appointmentDateMinutes,
+        },
+        { includeTime: true }
+      )
+    }
     updated = {
       ...(existing || {}),
       ...rest,

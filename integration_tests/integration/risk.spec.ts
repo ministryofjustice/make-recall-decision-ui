@@ -38,9 +38,6 @@ context('Risk page', () => {
 
     // MAPPA level
     cy.getElement('CAT 2/LEVEL 1').should('exist')
-
-    // predictor graphs
-    cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
@@ -55,6 +52,5 @@ context('Risk page', () => {
       'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
     )
     cy.getElement('NO MAPPA')
-    cy.getText('rsr-missing').should('equal', 'Not available.')
   })
 })
