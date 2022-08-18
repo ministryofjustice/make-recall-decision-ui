@@ -21,13 +21,5 @@
             oasysHeading: caseSummary.circumstancesIncreaseRisk.oasysHeading,
             content: caseSummary.circumstancesIncreaseRisk.description
         }) }}
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            Risk of serious recidivism (RSR) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}{% endif %}
-        </h2>
-        {% if caseSummary.predictorScores.current.RSR.score %}
-            {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
-        {% else %}
-            <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
-        {% endif %}
     </div>
 </div>
