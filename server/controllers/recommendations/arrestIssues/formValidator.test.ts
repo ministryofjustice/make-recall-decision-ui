@@ -21,7 +21,7 @@ describe('validateArrestIssues', () => {
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/confirmation-part-a`)
     })
 
-    it('returns valuesToSave and no errors if No selected', () => {
+    it('returns valuesToSave and no errors if No selected, and resets details', () => {
       const requestBody = {
         hasArrestIssues: 'NO',
         crn: 'X34534',
@@ -31,6 +31,7 @@ describe('validateArrestIssues', () => {
       expect(valuesToSave).toEqual({
         hasArrestIssues: {
           selected: false,
+          details: null,
         },
       })
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/confirmation-part-a`)

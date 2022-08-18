@@ -45,7 +45,7 @@ export const validateArrestIssues = ({ requestBody, recommendationId }: FormVali
   const valuesToSave = {
     hasArrestIssues: {
       selected: hasArrestIssues === 'YES',
-      details: hasArrestIssuesDetailsYes,
+      details: hasArrestIssues === 'YES' ? hasArrestIssuesDetailsYes : null,
     },
   }
   return {
