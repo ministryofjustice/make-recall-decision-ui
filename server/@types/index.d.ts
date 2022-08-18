@@ -12,6 +12,7 @@ export type CaseSectionId =
   | 'licence-conditions'
   | 'contact-history'
   | 'recommendations'
+  | 'recommendations-prototype'
 
 export interface FormError {
   text: string

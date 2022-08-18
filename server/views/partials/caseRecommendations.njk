@@ -2,13 +2,12 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-
         {% if caseSummary.activeRecommendation.recommendationId %}
-        <table class="govuk-table" id='table-recommendations-{{ loop.index0 }}'>
+        <table class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Recommendations</caption>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Last modified</th>
+                <th scope="col" class="govuk-table__header">Last updated</th>
                 <th scope="col" class="govuk-table__header">Recommendation</th>
                 <th scope="col" class="govuk-table__header"></th>
             </tr>
@@ -33,6 +32,5 @@
         {% else %}
         <p class='govuk-body'>No active recommendation.</p>
         {% endif %}
-
     </div>
 </div>
