@@ -1,6 +1,5 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { routeUrls } from '../../server/routes/routeUrls'
-import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
 
 context('Risk page', () => {
@@ -13,7 +12,16 @@ context('Risk page', () => {
   it('shows RoSH, MAPPA and predictor scores', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
-
+    // Content panels
+    cy.viewDetails('View more detail on Details of the risk').should(
+      'contain',
+      getCaseRiskResponse.natureOfRisk.description
+    )
+    cy.viewDetails('View more detail on Who is at risk').should('contain', getCaseRiskResponse.whoIsAtRisk.description)
+    cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
+      'contain',
+      getCaseRiskResponse.circumstancesIncreaseRisk.description
+    )
     // RoSH table
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
       expect(rowValues[0]).to.equal('Low')
@@ -33,10 +41,6 @@ context('Risk page', () => {
 
     // predictor graphs
     cy.getElement('Risk of serious recidivism (RSR) score - 23').should('exist')
-    cy.getElement('OSP/C score').should('exist')
-    cy.getElement('OSP/I score').should('exist')
-    // no score history
-    cy.getElement('Score history').should('exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
@@ -51,35 +55,6 @@ context('Risk page', () => {
       'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
     )
     cy.getElement('NO MAPPA')
-    cy.getText('ospc-missing').should('equal', 'Not available.')
     cy.getText('rsr-missing').should('equal', 'Not available.')
-    cy.getText('ospi-missing').should('equal', 'Not available.')
-    cy.getText('score-history-missing').should('equal', 'Not available.')
-  })
-
-  it('shows risk components using mocked data if flag is enabled', () => {
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
-    // Content panels
-    cy.viewDetails('View more detail on Details of the risk').should(
-      'contain',
-      getCaseRiskResponse.natureOfRisk.description
-    )
-    cy.viewDetails('View more detail on Who is at risk').should('contain', getCaseRiskResponse.whoIsAtRisk.description)
-    cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
-      'contain',
-      getCaseRiskResponse.circumstancesIncreaseRisk.description
-    )
-
-    cy.getElement('OGRS score - 12').should('exist')
-
-    // score history
-    cy.getElement('Score history').should('exist')
-    cy.getElement('14 May 2019 at 12:00').should('exist')
-    cy.getElement('12 September 2018 at 12:00').should('exist')
-    cy.getElement('RSR HIGH 18').should('not.be.visible')
-    cy.clickLink('Open all')
-    cy.getElement('RSR HIGH 18').should('be.visible')
-    cy.getElement('RSR MEDIUM 12').should('be.visible')
   })
 })
