@@ -210,15 +210,16 @@ Cypress.Commands.add('readBase64File', fileName => {
   return cy.task('readBase64File', filePath)
 })
 
-Cypress.Commands.add('interceptGoogleAnalyticsEvent', () => {
+Cypress.Commands.add('interceptGoogleAnalyticsEvent', (query, id) => {
   cy.intercept(
     {
       method: 'GET',
       url: 'https://www.google-analytics.com/collect?*',
       query: {
         t: 'event',
+        ...query,
       },
     },
     { statusCode: 200 }
-  ).as('googleAnalyticsEvent')
+  ).as(id)
 })

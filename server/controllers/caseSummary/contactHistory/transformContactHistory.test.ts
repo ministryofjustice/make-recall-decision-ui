@@ -120,6 +120,10 @@ describe('transformContactHistory', () => {
             contactCountInGroup: 1,
             contactTypeCodes: [
               {
+                attributes: {
+                  'data-group': 'Accredited programme',
+                  'data-type': 'Arrest attempt',
+                },
                 count: 1,
                 description: 'Arrest attempt',
                 html: "Arrest attempt <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
@@ -134,6 +138,10 @@ describe('transformContactHistory', () => {
             contactCountInGroup: 1,
             contactTypeCodes: [
               {
+                attributes: {
+                  'data-group': 'Appointments',
+                  'data-type': 'Responsible officer change',
+                },
                 count: 1,
                 description: 'Responsible officer change',
                 html: "Responsible officer change <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
@@ -197,6 +205,10 @@ describe('transformContactHistory', () => {
         contactCountInGroup: 3,
         contactTypeCodes: [
           {
+            attributes: {
+              'data-group': 'Accredited programme',
+              'data-type': 'Planned Office Visit (NS)',
+            },
             count: 3,
             description: 'Planned Office Visit (NS)',
             html: "Planned Office Visit (NS) <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
@@ -211,6 +223,10 @@ describe('transformContactHistory', () => {
         contactCountInGroup: 1,
         contactTypeCodes: [
           {
+            attributes: {
+              'data-group': 'Appointments',
+              'data-type': 'Responsible officer change',
+            },
             count: 1,
             description: 'Responsible officer change',
             html: "Responsible officer change <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
