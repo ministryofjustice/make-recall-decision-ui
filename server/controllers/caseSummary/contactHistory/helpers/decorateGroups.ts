@@ -22,6 +22,10 @@ export const decorateGroups = ({
             description,
             html: `${description} <span class='text-secondary'>(<span data-qa='contact-count'>${count}</span>)</span>`,
             count,
+            attributes: {
+              'data-group': group.label,
+              'data-type': description,
+            },
           }
         })
         // include contact types with zero count, if they've already been selected
