@@ -1,3 +1,5 @@
+import { ObjectMap } from '../server/@types'
+
 export {}
 
 declare global {
@@ -56,7 +58,7 @@ declare global {
 
       contactTypeFiltersTotalCount(): Chainable<number>
 
-      interceptGoogleAnalyticsEvent(): Chainable<void>
+      interceptGoogleAnalyticsEvent(query: ObjectMap<string>, id: string): Chainable<void>
 
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string; fieldError?: string })
 

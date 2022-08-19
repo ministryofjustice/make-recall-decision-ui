@@ -96,6 +96,10 @@ describe('decorateGroups', () => {
     })
     expect(groups[0].contactTypeCodes).toEqual([
       {
+        attributes: {
+          'data-group': 'Accredited programme',
+          'data-type': 'Arrest attempt',
+        },
         count: 0,
         description: 'Arrest attempt',
         html: "Arrest attempt <span class='text-secondary'>(<span data-qa='contact-count'>0</span>)</span>",
@@ -131,6 +135,10 @@ describe('decorateGroups', () => {
       contactCountInGroup: 3,
       contactTypeCodes: [
         {
+          attributes: {
+            'data-group': 'Appointments',
+            'data-type': 'Management Oversight - Recall',
+          },
           count: 3,
           description: 'Management Oversight - Recall',
           html: "Management Oversight - Recall <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
@@ -170,6 +178,10 @@ describe('decorateGroups', () => {
       contactCountInGroup: 3,
       contactTypeCodes: [
         {
+          attributes: {
+            'data-group': 'Appointments',
+            'data-type': 'Management Oversight - Recall',
+          },
           count: 3,
           description: 'Management Oversight - Recall',
           html: "Management Oversight - Recall <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
