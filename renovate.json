@@ -1,13 +1,23 @@
 {
-  "extends": ["config:base"],
-  "prConcurrentLimit": 1,
-  "rangeStrategy": "replace",
-  "prCreation": "status-success",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":disableDependencyDashboard", "docker:disable"],
+  "timezone": "Europe/London",
+  "schedule": ["after 9am every weekday", "before 5pm every weekday"],
+  "prCreation": "not-pending",
+  "rangeStrategy": "update-lockfile",
+  "rollbackPrs": true,
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non major dependencies",
+      "groupSlug": "all-minor-patch"
     }
   ],
-  "rebaseWhen": "behind-base-branch"
+  "vulnerabilityAlerts": {
+    "labels": ["security"]
+  },
+  "rebaseWhen": "behind-base-branch",
+  "lockFileMaintenance": {
+    "enabled": true
+  }
 }
