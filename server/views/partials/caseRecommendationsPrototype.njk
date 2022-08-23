@@ -25,7 +25,11 @@
                     {{ formatDateTimeFromIsoString({isoDate: recommendation.documentCreatedDate}) if recommendation.documentCreatedDate else '-'}}
                 </td>
                 <td class="govuk-table__cell">
+                    {% if recommendation.action === 'Decision not to recall letter' %}
+                    <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/no-recall-preview' class='govuk-link'>{{ recommendation.action }}</a>
+                    {% else %}
                     <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/behaviour' class='govuk-link'>{{ recommendation.action }}</a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
