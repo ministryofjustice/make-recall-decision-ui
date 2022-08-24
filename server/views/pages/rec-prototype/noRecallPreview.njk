@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Next appointment for the person", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "Preview the Decision not to Recall letter", hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ govukBackLink({
@@ -15,17 +15,16 @@
         <div class="govuk-grid-column-full">
             {% include '../../partials/error-summary.njk' %}
             <div class="govuk-caption-l">Decision not to Recall</div>
-            <h1 class='govuk-heading-l'>Preview your Decision not to Recall letter</h1>
-            <p class='govuk-body'>This is the letter that {{ personalDetailsOverview.name }} will get.</p>
-
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <a href='#' class='govuk-button govuk-button--secondary govuk-!-margin-right-8'>Edit letter</a>
-                <button class="govuk-button">
-                    Continue
-                </button>
-            </form>
-
+            <h1 class='govuk-heading-l'>Preview the Decision not to Recall letter</h1>
+            <div class='flex flex--align-center'>
+                <a href='/rec-prototype/{{ crn }}/no-recall-why-considered' class='govuk-button govuk-button--secondary govuk-!-margin-right-8'>Edit letter</a>
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <button class="govuk-button">
+                        Continue
+                    </button>
+                </form>
+            </div>
             <div class='border govuk-body govuk-!-padding-6'>
                 <div class='flex flex--space-between'>
                     <div>
@@ -49,7 +48,7 @@
 
                 <div>
                     <p class='govuk-body'>I am writing to you because you have breached your licence conditions in such
-                        a way that your risk is assessed as increased.</p>
+                        a way that {{ recommendation.noRecallLetterFirstLine.text}}.</p>
 
                     <p class='govuk-body'>This breach has been discussed with a Probation manager and a decision has
                         been made that you will not be recalled to prison. This letter explains this decision. If you
@@ -63,8 +62,8 @@
 
                     <p class='govuk-body'>{{ recommendation.noRecallFuture }}</p>
 
-                    <p class='govuk-body'>Your next appointment is by {{ recommendation.noRecallAppointmentTypeLabel }} on:
-                        formatDateTimeFromIsoString({isoDate: recommendation.appointmentDate })</p>
+                    <p class='govuk-body'>Your next appointment is by {{ recommendation.noRecallAppointmentTypeLabel.text }} on:
+                        {{ formatDateTimeFromIsoString({isoDate: recommendation.appointmentDate }) }}</p>
 
                     <p class='govuk-body'>You must please contact me immediately if you are not able to keep this
                         appointment. Should you wish to discuss anything before then, please contact me by the telephone
