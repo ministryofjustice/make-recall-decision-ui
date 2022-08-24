@@ -8,3 +8,4 @@ export type UserAccessResponse = {
     exclusionMessage?: string;
     restrictionMessage?: string;
 };
+

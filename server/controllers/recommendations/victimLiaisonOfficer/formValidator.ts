@@ -5,7 +5,7 @@ import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 
-export const validateVictimLiaisonOfficer = ({
+export const validateVictimLiaisonOfficer = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {

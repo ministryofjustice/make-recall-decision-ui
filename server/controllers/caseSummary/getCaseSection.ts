@@ -8,9 +8,8 @@ import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/mod
 import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './contactHistory/transformContactHistory'
 import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
-import { LicenceConditionsResponse } from '../../@types/make-recall-decision-api'
 import { AppError } from '../../AppError'
-import { transformLicenceConditions } from './licence-conditions/transformLicenceConditions'
+import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import getRecommendationsResponse from '../../../api/responses/get-recommendations.json'
 
 export const getCaseSection = async (
@@ -45,7 +44,7 @@ export const getCaseSection = async (
       break
     case 'licence-conditions':
       sectionLabel = 'Licence conditions'
-      caseSummaryRaw = await getCaseSummary<LicenceConditionsResponse>(trimmedCrn, sectionId, token)
+      caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         caseSummary = transformLicenceConditions(caseSummaryRaw)
       }

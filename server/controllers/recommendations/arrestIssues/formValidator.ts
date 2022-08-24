@@ -4,7 +4,10 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateArrestIssues = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+export const validateArrestIssues = async ({
+  requestBody,
+  recommendationId,
+}: FormValidatorArgs): FormValidatorReturn => {
   const { hasArrestIssues, hasArrestIssuesDetailsYes } = requestBody
   const invalidArrestIssues = !isValueValid(hasArrestIssues as string, 'hasArrestIssues')
   const missingYesDetail = hasArrestIssues === 'YES' && !hasArrestIssuesDetailsYes

@@ -75,6 +75,15 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria selects the licence conditions that have been breached', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectCheckboxes(`What licence conditions has ${offenderName} breached?`, [
+      'receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+    ])
+  )
+  cy.clickButton('Continue')
+})
+
 When('Maria selects the alternatives to recall that have been tried', () => {
   cy.selectCheckboxes('What alternatives to recall have been tried already?', [
     'Increased frequency of reporting',

@@ -7,3 +7,4 @@ export type ActiveRecommendation = {
     lastModifiedDate?: string;
     lastModifiedBy?: string;
 };
+

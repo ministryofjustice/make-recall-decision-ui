@@ -2,14 +2,14 @@ import { validateVictimLiaisonOfficer } from './formValidator'
 
 describe('validateVictimLiaisonOfficer', () => {
   const recommendationId = '34'
-  it('returns valuesToSave and no errors if valid', () => {
+  it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       'dateVloInformed-day': '12',
       'dateVloInformed-month': '05',
       'dateVloInformed-year': '2022',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = validateVictimLiaisonOfficer({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateVictimLiaisonOfficer({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       dateVloInformed: '2022-05-12',
@@ -17,14 +17,14 @@ describe('validateVictimLiaisonOfficer', () => {
     expect(nextPagePath).toEqual('/recommendations/34/arrest-issues')
   })
 
-  it('returns an error, if not set, and no valuesToSave', () => {
+  it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       'dateVloInformed-day': '',
       'dateVloInformed-month': '',
       'dateVloInformed-year': '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateVictimLiaisonOfficer({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateVictimLiaisonOfficer({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -41,14 +41,14 @@ describe('validateVictimLiaisonOfficer', () => {
     ])
   })
 
-  it('returns an error, if set to an invalid value, and no valuesToSave', () => {
+  it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
       'dateVloInformed-day': '12',
       'dateVloInformed-month': '',
       'dateVloInformed-year': '2022',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateVictimLiaisonOfficer({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateVictimLiaisonOfficer({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {

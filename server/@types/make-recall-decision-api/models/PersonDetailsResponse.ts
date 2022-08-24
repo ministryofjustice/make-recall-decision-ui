@@ -15,3 +15,4 @@ export type PersonDetailsResponse = {
     offenderManager?: OffenderManager;
     activeRecommendation?: ActiveRecommendation;
 };
+

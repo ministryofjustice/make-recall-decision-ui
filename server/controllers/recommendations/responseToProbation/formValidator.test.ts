@@ -2,25 +2,25 @@ import { validateResponseToProbation } from './formValidator'
 
 describe('validateResponseToProbation', () => {
   const recommendationId = '34'
-  it('returns valuesToSave and no errors if valid', () => {
+  it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       responseToProbation: 'Re-offending',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = validateResponseToProbation({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateResponseToProbation({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       responseToProbation: 'Re-offending',
     })
-    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
+    expect(nextPagePath).toEqual('/recommendations/34/licence-conditions')
   })
 
-  it('returns an error, if not set, and no valuesToSave', () => {
+  it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       responseToProbation: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateResponseToProbation({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateResponseToProbation({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {

@@ -4,13 +4,13 @@ describe('validateArrestIssues', () => {
   const recommendationId = '456'
 
   describe('valid', () => {
-    it('returns valuesToSave and no errors if Yes is selected, with details', () => {
+    it('returns valuesToSave and no errors if Yes is selected, with details', async () => {
       const requestBody = {
         hasArrestIssues: 'YES',
         hasArrestIssuesDetailsYes: 'Details...',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, nextPagePath } = validateArrestIssues({ requestBody, recommendationId })
+      const { errors, valuesToSave, nextPagePath } = await validateArrestIssues({ requestBody, recommendationId })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
         hasArrestIssues: {
@@ -21,12 +21,12 @@ describe('validateArrestIssues', () => {
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/confirmation-part-a`)
     })
 
-    it('returns valuesToSave and no errors if No selected, and resets details', () => {
+    it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
         hasArrestIssues: 'NO',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, nextPagePath } = validateArrestIssues({ requestBody, recommendationId })
+      const { errors, valuesToSave, nextPagePath } = await validateArrestIssues({ requestBody, recommendationId })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
         hasArrestIssues: {
@@ -39,11 +39,11 @@ describe('validateArrestIssues', () => {
   })
 
   describe('invalid', () => {
-    it('errors if nothing is selected', () => {
+    it('errors if nothing is selected', async () => {
       const requestBody = {
         crn: 'X34534',
       }
-      const { errors, valuesToSave, unsavedValues } = validateArrestIssues({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validateArrestIssues({ requestBody, recommendationId })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({})
       expect(errors).toEqual([
@@ -56,13 +56,13 @@ describe('validateArrestIssues', () => {
       ])
     })
 
-    it('errors if Yes is selected but no detail sent', () => {
+    it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
         hasArrestIssues: 'YES',
         hasArrestIssuesDetailsYes: '',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, unsavedValues } = validateArrestIssues({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validateArrestIssues({ requestBody, recommendationId })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
         hasArrestIssues: 'YES',
@@ -77,12 +77,12 @@ describe('validateArrestIssues', () => {
       ])
     })
 
-    it('returns an error, if hasArrestIssues is set to an invalid value', () => {
+    it('returns an error, if hasArrestIssues is set to an invalid value', async () => {
       const requestBody = {
         hasArrestIssues: 'BANANA',
         crn: 'X34534',
       }
-      const { errors, valuesToSave } = validateArrestIssues({ requestBody, recommendationId })
+      const { errors, valuesToSave } = await validateArrestIssues({ requestBody, recommendationId })
       expect(valuesToSave).toBeUndefined()
       expect(errors).toEqual([
         {

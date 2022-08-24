@@ -4,7 +4,10 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateCustodyStatus = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+export const validateCustodyStatus = async ({
+  requestBody,
+  recommendationId,
+}: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath

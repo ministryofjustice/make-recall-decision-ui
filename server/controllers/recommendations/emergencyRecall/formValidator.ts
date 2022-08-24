@@ -4,7 +4,10 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateEmergencyRecall = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+export const validateEmergencyRecall = async ({
+  requestBody,
+  recommendationId,
+}: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath

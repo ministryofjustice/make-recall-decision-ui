@@ -5,3 +5,4 @@
 export type Risk = {
     flags?: Array<string>;
 };
+

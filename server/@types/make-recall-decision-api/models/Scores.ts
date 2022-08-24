@@ -13,3 +13,4 @@ export type Scores = {
     OSPI?: OSPI;
     OGRS?: OGRS;
 };
+

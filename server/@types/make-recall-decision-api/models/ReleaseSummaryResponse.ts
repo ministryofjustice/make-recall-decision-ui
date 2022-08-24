@@ -9,3 +9,4 @@ export type ReleaseSummaryResponse = {
     lastRelease?: LastRelease;
     lastRecall?: LastRecall;
 };
+

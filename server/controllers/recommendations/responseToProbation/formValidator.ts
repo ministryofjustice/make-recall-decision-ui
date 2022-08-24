@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
 
-export const validateResponseToProbation = ({
+export const validateResponseToProbation = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -26,7 +26,7 @@ export const validateResponseToProbation = ({
     valuesToSave = {
       responseToProbation,
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/alternatives-tried`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/licence-conditions`
   }
   return {
     errors,
