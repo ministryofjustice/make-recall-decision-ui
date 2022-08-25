@@ -13,7 +13,7 @@ describe('validateLicenceConditionsBreached', () => {
     ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
     const requestBody = {
       crn: 'X514364',
-      licenceConditionsBreached: ['standard|RESIDE_ADDRESS', 'additional|NST30'],
+      licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NST30'],
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -36,7 +36,7 @@ describe('validateLicenceConditionsBreached', () => {
         },
         standardLicenceConditions: {
           allOptions: cleanseUiList(formOptions.standardLicenceConditions),
-          selected: ['RESIDE_ADDRESS'],
+          selected: ['ADDRESS_APPROVED'],
         },
       },
     })
