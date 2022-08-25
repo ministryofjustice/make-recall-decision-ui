@@ -29,7 +29,7 @@
                                 {% if recallType.value == 'NO_RECALL' %}
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="recallType-{{ recallType.value }}"
-                                               name="recallType" type="radio" value="{{ recallType.value }}">
+                                               name="recallType" type="radio" value="{{ recallType.value }}" {% if recommendation.recallType.value === 'NO_RECALL' %}checked{% endif %}>
                                         <label class="govuk-label govuk-radios__label" for="recallType-{{ recallType.value }}">
                                             {{ recallType.text }}
                                         </label>
@@ -38,7 +38,7 @@
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="recallType-{{ loop.index }}"
                                                name="recallType" type="radio" value="{{ recallType.value }}"
-                                               data-aria-controls="conditional-{{ loop.index }}">
+                                               data-aria-controls="conditional-{{ loop.index }}"{% if recallType.value === recommendation.recallType.value %}checked{% endif %}>
                                         <label class="govuk-label govuk-radios__label" for="recallType-{{ loop.index }}">
                                             {{ recallType.text }}
                                         </label>

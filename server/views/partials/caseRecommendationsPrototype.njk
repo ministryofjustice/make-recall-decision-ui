@@ -25,7 +25,7 @@
                     {{ formatDateTimeFromIsoString({isoDate: recommendation.documentCreatedDate}) if recommendation.documentCreatedDate else '-'}}
                 </td>
                 <td class="govuk-table__cell">
-                    <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/behaviour' class='govuk-link'>{{ recommendation.action }}</a>
+                    <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/no-recall-summary?partClearNoRecall=1' class='govuk-link'>{{ recommendation.action }}</a>
                 </td>
             </tr>
             {% endfor %}

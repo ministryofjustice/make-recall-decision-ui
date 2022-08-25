@@ -1,0 +1,93 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Your recommendation", hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href:  '/rec-prototype/' + crn + '/no-recall-appointment'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% if recommendation.noRecallAppointmentType %}
+                <h1 class='govuk-heading-l'>Decision not to Recall</h1>
+            {% else %}
+            <h1 class='govuk-heading-l'>Create a Decision not to Recall letter</h1>
+            <p class='govuk-body'>You’re not recommending a recall for {{ personalDetailsOverview.name }}. You must now create a Decision not to Recall letter.
+            </p>
+            {% endif %}
+            <ol class="moj-task-list govuk-!-margin-top-8">
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Recommendation
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}recall-type">Type of recall you recommend</a>
+                            {{ taskStatus({ hasData: recommendation.recallType }) }}
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Alternatives to recall
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}alternatives">Alternatives tried already</a>
+                            {{ taskStatus({ hasData: recommendation.alternativesTried.length }) }}
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Circumstances
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}behaviour">Response to probation so far</a>
+                            {{ taskStatus({ hasData: recommendation.behaviour }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}licence-conditions">Breached licence conditions</a>
+                            {{ taskStatus({ hasData: recommendation.standardLicenceConditions.length or recommendation.additionalLicenceConditions.length }) }}
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="moj-task-list__section">
+                        Create the letter
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}no-recall-why-considered">Why you considered recall</a>
+                            {{ taskStatus({ hasData: recommendation.noRecallLetterFirstLine }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}no-recall-reasons">Why {{ personalDetailsOverview.name }} should not be recalled</a>
+                            {{ taskStatus({ hasData: recommendation.noRecallBreach }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}no-recall-appointment">Appointment date and time</a>
+                            {{ taskStatus({ hasData: recommendation.noRecallAppointmentType }) }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}no-recall-preview">Preview of the letter</a>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            {% if recommendation.noRecallAppointmentType %}
+            <div>
+                <a href='/rec-prototype/{{ crn }}/no-recall-confirmation' class='govuk-button govuk-button--primary'>Create letter</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+

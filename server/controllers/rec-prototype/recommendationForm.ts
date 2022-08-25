@@ -5,6 +5,7 @@ import { custodyOptions } from './refData/custodyOptions'
 import { recallTypes } from './refData/recallTypes'
 import { yesNo } from './refData/yesNo'
 import { vulnerabilityRefData } from './refData/vulnerability'
+import { whyConsideredRecall } from './refData/whyConsideredRecall'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import {
   ContactSummaryResponse,
@@ -25,6 +26,7 @@ const getRefData = () => ({
   standardLicenceConditions: standardLicenceConditionsRefData,
   vulnerability: vulnerabilityRefData,
   appointmentTypeOptions,
+  whyConsideredRecall,
 })
 
 const getPageData = (sectionId: string, recommendation: SavedRecommendation) => {
@@ -52,7 +54,7 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'recall-type':
       return {
         pageTemplate: 'recallType',
-        nextPageId: recommendation.recallType === 'NO_RECALL' ? 'no-recall-letter-start' : 'sensitive',
+        nextPageId: recommendation?.recallType === 'NO_RECALL' ? 'no-recall-summary' : 'sensitive',
       }
     case 'sensitive':
       return {
@@ -121,9 +123,13 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
       return {
         pageTemplate: 'confirmationRecall',
       }
-    case 'no-recall-letter-start':
+    case 'no-recall-summary':
       return {
-        pageTemplate: 'noRecallLetterStart',
+        pageTemplate: 'noRecallSummary',
+      }
+    case 'no-recall-why-considered':
+      return {
+        pageTemplate: 'noRecallWhyConsidered',
         nextPageId: 'no-recall-reasons',
       }
     case 'no-recall-reasons':
@@ -134,17 +140,12 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'no-recall-appointment':
       return {
         pageTemplate: 'noRecallAppointment',
-        nextPageId: 'no-recall-cya',
-      }
-    case 'no-recall-cya':
-      return {
-        pageTemplate: 'noRecallCheckYourAnswers',
         nextPageId: 'no-recall-preview',
       }
     case 'no-recall-preview':
       return {
         pageTemplate: 'noRecallPreview',
-        nextPageId: 'no-recall-confirmation',
+        nextPageId: 'no-recall-summary',
       }
     case 'no-recall-confirmation':
       return {
@@ -218,6 +219,7 @@ interface SavedRecommendation {
   noRecallRationale: string
   noRecallProgress: string
   noRecallFuture: string
+  noRecallLetterFirstLine: string
 }
 
 const decorateRecommendation = (recommendation: SavedRecommendation, newestActiveConviction: ConvictionResponse) => {
@@ -261,6 +263,7 @@ const decorateRecommendation = (recommendation: SavedRecommendation, newestActiv
     noRecallRationale,
     noRecallProgress,
     noRecallFuture,
+    noRecallLetterFirstLine,
   } = recommendation
   const alternatives = Array.isArray(alternativesTried) || !alternativesTried ? alternativesTried : [alternativesTried]
   const vulnerabilityList = Array.isArray(vulnerability) || !vulnerability ? vulnerability : [vulnerability]
@@ -271,6 +274,7 @@ const decorateRecommendation = (recommendation: SavedRecommendation, newestActiv
     cause,
     emergencyRecall: yesNo.find(type => type.value === emergencyRecall),
     addressConfirmed: yesNo.find(type => type.value === addressConfirmed),
+    noRecallLetterFirstLine: whyConsideredRecall.find(type => type.value === noRecallLetterFirstLine),
     addressConfirmedDetail,
     alternativesTried:
       alternatives &&
@@ -332,7 +336,23 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
   const { crn, sectionId } = req.params
   const crnFormatted = (crn as string).toUpperCase()
 
-  const recommendation = await getRecommendation(crnFormatted)
+  let recommendation = await getRecommendation(crnFormatted)
+  if (req.query.partClearNoRecall) {
+    recommendation = {
+      ...recommendation,
+      noRecallBreach: '',
+      noRecallRationale: '',
+      noRecallProgress: '',
+      noRecallFuture: '',
+      noRecallAppointmentType: '',
+      appointmentDateDay: '',
+      appointmentDateMonth: '',
+      appointmentDateYear: '',
+      appointmentDateHours: '',
+      appointmentDateMinutes: '',
+    }
+    await saveRecommendation({ data: recommendation, crn: crnFormatted })
+  }
   const [licenceResponse, personalResponse] = await Promise.allSettled([
     getCaseSummary<LicenceConditionsResponse>(crnFormatted, 'licence-conditions', res.locals.user.token),
     getCaseSummary<PersonDetailsResponse>(crnFormatted, 'personal-details', res.locals.user.token),
