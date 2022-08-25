@@ -34,6 +34,10 @@ export const featureFlagsDefaults = {
     label: 'Show UI that uses mocked data',
     default: false,
   },
+  flagExcludeFromAnalytics: {
+    label: "Don't send my data to Google Analytics (in prod only)",
+    default: false,
+  },
 }
 
 export const readFeatureFlags =
