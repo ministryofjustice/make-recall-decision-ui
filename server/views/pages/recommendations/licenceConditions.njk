@@ -30,9 +30,8 @@
                 <form novalidate method="post">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                     <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                    <div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error"{% endif %}>
-                        <fieldset
-                                class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
+                    <div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error{% endif %}">
+                        <fieldset class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-fieldset__heading">{{ pageHeading }}</h1>
                             </legend>
@@ -50,7 +49,7 @@
                                                type="checkbox" value="standard|{{ standardCondition.value }}"
                                                {% if inputDisplayValues.standardLicenceConditions and standardCondition.value in inputDisplayValues.standardLicenceConditions %}checked{% endif %}>
                                         <label class="govuk-label govuk-checkboxes__label"
-                                               for="standard-{{ loop.index }}">
+                                               for="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}">
                                             {{ standardCondition.text }}
                                         </label>
                                     </div>
