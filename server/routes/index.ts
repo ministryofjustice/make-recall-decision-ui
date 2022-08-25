@@ -17,6 +17,7 @@ import { postRecommendationForm } from '../controllers/recommendations/postRecom
 import { routeUrls } from './routeUrls'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
 import { createAndDownloadPartA } from '../controllers/recommendations/createAndDownloadPartA'
+import { setAnalyticsId } from '../middleware/setAnalyticsId'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -24,7 +25,7 @@ export default function routes(router: Router): Router {
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
 
-  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
+  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults), setAnalyticsId)
   get('/', startPage)
   get(routeUrls.flags, getFeatureFlags)
   get(routeUrls.search, personSearch)

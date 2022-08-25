@@ -21,7 +21,6 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 import { appInsightsOperationId } from './middleware/appInsightsOperationId'
-import setupAnalytics from './middleware/setupAnalytics'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -36,7 +35,6 @@ export default function createApp(userService: UserService): express.Application
   app.use(cookieParser())
 
   app.use(setUpSentry())
-  app.use(setupAnalytics())
   app.use(appInsightsOperationId)
 
   app.use(metricsMiddleware)
