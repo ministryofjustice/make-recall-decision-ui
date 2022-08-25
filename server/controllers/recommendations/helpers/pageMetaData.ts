@@ -17,6 +17,8 @@ import { validateAlternativesTried } from '../alternativesToRecallTried/formVali
 import { inputDisplayValuesAlternativesToRecallTried } from '../alternativesToRecallTried/inputDisplayValues'
 import { validateArrestIssues } from '../arrestIssues/formValidator'
 import { inputDisplayValuesArrestIssues } from '../arrestIssues/inputDisplayValues'
+import { validateLicenceConditionsBreached } from '../licenceConditions/formValidator'
+import { inputDisplayValuesLicenceConditions } from '../licenceConditions/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -27,6 +29,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesResponseToProbation,
         pageHeading: strings.pageHeadings.responseToProbation,
         pageTitle: strings.pageTitles.responseToProbation,
+      }
+    case 'licence-conditions':
+      return {
+        templateName: 'licenceConditions',
+        validator: validateLicenceConditionsBreached,
+        inputDisplayValues: inputDisplayValuesLicenceConditions,
+        pageHeading: strings.pageHeadings.licenceConditions,
+        pageTitle: strings.pageTitles.licenceConditions,
       }
     case 'alternatives-tried':
       return {

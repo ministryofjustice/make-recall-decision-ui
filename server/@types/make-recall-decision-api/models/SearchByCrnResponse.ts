@@ -9,3 +9,4 @@ export type SearchByCrnResponse = {
     crn?: string;
     dateOfBirth?: string;
 };
+

@@ -15,3 +15,4 @@ export type LicenceConditionsResponse = {
     releaseSummary?: ReleaseSummaryResponse;
     activeRecommendation?: ActiveRecommendation;
 };
+

@@ -6,3 +6,4 @@ export type CaseDocumentType = {
     code?: string;
     description?: string;
 };
+

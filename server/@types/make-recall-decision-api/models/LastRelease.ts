@@ -9,3 +9,4 @@ export type LastRelease = {
     notes?: string;
     reason?: Reason;
 };
+

@@ -14,3 +14,4 @@ export type LicenceCondition = {
     licenceConditionTypeMainCat?: LicenceConditionTypeMainCat;
     licenceConditionTypeSubCat?: LicenceConditionTypeSubCat;
 };
+

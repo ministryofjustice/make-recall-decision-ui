@@ -75,6 +75,15 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria selects the licence conditions that have been breached', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectCheckboxes(`What licence conditions has ${offenderName} breached?`, [
+      'receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+    ])
+  )
+  cy.clickButton('Continue')
+})
+
 When('Maria selects the alternatives to recall that have been tried', () => {
   cy.selectCheckboxes('What alternatives to recall have been tried already?', [
     'Increased frequency of reporting',
@@ -135,6 +144,7 @@ When('Maria downloads the Part A', () => {
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
     )
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
+    // TODO - Q18 - additional licence conditions
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q21')
@@ -151,12 +161,26 @@ When('Maria updates the recommendation', () => {
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
+  // responded to probation
   cy.get('@offenderName').then(offenderName =>
     cy
       .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
       .should('equal', 'Re-offending has occurred')
   )
-  cy.clickButton('Continue') // responded to probation
+  cy.clickButton('Continue')
+
+  // licence conditions
+  cy.get('@offenderName').then(offenderName =>
+    cy
+      .getRadioOptionByLabel(
+        `What licence conditions has ${offenderName} breached?`,
+        'receive visits from the supervising officer in accordance with instructions given by the supervising officer'
+      )
+      .should('be.checked')
+  )
+  cy.clickButton('Continue')
+
+  // alternatives to recall
   cy.getRadioOptionByLabel(
     'What alternatives to recall have been tried already?',
     'Increased frequency of reporting'
@@ -170,7 +194,8 @@ When('Maria updates the recommendation', () => {
     'equal',
     'Details on drug testing'
   )
-  cy.clickButton('Continue') // alternatives to recall
+  cy.clickButton('Continue')
+
   cy.clickLink('Continue') // stop and think page
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')

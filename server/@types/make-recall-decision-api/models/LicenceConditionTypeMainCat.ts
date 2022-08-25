@@ -6,3 +6,4 @@ export type LicenceConditionTypeMainCat = {
     code: string;
     description: string;
 };
+

@@ -2,7 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type ArrestIssues = {
-    selected?: boolean;
+export type ValueWithDetails = {
+    value?: string;
     details?: string;
 };
+

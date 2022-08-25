@@ -3,10 +3,12 @@
 /* eslint-disable */
 
 import type { AlternativesToRecallTried } from './AlternativesToRecallTried';
-import type { ArrestIssues } from './ArrestIssues';
 import type { CustodyStatus } from './CustodyStatus';
+import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
 import type { PersonOnProbation } from './PersonOnProbation';
 import type { RecallType } from './RecallType';
+import type { SelectedWithDetails } from './SelectedWithDetails';
+import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 
 export type RecommendationResponse = {
@@ -19,9 +21,11 @@ export type RecommendationResponse = {
     isThisAnEmergencyRecall?: boolean;
     hasVictimsInContactScheme?: VictimsInContactScheme;
     dateVloInformed?: string;
-    hasArrestIssues?: ArrestIssues;
+    hasArrestIssues?: SelectedWithDetails;
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;
+    licenceConditionsBreached?: LicenceConditionsBreached;
+    isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
 };
 
 export namespace RecommendationResponse {
@@ -34,3 +38,4 @@ export namespace RecommendationResponse {
 
 
 }
+

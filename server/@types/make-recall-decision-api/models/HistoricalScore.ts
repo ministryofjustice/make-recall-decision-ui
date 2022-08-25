@@ -8,3 +8,4 @@ export type HistoricalScore = {
     date?: string;
     scores?: Scores;
 };
+

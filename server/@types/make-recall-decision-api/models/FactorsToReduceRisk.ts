@@ -8,3 +8,4 @@ export type FactorsToReduceRisk = {
     description?: string;
     oasysHeading?: OasysHeading;
 };
+

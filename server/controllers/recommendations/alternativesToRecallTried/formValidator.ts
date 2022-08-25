@@ -5,7 +5,7 @@ import { formOptions, isValueValid, optionTextFromValue } from '../helpers/formO
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 
-export const validateAlternativesTried = ({
+export const validateAlternativesTried = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {

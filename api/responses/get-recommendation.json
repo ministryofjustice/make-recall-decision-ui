@@ -85,5 +85,44 @@
     "name": "Paula Smith",
     "firstName": "Paula",
     "surname": "Smith"
+  },
+  "hasVictimsInContactScheme": {
+    "selected": "YES",
+    "allOptions": [
+      { "value": "YES", "text": "Yes" },
+      { "value": "NO", "text": "No" },
+      { "value": "NOT_APPLICABLE", "text": "N/A" }
+    ]
+  },
+  "dateVloInformed": "2022-05-12",
+  "licenceConditionsBreached":{
+    "standardLicenceConditions":{
+      "selected":[
+        "GOOD_BEHAVIOUR",
+        "NO_OFFENCE"
+      ],
+      "allOptions":[
+        {
+          "value":"GOOD_BEHAVIOUR",
+          "text":"Be of good behaviour"
+        },
+        {
+          "value":"NO_OFFENCE",
+          "text":"Not to commit any offence"
+        }
+      ]
+    },
+    "additionalLicenceConditions": {
+      "selected": ["NST14"],
+      "allOptions":[
+        {
+          "mainCatCode": "NLC5",
+          "subCatCode": "NST14",
+          "title":"Disclosure of information",
+          "details":"Notify your supervising officer of any intimate relationships",
+          "note":"Persons wife is Joan Smyth"
+        }
+      ]
+    }
   }
 }

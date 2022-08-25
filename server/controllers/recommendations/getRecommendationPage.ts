@@ -4,11 +4,19 @@ import { pageMetaData } from './helpers/pageMetaData'
 import { formOptions } from './helpers/formOptions'
 import { renderTemplateString } from '../../utils/nunjucks'
 import { renderErrorMessages } from '../../utils/errors'
+import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageId } = req.params
+  const { user } = res.locals
   const { templateName, pageHeading, pageTitle, inputDisplayValues } = pageMetaData(pageId)
-  res.locals.recommendation = await getRecommendation(recommendationId, res.locals.user.token)
+  res.locals.recommendation = await getRecommendation(recommendationId, user.token)
+  if (pageId === 'licence-conditions') {
+    res.locals.caseSummary = await fetchAndTransformLicenceConditions({
+      crn: res.locals.recommendation.crn,
+      token: user.token,
+    })
+  }
   const stringRenderParams = {
     fullName: res.locals.recommendation.personOnProbation.name,
   }

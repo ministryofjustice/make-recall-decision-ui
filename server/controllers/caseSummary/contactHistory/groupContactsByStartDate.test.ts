@@ -28,17 +28,14 @@ describe('groupContactsByStartDate', () => {
       {
         lastModifiedAt: '2022-07-03T16:12:23.586',
         documentName: 'my.document.pdf',
-        documentNameNoExtension: 'my.document',
       },
       {
         lastModifiedAt: '2022-07-01T16:57:47.575',
         documentName: 'ANOTHER.docx',
-        documentNameNoExtension: 'ANOTHER',
       },
       {
         lastModifiedAt: '2022-07-01T16:03:38.867',
         documentName: 'v1.txt',
-        documentNameNoExtension: 'v1',
       },
     ])
   })

@@ -23,3 +23,4 @@ export type ConvictionResponse = {
     licenceDocuments?: Array<CaseDocument>;
     isCustodial?: boolean;
 };
+

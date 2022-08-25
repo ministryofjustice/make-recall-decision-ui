@@ -2,10 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { SelectedAlternative } from './SelectedAlternative';
 import type { TextValueOption } from './TextValueOption';
+import type { ValueWithDetails } from './ValueWithDetails';
 
 export type AlternativesToRecallTried = {
-    selected?: Array<SelectedAlternative>;
+    selected?: Array<ValueWithDetails>;
     allOptions?: Array<TextValueOption>;
 };
+

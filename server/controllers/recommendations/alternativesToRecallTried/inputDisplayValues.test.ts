@@ -1,11 +1,11 @@
 import { inputDisplayValuesAlternativesToRecallTried } from './inputDisplayValues'
 import { formOptions } from '../helpers/formOptions'
-import { SelectedAlternative } from '../../../@types/make-recall-decision-api'
+import { ValueWithDetails } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesAlternativesToRecallTried', () => {
   const apiValues = {
     alternativesToRecallTried: {
-      selected: ['INCREASED_FREQUENCY'] as SelectedAlternative[],
+      selected: ['INCREASED_FREQUENCY'] as ValueWithDetails[],
       allOptions: formOptions.alternativesToRecallTried,
     },
   }

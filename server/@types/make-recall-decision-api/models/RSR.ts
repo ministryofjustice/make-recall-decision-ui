@@ -7,3 +7,4 @@ export type RSR = {
     score?: string;
     type?: string;
 };
+
