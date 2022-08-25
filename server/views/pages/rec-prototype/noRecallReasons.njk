@@ -29,25 +29,25 @@
                             <label class="govuk-label" for="breach">
                                 Explain the licence breach and why it's a problem
                             </label>
-                            <textarea class="govuk-textarea" id="breach" name="noRecallBreach" rows="5">On 25/04/2022 I was made aware of a Police Log detailing an allegation of assault, committed by yourself. During our previous meeting on 20/04/2022, you disclosed to me an argument you had with the same gentleman and admitted using bad language but denied there having.</textarea>
+                            <textarea class="govuk-textarea" id="breach" name="noRecallBreach" rows="5">{{ recommendation.noRecallBreach }}</textarea>
                         </div>
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="rationale">
                                 Explain your rationale for not recalling {{ personalDetailsOverview.name }}
                             </label>
-                            <textarea class="govuk-textarea" id="rationale" name="noRecallRationale" rows="5">It has been decided on this occasion not to recall you to prison. You have made considerable progress since your initial release. You have settled well into the community and have been positively focused on looking after your dog Puppy. Providing you continue to work with me, comply with your licence and are more mindful of your behaviour within the community, I feel we can continue to manage your case in the community. </textarea>
+                            <textarea class="govuk-textarea" id="rationale" name="noRecallRationale" rows="5">{{ recommendation.noRecallRationale }}</textarea>
                         </div>
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="progress">
                                 What progress has {{ personalDetailsOverview.name }} made so far?
                             </label>
-                            <textarea class="govuk-textarea" id="progress" name="noRecallProgress" rows="5">You too recognise the progress you have made and feel you have come a long way since your initial imprisonment. You are motivated to remain in the community for the sake of Puppy and want to positively move forward with your life.</textarea>
+                            <textarea class="govuk-textarea" id="progress" name="noRecallProgress" rows="5">{{ recommendation.noRecallProgress }}</textarea>
                         </div>
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="future">
                                 What is expected in the future?
                             </label>
-                            <textarea class="govuk-textarea" id="future" name="noRecallFuture" rows="5">Going forward then, I hope we can move on from this situation in a positive manner. I am going to be adding a licence condition for you to not have contact with the victim of the alleged assault. This is to prevent any further disputes between you. I would encourage you to be more mindful of your behaviour and recognise how you may present to members in your community. I would also ask that you re-engage with Together drug and alcohol service so you can be supported to reduce your alcohol consumption as this has a negative impact on your mood as well as your thinking and behaviour. If there are ongoing concerns about your alcohol use, appointments with Together will be made mandatory and Alcohol Monitoring Licence conditions may be added in due course. </textarea>
+                            <textarea class="govuk-textarea" id="future" name="noRecallFuture" rows="5">{{ recommendation.noRecallFuture }}</textarea>
                         </div>
                     </fieldset>
                 </div>
