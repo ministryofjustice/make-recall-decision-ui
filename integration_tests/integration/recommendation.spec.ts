@@ -173,6 +173,56 @@ context('Make a recommendation', () => {
     })
   })
 
+  it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        convictions: [
+          {
+            active: true,
+            isCustodial: true,
+            offences: [],
+          },
+          {
+            active: true,
+            isCustodial: true,
+            offences: [],
+          },
+        ],
+      },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+    cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+  })
+
+  it('licence conditions - shows message if person has no active custodial convictions', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        convictions: [
+          {
+            active: false,
+            isCustodial: true,
+            offences: [],
+          },
+          {
+            active: true,
+            isCustodial: false,
+            offences: [],
+          },
+        ],
+      },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+    cy.getElement(
+      'There are no licence conditions. This person is not currently on licence. Double-check that the information in NDelius is correct.'
+    ).should('exist')
+  })
+
   it('recall type - directs "no recall" to the letter page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
