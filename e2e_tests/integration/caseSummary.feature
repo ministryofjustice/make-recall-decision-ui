@@ -18,6 +18,7 @@ Feature: Case summary
     And Maria recommends a fixed term recall
     And Maria states that it's not an emergency recall
     And Maria selects a custody status
+    And Maria states that the person is not under integrated offender management
     And Maria states there are victims in the victim contact scheme
     And Maria enters the date the VLO was informed
     And Maria enters any arrest issues

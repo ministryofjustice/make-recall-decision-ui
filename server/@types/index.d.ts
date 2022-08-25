@@ -147,6 +147,7 @@ export type PageTemplateName =
   | 'recallType'
   | 'emergencyRecall'
   | 'custodyStatus'
+  | 'integratedOffenderManagement'
   | 'victimContactScheme'
   | 'victimLiaisonOfficer'
   | 'arrestIssues'
