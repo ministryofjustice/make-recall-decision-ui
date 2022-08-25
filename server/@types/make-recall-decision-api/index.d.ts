@@ -3,8 +3,9 @@
 /* eslint-disable */
 
 export type { ActiveRecommendation } from './models/ActiveRecommendation';
+export type { AdditionalLicenceConditionOption } from './models/AdditionalLicenceConditionOption';
+export type { AdditionalLicenceConditions } from './models/AdditionalLicenceConditions';
 export type { AlternativesToRecallTried } from './models/AlternativesToRecallTried';
-export type { ArrestIssues } from './models/ArrestIssues';
 export type { CaseDocument } from './models/CaseDocument';
 export type { CaseDocumentType } from './models/CaseDocumentType';
 export type { CaseSummaryOverviewResponse } from './models/CaseSummaryOverviewResponse';
@@ -23,6 +24,7 @@ export type { JsonNode } from './models/JsonNode';
 export type { LastRecall } from './models/LastRecall';
 export type { LastRelease } from './models/LastRelease';
 export type { LicenceCondition } from './models/LicenceCondition';
+export type { LicenceConditionsBreached } from './models/LicenceConditionsBreached';
 export type { LicenceConditionsResponse } from './models/LicenceConditionsResponse';
 export type { LicenceConditionTypeMainCat } from './models/LicenceConditionTypeMainCat';
 export type { LicenceConditionTypeSubCat } from './models/LicenceConditionTypeSubCat';
@@ -53,9 +55,12 @@ export type { RiskResponse } from './models/RiskResponse';
 export type { RSR } from './models/RSR';
 export type { Scores } from './models/Scores';
 export type { SearchByCrnResponse } from './models/SearchByCrnResponse';
-export type { SelectedAlternative } from './models/SelectedAlternative';
+export type { SelectedWithDetails } from './models/SelectedWithDetails';
+export type { StandardLicenceConditions } from './models/StandardLicenceConditions';
 export type { TextValueOption } from './models/TextValueOption';
+export type { UnderIntegratedOffenderManagement } from './models/UnderIntegratedOffenderManagement';
 export type { UserAccessResponse } from './models/UserAccessResponse';
+export type { ValueWithDetails } from './models/ValueWithDetails';
 export { VictimsInContactScheme } from './models/VictimsInContactScheme';
 export type { WhenRiskHighest } from './models/WhenRiskHighest';
 export type { WhoIsAtRisk } from './models/WhoIsAtRisk';

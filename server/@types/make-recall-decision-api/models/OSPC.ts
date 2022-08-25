@@ -7,3 +7,4 @@ export type OSPC = {
     score?: string;
     type?: string;
 };
+

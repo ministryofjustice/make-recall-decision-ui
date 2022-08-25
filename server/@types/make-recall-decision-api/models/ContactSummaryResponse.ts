@@ -16,3 +16,4 @@ export type ContactSummaryResponse = {
     contactDocuments?: Array<CaseDocument>;
     description?: string;
 };
+

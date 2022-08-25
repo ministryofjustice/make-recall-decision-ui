@@ -7,3 +7,4 @@ export type OSPI = {
     score?: string;
     type?: string;
 };
+

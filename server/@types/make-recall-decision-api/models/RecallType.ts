@@ -9,3 +9,4 @@ export type RecallType = {
     selected?: RecallTypeSelectedValue;
     allOptions?: Array<TextValueOption>;
 };
+

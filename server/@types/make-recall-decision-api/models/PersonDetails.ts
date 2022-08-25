@@ -11,3 +11,4 @@ export type PersonDetails = {
     gender?: string;
     crn?: string;
 };
+

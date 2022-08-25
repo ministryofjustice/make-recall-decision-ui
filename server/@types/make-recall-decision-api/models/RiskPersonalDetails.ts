@@ -9,3 +9,4 @@ export type RiskPersonalDetails = {
     gender?: string;
     crn?: string;
 };
+

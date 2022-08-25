@@ -13,9 +13,14 @@ export const strings = {
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
     missingArrestIssuesDetail: 'You must enter details of the arrest issues',
+    noLicenceConditionsSelected: 'You must select one or more licence conditions',
+    excludedRestrictedCrn: 'This CRN is excluded or restricted',
+    hasMultipleActiveCustodial: 'This person has multiple active custodial convictions',
+    noActiveCustodial: 'This person has no active custodial convictions',
   },
   pageHeadings: {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
+    licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
     recallType: 'What do you recommend?',
@@ -29,6 +34,7 @@ export const strings = {
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
+    licenceConditions: 'What licence conditions has the person breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
     recallType: 'What do you recommend?',

@@ -6,3 +6,4 @@ export type ProbationTeam = {
     code?: string;
     label?: string;
 };
+

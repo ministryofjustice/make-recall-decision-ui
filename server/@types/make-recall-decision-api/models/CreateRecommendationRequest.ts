@@ -5,3 +5,4 @@
 export type CreateRecommendationRequest = {
     crn?: string;
 };
+

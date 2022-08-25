@@ -9,3 +9,4 @@ export type PredictorScores = {
     current?: Scores;
     historical?: Array<HistoricalScore>;
 };
+
