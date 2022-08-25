@@ -6,7 +6,7 @@ export const standardLicenceConditions = [
   },
   {
     id: 2,
-    value: 'OFFENCE',
+    value: 'NO_OFFENCE',
     text: 'not commit any offence',
   },
   {
@@ -16,22 +16,22 @@ export const standardLicenceConditions = [
   },
   {
     id: 4,
-    value: 'RECEIVE_VISITS',
+    value: 'SUPERVISING_OFFICER_VISIT',
     text: 'receive visits from the supervising officer in accordance with instructions given by the supervising officer',
   },
   {
     id: 5,
-    value: 'RESIDE_ADDRESS',
+    value: 'ADDRESS_APPROVED',
     text: 'reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
   },
   {
     id: 6,
-    value: 'APPROVED_WORK',
+    value: 'NO_WORK_UNDERTAKEN',
     text: 'not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
   },
   {
     id: 7,
-    value: 'APPROVED_TRAVEL',
+    value: 'NO_TRAVEL_OUTSIDE_UK',
     text: 'not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
   },
 ]
