@@ -15,8 +15,8 @@ context('Analytics', () => {
     cy.log('======= contact type filters')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ec: 'Appointments',
-        ea: 'contactHistoryFilterByType',
+        ea: 'Appointments',
+        ec: 'contactFilterType',
         el: 'Responsible Officer Change',
       },
       'contactTypeEvent'
@@ -29,8 +29,8 @@ context('Analytics', () => {
     cy.log('======= search term filter')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ec: 'offender manager',
-        ea: 'contactHistoryFilterByTerm',
+        ea: 'offender manager',
+        ec: 'contactFilterTerm',
       },
       'searchTermEvent'
     )
@@ -41,8 +41,8 @@ context('Analytics', () => {
     cy.log('======= form validation error')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ec: 'missingDateParts',
-        ea: 'form_error',
+        ec: 'formValidationError',
+        ea: 'missingDateParts',
         el: 'dateFrom',
       },
       'dateValidationEvent'
@@ -59,8 +59,8 @@ context('Analytics', () => {
     cy.clickLink('Clear filters')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ec: 'contactNotes',
-        ea: 'openDetails',
+        ec: 'contactViewDetail',
+        ea: '2022-04-21T11:30:00Z',
         el: 'Responsible Officer Change',
       },
       'openDetailsEvent'
@@ -70,15 +70,5 @@ context('Analytics', () => {
       'Comment added by Eliot Prufrock on 20/04/2022 at 11:35'
     )
     cy.wait('@openDetailsEvent')
-    cy.interceptGoogleAnalyticsEvent(
-      {
-        ec: 'contactNotes',
-        ea: 'closeDetails',
-        el: 'Responsible Officer Change',
-      },
-      'closeDetailsEvent'
-    )
-    cy.get(`[data-qa="contact-1"]`).contains('View more detail').click()
-    cy.wait('@closeDetailsEvent')
   })
 })

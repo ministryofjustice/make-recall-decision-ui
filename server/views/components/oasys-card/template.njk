@@ -13,7 +13,8 @@
   {{ govukDetails({
     summaryHtml: "View more detail<span class='govuk-visually-hidden'> on " + params.cardHeading + "</span>",
     html: contentHtml,
-    open: params.open
+    open: params.open,
+    attributes: params.attributes
   }) }}
   {% else %}
   <p class='govuk-body'>Not available</p>

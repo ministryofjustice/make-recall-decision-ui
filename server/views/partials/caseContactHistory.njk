@@ -61,9 +61,10 @@
                         html: notesHtml,
                         open: contact.searchTextMatch.notesMatched,
                         attributes: {
-                            'data-qa': 'detailsSummary',
-                            'data-analytics-category': 'contactNotes',
-                            'data-analytics-label': contact.descriptionType  if not contact.sensitive else 'Sensitive'
+                            'data-js': 'viewDetail',
+                            'data-analytics-action': contact.contactStartDate,
+                            'data-analytics-category': 'contactViewDetail',
+                            'data-analytics-label': 'Sensitive' if contact.sensitive else contact.descriptionType
                         }
                     }) }}
                     {% endif %}

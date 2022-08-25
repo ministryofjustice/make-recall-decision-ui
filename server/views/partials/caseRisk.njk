@@ -9,17 +9,32 @@
         {{ oasysCard({
             cardHeading: 'Details of the risk',
             oasysHeading: caseSummary.natureOfRisk.oasysHeading,
-            content: caseSummary.natureOfRisk.description
+            content: caseSummary.natureOfRisk.description,
+            attributes: {
+                'data-js': 'viewDetail',
+                'data-analytics-category': 'riskViewDetail',
+                'data-analytics-label': 'Details of the risk'
+            }
         }) }}
         {{ oasysCard({
             cardHeading: 'Who is at risk',
             oasysHeading: caseSummary.whoIsAtRisk.oasysHeading,
-            content: caseSummary.whoIsAtRisk.description
+            content: caseSummary.whoIsAtRisk.description,
+            attributes: {
+                'data-js': 'viewDetail',
+                'data-analytics-category': 'riskViewDetail',
+                'data-analytics-label': 'Who is at risk'
+            }
         }) }}
         {{ oasysCard({
             cardHeading: 'Circumstances that will increase the risk',
             oasysHeading: caseSummary.circumstancesIncreaseRisk.oasysHeading,
-            content: caseSummary.circumstancesIncreaseRisk.description
+            content: caseSummary.circumstancesIncreaseRisk.description,
+            attributes: {
+                'data-js': 'viewDetail',
+                'data-analytics-category': 'riskViewDetail',
+                'data-analytics-label': 'Circumstances that will increase the risk'
+            }
         }) }}
     </div>
 </div>
