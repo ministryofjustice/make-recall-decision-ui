@@ -110,6 +110,13 @@ When('Maria selects a custody status', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria states that the person is not under integrated offender management', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable')
+  )
+  cy.clickButton('Continue')
+})
+
 When('Maria states there are victims in the victim contact scheme', () => {
   cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
   cy.clickButton('Continue')
@@ -139,6 +146,10 @@ When('Maria downloads the Part A', () => {
     cy.log('Q8')
     expect(contents).to.contain('Are there any arrest issues of which police should be aware?  Yes')
     expect(contents).to.contain('Arrest issues details...')
+    cy.log('Q13')
+    expect(contents).to.contain(
+      'Registered PPO/IOM: N/A'
+    )
     cy.log('Q14')
     expect(contents).to.contain(
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
@@ -203,6 +214,10 @@ When('Maria updates the recommendation', () => {
   cy.clickButton('Continue')
   cy.get('@offenderName').then(offenderName =>
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
+  )
+  cy.clickButton('Continue')
+  cy.get('@offenderName').then(offenderName =>
+    cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable').should('be.checked')
   )
   cy.clickButton('Continue')
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')

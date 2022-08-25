@@ -4,7 +4,7 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateCustodyStatus = async ({
+export const validateIntegratedOffenderManagement = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -12,12 +12,15 @@ export const validateCustodyStatus = async ({
   let valuesToSave
   let nextPagePath
 
-  const { custodyStatus } = requestBody
-  if (!custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')) {
-    const errorId = 'noCustodyStatusSelected'
+  const { isUnderIntegratedOffenderManagement } = requestBody
+  if (
+    !isUnderIntegratedOffenderManagement ||
+    !isValueValid(isUnderIntegratedOffenderManagement as string, 'isUnderIntegratedOffenderManagement')
+  ) {
+    const errorId = 'noIntegratedOffenderManagementSelected'
     errors = [
       makeErrorObject({
-        id: 'custodyStatus',
+        id: 'isUnderIntegratedOffenderManagement',
         text: strings.errors[errorId],
         errorId,
       }),
@@ -25,12 +28,12 @@ export const validateCustodyStatus = async ({
   }
   if (!errors) {
     valuesToSave = {
-      custodyStatus: {
-        selected: custodyStatus,
-        allOptions: formOptions.custodyStatus,
+      isUnderIntegratedOffenderManagement: {
+        selected: isUnderIntegratedOffenderManagement,
+        allOptions: formOptions.isUnderIntegratedOffenderManagement,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/iom`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`
   }
   return {
     errors,

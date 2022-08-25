@@ -91,7 +91,24 @@
     "allOptions": [
       { "value": "YES", "text": "Yes" },
       { "value": "NO", "text": "No" },
-      { "value": "NOT_APPLICABLE", "text": "N/A" }
+      { "value": "NOT_APPLICABLE", "text": "Not applicable" }
+    ]
+  },
+  "isUnderIntegratedOffenderManagement": {
+    "selected": "YES",
+    "allOptions": [
+      {
+        "value": "YES",
+        "text": "Yes"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      },
+      {
+        "value": "NOT_APPLICABLE",
+        "text": "Not applicable"
+      }
     ]
   },
   "dateVloInformed": "2022-05-12",
