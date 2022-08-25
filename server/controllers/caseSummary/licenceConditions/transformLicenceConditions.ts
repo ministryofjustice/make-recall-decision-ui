@@ -2,10 +2,12 @@ import {
   ConvictionResponse,
   LicenceCondition,
   LicenceConditionsResponse,
+  UserAccessResponse,
 } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
 import { formOptions } from '../../recommendations/helpers/formOptions'
 import { sortList } from '../../../utils/lists'
+import { FormOption } from '../../../@types'
 
 const transformConviction = (conviction: ConvictionResponse) => {
   const licenceConditions = conviction.licenceConditions
@@ -21,7 +23,8 @@ const transformConviction = (conviction: ConvictionResponse) => {
   }
 }
 
-interface DecoratedConviction {
+export interface DecoratedConviction {
+  convictionId?: number
   active?: boolean
   isCustodial?: boolean
   licenceExpiryDate?: string
@@ -33,7 +36,19 @@ interface DecoratedConviction {
   licenceConditions?: LicenceCondition[]
 }
 
-export const transformLicenceConditions = (caseSummary: LicenceConditionsResponse) => {
+export interface TransformedLicenceConditionsResponse {
+  userAccessResponse?: UserAccessResponse
+  convictions?: {
+    active: DecoratedConviction[]
+    activeCustodial: DecoratedConviction[]
+    hasMultipleActiveCustodial: boolean
+  }
+  standardLicenceConditions?: FormOption[]
+}
+
+export const transformLicenceConditions = (
+  caseSummary: LicenceConditionsResponse
+): TransformedLicenceConditionsResponse => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
   if (caseSummary.convictions) {

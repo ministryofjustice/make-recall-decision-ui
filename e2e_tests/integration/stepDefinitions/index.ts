@@ -75,6 +75,15 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria selects the licence conditions that have been breached', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectCheckboxes(`What licence conditions has ${offenderName} breached?`, [
+      'receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+    ])
+  )
+  cy.clickButton('Continue')
+})
+
 When('Maria selects the alternatives to recall that have been tried', () => {
   cy.selectCheckboxes('What alternatives to recall have been tried already?', [
     'Increased frequency of reporting',
@@ -97,6 +106,13 @@ When("Maria states that it's not an emergency recall", () => {
 When('Maria selects a custody status', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody')
+  )
+  cy.clickButton('Continue')
+})
+
+When('Maria states that the person is not under integrated offender management', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable')
   )
   cy.clickButton('Continue')
 })
@@ -130,11 +146,16 @@ When('Maria downloads the Part A', () => {
     cy.log('Q8')
     expect(contents).to.contain('Are there any arrest issues of which police should be aware?  Yes')
     expect(contents).to.contain('Arrest issues details...')
+    cy.log('Q13')
+    expect(contents).to.contain(
+      'Registered PPO/IOM: N/A'
+    )
     cy.log('Q14')
     expect(contents).to.contain(
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
     )
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
+    // TODO - Q18 - additional licence conditions
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q21')
@@ -151,12 +172,26 @@ When('Maria updates the recommendation', () => {
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
+  // responded to probation
   cy.get('@offenderName').then(offenderName =>
     cy
       .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
       .should('equal', 'Re-offending has occurred')
   )
-  cy.clickButton('Continue') // responded to probation
+  cy.clickButton('Continue')
+
+  // licence conditions
+  cy.get('@offenderName').then(offenderName =>
+    cy
+      .getRadioOptionByLabel(
+        `What licence conditions has ${offenderName} breached?`,
+        'receive visits from the supervising officer in accordance with instructions given by the supervising officer'
+      )
+      .should('be.checked')
+  )
+  cy.clickButton('Continue')
+
+  // alternatives to recall
   cy.getRadioOptionByLabel(
     'What alternatives to recall have been tried already?',
     'Increased frequency of reporting'
@@ -170,7 +205,8 @@ When('Maria updates the recommendation', () => {
     'equal',
     'Details on drug testing'
   )
-  cy.clickButton('Continue') // alternatives to recall
+  cy.clickButton('Continue')
+
   cy.clickLink('Continue') // stop and think page
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
@@ -178,6 +214,10 @@ When('Maria updates the recommendation', () => {
   cy.clickButton('Continue')
   cy.get('@offenderName').then(offenderName =>
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
+  )
+  cy.clickButton('Continue')
+  cy.get('@offenderName').then(offenderName =>
+    cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable').should('be.checked')
   )
   cy.clickButton('Continue')
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')

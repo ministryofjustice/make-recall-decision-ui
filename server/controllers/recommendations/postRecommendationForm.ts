@@ -15,9 +15,10 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
     }
     const { validator } = pageMetaData(pageId)
     const { user } = res.locals
-    const { errors, valuesToSave, unsavedValues, nextPagePath } = validator({
+    const { errors, valuesToSave, unsavedValues, nextPagePath } = await validator({
       requestBody: req.body,
       recommendationId,
+      token: user.token,
     })
     if (errors) {
       req.session.errors = errors

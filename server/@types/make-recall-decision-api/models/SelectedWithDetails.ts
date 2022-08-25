@@ -2,7 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type SelectedAlternative = {
-    value?: string;
+export type SelectedWithDetails = {
+    selected?: boolean;
     details?: string;
 };
+

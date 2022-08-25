@@ -6,3 +6,4 @@ export type LicenceConditionTypeSubCat = {
     code: string;
     description: string;
 };
+

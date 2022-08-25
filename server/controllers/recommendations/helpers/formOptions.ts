@@ -6,6 +6,7 @@ import { standardLicenceConditions } from '../formOptions/licenceConditions'
 import { hasVictimsInContactScheme } from '../victimContactScheme/formOptions'
 import { alternativesToRecallTried } from '../alternativesToRecallTried/formOptions'
 import { hasArrestIssues } from '../arrestIssues/formOptions'
+import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
 
 export const formOptions = {
   recallType,
@@ -15,6 +16,7 @@ export const formOptions = {
   hasVictimsInContactScheme,
   alternativesToRecallTried,
   hasArrestIssues,
+  isUnderIntegratedOffenderManagement,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

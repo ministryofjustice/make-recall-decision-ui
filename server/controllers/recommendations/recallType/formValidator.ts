@@ -4,7 +4,7 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 
-export const validateRecallType = ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+export const validateRecallType = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const missingDetailFixedTerm = recallType === 'FIXED_TERM' && !recallTypeDetailsFixedTerm

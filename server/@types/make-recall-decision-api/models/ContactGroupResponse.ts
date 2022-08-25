@@ -7,3 +7,4 @@ export type ContactGroupResponse = {
     label: string;
     contactTypeCodes: Array<string>;
 };
+

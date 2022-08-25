@@ -48,14 +48,15 @@ export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
 export interface FormValidatorArgs {
   requestBody: ObjectMap<string | string[]>
   recommendationId: string
+  token?: string
 }
 
-export interface FormValidatorReturn {
+export type FormValidatorReturn = Promise<{
   errors?: NamedFormError[]
   valuesToSave?: ObjectMap<unknown>
   unsavedValues?: ObjectMap<unknown>
   nextPagePath?: string
-}
+}>
 
 export interface InputDisplayValuesArgs {
   errors: ObjectMap<FormError>
@@ -140,11 +141,13 @@ export interface ContactHistoryFilters {
 
 export type PageTemplateName =
   | 'responseToProbation'
+  | 'licenceConditions'
   | 'alternativesToRecallTried'
   | 'stopThink'
   | 'recallType'
   | 'emergencyRecall'
   | 'custodyStatus'
+  | 'integratedOffenderManagement'
   | 'victimContactScheme'
   | 'victimLiaisonOfficer'
   | 'arrestIssues'

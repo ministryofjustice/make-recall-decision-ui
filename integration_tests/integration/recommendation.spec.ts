@@ -1,6 +1,7 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
+import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 
 context('Make a recommendation', () => {
   beforeEach(() => {
@@ -33,6 +34,7 @@ context('Make a recommendation', () => {
     cy.task('createRecommendation', { statusCode: 201, response: recommendationResponse })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickButton('Make a recommendation')
 
@@ -44,6 +46,18 @@ context('Make a recommendation', () => {
       errorText: 'You must explain how Paula Smith has responded to probation',
     })
     cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
+    cy.clickButton('Continue')
+
+    cy.log('===== Licence conditions')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'licenceConditionsBreached',
+      errorText: 'You must select one or more licence conditions',
+    })
+    cy.selectCheckboxes('What licence conditions has Paula Smith breached?', [
+      'not commit any offence',
+      'Supervision in the community',
+    ])
     cy.clickButton('Continue')
 
     cy.log('===== Alternatives to recall tried')
@@ -97,6 +111,15 @@ context('Make a recommendation', () => {
 
     cy.log('===== Custody status')
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
+    cy.clickButton('Continue')
+
+    cy.log('===== IOM')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'isUnderIntegratedOffenderManagement',
+      errorText: 'You must select whether Paula Smith is under Integrated Offender Management',
+    })
+    cy.selectRadio('Is Paula Smith under Integrated Offender Management (IOM)?', 'Not applicable')
     cy.clickButton('Continue')
 
     cy.log('===== Victim contact scheme')

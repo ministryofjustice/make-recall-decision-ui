@@ -17,3 +17,4 @@ export type ContactHistoryResponse = {
     releaseSummary?: ReleaseSummaryResponse;
     activeRecommendation?: ActiveRecommendation;
 };
+

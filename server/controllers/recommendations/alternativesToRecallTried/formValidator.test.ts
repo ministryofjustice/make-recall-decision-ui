@@ -4,14 +4,14 @@ import { cleanseUiList } from '../../../utils/lists'
 
 describe('validateAlternativesTried', () => {
   const recommendationId = '34'
-  it('returns valuesToSave and no errors if valid', () => {
+  it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       crn: 'X514364',
       alternativesToRecallTried: ['EXTRA_LICENCE_CONDITIONS', 'REFERRAL_TO_PARTNERSHIP_AGENCIES'],
       'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': 'Info..',
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details for..',
     }
-    const { errors, valuesToSave, nextPagePath } = validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateAlternativesTried({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {
@@ -31,11 +31,11 @@ describe('validateAlternativesTried', () => {
     expect(nextPagePath).toEqual('/recommendations/34/stop-think')
   })
 
-  it('returns an error, if no checkbox is selected, and no valuesToSave', () => {
+  it('returns an error, if no checkbox is selected, and no valuesToSave', async () => {
     const requestBody = {
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -47,7 +47,7 @@ describe('validateAlternativesTried', () => {
     ])
   })
 
-  it('returns an error, if a selected checkbox is missing details, and no valuesToSave', () => {
+  it('returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
     const requestBody = {
       _csrf: 'vbnnvrf3-byah2Sg8rc4Sx68ypC8JxJtrync',
       crn: 'X514364',
@@ -55,7 +55,7 @@ describe('validateAlternativesTried', () => {
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details',
       'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
     }
-    const { errors, unsavedValues, valuesToSave } = validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, unsavedValues, valuesToSave } = await validateAlternativesTried({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(unsavedValues).toEqual({
       alternativesToRecallTried: [
@@ -79,12 +79,12 @@ describe('validateAlternativesTried', () => {
     ])
   })
 
-  it('allows None to be selected without details required', () => {
+  it('allows None to be selected without details required', async () => {
     const requestBody = {
       crn: 'X514364',
       alternativesToRecallTried: ['NONE'],
     }
-    const { errors, valuesToSave } = validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {

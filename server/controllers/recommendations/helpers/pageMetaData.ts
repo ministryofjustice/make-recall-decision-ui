@@ -17,6 +17,10 @@ import { validateAlternativesTried } from '../alternativesToRecallTried/formVali
 import { inputDisplayValuesAlternativesToRecallTried } from '../alternativesToRecallTried/inputDisplayValues'
 import { validateArrestIssues } from '../arrestIssues/formValidator'
 import { inputDisplayValuesArrestIssues } from '../arrestIssues/inputDisplayValues'
+import { validateLicenceConditionsBreached } from '../licenceConditions/formValidator'
+import { inputDisplayValuesLicenceConditions } from '../licenceConditions/inputDisplayValues'
+import { validateIntegratedOffenderManagement } from '../integratedOffenderManagement/formValidator'
+import { inputDisplayValuesIntegratedOffenderManagement } from '../integratedOffenderManagement/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -27,6 +31,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesResponseToProbation,
         pageHeading: strings.pageHeadings.responseToProbation,
         pageTitle: strings.pageTitles.responseToProbation,
+      }
+    case 'licence-conditions':
+      return {
+        templateName: 'licenceConditions',
+        validator: validateLicenceConditionsBreached,
+        inputDisplayValues: inputDisplayValuesLicenceConditions,
+        pageHeading: strings.pageHeadings.licenceConditions,
+        pageTitle: strings.pageTitles.licenceConditions,
       }
     case 'alternatives-tried':
       return {
@@ -65,6 +77,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesCustodyStatus,
         pageHeading: strings.pageHeadings.custodyStatus,
         pageTitle: strings.pageTitles.custodyStatus,
+      }
+    case 'iom':
+      return {
+        templateName: 'integratedOffenderManagement',
+        validator: validateIntegratedOffenderManagement,
+        inputDisplayValues: inputDisplayValuesIntegratedOffenderManagement,
+        pageHeading: strings.pageHeadings.integratedOffenderManagement,
+        pageTitle: strings.pageTitles.integratedOffenderManagement,
       }
     case 'victim-contact-scheme':
       return {

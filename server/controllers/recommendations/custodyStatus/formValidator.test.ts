@@ -2,12 +2,12 @@ import { validateCustodyStatus } from './formValidator'
 
 describe('validateCustodyStatus', () => {
   const recommendationId = '34'
-  it('returns valuesToSave and no errors if valid', () => {
+  it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       custodyStatus: 'YES_POLICE',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = validateCustodyStatus({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       custodyStatus: {
@@ -19,15 +19,15 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_POLICE',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/victim-contact-scheme')
+    expect(nextPagePath).toEqual('/recommendations/34/iom')
   })
 
-  it('returns an error, if not set, and no valuesToSave', () => {
+  it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       custodyStatus: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateCustodyStatus({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -39,12 +39,12 @@ describe('validateCustodyStatus', () => {
     ])
   })
 
-  it('returns an error, if set to an invalid value, and no valuesToSave', () => {
+  it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
       custodyStatus: 'BANANA',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = validateCustodyStatus({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {

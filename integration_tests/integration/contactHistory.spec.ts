@@ -89,9 +89,9 @@ context('Contact history', () => {
 
     cy.log('Documents sorted by last modified date (newest first)')
     cy.getListLabels('contact-document-label', { parent: '[data-qa="contact-2"]' }).should('deep.equal', [
-      'my.doc',
-      'v1-1',
-      'v1',
+      'my.doc.docx',
+      'v1-1.pdf',
+      'v1.txt',
     ])
 
     cy.log('Download a PDF')
@@ -102,7 +102,7 @@ context('Contact history', () => {
         fileName: pdfFileName,
         contentType: 'application/pdf',
       })
-      cy.downloadPdf('v1-1').should('contain', 'This is a test PDF document')
+      cy.downloadPdf('v1-1.pdf').should('contain', 'This is a test PDF document')
     })
 
     cy.log('Download a .docx')
@@ -113,7 +113,7 @@ context('Contact history', () => {
         fileName: docFileName,
         contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       })
-      cy.downloadDocX('my.doc').should('contain', 'Lorem ipsum')
+      cy.downloadDocX('my.doc.docx').should('contain', 'Lorem ipsum')
     })
   })
 

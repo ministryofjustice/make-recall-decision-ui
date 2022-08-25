@@ -17,3 +17,4 @@ export type CaseSummaryOverviewResponse = {
     risk?: Risk;
     activeRecommendation?: ActiveRecommendation;
 };
+

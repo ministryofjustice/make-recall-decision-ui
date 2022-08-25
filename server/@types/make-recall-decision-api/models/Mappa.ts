@@ -7,3 +7,4 @@ export type Mappa = {
     isNominal?: boolean;
     lastUpdated?: string;
 };
+
