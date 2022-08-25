@@ -4,14 +4,20 @@ $('body').on('click', evt => {
     const classList = evt.target.classList
     // open / close view details
     if (classList.contains('govuk-details__summary') || classList.contains('govuk-details__summary-text')) {
-      const $component = $(evt.target).closest('[data-qa="detailsSummary"]')
-      const category = $component.attr('data-analytics-category')
-      const label = $component.attr('data-analytics-label')
-      const event = $component.attr('open') ? 'closeDetails' : 'openDetails'
-      gtag('event', event, {
-        event_category: category,
-        event_label: label,
-      })
+      const $viewDetail = $(evt.target).closest('[data-js="viewDetail"]')
+      if ($viewDetail.length) {
+        let action = $viewDetail.attr('data-analytics-action')
+        if (action && $viewDetail.attr('open')){
+          return
+        }
+        action = action || ($viewDetail.attr('open') ? 'closeDetails' : 'openDetails')
+        const category = $viewDetail.attr('data-analytics-category')
+        const label = $viewDetail.attr('data-analytics-label')
+        gtag('event', action, {
+          event_category: category,
+          event_label: label,
+        })
+      }
     }
   } catch (err) {
     console.error(err)
@@ -23,15 +29,15 @@ $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
   try {
     const $form = $(evt.target)
     $form.find('[name="contactTypes"]:checked').each((idx, el) => {
-      gtag('event', 'contactHistoryFilterByType', {
-        event_category: el.dataset.group,
+      gtag('event', el.dataset.group, {
+        event_category: 'contactFilterType',
         event_label: el.dataset.type,
       })
     })
     const searchTerm = $form.find('[name="searchFilters"]').val()
     if (searchTerm) {
-      gtag('event', 'contactHistoryFilterByTerm', {
-        event_category: searchTerm,
+      gtag('event', searchTerm, {
+        event_category: 'contactFilterTerm',
       })
     }
   } catch (err) {
