@@ -8,8 +8,8 @@
     }) }}
     <script nonce='{{ cspNonce }}'>
         {% for error in errors.list %}
-        gtag('event', '{{ error.errorId }}', {
-          'event_category': 'formValidationError',
+        gtag('event', 'formValidationError', {
+          'event_category': '{{ error.errorId }}',
           'event_label': '{{ error.name }}',
           'non_interaction': true
           });

@@ -6,16 +6,9 @@ $('body').on('click', evt => {
     if (classList.contains('govuk-details__summary') || classList.contains('govuk-details__summary-text')) {
       const $viewDetail = $(evt.target).closest('[data-js="viewDetail"]')
       if ($viewDetail.length) {
-        let action = $viewDetail.attr('data-analytics-action')
-        if (action && $viewDetail.attr('open')){
-          return
-        }
-        action = action || ($viewDetail.attr('open') ? 'closeDetails' : 'openDetails')
-        const category = $viewDetail.attr('data-analytics-category')
         const label = $viewDetail.attr('data-analytics-label')
-        gtag('event', action, {
-          event_category: category,
-          event_label: label,
+        gtag('event', 'select_content', {
+          content_type: label,
         })
       }
     }
@@ -29,15 +22,20 @@ $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
   try {
     const $form = $(evt.target)
     $form.find('[name="contactTypes"]:checked').each((idx, el) => {
-      gtag('event', el.dataset.group, {
-        event_category: 'contactFilterType',
-        event_label: el.dataset.type,
-      })
+      gtag("event", "select_item", {
+        item_list_name: 'contactFilterTypes',
+        items: [
+          {
+            item_name: el.dataset.type,
+            item_category: el.dataset.group,
+          }
+        ]
+      });
     })
     const searchTerm = $form.find('[name="searchFilters"]').val()
     if (searchTerm) {
-      gtag('event', searchTerm, {
-        event_category: 'contactFilterTerm',
+      gtag('event', 'search', {
+        search_term: searchTerm,
       })
     }
   } catch (err) {

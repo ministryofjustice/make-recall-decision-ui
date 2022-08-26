@@ -20,16 +20,6 @@
                     </div>
                 {% endset %}
                 {% set actionsHtml %}
-                    {% if flags.flagRecommendationPrototype and isSelectContactsPage %}
-                    {{ selectComponent({
-                        itemId: contact.id,
-                        itemText: contact.descriptionType,
-                        added: contact.added,
-                        componentType: 'contacts',
-                        crn: caseSummary.personalDetailsOverview.crn,
-                        csrfToken: csrfToken
-                    }) }}
-                    {% endif %}
                     {% if contact.outcome or contact.enforcementAction %}
                         <div>
                             {% if contact.outcome %}

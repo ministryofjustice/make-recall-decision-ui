@@ -15,9 +15,9 @@ context('Analytics', () => {
     cy.log('======= contact type filters')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ea: 'Appointments',
-        ec: 'contactFilterType',
-        el: 'Responsible Officer Change',
+        pal: 'contactFilterTypes',
+        pr1ca: 'Appointments',
+        pr1nm: 'Responsible Officer Change',
       },
       'contactTypeEvent'
     )
@@ -29,8 +29,8 @@ context('Analytics', () => {
     cy.log('======= search term filter')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ea: 'offender manager',
-        ec: 'contactFilterTerm',
+        ea: 'search',
+        el: 'offender manager',
       },
       'searchTermEvent'
     )
@@ -41,8 +41,8 @@ context('Analytics', () => {
     cy.log('======= form validation error')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ec: 'formValidationError',
-        ea: 'missingDateParts',
+        ea: 'formValidationError',
+        ec: 'missingDateParts',
         el: 'dateFrom',
       },
       'dateValidationEvent'
@@ -59,8 +59,7 @@ context('Analytics', () => {
     cy.clickLink('Clear filters')
     cy.interceptGoogleAnalyticsEvent(
       {
-        ec: 'contactViewDetail',
-        ea: '2022-04-21T11:30:00Z',
+        ea: 'select_content',
         el: 'Responsible Officer Change',
       },
       'openDetailsEvent'
