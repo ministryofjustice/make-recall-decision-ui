@@ -119,9 +119,9 @@ When('Maria states that the person is not under integrated offender management',
 
 When('Maria completes local police contact details', () => {
   cy.fillInput('Police contact name', 'Bob Wiggins')
-  cy.fillInput('Phone number', '07936 737 387')
-  cy.fillInput('Fax number', '0208 737 3838')
-  cy.fillInput('Email address', 'bob.wiggins@met.gov.uk')
+  cy.fillInput('Phone number (optional)', '07936 737 387')
+  cy.fillInput('Fax number (optional)', '0208 737 3838')
+  cy.fillInput('Email address (optional)', 'bob.wiggins@met.gov.uk')
   cy.clickButton('Continue')
 })
 
@@ -236,9 +236,9 @@ When('Maria updates the recommendation', () => {
   cy.clickButton('Continue')
 
   cy.getTextInputValue('Police contact name').should('equal', 'Bob Wiggins')
-  cy.getTextInputValue('Phone number').should('equal', '07936 737 387')
-  cy.getTextInputValue('Fax number').should('equal', '0208 737 3838')
-  cy.getTextInputValue('Email address').should('equal', 'bob.wiggins@met.gov.uk')
+  cy.getTextInputValue('Phone number (optional)').should('equal', '07936 737 387')
+  cy.getTextInputValue('Fax number (optional)').should('equal', '0208 737 3838')
+  cy.getTextInputValue('Email address (optional)').should('equal', 'bob.wiggins@met.gov.uk')
   cy.clickButton('Continue')
 
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')

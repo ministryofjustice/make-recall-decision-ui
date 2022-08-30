@@ -124,18 +124,17 @@ context('Make a recommendation', () => {
 
     cy.log('===== Police contact details')
     cy.fillInput('Police contact name', 'Bob Wiggins')
-    cy.fillInput('Phone number', '07936 737 387')
+    cy.fillInput('Email address (optional)', '111')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'faxNumber',
-      errorText: 'Enter a fax number',
+      fieldName: 'contactName',
+      errorText: 'Enter a police contact name',
     })
     cy.assertErrorMessage({
       fieldName: 'emailAddress',
-      errorText: 'Enter an email address',
+      errorText: 'Enter an email address in the correct format, like name@example.com',
     })
-    cy.fillInput('Fax number', '0208 737 3838')
-    cy.fillInput('Email address', 'bob.wiggins@met.gov.uk')
+    cy.fillInput('Email address (optional)', 'bob.wiggins@met.gov.uk')
     cy.clickButton('Continue')
 
     cy.log('===== Victim contact scheme')

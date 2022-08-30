@@ -11,30 +11,21 @@ export const validateLocalPoliceContactDetails = async ({
   let errors
 
   const { contactName, phoneNumber, faxNumber, emailAddress } = requestBody
-  const emailValid = isEmailValid(emailAddress as string)
-  const phoneValid = isPhoneValid(phoneNumber as string)
-  const faxValid = isPhoneValid(faxNumber as string)
-  if (!contactName || !emailAddress || !emailValid || !phoneNumber || !phoneValid || !faxNumber) {
+  const invalidEmail = emailAddress && !isEmailValid(emailAddress as string)
+  const invalidPhone = phoneNumber && !isPhoneValid(phoneNumber as string)
+  const invalidFax = faxNumber && !isPhoneValid(faxNumber as string)
+  if (!contactName || invalidPhone || invalidFax || invalidEmail) {
     errors = []
     if (!contactName) {
       errors.push({ id: 'contactName', errorId: 'noLocalPoliceName' })
     }
-    if (!phoneNumber) {
-      errors.push({ id: 'phoneNumber', errorId: 'noLocalPolicePhone' })
-    }
-    if (phoneNumber && !phoneValid) {
+    if (invalidPhone) {
       errors.push({ id: 'phoneNumber', errorId: 'invalidLocalPolicePhone' })
     }
-    if (!faxNumber) {
-      errors.push({ id: 'faxNumber', errorId: 'noLocalPoliceFax' })
-    }
-    if (faxNumber && !faxValid) {
+    if (invalidFax) {
       errors.push({ id: 'faxNumber', errorId: 'invalidLocalPoliceFax' })
     }
-    if (!emailAddress) {
-      errors.push({ id: 'emailAddress', errorId: 'noLocalPoliceEmail' })
-    }
-    if (emailAddress && !emailValid) {
+    if (invalidEmail) {
       errors.push({ id: 'emailAddress', errorId: 'invalidLocalPoliceEmail' })
     }
     errors = errors.map(({ id, errorId }) =>
