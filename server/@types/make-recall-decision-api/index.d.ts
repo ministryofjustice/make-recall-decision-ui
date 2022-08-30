@@ -28,6 +28,7 @@ export type { LicenceConditionsBreached } from './models/LicenceConditionsBreach
 export type { LicenceConditionsResponse } from './models/LicenceConditionsResponse';
 export type { LicenceConditionTypeMainCat } from './models/LicenceConditionTypeMainCat';
 export type { LicenceConditionTypeSubCat } from './models/LicenceConditionTypeSubCat';
+export type { LocalPoliceContact } from './models/LocalPoliceContact';
 export type { Mappa } from './models/Mappa';
 export type { NatureOfRisk } from './models/NatureOfRisk';
 export type { OasysHeading } from './models/OasysHeading';

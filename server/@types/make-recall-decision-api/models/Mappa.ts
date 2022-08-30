@@ -6,5 +6,6 @@ export type Mappa = {
     level?: string;
     isNominal?: boolean;
     lastUpdated?: string;
+    category?: number;
 };
 

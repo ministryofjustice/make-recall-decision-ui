@@ -25,7 +25,7 @@ context('Make a recommendation', () => {
     },
   }
 
-  it('can create a recommendation', () => {
+  it.only('can create a recommendation', () => {
     const caseResponse = {
       ...getCaseOverviewResponse,
       activeRecommendation: undefined,
@@ -120,6 +120,22 @@ context('Make a recommendation', () => {
       errorText: 'You must select whether Paula Smith is under Integrated Offender Management',
     })
     cy.selectRadio('Is Paula Smith under Integrated Offender Management (IOM)?', 'Not applicable')
+    cy.clickButton('Continue')
+
+    cy.log('===== Police contact details')
+    cy.fillInput('Police contact name', 'Bob Wiggins')
+    cy.fillInput('Phone number', '07936 737 387')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'faxNumber',
+      errorText: 'Enter a fax number',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'emailAddress',
+      errorText: 'Enter an email address',
+    })
+    cy.fillInput('Fax number', '0208 737 3838')
+    cy.fillInput('Email address', 'bob.wiggins@met.gov.uk')
     cy.clickButton('Continue')
 
     cy.log('===== Victim contact scheme')

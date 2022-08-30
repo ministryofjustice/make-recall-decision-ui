@@ -117,6 +117,14 @@ When('Maria states that the person is not under integrated offender management',
   cy.clickButton('Continue')
 })
 
+When('Maria completes local police contact details', () => {
+  cy.fillInput('Police contact name', 'Bob Wiggins')
+  cy.fillInput('Phone number', '07936 737 387')
+  cy.fillInput('Fax number', '0208 737 3838')
+  cy.fillInput('Email address', 'bob.wiggins@met.gov.uk')
+  cy.clickButton('Continue')
+})
+
 When('Maria states there are victims in the victim contact scheme', () => {
   cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
   cy.clickButton('Continue')
@@ -146,6 +154,12 @@ When('Maria downloads the Part A', () => {
     cy.log('Q8')
     expect(contents).to.contain('Are there any arrest issues of which police should be aware?  Yes')
     expect(contents).to.contain('Arrest issues details...')
+    cy.log('Q9')
+    expect(contents).to.contain('Police single point of contact name: Bob Wiggins')
+    expect(contents).to.contain('Current contact telephone number: 07936 737 387')
+    expect(contents).to.contain('Fax number: 0208 737 3838')
+    expect(contents).to.contain('Email address: bob.wiggins@met.gov.uk')
+
     cy.log('Q13')
     expect(contents).to.contain(
       'Registered PPO/IOM: N/A'
@@ -220,6 +234,12 @@ When('Maria updates the recommendation', () => {
     cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable').should('be.checked')
   )
   cy.clickButton('Continue')
+
+  cy.getTextInputValue('Police contact name').should('equal', 'Bob Wiggins')
+  cy.getTextInputValue('Phone number').should('equal', '07936 737 387')
+  cy.getTextInputValue('Fax number').should('equal', '0208 737 3838')
+  cy.getTextInputValue('Email address').should('equal', 'bob.wiggins@met.gov.uk')
+
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
   cy.getTextInputValue('Day').should('equal', '14')

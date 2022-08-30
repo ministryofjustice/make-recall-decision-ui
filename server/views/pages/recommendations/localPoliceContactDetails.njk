@@ -1,0 +1,71 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/iom'
+        }) }}</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Custody</div>
+                <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+                {{ govukInput({
+                    label: {
+                        text: "Police contact name"
+                    },
+                    id: "contactName",
+                    name: "contactName",
+                    classes: "govuk-input--width-20",
+                    value: inputDisplayValues.contactName,
+                    errorMessage: errorMessage(errors.contactName)
+                }) }}
+                {{ govukInput({
+                    label: {
+                        text: "Phone number"
+                    },
+                    id: "phoneNumber",
+                    name: "phoneNumber",
+                    type: 'tel',
+                    classes: "govuk-input--width-20",
+                    value: inputDisplayValues.phoneNumber,
+                    errorMessage: errorMessage(errors.phoneNumber)
+                }) }}
+                {{ govukInput({
+                    label: {
+                        text: "Fax number"
+                    },
+                    id: "faxNumber",
+                    name: "faxNumber",
+                    type: 'tel',
+                    classes: "govuk-input--width-20",
+                    value: inputDisplayValues.faxNumber,
+                    errorMessage: errorMessage(errors.faxNumber)
+                }) }}
+                {{ govukInput({
+                    label: {
+                        text: "Email address"
+                    },
+                    id: "emailAddress",
+                    name: "emailAddress",
+                    type: 'email',
+                    classes: "govuk-input--width-20",
+                    value: inputDisplayValues.emailAddress,
+                    errorMessage: errorMessage(errors.emailAddress)
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

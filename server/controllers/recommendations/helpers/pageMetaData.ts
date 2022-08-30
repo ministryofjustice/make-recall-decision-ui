@@ -21,6 +21,8 @@ import { validateLicenceConditionsBreached } from '../licenceConditions/formVali
 import { inputDisplayValuesLicenceConditions } from '../licenceConditions/inputDisplayValues'
 import { validateIntegratedOffenderManagement } from '../integratedOffenderManagement/formValidator'
 import { inputDisplayValuesIntegratedOffenderManagement } from '../integratedOffenderManagement/inputDisplayValues'
+import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/formValidator'
+import { inputDisplayValuesLocalPoliceContactDetails } from '../localPoliceContactDetails/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -85,6 +87,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesIntegratedOffenderManagement,
         pageHeading: strings.pageHeadings.integratedOffenderManagement,
         pageTitle: strings.pageTitles.integratedOffenderManagement,
+      }
+    case 'police-details':
+      return {
+        templateName: 'localPoliceContactDetails',
+        validator: validateLocalPoliceContactDetails,
+        inputDisplayValues: inputDisplayValuesLocalPoliceContactDetails,
+        pageHeading: strings.pageHeadings.localPoliceContactDetails,
+        pageTitle: strings.pageTitles.localPoliceContactDetails,
       }
     case 'victim-contact-scheme':
       return {
