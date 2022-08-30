@@ -78,7 +78,7 @@ When('Maria explains how the person has responded to probation so far', () => {
 When('Maria selects the licence conditions that have been breached', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectCheckboxes(`What licence conditions has ${offenderName} breached?`, [
-      'receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+      'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
     ])
   )
   cy.clickButton('Continue')
@@ -185,7 +185,7 @@ When('Maria updates the recommendation', () => {
     cy
       .getRadioOptionByLabel(
         `What licence conditions has ${offenderName} breached?`,
-        'receive visits from the supervising officer in accordance with instructions given by the supervising officer'
+        'Receive visits from the supervising officer in accordance with instructions given by the supervising officer'
       )
       .should('be.checked')
   )
