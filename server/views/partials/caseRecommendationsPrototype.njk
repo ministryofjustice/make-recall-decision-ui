@@ -16,13 +16,13 @@
             {% for recommendation in caseSummary.recommendations %}
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    {{ formatDateTimeFromIsoString({isoDate: recommendation.createdDate})}}
+                    {{ formatDateTimeFromIsoString({isoDate: recommendation.createdDate, dateOnly: true})}}
                 </td>
                 <td class="govuk-table__cell">
-                    {{ formatDateTimeFromIsoString({isoDate: recommendation.lastModifiedDate})}}
+                    {{ formatDateTimeFromIsoString({isoDate: recommendation.lastModifiedDate, dateOnly: true})}}
                 </td>
                 <td class="govuk-table__cell">
-                    {{ formatDateTimeFromIsoString({isoDate: recommendation.documentCreatedDate}) if recommendation.documentCreatedDate else '-'}}
+                    {{ formatDateTimeFromIsoString({isoDate: recommendation.documentCreatedDate, dateOnly: true}) if recommendation.documentCreatedDate else '-'}}
                 </td>
                 <td class="govuk-table__cell">
                     <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/no-recall-summary?partClearNoRecall=1' class='govuk-link'>{{ recommendation.action }}</a>
