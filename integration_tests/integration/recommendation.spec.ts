@@ -123,17 +123,17 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Police contact details')
-    cy.fillInput('Police contact name', 'Bob Wiggins')
     cy.fillInput('Email address (optional)', '111')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'contactName',
-      errorText: 'Enter a police contact name',
+      errorText: 'Enter the police contact name',
     })
     cy.assertErrorMessage({
       fieldName: 'emailAddress',
       errorText: 'Enter an email address in the correct format, like name@example.com',
     })
+    cy.fillInput('Police contact name', 'Bob Wiggins')
     cy.fillInput('Email address (optional)', 'bob.wiggins@met.gov.uk')
     cy.clickButton('Continue')
 

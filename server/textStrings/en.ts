@@ -19,7 +19,7 @@ export const strings = {
     excludedRestrictedCrn: 'This CRN is excluded or restricted',
     hasMultipleActiveCustodial: 'This person has multiple active custodial convictions',
     noActiveCustodial: 'This person has no active custodial convictions',
-    noLocalPoliceName: 'Enter a police contact name',
+    noLocalPoliceName: 'Enter the police contact name',
     invalidLocalPoliceEmail: 'Enter an email address in the correct format, like name@example.com',
     invalidLocalPolicePhone: 'Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
     invalidLocalPoliceFax: 'Enter a fax number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',

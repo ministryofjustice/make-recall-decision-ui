@@ -29,7 +29,7 @@ describe('validateLocalPoliceContactDetails', () => {
         errorId: 'noLocalPoliceName',
         href: '#contactName',
         name: 'contactName',
-        text: 'Enter a police contact name',
+        text: 'Enter the police contact name',
       },
     ])
   })
