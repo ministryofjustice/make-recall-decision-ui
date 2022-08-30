@@ -55,7 +55,7 @@ context('Make a recommendation', () => {
       errorText: 'You must select one or more licence conditions',
     })
     cy.selectCheckboxes('What licence conditions has Paula Smith breached?', [
-      'not commit any offence',
+      'Not commit any offence',
       'Supervision in the community',
     ])
     cy.clickButton('Continue')
