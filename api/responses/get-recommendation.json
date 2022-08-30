@@ -8,17 +8,35 @@
       "details": "Details..."
     },
     "allOptions": [
-      { "value": "FIXED_TERM", "text": "Fixed term recall" },
-      { "value": "STANDARD", "text": "Standard recall" },
-      { "value": "NO_RECALL", "text": "No recall" }
+      {
+        "value": "FIXED_TERM",
+        "text": "Fixed term recall"
+      },
+      {
+        "value": "STANDARD",
+        "text": "Standard recall"
+      },
+      {
+        "value": "NO_RECALL",
+        "text": "No recall"
+      }
     ]
   },
   "custodyStatus": {
     "selected": "YES_PRISON",
     "allOptions": [
-      { "value": "YES_PRISON", "text": "Yes, prison custody" },
-      { "value": "YES_POLICE", "text": "Yes, police custody" },
-      { "value": "NO", "text": "No" }
+      {
+        "value": "YES_PRISON",
+        "text": "Yes, prison custody"
+      },
+      {
+        "value": "YES_POLICE",
+        "text": "Yes, police custody"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      }
     ]
   },
   "responseToProbation": "Missed appointments\nRe-offending ",
@@ -86,14 +104,6 @@
     "firstName": "Paula",
     "surname": "Smith"
   },
-  "hasVictimsInContactScheme": {
-    "selected": "YES",
-    "allOptions": [
-      { "value": "YES", "text": "Yes" },
-      { "value": "NO", "text": "No" },
-      { "value": "NOT_APPLICABLE", "text": "Not applicable" }
-    ]
-  },
   "isUnderIntegratedOffenderManagement": {
     "selected": "YES",
     "allOptions": [
@@ -111,33 +121,58 @@
       }
     ]
   },
+  "localPoliceContact": {
+    "contactName": "Thomas Magnum",
+    "phoneNumber": "07337838282",
+    "faxNumber": "02075289289",
+    "emailAddress": "thomas.magnum@gmail.com"
+  },
+  "hasVictimsInContactScheme": {
+    "selected": "YES",
+    "allOptions": [
+      {
+        "value": "YES",
+        "text": "Yes"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      },
+      {
+        "value": "NOT_APPLICABLE",
+        "text": "Not applicable"
+      }
+    ]
+  },
   "dateVloInformed": "2022-05-12",
-  "licenceConditionsBreached":{
-    "standardLicenceConditions":{
-      "selected":[
+  "licenceConditionsBreached": {
+    "standardLicenceConditions": {
+      "selected": [
         "GOOD_BEHAVIOUR",
         "NO_OFFENCE"
       ],
-      "allOptions":[
+      "allOptions": [
         {
-          "value":"GOOD_BEHAVIOUR",
-          "text":"Be of good behaviour"
+          "value": "GOOD_BEHAVIOUR",
+          "text": "Be of good behaviour"
         },
         {
-          "value":"NO_OFFENCE",
-          "text":"Not to commit any offence"
+          "value": "NO_OFFENCE",
+          "text": "Not to commit any offence"
         }
       ]
     },
     "additionalLicenceConditions": {
-      "selected": ["NST14"],
-      "allOptions":[
+      "selected": [
+        "NST14"
+      ],
+      "allOptions": [
         {
           "mainCatCode": "NLC5",
           "subCatCode": "NST14",
-          "title":"Disclosure of information",
-          "details":"Notify your supervising officer of any intimate relationships",
-          "note":"Persons wife is Joan Smyth"
+          "title": "Disclosure of information",
+          "details": "Notify your supervising officer of any intimate relationships",
+          "note": "Persons wife is Joan Smyth"
         }
       ]
     }

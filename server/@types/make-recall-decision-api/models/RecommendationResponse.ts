@@ -5,6 +5,7 @@
 import type { AlternativesToRecallTried } from './AlternativesToRecallTried';
 import type { CustodyStatus } from './CustodyStatus';
 import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
+import type { LocalPoliceContact } from './LocalPoliceContact';
 import type { PersonOnProbation } from './PersonOnProbation';
 import type { RecallType } from './RecallType';
 import type { SelectedWithDetails } from './SelectedWithDetails';
@@ -15,6 +16,7 @@ export type RecommendationResponse = {
     id?: number;
     status?: RecommendationResponse.status;
     custodyStatus?: CustodyStatus;
+    localPoliceContact?: LocalPoliceContact;
     crn?: string;
     recallType?: RecallType;
     responseToProbation?: string;

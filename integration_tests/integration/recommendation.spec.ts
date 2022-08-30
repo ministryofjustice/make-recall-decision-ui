@@ -122,6 +122,21 @@ context('Make a recommendation', () => {
     cy.selectRadio('Is Paula Smith under Integrated Offender Management (IOM)?', 'Not applicable')
     cy.clickButton('Continue')
 
+    cy.log('===== Police contact details')
+    cy.fillInput('Email address (optional)', '111')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'contactName',
+      errorText: 'Enter the police contact name',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'emailAddress',
+      errorText: 'Enter an email address in the correct format, like name@example.com',
+    })
+    cy.fillInput('Police contact name', 'Bob Wiggins')
+    cy.fillInput('Email address (optional)', 'bob.wiggins@met.gov.uk')
+    cy.clickButton('Continue')
+
     cy.log('===== Victim contact scheme')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
