@@ -157,7 +157,7 @@ When('Maria downloads the Part A', () => {
     cy.log('Q9')
     expect(contents).to.contain('Police single point of contact name: Bob Wiggins')
     expect(contents).to.contain('Current contact telephone number: 07936 737 387')
-    expect(contents).to.contain('Fax number: 0208 737 3838')
+    expect(contents).to.contain('Fax number:  0208 737 3838')
     expect(contents).to.contain('Email address: bob.wiggins@met.gov.uk')
 
     cy.log('Q13')
