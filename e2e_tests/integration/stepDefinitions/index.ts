@@ -239,6 +239,7 @@ When('Maria updates the recommendation', () => {
   cy.getTextInputValue('Phone number').should('equal', '07936 737 387')
   cy.getTextInputValue('Fax number').should('equal', '0208 737 3838')
   cy.getTextInputValue('Email address').should('equal', 'bob.wiggins@met.gov.uk')
+  cy.clickButton('Continue')
 
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
