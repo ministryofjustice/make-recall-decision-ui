@@ -117,7 +117,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilities',
-      errorText: 'You must select which, if any, vulnerabilities the recall would affect',
+      errorText: 'Select which vulnerabilities and additional needs (if any) the recall would affect',
     })
     cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
       'Relationship breakdown',
