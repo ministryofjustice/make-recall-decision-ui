@@ -15,6 +15,10 @@ pre.govuk-body {
   color: $govuk-secondary-text-colour
 }
 
+.text-uppercase {
+  text-transform: uppercase;
+}
+
 .no-wrap-tablet {
   @include govuk-media-query($from: tablet ) {
     white-space: nowrap;

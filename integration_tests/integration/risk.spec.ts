@@ -37,7 +37,7 @@ context('Risk page', () => {
     })
 
     // MAPPA level
-    cy.getElement('CAT 2/LEVEL 1').should('exist')
+    cy.getElement('Cat 2/Level 1 MAPPA').should('exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
@@ -51,6 +51,6 @@ context('Risk page', () => {
     cy.getElement(
       'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
     )
-    cy.getElement('NO MAPPA')
+    cy.getElement('No MAPPA')
   })
 })

@@ -1,6 +1,6 @@
 <div class="mappa-widget">
 {% if mappa != null %}
-    <h3 class="govuk-heading-m"><strong>{{ mappa.level | default("NO", true) }}</strong> MAPPA</h3>
+    <h3 class="govuk-heading-m text-uppercase"><strong>{% if mappa.category %}Cat {{ mappa.category }}/{% endif %}{% if mappa.level %}Level {{ mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h3>
     <p class="govuk-body-m">Multi-agency public protection arrangements</p>
     {% if mappa.level and mappa.lastUpdated %}
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
