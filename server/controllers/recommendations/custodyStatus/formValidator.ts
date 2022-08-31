@@ -30,7 +30,7 @@ export const validateCustodyStatus = async ({
         allOptions: formOptions.custodyStatus,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/iom`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/vulnerabilities`
   }
   return {
     errors,

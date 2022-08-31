@@ -110,6 +110,16 @@ When('Maria selects a custody status', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria selects the vulnerabilities that recall would affect', () => {
+  cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
+    'Relationship breakdown',
+    'Physical disabilities',
+  ])
+  cy.fillInput('Give details', 'Details on relationship breakdown', { parent: '#conditional-RELATIONSHIP_BREAKDOWN' })
+  cy.fillInput('Give details', 'Details on physical disabilities', { parent: '#conditional-PHYSICAL_DISABILITIES' })
+  cy.clickButton('Continue')
+})
+
 When('Maria states that the person is not under integrated offender management', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectRadio(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable')
@@ -160,10 +170,14 @@ When('Maria downloads the Part A', () => {
     expect(contents).to.contain('Fax number:  0208 737 3838')
     expect(contents).to.contain('Email address: bob.wiggins@met.gov.uk')
 
+    cy.log('Q10')
+    expect(contents).to.contain('Relationship breakdown')
+    expect(contents).to.contain('Details on relationship breakdown')
+    expect(contents).to.contain('Physical disabilities')
+    expect(contents).to.contain('Details on physical disabilities')
+
     cy.log('Q13')
-    expect(contents).to.contain(
-      'Registered PPO/IOM: N/A'
-    )
+    expect(contents).to.contain('Registered PPO/IOM: N/A')
     cy.log('Q14')
     expect(contents).to.contain(
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
@@ -230,6 +244,21 @@ When('Maria updates the recommendation', () => {
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
   )
   cy.clickButton('Continue')
+
+  // vulnerabilities
+  cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?','Relationship breakdown',).should('be.checked')
+  cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?','Physical disabilities',).should('be.checked')
+  cy.getTextInputValue('Give details', { parent: '#conditional-RELATIONSHIP_BREAKDOWN' }).should(
+    'equal',
+    'Details on relationship breakdown'
+  )
+  cy.getTextInputValue('Give details', { parent: '#conditional-PHYSICAL_DISABILITIES' }).should(
+    'equal',
+    'Details on physical disabilities'
+  )
+  cy.clickButton('Continue')
+
+  // IOM
   cy.get('@offenderName').then(offenderName =>
     cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable').should('be.checked')
   )
