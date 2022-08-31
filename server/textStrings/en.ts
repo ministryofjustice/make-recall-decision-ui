@@ -11,6 +11,7 @@ export const strings = {
     noIntegratedOffenderManagementSelected:
       'You must select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'You must select which alternatives to recall have been tried already',
+    noVulnerabilitiesSelected: 'Select which vulnerabilities and additional needs (if any) the recall would affect',
     missingDetail: 'Enter more detail',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
@@ -32,6 +33,7 @@ export const strings = {
     recallType: 'What do you recommend?',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
+    vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
@@ -48,6 +50,7 @@ export const strings = {
     recallType: 'What do you recommend?',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is the person in custody now?',
+    vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
     integratedOffenderManagement: 'Is the person under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',

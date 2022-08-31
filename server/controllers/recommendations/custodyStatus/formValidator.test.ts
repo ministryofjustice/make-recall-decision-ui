@@ -19,7 +19,7 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_POLICE',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/iom')
+    expect(nextPagePath).toEqual('/recommendations/34/vulnerabilities')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

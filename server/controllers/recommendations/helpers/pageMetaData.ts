@@ -23,6 +23,8 @@ import { validateIntegratedOffenderManagement } from '../integratedOffenderManag
 import { inputDisplayValuesIntegratedOffenderManagement } from '../integratedOffenderManagement/inputDisplayValues'
 import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/formValidator'
 import { inputDisplayValuesLocalPoliceContactDetails } from '../localPoliceContactDetails/inputDisplayValues'
+import { inputDisplayValuesVulnerabilities } from '../vulnerabilities/inputDisplayValues'
+import { validateVulnerabilities } from '../vulnerabilities/formValidator'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -79,6 +81,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesCustodyStatus,
         pageHeading: strings.pageHeadings.custodyStatus,
         pageTitle: strings.pageTitles.custodyStatus,
+      }
+    case 'vulnerabilities':
+      return {
+        templateName: 'vulnerabilities',
+        validator: validateVulnerabilities,
+        inputDisplayValues: inputDisplayValuesVulnerabilities,
+        pageHeading: strings.pageHeadings.vulnerabilities,
+        pageTitle: strings.pageTitles.vulnerabilities,
       }
     case 'iom':
       return {

@@ -49,7 +49,6 @@ describe('validateAlternativesTried', () => {
 
   it('returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
     const requestBody = {
-      _csrf: 'vbnnvrf3-byah2Sg8rc4Sx68ypC8JxJtrync',
       crn: 'X514364',
       alternativesToRecallTried: ['REFERRAL_TO_PARTNERSHIP_AGENCIES', 'REFERRAL_TO_APPROVED_PREMISES'],
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details',
