@@ -2,7 +2,7 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel } from './utils'
+import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel, isNotNull } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
 import { dateTimeItems, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
@@ -64,4 +64,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('countLabel', countLabel)
   njkEnv.addGlobal('removeUndefinedListItems', removeUndefinedListItems)
   njkEnv.addGlobal('getDisplayValueForOption', getDisplayValueForOption)
+  njkEnv.addGlobal('isNotNull', isNotNull)
 }

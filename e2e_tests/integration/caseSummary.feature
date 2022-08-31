@@ -18,6 +18,7 @@ Feature: Case summary
     And Maria recommends a fixed term recall
     And Maria states that it's not an emergency recall
     And Maria selects a custody status
+    And Maria views the page Create a Part A form
     And Maria selects the vulnerabilities that recall would affect
     And Maria states that the person is not under integrated offender management
     And Maria completes local police contact details

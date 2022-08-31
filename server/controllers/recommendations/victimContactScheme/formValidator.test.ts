@@ -33,7 +33,7 @@ describe('validateVictimContactScheme', () => {
       dateVloInformed: null,
     })
     expect(errors).toBeUndefined()
-    expect(nextPagePath).toEqual('/recommendations/34/arrest-issues')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
 
   it('redirects to arrest issues page if Not applicable selected', async () => {
@@ -50,7 +50,7 @@ describe('validateVictimContactScheme', () => {
       dateVloInformed: null,
     })
     expect(errors).toBeUndefined()
-    expect(nextPagePath).toEqual('/recommendations/34/arrest-issues')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

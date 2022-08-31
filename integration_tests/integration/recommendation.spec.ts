@@ -113,7 +113,10 @@ context('Make a recommendation', () => {
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
 
+    cy.pageHeading().should('contain', 'Create a Part A form')
+
     cy.log('===== Vulnerabilities')
+    cy.clickLink('Would recall affect vulnerability or additional needs?')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilities',
@@ -128,6 +131,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== IOM')
+    cy.clickLink('Is Paula Smith under Integrated Offender Management (IOM)?')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isUnderIntegratedOffenderManagement',
@@ -137,6 +141,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Police contact details')
+    cy.clickLink('Local police contact details')
     cy.fillInput('Email address (optional)', '111')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
@@ -152,6 +157,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Victim contact scheme')
+    cy.clickLink('Are there any victims in the victim contact scheme?')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasVictimsInContactScheme',
@@ -171,6 +177,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Arrest issues')
+    cy.clickLink('Is there anything the police should know before they arrest Paula Smith?')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasArrestIssues',
@@ -187,6 +194,8 @@ context('Make a recommendation', () => {
       'Arrest issues details...'
     )
     cy.clickButton('Continue')
+
+    cy.clickLink('Create Part A')
 
     cy.log('===== Download Part A')
     cy.pageHeading().should('contain', 'Part A created')
@@ -261,13 +270,13 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
   })
 
-  it('victim contact scheme - directs "no" to the arrest issues page', () => {
+  it('victim contact scheme - directs "no" to the task list page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagRecommendationProd=1`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Is there anything the police should know before they arrest Paula Smith?')
+    cy.pageHeading().should('contain', 'Create a Part A form')
   })
 
   it('shows an error if creation fails', () => {
