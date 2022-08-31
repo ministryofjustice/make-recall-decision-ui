@@ -28,7 +28,7 @@ describe('validateVulnerabilities', () => {
         ],
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/iom')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
 
   it('returns an error, if no checkbox is selected, and no valuesToSave', async () => {
