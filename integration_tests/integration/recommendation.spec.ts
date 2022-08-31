@@ -113,6 +113,20 @@ context('Make a recommendation', () => {
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
     cy.clickButton('Continue')
 
+    cy.log('===== Vulnerabilities')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'vulnerabilities',
+      errorText: 'Select which vulnerabilities and additional needs (if any) the recall would affect',
+    })
+    cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
+      'Relationship breakdown',
+      'Physical disabilities',
+    ])
+    cy.fillInput('Give details', 'Details on relationship breakdown', { parent: '#conditional-RELATIONSHIP_BREAKDOWN' })
+    cy.fillInput('Give details', 'Details on physical disabilities', { parent: '#conditional-PHYSICAL_DISABILITIES' })
+    cy.clickButton('Continue')
+
     cy.log('===== IOM')
     cy.clickButton('Continue')
     cy.assertErrorMessage({

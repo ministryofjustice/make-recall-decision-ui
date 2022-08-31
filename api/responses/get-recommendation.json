@@ -176,5 +176,23 @@
         }
       ]
     }
+  },
+  "vulnerabilities": {
+    "selected": [
+      {
+        "value": "RISK_OF_SUICIDE_OR_SELF_HARM",
+        "details": "Details"
+      }
+    ],
+    "allOptions": [
+      {
+        "value": "RISK_OF_SUICIDE_OR_SELF_HARM",
+        "text": "Risk of suicide or self-harm"
+      },
+      {
+        "value": "DOMESTIC_ABUSE",
+        "text": "Domestic abuse"
+      }
+    ]
   }
 }
