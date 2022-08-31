@@ -51,6 +51,6 @@ context('Risk page', () => {
     cy.getElement(
       'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
     )
-    cy.getElement('NO MAPPA')
+    cy.getElement('No MAPPA')
   })
 })
