@@ -111,6 +111,7 @@ When('Maria selects a custody status', () => {
 })
 
 When('Maria selects the vulnerabilities that recall would affect', () => {
+  cy.clickLink('Would recall affect vulnerability or additional needs?')
   cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
     'Relationship breakdown',
     'Physical disabilities',
@@ -162,6 +163,7 @@ When('Maria enters any arrest issues', () => {
 })
 
 When('Maria sees a confirmation page', () => {
+  cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')
 })
 

@@ -116,7 +116,7 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('contain', 'Create a Part A form')
 
     cy.log('===== Vulnerabilities')
-    cy.clickLink('Select which vulnerabilities and additional needs (if any) the recall would affect')
+    cy.clickLink('Would recall affect vulnerability or additional needs?')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilities',
@@ -195,6 +195,8 @@ context('Make a recommendation', () => {
     )
     cy.clickButton('Continue')
 
+    cy.clickLink('Create Part A')
+
     cy.log('===== Download Part A')
     cy.pageHeading().should('contain', 'Part A created')
     const fileName = 'NAT_Recall_Part_A_X514364.docx'
@@ -268,13 +270,13 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
   })
 
-  it('victim contact scheme - directs "no" to the arrest issues page', () => {
+  it('victim contact scheme - directs "no" to the task list page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagRecommendationProd=1`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Is there anything the police should know before they arrest Paula Smith?')
+    cy.pageHeading().should('contain', 'Create a Part A form')
   })
 
   it('shows an error if creation fails', () => {
