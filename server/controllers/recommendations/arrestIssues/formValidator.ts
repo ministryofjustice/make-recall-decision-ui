@@ -53,6 +53,6 @@ export const validateArrestIssues = async ({
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`,
+    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list`,
   }
 }

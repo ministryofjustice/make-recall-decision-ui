@@ -90,6 +90,12 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.vulnerabilities,
         pageTitle: strings.pageTitles.vulnerabilities,
       }
+    case 'task-list':
+      return {
+        templateName: 'taskList',
+        pageHeading: strings.pageHeadings.taskList,
+        pageTitle: strings.pageTitles.taskList,
+      }
     case 'iom':
       return {
         templateName: 'integratedOffenderManagement',

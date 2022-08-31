@@ -148,6 +148,7 @@ export type PageTemplateName =
   | 'emergencyRecall'
   | 'custodyStatus'
   | 'vulnerabilities'
+  | 'taskList'
   | 'integratedOffenderManagement'
   | 'localPoliceContactDetails'
   | 'victimContactScheme'

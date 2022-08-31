@@ -28,6 +28,10 @@ export const makePageTitle = ({ pageHeading, hasErrors }: { pageHeading: string;
 
 export const isDefined = (val: unknown) => typeof val !== 'undefined'
 
+export const isNotNull = (val: unknown) => {
+  return val !== null
+}
+
 export const isString = (val: unknown) => typeof val === 'string'
 
 export const isNumber = (val: unknown) => typeof val === 'number'

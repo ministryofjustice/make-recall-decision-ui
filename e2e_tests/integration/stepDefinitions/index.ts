@@ -111,6 +111,7 @@ When('Maria selects a custody status', () => {
 })
 
 When('Maria selects the vulnerabilities that recall would affect', () => {
+  cy.clickLink('Would recall affect vulnerability or additional needs?')
   cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
     'Relationship breakdown',
     'Physical disabilities',
@@ -120,14 +121,20 @@ When('Maria selects the vulnerabilities that recall would affect', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria views the page Create a Part A form', () => {
+  cy.pageHeading().should('contain', 'Create a Part A form')
+})
+
 When('Maria states that the person is not under integrated offender management', () => {
-  cy.get('@offenderName').then(offenderName =>
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is ${offenderName} under Integrated Offender Management (IOM)?`)
     cy.selectRadio(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable')
-  )
+  })
   cy.clickButton('Continue')
 })
 
 When('Maria completes local police contact details', () => {
+  cy.clickLink('Local police contact details')
   cy.fillInput('Police contact name', 'Bob Wiggins')
   cy.fillInput('Telephone number (optional)', '07936 737 387')
   cy.fillInput('Fax number (optional)', '0208 737 3838')
@@ -136,6 +143,7 @@ When('Maria completes local police contact details', () => {
 })
 
 When('Maria states there are victims in the victim contact scheme', () => {
+  cy.clickLink('Are there any victims in the victim contact scheme?')
   cy.selectRadio('Are there any victims in the victim contact scheme?', 'Yes')
   cy.clickButton('Continue')
 })
@@ -146,14 +154,16 @@ When('Maria enters the date the VLO was informed', () => {
 })
 
 When('Maria enters any arrest issues', () => {
-  cy.get('@offenderName').then(offenderName =>
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
     cy.selectRadio(`Is there anything the police should know before they arrest ${offenderName}?`, 'Yes')
-  )
+  })
   cy.fillInput('Give details. Include information about any vulnerable children and adults', 'Arrest issues details...')
   cy.clickButton('Continue')
 })
 
 When('Maria sees a confirmation page', () => {
+  cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')
 })
 
@@ -246,6 +256,7 @@ When('Maria updates the recommendation', () => {
   cy.clickButton('Continue')
 
   // vulnerabilities
+  cy.clickLink('Would recall affect vulnerability or additional needs?')
   cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?','Relationship breakdown',).should('be.checked')
   cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?','Physical disabilities',).should('be.checked')
   cy.getTextInputValue('Give details', { parent: '#conditional-RELATIONSHIP_BREAKDOWN' }).should(
@@ -259,28 +270,33 @@ When('Maria updates the recommendation', () => {
   cy.clickButton('Continue')
 
   // IOM
-  cy.get('@offenderName').then(offenderName =>
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is ${offenderName} under Integrated Offender Management (IOM)?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable').should('be.checked')
-  )
+  })
   cy.clickButton('Continue')
 
+  cy.clickLink('Local police contact details')
   cy.getTextInputValue('Police contact name').should('equal', 'Bob Wiggins')
   cy.getTextInputValue('Telephone number (optional)').should('equal', '07936 737 387')
   cy.getTextInputValue('Fax number (optional)').should('equal', '0208 737 3838')
   cy.getTextInputValue('Email address (optional)').should('equal', 'bob.wiggins@met.gov.uk')
   cy.clickButton('Continue')
 
+  cy.clickLink('Are there any victims in the victim contact scheme?')
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
   cy.getTextInputValue('Day').should('equal', '14')
   cy.getTextInputValue('Month').should('equal', '04')
   cy.getTextInputValue('Year').should('equal', '2022')
   cy.clickButton('Continue')
-  cy.get('@offenderName').then(offenderName =>
+
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
     cy
       .getRadioOptionByLabel(`Is there anything the police should know before they arrest ${offenderName}?`, 'Yes')
       .should('be.checked')
-  )
+  })
   cy.getTextInputValue('Give details. Include information about any vulnerable children and adults').should(
     'equal',
     'Arrest issues details...'
