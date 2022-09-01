@@ -3,6 +3,7 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
+import excludedResponse from '../../api/responses/get-case-excluded.json'
 import { setResponsePropertiesToNull } from '../support/commands'
 
 context('Make a recommendation', () => {
@@ -219,6 +220,34 @@ context('Make a recommendation', () => {
       })
       cy.downloadDocX('Download the Part A').should('contain', 'PART A: Recall Report')
     })
+  })
+
+  it('prevents creating a recommendation if CRN is excluded', () => {
+    const caseResponse = {
+      ...getCaseOverviewResponse,
+      activeRecommendation: undefined,
+    }
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+    cy.task('createRecommendation', { statusCode: 403, response: excludedResponse })
+    cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+    cy.clickButton('Make a recommendation')
+    cy.getElement('There is a problem').should('exist')
+  })
+
+  it('prevents updating a recommendation if CRN is excluded', () => {
+    cy.task('updateRecommendation', { statusCode: 403, response: excludedResponse })
+    cy.visit(`${routeUrls.recommendations}/123/custody-status`)
+    cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('equal', 'Is Paula Smith in custody now?')
+    cy.getElement('There is a problem').should('exist')
+  })
+
+  it('prevents viewing a recommendation if CRN is excluded', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: excludedResponse })
+    cy.visit(`${routeUrls.recommendations}/123/custody-status`)
+    cy.pageHeading().should('equal', 'Excluded case')
+    cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
   })
 
   it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
