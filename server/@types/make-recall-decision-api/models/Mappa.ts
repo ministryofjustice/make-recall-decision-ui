@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 export type Mappa = {
-    level?: string;
+    level?: number;
     isNominal?: boolean;
     lastUpdated?: string;
     category?: number;

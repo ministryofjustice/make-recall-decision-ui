@@ -63,5 +63,6 @@ export type { UnderIntegratedOffenderManagement } from './models/UnderIntegrated
 export type { UserAccessResponse } from './models/UserAccessResponse';
 export type { ValueWithDetails } from './models/ValueWithDetails';
 export { VictimsInContactScheme } from './models/VictimsInContactScheme';
+export type { Vulnerabilities } from './models/Vulnerabilities';
 export type { WhenRiskHighest } from './models/WhenRiskHighest';
 export type { WhoIsAtRisk } from './models/WhoIsAtRisk';

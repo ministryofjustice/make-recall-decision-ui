@@ -11,7 +11,7 @@ import type { RecallType } from './RecallType';
 import type { SelectedWithDetails } from './SelectedWithDetails';
 import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
-import { Vulnerabilities } from './Vulnerabilities'
+import type { Vulnerabilities } from './Vulnerabilities';
 
 export type RecommendationResponse = {
     id?: number;
@@ -27,9 +27,9 @@ export type RecommendationResponse = {
     hasArrestIssues?: SelectedWithDetails;
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;
-    vulnerabilities?: Vulnerabilities;
     licenceConditionsBreached?: LicenceConditionsBreached;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
+    vulnerabilities?: Vulnerabilities;
 };
 
 export namespace RecommendationResponse {
