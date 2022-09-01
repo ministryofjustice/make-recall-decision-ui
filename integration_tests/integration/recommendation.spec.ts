@@ -2,6 +2,15 @@ import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
+
+const setResponsePropertiesToNull = recommendation => {
+  const copy = { ...recommendation }
+  Object.keys(recommendation).forEach(key => {
+    copy[key] = null
+  })
+  return copy
+}
 
 context('Make a recommendation', () => {
   beforeEach(() => {
@@ -11,15 +20,9 @@ context('Make a recommendation', () => {
   const crn = 'X34983'
   const recommendationId = '123'
   const recommendationResponse = {
+    ...setResponsePropertiesToNull(completeRecommendationResponse),
     id: recommendationId,
     crn,
-    recallType: {
-      selected: {},
-      allOptions: formOptions.recallType,
-    },
-    custodyStatus: {
-      allOptions: formOptions.custodyStatus,
-    },
     personOnProbation: {
       name: 'Paula Smith',
     },
@@ -195,6 +198,20 @@ context('Make a recommendation', () => {
     )
     cy.clickButton('Continue')
 
+    // include enough to render the confirmation page
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...recommendationResponse,
+        recallType: {
+          selected: {},
+          allOptions: formOptions.recallType,
+        },
+        custodyStatus: {
+          allOptions: formOptions.custodyStatus,
+        },
+      },
+    })
     cy.clickLink('Create Part A')
 
     cy.log('===== Download Part A')
@@ -209,6 +226,14 @@ context('Make a recommendation', () => {
       })
       cy.downloadDocX('Download the Part A').should('contain', 'PART A: Recall Report')
     })
+  })
+
+  it('update recommendation button links to task list', () => {
+    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+    cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+    cy.clickLink('Update recommendation')
+    cy.pageHeading().should('equal', 'Create a Part A form')
   })
 
   it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
@@ -305,5 +330,37 @@ context('Make a recommendation', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickLink('Update recommendation')
     cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
+  })
+
+  it('task list - completed', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getElement('What you recommend completed').should('exist')
+    cy.getElement('Alternatives tried already completed').should('exist')
+    cy.getElement('Response to probation so far completed').should('exist')
+    cy.getElement('Breached licence condition(s) completed').should('exist')
+    cy.getElement('Emergency recall completed').should('exist')
+    cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
+    cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
+    cy.getElement('Is Paula Smith in custody now? completed').should('exist')
+    cy.getElement('Local police contact details completed').should('exist')
+    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
+    cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
+  })
+
+  it('task list - to do', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getElement('What you recommend to do').should('exist')
+    cy.getElement('Alternatives tried already to do').should('exist')
+    cy.getElement('Response to probation so far to do').should('exist')
+    cy.getElement('Breached licence condition(s) to do').should('exist')
+    cy.getElement('Emergency recall to do').should('exist')
+    cy.getElement('Would recall affect vulnerability or additional needs? to do').should('exist')
+    cy.getElement('Are there any victims in the victim contact scheme? to do').should('exist')
+    cy.getElement('Is Paula Smith in custody now? to do').should('exist')
+    cy.getElement('Local police contact details to do').should('exist')
+    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? to do').should('exist')
+    cy.getElement('Is there anything the police should know before they arrest Paula Smith? to do').should('exist')
   })
 })

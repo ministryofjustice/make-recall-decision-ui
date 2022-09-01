@@ -26,7 +26,7 @@
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}recall-type">What you recommend</a>
-                            {{ taskStatus({ hasData: recommendation.recallType.selected }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.recallType }) }}
                         </li>
                     </ul>
                 </li>
@@ -38,7 +38,7 @@
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}alternatives-tried">Alternatives
                                 tried already</a>
-                            {{ taskStatus({ hasData: recommendation.alternativesToRecallTried.selected.length }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.alternativesToRecallTried }) }}
                         </li>
                     </ul>
                 </li>
@@ -49,15 +49,15 @@
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}response-to-probation">Response to probation so far</a>
-                            {{ taskStatus({ hasData: recommendation.responseToProbation }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.responseToProbation }) }}
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}licence-conditions">Breached licence condition(s)</a>
-                            {{ taskStatus({ hasData: recommendation.licenceConditionsBreached.standardLicenceConditions.selected.length or recommendation.licenceConditionsBreached.additionalLicenceConditions.selected.length }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.licenceConditionsBreached }) }}
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}emergency-recall">Emergency recall</a>
-                            {{ taskStatus({ hasData: isNotNull(recommendation.isThisAnEmergencyRecall) }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.isThisAnEmergencyRecall }) }}
                         </li>
                     </ul>
                 </li>
@@ -69,7 +69,7 @@
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}vulnerabilities">Would recall affect vulnerability or additional
                                 needs?</a>
-                            {{ taskStatus({ hasData: recommendation.vulnerabilities.selected.length }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.vulnerabilities }) }}
                         </li>
                     </ul>
                 </li>
@@ -80,7 +80,7 @@
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}victim-contact-scheme">Are there any victims in the victim contact scheme?</a>
-                            {{ taskStatus({ hasData: recommendation.hasVictimsInContactScheme.selected }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.hasVictimsInContactScheme }) }}
                         </li>
                     </ul>
                 </li>
@@ -92,19 +92,19 @@
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}custody-status">Is {{ recommendation.personOnProbation.name }} in
                                 custody now?</a>
-                            {{ taskStatus({ hasData: recommendation.custodyStatus.selected }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.custodyStatus }) }}
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}police-details">Local police contact details</a>
-                            {{ taskStatus({ hasData: recommendation.localPoliceContact.contactName }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.localPoliceContact }) }}
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}iom">Is {{ recommendation.personOnProbation.name }} under Integrated Offender Management (IOM)?</a>
-                            {{ taskStatus({ hasData: recommendation.isUnderIntegratedOffenderManagement.selected }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.isUnderIntegratedOffenderManagement }) }}
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}arrest-issues">Is there anything the police should know before they arrest {{ recommendation.personOnProbation.name }}?</a>
-                            {{ taskStatus({ hasData: isNotNull(recommendation.hasArrestIssues) }) }}
+                            {{ taskStatus({ hasData: taskCompleteness.hasArrestIssues }) }}
                         </li>
                     </ul>
                 </li>
