@@ -210,12 +210,16 @@ When('Maria updates the recommendation', () => {
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
   cy.clickLink('Update recommendation')
+
+  cy.pageHeading().should('equal', 'Create a Part A form')
+
   // responded to probation
-  cy.get('@offenderName').then(offenderName =>
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`How has ${offenderName} responded to probation so far?`)
     cy
       .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
       .should('equal', 'Re-offending has occurred')
-  )
+  })
   cy.clickButton('Continue')
 
   // licence conditions
@@ -268,6 +272,8 @@ When('Maria updates the recommendation', () => {
     'Details on physical disabilities'
   )
   cy.clickButton('Continue')
+
+  cy.pageHeading().should('equal', 'Create a Part A form')
 
   // IOM
   cy.get('@offenderName').then(offenderName => {

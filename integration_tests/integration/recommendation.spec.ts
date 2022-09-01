@@ -228,14 +228,6 @@ context('Make a recommendation', () => {
     })
   })
 
-  it('update recommendation button links to task list', () => {
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-    cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
-    cy.clickLink('Update recommendation')
-    cy.pageHeading().should('equal', 'Create a Part A form')
-  })
-
   it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getCase', {
@@ -329,7 +321,7 @@ context('Make a recommendation', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickLink('Update recommendation')
-    cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
+    cy.pageHeading().should('equal', 'Create a Part A form')
   })
 
   it('task list - completed', () => {
