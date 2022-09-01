@@ -7,6 +7,7 @@ import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
 Cypress.Commands.add('signIn', () => {
   cy.task('stubSignIn')
@@ -35,10 +36,19 @@ Cypress.Commands.add('mockCaseSummaryData', () => {
   cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })
 })
 
+export const setResponsePropertiesToNull = recommendation => {
+  const copy = { ...recommendation }
+  Object.keys(recommendation).forEach(key => {
+    copy[key] = null
+  })
+  return copy
+}
+
 Cypress.Commands.add('mockRecommendationData', () => {
   cy.task('getRecommendation', {
     statusCode: 200,
     response: {
+      ...setResponsePropertiesToNull(completeRecommendationResponse),
       recommendationId: '456',
       crn: '123',
       personOnProbation: {

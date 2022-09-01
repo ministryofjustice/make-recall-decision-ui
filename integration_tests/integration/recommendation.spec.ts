@@ -3,14 +3,7 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
-
-const setResponsePropertiesToNull = recommendation => {
-  const copy = { ...recommendation }
-  Object.keys(recommendation).forEach(key => {
-    copy[key] = null
-  })
-  return copy
-}
+import { setResponsePropertiesToNull } from '../support/commands'
 
 context('Make a recommendation', () => {
   beforeEach(() => {
