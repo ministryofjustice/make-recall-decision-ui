@@ -41,7 +41,7 @@ describe('validateVulnerabilities', () => {
       {
         href: '#vulnerabilities',
         name: 'vulnerabilities',
-        text: 'Select which vulnerabilities and additional needs (if any) the recall would affect',
+        text: 'Select if there are vulnerabilities or additional needs',
         errorId: 'noVulnerabilitiesSelected',
       },
     ])

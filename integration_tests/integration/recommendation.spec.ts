@@ -120,7 +120,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilities',
-      errorText: 'Select which vulnerabilities and additional needs (if any) the recall would affect',
+      errorText: 'Select if there are vulnerabilities or additional needs',
     })
     cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
       'Relationship breakdown',
@@ -142,7 +142,7 @@ context('Make a recommendation', () => {
 
     cy.log('===== Police contact details')
     cy.clickLink('Local police contact details')
-    cy.fillInput('Email address (optional)', '111')
+    cy.fillInput('Email address', '111')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'contactName',
@@ -153,7 +153,7 @@ context('Make a recommendation', () => {
       errorText: 'Enter an email address in the correct format, like name@example.com',
     })
     cy.fillInput('Police contact name', 'Bob Wiggins')
-    cy.fillInput('Email address (optional)', 'bob.wiggins@met.gov.uk')
+    cy.fillInput('Email address', 'bob.wiggins@met.gov.uk')
     cy.clickButton('Continue')
 
     cy.log('===== Victim contact scheme')
