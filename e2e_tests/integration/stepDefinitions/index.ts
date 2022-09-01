@@ -214,8 +214,8 @@ When('Maria updates the recommendation', () => {
   cy.pageHeading().should('equal', 'Create a Part A form')
 
   // responded to probation
+  cy.clickLink('Response to probation so far')
   cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`How has ${offenderName} responded to probation so far?`)
     cy
       .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
       .should('equal', 'Re-offending has occurred')
