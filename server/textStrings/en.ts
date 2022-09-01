@@ -11,7 +11,7 @@ export const strings = {
     noIntegratedOffenderManagementSelected:
       'You must select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'You must select which alternatives to recall have been tried already',
-    noVulnerabilitiesSelected: 'Select which vulnerabilities and additional needs (if any) the recall would affect',
+    noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     missingDetail: 'Enter more detail',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
