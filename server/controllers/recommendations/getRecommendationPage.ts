@@ -6,12 +6,17 @@ import { renderTemplateString } from '../../utils/nunjucks'
 import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { taskCompleteness } from './helpers/taskCompleteness'
+import { isCaseRestrictedOrExcluded } from '../../utils/utils'
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageId } = req.params
   const { user } = res.locals
   const { templateName, pageHeading, pageTitle, inputDisplayValues } = pageMetaData(pageId)
   res.locals.recommendation = await getRecommendation(recommendationId, user.token)
+  if (isCaseRestrictedOrExcluded(res.locals.recommendation.userAccessResponse)) {
+    res.locals.caseSummary = res.locals.recommendation
+    return res.render('pages/excludedRestrictedCrn')
+  }
   res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation)
   if (pageId === 'licence-conditions') {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
