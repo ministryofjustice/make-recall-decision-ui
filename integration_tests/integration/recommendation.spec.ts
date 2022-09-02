@@ -1,6 +1,5 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
-import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
@@ -190,22 +189,13 @@ context('Make a recommendation', () => {
       'Give details. Include information about any vulnerable children and adults',
       'Arrest issues details...'
     )
-    cy.clickButton('Continue')
-
-    // include enough to render the confirmation page
+    // all tasks must be complete in order to show the Create Part A button
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: {
-        ...recommendationResponse,
-        recallType: {
-          selected: {},
-          allOptions: formOptions.recallType,
-        },
-        custodyStatus: {
-          allOptions: formOptions.custodyStatus,
-        },
-      },
+      response: completeRecommendationResponse,
     })
+    cy.clickButton('Continue')
+
     cy.clickLink('Create Part A')
 
     cy.log('===== Download Part A')
@@ -360,6 +350,7 @@ context('Make a recommendation', () => {
     cy.getElement('Local police contact details completed').should('exist')
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
+    cy.clickLink('Create Part A')
   })
 
   it('task list - to do', () => {
@@ -376,5 +367,6 @@ context('Make a recommendation', () => {
     cy.getElement('Local police contact details to do').should('exist')
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? to do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? to do').should('exist')
+    cy.getElement('Create Part A').should('not.exist')
   })
 })
