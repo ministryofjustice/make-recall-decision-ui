@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: '/recommendations/' + recommendation.id + '/' + ('victim-liaison-officer' if recommendation.hasVictimsInContactScheme === 'YES' else 'victim-contact-scheme')
+            href: '/recommendations/' + recommendation.id + '/task-list')
         }) }}
     </nav>
 {% endblock %}
