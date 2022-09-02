@@ -260,8 +260,17 @@ context('Make a recommendation', () => {
         ],
       },
     })
+    cy.interceptGoogleAnalyticsEvent(
+      {
+        ea: 'multipleCustodialConvictionsBanner',
+        ec: crn,
+        el: '2',
+      },
+      'multipleConvictionsEvent'
+    )
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
     cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+    cy.wait('@multipleConvictionsEvent')
   })
 
   it('licence conditions - shows message if person has no active custodial convictions', () => {

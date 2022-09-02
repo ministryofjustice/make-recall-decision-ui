@@ -95,3 +95,8 @@ pre.govuk-body {
 .border-top {
   border-top: 1px solid $govuk-border-colour;
 }
+
+.grey-panel {
+  padding: govuk-spacing(4);
+  background-color: govuk-colour("light-grey");
+}
