@@ -42,6 +42,11 @@
                     }) }}
                 </div>
                 {{ formSubmitButton() }}
+
+                <div class="govuk-caption-m govuk-!-font-weight-bold">A previous related question:</div>
+                <h2 class='govuk-heading-l'>How has {{ personalDetailsOverview.name }} responded to probation so far?</h2>
+                <p class='govuk-body govuk-!-font-weight-bold'>Your response:</p>
+                <pre class='govuk-body grey-panel'>{{ recommendation.behaviour }}</pre>
             </form>
         </div>
     </div>
