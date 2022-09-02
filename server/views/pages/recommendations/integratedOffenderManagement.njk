@@ -6,7 +6,7 @@
     <nav>
     {{ govukBackLink({
         text: "Back",
-        href: '/recommendations/' + recommendation.id + '/vulnerabilities'
+        href: '/recommendations/' + recommendation.id + '/task-list'
     }) }}</nav>
 {% endblock %}
 
@@ -17,7 +17,7 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <div class="govuk-caption-l">Victim liaison</div>
+                <div class="govuk-caption-l">Custody</div>
                 {{ govukRadios({
                     idPrefix: "isUnderIntegratedOffenderManagement",
                     name: "isUnderIntegratedOffenderManagement",
