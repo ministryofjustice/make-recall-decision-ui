@@ -12,4 +12,11 @@
         },
         classes: "govuk-notification-banner--error"
     }) }}
+    <script nonce='{{ cspNonce }}'>
+        gtag('event', 'multipleCustodialConvictionsBanner', {
+          'event_category': '{{ crn }}',
+          'event_label': '{{ caseSummary.convictions.activeCustodial.length }}',
+          'non_interaction': true
+        });
+    </script>
 {% endif %}
