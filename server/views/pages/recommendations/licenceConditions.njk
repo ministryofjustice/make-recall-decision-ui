@@ -16,6 +16,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% if caseSummary.convictions.hasMultipleActiveCustodial or caseSummary.convictions.activeCustodial.length == 0 %}
+                <div class="govuk-caption-l">Circumstances</div>
                 <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
                 {% include '../../partials/multipleActiveCustodialBanner.njk' %}
                 {% if caseSummary.convictions.activeCustodial.length == 0 %}
@@ -33,6 +34,7 @@
                     <div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error{% endif %}">
                         <fieldset class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <div class="govuk-caption-l">Circumstances</div>
                                 <h1 class="govuk-fieldset__heading">{{ pageHeading }}</h1>
                             </legend>
                             {% if errors.licenceConditionsBreached %}
