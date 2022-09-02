@@ -1,0 +1,177 @@
+### AUTOFILL PROFILES ###,,,,,,
+Profile ID,Name,Site,Hotkey,,,
+c2,Make recall decision,,Ctrl + F,,,
+c1,Manage recalls,,Option + Ƒ,,,
+### AUTOFILL RULES ###,,,,,,
+Rule ID,Type,Name,Value,Site,Mode,Profile
+r1,0,"^day$","20","/recalls/[^\/]+/request-received",0,c1
+r2,0,"^month$","11","/recalls/[^\/]+/request-received",0,c1
+r3,0,"^year$","2021","/recalls/[^\/]+/request-received",0,c1
+r4,0,"^hour$","07","/recalls/[^\/]+/request-received",0,c1
+r5,0,"^minute$","04","/recalls/[^\/]+/request-received",0,c1
+r6,0,"^sentenceDateDay$","12","/recalls/[^\/]+/last-release",0,c1
+r7,0,"^sentenceDateMonth$","02","/recalls/[^\/]+/last-release",0,c1
+r8,0,"^sentenceDateYear$","2021","/recalls/[^\/]+/last-release",0,c1
+r9,0,"^licenceExpiryDateDay$","24","/recalls/[^\/]+/last-release",0,c1
+r10,0,"^licenceExpiryDateMonth$","10","/recalls/[^\/]+/last-release",0,c1
+r11,0,"^licenceExpiryDateYear$","2022","/recalls/[^\/]+/last-release",0,c1
+r12,0,"^sentenceExpiryDateDay$","26","/recalls/[^\/]+/last-release",0,c1
+r13,0,"^sentenceExpiryDateMonth$","10","/recalls/[^\/]+/last-release",0,c1
+r14,0,"^sentenceExpiryDateYear$","2022","/recalls/[^\/]+/last-release",0,c1
+r15,0,"^sentencingCourt$","Blackpool County Court","/recalls/[^\/]+/last-release",0,c1
+r16,0,"^indexOffence$","Burglary","/recalls/[^\/]+/last-release",0,c1
+r18,0,"^lastReleaseDateDay$","12","/recalls/[^\/]+/last-release",0,c1
+r19,0,"^lastReleaseDateMonth$","05","/recalls/[^\/]+/last-release",0,c1
+r20,0,"^lastReleaseDateYear$","2021","/recalls/[^\/]+/last-release",0,c1
+r21,0,"^conditionalReleaseDateDay$","14","/recalls/[^\/]+/last-release",0,c1
+r22,0,"^conditionalReleaseDateMonth$","05","/recalls/[^\/]+/last-release",0,c1
+r23,0,"^conditionalReleaseDateYear$","2022","/recalls/[^\/]+/last-release",0,c1
+r25,3,"^vulnerabilityDiversity$","10","/recalls/[^\/]+/issues-needs",0,c1
+r26,3,"^contraband$","01","/recalls/[^\/]+/issues-needs",0,c1
+r27,2,"^mappaLevel$","""LEVEL_1""","/recalls/[^\/]+/issues-needs",0,c1
+r28,0,"^vulnerabilityDiversityDetail$","Substance abuse","/recalls/[^\/]+/issues-needs",0,c1
+r38,0,"^sentenceLengthYears$","3","/recalls/[^\/]+/last-release",0,c1
+r61,0,"^bookingNumber$","A12345","/recalls/[^\/]+/last-release",0,c1
+r68,0,"^probationOfficerName$","Dave Angel","/recalls/[^\/]+/probation-officer",0,c1
+r69,0,"^probationOfficerEmail$","dave.angel@probation.gov.uk","/recalls/[^\/]+/probation-officer",0,c1
+r70,0,"^probationOfficerPhoneNumber$","07393739393","/recalls/[^\/]+/probation-officer",0,c1
+r71,0,"^authorisingAssistantChiefOfficer$","Bob Monkfish","/recalls/[^\/]+/probation-officer",0,c1
+r72,2,"^localDeliveryUnit$","""CENTRAL_AUDIT_TEAM""","/recalls/[^\/]+/probation-officer",0,c1
+r73,0,"^recallNotificationEmailSentDateTimeDay$","12","/recalls/[^\/]+/assess-email",0,c1
+r74,0,"^recallNotificationEmailSentDateTimeMonth$","11","/recalls/[^\/]+/assess-email",0,c1
+r75,0,"^recallNotificationEmailSentDateTimeYear$","2021","/recalls/[^\/]+/assess-email",0,c1
+r76,0,"^recallNotificationEmailSentDateTimeHour$","08","/recalls/[^\/]+/assess-email",0,c1
+r77,0,"^recallNotificationEmailSentDateTimeMinute$","14","/recalls/[^\/]+/assess-email",0,c1
+r78,3,"^confirmRecallNotificationEmailSent$","1","/recalls/[^\/]+/assess-email",0,c1
+r79,3,"^hasOtherPreviousConvictionMainName$","10","/recalls/[^\/]+/assess-email/pre-cons-name",0,c1
+r82,0,"^lastReleasePrison$","Albany (HMP)","/recalls/[^\/]+/last-release",0,c1
+r83,2,"^lastReleasePrison$","""ALI""","/recalls/[^\/]+/last-release",0,c1
+r84,3,"^agreeWithRecall$","10","/recalls/[^\/]+/assess-decision",0,c1
+r85,0,"^agreeWithRecallDetailYes$","Reasons","/recalls/[^\/]+/assess-decision",0,c1
+r86,3,"^reasonsForRecall$","00100000000000001","/recalls/[^\/]+/assess-licence",0,c1
+r87,0,"^licenceConditionsBreached$","(i) one
+(ii) two","/recalls/[^\/]+/assess-licence",0,c1
+r88,0,"^reasonsForRecallOtherDetail$","Explain..","/recalls/[^\/]+/assess-licence",0,c1
+r89,0,"^currentPrison$","Berwyn (HMP)","/recalls/[^\/]+/assess-prison",0,c1
+r90,2,"^currentPrison$","""BWI""","/recalls/[^\/]+/assess-prison",0,c1
+r98,0,"^differentNomsNumberDetail$","A345873","/recalls/[^\/]+/dossier-letter",0,c1
+r99,3,"^additionalLicenceConditions$","10","/recalls/[^\/]+/dossier-letter",0,c1
+r100,3,"^differentNomsNumber$","C1937HY","/recalls/[^\/]+/dossier-letter",0,c1
+r101,0,"^additionalLicenceConditionsDetail$","one
+two","/recalls/[^\/]+/dossier-letter",0,c1
+r102,3,"^hasDossierBeenChecked$","1","/recalls/[^\/]+/dossier-download",0,c1
+r103,0,"^dossierEmailSentDateDay$","13","/recalls/[^\/]+/dossier-email",0,c1
+r104,0,"^dossierEmailSentDateMonth$","11","/recalls/[^\/]+/dossier-email",0,c1
+r105,0,"^dossierEmailSentDateYear$","2021","/recalls/[^\/]+/dossier-email",0,c1
+r106,3,"^confirmDossierEmailSent$","1","/recalls/[^\/]+/dossier-email",0,c1
+r126,0,"^localDeliveryUnit$","Central Audit Team","/recalls/[^\/]+/probation-officer",0,c1
+r129,2,"^sentencingCourt$","""BLKPCT""","/recalls/[^\/]+/last-release",0,c1
+r130,0,"^missingDocumentsDetail$","Chased","/recalls/[^\/]+/last-release/missing-documents",0,c1
+r131,3,"^FIRST_LAST","1","/recalls/[^\/]+/licence-name",0,c1
+r132,3,"^FIRST_MIDDLE_LAST","1","/recalls/[^\/]+/pre-cons-name",0,c1
+r136,0,"^missingDocumentsDetail$","Chased the missing documents on 6/12/21
+Email uploaded","/recalls/[^\/]+/missing-documents",0,c1
+r137,0,"^localPoliceForceIdInput$","City of London Police","/recalls/[^\/]+/prison-police",0,c1
+r138,2,"^localPoliceForceId$","""city-of-london""","/recalls/[^\/]+/prison-police",0,c1
+r140,3,"^arrestIssues$","10","/recalls/[^\/]+/issues-needs",0,c1
+r144,0,"^arrestIssuesDetail$","Arrest issue detail...","/recalls/[^\/]+/issues-needs",0,c1
+r145,3,"^inCustodyAtBooking$","10","/recalls/[^\/]+/custody-status",0,c1
+r146,3,"^lastKnownAddressOption$","10","/recalls/[^\/]+/last-known-address",0,c1
+r147,0,"^postcode$","E151JZ","/recalls/[^\/]+/find-address",0,c1
+r148,0,"^line1$","345 Porchester Road","/recalls/[^\/]+/address-manual",0,c1
+r149,0,"^line2$","Southsea","/recalls/[^\/]+/address-manual",0,c1
+r150,0,"^town$","Portsmouth","/recalls/[^\/]+/address-manual",0,c1
+r151,0,"^postcode$","PO1 4OY","/recalls/[^\/]+/address-manual",0,c1
+r152,0,"^postcode$","PE14 7DF","/recalls/[^\/]+/postcode-lookup",0,c1
+r153,2,"^addressUprn$","""100090995355""","/recalls/[^\/]+/postcode-results",0,c1
+r154,0,"^rescindRequestEmailReceivedDateDay$","16","/recalls/[^\/]+/rescind-request",0,c1
+r155,0,"^rescindRequestEmailReceivedDateMonth$","02","/recalls/[^\/]+/rescind-request",0,c1
+r156,0,"^rescindRequestEmailReceivedDateYear$","2022","/recalls/[^\/]+/rescind-request",0,c1
+r158,0,"^rescindRequestDetail$","Incorrect recall initiated, should be rescinded","/recalls/[^\/]+/rescind-request",0,c1
+r159,0,"^rescindDecisionEmailSentDateDay$","16","/recalls/[^\/]+/rescind-decision",0,c1
+r160,0,"^rescindDecisionEmailSentDateMonth$","02","/recalls/[^\/]+/rescind-decision",0,c1
+r161,0,"^rescindDecisionEmailSentDateYear$","2022","/recalls/[^\/]+/rescind-decision",0,c1
+r163,3,"^approveRescindDecision$","10","/recalls/[^\/]+/rescind-decision",0,c1
+r164,3,"^confirmEmailSent$","1","/recalls/[^\/]+/rescind-decision",0,c1
+r165,0,"^rescindDecisionDetail$","Confirmed that the rescind is valid.","/recalls/[^\/]+/rescind-decision",0,c1
+r166,0,"^returnedToCustodyDateTimeDay$","21","/recalls/[^\/]+/rtc-dates",0,c1
+r167,0,"^returnedToCustodyDateTimeMonth$","02","/recalls/[^\/]+/rtc-dates",0,c1
+r168,0,"^returnedToCustodyDateTimeYear$","2022","/recalls/[^\/]+/rtc-dates",0,c1
+r169,0,"^returnedToCustodyDateTimeHour$","08","/recalls/[^\/]+/rtc-dates",0,c1
+r170,0,"^returnedToCustodyDateTimeMinute$","09","/recalls/[^\/]+/rtc-dates",0,c1
+r171,0,"^returnedToCustodyNotificationDateTimeDay$","21","/recalls/[^\/]+/rtc-dates",0,c1
+r172,0,"^returnedToCustodyNotificationDateTimeMonth$","02","/recalls/[^\/]+/rtc-dates",0,c1
+r173,0,"^returnedToCustodyNotificationDateTimeYear$","2022","/recalls/[^\/]+/rtc-dates",0,c1
+r174,0,"^returnedToCustodyNotificationDateTimeHour$","08","/recalls/[^\/]+/rtc-dates",0,c1
+r175,0,"^returnedToCustodyNotificationDateTimeMinute$","15","/recalls/[^\/]+/rtc-dates",0,c1
+r176,3,"^NO$","1","/recalls/[^\/]+/assess-custody-status",0,c1
+r177,0,"^currentPrisonInput$","Belmarsh (HMP)","/recalls/[^\/]+/dossier-prison",0,c1
+r178,2,"^currentPrison$","""BAI""","/recalls/[^\/]+/dossier-prison",0,c1
+r179,3,"^YES$","1","/recalls/[^\/]+/dossier-nsy-email",0,c1
+r180,3,"^NO$","1","/recalls/[^\/]+/address-list",0,c1
+r181,3,"^STANDARD$","1","/recalls/[^\/]+/recall-type",0,c1
+r182,0,"^warrantReferenceNumber$","02RC/1234567C12345","/recalls/[^\/]+/warrant-reference",0,c1
+r183,3,"^confirmedRecallType$","10","/recalls/[^\/]+/assess-decision",0,c1
+r184,0,"^confirmedRecallTypeDetailStandard$","Agree with the recommendation","/recalls/[^\/]+/assess-decision",0,c1
+r185,0,"^subject$","Note 1","/recalls/[^\/]+/add-note",0,c1
+r186,0,"^details$","First
+Second
+Third","/recalls/[^\/]+/add-note",0,c1
+r189,0,"^partBEmailReceivedDateDay$","08","/recalls/[^\/]+/part-b",0,c1
+r190,0,"^partBEmailReceivedDateMonth$","03","/recalls/[^\/]+/part-b",0,c1
+r191,0,"^partBEmailReceivedDateYear$","2022","/recalls/[^\/]+/part-b",0,c1
+r193,0,"^partBDetail$","Part B arrived","/recalls/[^\/]+/part-b",0,c1
+r194,0,"^legalRepresentativeInfo_fullName$","Mary Quinn","/recalls/[^\/]+/secondary-dossier-legal-rep",0,c1
+r195,0,"^legalRepresentativeInfo_email$","m.quinn@harvardllp.co.uk","/recalls/[^\/]+/secondary-dossier-legal-rep",0,c1
+r196,0,"^legalRepresentativeInfo_phoneNumber$","07383837873","/recalls/[^\/]+/secondary-dossier-legal-rep",0,c1
+r197,0,"^seniorProbationOfficerInfo_functionalEmail$","functional@probation.gov.uk","/recalls/[^\/]+/secondary-dossier-probation",0,c1
+r198,0,"^seniorProbationOfficerInfo_fullName$","Zara Hall","/recalls/[^\/]+/secondary-dossier-probation",0,c1
+r199,0,"^seniorProbationOfficerInfo_phoneNumber$","01305737387","/recalls/[^\/]+/secondary-dossier-probation",0,c1
+r201,0,"^seniorProbationOfficerInfo_email$","zhall@probation.gov.uk","/recalls/[^\/]+/secondary-dossier-probation",0,c1
+r203,0,"^responseToProbation$","DC has been attending appointments and says he is focusing on controlling his drinking. When I questioned the smell of alcohol he claimed it was a strong cologne. contacting family they’ve said he’s doing ok and that all is back to normal.
+He missed some rehab appointments but the worker has said that he’s struggling to focus.","/recommendations/[^\/]+/response-to-probation",0,c2
+r204,3,"^standard\|GOOD_BEHAVIOUR$","1","/recommendations/[^\/]+/licence-conditions",0,c2
+r205,3,"^additional\|LC74$","1","/recommendations/[^\/]+/licence-conditions",0,c2
+r206,3,"^REFERRAL_TO_PARTNERSHIP_AGENCIES$","1","/recommendations/[^\/]+/alternatives-tried",0,c2
+r207,0,"^alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES$","DC is referred to DrinkAware rehab programme.","/recommendations/[^\/]+/alternatives-tried",0,c2
+r208,3,"^FIXED_TERM$","1","/recommendations/[^\/]+/recall-type",0,c2
+r209,0,"^recallTypeDetailsFixedTerm$","Determinate sentence","/recommendations/[^\/]+/recall-type",0,c2
+r210,3,"^NO$","1","/recommendations/[^\/]+/emergency-recall",0,c2
+r211,3,"^YES$","1","/recommendations/[^\/]+/custody-status",0,c2
+r212,3,"^DOMESTIC_ABUSE$","1","/recommendations/[^\/]+/vulnerabilities",0,c2
+r213,3,"^NONE$","0","/recommendations/[^\/]+/vulnerabilities",0,c2
+r214,3,"^YES$","1","/recommendations/[^\/]+/victim-contact-scheme",0,c2
+r215,0,"^dateVloInformed-day$","02","/recommendations/[^\/]+/victim-liaison-officer",0,c2
+r216,0,"^dateVloInformed-month$","09","/recommendations/[^\/]+/victim-liaison-officer",0,c2
+r217,0,"^dateVloInformed-year$","2022","/recommendations/[^\/]+/victim-liaison-officer",0,c2
+r219,3,"^NO$","1","/recommendations/[^\/]+/iom",0,c2
+r220,3,"^YES$","1","/recommendations/[^\/]+/arrest-issues",0,c2
+r221,0,"^hasArrestIssuesDetailsYes$","Prone to drinking and violence","/recommendations/[^\/]+/arrest-issues",0,c2
+r222,0,"^phoneNumber$","07838383929","/recommendations/[^\/]+/police-details",0,c2
+r223,0,"^faxNumber$","02087960691","/recommendations/[^\/]+/police-details",0,c2
+r226,0,"^contactName$","PC John Smith","/recommendations/[^\/]+/police-details",0,c2
+r227,0,"^emailAddress$","john.smith@met.police.gov.uk","/recommendations/[^\/]+/police-details",0,c2
+r229,0,"^vulnerabilitiesDetail-DOMESTIC_ABUSE$","History of alcohol abuse which can lead to poor decision making","/recommendations/[^\/]+/vulnerabilities",0,c2
+### AUTOFILL OPTIONS ###,,,,,,
+advanced,"[]",,,,,
+exceptions,"[]",,,,,
+textclips,"[]",,,,,
+variables,"[]",,,,,
+activecat,1,,,,,
+autoimport,0,,,,,
+backup,0,30,,,,
+badge,1,,,,,
+closeinfobar,1,1,,,,
+debug,0,,,,,
+delay,0,1,,,,
+fluid,1,,,,,
+hidebackup,0,,,,,
+manual,1,,,,,
+mask,1,,,,,
+menu,1,,,,,
+overwrite,0,,,,,
+sitefilters,1,,,,,
+skiphidden,0,,,,,
+sound,1,,,,,
+vars,1,,,,,
+voice,0,1,,,,
