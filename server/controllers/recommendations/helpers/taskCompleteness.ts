@@ -12,7 +12,7 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
 }
 
 export const taskCompleteness = (recommendation: RecommendationResponse) => {
-  return {
+  const statuses = {
     recallType: isNotNull(recommendation.recallType) && isNotNull(recommendation.recallType.selected),
     alternativesToRecallTried:
       isNotNull(recommendation.alternativesToRecallTried) &&
@@ -32,5 +32,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       isNotNull(recommendation.isUnderIntegratedOffenderManagement) &&
       isNotNull(recommendation.isUnderIntegratedOffenderManagement.selected),
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
+  }
+  const areAllComplete = Object.values(statuses).every(Boolean)
+  return {
+    statuses,
+    areAllComplete,
   }
 }

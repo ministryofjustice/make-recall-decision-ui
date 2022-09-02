@@ -3,8 +3,8 @@ import recommendationResponse from '../../../../api/responses/get-recommendation
 import { RecommendationResponse, VictimsInContactScheme } from '../../../@types/make-recall-decision-api'
 
 describe('taskCompleteness', () => {
-  it('returns Complete statuses', () => {
-    const statuses = taskCompleteness(recommendationResponse as RecommendationResponse)
+  it('returns Complete statuses, and areAllComplete is true', () => {
+    const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse)
     expect(statuses).toEqual({
       alternativesToRecallTried: true,
       custodyStatus: true,
@@ -18,6 +18,7 @@ describe('taskCompleteness', () => {
       responseToProbation: true,
       vulnerabilities: true,
     })
+    expect(areAllComplete).toEqual(true)
   })
 
   const emptyRecommendation: RecommendationResponse = {
@@ -34,8 +35,8 @@ describe('taskCompleteness', () => {
     vulnerabilities: null,
   }
 
-  it('returns To do statuses', () => {
-    const statuses = taskCompleteness(emptyRecommendation)
+  it('returns To do statuses, and areAllComplete is false', () => {
+    const { statuses, areAllComplete } = taskCompleteness(emptyRecommendation)
     expect(statuses).toEqual({
       alternativesToRecallTried: false,
       custodyStatus: false,
@@ -49,10 +50,11 @@ describe('taskCompleteness', () => {
       responseToProbation: false,
       vulnerabilities: false,
     })
+    expect(areAllComplete).toEqual(false)
   })
 
   it('returns true if hasVictimsInContactScheme is Yes and VLO date set', () => {
-    const statuses = taskCompleteness({
+    const { statuses } = taskCompleteness({
       ...emptyRecommendation,
       hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
       dateVloInformed: '2022-09-05',
@@ -61,7 +63,7 @@ describe('taskCompleteness', () => {
   })
 
   it('returns false if hasVictimsInContactScheme is Yes and VLO date not set', () => {
-    const statuses = taskCompleteness({
+    const { statuses } = taskCompleteness({
       ...emptyRecommendation,
       hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
       dateVloInformed: null,
@@ -70,7 +72,7 @@ describe('taskCompleteness', () => {
   })
 
   it('returns true if hasVictimsInContactScheme is No and VLO date not set', () => {
-    const statuses = taskCompleteness({
+    const { statuses } = taskCompleteness({
       ...emptyRecommendation,
       hasVictimsInContactScheme: { selected: 'NO' as VictimsInContactScheme.selected },
       dateVloInformed: null,
@@ -79,7 +81,7 @@ describe('taskCompleteness', () => {
   })
 
   it('returns true if hasVictimsInContactScheme is Not applicable and VLO date not set', () => {
-    const statuses = taskCompleteness({
+    const { statuses } = taskCompleteness({
       ...emptyRecommendation,
       hasVictimsInContactScheme: { selected: 'NOT_APPLICABLE' as VictimsInContactScheme.selected },
       dateVloInformed: null,
