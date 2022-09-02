@@ -129,6 +129,14 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.interceptGoogleAnalyticsEvent(
+      {
+        ea: 'multipleCustodialConvictionsBanner',
+        ec: crn,
+        el: '2',
+      },
+      'multipleConvictionsEvent'
+    )
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     // Additional licence conditions
     cy.getElement('Burglary - 05714').should('exist')
@@ -137,6 +145,7 @@ context('Licence conditions', () => {
     cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 3)
 
     cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+    cy.wait('@multipleConvictionsEvent')
 
     // first condition
     cy.getElement('Poss, own, control, inspect specified items /docs', {
