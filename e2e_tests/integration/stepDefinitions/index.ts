@@ -75,6 +75,13 @@ When('Maria explains how the person has responded to probation so far', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria states what has led to the recall', () => {
+  cy.clickLink('What has led to this recall?')
+  cy.fillInput('What has led to this recall?', 'Increasingly violent behaviour')
+  cy.getText('previous-answer').should('equal', 'Re-offending has occurred')
+  cy.clickButton('Continue')
+})
+
 When('Maria selects the licence conditions that have been breached', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectCheckboxes(`What licence conditions has ${offenderName} breached?`, [
@@ -194,6 +201,8 @@ When('Maria downloads the Part A', () => {
     )
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
     // TODO - Q18 - additional licence conditions
+    cy.log('Q19')
+    expect(contents).to.contain('Increasingly violent behaviour')
     cy.log('Q20')
     expect(contents).to.contain('Re-offending has occurred')
     cy.log('Q21')
@@ -257,6 +266,11 @@ When('Maria updates the recommendation', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
   )
+  cy.clickButton('Continue')
+
+  // what has led to this recall
+  cy.clickLink('What has led to this recall?')
+  cy.getTextInputValue('What has led to this recall?').should('equal', 'Increasingly violent behaviour')
   cy.clickButton('Continue')
 
   // vulnerabilities

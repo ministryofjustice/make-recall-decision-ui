@@ -35,7 +35,6 @@ context('Make a recommendation', () => {
     cy.clickButton('Make a recommendation')
 
     cy.log('===== Response to probation')
-    // validation error
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'responseToProbation',
@@ -170,6 +169,16 @@ context('Make a recommendation', () => {
       errorText: 'Enter the date you told the VLO',
     })
     cy.enterDateTime('2022-04-14', { parent: '#dateVloInformed' })
+    cy.clickButton('Continue')
+
+    cy.log('===== What has led to this recall?')
+    cy.clickLink('What has led to this recall?')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'whatLedToRecall',
+      errorText: 'You must explain what has led to this recall',
+    })
+    cy.fillInput('What has led to this recall?', 'Increasingly violent behaviour')
     cy.clickButton('Continue')
 
     cy.log('===== Arrest issues')

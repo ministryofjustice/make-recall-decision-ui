@@ -18,6 +18,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       isNotNull(recommendation.alternativesToRecallTried) &&
       recommendation.alternativesToRecallTried.selected?.length > 0,
     responseToProbation: isNotNull(recommendation.responseToProbation),
+    whatLedToRecall: isNotNull(recommendation.whatLedToRecall),
     licenceConditionsBreached:
       isNotNull(recommendation.licenceConditionsBreached) &&
       (recommendation.licenceConditionsBreached.standardLicenceConditions?.selected?.length > 0 ||

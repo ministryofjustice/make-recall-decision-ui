@@ -16,6 +16,7 @@ describe('taskCompleteness', () => {
       localPoliceContact: true,
       recallType: true,
       responseToProbation: true,
+      whatLedToRecall: true,
       vulnerabilities: true,
     })
     expect(areAllComplete).toEqual(true)
@@ -32,6 +33,7 @@ describe('taskCompleteness', () => {
     localPoliceContact: null,
     recallType: null,
     responseToProbation: null,
+    whatLedToRecall: null,
     vulnerabilities: null,
   }
 
@@ -48,6 +50,7 @@ describe('taskCompleteness', () => {
       localPoliceContact: false,
       recallType: false,
       responseToProbation: false,
+      whatLedToRecall: false,
       vulnerabilities: false,
     })
     expect(areAllComplete).toEqual(false)

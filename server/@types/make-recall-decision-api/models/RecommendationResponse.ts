@@ -21,6 +21,7 @@ export type RecommendationResponse = {
     crn?: string;
     recallType?: RecallType;
     responseToProbation?: string;
+    whatLedToRecall?: string;
     isThisAnEmergencyRecall?: boolean;
     hasVictimsInContactScheme?: VictimsInContactScheme;
     dateVloInformed?: string;

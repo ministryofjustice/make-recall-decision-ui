@@ -13,6 +13,7 @@ Feature: Case summary
     And Maria starts a new recommendation
     And Maria explains how the person has responded to probation so far
     And Maria selects the licence conditions that have been breached
+    And Maria states what has led to the recall
     And Maria selects the alternatives to recall that have been tried
     And Maria continues from the Stop and Think page
     And Maria recommends a fixed term recall
