@@ -19,6 +19,7 @@ Feature: Case summary
     And Maria states that it's not an emergency recall
     And Maria selects a custody status
     And Maria views the page Create a Part A form
+    And Maria states what has led to the recall
     And Maria selects the vulnerabilities that recall would affect
     And Maria states that the person is not under integrated offender management
     And Maria completes local police contact details

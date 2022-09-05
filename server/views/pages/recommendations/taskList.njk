@@ -56,6 +56,10 @@
                             {{ taskStatus({ hasData: taskCompleteness.statuses.licenceConditionsBreached }) }}
                         </li>
                         <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}what-led">What has led to this recall?</a>
+                            {{ taskStatus({ hasData: taskCompleteness.statuses.whatLedToRecall }) }}
+                        </li>
+                        <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}emergency-recall">Emergency recall</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.isThisAnEmergencyRecall }) }}
                         </li>

@@ -25,6 +25,8 @@ import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/
 import { inputDisplayValuesLocalPoliceContactDetails } from '../localPoliceContactDetails/inputDisplayValues'
 import { inputDisplayValuesVulnerabilities } from '../vulnerabilities/inputDisplayValues'
 import { validateVulnerabilities } from '../vulnerabilities/formValidator'
+import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
+import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -89,6 +91,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesVulnerabilities,
         pageHeading: strings.pageHeadings.vulnerabilities,
         pageTitle: strings.pageTitles.vulnerabilities,
+      }
+    case 'what-led':
+      return {
+        templateName: 'whatLedToRecall',
+        validator: validateWhatLedToRecall,
+        inputDisplayValues: inputDisplayValuesWhatLedToRecall,
+        pageHeading: strings.pageHeadings.whatLedToRecall,
+        pageTitle: strings.pageTitles.whatLedToRecall,
       }
     case 'task-list':
       return {

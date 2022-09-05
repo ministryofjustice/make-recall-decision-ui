@@ -152,6 +152,7 @@ export type PageTemplateName =
   | 'integratedOffenderManagement'
   | 'localPoliceContactDetails'
   | 'victimContactScheme'
+  | 'whatLedToRecall'
   | 'victimLiaisonOfficer'
   | 'arrestIssues'
   | 'confirmationPartA'
