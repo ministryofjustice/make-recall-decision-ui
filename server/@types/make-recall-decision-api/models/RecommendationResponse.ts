@@ -26,6 +26,7 @@ export type RecommendationResponse = {
     hasVictimsInContactScheme?: VictimsInContactScheme;
     dateVloInformed?: string;
     hasArrestIssues?: SelectedWithDetails;
+    hasContrabandRisk?: SelectedWithDetails;
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;
     licenceConditionsBreached?: LicenceConditionsBreached;

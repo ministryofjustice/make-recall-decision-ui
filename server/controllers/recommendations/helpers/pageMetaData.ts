@@ -27,6 +27,8 @@ import { inputDisplayValuesVulnerabilities } from '../vulnerabilities/inputDispl
 import { validateVulnerabilities } from '../vulnerabilities/formValidator'
 import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
 import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
+import { validateContraband } from '../contraband/formValidator'
+import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -145,6 +147,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesArrestIssues,
         pageHeading: strings.pageHeadings.arrestIssues,
         pageTitle: strings.pageHeadings.arrestIssues,
+      }
+    case 'contraband':
+      return {
+        templateName: 'contraband',
+        validator: validateContraband,
+        inputDisplayValues: inputDisplayValuesContraband,
+        pageHeading: strings.pageHeadings.contraband,
+        pageTitle: strings.pageHeadings.contraband,
       }
     case 'confirmation-part-a':
       return {

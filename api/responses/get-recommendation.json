@@ -100,6 +100,10 @@
     "selected": true,
     "details": "Arrest issues..."
   },
+  "hasContrabandRisk": {
+    "selected": true,
+    "details": "Contraband detail..."
+  },
   "personOnProbation": {
     "name": "Paula Smith",
     "firstName": "Paula",

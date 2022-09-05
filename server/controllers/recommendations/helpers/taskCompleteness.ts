@@ -33,6 +33,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       isNotNull(recommendation.isUnderIntegratedOffenderManagement) &&
       isNotNull(recommendation.isUnderIntegratedOffenderManagement.selected),
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
+    hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
   }
   const areAllComplete = Object.values(statuses).every(Boolean)
   return {
