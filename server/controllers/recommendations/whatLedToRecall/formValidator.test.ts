@@ -26,7 +26,7 @@ describe('validateWhatLedToRecall', () => {
       {
         href: '#whatLedToRecall',
         name: 'whatLedToRecall',
-        text: 'You must explain what has led to this recall',
+        text: 'Enter details of what has led to this recall',
         errorId: 'missingWhatLedToRecall',
       },
     ])

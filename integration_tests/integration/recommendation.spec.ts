@@ -176,7 +176,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'whatLedToRecall',
-      errorText: 'You must explain what has led to this recall',
+      errorText: 'Enter details of what has led to this recall',
     })
     cy.fillInput('What has led to this recall?', 'Increasingly violent behaviour')
     cy.clickButton('Continue')

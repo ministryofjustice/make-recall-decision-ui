@@ -8,7 +8,7 @@ describe('inputDisplayValuesWhatLedToRecall', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       whatLedToRecall: {
-        text: 'You must explain what has led to this recall',
+        text: 'Enter details of what has led to this recall',
         href: '#whatLedToRecall',
       },
     }

@@ -14,7 +14,7 @@ export const strings = {
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     missingDetail: 'Enter more detail',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
-    missingWhatLedToRecall: 'You must explain what has led to this recall',
+    missingWhatLedToRecall: 'Enter details of what has led to this recall',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
     missingArrestIssuesDetail: 'You must enter details of the arrest issues',
     noLicenceConditionsSelected: 'You must select one or more licence conditions',
