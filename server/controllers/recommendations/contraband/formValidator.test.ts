@@ -50,7 +50,7 @@ describe('validateContraband', () => {
         {
           href: '#hasContrabandRisk',
           name: 'hasContrabandRisk',
-          text: "Select whether there's anything the police should know",
+          text: 'Select whether you think {{ fullName }} is using recall to bring contraband into prison',
           errorId: 'noContrabandSelected',
         },
       ])
@@ -71,7 +71,7 @@ describe('validateContraband', () => {
         {
           href: '#hasContrabandRiskDetailsYes',
           name: 'hasContrabandRiskDetailsYes',
-          text: 'You must enter details of the arrest issues',
+          text: 'You must enter details of the contraband concerns',
           errorId: 'missingContrabandDetail',
         },
       ])
@@ -88,7 +88,7 @@ describe('validateContraband', () => {
         {
           href: '#hasContrabandRisk',
           name: 'hasContrabandRisk',
-          text: "Select whether there's anything the police should know",
+          text: 'Select whether you think {{ fullName }} is using recall to bring contraband into prison',
           errorId: 'noContrabandSelected',
         },
       ])
