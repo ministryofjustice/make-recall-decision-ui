@@ -5,6 +5,7 @@ export const strings = {
     saveChanges: 'An error occurred saving your changes',
     noRecallTypeSelected: 'You must select a recommendation',
     missingRecallTypeDetail: 'You must explain why you recommend this recall type',
+    missingCustodyPoliceAddressDetail: 'Enter the custody address',
     noCustodyStatusSelected: 'Select whether the person is in custody or not',
     noEmergencyRecallSelected: 'You must select whether this is an emergency recall or not',
     noVictimContactSchemeSelected: 'You must select whether there are any victims in the victim contact scheme',

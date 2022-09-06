@@ -106,6 +106,7 @@ context('Make a recommendation', () => {
 
     cy.log('===== Custody status')
     cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
+    cy.fillInput('Custody address', 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG')
     cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Create a Part A form')

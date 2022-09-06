@@ -9,31 +9,48 @@ export const validateCustodyStatus = async ({
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
   let errors
-  let valuesToSave
-  let nextPagePath
 
-  const { custodyStatus } = requestBody
-  if (!custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')) {
-    const errorId = 'noCustodyStatusSelected'
-    errors = [
-      makeErrorObject({
-        id: 'custodyStatus',
-        text: strings.errors[errorId],
-        errorId,
-      }),
-    ]
-  }
-  if (!errors) {
-    valuesToSave = {
-      custodyStatus: {
-        selected: custodyStatus,
-        allOptions: formOptions.custodyStatus,
+  const { custodyStatus, custodyStatusDetailsYesPolice } = requestBody
+  const invalidStatus = !custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')
+  const missingPoliceCustodyAddress = custodyStatus === 'YES_POLICE' && !custodyStatusDetailsYesPolice
+  if (invalidStatus || missingPoliceCustodyAddress) {
+    errors = []
+    if (invalidStatus) {
+      const errorId = 'noCustodyStatusSelected'
+      errors.push(
+        makeErrorObject({
+          id: 'custodyStatus',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+    if (missingPoliceCustodyAddress) {
+      const errorId = 'missingCustodyPoliceAddressDetail'
+      errors.push(
+        makeErrorObject({
+          id: 'custodyStatusDetailsYesPolice',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+    return {
+      errors,
+      unsavedValues: {
+        custodyStatus,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list`
   }
+  const valuesToSave = {
+    custodyStatus: {
+      selected: custodyStatus,
+      details: custodyStatus === 'YES_POLICE' ? custodyStatusDetailsYesPolice : null,
+      allOptions: formOptions.custodyStatus,
+    },
+  }
+  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list`
   return {
-    errors,
     valuesToSave,
     nextPagePath,
   }

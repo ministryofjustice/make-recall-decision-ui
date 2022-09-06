@@ -23,7 +23,8 @@
     ]
   },
   "custodyStatus": {
-    "selected": "YES_PRISON",
+    "selected": "YES_POLICE",
+    "details": "West Ham Lane Police Station\r\n18 West Ham Lane\r\nStratford\r\nE15 4SG",
     "allOptions": [
       {
         "value": "YES_PRISON",
