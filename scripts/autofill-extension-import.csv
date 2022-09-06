@@ -153,6 +153,13 @@ r227,0,"^emailAddress$","john.smith@met.police.gov.uk","/recommendations/[^\/]+/
 r229,0,"^vulnerabilitiesDetail-DOMESTIC_ABUSE$","History of alcohol abuse which can lead to poor decision making","/recommendations/[^\/]+/vulnerabilities",0,c2
 r230,3,"^YES_POLICE$","1","/recommendations/[^\/]+/custody-status",0,c2
 r231,0,"^whatLedToRecall$","DC’s offence is for aggravated burglary which he committed while under the influence of alcohol. I’ve  started to become increasingly concerned about erratic and passive aggressive comments. I’ve smelt drink and difficult his behaviour is escalating.  After missing an appointment this week I decided to check-up on him at home to find bottles of spirits.","/recommendations/[^\/]+/what-led",0,c2
+r232,0,"^hasContrabandRiskDetailsYes$","DC has a known associate who was found with illegal substances when re-entering prison after a previous recall.
+He may attempt a similar operation.","/recommendations/[^\/]+/contraband",0,c2
+r233,3,"^YES$","1","/recommendations/[^\/]+/contraband",0,c2
+r235,0,"^custodyStatusDetailsYesPolice$","West Ham Lane Police Station
+18 West Ham Lane
+Stratford
+E15 4SG","/recommendations/[^\/]+/custody-status",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,

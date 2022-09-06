@@ -18,6 +18,18 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <div class="govuk-caption-l">Custody</div>
+                {% set yesPoliceDetailHtml %}
+                    {{ govukTextarea({
+                        name: "custodyStatusDetailsYesPolice",
+                        id: "custodyStatusDetailsYesPolice",
+                        label: {
+                            text: "Custody address",
+                            classes: "govuk-label--s"
+                        },
+                        value: inputDisplayValues.details,
+                        errorMessage: errorMessage(errors.custodyStatusDetailsYesPolice)
+                    }) }}
+                {% endset %}
                 {{ govukRadios({
                     idPrefix: "custodyStatus",
                     name: "custodyStatus",
@@ -30,7 +42,10 @@
                     },
                     items: radioCheckboxItems({
                         items: formOptions.custodyStatus,
-                        currentValues: inputDisplayValues.value
+                        currentValues: inputDisplayValues.value,
+                        conditionalContent: {
+                            YES_POLICE: yesPoliceDetailHtml
+                        }
                     }),
                     errorMessage: errorMessage(errors.custodyStatus)
                 }) }}

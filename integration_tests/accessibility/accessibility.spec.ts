@@ -22,8 +22,8 @@ const urls = [
   // recommendation flow
   // { url: `${routeUrls.recommendations}/456/recall-type` },
   // { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true },
-  { url: `${routeUrls.recommendations}/456/custody-status` },
-  { url: `${routeUrls.recommendations}/456/custody-status`, validationError: true },
+  { url: `${routeUrls.recommendations}/456/emergency-recall` },
+  { url: `${routeUrls.recommendations}/456/emergency-recall`, validationError: true },
 ]
 
 context('Accessibility (a11y) Checks', () => {
