@@ -169,6 +169,15 @@ When('Maria enters any arrest issues', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria indicates there is a risk of contraband', () => {
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)
+    cy.selectRadio(`Do you think ${offenderName} is using recall to bring contraband into prison?`, 'Yes')
+  })
+  cy.fillInput('Give details. Also tell your local police contact about your concerns.', 'Contraband details...')
+  cy.clickButton('Continue')
+})
+
 When('Maria sees a confirmation page', () => {
   cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')
@@ -193,6 +202,9 @@ When('Maria downloads the Part A', () => {
     expect(contents).to.contain('Physical disabilities')
     expect(contents).to.contain('Details on physical disabilities')
 
+    cy.log('Q11')
+    expect(contents).to.contain('Do you have any suspicions that the offender is using recall to bring contraband into the prison estate? Yes')
+    expect(contents).to.contain('If yes, provide details and contact your local police SPOC to share information or concerns: Contraband details...')
     cy.log('Q13')
     expect(contents).to.contain('Registered PPO/IOM: N/A')
     cy.log('Q14')
@@ -259,10 +271,14 @@ When('Maria updates the recommendation', () => {
   cy.clickButton('Continue')
 
   cy.clickLink('Continue') // stop and think page
+
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
+
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
+
+  // Custody
   cy.get('@offenderName').then(offenderName =>
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
   )
@@ -296,6 +312,7 @@ When('Maria updates the recommendation', () => {
   })
   cy.clickButton('Continue')
 
+  // Local police contact
   cy.clickLink('Local police contact details')
   cy.getTextInputValue('Police contact name').should('equal', 'Bob Wiggins')
   cy.getTextInputValue('Telephone number').should('equal', '07936 737 387')
@@ -303,6 +320,7 @@ When('Maria updates the recommendation', () => {
   cy.getTextInputValue('Email address').should('equal', 'bob.wiggins@met.gov.uk')
   cy.clickButton('Continue')
 
+  // Victim contact scheme
   cy.clickLink('Are there any victims in the victim contact scheme?')
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
@@ -311,6 +329,7 @@ When('Maria updates the recommendation', () => {
   cy.getTextInputValue('Year').should('equal', '2022')
   cy.clickButton('Continue')
 
+  // Arrest issues
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
     cy
@@ -321,4 +340,12 @@ When('Maria updates the recommendation', () => {
     'equal',
     'Arrest issues details...'
   )
+  cy.clickButton('Continue')
+
+  // Contraband
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)
+    cy.getRadioOptionByLabel(`Do you think ${offenderName} is using recall to bring contraband into prison?`, 'Yes').should('be.checked')
+  })
+  cy.getTextInputValue('Give details. Also tell your local police contact about your concerns.').should('equal', 'Contraband details...')
 })

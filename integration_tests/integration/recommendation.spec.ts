@@ -198,6 +198,23 @@ context('Make a recommendation', () => {
       'Give details. Include information about any vulnerable children and adults',
       'Arrest issues details...'
     )
+    cy.clickButton('Continue')
+
+    cy.log('===== Contraband')
+    cy.clickLink(`Do you think Paula Smith is using recall to bring contraband into prison?`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'hasContrabandRisk',
+      errorText: 'Select whether you think Paula Smith is using recall to bring contraband into prison',
+    })
+    cy.selectRadio(`Do you think Paula Smith is using recall to bring contraband into prison?`, 'Yes')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'hasContrabandRiskDetailsYes',
+      errorText: 'You must enter details of the contraband concerns',
+    })
+    cy.fillInput('Give details. Also tell your local police contact about your concerns.', 'Contraband details...')
+
     // all tasks must be complete in order to show the Create Part A button
     cy.task('getRecommendation', {
       statusCode: 200,

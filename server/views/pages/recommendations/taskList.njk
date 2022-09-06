@@ -110,6 +110,10 @@
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}arrest-issues">Is there anything the police should know before they arrest {{ recommendation.personOnProbation.name }}?</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.hasArrestIssues }) }}
                         </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}contraband">Do you think {{ recommendation.personOnProbation.name }} is using recall to bring contraband into prison?</a>
+                            {{ taskStatus({ hasData: taskCompleteness.statuses.hasContrabandRisk }) }}
+                        </li>
                     </ul>
                 </li>
             </ol>

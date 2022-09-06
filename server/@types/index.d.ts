@@ -155,6 +155,7 @@ export type PageTemplateName =
   | 'whatLedToRecall'
   | 'victimLiaisonOfficer'
   | 'arrestIssues'
+  | 'contraband'
   | 'confirmationPartA'
   | 'startNoRecall'
 

@@ -8,6 +8,7 @@ import { alternativesToRecallTried } from '../alternativesToRecallTried/formOpti
 import { hasArrestIssues } from '../arrestIssues/formOptions'
 import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
 import { vulnerabilities } from '../vulnerabilities/formOptions'
+import { hasContrabandRisk } from '../contraband/formOptions'
 
 export const formOptions = {
   recallType,
@@ -19,6 +20,7 @@ export const formOptions = {
   hasArrestIssues,
   isUnderIntegratedOffenderManagement,
   vulnerabilities,
+  hasContrabandRisk,
 }
 
 export const isValueValid = (val: string, optionId: string) =>
