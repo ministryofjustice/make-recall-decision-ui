@@ -340,6 +340,7 @@ When('Maria updates the recommendation', () => {
     'equal',
     'Arrest issues details...'
   )
+  cy.clickButton('Continue')
 
   // Contraband
   cy.get('@offenderName').then(offenderName => {
