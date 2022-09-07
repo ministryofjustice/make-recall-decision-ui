@@ -52,7 +52,7 @@ popd
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-docker-compose build make-recall-decision-api
+#docker-compose build make-recall-decision-api
 docker-compose up -d
 popd
 

@@ -22,7 +22,7 @@ describe('getRecommendationPage', () => {
   it('should fetch data and render a recommendation page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     await getRecommendationPage(req, res)
-    expect(res.locals.recommendation).toEqual(recommendationApiResponse)
+    expect(res.locals.recommendation).toEqual({ ...recommendationApiResponse, isInCustody: true })
     expect(res.locals.pageHeading).toEqual('Is Paula Smith in custody now?')
     expect(res.locals.pageTitle).toEqual('Is the person in custody now?')
     expect(res.locals.inputDisplayValues.value).toBeDefined()

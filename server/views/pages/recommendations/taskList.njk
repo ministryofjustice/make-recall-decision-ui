@@ -98,18 +98,22 @@
                                 custody now?</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.custodyStatus }) }}
                         </li>
+                        {% if not recommendation.isInCustody %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}police-details">Local police contact details</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.localPoliceContact }) }}
                         </li>
+                        {% endif %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}iom">Is {{ recommendation.personOnProbation.name }} under Integrated Offender Management (IOM)?</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.isUnderIntegratedOffenderManagement }) }}
                         </li>
+                        {% if not recommendation.isInCustody %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}arrest-issues">Is there anything the police should know before they arrest {{ recommendation.personOnProbation.name }}?</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.hasArrestIssues }) }}
                         </li>
+                        {% endif %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}contraband">Do you think {{ recommendation.personOnProbation.name }} is using recall to bring contraband into prison?</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.hasContrabandRisk }) }}

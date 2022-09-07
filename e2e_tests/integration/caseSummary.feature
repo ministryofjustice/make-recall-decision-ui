@@ -17,7 +17,7 @@ Feature: Case summary
     And Maria continues from the Stop and Think page
     And Maria recommends a fixed term recall
     And Maria states that it's not an emergency recall
-    And Maria enters the police custody address
+    And Maria indicates the person is not in custody
     And Maria views the page Create a Part A form
     And Maria states what has led to the recall
     And Maria selects the vulnerabilities that recall would affect
@@ -29,4 +29,6 @@ Feature: Case summary
     And Maria indicates there is a risk of contraband
     Then Maria sees a confirmation page
     And Maria downloads the Part A
-    And Maria updates the recommendation
+    And Maria confirms the recommendation was saved
+    And Maria changes custody status to "In police custody"
+    And Maria generates an updated Part A

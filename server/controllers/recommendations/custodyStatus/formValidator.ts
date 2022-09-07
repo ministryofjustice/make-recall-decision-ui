@@ -3,6 +3,8 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { isInCustody } from '../helpers/isInCustody'
+import { CustodyStatus } from '../../../@types/make-recall-decision-api'
 
 export const validateCustodyStatus = async ({
   requestBody,
@@ -42,12 +44,20 @@ export const validateCustodyStatus = async ({
       },
     }
   }
+  const inCustody = isInCustody(custodyStatus as CustodyStatus.selected)
+  const resets = inCustody
+    ? {
+        hasArrestIssues: null,
+        localPoliceContact: null,
+      }
+    : {}
   const valuesToSave = {
     custodyStatus: {
       selected: custodyStatus,
       details: custodyStatus === 'YES_POLICE' ? custodyStatusDetailsYesPolice : null,
       allOptions: formOptions.custodyStatus,
     },
+    ...resets,
   }
   const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list`
   return {

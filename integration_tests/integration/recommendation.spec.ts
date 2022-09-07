@@ -105,8 +105,17 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Custody status')
-    cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
-    cy.fillInput('Custody address', 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'custodyStatus',
+      errorText: 'Select whether the person is in custody or not',
+    })
+    cy.selectRadio('Is Paula Smith in custody now?', 'No')
+
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, custodyStatus: { selected: 'NO' } },
+    })
     cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Create a Part A form')
@@ -372,8 +381,29 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('equal', 'Create a Part A form')
   })
 
-  it('task list - completed', () => {
+  it('task list - completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getElement('What you recommend completed').should('exist')
+    cy.getElement('Alternatives tried already completed').should('exist')
+    cy.getElement('Response to probation so far completed').should('exist')
+    cy.getElement('Breached licence condition(s) completed').should('exist')
+    cy.getElement('Emergency recall completed').should('exist')
+    cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
+    cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
+    cy.getElement('Is Paula Smith in custody now? completed').should('exist')
+    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
+    // the following 2 links should not be present, as person is in custody
+    cy.getElement('Local police contact details').should('not.exist')
+    cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
+    cy.clickLink('Create Part A')
+  })
+
+  it('task list - completed - not in custody', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
+    })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend completed').should('exist')
     cy.getElement('Alternatives tried already completed').should('exist')
