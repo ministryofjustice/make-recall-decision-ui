@@ -110,11 +110,10 @@ When("Maria states that it's not an emergency recall", () => {
   cy.clickButton('Continue')
 })
 
-When('Maria enters the police custody address', () => {
+When('Maria indicates the person is not in custody', () => {
   cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody')
+    cy.selectRadio(`Is ${offenderName} in custody now?`, 'No')
   )
-  cy.fillInput('Custody address', 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG')
   cy.clickButton('Continue')
 })
 
@@ -187,12 +186,12 @@ When('Maria sees a confirmation page', () => {
 When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     cy.log('Q6')
-    expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
-    cy.log('Q7')
-    expect(contents).to.contain('If the offender is in police custody, state where: West Ham Lane Police Station, 18 West Ham Lane, Stratford, E15 4SG')
+    expect(contents).to.contain('Is the offender currently in police custody or prison custody? No')
+
     cy.log('Q8')
     expect(contents).to.contain('Are there any arrest issues of which police should be aware?  Yes')
     expect(contents).to.contain('Arrest issues details...')
+
     cy.log('Q9')
     expect(contents).to.contain('Police single point of contact name: Bob Wiggins')
     expect(contents).to.contain('Current contact telephone number: 07936 737 387')
@@ -229,7 +228,8 @@ When('Maria downloads the Part A', () => {
   })
 })
 
-When('Maria updates the recommendation', () => {
+When('Maria confirms the recommendation was saved', () => {
+  cy.log('========== Confirm recommendation saved"')
   cy.clickLink('Back to case overview')
   // check saved values
   cy.pageHeading().should('contain', 'Overview')
@@ -281,11 +281,10 @@ When('Maria updates the recommendation', () => {
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
 
-  // Custody
-  cy.get('@offenderName').then(offenderName =>
-    cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'Yes, police custody').should('be.checked')
-  )
-  cy.getTextInputValue('Custody address').should('equal', 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG')
+
+  cy.get('@offenderName').then(offenderName => {
+    cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'No').should('be.checked')
+  })
   cy.clickButton('Continue')
 
   // what has led to this recall
@@ -295,8 +294,8 @@ When('Maria updates the recommendation', () => {
 
   // vulnerabilities
   cy.clickLink('Would recall affect vulnerability or additional needs?')
-  cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?','Relationship breakdown',).should('be.checked')
-  cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?','Physical disabilities',).should('be.checked')
+  cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?', 'Relationship breakdown',).should('be.checked')
+  cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?', 'Physical disabilities',).should('be.checked')
   cy.getTextInputValue('Give details', { parent: '#conditional-RELATIONSHIP_BREAKDOWN' }).should(
     'equal',
     'Details on relationship breakdown'
@@ -352,4 +351,33 @@ When('Maria updates the recommendation', () => {
     cy.getRadioOptionByLabel(`Do you think ${offenderName} is using recall to bring contraband into prison?`, 'Yes').should('be.checked')
   })
   cy.getTextInputValue('Give details. Also tell your local police contact about your concerns.').should('equal', 'Contraband details...')
+  cy.clickButton('Continue')
+})
+
+When('Maria changes custody status to "In police custody"', () => {
+  cy.log('========== Change to "In police custody"')
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is ${offenderName} in custody now?`)
+    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody')
+  })
+  cy.fillInput('Custody address', 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG')
+  cy.clickButton('Continue')
+
+  // Local police contact / arrest issues links should be hidden, because person is in custody now
+  cy.getElement('Local police contact details').should('not.exist')
+  cy.get('@offenderName').then(offenderName => {
+    cy.getElement(`Is there anything the police should know before they arrest ${offenderName}?`).should('not.exist')
+  })
+})
+
+When('Maria generates an updated Part A', () => {
+  cy.clickLink('Create Part A')
+  cy.downloadDocX('Download the Part A').then(contents => {
+    cy.log('Q6')
+    expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
+
+    cy.log('Q7')
+    expect(contents).to.contain('If the offender is in police custody, state where: West Ham Lane Police Station, 18 West Ham Lane, Stratford, E15 4SG')
+
+  })
 })

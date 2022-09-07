@@ -59,39 +59,103 @@ describe('taskCompleteness', () => {
     expect(areAllComplete).toEqual(false)
   })
 
-  it('returns true if hasVictimsInContactScheme is Yes and VLO date set', () => {
-    const { statuses } = taskCompleteness({
-      ...emptyRecommendation,
-      hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
-      dateVloInformed: '2022-09-05',
+  describe('Custody status', () => {
+    it('returns false for areAllComplete if not in custody, and hasArrestIssues / localPoliceContact are null', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        custodyStatus: { selected: 'NO' },
+        hasArrestIssues: null,
+        localPoliceContact: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(false)
     })
-    expect(statuses.hasVictimsInContactScheme).toEqual(true)
+
+    it('returns false for areAllComplete if not in custody, and hasArrestIssues not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        custodyStatus: { selected: 'NO' },
+        hasArrestIssues: null,
+        localPoliceContact: {},
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('returns false for areAllComplete if not in custody, and localPoliceContact not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        custodyStatus: { selected: 'NO' },
+        hasArrestIssues: 'details',
+        localPoliceContact: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('returns true for areAllComplete if not in custody, and hasArrestIssues / localPoliceContact are both set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        custodyStatus: { selected: 'NO' },
+        hasArrestIssues: 'details',
+        localPoliceContact: {},
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns true for areAllComplete if in police custody, and hasArrestIssues / localPoliceContact are null', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        custodyStatus: { selected: 'YES_POLICE' },
+        hasArrestIssues: null,
+        localPoliceContact: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns true for areAllComplete if in prison custody, and hasArrestIssues / localPoliceContact are null', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        custodyStatus: { selected: 'YES_PRISON' },
+        hasArrestIssues: null,
+        localPoliceContact: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
   })
 
-  it('returns false if hasVictimsInContactScheme is Yes and VLO date not set', () => {
-    const { statuses } = taskCompleteness({
-      ...emptyRecommendation,
-      hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
-      dateVloInformed: null,
+  describe('Victim contact scheme', () => {
+    it('returns true if hasVictimsInContactScheme is Yes and VLO date set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecommendation,
+        hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
+        dateVloInformed: '2022-09-05',
+      })
+      expect(statuses.hasVictimsInContactScheme).toEqual(true)
     })
-    expect(statuses.hasVictimsInContactScheme).toEqual(false)
-  })
 
-  it('returns true if hasVictimsInContactScheme is No and VLO date not set', () => {
-    const { statuses } = taskCompleteness({
-      ...emptyRecommendation,
-      hasVictimsInContactScheme: { selected: 'NO' as VictimsInContactScheme.selected },
-      dateVloInformed: null,
+    it('returns false if hasVictimsInContactScheme is Yes and VLO date not set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecommendation,
+        hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
+        dateVloInformed: null,
+      })
+      expect(statuses.hasVictimsInContactScheme).toEqual(false)
     })
-    expect(statuses.hasVictimsInContactScheme).toEqual(true)
-  })
 
-  it('returns true if hasVictimsInContactScheme is Not applicable and VLO date not set', () => {
-    const { statuses } = taskCompleteness({
-      ...emptyRecommendation,
-      hasVictimsInContactScheme: { selected: 'NOT_APPLICABLE' as VictimsInContactScheme.selected },
-      dateVloInformed: null,
+    it('returns true if hasVictimsInContactScheme is No and VLO date not set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecommendation,
+        hasVictimsInContactScheme: { selected: 'NO' as VictimsInContactScheme.selected },
+        dateVloInformed: null,
+      })
+      expect(statuses.hasVictimsInContactScheme).toEqual(true)
     })
-    expect(statuses.hasVictimsInContactScheme).toEqual(true)
+
+    it('returns true if hasVictimsInContactScheme is Not applicable and VLO date not set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecommendation,
+        hasVictimsInContactScheme: { selected: 'NOT_APPLICABLE' as VictimsInContactScheme.selected },
+        dateVloInformed: null,
+      })
+      expect(statuses.hasVictimsInContactScheme).toEqual(true)
+    })
   })
 })

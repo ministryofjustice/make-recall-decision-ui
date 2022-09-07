@@ -7,6 +7,7 @@ import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { taskCompleteness } from './helpers/taskCompleteness'
 import { isCaseRestrictedOrExcluded } from '../../utils/utils'
+import { isInCustody } from './helpers/isInCustody'
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageId } = req.params
@@ -17,6 +18,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     res.locals.caseSummary = res.locals.recommendation
     return res.render('pages/excludedRestrictedCrn')
   }
+  res.locals.recommendation.isInCustody = isInCustody(res.locals.recommendation.custodyStatus?.selected)
   res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation)
   if (pageId === 'licence-conditions') {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({

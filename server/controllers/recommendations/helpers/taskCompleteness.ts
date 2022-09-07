@@ -1,5 +1,6 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { isNotNull } from '../../../utils/utils'
+import { ObjectMap } from '../../../@types'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -9,6 +10,20 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
     return isNotNull(recommendation.dateVloInformed)
   }
   return isNotNull(recommendation.hasVictimsInContactScheme?.selected)
+}
+
+const areAllTasksComplete = ({
+  statuses,
+  recommendation,
+}: {
+  statuses: ObjectMap<boolean>
+  recommendation: RecommendationResponse
+}) => {
+  let statusesToCheck = Object.keys(statuses)
+  if (['YES_POLICE', 'YES_PRISON'].includes(recommendation.custodyStatus?.selected as string)) {
+    statusesToCheck = statusesToCheck.filter(key => !['hasArrestIssues', 'localPoliceContact'].includes(key))
+  }
+  return statusesToCheck.every(key => Boolean(statuses[key]))
 }
 
 export const taskCompleteness = (recommendation: RecommendationResponse) => {
@@ -35,7 +50,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
     hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
   }
-  const areAllComplete = Object.values(statuses).every(Boolean)
+  const areAllComplete = areAllTasksComplete({ statuses, recommendation })
   return {
     statuses,
     areAllComplete,

@@ -2,7 +2,7 @@ import { validateCustodyStatus } from './formValidator'
 
 describe('validateCustodyStatus', () => {
   const recommendationId = '34'
-  it('returns valuesToSave and no errors if valid', async () => {
+  it('returns valuesToSave and no errors if set to "Yes, police custody", and resets arrest issues / local police contact', async () => {
     const requestBody = {
       custodyStatus: 'YES_POLICE',
       custodyStatusDetailsYesPolice: 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
@@ -20,11 +20,13 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_POLICE',
         details: 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
       },
+      hasArrestIssues: null,
+      localPoliceContact: null,
     })
     expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
 
-  it('returns valuesToSave and no errors if Yes, prison selected, and resets details', async () => {
+  it('returns valuesToSave and no errors if Yes, prison selected, and resets details / arrest issues / local police contact', async () => {
     const requestBody = {
       custodyStatus: 'YES_PRISON',
       crn: 'X34534',
@@ -41,6 +43,8 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_PRISON',
         details: null,
       },
+      hasArrestIssues: null,
+      localPoliceContact: null,
     })
     expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
   })
