@@ -3,19 +3,19 @@ import { FeatureFlag, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
   flagRecommendationProd: {
-    label: 'Make a recommendation (production feature)',
+    label: 'Make a recommendation',
     default: false,
   },
   flagRecommendationsPageProd: {
-    label: 'Recommendations list (production feature)',
+    label: 'Recommendations list',
     default: false,
   },
   flagRecommendationsPagePrototype: {
-    label: 'Recommendations list (prototype for user research)',
+    label: 'Prototype - Recommendations list',
     default: false,
   },
   flagRecommendationPrototype: {
-    label: 'Make a recommendation (prototype journey for user research)',
+    label: 'Prototype - Make a recommendation',
     default: false,
   },
   contactTypesFilter: {
