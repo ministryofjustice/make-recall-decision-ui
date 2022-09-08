@@ -78,6 +78,15 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('equal', 'Stop and think')
     cy.clickLink('Continue')
 
+    cy.log('===== Indeterminate / extended sentence')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'isExtendedOrIndeterminateSentence',
+      errorText: 'Select whether the person on probation is on an extended or indeterminate sentence or not',
+    })
+    cy.selectRadio('Is Paula Smith on an extended or indeterminate sentence?', 'Yes')
+    cy.clickButton('Continue')
+
     cy.log('===== What do you recommend?')
     cy.pageHeading().should('equal', 'What do you recommend?')
     // validation error

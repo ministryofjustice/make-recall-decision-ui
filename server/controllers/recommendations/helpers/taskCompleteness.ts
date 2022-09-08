@@ -39,6 +39,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       (recommendation.licenceConditionsBreached.standardLicenceConditions?.selected?.length > 0 ||
         recommendation.licenceConditionsBreached.additionalLicenceConditions?.selected?.length > 0),
     isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
+    isExtendedOrIndeterminateSentence: isNotNull(recommendation.isExtendedOrIndeterminateSentence),
     vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
     custodyStatus: isNotNull(recommendation.custodyStatus) && isNotNull(recommendation.custodyStatus.selected),

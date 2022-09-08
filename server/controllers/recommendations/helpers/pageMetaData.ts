@@ -29,6 +29,8 @@ import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
 import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 import { validateContraband } from '../contraband/formValidator'
 import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
+import { validateExtendedIndeterminate } from '../extendedIndeterminate/formValidator'
+import { inputDisplayValuesExtendedIndeterminate } from '../extendedIndeterminate/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -61,6 +63,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         templateName: 'stopThink',
         pageHeading: strings.pageHeadings.stopThink,
         pageTitle: strings.pageHeadings.stopThink,
+      }
+    case 'extended-indeterminate':
+      return {
+        templateName: 'extendedIndeterminate',
+        validator: validateExtendedIndeterminate,
+        inputDisplayValues: inputDisplayValuesExtendedIndeterminate,
+        pageHeading: strings.pageHeadings.extendedIndeterminate,
+        pageTitle: strings.pageHeadings.extendedIndeterminate,
       }
     case 'recall-type':
       return {

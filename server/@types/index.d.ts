@@ -144,6 +144,7 @@ export type PageTemplateName =
   | 'licenceConditions'
   | 'alternativesToRecallTried'
   | 'stopThink'
+  | 'extendedIndeterminate'
   | 'recallType'
   | 'emergencyRecall'
   | 'custodyStatus'
