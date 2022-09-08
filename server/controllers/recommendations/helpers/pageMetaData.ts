@@ -62,7 +62,7 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
       return {
         templateName: 'stopThink',
         pageHeading: strings.pageHeadings.stopThink,
-        pageTitle: strings.pageHeadings.stopThink,
+        pageTitle: strings.pageTitles.stopThink,
       }
     case 'extended-indeterminate':
       return {
@@ -70,7 +70,7 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         validator: validateExtendedIndeterminate,
         inputDisplayValues: inputDisplayValuesExtendedIndeterminate,
         pageHeading: strings.pageHeadings.extendedIndeterminate,
-        pageTitle: strings.pageHeadings.extendedIndeterminate,
+        pageTitle: strings.pageTitles.extendedIndeterminate,
       }
     case 'recall-type':
       return {
@@ -78,7 +78,7 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         validator: validateRecallType,
         inputDisplayValues: inputDisplayValuesRecallType,
         pageHeading: strings.pageHeadings.recallType,
-        pageTitle: strings.pageHeadings.recallType,
+        pageTitle: strings.pageTitles.recallType,
       }
     case 'emergency-recall':
       return {
@@ -86,7 +86,7 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         validator: validateEmergencyRecall,
         inputDisplayValues: inputDisplayValuesEmergencyRecall,
         pageHeading: strings.pageHeadings.emergencyRecall,
-        pageTitle: strings.pageHeadings.emergencyRecall,
+        pageTitle: strings.pageTitles.emergencyRecall,
       }
     case 'custody-status':
       return {
@@ -156,7 +156,7 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         validator: validateArrestIssues,
         inputDisplayValues: inputDisplayValuesArrestIssues,
         pageHeading: strings.pageHeadings.arrestIssues,
-        pageTitle: strings.pageHeadings.arrestIssues,
+        pageTitle: strings.pageTitles.arrestIssues,
       }
     case 'contraband':
       return {
@@ -164,7 +164,7 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         validator: validateContraband,
         inputDisplayValues: inputDisplayValuesContraband,
         pageHeading: strings.pageHeadings.contraband,
-        pageTitle: strings.pageHeadings.contraband,
+        pageTitle: strings.pageTitles.contraband,
       }
     case 'confirmation-part-a':
       return {
