@@ -285,6 +285,7 @@ When('Maria confirms the recommendation was saved', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.getRadioOptionByLabel(`Is ${offenderName} on an extended or indeterminate sentence?`, 'Yes').should('be.checked')
   })
+  cy.clickButton('Continue')
 
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
