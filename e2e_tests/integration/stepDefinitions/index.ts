@@ -105,6 +105,13 @@ When('Maria continues from the Stop and Think page', () => {
   cy.clickLink('Continue')
 })
 
+When('Maria selects indeterminate sentence', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} on an extended or indeterminate sentence?`, 'Yes')
+  )
+  cy.clickButton('Continue')
+})
+
 When("Maria states that it's not an emergency recall", () => {
   cy.selectRadio('Is this an emergency recall?', 'No')
   cy.clickButton('Continue')
@@ -274,6 +281,11 @@ When('Maria confirms the recommendation was saved', () => {
   cy.clickButton('Continue')
 
   cy.clickLink('Continue') // stop and think page
+
+  cy.get('@offenderName').then(offenderName => {
+    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended or indeterminate sentence?`, 'Yes').should('be.checked')
+  })
+  cy.clickButton('Continue')
 
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')

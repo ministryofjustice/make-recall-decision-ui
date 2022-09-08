@@ -29,6 +29,7 @@
                             {{ taskStatus({ hasData: taskCompleteness.statuses.recallType }) }}
                         </li>
                     </ul>
+
                 </li>
                 <li>
                     <h2 class="moj-task-list__section">
@@ -47,6 +48,10 @@
                         Circumstances
                     </h2>
                     <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ pageUrlBase }}extended-indeterminate">Extended or indeterminate sentence</a>
+                            {{ taskStatus({ hasData: taskCompleteness.statuses.isExtendedOrIndeterminateSentence }) }}
+                        </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ pageUrlBase }}response-to-probation">Response to probation so far</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.responseToProbation }) }}
