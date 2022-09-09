@@ -70,6 +70,7 @@ export const mockRes = ({
       },
       env: locals.env || 'PRODUCTION',
       flags: locals.flags || {},
+      urlInfo: locals.urlInfo || {},
     },
     redirect,
     render,
