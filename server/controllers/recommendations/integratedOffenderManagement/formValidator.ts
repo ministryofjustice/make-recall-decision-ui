@@ -33,7 +33,7 @@ export const validateIntegratedOffenderManagement = async ({
         allOptions: formOptions.isUnderIntegratedOffenderManagement,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`
   }
   return {
     errors,

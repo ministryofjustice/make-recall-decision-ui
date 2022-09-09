@@ -1,10 +1,10 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateRecallType = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const missingDetailFixedTerm = recallType === 'FIXED_TERM' && !recallTypeDetailsFixedTerm
@@ -58,9 +58,12 @@ export const validateRecallType = async ({ requestBody, recommendationId }: Form
       allOptions: formOptions.recallType,
     },
   }
-  const nextPageId = recallType === 'NO_RECALL' ? 'start-no-recall' : 'emergency-recall'
+  const nextPagePath =
+    recallType === 'NO_RECALL'
+      ? `${urlInfo.basePath}start-no-recall`
+      : nextPageLinkUrl({ nextPageId: 'emergency-recall', urlInfo })
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`,
+    nextPagePath,
   }
 }

@@ -54,6 +54,6 @@ export const validateLocalPoliceContactDetails = async ({
         emailAddress,
       },
     },
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list`,
+    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }

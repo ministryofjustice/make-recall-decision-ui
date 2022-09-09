@@ -74,6 +74,6 @@ export const validateVulnerabilities = async ({
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list`,
+    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
   }
 }

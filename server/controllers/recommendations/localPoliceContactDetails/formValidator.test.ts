@@ -17,7 +17,7 @@ describe('validateLocalPoliceContactDetails', () => {
     expect(valuesToSave).toEqual({
       localPoliceContact: requestBody,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-custody')
   })
 
   it('returns errors for missing name, and no valuesToSave', async () => {

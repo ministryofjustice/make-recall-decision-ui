@@ -8,6 +8,11 @@ jest.mock('../../../data/makeDecisionApiClient')
 
 describe('validateLicenceConditionsBreached', () => {
   const recommendationId = '34'
+  const urlInfo = {
+    currentPageId: 'licence-conditions',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/licence-conditions`,
+  }
 
   it('returns valuesToSave and no errors if valid', async () => {
     ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
@@ -17,7 +22,7 @@ describe('validateLicenceConditionsBreached', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
@@ -49,7 +54,7 @@ describe('validateLicenceConditionsBreached', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toEqual([
       {
@@ -70,7 +75,7 @@ describe('validateLicenceConditionsBreached', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toEqual([
       {
@@ -96,7 +101,7 @@ describe('validateLicenceConditionsBreached', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toEqual([
       {
@@ -134,7 +139,7 @@ describe('validateLicenceConditionsBreached', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toEqual([
       {
@@ -166,7 +171,7 @@ describe('validateLicenceConditionsBreached', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toEqual([
       {
@@ -178,5 +183,20 @@ describe('validateLicenceConditionsBreached', () => {
     ])
     expect(valuesToSave).toBeUndefined()
     expect(nextPagePath).toBeUndefined()
+  })
+
+  it('if "from page" is set to recall task list, redirect to it', async () => {
+    const requestBody = {
+      licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NST30'],
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
+    const { nextPagePath } = await validateLicenceConditionsBreached({
+      requestBody,
+      recommendationId,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
   })
 })

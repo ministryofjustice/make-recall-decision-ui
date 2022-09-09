@@ -12,7 +12,7 @@ describe('validateWhatLedToRecall', () => {
     expect(valuesToSave).toEqual({
       whatLedToRecall: 'Re-offending',
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-circumstances')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

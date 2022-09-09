@@ -2,12 +2,18 @@ import { validateEmergencyRecall } from './formValidator'
 
 describe('validateEmergencyRecall', () => {
   const recommendationId = '34'
+  const urlInfo = {
+    currentPageId: 'emergency-recall',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/emergency-recall`,
+  }
+
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       isThisAnEmergencyRecall: 'YES',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateEmergencyRecall({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateEmergencyRecall({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       isThisAnEmergencyRecall: true,
@@ -20,7 +26,7 @@ describe('validateEmergencyRecall', () => {
       isThisAnEmergencyRecall: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateEmergencyRecall({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateEmergencyRecall({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -37,7 +43,7 @@ describe('validateEmergencyRecall', () => {
       isThisAnEmergencyRecall: 'BANANA',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateEmergencyRecall({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateEmergencyRecall({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -47,5 +53,19 @@ describe('validateEmergencyRecall', () => {
         errorId: 'noEmergencyRecallSelected',
       },
     ])
+  })
+
+  it('if "from page" is set to recall task list, redirect to it', async () => {
+    const requestBody = {
+      isThisAnEmergencyRecall: 'YES',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
+    const { nextPagePath } = await validateEmergencyRecall({
+      requestBody,
+      recommendationId,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
   })
 })

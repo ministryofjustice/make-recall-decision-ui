@@ -47,7 +47,8 @@ export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
 
 export interface FormValidatorArgs {
   requestBody: ObjectMap<string | string[]>
-  recommendationId: string
+  recommendationId?: string
+  urlInfo?: UrlInfo
   token?: string
 }
 

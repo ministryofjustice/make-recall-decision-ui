@@ -4,6 +4,12 @@ import { cleanseUiList } from '../../../utils/lists'
 
 describe('validateAlternativesTried', () => {
   const recommendationId = '34'
+  const urlInfo = {
+    currentPageId: 'alternatives-tried',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/alternatives-tried`,
+  }
+
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       crn: 'X514364',
@@ -11,7 +17,7 @@ describe('validateAlternativesTried', () => {
       'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': 'Info..',
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details for..',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateAlternativesTried({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {
@@ -35,7 +41,7 @@ describe('validateAlternativesTried', () => {
     const requestBody = {
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -54,7 +60,7 @@ describe('validateAlternativesTried', () => {
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details',
       'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
     }
-    const { errors, unsavedValues, valuesToSave } = await validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, unsavedValues, valuesToSave } = await validateAlternativesTried({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(unsavedValues).toEqual({
       alternativesToRecallTried: [
@@ -83,7 +89,7 @@ describe('validateAlternativesTried', () => {
       crn: 'X514364',
       alternativesToRecallTried: ['NONE'],
     }
-    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {
@@ -95,5 +101,19 @@ describe('validateAlternativesTried', () => {
         ],
       },
     })
+  })
+
+  it('if "from page" is set to recall task list, redirect to it', async () => {
+    const requestBody = {
+      alternativesToRecallTried: ['REFERRAL_TO_PARTNERSHIP_AGENCIES'],
+      'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
+    const { nextPagePath } = await validateAlternativesTried({
+      requestBody,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-recommendation`)
   })
 })
