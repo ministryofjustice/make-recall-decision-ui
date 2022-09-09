@@ -1,4 +1,3 @@
-import getCaseResponse from '../../api/responses/get-case-personal-details.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
@@ -10,7 +9,7 @@ context('Personal details', () => {
 
   it('can view the personal details page', () => {
     const crn = 'X34983'
-    const { personalDetailsOverview } = getCaseResponse
+    const { personalDetailsOverview } = getCasePersonalDetailsResponse
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
     cy.pageHeading().should('equal', 'Personal details for Paula Smith')
 
