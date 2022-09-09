@@ -6,12 +6,20 @@
     "gender": "Male",
     "crn": "A12345"
   },
-  "currentAddress": {
-    "line1": "5 Anderton Road",
-    "line2": "Newham",
-    "town": "London",
-    "postcode": "E15 1UJ"
-  },
+  "addresses": [
+    {
+      "line1": "5 Anderton Road",
+      "line2": "Newham",
+      "town": "London",
+      "postcode": "E15 1UJ"
+    },
+    {
+      "line1": "33 Balaam St",
+      "line2": "Plaistow",
+      "town": "London",
+      "postcode": "E15 3NU"
+    }
+  ],
   "offenderManager": {
     "name": "Jenny Eclair",
     "phoneNumber": "07824637629",
