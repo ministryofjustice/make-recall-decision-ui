@@ -70,7 +70,7 @@ When('Maria recommends a fixed term recall', () => {
 
 When('Maria reads the guidance on sensitive information', () => {
   cy.pageHeading().should('contain', 'Sensitive information')
-  cy.clickButton('Continue')
+  cy.clickLink('Continue')
 })
 
 When('Maria explains how the person has responded to probation so far', () => {

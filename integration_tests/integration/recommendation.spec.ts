@@ -1,4 +1,3 @@
-import { When } from 'cypress-cucumber-preprocessor/steps'
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
