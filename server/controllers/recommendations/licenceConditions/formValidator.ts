@@ -1,18 +1,18 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList } from '../../../utils/lists'
 import { isCaseRestrictedOrExcluded, isDefined } from '../../../utils/utils'
 import { fetchAndTransformLicenceConditions } from './transform'
 import { TransformedLicenceConditionsResponse } from '../../caseSummary/licenceConditions/transformLicenceConditions'
+import { nextPageLinkUrl } from '../helpers/urls'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
 export const validateLicenceConditionsBreached = async ({
   requestBody,
-  recommendationId,
+  urlInfo,
   token,
 }: FormValidatorArgs): FormValidatorReturn => {
   const { licenceConditionsBreached, crn } = requestBody
@@ -103,8 +103,9 @@ export const validateLicenceConditionsBreached = async ({
       },
     },
   }
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'alternatives-tried', urlInfo })
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/alternatives-tried`,
+    nextPagePath,
   }
 }

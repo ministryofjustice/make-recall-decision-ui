@@ -7,7 +7,7 @@ import { caseSummary } from '../controllers/caseSummary/caseSummary'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
 import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
-import { parseUrl } from '../middleware/parseUrl'
+import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import { getFeatureFlags } from '../controllers/featureFlags'
 import { recommendationFormGet, recommendationFormPost } from '../controllers/rec-prototype/recommendationForm'
 import { downloadDocument } from '../controllers/downloadDocument'
@@ -18,6 +18,7 @@ import { routeUrls } from './routeUrls'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
 import { createAndDownloadPartA } from '../controllers/recommendations/createAndDownloadPartA'
 import { setAnalyticsId } from '../middleware/setAnalyticsId'
+import { parseUrl } from '../middleware/parseUrl'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -36,8 +37,16 @@ export default function routes(router: Router): Router {
   post(routeUrls.recommendations, createRecommendationController)
   get(`${routeUrls.recommendations}/:recommendationId/documents/part-a`, createAndDownloadPartA)
   post(`${routeUrls.recommendations}/:recommendationId/status`, updateRecommendationStatus)
-  get(`${routeUrls.recommendations}/:recommendationId/:pageId`, getRecommendationPage)
-  post(`${routeUrls.recommendations}/:recommendationId/:pageId`, postRecommendationForm)
+  router.get(
+    `${routeUrls.recommendations}/:recommendationId/:pageId`,
+    asyncMiddleware(parseRecommendationUrl),
+    asyncMiddleware(getRecommendationPage)
+  )
+  router.post(
+    `${routeUrls.recommendations}/:recommendationId/:pageId`,
+    asyncMiddleware(parseRecommendationUrl),
+    asyncMiddleware(postRecommendationForm)
+  )
 
   // user research prototype
   get('/rec-prototype/:crn/:sectionId', recommendationFormGet)

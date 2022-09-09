@@ -347,7 +347,18 @@ context('Make a recommendation', () => {
   it('recall type - directs "no recall" to the letter page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type?flagRecommendationProd=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
+    cy.selectRadio('What do you recommend?', 'No recall')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
+  })
+
+  it('recall type - directs "no recall" to the letter page even if from task list', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(
+      `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`
+    )
     cy.selectRadio('What do you recommend?', 'No recall')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Start the Decision not to Recall letter')
@@ -443,5 +454,72 @@ context('Make a recommendation', () => {
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? to do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? to do').should('exist')
     cy.getElement('Create Part A').should('not.exist')
+  })
+
+  it('from task list, link to form then return to task list', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.clickLink('What you recommend')
+    cy.log('============= Back link')
+    cy.clickLink('Back')
+    cy.pageHeading().should('equal', 'Create a Part A form')
+    cy.log('============= Continue button')
+    cy.clickLink('What you recommend')
+    cy.selectRadio('What do you recommend?', 'Standard recall')
+    cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
+    cy.clickButton('Continue')
+    cy.pageHeading().should('equal', 'Create a Part A form')
+  })
+
+  it('task list - check links to forms', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('Alternatives tried already').should(
+      'contain',
+      '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
+    )
+    cy.getLinkHref('Extended or indeterminate sentence').should(
+      'contain',
+      '/recommendations/123/extended-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
+    cy.getLinkHref('Response to probation so far').should(
+      'contain',
+      '/recommendations/123/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
+    cy.getLinkHref('Breached licence condition(s)').should(
+      'contain',
+      '/recommendations/123/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
+    cy.getLinkHref('What has led to this recall?').should('contain', '/recommendations/123/what-led')
+    cy.getLinkHref('Emergency recall').should(
+      'contain',
+      '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
+    cy.getLinkHref('Would recall affect vulnerability or additional needs?').should(
+      'contain',
+      '/recommendations/123/vulnerabilities'
+    )
+    cy.getLinkHref('Are there any victims in the victim contact scheme?').should(
+      'contain',
+      '/recommendations/123/victim-contact-scheme'
+    )
+    cy.getLinkHref('Is Paula Smith in custody now?').should(
+      'contain',
+      '/recommendations/123/custody-status?fromPageId=task-list&fromAnchor=heading-custody'
+    )
+    cy.getLinkHref('Local police contact details').should('contain', '/recommendations/123/police-details')
+    cy.getLinkHref('Is Paula Smith under Integrated Offender Management (IOM)?').should(
+      'contain',
+      '/recommendations/123/iom'
+    )
+    cy.getLinkHref('Is there anything the police should know before they arrest Paula Smith?').should(
+      'contain',
+      '/recommendations/123/arrest-issues'
+    )
+    cy.getLinkHref('Do you think Paula Smith is using recall to bring contraband into prison?').should(
+      'contain',
+      '/recommendations/123/contraband'
+    )
   })
 })

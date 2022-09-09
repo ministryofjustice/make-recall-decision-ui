@@ -8,6 +8,7 @@ import { formatDateTimeFromIsoString } from './dates/format'
 import { dateTimeItems, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
+import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -65,4 +66,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('removeUndefinedListItems', removeUndefinedListItems)
   njkEnv.addGlobal('getDisplayValueForOption', getDisplayValueForOption)
   njkEnv.addGlobal('isNotNull', isNotNull)
+  njkEnv.addGlobal('changeLinkUrl', changeLinkUrl)
+  njkEnv.addGlobal('nextPageLinkUrl', nextPageLinkUrl)
 }

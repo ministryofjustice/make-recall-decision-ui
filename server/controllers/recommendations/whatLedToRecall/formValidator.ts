@@ -26,7 +26,7 @@ export const validateWhatLedToRecall = async ({
     valuesToSave = {
       whatLedToRecall,
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-circumstances`
   }
   return {
     errors,

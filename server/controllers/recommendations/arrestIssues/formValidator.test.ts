@@ -18,7 +18,7 @@ describe('validateArrestIssues', () => {
           details: requestBody.hasArrestIssuesDetailsYes,
         },
       })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
+      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
     })
 
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
@@ -34,7 +34,7 @@ describe('validateArrestIssues', () => {
           details: null,
         },
       })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
+      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
     })
   })
 

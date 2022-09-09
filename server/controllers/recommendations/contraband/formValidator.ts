@@ -50,6 +50,6 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list`,
+    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }

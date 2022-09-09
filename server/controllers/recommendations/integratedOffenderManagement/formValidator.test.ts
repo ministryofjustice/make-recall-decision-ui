@@ -19,7 +19,7 @@ describe('validateIntegratedOffenderManagement', () => {
         selected: 'YES',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-custody')
   })
 
   it('returns valuesToSave and no errors if No selected', async () => {
@@ -38,7 +38,7 @@ describe('validateIntegratedOffenderManagement', () => {
       },
     })
     expect(errors).toBeUndefined()
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-custody')
   })
 
   it('returns valuesToSave and no errors if Not applicable selected', async () => {
@@ -57,7 +57,7 @@ describe('validateIntegratedOffenderManagement', () => {
       },
     })
     expect(errors).toBeUndefined()
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-custody')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

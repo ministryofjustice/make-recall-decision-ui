@@ -47,7 +47,8 @@ export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
 
 export interface FormValidatorArgs {
   requestBody: ObjectMap<string | string[]>
-  recommendationId: string
+  recommendationId?: string
+  urlInfo?: UrlInfo
   token?: string
 }
 
@@ -104,6 +105,10 @@ export interface SelectedFilterItem {
 
 export interface UrlInfo {
   path: string
+  fromPageId?: string
+  fromAnchor?: string
+  currentPageId?: string
+  basePath?: string
 }
 
 export interface FeatureFlag {

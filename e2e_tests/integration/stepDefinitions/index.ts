@@ -244,7 +244,7 @@ When('Maria confirms the recommendation was saved', () => {
 
   cy.pageHeading().should('equal', 'Create a Part A form')
 
-  // responded to probation
+  cy.log('========= Response to probation')
   cy.clickLink('Response to probation so far')
   cy.get('@offenderName').then(offenderName => {
     cy
@@ -253,7 +253,8 @@ When('Maria confirms the recommendation was saved', () => {
   })
   cy.clickButton('Continue')
 
-  // licence conditions
+  cy.log('========= Licence conditions')
+  cy.clickLink('Breached licence condition(s)')
   cy.get('@offenderName').then(offenderName =>
     cy
       .getRadioOptionByLabel(
@@ -264,7 +265,8 @@ When('Maria confirms the recommendation was saved', () => {
   )
   cy.clickButton('Continue')
 
-  // alternatives to recall
+  cy.log('========= Alternatives to recall')
+  cy.clickLink('Alternatives tried already')
   cy.getRadioOptionByLabel(
     'What alternatives to recall have been tried already?',
     'Increased frequency of reporting'
@@ -280,31 +282,37 @@ When('Maria confirms the recommendation was saved', () => {
   )
   cy.clickButton('Continue')
 
-  cy.clickLink('Continue') // stop and think page
 
+  cy.log('========= Extended or indeterminate sentence')
+  cy.clickLink('Extended or indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
     cy.getRadioOptionByLabel(`Is ${offenderName} on an extended or indeterminate sentence?`, 'Yes').should('be.checked')
   })
   cy.clickButton('Continue')
 
+  cy.log('========= Recommendation')
+  cy.clickLink('What you recommend')
   cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
   cy.clickButton('Continue')
 
+  cy.log('========= Emergency recall')
+  cy.clickLink('Emergency recall')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
 
-
+  cy.log('========= Custody')
   cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is ${offenderName} in custody now?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'No').should('be.checked')
   })
   cy.clickButton('Continue')
 
-  // what has led to this recall
+  cy.log('========= What led to recall')
   cy.clickLink('What has led to this recall?')
   cy.getTextInputValue('What has led to this recall?').should('equal', 'Increasingly violent behaviour')
   cy.clickButton('Continue')
 
-  // vulnerabilities
+  cy.log('========= Vulnerability')
   cy.clickLink('Would recall affect vulnerability or additional needs?')
   cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?', 'Relationship breakdown',).should('be.checked')
   cy.getRadioOptionByLabel('Consider vulnerability and additional needs. Which of these would recall affect?', 'Physical disabilities',).should('be.checked')
@@ -318,16 +326,14 @@ When('Maria confirms the recommendation was saved', () => {
   )
   cy.clickButton('Continue')
 
-  cy.pageHeading().should('equal', 'Create a Part A form')
-
-  // IOM
+  cy.log('========= IOM')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} under Integrated Offender Management (IOM)?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Not applicable').should('be.checked')
   })
   cy.clickButton('Continue')
 
-  // Local police contact
+  cy.log('========= Local police contact')
   cy.clickLink('Local police contact details')
   cy.getTextInputValue('Police contact name').should('equal', 'Bob Wiggins')
   cy.getTextInputValue('Telephone number').should('equal', '07936 737 387')
@@ -335,7 +341,7 @@ When('Maria confirms the recommendation was saved', () => {
   cy.getTextInputValue('Email address').should('equal', 'bob.wiggins@met.gov.uk')
   cy.clickButton('Continue')
 
-  // Victim contact scheme
+  cy.log('========= Victim contact scheme')
   cy.clickLink('Are there any victims in the victim contact scheme?')
   cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
@@ -344,7 +350,7 @@ When('Maria confirms the recommendation was saved', () => {
   cy.getTextInputValue('Year').should('equal', '2022')
   cy.clickButton('Continue')
 
-  // Arrest issues
+  cy.log('========= Arrest issues')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
     cy
@@ -357,13 +363,15 @@ When('Maria confirms the recommendation was saved', () => {
   )
   cy.clickButton('Continue')
 
-  // Contraband
+  cy.log('========= Contraband')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)
     cy.getRadioOptionByLabel(`Do you think ${offenderName} is using recall to bring contraband into prison?`, 'Yes').should('be.checked')
   })
   cy.getTextInputValue('Give details. Also tell your local police contact about your concerns.').should('equal', 'Contraband details...')
   cy.clickButton('Continue')
+
+  cy.pageHeading().should('equal', 'Create a Part A form')
 })
 
 When('Maria changes custody status to "In police custody"', () => {

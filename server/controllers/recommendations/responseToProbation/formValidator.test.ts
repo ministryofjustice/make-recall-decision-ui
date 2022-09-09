@@ -2,12 +2,18 @@ import { validateResponseToProbation } from './formValidator'
 
 describe('validateResponseToProbation', () => {
   const recommendationId = '34'
+  const urlInfo = {
+    currentPageId: 'response-to-probation',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/response-to-probation`,
+  }
+
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       responseToProbation: 'Re-offending',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateResponseToProbation({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateResponseToProbation({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       responseToProbation: 'Re-offending',
@@ -20,7 +26,7 @@ describe('validateResponseToProbation', () => {
       responseToProbation: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateResponseToProbation({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateResponseToProbation({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -30,5 +36,19 @@ describe('validateResponseToProbation', () => {
         errorId: 'missingResponseToProbation',
       },
     ])
+  })
+
+  it('if "from page" is set to recall task list, redirect to it', async () => {
+    const requestBody = {
+      responseToProbation: 'Re-offending',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
+    const { nextPagePath } = await validateResponseToProbation({
+      requestBody,
+      recommendationId,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
   })
 })

@@ -1,13 +1,10 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateEmergencyRecall = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -27,7 +24,7 @@ export const validateEmergencyRecall = async ({
     valuesToSave = {
       isThisAnEmergencyRecall: isThisAnEmergencyRecall === 'YES',
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/custody-status`
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'custody-status', urlInfo })
   }
   return {
     errors,
