@@ -104,6 +104,10 @@ export interface SelectedFilterItem {
 
 export interface UrlInfo {
   path: string
+  fromPageId?: string
+  fromAnchor?: string
+  currentPageId?: string
+  basePath?: string
 }
 
 export interface FeatureFlag {
