@@ -20,6 +20,24 @@ context('Make a recommendation', () => {
       name: 'Paula Smith',
     },
   }
+  const licenceConditionsMultipleActiveCustodial = {
+    sectionId: 'licence-conditions',
+    statusCode: 200,
+    response: {
+      convictions: [
+        {
+          active: true,
+          isCustodial: true,
+          offences: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          offences: [],
+        },
+      ],
+    },
+  }
 
   it('can create a recommendation', () => {
     const caseResponse = {
@@ -287,24 +305,7 @@ context('Make a recommendation', () => {
 
   it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getCase', {
-      sectionId: 'licence-conditions',
-      statusCode: 200,
-      response: {
-        convictions: [
-          {
-            active: true,
-            isCustodial: true,
-            offences: [],
-          },
-          {
-            active: true,
-            isCustodial: true,
-            offences: [],
-          },
-        ],
-      },
-    })
+    cy.task('getCase', licenceConditionsMultipleActiveCustodial)
     cy.interceptGoogleAnalyticsEvent(
       {
         ea: 'multipleCustodialConvictionsBanner',
@@ -521,5 +522,18 @@ context('Make a recommendation', () => {
       'contain',
       '/recommendations/123/contraband'
     )
+  })
+
+  it('task list - user can create Part A even if they have multiple active custodial convictions', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
+    })
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: licenceConditionsMultipleActiveCustodial,
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
   })
 })

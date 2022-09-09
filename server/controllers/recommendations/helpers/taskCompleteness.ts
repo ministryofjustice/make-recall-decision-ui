@@ -15,18 +15,29 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
 const areAllTasksComplete = ({
   statuses,
   recommendation,
+  hasMultipleActiveCustodial,
 }: {
   statuses: ObjectMap<boolean>
   recommendation: RecommendationResponse
+  hasMultipleActiveCustodial: boolean
 }) => {
   let statusesToCheck = Object.keys(statuses)
   if (['YES_POLICE', 'YES_PRISON'].includes(recommendation.custodyStatus?.selected as string)) {
     statusesToCheck = statusesToCheck.filter(key => !['hasArrestIssues', 'localPoliceContact'].includes(key))
   }
+  if (hasMultipleActiveCustodial) {
+    statusesToCheck = statusesToCheck.filter(key => key !== 'licenceConditionsBreached')
+  }
   return statusesToCheck.every(key => Boolean(statuses[key]))
 }
 
-export const taskCompleteness = (recommendation: RecommendationResponse) => {
+export const taskCompleteness = ({
+  recommendation,
+  hasMultipleActiveCustodial,
+}: {
+  recommendation: RecommendationResponse
+  hasMultipleActiveCustodial: boolean
+}) => {
   const statuses = {
     recallType: isNotNull(recommendation.recallType) && isNotNull(recommendation.recallType.selected),
     alternativesToRecallTried:
@@ -51,7 +62,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
     hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
   }
-  const areAllComplete = areAllTasksComplete({ statuses, recommendation })
+  const areAllComplete = areAllTasksComplete({ statuses, recommendation, hasMultipleActiveCustodial })
   return {
     statuses,
     areAllComplete,
