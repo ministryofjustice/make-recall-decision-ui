@@ -61,7 +61,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
   const nextPagePath =
     recallType === 'NO_RECALL'
       ? `${urlInfo.basePath}start-no-recall`
-      : nextPageLinkUrl({ nextPageId: 'emergency-recall', urlInfo })
+      : nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
   return {
     valuesToSave,
     nextPagePath,

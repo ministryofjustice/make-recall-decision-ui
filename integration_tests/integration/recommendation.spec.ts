@@ -1,3 +1,4 @@
+import { When } from 'cypress-cucumber-preprocessor/steps'
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
@@ -120,6 +121,9 @@ context('Make a recommendation', () => {
       errorText: 'You must explain why you recommend this recall type',
     })
     cy.fillInput('Why do you recommend this recall type?', 'Details...')
+    cy.clickButton('Continue')
+
+    cy.pageHeading().should('contain', 'Sensitive information')
     cy.clickButton('Continue')
 
     cy.log('===== Emergency recall')

@@ -151,6 +151,7 @@ export type PageTemplateName =
   | 'stopThink'
   | 'extendedIndeterminate'
   | 'recallType'
+  | 'sensitiveInformation'
   | 'emergencyRecall'
   | 'custodyStatus'
   | 'vulnerabilities'

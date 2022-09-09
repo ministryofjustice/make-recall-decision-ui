@@ -17,6 +17,7 @@ Feature: Case summary
     And Maria continues from the Stop and Think page
     And Maria selects indeterminate sentence
     And Maria recommends a fixed term recall
+    And Maria reads the guidance on sensitive information
     And Maria states that it's not an emergency recall
     And Maria indicates the person is not in custody
     And Maria views the page Create a Part A form

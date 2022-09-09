@@ -68,6 +68,11 @@ When('Maria recommends a fixed term recall', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria reads the guidance on sensitive information', () => {
+  cy.pageHeading().should('contain', 'Sensitive information')
+  cy.clickButton('Continue')
+})
+
 When('Maria explains how the person has responded to probation so far', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.fillInput(`How has ${offenderName} responded to probation so far?`, 'Re-offending has occurred')
