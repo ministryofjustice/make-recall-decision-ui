@@ -11,7 +11,7 @@ import type { UserAccessResponse } from './UserAccessResponse';
 export type PersonDetailsResponse = {
     userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: PersonDetails;
-    currentAddress?: CurrentAddress;
+    addresses?: CurrentAddress[];
     offenderManager?: OffenderManager;
     activeRecommendation?: ActiveRecommendation;
 };

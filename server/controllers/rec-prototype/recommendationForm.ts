@@ -364,7 +364,7 @@ export const recommendationFormGet = async (req: Request, res: Response): Promis
     ...res.locals,
     refData: getRefData(),
     personalDetailsOverview: personalDetails.personalDetailsOverview,
-    currentAddress: personalDetails.currentAddress,
+    currentAddress: personalDetails.addresses[0],
     crn: crnFormatted,
     pageUrlBase: `/rec-prototype/${crn}/`,
     recommendation: decorateRecommendation(recommendation, newestActiveConviction),
