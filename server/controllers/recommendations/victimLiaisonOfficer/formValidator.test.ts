@@ -14,7 +14,7 @@ describe('validateVictimLiaisonOfficer', () => {
     expect(valuesToSave).toEqual({
       dateVloInformed: '2022-05-12',
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-victim-liaison')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

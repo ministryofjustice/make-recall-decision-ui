@@ -1,14 +1,11 @@
 import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid, optionTextFromValue } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
+import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateAlternativesTried = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { alternativesToRecallTried } = requestBody
   const alternativesList = Array.isArray(alternativesToRecallTried)
     ? alternativesToRecallTried
@@ -79,8 +76,9 @@ export const validateAlternativesTried = async ({
       allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
     },
   }
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'stop-think', urlInfo })
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/stop-think`,
+    nextPagePath,
   }
 }

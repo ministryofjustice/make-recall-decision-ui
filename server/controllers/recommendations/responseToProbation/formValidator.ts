@@ -1,12 +1,9 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
+import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateResponseToProbation = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+export const validateResponseToProbation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -26,7 +23,7 @@ export const validateResponseToProbation = async ({
     valuesToSave = {
       responseToProbation,
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/licence-conditions`
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'licence-conditions', urlInfo })
   }
   return {
     errors,

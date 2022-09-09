@@ -2,6 +2,12 @@ import { validateExtendedIndeterminate } from './formValidator'
 
 describe('validateExtendedIndeterminate', () => {
   const recommendationId = '34'
+  const urlInfo = {
+    currentPageId: 'extended-indeterminate',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/extended-indeterminate`,
+  }
+
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       isExtendedOrIndeterminateSentence: 'YES',
@@ -9,7 +15,7 @@ describe('validateExtendedIndeterminate', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateExtendedIndeterminate({
       requestBody,
-      recommendationId,
+      urlInfo,
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
@@ -23,7 +29,7 @@ describe('validateExtendedIndeterminate', () => {
       isExtendedOrIndeterminateSentence: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateExtendedIndeterminate({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateExtendedIndeterminate({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -40,7 +46,7 @@ describe('validateExtendedIndeterminate', () => {
       isExtendedOrIndeterminateSentence: 'BANANA',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateExtendedIndeterminate({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateExtendedIndeterminate({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -50,5 +56,19 @@ describe('validateExtendedIndeterminate', () => {
         errorId: 'noExtendedIndeterminateSelected',
       },
     ])
+  })
+
+  it('if "from page" is set to recall task list, redirect to it', async () => {
+    const requestBody = {
+      isExtendedOrIndeterminateSentence: 'NO',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
+    const { nextPagePath } = await validateExtendedIndeterminate({
+      requestBody,
+      recommendationId,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
   })
 })

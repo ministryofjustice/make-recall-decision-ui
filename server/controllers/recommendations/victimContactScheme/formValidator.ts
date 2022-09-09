@@ -31,7 +31,8 @@ export const validateVictimContactScheme = async ({
       },
       dateVloInformed: hasVictimsInContactScheme !== 'YES' ? null : undefined,
     }
-    const nextPageId = hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'task-list'
+    const nextPageId =
+      hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'task-list#heading-victim-liaison'
     nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
   }
   return {

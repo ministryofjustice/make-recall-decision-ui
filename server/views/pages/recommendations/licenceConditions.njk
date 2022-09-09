@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: '/recommendations/' + recommendation.id + '/response-to-probation'
+            href: nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo: urlInfo })
         }) }}
     </nav>
 {% endblock %}

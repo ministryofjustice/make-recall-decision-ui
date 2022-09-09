@@ -9,7 +9,8 @@ describe('postRecommendationForm', () => {
   const recommendationId = '123'
   const pageId = 'recall-type'
   const crn = 'X12345'
-  const currentPageUrl = `/recommendations/${recommendationId}/recall-type`
+  const basePath = `/recommendations/${recommendationId}/`
+  const currentPageUrl = `${basePath}recall-type`
   const requestBody = {
     recallType: 'STANDARD',
     recallTypeDetailsStandard: 'Details...',
@@ -18,7 +19,7 @@ describe('postRecommendationForm', () => {
   let res: Response
 
   beforeEach(() => {
-    res = mockRes()
+    res = mockRes({ locals: { urlInfo: { basePath } } })
   })
 
   it('should update recommendation and redirect to next page', async () => {

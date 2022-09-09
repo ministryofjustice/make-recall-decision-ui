@@ -3,6 +3,11 @@ import { formOptions } from '../helpers/formOptions'
 
 describe('validateRecallType', () => {
   const recommendationId = '456'
+  const urlInfo = {
+    currentPageId: 'recall-type',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/recall-type`,
+  }
 
   describe('valid', () => {
     it('returns valuesToSave and no errors if valid fixed term recall selected', async () => {
@@ -11,7 +16,7 @@ describe('validateRecallType', () => {
         recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
         crn: 'X34534',
       }
-      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
         recallType: {
@@ -30,7 +35,7 @@ describe('validateRecallType', () => {
         recallTypeDetailsStandard: 'I recommend fixed term recall...',
         crn: 'X34534',
       }
-      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
         recallType: {
@@ -48,7 +53,7 @@ describe('validateRecallType', () => {
         recallType: 'NO_RECALL',
         crn: 'X34534',
       }
-      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
         recallType: {
@@ -60,33 +65,79 @@ describe('validateRecallType', () => {
       })
     })
 
-    it('redirects to custody status if Fixed term recall is selected', async () => {
-      const requestBody = {
-        recallType: 'FIXED_TERM',
-        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
-        crn: 'X34534',
-      }
-      const { nextPagePath } = await validateRecallType({ requestBody, recommendationId })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
-    })
+    describe('Redirects', () => {
+      it('redirects to custody status if Fixed term recall is selected', async () => {
+        const requestBody = {
+          recallType: 'FIXED_TERM',
+          recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+          crn: 'X34534',
+        }
+        const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
+      })
 
-    it('redirects to custody status if Standard recall is selected', async () => {
-      const requestBody = {
-        recallType: 'STANDARD',
-        recallTypeDetailsStandard: 'I recommend fixed term recall...',
-        crn: 'X34534',
-      }
-      const { nextPagePath } = await validateRecallType({ requestBody, recommendationId })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
-    })
+      it('redirects to custody status if Standard recall is selected', async () => {
+        const requestBody = {
+          recallType: 'STANDARD',
+          recallTypeDetailsStandard: 'I recommend fixed term recall...',
+          crn: 'X34534',
+        }
+        const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
+      })
 
-    it('redirects to no recall letter page if No recall is selected', async () => {
-      const requestBody = {
-        recallType: 'NO_RECALL',
-        crn: 'X34534',
-      }
-      const { nextPagePath } = await validateRecallType({ requestBody, recommendationId })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+      it('redirects to no recall letter page if No recall is selected', async () => {
+        const requestBody = {
+          recallType: 'NO_RECALL',
+          crn: 'X34534',
+        }
+        const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+      })
+
+      it('if "from page" is set to recall task list, redirects to it if a fixed term recall is selected', async () => {
+        const requestBody = {
+          recallType: 'FIXED_TERM',
+          recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+          crn: 'X34534',
+        }
+        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
+        const { nextPagePath } = await validateRecallType({
+          requestBody,
+          recommendationId,
+          urlInfo: urlInfoWithFromPage,
+        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-recommendation`)
+      })
+
+      it('if "from page" is set to recall task list, redirects to it if a standard recall is selected', async () => {
+        const requestBody = {
+          recallType: 'STANDARD',
+          recallTypeDetailsStandard: 'I recommend standard recall...',
+          crn: 'X34534',
+        }
+        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
+        const { nextPagePath } = await validateRecallType({
+          requestBody,
+          recommendationId,
+          urlInfo: urlInfoWithFromPage,
+        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-recommendation`)
+      })
+
+      it('if "from page" is set to recall task list, don\'t redirect to it if No recall is selected', async () => {
+        const requestBody = {
+          recallType: 'NO_RECALL',
+          crn: 'X34534',
+        }
+        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
+        const { nextPagePath } = await validateRecallType({
+          requestBody,
+          recommendationId,
+          urlInfo: urlInfoWithFromPage,
+        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+      })
     })
   })
 
@@ -97,7 +148,11 @@ describe('validateRecallType', () => {
         recallTypeDetailsStandard: 'I recommend fixed term recall...',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, unsavedValues } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
         recallType: 'FIXED_TERM',
@@ -118,7 +173,11 @@ describe('validateRecallType', () => {
         recallTypeDetailsFixedTerm: '',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, unsavedValues } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
         recallType: 'FIXED_TERM',
@@ -139,7 +198,11 @@ describe('validateRecallType', () => {
         recallTypeDetailsFixedTerm: 'I recommend standard recall...',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, unsavedValues } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
         recallType: 'STANDARD',
@@ -160,7 +223,11 @@ describe('validateRecallType', () => {
         recallTypeDetailsStandard: '',
         crn: 'X34534',
       }
-      const { errors, valuesToSave, unsavedValues } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
         recallType: 'STANDARD',
@@ -180,7 +247,7 @@ describe('validateRecallType', () => {
         recallType: '',
         crn: 'X34534',
       }
-      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
       expect(valuesToSave).toBeUndefined()
       expect(errors).toEqual([
         {
@@ -197,7 +264,7 @@ describe('validateRecallType', () => {
         recallType: 'BANANA',
         crn: 'X34534',
       }
-      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId })
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
       expect(valuesToSave).toBeUndefined()
       expect(errors).toEqual([
         {

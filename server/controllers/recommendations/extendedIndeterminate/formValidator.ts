@@ -1,12 +1,12 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateExtendedIndeterminate = async ({
   requestBody,
-  recommendationId,
+  urlInfo,
 }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
@@ -30,7 +30,7 @@ export const validateExtendedIndeterminate = async ({
     valuesToSave = {
       isExtendedOrIndeterminateSentence: isExtendedOrIndeterminateSentence === 'YES',
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/recall-type`
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo })
   }
   return {
     errors,
