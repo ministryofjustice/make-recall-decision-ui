@@ -1,6 +1,5 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList } from '../../../utils/lists'
