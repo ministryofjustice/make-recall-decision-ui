@@ -123,7 +123,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Sensitive information')
-    cy.clickButton('Continue')
+    cy.clickLink('Continue')
 
     cy.log('===== Emergency recall')
     cy.clickButton('Continue')
