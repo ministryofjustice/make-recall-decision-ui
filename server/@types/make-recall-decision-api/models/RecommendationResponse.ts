@@ -23,7 +23,7 @@ export type RecommendationResponse = {
     responseToProbation?: string;
     whatLedToRecall?: string;
     isThisAnEmergencyRecall?: boolean;
-    isExtendedOrIndeterminateSentence?: boolean;
+    isDeterminateSentence?: boolean;
     hasVictimsInContactScheme?: VictimsInContactScheme;
     dateVloInformed?: string;
     hasArrestIssues?: SelectedWithDetails;

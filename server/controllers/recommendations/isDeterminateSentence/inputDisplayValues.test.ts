@@ -2,14 +2,14 @@ import { inputDisplayValuesExtendedIndeterminate } from './inputDisplayValues'
 
 describe('inputDisplayValuesExtendedIndeterminate', () => {
   const apiValues = {
-    isExtendedOrIndeterminateSentence: true,
+    isDeterminateSentence: true,
   }
 
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
-      isExtendedOrIndeterminateSentence: {
+      isDeterminateSentence: {
         text: 'Select whether the person on probation is on an extended or indeterminate sentence or not',
-        href: '#isExtendedOrIndeterminateSentence',
+        href: '#isDeterminateSentence',
       },
     }
     const unsavedValues = {}

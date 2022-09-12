@@ -112,7 +112,7 @@ When('Maria continues from the Stop and Think page', () => {
 
 When('Maria selects indeterminate sentence', () => {
   cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} on an extended or indeterminate sentence?`, 'Yes')
+    cy.selectRadio(`Is ${offenderName} on a determinate sentence?`, 'No')
   )
   cy.clickButton('Continue')
 })
@@ -288,10 +288,10 @@ When('Maria confirms the recommendation was saved', () => {
   cy.clickButton('Continue')
 
 
-  cy.log('========= Extended or indeterminate sentence')
-  cy.clickLink('Extended or indeterminate sentence')
+  cy.log('========= Determinate sentence')
+  cy.clickLink('Determinate sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended or indeterminate sentence?`, 'Yes').should('be.checked')
+    cy.getRadioOptionByLabel(`Is ${offenderName} on a determinate sentence?`, 'No').should('be.checked')
   })
   cy.clickButton('Continue')
 

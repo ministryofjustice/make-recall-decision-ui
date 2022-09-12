@@ -12,15 +12,12 @@ export const validateExtendedIndeterminate = async ({
   let valuesToSave
   let nextPagePath
 
-  const { isExtendedOrIndeterminateSentence } = requestBody
-  if (
-    !isExtendedOrIndeterminateSentence ||
-    !isValueValid(isExtendedOrIndeterminateSentence as string, 'isExtendedOrIndeterminateSentence')
-  ) {
-    const errorId = 'noExtendedIndeterminateSelected'
+  const { isDeterminateSentence } = requestBody
+  if (!isDeterminateSentence || !isValueValid(isDeterminateSentence as string, 'isDeterminateSentence')) {
+    const errorId = 'noDeterminateSelected'
     errors = [
       makeErrorObject({
-        id: 'isExtendedOrIndeterminateSentence',
+        id: 'isDeterminateSentence',
         text: strings.errors[errorId],
         errorId,
       }),
@@ -28,7 +25,7 @@ export const validateExtendedIndeterminate = async ({
   }
   if (!errors) {
     valuesToSave = {
-      isExtendedOrIndeterminateSentence: isExtendedOrIndeterminateSentence === 'YES',
+      isDeterminateSentence: isDeterminateSentence === 'YES',
     }
     nextPagePath = nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo })
   }
