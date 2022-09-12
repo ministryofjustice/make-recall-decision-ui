@@ -320,6 +320,8 @@ context('Make a recommendation', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
     cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
     cy.wait('@multipleConvictionsEvent')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
   })
 
   it('licence conditions - shows message if person has no active custodial convictions', () => {
@@ -346,6 +348,8 @@ context('Make a recommendation', () => {
     cy.getElement(
       'There are no licence conditions. This person is not currently on licence. Double-check that the information in NDelius is correct.'
     ).should('exist')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
   })
 
   it('recall type - directs "no recall" to the letter page', () => {

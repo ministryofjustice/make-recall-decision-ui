@@ -23,6 +23,7 @@ export const strings = {
     noContrabandSelected: 'Select whether you think {{ fullName }} is using recall to bring contraband into prison',
     missingContrabandDetail: 'You must enter details of the contraband concerns',
     noLicenceConditionsSelected: 'You must select one or more licence conditions',
+    invalidConvictionCount: 'Invalid conviction count',
     excludedRestrictedCrn: 'This CRN is excluded or restricted',
     hasMultipleActiveCustodial: 'This person has multiple active custodial convictions',
     noActiveCustodial: 'This person has no active custodial convictions',

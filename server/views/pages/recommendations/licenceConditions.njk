@@ -15,24 +15,23 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            {% if caseSummary.convictions.hasMultipleActiveCustodial or caseSummary.convictions.activeCustodial.length == 0 %}
-                <div class="govuk-caption-l">Circumstances</div>
-                <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
-                {% include '../../partials/multipleActiveCustodialBanner.njk' %}
-                {% if caseSummary.convictions.activeCustodial.length == 0 %}
-                    <p class='govuk-body'>There are no licence conditions. This person is not currently on licence.
-                        Double-check that the information in NDelius is correct.</p>
-                {% endif %}
-                <p class='govuk-body'>
-                    <a class='govuk-button'
-                       href='/recommendations/{{ recommendation.id }}/alternatives-tried'>Continue</a>
-                </p>
-            {% elseif caseSummary.convictions.activeCustodial.length %}
-                <form novalidate method="post">
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                    <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="activeCustodialConvictionCount"
+                       value="{{ caseSummary.convictions.activeCustodial.length }}" />
+                {% if caseSummary.convictions.hasMultipleActiveCustodial or caseSummary.convictions.activeCustodial.length == 0 %}
+                    <div class="govuk-caption-l">Circumstances</div>
+                    <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
+                    {% include '../../partials/multipleActiveCustodialBanner.njk' %}
+                    {% if caseSummary.convictions.activeCustodial.length == 0 %}
+                        <p class='govuk-body'>There are no licence conditions. This person is not currently on licence.
+                            Double-check that the information in NDelius is correct.</p>
+                    {% endif %}
+                {% elseif caseSummary.convictions.activeCustodial.length %}
                     <div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error{% endif %}">
-                        <fieldset class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
+                        <fieldset
+                                class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <div class="govuk-caption-l">Circumstances</div>
                                 <h1 class="govuk-fieldset__heading">{{ pageHeading }}</h1>
@@ -46,7 +45,8 @@
                                 <h2 class='govuk-heading-m'>Standard licence conditions</h2>
                                 {% for standardCondition in formOptions.standardLicenceConditions %}
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}"
+                                        <input class="govuk-checkboxes__input"
+                                               id="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}"
                                                name="licenceConditionsBreached"
                                                type="checkbox" value="standard|{{ standardCondition.value }}"
                                                {% if inputDisplayValues.standardLicenceConditions and standardCondition.value in inputDisplayValues.standardLicenceConditions %}checked{% endif %}>
@@ -77,8 +77,9 @@
                                                      class="govuk-hint govuk-checkboxes__hint">
                                                     <p class='govuk-body govuk-!-margin-bottom-0'>{{ licenceCondition.licenceConditionTypeSubCat.description }}</p>
                                                     {% if licenceCondition.licenceConditionNotes %}
-                                                    <h4 class='govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-0'>Notes</h4>
-                                                    <p class='govuk-body'>{{ licenceCondition.licenceConditionNotes }}</p>
+                                                        <h4 class='govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-0'>
+                                                            Notes</h4>
+                                                        <p class='govuk-body'>{{ licenceCondition.licenceConditionNotes }}</p>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -92,9 +93,9 @@
                             </div>
                         </fieldset>
                     </div>
-                    {{ formSubmitButton() }}
-                </form>
-            {% endif %}
+                {% endif %}
+                {{ formSubmitButton() }}
+            </form>
         </div>
     </div>
 {% endblock %}

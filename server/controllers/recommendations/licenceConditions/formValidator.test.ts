@@ -19,6 +19,7 @@ describe('validateLicenceConditionsBreached', () => {
     const requestBody = {
       crn: 'X514364',
       licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NST30'],
+      activeCustodialConvictionCount: '1',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -44,13 +45,49 @@ describe('validateLicenceConditionsBreached', () => {
           selected: ['ADDRESS_APPROVED'],
         },
       },
+      activeCustodialConvictionCount: 1,
     })
     expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
   })
 
-  it('returns an error if nothing selected', async () => {
+  it('returns valuesToSave and no errors if nothing selected but PoP has multiple convictions', async () => {
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
     const requestBody = {
       crn: 'X514364',
+      activeCustodialConvictionCount: '2',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      activeCustodialConvictionCount: 2,
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
+  })
+
+  it('returns valuesToSave and no errors if nothing selected but PoP has no convictions', async () => {
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
+    const requestBody = {
+      crn: 'X514364',
+      activeCustodialConvictionCount: '0',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      activeCustodialConvictionCount: 0,
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
+  })
+
+  it('returns an error if nothing selected, and PoP has 1 conviction', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      activeCustodialConvictionCount: '1',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -72,6 +109,7 @@ describe('validateLicenceConditionsBreached', () => {
     const requestBody = {
       crn: 'X514364',
       licenceConditionsBreached: 'standard|BANANA',
+      activeCustodialConvictionCount: '1',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -98,6 +136,7 @@ describe('validateLicenceConditionsBreached', () => {
     const requestBody = {
       crn: 'X514364',
       licenceConditionsBreached: 'additional|NST30',
+      activeCustodialConvictionCount: '1',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -136,6 +175,7 @@ describe('validateLicenceConditionsBreached', () => {
     const requestBody = {
       crn: 'X514364',
       licenceConditionsBreached: 'additional|NST30',
+      activeCustodialConvictionCount: '2',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -168,6 +208,7 @@ describe('validateLicenceConditionsBreached', () => {
     const requestBody = {
       crn: 'X514364',
       licenceConditionsBreached: 'additional|NST30',
+      activeCustodialConvictionCount: '0',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
       requestBody,
@@ -189,6 +230,7 @@ describe('validateLicenceConditionsBreached', () => {
     const requestBody = {
       licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NST30'],
       crn: 'X34534',
+      activeCustodialConvictionCount: '1',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
     ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)

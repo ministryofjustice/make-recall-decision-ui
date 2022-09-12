@@ -2,6 +2,7 @@
   "id": 1,
   "status": "DRAFT",
   "crn": "X12345",
+  "activeCustodialConvictionCount": 1,
   "recallType": {
     "selected": {
       "value": "STANDARD",
