@@ -29,8 +29,8 @@ import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
 import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 import { validateContraband } from '../contraband/formValidator'
 import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
-import { validateExtendedIndeterminate } from '../extendedIndeterminate/formValidator'
-import { inputDisplayValuesExtendedIndeterminate } from '../extendedIndeterminate/inputDisplayValues'
+import { validateExtendedIndeterminate } from '../isDeterminateSentence/formValidator'
+import { inputDisplayValuesExtendedIndeterminate } from '../isDeterminateSentence/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -64,13 +64,13 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.stopThink,
         pageTitle: strings.pageTitles.stopThink,
       }
-    case 'extended-indeterminate':
+    case 'is-determinate':
       return {
-        templateName: 'extendedIndeterminate',
+        templateName: 'isDeterminateSentence',
         validator: validateExtendedIndeterminate,
         inputDisplayValues: inputDisplayValuesExtendedIndeterminate,
-        pageHeading: strings.pageHeadings.extendedIndeterminate,
-        pageTitle: strings.pageTitles.extendedIndeterminate,
+        pageHeading: strings.pageHeadings.isDeterminateSentence,
+        pageTitle: strings.pageTitles.isDeterminateSentence,
       }
     case 'recall-type':
       return {

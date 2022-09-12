@@ -149,7 +149,7 @@ export type PageTemplateName =
   | 'licenceConditions'
   | 'alternativesToRecallTried'
   | 'stopThink'
-  | 'extendedIndeterminate'
+  | 'isDeterminateSentence'
   | 'recallType'
   | 'sensitiveInformation'
   | 'emergencyRecall'

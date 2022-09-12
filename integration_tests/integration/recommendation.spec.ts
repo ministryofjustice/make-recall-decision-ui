@@ -96,13 +96,13 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('equal', 'Stop and think')
     cy.clickLink('Continue')
 
-    cy.log('===== Indeterminate / extended sentence')
+    cy.log('===== Determinate sentence')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'isExtendedOrIndeterminateSentence',
-      errorText: 'Select whether the person on probation is on an extended or indeterminate sentence or not',
+      fieldName: 'isDeterminateSentence',
+      errorText: 'Select whether the person on probation is on a determinate sentence or not',
     })
-    cy.selectRadio('Is Paula Smith on an extended or indeterminate sentence?', 'Yes')
+    cy.selectRadio('Is Paula Smith on a determinate sentence?', 'Yes')
     cy.clickButton('Continue')
 
     cy.log('===== What do you recommend?')
@@ -489,9 +489,9 @@ context('Make a recommendation', () => {
       'contain',
       '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
     )
-    cy.getLinkHref('Extended or indeterminate sentence').should(
+    cy.getLinkHref('Determinate sentence').should(
       'contain',
-      '/recommendations/123/extended-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
+      '/recommendations/123/is-determinate?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
     cy.getLinkHref('Response to probation so far').should(
       'contain',

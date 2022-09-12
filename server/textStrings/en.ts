@@ -8,8 +8,7 @@ export const strings = {
     missingCustodyPoliceAddressDetail: 'Enter the custody address',
     noCustodyStatusSelected: 'Select whether the person is in custody or not',
     noEmergencyRecallSelected: 'You must select whether this is an emergency recall or not',
-    noExtendedIndeterminateSelected:
-      'Select whether the person on probation is on an extended or indeterminate sentence or not',
+    noDeterminateSelected: 'Select whether the person on probation is on a determinate sentence or not',
     noVictimContactSchemeSelected: 'You must select whether there are any victims in the victim contact scheme',
     noIntegratedOffenderManagementSelected:
       'You must select whether {{ fullName }} is under Integrated Offender Management',
@@ -37,7 +36,7 @@ export const strings = {
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
-    extendedIndeterminate: 'Is {{ fullName }} on an extended or indeterminate sentence?',
+    isDeterminateSentence: 'Is {{ fullName }} on a determinate sentence?',
     recallType: 'What do you recommend?',
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
@@ -59,7 +58,7 @@ export const strings = {
     licenceConditions: 'What licence conditions has the person breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
-    extendedIndeterminate: 'Is the person on an extended or indeterminate sentence?',
+    isDeterminateSentence: 'Is the person on a determinate sentence?',
     recallType: 'What do you recommend?',
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
