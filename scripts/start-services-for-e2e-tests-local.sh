@@ -45,7 +45,12 @@ readonly AUTH_DIR="${SCRIPT_DIR}/../../${AUTH_NAME}"
 readonly UI_DIR="${SCRIPT_DIR}/../../${UI_NAME}"
 readonly API_DIR="${SCRIPT_DIR}/../../${API_NAME}"
 
+pushd "${API_DIR}"
+docker-compose stop
+popd
+
 pushd "${UI_DIR}"
+docker-compose stop
 printf "\n\nBuilding/starting UI components...\n\n"
 docker-compose up -d --scale=${UI_NAME}=0
 popd
