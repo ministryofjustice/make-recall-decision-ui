@@ -309,6 +309,7 @@ context('Make a recommendation', () => {
   it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getCase', licenceConditionsMultipleActiveCustodial)
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.interceptGoogleAnalyticsEvent(
       {
         ea: 'multipleCustodialConvictionsBanner',
@@ -326,6 +327,7 @@ context('Make a recommendation', () => {
 
   it('licence conditions - shows message if person has no active custodial convictions', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getCase', {
       sectionId: 'licence-conditions',
       statusCode: 200,
