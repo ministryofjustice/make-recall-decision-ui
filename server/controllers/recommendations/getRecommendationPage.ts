@@ -19,14 +19,11 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     return res.render('pages/excludedRestrictedCrn')
   }
   res.locals.recommendation.isInCustody = isInCustody(res.locals.recommendation.custodyStatus?.selected)
-  if (['task-list', 'licence-conditions'].includes(pageId)) {
+  res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation)
+  if (pageId === 'licence-conditions') {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
       crn: res.locals.recommendation.crn,
       token: user.token,
-    })
-    res.locals.taskCompleteness = taskCompleteness({
-      recommendation: res.locals.recommendation,
-      hasMultipleActiveCustodial: res.locals.caseSummary.convictions?.hasMultipleActiveCustodial,
     })
   }
   const stringRenderParams = {

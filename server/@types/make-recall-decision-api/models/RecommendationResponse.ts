@@ -31,6 +31,7 @@ export type RecommendationResponse = {
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;
     licenceConditionsBreached?: LicenceConditionsBreached;
+    activeCustodialConvictionCount?: number;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
     vulnerabilities?: Vulnerabilities;
 };
