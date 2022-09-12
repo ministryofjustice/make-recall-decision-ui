@@ -122,6 +122,9 @@ context('Make a recommendation', () => {
     cy.fillInput('Why do you recommend this recall type?', 'Details...')
     cy.clickButton('Continue')
 
+    cy.pageHeading().should('contain', 'Sensitive information')
+    cy.clickLink('Continue')
+
     cy.log('===== Emergency recall')
     cy.clickButton('Continue')
     cy.assertErrorMessage({

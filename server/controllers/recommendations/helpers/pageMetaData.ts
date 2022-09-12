@@ -80,6 +80,12 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.recallType,
         pageTitle: strings.pageTitles.recallType,
       }
+    case 'sensitive-info':
+      return {
+        templateName: 'sensitiveInformation',
+        pageHeading: strings.pageHeadings.sensitiveInformation,
+        pageTitle: strings.pageTitles.sensitiveInformation,
+      }
     case 'emergency-recall':
       return {
         templateName: 'emergencyRecall',

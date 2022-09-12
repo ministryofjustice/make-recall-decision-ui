@@ -73,7 +73,7 @@ describe('validateRecallType', () => {
           crn: 'X34534',
         }
         const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
       })
 
       it('redirects to custody status if Standard recall is selected', async () => {
@@ -83,7 +83,7 @@ describe('validateRecallType', () => {
           crn: 'X34534',
         }
         const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
       })
 
       it('redirects to no recall letter page if No recall is selected', async () => {
