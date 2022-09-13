@@ -96,13 +96,25 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('equal', 'Stop and think')
     cy.clickLink('Continue')
 
-    cy.log('===== Indeterminate / extended sentence')
+    cy.log('===== Determinate sentence')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'isExtendedOrIndeterminateSentence',
-      errorText: 'Select whether the person on probation is on an extended or indeterminate sentence or not',
+      fieldName: 'isDeterminateSentence',
+      errorText: 'Select whether the person on probation is on a determinate sentence or not',
     })
-    cy.selectRadio('Is Paula Smith on an extended or indeterminate sentence?', 'Yes')
+    cy.selectRadio('Is Paula Smith on a determinate sentence?', 'No')
+    cy.clickButton('Continue')
+
+    cy.log('===== Indeterminate sentence type')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateSentenceType',
+      errorText: 'Select whether Paula Smith is on a life, IPP or DPP sentence',
+    })
+    cy.selectRadio(
+      'Is Paula Smith on a life, IPP or DPP sentence?',
+      'Imprisonment for Public Protection (IPP) sentence'
+    )
     cy.clickButton('Continue')
 
     cy.log('===== What do you recommend?')
@@ -113,13 +125,13 @@ context('Make a recommendation', () => {
       fieldName: 'recallType',
       errorText: 'You must select a recommendation',
     })
-    cy.selectRadio('What do you recommend?', 'Fixed term recall')
+    cy.selectRadio('What do you recommend?', 'Standard recall')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'recallTypeDetailsFixedTerm',
+      fieldName: 'recallTypeDetailsStandard',
       errorText: 'You must explain why you recommend this recall type',
     })
-    cy.fillInput('Why do you recommend this recall type?', 'Details...')
+    cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
     cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Sensitive information')
@@ -377,10 +389,19 @@ context('Make a recommendation', () => {
   it('victim contact scheme - directs "no" to the task list page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagRecommendationProd=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a Part A form')
+  })
+
+  it('determinate sentence - directs "yes" to the recall type page', () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-determinate`)
+    cy.selectRadio('Is Paula Smith on a determinate sentence?', 'Yes')
+    cy.clickButton('Continue')
+    cy.pageHeading().should('contain', 'What do you recommend?')
   })
 
   it('shows an error if creation fails', () => {
@@ -409,140 +430,5 @@ context('Make a recommendation', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
     cy.clickLink('Update recommendation')
     cy.pageHeading().should('equal', 'Create a Part A form')
-  })
-
-  it('task list - completed - in custody', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend completed').should('exist')
-    cy.getElement('Alternatives tried already completed').should('exist')
-    cy.getElement('Response to probation so far completed').should('exist')
-    cy.getElement('Breached licence condition(s) completed').should('exist')
-    cy.getElement('Emergency recall completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
-    cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
-    cy.getElement('Is Paula Smith in custody now? completed').should('exist')
-    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
-    // the following 2 links should not be present, as person is in custody
-    cy.getElement('Local police contact details').should('not.exist')
-    cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
-    cy.clickLink('Create Part A')
-  })
-
-  it('task list - completed - not in custody', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
-    })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend completed').should('exist')
-    cy.getElement('Alternatives tried already completed').should('exist')
-    cy.getElement('Response to probation so far completed').should('exist')
-    cy.getElement('Breached licence condition(s) completed').should('exist')
-    cy.getElement('Emergency recall completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
-    cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
-    cy.getElement('Is Paula Smith in custody now? completed').should('exist')
-    cy.getElement('Local police contact details completed').should('exist')
-    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
-    cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
-    cy.clickLink('Create Part A')
-  })
-
-  it('task list - to do', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend to do').should('exist')
-    cy.getElement('Alternatives tried already to do').should('exist')
-    cy.getElement('Response to probation so far to do').should('exist')
-    cy.getElement('Breached licence condition(s) to do').should('exist')
-    cy.getElement('Emergency recall to do').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? to do').should('exist')
-    cy.getElement('Are there any victims in the victim contact scheme? to do').should('exist')
-    cy.getElement('Is Paula Smith in custody now? to do').should('exist')
-    cy.getElement('Local police contact details to do').should('exist')
-    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? to do').should('exist')
-    cy.getElement('Is there anything the police should know before they arrest Paula Smith? to do').should('exist')
-    cy.getElement('Create Part A').should('not.exist')
-  })
-
-  it('from task list, link to form then return to task list', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.clickLink('What you recommend')
-    cy.log('============= Back link')
-    cy.clickLink('Back')
-    cy.pageHeading().should('equal', 'Create a Part A form')
-    cy.log('============= Continue button')
-    cy.clickLink('What you recommend')
-    cy.selectRadio('What do you recommend?', 'Standard recall')
-    cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
-    cy.clickButton('Continue')
-    cy.pageHeading().should('equal', 'Create a Part A form')
-  })
-
-  it('task list - check links to forms', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('Alternatives tried already').should(
-      'contain',
-      '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
-    )
-    cy.getLinkHref('Extended or indeterminate sentence').should(
-      'contain',
-      '/recommendations/123/extended-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('Response to probation so far').should(
-      'contain',
-      '/recommendations/123/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('Breached licence condition(s)').should(
-      'contain',
-      '/recommendations/123/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('What has led to this recall?').should('contain', '/recommendations/123/what-led')
-    cy.getLinkHref('Emergency recall').should(
-      'contain',
-      '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('Would recall affect vulnerability or additional needs?').should(
-      'contain',
-      '/recommendations/123/vulnerabilities'
-    )
-    cy.getLinkHref('Are there any victims in the victim contact scheme?').should(
-      'contain',
-      '/recommendations/123/victim-contact-scheme'
-    )
-    cy.getLinkHref('Is Paula Smith in custody now?').should(
-      'contain',
-      '/recommendations/123/custody-status?fromPageId=task-list&fromAnchor=heading-custody'
-    )
-    cy.getLinkHref('Local police contact details').should('contain', '/recommendations/123/police-details')
-    cy.getLinkHref('Is Paula Smith under Integrated Offender Management (IOM)?').should(
-      'contain',
-      '/recommendations/123/iom'
-    )
-    cy.getLinkHref('Is there anything the police should know before they arrest Paula Smith?').should(
-      'contain',
-      '/recommendations/123/arrest-issues'
-    )
-    cy.getLinkHref('Do you think Paula Smith is using recall to bring contraband into prison?').should(
-      'contain',
-      '/recommendations/123/contraband'
-    )
-  })
-
-  it('task list - user can create Part A even if they have multiple active custodial convictions', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
-    })
-    cy.task('getCase', {
-      sectionId: 'licence-conditions',
-      statusCode: 200,
-      response: licenceConditionsMultipleActiveCustodial,
-    })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
   })
 })

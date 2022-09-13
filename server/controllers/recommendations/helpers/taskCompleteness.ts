@@ -20,11 +20,17 @@ const areAllTasksComplete = ({
   recommendation: RecommendationResponse
 }) => {
   let statusesToCheck = Object.keys(statuses)
+  // custody status
   if (['YES_POLICE', 'YES_PRISON'].includes(recommendation.custodyStatus?.selected as string)) {
     statusesToCheck = statusesToCheck.filter(key => !['hasArrestIssues', 'localPoliceContact'].includes(key))
   }
+  // active custodial convictions
   if (recommendation.activeCustodialConvictionCount !== 1) {
     statusesToCheck = statusesToCheck.filter(key => key !== 'licenceConditionsBreached')
+  }
+  // indeterminate sentence
+  if (recommendation.isDeterminateSentence === true) {
+    statusesToCheck = statusesToCheck.filter(key => key !== 'indeterminateSentenceType')
   }
   return statusesToCheck.every(key => Boolean(statuses[key]))
 }
@@ -42,7 +48,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       (recommendation.licenceConditionsBreached.standardLicenceConditions?.selected?.length > 0 ||
         recommendation.licenceConditionsBreached.additionalLicenceConditions?.selected?.length > 0),
     isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
-    isExtendedOrIndeterminateSentence: isNotNull(recommendation.isExtendedOrIndeterminateSentence),
+    isDeterminateSentence: isNotNull(recommendation.isDeterminateSentence),
+    indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
     vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
     custodyStatus: isNotNull(recommendation.custodyStatus) && isNotNull(recommendation.custodyStatus.selected),

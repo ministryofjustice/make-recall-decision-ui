@@ -9,7 +9,8 @@ import { hasArrestIssues } from '../arrestIssues/formOptions'
 import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
 import { vulnerabilities } from '../vulnerabilities/formOptions'
 import { hasContrabandRisk } from '../contraband/formOptions'
-import { isExtendedOrIndeterminateSentence } from '../extendedIndeterminate/formOptions'
+import { isDeterminateSentence } from '../isDeterminateSentence/formOptions'
+import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
 
 export const formOptions = {
   recallType,
@@ -22,7 +23,8 @@ export const formOptions = {
   isUnderIntegratedOffenderManagement,
   vulnerabilities,
   hasContrabandRisk,
-  isExtendedOrIndeterminateSentence,
+  isDeterminateSentence,
+  indeterminateSentenceType,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

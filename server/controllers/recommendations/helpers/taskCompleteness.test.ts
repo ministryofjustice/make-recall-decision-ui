@@ -1,6 +1,7 @@
 import { taskCompleteness } from './taskCompleteness'
 import recommendationResponse from '../../../../api/responses/get-recommendation.json'
 import { RecommendationResponse, VictimsInContactScheme } from '../../../@types/make-recall-decision-api'
+import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
 
 describe('taskCompleteness', () => {
   it('returns Complete statuses, and areAllComplete is true', () => {
@@ -12,7 +13,8 @@ describe('taskCompleteness', () => {
       hasContrabandRisk: true,
       hasVictimsInContactScheme: true,
       isThisAnEmergencyRecall: true,
-      isExtendedOrIndeterminateSentence: true,
+      isDeterminateSentence: true,
+      indeterminateSentenceType: true,
       isUnderIntegratedOffenderManagement: true,
       licenceConditionsBreached: true,
       localPoliceContact: true,
@@ -31,7 +33,8 @@ describe('taskCompleteness', () => {
     hasContrabandRisk: null,
     hasVictimsInContactScheme: null,
     isThisAnEmergencyRecall: null,
-    isExtendedOrIndeterminateSentence: null,
+    isDeterminateSentence: null,
+    indeterminateSentenceType: null,
     isUnderIntegratedOffenderManagement: null,
     licenceConditionsBreached: null,
     localPoliceContact: null,
@@ -50,7 +53,8 @@ describe('taskCompleteness', () => {
       hasContrabandRisk: false,
       hasVictimsInContactScheme: false,
       isThisAnEmergencyRecall: false,
-      isExtendedOrIndeterminateSentence: false,
+      isDeterminateSentence: false,
+      indeterminateSentenceType: false,
       isUnderIntegratedOffenderManagement: false,
       licenceConditionsBreached: false,
       localPoliceContact: false,
@@ -177,6 +181,37 @@ describe('taskCompleteness', () => {
         dateVloInformed: null,
       })
       expect(statuses.hasVictimsInContactScheme).toEqual(true)
+    })
+  })
+
+  describe('Indeterminate sentence type', () => {
+    it('returns true if isDeterminateSentence is true and indeterminateSentenceType not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isDeterminateSentence: true,
+        indeterminateSentenceType: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns false if isDeterminateSentence is false and indeterminateSentenceType not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isDeterminateSentence: false,
+        indeterminateSentenceType: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('returns true if isDeterminateSentence is false and indeterminateSentenceType is set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isDeterminateSentence: true,
+        indeterminateSentenceType: {
+          selected: 'LIFE' as IndeterminateSentenceType.selected,
+        },
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
     })
   })
 })

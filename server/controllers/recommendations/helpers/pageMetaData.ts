@@ -29,8 +29,10 @@ import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
 import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 import { validateContraband } from '../contraband/formValidator'
 import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
-import { validateExtendedIndeterminate } from '../extendedIndeterminate/formValidator'
-import { inputDisplayValuesExtendedIndeterminate } from '../extendedIndeterminate/inputDisplayValues'
+import { validateIsDeterminateSentence } from '../isDeterminateSentence/formValidator'
+import { inputDisplayValuesIsDeterminateSentence } from '../isDeterminateSentence/inputDisplayValues'
+import { validateIndeterminateSentenceType } from '../indeterminateSentenceType/formValidator'
+import { inputDisplayValuesIndeterminateSentenceType } from '../indeterminateSentenceType/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -64,13 +66,21 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.stopThink,
         pageTitle: strings.pageTitles.stopThink,
       }
-    case 'extended-indeterminate':
+    case 'is-determinate':
       return {
-        templateName: 'extendedIndeterminate',
-        validator: validateExtendedIndeterminate,
-        inputDisplayValues: inputDisplayValuesExtendedIndeterminate,
-        pageHeading: strings.pageHeadings.extendedIndeterminate,
-        pageTitle: strings.pageTitles.extendedIndeterminate,
+        templateName: 'isDeterminateSentence',
+        validator: validateIsDeterminateSentence,
+        inputDisplayValues: inputDisplayValuesIsDeterminateSentence,
+        pageHeading: strings.pageHeadings.isDeterminateSentence,
+        pageTitle: strings.pageTitles.isDeterminateSentence,
+      }
+    case 'indeterminate-type':
+      return {
+        templateName: 'indeterminateSentenceType',
+        validator: validateIndeterminateSentenceType,
+        inputDisplayValues: inputDisplayValuesIndeterminateSentenceType,
+        pageHeading: strings.pageHeadings.indeterminateSentenceType,
+        pageTitle: strings.pageTitles.indeterminateSentenceType,
       }
     case 'recall-type':
       return {

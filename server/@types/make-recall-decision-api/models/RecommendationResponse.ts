@@ -12,6 +12,7 @@ import type { SelectedWithDetails } from './SelectedWithDetails';
 import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { Vulnerabilities } from './Vulnerabilities';
+import { IndeterminateSentenceType } from './IndeterminateSentenceType'
 
 export type RecommendationResponse = {
     id?: number;
@@ -23,8 +24,9 @@ export type RecommendationResponse = {
     responseToProbation?: string;
     whatLedToRecall?: string;
     isThisAnEmergencyRecall?: boolean;
-    isExtendedOrIndeterminateSentence?: boolean;
+    isDeterminateSentence?: boolean;
     hasVictimsInContactScheme?: VictimsInContactScheme;
+    indeterminateSentenceType?: IndeterminateSentenceType;
     dateVloInformed?: string;
     hasArrestIssues?: SelectedWithDetails;
     hasContrabandRisk?: SelectedWithDetails;

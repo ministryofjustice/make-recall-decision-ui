@@ -49,9 +49,15 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'extended-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Extended or indeterminate sentence</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.isExtendedOrIndeterminateSentence }) }}
+                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'is-determinate', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Determinate sentence</a>
+                            {{ taskStatus({ hasData: taskCompleteness.statuses.isDeterminateSentence }) }}
                         </li>
+                        {% if recommendation.isDeterminateSentence == false %}
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'indeterminate-type', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Life, IPP or DPP sentence</a>
+                            {{ taskStatus({ hasData: taskCompleteness.statuses.indeterminateSentenceType }) }}
+                        </li>
+                        {% endif %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Response to probation so far</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.responseToProbation }) }}
