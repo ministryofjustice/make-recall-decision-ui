@@ -9,6 +9,7 @@ export const strings = {
     noCustodyStatusSelected: 'Select whether the person is in custody or not',
     noEmergencyRecallSelected: 'You must select whether this is an emergency recall or not',
     noDeterminateSelected: 'Select whether the person on probation is on a determinate sentence or not',
+    noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
     noVictimContactSchemeSelected: 'You must select whether there are any victims in the victim contact scheme',
     noIntegratedOffenderManagementSelected:
       'You must select whether {{ fullName }} is under Integrated Offender Management',
@@ -37,6 +38,7 @@ export const strings = {
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
     isDeterminateSentence: 'Is {{ fullName }} on a determinate sentence?',
+    indeterminateSentenceType: 'Is {{ fullName }} on a life, IPP or DPP sentence?',
     recallType: 'What do you recommend?',
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
@@ -59,6 +61,7 @@ export const strings = {
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     stopThink: 'Stop and think',
     isDeterminateSentence: 'Is the person on a determinate sentence?',
+    indeterminateSentenceType: 'Is the person on a life, IPP or DPP sentence?',
     recallType: 'What do you recommend?',
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',

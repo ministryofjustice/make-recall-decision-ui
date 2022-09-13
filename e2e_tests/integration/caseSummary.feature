@@ -15,8 +15,9 @@ Feature: Case summary
     And Maria selects the licence conditions that have been breached
     And Maria selects the alternatives to recall that have been tried
     And Maria continues from the Stop and Think page
-    And Maria selects indeterminate sentence
-    And Maria recommends a fixed term recall
+    And Maria confirms the person is not on a determinate sentence
+    And Maria confirms the person is on a IPP sentence
+    And Maria recommends a standard recall
     And Maria reads the guidance on sensitive information
     And Maria states that it's not an emergency recall
     And Maria indicates the person is not in custody

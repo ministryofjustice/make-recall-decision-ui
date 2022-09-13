@@ -1,6 +1,10 @@
 /// <reference path = "../../cypress_shared/index.d.ts" />
 import '../../cypress_shared/commands'
 
+Cypress.Keyboard.defaults({
+  keystrokeDelay: 0,
+})
+
 const userName = Cypress.env('USERNAME')
 const password = Cypress.env('PASSWORD')
 

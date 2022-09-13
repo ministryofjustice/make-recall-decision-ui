@@ -36,7 +36,7 @@ describe('validateVictimContactScheme', () => {
     expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-victim-liaison')
   })
 
-  it('redirects to arrest issues page if Not applicable selected', async () => {
+  it('redirects to task list if Not applicable selected', async () => {
     const requestBody = {
       hasVictimsInContactScheme: 'NOT_APPLICABLE',
       crn: 'X34534',

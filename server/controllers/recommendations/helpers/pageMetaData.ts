@@ -29,8 +29,10 @@ import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
 import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 import { validateContraband } from '../contraband/formValidator'
 import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
-import { validateExtendedIndeterminate } from '../isDeterminateSentence/formValidator'
-import { inputDisplayValuesExtendedIndeterminate } from '../isDeterminateSentence/inputDisplayValues'
+import { validateIsDeterminateSentence } from '../isDeterminateSentence/formValidator'
+import { inputDisplayValuesIsDeterminateSentence } from '../isDeterminateSentence/inputDisplayValues'
+import { validateIndeterminateSentenceType } from '../indeterminateSentenceType/formValidator'
+import { inputDisplayValuesIndeterminateSentenceType } from '../indeterminateSentenceType/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -67,10 +69,18 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
     case 'is-determinate':
       return {
         templateName: 'isDeterminateSentence',
-        validator: validateExtendedIndeterminate,
-        inputDisplayValues: inputDisplayValuesExtendedIndeterminate,
+        validator: validateIsDeterminateSentence,
+        inputDisplayValues: inputDisplayValuesIsDeterminateSentence,
         pageHeading: strings.pageHeadings.isDeterminateSentence,
         pageTitle: strings.pageTitles.isDeterminateSentence,
+      }
+    case 'indeterminate-type':
+      return {
+        templateName: 'indeterminateSentenceType',
+        validator: validateIndeterminateSentenceType,
+        inputDisplayValues: inputDisplayValuesIndeterminateSentenceType,
+        pageHeading: strings.pageHeadings.indeterminateSentenceType,
+        pageTitle: strings.pageTitles.indeterminateSentenceType,
       }
     case 'recall-type':
       return {

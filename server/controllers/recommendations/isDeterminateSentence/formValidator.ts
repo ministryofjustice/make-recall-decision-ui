@@ -4,7 +4,7 @@ import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateExtendedIndeterminate = async ({
+export const validateIsDeterminateSentence = async ({
   requestBody,
   urlInfo,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -27,7 +27,8 @@ export const validateExtendedIndeterminate = async ({
     valuesToSave = {
       isDeterminateSentence: isDeterminateSentence === 'YES',
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo })
+    const nextPageId = isDeterminateSentence === 'YES' ? 'recall-type' : 'indeterminate-type'
+    nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   }
   return {
     errors,
