@@ -48,6 +48,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
     cy.getElement('Is Paula Smith in custody now? completed').should('exist')
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
+    cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
+    cy.getElement('Type of indeterminate sentence completed').should('exist')
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
@@ -71,8 +73,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Local police contact details completed').should('exist')
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
-    cy.getElement('Determinate sentence completed').should('exist')
-    cy.getElement('Life, IPP or DPP sentence completed').should('exist')
+    cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
+    cy.getElement('Type of indeterminate sentence completed').should('exist')
     cy.clickLink('Create Part A')
   })
 
@@ -90,8 +92,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Local police contact details to do').should('exist')
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? to do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? to do').should('exist')
-    cy.getElement('Determinate sentence to do').should('exist')
-    cy.getElement('Life, IPP or DPP sentence to do').should('not.exist')
+    cy.getElement('Is Paula Smith on an indeterminate sentence? to do').should('exist')
+    cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Create Part A').should('not.exist')
   })
 
@@ -114,18 +116,18 @@ context('Recommendation - task list', () => {
   it('task list - check links to forms', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...recommendationResponse, isDeterminateSentence: false },
+      response: { ...recommendationResponse, isIndeterminateSentence: true },
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('Alternatives tried already').should(
       'contain',
       '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
     )
-    cy.getLinkHref('Determinate sentence').should(
+    cy.getLinkHref('Is Paula Smith on an indeterminate sentence?').should(
       'contain',
-      '/recommendations/123/is-determinate?fromPageId=task-list&fromAnchor=heading-circumstances'
+      '/recommendations/123/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
-    cy.getLinkHref('Life, IPP or DPP sentence').should(
+    cy.getLinkHref('Type of indeterminate sentence').should(
       'contain',
       '/recommendations/123/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances'
     )

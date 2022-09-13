@@ -29,7 +29,7 @@ const areAllTasksComplete = ({
     statusesToCheck = statusesToCheck.filter(key => key !== 'licenceConditionsBreached')
   }
   // indeterminate sentence
-  if (recommendation.isDeterminateSentence === true) {
+  if (recommendation.isIndeterminateSentence === false) {
     statusesToCheck = statusesToCheck.filter(key => key !== 'indeterminateSentenceType')
   }
   return statusesToCheck.every(key => Boolean(statuses[key]))
@@ -48,7 +48,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       (recommendation.licenceConditionsBreached.standardLicenceConditions?.selected?.length > 0 ||
         recommendation.licenceConditionsBreached.additionalLicenceConditions?.selected?.length > 0),
     isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
-    isDeterminateSentence: isNotNull(recommendation.isDeterminateSentence),
+    isIndeterminateSentence: isNotNull(recommendation.isIndeterminateSentence),
     indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
     vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),

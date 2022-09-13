@@ -44,7 +44,7 @@
   "responseToProbation": "Missed appointments\nRe-offending ",
   "whatLedToRecall": "Increasingly violent behaviour",
   "isThisAnEmergencyRecall": false,
-  "isDeterminateSentence": false,
+  "isIndeterminateSentence": true,
   "indeterminateSentenceType": {
     "selected": "LIFE",
     "allOptions": [

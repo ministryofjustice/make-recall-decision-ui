@@ -19,8 +19,8 @@
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <div class="govuk-caption-l">Circumstances</div>
                 {{ govukRadios({
-                    idPrefix: "isDeterminateSentence",
-                    name: "isDeterminateSentence",
+                    idPrefix: "isIndeterminateSentence",
+                    name: "isIndeterminateSentence",
                     fieldset: {
                         legend: {
                             text: pageHeading,
@@ -29,10 +29,10 @@
                         }
                     },
                     items: radioCheckboxItems({
-                        items: formOptions.isDeterminateSentence,
+                        items: formOptions.isIndeterminateSentence,
                         currentValues: inputDisplayValues.value
                     }),
-                    errorMessage: errorMessage(errors.isDeterminateSentence)
+                    errorMessage: errorMessage(errors.isIndeterminateSentence)
                 }) }}
                 {{ formSubmitButton() }}
             </form>

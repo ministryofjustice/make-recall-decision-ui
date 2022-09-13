@@ -1,6 +1,6 @@
 import qs from 'qs'
 import config from '../config'
-import { CurrentAddress } from '../@types/make-recall-decision-api/models/CurrentAddress'
+import { Address } from '../@types/make-recall-decision-api/models/Address'
 import { FormError, ObjectMap } from '../@types'
 import { UserAccessResponse } from '../@types/make-recall-decision-api/models/UserAccessResponse'
 import { AppError } from '../AppError'
@@ -51,7 +51,7 @@ export const listToString = (list: string[], conjunction?: string) => {
   return copy.join(', ')
 }
 
-export const formatSingleLineAddress = (address: CurrentAddress) => {
+export const formatSingleLineAddress = (address: Address) => {
   const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
   return listToString(parts, '')
 }

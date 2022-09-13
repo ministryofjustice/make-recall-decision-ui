@@ -11,8 +11,4 @@ export const indeterminateSentenceType = [
     value: 'DPP',
     text: 'Detention for Public Protection (DPP) sentence',
   },
-  {
-    value: 'NO',
-    text: 'No',
-  },
 ]

@@ -110,16 +110,16 @@ When('Maria continues from the Stop and Think page', () => {
   cy.clickLink('Continue')
 })
 
-When('Maria confirms the person is not on a determinate sentence', () => {
+When('Maria confirms the person is on an indeterminate sentence', () => {
   cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} on a determinate sentence?`, 'No')
+    cy.selectRadio(`Is ${offenderName} on an indeterminate sentence?`, 'Yes')
   )
   cy.clickButton('Continue')
 })
 
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} on a life, IPP or DPP sentence?`, 'Imprisonment for Public Protection (IPP) sentence')
+    cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence')
   )
   cy.clickButton('Continue')
 })
@@ -300,14 +300,14 @@ When('Maria confirms the recommendation was saved', () => {
   cy.log('========= Determinate sentence')
   cy.clickLink('Determinate sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`Is ${offenderName} on a determinate sentence?`, 'No').should('be.checked')
+    cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
   })
   cy.clickButton('Continue')
 
-  cy.log('========= Life, IPP or DPP sentence')
-  cy.clickLink('Life, IPP or DPP sentence')
+  cy.log('========= Type of indeterminate sentence')
+  cy.clickLink('Type of indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`Is ${offenderName} on a life, IPP or DPP sentence?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
+    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
   })
   cy.clickButton('Continue')
 
