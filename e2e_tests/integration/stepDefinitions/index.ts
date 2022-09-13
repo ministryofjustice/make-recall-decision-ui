@@ -297,9 +297,9 @@ When('Maria confirms the recommendation was saved', () => {
   cy.clickButton('Continue')
 
 
-  cy.log('========= Determinate sentence')
-  cy.clickLink('Determinate sentence')
+  cy.log('========= Indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is ${offenderName} on an indeterminate sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
   })
   cy.clickButton('Continue')
