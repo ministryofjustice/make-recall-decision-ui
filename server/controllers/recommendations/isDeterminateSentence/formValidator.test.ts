@@ -1,4 +1,4 @@
-import { validateExtendedIndeterminate } from './formValidator'
+import { validateIsDeterminateSentence } from './formValidator'
 
 describe('validateExtendedIndeterminate', () => {
   const recommendationId = '34'
@@ -13,7 +13,7 @@ describe('validateExtendedIndeterminate', () => {
       isDeterminateSentence: 'YES',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateExtendedIndeterminate({
+    const { errors, valuesToSave, nextPagePath } = await validateIsDeterminateSentence({
       requestBody,
       urlInfo,
     })
@@ -24,12 +24,28 @@ describe('validateExtendedIndeterminate', () => {
     expect(nextPagePath).toEqual('/recommendations/34/recall-type')
   })
 
+  it('redirects to indeterminate sentence type, if answer is No', async () => {
+    const requestBody = {
+      isDeterminateSentence: 'NO',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateIsDeterminateSentence({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      isDeterminateSentence: false,
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/indeterminate-type')
+  })
+
   it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       isDeterminateSentence: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateExtendedIndeterminate({ requestBody, urlInfo })
+    const { errors, valuesToSave } = await validateIsDeterminateSentence({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -46,7 +62,7 @@ describe('validateExtendedIndeterminate', () => {
       isDeterminateSentence: 'BANANA',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateExtendedIndeterminate({ requestBody, urlInfo })
+    const { errors, valuesToSave } = await validateIsDeterminateSentence({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -64,7 +80,7 @@ describe('validateExtendedIndeterminate', () => {
       crn: 'X34534',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
-    const { nextPagePath } = await validateExtendedIndeterminate({
+    const { nextPagePath } = await validateIsDeterminateSentence({
       requestBody,
       recommendationId,
       urlInfo: urlInfoWithFromPage,

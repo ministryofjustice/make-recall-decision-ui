@@ -62,9 +62,9 @@ When('Maria starts a new recommendation', () => {
   cy.clickButton('Make a recommendation')
 })
 
-When('Maria recommends a fixed term recall', () => {
-  cy.selectRadio('What do you recommend?', 'Fixed term recall')
-  cy.fillInput('Why do you recommend this recall type?', 'Details...')
+When('Maria recommends a standard recall', () => {
+  cy.selectRadio('What do you recommend?', 'Standard recall')
+  cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
   cy.clickButton('Continue')
 })
 
@@ -110,9 +110,16 @@ When('Maria continues from the Stop and Think page', () => {
   cy.clickLink('Continue')
 })
 
-When('Maria selects indeterminate sentence', () => {
+When('Maria confirms the person is not on a determinate sentence', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectRadio(`Is ${offenderName} on a determinate sentence?`, 'No')
+  )
+  cy.clickButton('Continue')
+})
+
+When('Maria confirms the person is on a IPP sentence', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} on a life, IPP or DPP sentence?`, 'Imprisonment for Public Protection (IPP) sentence')
   )
   cy.clickButton('Continue')
 })
@@ -197,6 +204,8 @@ When('Maria sees a confirmation page', () => {
 
 When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
+    cy.log('Q2')
+    expect(contents).to.contain('Is the offender serving a life or IPP/DPP sentence? Yes - IPP')
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? No')
 
@@ -235,7 +244,7 @@ When('Maria downloads the Part A', () => {
     expect(contents).to.contain('Details on reporting')
     expect(contents).to.contain('Details on drug testing')
     cy.log('Q22')
-    expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
+    expect(contents).to.contain('Select the proposed recall type, having considered the information above: Standard')
     expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')
   })
 })
@@ -295,9 +304,16 @@ When('Maria confirms the recommendation was saved', () => {
   })
   cy.clickButton('Continue')
 
+  cy.log('========= Life, IPP or DPP sentence')
+  cy.clickLink('Life, IPP or DPP sentence')
+  cy.get('@offenderName').then(offenderName => {
+    cy.getRadioOptionByLabel(`Is ${offenderName} on a life, IPP or DPP sentence?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
+  })
+  cy.clickButton('Continue')
+
   cy.log('========= Recommendation')
   cy.clickLink('What you recommend')
-  cy.getRadioOptionByLabel('What do you recommend?', 'Fixed term recall').should('be.checked')
+  cy.getRadioOptionByLabel('What do you recommend?', 'Standard recall').should('be.checked')
   cy.clickButton('Continue')
 
   cy.log('========= Emergency recall')

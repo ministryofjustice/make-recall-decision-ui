@@ -44,7 +44,28 @@
   "responseToProbation": "Missed appointments\nRe-offending ",
   "whatLedToRecall": "Increasingly violent behaviour",
   "isThisAnEmergencyRecall": false,
-  "isDeterminateSentence": true,
+  "isDeterminateSentence": false,
+  "indeterminateSentenceType": {
+    "selected": "LIFE",
+    "allOptions": [
+      {
+        "value": "LIFE",
+        "text": "Life sentence"
+      },
+      {
+        "value": "IPP",
+        "text": "Imprisonment for Public Protection (IPP) sentence"
+      },
+      {
+        "value": "DPP",
+        "text": "Detention for Public Protection (DPP) sentence"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      }
+    ]
+  },
   "alternativesToRecallTried": {
     "selected": [
       {
