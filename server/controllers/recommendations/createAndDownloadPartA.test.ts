@@ -10,8 +10,10 @@ let res: Response
 const token = 'token'
 
 describe('createAndDownloadPartA', () => {
+  const userFullName = 'Dave Smith'
+
   beforeEach(() => {
-    res = mockRes({ token, locals: { user: { username: 'Dave' } } })
+    res = mockRes({ token, locals: { user: { username: 'Dave', name: userFullName } } })
   })
 
   it('calls the API', async () => {
@@ -20,7 +22,7 @@ describe('createAndDownloadPartA', () => {
     ;(createPartA as jest.Mock).mockReturnValueOnce({ fileContents, fileName })
     const req = mockReq({ params: { recommendationId } })
     await createAndDownloadPartA(req, res)
-    expect(createPartA).toHaveBeenCalledWith(recommendationId, token)
+    expect(createPartA).toHaveBeenCalledWith(recommendationId, userFullName, token)
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
 
     expect(res.contentType).toHaveBeenCalledWith(
