@@ -296,18 +296,17 @@ When('Maria confirms the recommendation was saved', () => {
   )
   cy.clickButton('Continue')
 
+  cy.log('========= Type of indeterminate sentence')
+  cy.clickLink('Type of indeterminate sentence')
+  cy.get('@offenderName').then(offenderName => {
+    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
+  })
+  cy.clickButton('Continue')
 
   cy.log('========= Indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} on an indeterminate sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
-  })
-  cy.clickButton('Continue')
-
-  cy.log('========= Type of indeterminate sentence')
-  cy.clickLink('Type of indeterminate sentence')
-  cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
   })
   cy.clickButton('Continue')
 
