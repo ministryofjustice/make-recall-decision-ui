@@ -312,21 +312,24 @@ When('Maria confirms the recommendation was saved', () => {
 
   cy.log('========= Extended sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'No').should('be.checked')
+    // this answer will have been reset to null
+    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'No').should('not.be.checked')
+    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'Yes')
   })
   cy.clickButton('Continue')
 
   cy.log('========= Type of indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
+    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('not.be.checked')
+    cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Life sentence')
   })
   cy.clickButton('Continue')
-
-  cy.clickLink('Continue') // stop and think
 
   cy.log('========= Recommendation')
   cy.getRadioOptionByLabel('What do you recommend?', 'Standard recall').should('be.checked')
   cy.clickButton('Continue')
+
+  cy.clickLink('Continue') // sensitive information
 
   cy.log('========= Emergency recall')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
