@@ -49,6 +49,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Paula Smith in custody now? completed').should('exist')
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
     cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
+    cy.getElement('Is Paula Smith on an extended sentence? completed').should('exist')
     cy.getElement('Type of indeterminate sentence completed').should('exist')
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
@@ -74,6 +75,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
     cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
+    cy.getElement('Is Paula Smith on an extended sentence? completed').should('exist')
     cy.getElement('Type of indeterminate sentence completed').should('exist')
     cy.clickLink('Create Part A')
   })
@@ -93,6 +95,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? to do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? to do').should('exist')
     cy.getElement('Is Paula Smith on an indeterminate sentence? to do').should('exist')
+    cy.getElement('Is Paula Smith on an extended sentence? to do').should('exist')
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Create Part A').should('not.exist')
   })
@@ -127,6 +130,7 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/is-indeterminate'
     )
+    cy.getLinkHref('Is Paula Smith on an extended sentence?').should('contain', '/recommendations/123/is-extended')
     cy.getLinkHref('Type of indeterminate sentence').should('contain', '/recommendations/123/indeterminate-type')
     cy.getLinkHref('Response to probation so far').should(
       'contain',

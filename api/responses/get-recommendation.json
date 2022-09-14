@@ -45,6 +45,7 @@
   "whatLedToRecall": "Increasingly violent behaviour",
   "isThisAnEmergencyRecall": false,
   "isIndeterminateSentence": true,
+  "isExtendedSentence": true,
   "indeterminateSentenceType": {
     "selected": "LIFE",
     "allOptions": [
