@@ -16,6 +16,7 @@ Feature: Case summary
     And Maria selects the alternatives to recall that have been tried
     And Maria continues from the Stop and Think page
     And Maria confirms the person is on an indeterminate sentence
+    And Maria confirms the person is not on an extended sentence
     And Maria confirms the person is on a IPP sentence
     And Maria recommends a standard recall
     And Maria reads the guidance on sensitive information

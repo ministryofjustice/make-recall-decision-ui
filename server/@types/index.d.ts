@@ -150,6 +150,7 @@ export type PageTemplateName =
   | 'alternativesToRecallTried'
   | 'stopThink'
   | 'isIndeterminateSentence'
+  | 'isExtendedSentence'
   | 'indeterminateSentenceType'
   | 'recallType'
   | 'sensitiveInformation'

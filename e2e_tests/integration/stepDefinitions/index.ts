@@ -117,6 +117,13 @@ When('Maria confirms the person is on an indeterminate sentence', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria confirms the person is not on an extended sentence', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No')
+  )
+  cy.clickButton('Continue')
+})
+
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence')
@@ -295,34 +302,41 @@ When('Maria confirms the recommendation was saved', () => {
     'Details on drug testing'
   )
   cy.clickButton('Continue')
-  
+
   cy.log('========= Indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} on an indeterminate sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
   })
-  cy.clickLink('Back') // don't save or it will reset the indeterminate sentence type
+  cy.clickButton('Continue')
+
+  cy.log('========= Extended sentence')
+  cy.get('@offenderName').then(offenderName => {
+    // this answer will have been reset to null
+    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'No').should('not.be.checked')
+    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'Yes')
+  })
+  cy.clickButton('Continue')
 
   cy.log('========= Type of indeterminate sentence')
-  cy.clickLink('Type of indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
+    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('not.be.checked')
+    cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Life sentence')
   })
   cy.clickButton('Continue')
 
   cy.log('========= Recommendation')
-  cy.clickLink('What you recommend')
   cy.getRadioOptionByLabel('What do you recommend?', 'Standard recall').should('be.checked')
   cy.clickButton('Continue')
 
+  cy.clickLink('Continue') // sensitive information
+
   cy.log('========= Emergency recall')
-  cy.clickLink('Emergency recall')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
 
   cy.log('========= Custody')
   cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Is ${offenderName} in custody now?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'No').should('be.checked')
   })
   cy.clickButton('Continue')

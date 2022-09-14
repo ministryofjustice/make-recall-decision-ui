@@ -103,6 +103,15 @@ context('Make a recommendation', () => {
       errorText: 'Select whether the person on probation is on an indeterminate sentence or not',
     })
     cy.selectRadio('Is Paula Smith on an indeterminate sentence?', 'Yes')
+    // this has to be in the next response so the extended sentence page redirects
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, isIndeterminateSentence: true },
+    })
+    cy.clickButton('Continue')
+
+    cy.log('===== Extended sentence')
+    cy.selectRadio(`Is Paula Smith on an extended sentence?`, 'No')
     cy.clickButton('Continue')
 
     cy.log('===== Indeterminate sentence type')
@@ -390,15 +399,6 @@ context('Make a recommendation', () => {
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a Part A form')
-  })
-
-  it('indeterminate sentence - directs "no" to the recall type page', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-indeterminate`)
-    cy.selectRadio('Is Paula Smith on an indeterminate sentence?', 'No')
-    cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'What do you recommend?')
   })
 
   it('shows an error if creation fails', () => {

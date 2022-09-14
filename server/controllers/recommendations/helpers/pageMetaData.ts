@@ -33,6 +33,8 @@ import { validateIsIndeterminateSentence } from '../isIndeterminateSentence/form
 import { inputDisplayValuesIsIndeterminateSentence } from '../isIndeterminateSentence/inputDisplayValues'
 import { validateIndeterminateSentenceType } from '../indeterminateSentenceType/formValidator'
 import { inputDisplayValuesIndeterminateSentenceType } from '../indeterminateSentenceType/inputDisplayValues'
+import { validateIsExtendedSentence } from '../isExtendedSentence/formValidator'
+import { inputDisplayValuesIsExtendedSentence } from '../isExtendedSentence/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -73,6 +75,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesIsIndeterminateSentence,
         pageHeading: strings.pageHeadings.isIndeterminateSentence,
         pageTitle: strings.pageTitles.isIndeterminateSentence,
+      }
+    case 'is-extended':
+      return {
+        templateName: 'isExtendedSentence',
+        validator: validateIsExtendedSentence,
+        inputDisplayValues: inputDisplayValuesIsExtendedSentence,
+        pageHeading: strings.pageHeadings.isExtendedSentence,
+        pageTitle: strings.pageTitles.isExtendedSentence,
       }
     case 'indeterminate-type':
       return {

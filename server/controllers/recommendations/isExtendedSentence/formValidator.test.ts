@@ -1,6 +1,6 @@
-import { validateIsIndeterminateSentence } from './formValidator'
+import { validateIsExtendedSentence } from './formValidator'
 
-describe('validateIsIndeterminateSentence', () => {
+describe('validateIsExtendedSentence', () => {
   const recommendationId = '34'
   const urlInfo = {
     currentPageId: 'is-indeterminate',
@@ -8,55 +8,51 @@ describe('validateIsIndeterminateSentence', () => {
     path: `/recommendations/${recommendationId}/is-indeterminate`,
   }
 
-  it('sets indeterminate type to NO, extended sentence to null and redirects if answer is No', async () => {
+  it('redirects to indeterminate sentence type page if it is an indeterminate sentence', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'NO',
+      isExtendedSentence: 'NO',
+      isIndeterminateSentence: '1',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateIsIndeterminateSentence({
+    const { errors, valuesToSave, nextPagePath } = await validateIsExtendedSentence({
       requestBody,
       urlInfo,
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
-      isIndeterminateSentence: false,
-      indeterminateSentenceType: {
-        selected: 'NO',
-      },
-      isExtendedSentence: null,
+      isExtendedSentence: false,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
+    expect(nextPagePath).toEqual('/recommendations/34/indeterminate-type')
   })
 
-  it('resets indeterminate type to null, extended sentence to null and redirects, if answer is Yes', async () => {
+  it('redirects to recall type page if it is not an indeterminate sentence', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'YES',
+      isExtendedSentence: 'YES',
+      isIndeterminateSentence: '0',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateIsIndeterminateSentence({
+    const { errors, valuesToSave, nextPagePath } = await validateIsExtendedSentence({
       requestBody,
       urlInfo,
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
-      isIndeterminateSentence: true,
-      indeterminateSentenceType: null,
-      isExtendedSentence: null,
+      isExtendedSentence: true,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
+    expect(nextPagePath).toEqual('/recommendations/34/recall-type')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
-      isIndeterminateSentence: '',
+      isExtendedSentence: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIsIndeterminateSentence({ requestBody, urlInfo })
+    const { errors, valuesToSave } = await validateIsExtendedSentence({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
-        href: '#isIndeterminateSentence',
-        name: 'isIndeterminateSentence',
+        href: '#isExtendedSentence',
+        name: 'isExtendedSentence',
         text: 'Select whether the person on probation is on an indeterminate sentence or not',
         errorId: 'noIsIndeterminateSelected',
       },
@@ -65,15 +61,15 @@ describe('validateIsIndeterminateSentence', () => {
 
   it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'BANANA',
+      isExtendedSentence: 'BANANA',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIsIndeterminateSentence({ requestBody, urlInfo })
+    const { errors, valuesToSave } = await validateIsExtendedSentence({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
-        href: '#isIndeterminateSentence',
-        name: 'isIndeterminateSentence',
+        href: '#isExtendedSentence',
+        name: 'isExtendedSentence',
         text: 'Select whether the person on probation is on an indeterminate sentence or not',
         errorId: 'noIsIndeterminateSelected',
       },
@@ -82,11 +78,11 @@ describe('validateIsIndeterminateSentence', () => {
 
   it('if "from page" is set to recall task list, redirect to it', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'NO',
+      isExtendedSentence: 'NO',
       crn: 'X34534',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
-    const { nextPagePath } = await validateIsIndeterminateSentence({
+    const { nextPagePath } = await validateIsExtendedSentence({
       requestBody,
       recommendationId,
       urlInfo: urlInfoWithFromPage,
