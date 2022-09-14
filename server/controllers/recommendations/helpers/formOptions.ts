@@ -11,6 +11,7 @@ import { vulnerabilities } from '../vulnerabilities/formOptions'
 import { hasContrabandRisk } from '../contraband/formOptions'
 import { isIndeterminateSentence } from '../isIndeterminateSentence/formOptions'
 import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
+import { isExtendedSentence } from '../isExtendedSentence/formOptions'
 
 export const formOptions = {
   recallType,
@@ -25,6 +26,7 @@ export const formOptions = {
   hasContrabandRisk,
   isIndeterminateSentence,
   indeterminateSentenceType,
+  isExtendedSentence,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

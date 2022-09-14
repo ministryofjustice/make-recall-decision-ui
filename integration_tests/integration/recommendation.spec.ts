@@ -105,6 +105,10 @@ context('Make a recommendation', () => {
     cy.selectRadio('Is Paula Smith on an indeterminate sentence?', 'Yes')
     cy.clickButton('Continue')
 
+    cy.log('===== Extended sentence')
+    cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No'))
+    cy.clickButton('Continue')
+
     cy.log('===== Indeterminate sentence type')
     cy.clickButton('Continue')
     cy.assertErrorMessage({

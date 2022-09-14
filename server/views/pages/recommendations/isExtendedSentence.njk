@@ -6,7 +6,7 @@
     <nav>
     {{ govukBackLink({
         text: "Back",
-        href: nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo: urlInfo })
+        href: nextPageLinkUrl({ nextPageId: 'is-indeterminate', urlInfo: urlInfo })
     }) }}</nav>
 {% endblock %}
 
@@ -17,10 +17,11 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="isIndeterminateSentence" value="{{ "1" if recommendation.isIndeterminateSentence else "0"}}" />
                 <div class="govuk-caption-l">Circumstances</div>
                 {{ govukRadios({
-                    idPrefix: "indeterminateSentenceType",
-                    name: "indeterminateSentenceType",
+                    idPrefix: "isExtendedSentence",
+                    name: "isExtendedSentence",
                     fieldset: {
                         legend: {
                             text: pageHeading,
@@ -28,9 +29,11 @@
                             isPageHeading: true
                         }
                     },
-                    items: radioCheckboxItems({ items: formOptions.indeterminateSentenceType,
-                        currentValues: inputDisplayValues.value }),
-                    errorMessage: errorMessage(errors.indeterminateSentenceType)
+                    items: radioCheckboxItems({
+                        items: formOptions.isExtendedSentence,
+                        currentValues: inputDisplayValues.value
+                    }),
+                    errorMessage: errorMessage(errors.isExtendedSentence)
                 }) }}
                 {{ formSubmitButton() }}
             </form>

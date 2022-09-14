@@ -117,6 +117,13 @@ When('Maria confirms the person is on an indeterminate sentence', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria confirms the person is not on an extended sentence', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No')
+  )
+  cy.clickButton('Continue')
+})
+
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence')
@@ -295,13 +302,20 @@ When('Maria confirms the recommendation was saved', () => {
     'Details on drug testing'
   )
   cy.clickButton('Continue')
-  
+
   cy.log('========= Indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} on an indeterminate sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
   })
   cy.clickLink('Back') // don't save or it will reset the indeterminate sentence type
+
+  cy.log('========= Extended sentence')
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`Is ${offenderName} on an extended sentence?`)
+    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'No').should('be.checked')
+    cy.clickButton('Continue')
+  })
 
   cy.log('========= Type of indeterminate sentence')
   cy.clickLink('Type of indeterminate sentence')
