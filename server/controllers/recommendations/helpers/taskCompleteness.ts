@@ -49,6 +49,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
         recommendation.licenceConditionsBreached.additionalLicenceConditions?.selected?.length > 0),
     isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
     isIndeterminateSentence: isNotNull(recommendation.isIndeterminateSentence),
+    isExtendedSentence: isNotNull(recommendation.isExtendedSentence),
     indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
     vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
