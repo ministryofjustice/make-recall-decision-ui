@@ -308,35 +308,32 @@ When('Maria confirms the recommendation was saved', () => {
     cy.clickLink(`Is ${offenderName} on an indeterminate sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
   })
-  cy.clickLink('Back') // don't save or it will reset the indeterminate sentence type
+  cy.clickButton('Continue')
 
   cy.log('========= Extended sentence')
   cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Is ${offenderName} on an extended sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'No').should('be.checked')
-    cy.clickButton('Continue')
   })
+  cy.clickButton('Continue')
 
   cy.log('========= Type of indeterminate sentence')
-  cy.clickLink('Type of indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
     cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('be.checked')
   })
   cy.clickButton('Continue')
 
+  cy.clickLink('Continue') // stop and think
+
   cy.log('========= Recommendation')
-  cy.clickLink('What you recommend')
   cy.getRadioOptionByLabel('What do you recommend?', 'Standard recall').should('be.checked')
   cy.clickButton('Continue')
 
   cy.log('========= Emergency recall')
-  cy.clickLink('Emergency recall')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
 
   cy.log('========= Custody')
   cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Is ${offenderName} in custody now?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'No').should('be.checked')
   })
   cy.clickButton('Continue')
