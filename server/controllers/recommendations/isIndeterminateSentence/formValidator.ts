@@ -34,6 +34,7 @@ export const validateIsIndeterminateSentence = async ({
             selected: 'NO',
           }
         : null,
+      recallType: null,
     }
     nextPagePath = nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo })
   }

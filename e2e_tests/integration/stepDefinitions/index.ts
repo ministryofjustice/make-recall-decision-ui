@@ -64,7 +64,6 @@ When('Maria starts a new recommendation', () => {
 
 When('Maria recommends a standard recall', () => {
   cy.selectRadio('What do you recommend?', 'Standard recall')
-  cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
   cy.clickButton('Continue')
 })
 
@@ -117,9 +116,9 @@ When('Maria confirms the person is on an indeterminate sentence', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria confirms the person is not on an extended sentence', () => {
+When('Maria confirms the person is on an extended sentence', () => {
   cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No')
+    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'Yes')
   )
   cy.clickButton('Continue')
 })
@@ -213,6 +212,8 @@ When('Maria downloads the Part A', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     cy.log('Q2')
     expect(contents).to.contain('Is the offender serving a life or IPP/DPP sentence? Yes - IPP')
+    cy.log('Q3')
+    expect(contents).to.contain('Is the offender serving one of the following:  Yes')
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? No')
 
@@ -252,7 +253,6 @@ When('Maria downloads the Part A', () => {
     expect(contents).to.contain('Details on drug testing')
     cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Standard')
-    expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Details...')
   })
 })
 
@@ -302,31 +302,31 @@ When('Maria confirms the recommendation was saved', () => {
     'Details on drug testing'
   )
   cy.clickButton('Continue')
+})
 
+When('Maria changes to a determinate sentence', () => {
   cy.log('========= Indeterminate sentence')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} on an indeterminate sentence?`)
     cy.getRadioOptionByLabel(`Is ${offenderName} on an indeterminate sentence?`, 'Yes').should('be.checked')
+    cy.selectRadio(`Is ${offenderName} on an indeterminate sentence?`, 'No')
   })
   cy.clickButton('Continue')
+})
 
+When('Maria changes to a not extended sentence', () => {
   cy.log('========= Extended sentence')
   cy.get('@offenderName').then(offenderName => {
     // this answer will have been reset to null
-    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'No').should('not.be.checked')
-    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'Yes')
-  })
-  cy.clickButton('Continue')
-
-  cy.log('========= Type of indeterminate sentence')
-  cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence').should('not.be.checked')
-    cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Life sentence')
+    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'Yes').should('not.be.checked')
+    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No')
   })
   cy.clickButton('Continue')
 
   cy.log('========= Recommendation')
-  cy.getRadioOptionByLabel('What do you recommend?', 'Standard recall').should('be.checked')
+  cy.getRadioOptionByLabel('What do you recommend?', 'Standard recall').should('not.be.checked')
+  cy.selectRadio('What do you recommend?', 'Fixed term recall')
+  cy.fillInput('Why do you recommend this recall type?', "Fixed term details...")
   cy.clickButton('Continue')
 
   cy.clickLink('Continue') // sensitive information
@@ -427,11 +427,16 @@ When('Maria changes custody status to "In police custody"', () => {
 When('Maria generates an updated Part A', () => {
   cy.clickLink('Create Part A')
   cy.downloadDocX('Download the Part A').then(contents => {
+    cy.log('Q3')
+    expect(contents).to.contain('Is the offender serving one of the following:  No')
     cy.log('Q6')
     expect(contents).to.contain('Is the offender currently in police custody or prison custody? Police Custody')
 
     cy.log('Q7')
     expect(contents).to.contain('If the offender is in police custody, state where: West Ham Lane Police Station, 18 West Ham Lane, Stratford, E15 4SG')
 
+    cy.log('Q22')
+    expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
+    expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Fixed term details...')
   })
 })

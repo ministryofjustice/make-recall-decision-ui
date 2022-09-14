@@ -153,6 +153,7 @@ export type PageTemplateName =
   | 'isExtendedSentence'
   | 'indeterminateSentenceType'
   | 'recallType'
+  | 'recallTypeIndeterminate'
   | 'sensitiveInformation'
   | 'emergencyRecall'
   | 'custodyStatus'

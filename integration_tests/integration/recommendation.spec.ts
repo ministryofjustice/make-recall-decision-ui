@@ -133,12 +133,6 @@ context('Make a recommendation', () => {
     })
     cy.selectRadio('What do you recommend?', 'Standard recall')
     cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'recallTypeDetailsStandard',
-      errorText: 'You must explain why you recommend this recall type',
-    })
-    cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
-    cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Sensitive information')
     cy.clickLink('Continue')

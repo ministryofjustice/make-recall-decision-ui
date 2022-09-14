@@ -25,7 +25,10 @@ export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormV
     valuesToSave = {
       isExtendedSentence: isYes,
     }
-    const nextPageId = isIndeterminateSentence === '1' ? 'indeterminate-type' : 'recall-type'
+    let nextPageId = 'indeterminate-type'
+    if (isIndeterminateSentence === '0') {
+      nextPageId = isYes ? 'recall-type-indeterminate' : 'recall-type'
+    }
     nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   }
   return {

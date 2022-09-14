@@ -1,0 +1,43 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'indeterminate-type' if recommendation.isIndeterminateSentence else 'is-extended', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Circumstances</div>
+                {{ govukRadios({
+                    idPrefix: "recallType",
+                    name: "recallType",
+                    fieldset: {
+                        legend: {
+                            text: pageHeading,
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.recallTypeIndeterminate,
+                        currentValues: inputDisplayValues.value
+                    }),
+                    errorMessage: errorMessage(errors.recallType)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

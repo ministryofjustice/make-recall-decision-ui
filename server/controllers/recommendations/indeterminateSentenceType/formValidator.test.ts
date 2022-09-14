@@ -26,7 +26,7 @@ describe('validateVictimContactScheme', () => {
         selected: 'LIFE',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/recall-type')
+    expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
   })
 
   it('if "from page" is set to recall task list, redirect to it', async () => {

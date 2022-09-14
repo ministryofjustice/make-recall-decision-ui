@@ -12,9 +12,11 @@ import { hasContrabandRisk } from '../contraband/formOptions'
 import { isIndeterminateSentence } from '../isIndeterminateSentence/formOptions'
 import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
 import { isExtendedSentence } from '../isExtendedSentence/formOptions'
+import { recallTypeIndeterminate } from '../recallTypeIndeterminate/formOptions'
 
 export const formOptions = {
   recallType,
+  recallTypeIndeterminate,
   standardLicenceConditions,
   isThisAnEmergencyRecall,
   custodyStatus,
