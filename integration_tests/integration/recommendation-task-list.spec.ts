@@ -125,12 +125,9 @@ context('Recommendation - task list', () => {
     )
     cy.getLinkHref('Is Paula Smith on an indeterminate sentence?').should(
       'contain',
-      '/recommendations/123/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
+      '/recommendations/123/is-indeterminate'
     )
-    cy.getLinkHref('Type of indeterminate sentence').should(
-      'contain',
-      '/recommendations/123/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
+    cy.getLinkHref('Type of indeterminate sentence').should('contain', '/recommendations/123/indeterminate-type')
     cy.getLinkHref('Response to probation so far').should(
       'contain',
       '/recommendations/123/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances'
