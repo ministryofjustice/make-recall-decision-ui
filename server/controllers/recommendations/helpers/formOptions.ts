@@ -9,7 +9,7 @@ import { hasArrestIssues } from '../arrestIssues/formOptions'
 import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
 import { vulnerabilities } from '../vulnerabilities/formOptions'
 import { hasContrabandRisk } from '../contraband/formOptions'
-import { isDeterminateSentence } from '../isDeterminateSentence/formOptions'
+import { isIndeterminateSentence } from '../isIndeterminateSentence/formOptions'
 import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
 
 export const formOptions = {
@@ -23,7 +23,7 @@ export const formOptions = {
   isUnderIntegratedOffenderManagement,
   vulnerabilities,
   hasContrabandRisk,
-  isDeterminateSentence,
+  isIndeterminateSentence,
   indeterminateSentenceType,
 }
 

@@ -49,12 +49,12 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'is-determinate', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Determinate sentence</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.isDeterminateSentence }) }}
+                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.isIndeterminateSentence }}</a>
+                            {{ taskStatus({ hasData: taskCompleteness.statuses.isIndeterminateSentence }) }}
                         </li>
-                        {% if recommendation.isDeterminateSentence == false %}
+                        {% if recommendation.isIndeterminateSentence == true %}
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'indeterminate-type', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Life, IPP or DPP sentence</a>
+                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'indeterminate-type', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Type of indeterminate sentence</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.indeterminateSentenceType }) }}
                         </li>
                         {% endif %}

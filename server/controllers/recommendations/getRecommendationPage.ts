@@ -8,6 +8,7 @@ import { fetchAndTransformLicenceConditions } from './licenceConditions/transfor
 import { taskCompleteness } from './helpers/taskCompleteness'
 import { isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { isInCustody } from './helpers/isInCustody'
+import { renderPageHeadings } from './helpers/renderPageHeadings'
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageId } = req.params
@@ -29,7 +30,10 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const stringRenderParams = {
     fullName: res.locals.recommendation.personOnProbation.name,
   }
+
+  // TODO - use pageHeadings instead of pageHeading property
   res.locals.pageHeading = renderTemplateString(pageHeading, stringRenderParams)
+  res.locals.pageHeadings = renderPageHeadings(stringRenderParams)
   res.locals.pageTitle = pageTitle
   // get values to preload into form inputs
   if (inputDisplayValues) {

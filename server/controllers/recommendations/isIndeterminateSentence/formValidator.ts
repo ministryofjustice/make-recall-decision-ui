@@ -4,7 +4,7 @@ import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateIsDeterminateSentence = async ({
+export const validateIsIndeterminateSentence = async ({
   requestBody,
   urlInfo,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -12,22 +12,30 @@ export const validateIsDeterminateSentence = async ({
   let valuesToSave
   let nextPagePath
 
-  const { isDeterminateSentence } = requestBody
-  if (!isDeterminateSentence || !isValueValid(isDeterminateSentence as string, 'isDeterminateSentence')) {
-    const errorId = 'noDeterminateSelected'
+  const { isIndeterminateSentence } = requestBody
+  if (!isIndeterminateSentence || !isValueValid(isIndeterminateSentence as string, 'isIndeterminateSentence')) {
+    const errorId = 'noIsIndeterminateSelected'
     errors = [
       makeErrorObject({
-        id: 'isDeterminateSentence',
+        id: 'isIndeterminateSentence',
         text: strings.errors[errorId],
         errorId,
       }),
     ]
   }
   if (!errors) {
+    const isNo = isIndeterminateSentence === 'NO'
+    const isYes = isIndeterminateSentence === 'YES'
     valuesToSave = {
-      isDeterminateSentence: isDeterminateSentence === 'YES',
+      isIndeterminateSentence: isYes,
+      isExtendedSentence: null,
+      indeterminateSentenceType: isNo
+        ? {
+            selected: 'NO',
+          }
+        : null,
     }
-    const nextPageId = isDeterminateSentence === 'YES' ? 'recall-type' : 'indeterminate-type'
+    const nextPageId = isYes ? 'indeterminate-type' : 'recall-type'
     nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   }
   return {

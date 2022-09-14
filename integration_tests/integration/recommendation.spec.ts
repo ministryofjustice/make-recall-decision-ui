@@ -96,13 +96,13 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('equal', 'Stop and think')
     cy.clickLink('Continue')
 
-    cy.log('===== Determinate sentence')
+    cy.log('===== Indeterminate sentence')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'isDeterminateSentence',
-      errorText: 'Select whether the person on probation is on a determinate sentence or not',
+      fieldName: 'isIndeterminateSentence',
+      errorText: 'Select whether the person on probation is on an indeterminate sentence or not',
     })
-    cy.selectRadio('Is Paula Smith on a determinate sentence?', 'No')
+    cy.selectRadio('Is Paula Smith on an indeterminate sentence?', 'Yes')
     cy.clickButton('Continue')
 
     cy.log('===== Indeterminate sentence type')
@@ -111,10 +111,7 @@ context('Make a recommendation', () => {
       fieldName: 'indeterminateSentenceType',
       errorText: 'Select whether Paula Smith is on a life, IPP or DPP sentence',
     })
-    cy.selectRadio(
-      'Is Paula Smith on a life, IPP or DPP sentence?',
-      'Imprisonment for Public Protection (IPP) sentence'
-    )
+    cy.selectRadio('What type of sentence is Paula Smith on?', 'Imprisonment for Public Protection (IPP) sentence')
     cy.clickButton('Continue')
 
     cy.log('===== What do you recommend?')
@@ -395,11 +392,11 @@ context('Make a recommendation', () => {
     cy.pageHeading().should('contain', 'Create a Part A form')
   })
 
-  it('determinate sentence - directs "yes" to the recall type page', () => {
+  it('indeterminate sentence - directs "no" to the recall type page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-determinate`)
-    cy.selectRadio('Is Paula Smith on a determinate sentence?', 'Yes')
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-indeterminate`)
+    cy.selectRadio('Is Paula Smith on an indeterminate sentence?', 'No')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'What do you recommend?')
   })

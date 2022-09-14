@@ -50,7 +50,7 @@ docker-compose stop
 popd
 
 pushd "${UI_DIR}"
-docker-compose stop
+docker-compose  -f docker-compose.yml  -f docker-compose-test.yml stop
 printf "\n\nBuilding/starting UI components...\n\n"
 docker-compose up -d --scale=${UI_NAME}=0
 popd
