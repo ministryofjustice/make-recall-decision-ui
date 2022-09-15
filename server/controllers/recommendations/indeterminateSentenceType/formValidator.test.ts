@@ -1,8 +1,7 @@
 import { validateIndeterminateSentenceType } from './formValidator'
 import { formOptions } from '../helpers/formOptions'
-import { validateCustodyStatus } from '../custodyStatus/formValidator'
 
-describe('validateVictimContactScheme', () => {
+describe('validateIndeterminateSentenceType', () => {
   const recommendationId = '34'
   const urlInfo = {
     currentPageId: 'indeterminate-type',
@@ -29,17 +28,17 @@ describe('validateVictimContactScheme', () => {
     expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
   })
 
-  it('if "from page" is set to recall task list, redirect to it', async () => {
+  it('if "from page" is set, ignore it', async () => {
     const requestBody = {
-      custodyStatus: 'YES_PRISON',
+      indeterminateSentenceType: 'LIFE',
       crn: 'X34534',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-custody' }
-    const { nextPagePath } = await validateCustodyStatus({
+    const { nextPagePath } = await validateIndeterminateSentenceType({
       requestBody,
       urlInfo: urlInfoWithFromPage,
     })
-    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
+    expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

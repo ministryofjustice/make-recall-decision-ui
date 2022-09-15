@@ -8,7 +8,7 @@ describe('inputDisplayValuesIsIndeterminateSentence', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       isIndeterminateSentence: {
-        text: 'Select whether the person on probation is on an indeterminate sentence or not',
+        text: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
         href: '#isIndeterminateSentence',
       },
     }

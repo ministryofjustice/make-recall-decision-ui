@@ -100,7 +100,7 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isIndeterminateSentence',
-      errorText: 'Select whether the person on probation is on an indeterminate sentence or not',
+      errorText: 'Select whether Paula Smith is on an indeterminate sentence or not',
     })
     cy.selectRadio('Is Paula Smith on an indeterminate sentence?', 'Yes')
     // this has to be in the next response so the extended sentence page redirects
@@ -111,6 +111,11 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
 
     cy.log('===== Extended sentence')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'isExtendedSentence',
+      errorText: 'Select whether Paula Smith is on an extended sentence or not',
+    })
     cy.selectRadio(`Is Paula Smith on an extended sentence?`, 'No')
     cy.clickButton('Continue')
 

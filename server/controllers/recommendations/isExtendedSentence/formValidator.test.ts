@@ -53,8 +53,8 @@ describe('validateIsExtendedSentence', () => {
       {
         href: '#isExtendedSentence',
         name: 'isExtendedSentence',
-        text: 'Select whether the person on probation is on an indeterminate sentence or not',
-        errorId: 'noIsIndeterminateSelected',
+        text: 'Select whether {{ fullName }} is on an extended sentence or not',
+        errorId: 'noIsExtendedSelected',
       },
     ])
   })
@@ -70,13 +70,13 @@ describe('validateIsExtendedSentence', () => {
       {
         href: '#isExtendedSentence',
         name: 'isExtendedSentence',
-        text: 'Select whether the person on probation is on an indeterminate sentence or not',
-        errorId: 'noIsIndeterminateSelected',
+        text: 'Select whether {{ fullName }} is on an extended sentence or not',
+        errorId: 'noIsExtendedSelected',
       },
     ])
   })
 
-  it('if "from page" is set to recall task list, redirect to it', async () => {
+  it('if "from page" is set, ignore it', async () => {
     const requestBody = {
       isExtendedSentence: 'NO',
       crn: 'X34534',
@@ -87,6 +87,6 @@ describe('validateIsExtendedSentence', () => {
       recommendationId,
       urlInfo: urlInfoWithFromPage,
     })
-    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
+    expect(nextPagePath).toEqual('/recommendations/34/indeterminate-type')
   })
 })
