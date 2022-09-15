@@ -11,7 +11,7 @@ export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormV
 
   const { isExtendedSentence, isIndeterminateSentence } = requestBody
   if (!isExtendedSentence || !isValueValid(isExtendedSentence as string, 'isExtendedSentence')) {
-    const errorId = 'noIsIndeterminateSelected'
+    const errorId = 'noIsExtendedSelected'
     errors = [
       makeErrorObject({
         id: 'isExtendedSentence',

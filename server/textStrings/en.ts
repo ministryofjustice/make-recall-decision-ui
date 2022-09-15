@@ -8,7 +8,8 @@ export const strings = {
     missingCustodyPoliceAddressDetail: 'Enter the custody address',
     noCustodyStatusSelected: 'Select whether the person is in custody or not',
     noEmergencyRecallSelected: 'You must select whether this is an emergency recall or not',
-    noIsIndeterminateSelected: 'Select whether the person on probation is on an indeterminate sentence or not',
+    noIsIndeterminateSelected: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
+    noIsExtendedSelected: 'Select whether {{ fullName }} is on an extended sentence or not',
     noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
     noVictimContactSchemeSelected: 'You must select whether there are any victims in the victim contact scheme',
     noIntegratedOffenderManagementSelected:

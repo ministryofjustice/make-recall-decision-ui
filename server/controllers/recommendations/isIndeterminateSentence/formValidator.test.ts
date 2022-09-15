@@ -59,7 +59,7 @@ describe('validateIsIndeterminateSentence', () => {
       {
         href: '#isIndeterminateSentence',
         name: 'isIndeterminateSentence',
-        text: 'Select whether the person on probation is on an indeterminate sentence or not',
+        text: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
         errorId: 'noIsIndeterminateSelected',
       },
     ])
@@ -76,7 +76,7 @@ describe('validateIsIndeterminateSentence', () => {
       {
         href: '#isIndeterminateSentence',
         name: 'isIndeterminateSentence',
-        text: 'Select whether the person on probation is on an indeterminate sentence or not',
+        text: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
         errorId: 'noIsIndeterminateSelected',
       },
     ])
