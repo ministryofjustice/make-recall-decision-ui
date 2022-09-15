@@ -251,8 +251,6 @@ When('Maria downloads the Part A', () => {
     cy.log('Q21')
     expect(contents).to.contain('Details on reporting')
     expect(contents).to.contain('Details on drug testing')
-    cy.log('Q22')
-    expect(contents).to.contain('Select the proposed recall type, having considered the information above: Standard')
   })
 })
 
