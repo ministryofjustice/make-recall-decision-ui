@@ -41,7 +41,8 @@ export const getDocumentContents = (crn: string, documentId: string, token: stri
   }) as Promise<Response>
 }
 
-export const createPartA = (recommendationId: string, token: string): Promise<PartAResponse> =>
+export const createPartA = (recommendationId: string, data: ObjectMap<string>, token: string): Promise<PartAResponse> =>
   restClient(token).post({
     path: `${routes.recommendations}/${recommendationId}/part-a`,
+    data,
   }) as Promise<PartAResponse>

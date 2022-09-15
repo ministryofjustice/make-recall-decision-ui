@@ -20,7 +20,7 @@ describe('createAndDownloadPartA', () => {
     ;(createPartA as jest.Mock).mockReturnValueOnce({ fileContents, fileName })
     const req = mockReq({ params: { recommendationId } })
     await createAndDownloadPartA(req, res)
-    expect(createPartA).toHaveBeenCalledWith(recommendationId, token)
+    expect(createPartA).toHaveBeenCalledWith(recommendationId, { userEmail: '' }, token)
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
 
     expect(res.contentType).toHaveBeenCalledWith(
