@@ -54,7 +54,7 @@ describe('validateIsExtendedSentence', () => {
         href: '#isExtendedSentence',
         name: 'isExtendedSentence',
         text: 'Select whether {{ fullName }} is on an extended sentence or not',
-        errorId: 'noIsIndeterminateSelected',
+        errorId: 'noIsExtendedSelected',
       },
     ])
   })
@@ -71,7 +71,7 @@ describe('validateIsExtendedSentence', () => {
         href: '#isExtendedSentence',
         name: 'isExtendedSentence',
         text: 'Select whether {{ fullName }} is on an extended sentence or not',
-        errorId: 'noIsIndeterminateSelected',
+        errorId: 'noIsExtendedSelected',
       },
     ])
   })
