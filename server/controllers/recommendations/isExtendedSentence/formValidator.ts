@@ -2,7 +2,6 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -29,7 +28,8 @@ export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormV
     if (isIndeterminateSentence === '0') {
       nextPageId = isYes ? 'recall-type-indeterminate' : 'recall-type'
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+    // ignore any 'fromPage' parameter, user should proceed through entire flow back to task list
+    nextPagePath = `${urlInfo.basePath}${nextPageId}`
   }
   return {
     errors,

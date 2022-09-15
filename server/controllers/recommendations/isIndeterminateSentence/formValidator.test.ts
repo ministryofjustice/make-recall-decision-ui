@@ -82,7 +82,7 @@ describe('validateIsIndeterminateSentence', () => {
     ])
   })
 
-  it('if "from page" is set to recall task list, redirect to it', async () => {
+  it('if "from page" is set, ignore it', async () => {
     const requestBody = {
       isIndeterminateSentence: 'NO',
       crn: 'X34534',
@@ -93,6 +93,6 @@ describe('validateIsIndeterminateSentence', () => {
       recommendationId,
       urlInfo: urlInfoWithFromPage,
     })
-    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
+    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
 })

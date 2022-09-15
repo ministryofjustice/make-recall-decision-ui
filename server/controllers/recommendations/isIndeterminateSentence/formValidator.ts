@@ -2,7 +2,6 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateIsIndeterminateSentence = async ({
   requestBody,
@@ -35,8 +34,10 @@ export const validateIsIndeterminateSentence = async ({
           }
         : null,
       recallType: null,
+      // TODO - reset fixed term recall licence conditions, and indeterminate / extended details
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo })
+    // ignore any 'fromPage' parameter, user should proceed through entire flow back to task list
+    nextPagePath = `${urlInfo.basePath}is-extended`
   }
   return {
     errors,
