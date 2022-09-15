@@ -30,7 +30,7 @@ export const validateIndeterminateSentenceType = async ({
         allOptions: formOptions.indeterminateSentenceType,
       },
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo })
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'recall-type-indeterminate', urlInfo })
   }
   return {
     errors,

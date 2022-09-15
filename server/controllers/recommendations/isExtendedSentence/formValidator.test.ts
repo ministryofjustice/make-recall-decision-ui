@@ -39,7 +39,7 @@ describe('validateIsExtendedSentence', () => {
     expect(valuesToSave).toEqual({
       isExtendedSentence: true,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/recall-type')
+    expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

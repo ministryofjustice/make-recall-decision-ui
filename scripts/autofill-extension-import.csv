@@ -160,6 +160,10 @@ r235,0,"^custodyStatusDetailsYesPolice$","West Ham Lane Police Station
 18 West Ham Lane
 Stratford
 E15 4SG","/recommendations/[^\/]+/custody-status",0,c2
+r236,3,"^YES$","1","/recommendations/[^\/]+/is-indeterminate",0,c2
+r237,3,"^LIFE$","1","/recommendations/[^\/]+/indeterminate-type",0,c2
+r238,3,"^YES$","1","/recommendations/[^\/]+/is-extended",0,c2
+r239,3,"^STANDARD$","1","/recommendations/[^\/]+/recall-type-indeterminate",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,
@@ -180,6 +184,6 @@ menu,1,,,,,
 overwrite,0,,,,,
 sitefilters,1,,,,,
 skiphidden,0,,,,,
-sound,1,,,,,
+sound,0,,,,,
 vars,1,,,,,
 voice,0,1,,,,

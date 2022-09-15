@@ -8,7 +8,7 @@ describe('validateIsIndeterminateSentence', () => {
     path: `/recommendations/${recommendationId}/is-indeterminate`,
   }
 
-  it('sets indeterminate type to NO, extended sentence to null and redirects if answer is No', async () => {
+  it('sets indeterminate type to NO, extended sentence / recall type to null and redirects if answer is No', async () => {
     const requestBody = {
       isIndeterminateSentence: 'NO',
       crn: 'X34534',
@@ -24,6 +24,7 @@ describe('validateIsIndeterminateSentence', () => {
         selected: 'NO',
       },
       isExtendedSentence: null,
+      recallType: null,
     })
     expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
@@ -42,6 +43,7 @@ describe('validateIsIndeterminateSentence', () => {
       isIndeterminateSentence: true,
       indeterminateSentenceType: null,
       isExtendedSentence: null,
+      recallType: null,
     })
     expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })

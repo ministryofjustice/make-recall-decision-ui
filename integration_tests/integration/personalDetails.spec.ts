@@ -24,10 +24,10 @@ context('Personal details', () => {
       formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender })
     )
     // personal details
-    cy.getDefinitionListValue('Current addresses').should('contain', '5 Anderton Road')
-    cy.getDefinitionListValue('Current addresses').should('contain', 'Newham')
-    cy.getDefinitionListValue('Current addresses').should('contain', 'London')
-    cy.getDefinitionListValue('Current addresses').should('contain', 'E15 1UJ')
+    cy.getDefinitionListValue('Main address').should('contain', '5 Anderton Road')
+    cy.getDefinitionListValue('Main address').should('contain', 'Newham')
+    cy.getDefinitionListValue('Main address').should('contain', 'London')
+    cy.getDefinitionListValue('Main address').should('contain', 'E15 1UJ')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Name: Jenny Eclair')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Code: N07')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Team: NPS London')
@@ -44,6 +44,6 @@ context('Personal details', () => {
       response: { ...getCasePersonalDetailsResponse, addresses: [] },
     })
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
-    cy.getDefinitionListValue('Current addresses').should('contain', 'None')
+    cy.getDefinitionListValue('Main address').should('contain', 'None')
   })
 })
