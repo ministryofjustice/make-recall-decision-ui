@@ -329,11 +329,12 @@ When('Maria changes to a not extended sentence', () => {
   cy.fillInput('Why do you recommend this recall type?', "Fixed term details...")
   cy.clickButton('Continue')
 
-  cy.clickLink('Continue') // sensitive information
 
   cy.log('========= Emergency recall')
   cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
   cy.clickButton('Continue')
+
+  cy.clickLink('Continue') // sensitive information
 
   cy.log('========= Custody')
   cy.get('@offenderName').then(offenderName => {

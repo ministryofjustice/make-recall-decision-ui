@@ -134,22 +134,13 @@ context('Make a recommendation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: 'You must select a recommendation',
+      errorText: 'Select whether you recommend a recall or not',
     })
     cy.selectRadio('What do you recommend?', 'Emergency recall')
     cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Sensitive information')
     cy.clickLink('Continue')
-
-    cy.log('===== Emergency recall')
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isThisAnEmergencyRecall',
-      errorText: 'You must select whether this is an emergency recall or not',
-    })
-    cy.selectRadio('Is this an emergency recall?', 'No')
-    cy.clickButton('Continue')
 
     cy.log('===== Custody status')
     cy.clickButton('Continue')
