@@ -73,7 +73,7 @@ describe('validateRecallType', () => {
           crn: 'X34534',
         }
         const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/fixed-licence`)
       })
 
       it('redirects to emergency recall if Standard recall is selected', async () => {
@@ -107,7 +107,7 @@ describe('validateRecallType', () => {
           recommendationId,
           urlInfo: urlInfoWithFromPage,
         })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/fixed-licence`)
       })
 
       it('if "from page" is set to recall task list, redirects to it if a standard recall is selected', async () => {

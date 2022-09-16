@@ -29,6 +29,7 @@ export type RecommendationResponse = {
     isDeterminateSentence?: boolean;
     isIndeterminateSentence?: boolean;
     isExtendedSentence?: boolean;
+    fixedTermAdditionalLicenceConditions?: SelectedWithDetails;
     activeCustodialConvictionCount?: number;
     hasVictimsInContactScheme?: VictimsInContactScheme;
     indeterminateSentenceType?: IndeterminateSentenceType;

@@ -37,6 +37,8 @@ import { validateIsExtendedSentence } from '../isExtendedSentence/formValidator'
 import { inputDisplayValuesIsExtendedSentence } from '../isExtendedSentence/inputDisplayValues'
 import { validateRecallTypeIndeterminate } from '../recallTypeIndeterminate/formValidator'
 import { inputDisplayValuesRecallTypeIndeterminate } from '../recallTypeIndeterminate/inputDisplayValues'
+import { validateFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/formValidator'
+import { inputDisplayValuesFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -109,6 +111,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesRecallType,
         pageHeading: strings.pageHeadings.recallType,
         pageTitle: strings.pageTitles.recallType,
+      }
+    case 'fixed-licence':
+      return {
+        templateName: 'fixedTermLicenceConditions',
+        validator: validateFixedTermLicenceConditions,
+        inputDisplayValues: inputDisplayValuesFixedTermLicenceConditions,
+        pageHeading: strings.pageHeadings.fixedTermLicenceConditions,
+        pageTitle: strings.pageTitles.fixedTermLicenceConditions,
       }
     case 'sensitive-info':
       return {

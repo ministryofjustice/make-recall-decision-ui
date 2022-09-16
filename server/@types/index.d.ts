@@ -159,6 +159,7 @@ export type PageTemplateName =
   | 'custodyStatus'
   | 'vulnerabilities'
   | 'taskList'
+  | 'fixedTermLicenceConditions'
   | 'integratedOffenderManagement'
   | 'localPoliceContactDetails'
   | 'victimContactScheme'

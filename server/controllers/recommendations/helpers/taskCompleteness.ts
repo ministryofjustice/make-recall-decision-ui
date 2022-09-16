@@ -28,9 +28,13 @@ const areAllTasksComplete = ({
   if (recommendation.activeCustodialConvictionCount !== 1) {
     statusesToCheck = statusesToCheck.filter(key => key !== 'licenceConditionsBreached')
   }
-  // indeterminate sentence
+  // determinate sentence
   if (recommendation.isIndeterminateSentence === false) {
     statusesToCheck = statusesToCheck.filter(key => key !== 'indeterminateSentenceType')
+  }
+  // indeterminate sentence
+  if (recommendation.isIndeterminateSentence === true) {
+    statusesToCheck = statusesToCheck.filter(key => key !== 'fixedTermAdditionalLicenceConditions')
   }
   return statusesToCheck.every(key => Boolean(statuses[key]))
 }
@@ -60,6 +64,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       isNotNull(recommendation.isUnderIntegratedOffenderManagement) &&
       isNotNull(recommendation.isUnderIntegratedOffenderManagement.selected),
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
+    fixedTermAdditionalLicenceConditions: isNotNull(recommendation.fixedTermAdditionalLicenceConditions),
     hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
   }
   const areAllComplete = areAllTasksComplete({ statuses, recommendation })
