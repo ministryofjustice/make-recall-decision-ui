@@ -18,7 +18,7 @@ describe('validateEmergencyRecall', () => {
     expect(valuesToSave).toEqual({
       isThisAnEmergencyRecall: true,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/custody-status')
+    expect(nextPagePath).toEqual('/recommendations/34/sensitive-info')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

@@ -2,7 +2,6 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
@@ -58,12 +57,13 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
       allOptions: formOptions.recallType,
     },
   }
-  const nextPagePath =
-    recallType === 'NO_RECALL'
-      ? `${urlInfo.basePath}start-no-recall`
-      : nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
+  // ignore any 'from page', whatever the user selects they'll continue through the flow
+  let nextPageId = 'start-no-recall'
+  if (recallType !== 'NO_RECALL') {
+    nextPageId = recallType === 'FIXED_TERM' ? 'sensitive-info' : 'emergency-recall'
+  }
   return {
     valuesToSave,
-    nextPagePath,
+    nextPagePath: `${urlInfo.basePath}${nextPageId}`,
   }
 }

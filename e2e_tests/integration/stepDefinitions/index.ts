@@ -62,8 +62,8 @@ When('Maria starts a new recommendation', () => {
   cy.clickButton('Make a recommendation')
 })
 
-When('Maria recommends a standard recall', () => {
-  cy.selectRadio('What do you recommend?', 'Standard recall')
+When('Maria recommends an emergency recall', () => {
+  cy.selectRadio('What do you recommend?', 'Emergency recall')
   cy.clickButton('Continue')
 })
 
@@ -251,6 +251,8 @@ When('Maria downloads the Part A', () => {
     cy.log('Q21')
     expect(contents).to.contain('Details on reporting')
     expect(contents).to.contain('Details on drug testing')
+    cy.log('Q22')
+    expect(contents).to.contain('Select the proposed recall type, having considered the information above: N/A')
   })
 })
 
@@ -328,10 +330,6 @@ When('Maria changes to a not extended sentence', () => {
   cy.clickButton('Continue')
 
   cy.clickLink('Continue') // sensitive information
-
-  cy.log('========= Emergency recall')
-  cy.getRadioOptionByLabel('Is this an emergency recall?', 'No').should('be.checked')
-  cy.clickButton('Continue')
 
   cy.log('========= Custody')
   cy.get('@offenderName').then(offenderName => {

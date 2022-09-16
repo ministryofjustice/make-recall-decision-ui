@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: '/recommendations/' + recommendation.id + '/recall-type'
+            href: '/recommendations/' + recommendation.id + '/emergency-recall'
         }) }}
     </nav>
 {% endblock %}
@@ -33,7 +33,7 @@
             </ul>
             <p class='govuk-body govuk-!-margin-top-6'>
                 <a class='govuk-button'
-                   href='/recommendations/{{ recommendation.id }}/emergency-recall'>Continue</a>
+                   href='/recommendations/{{ recommendation.id }}/custody-status'>Continue</a>
             </p>
         </div>
     </div>

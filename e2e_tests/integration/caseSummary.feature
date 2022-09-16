@@ -18,9 +18,8 @@ Feature: Case summary
     And Maria confirms the person is on an indeterminate sentence
     And Maria confirms the person is on an extended sentence
     And Maria confirms the person is on a IPP sentence
-    And Maria recommends a standard recall
+    And Maria recommends an emergency recall
     And Maria reads the guidance on sensitive information
-    And Maria states that it's not an emergency recall
     And Maria indicates the person is not in custody
     And Maria views the page Create a Part A form
     And Maria states what has led to the recall

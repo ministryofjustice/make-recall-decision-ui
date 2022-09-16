@@ -15,7 +15,7 @@ export const validateRecallTypeIndeterminate = async ({
     const errors = []
     let errorId
     if (!recallType || invalidRecallTypeIndeterminate) {
-      errorId = 'noRecallTypeSelected'
+      errorId = 'noRecallTypeIndeterminateSelected'
       errors.push(
         makeErrorObject({
           id: 'recallType',
@@ -34,18 +34,19 @@ export const validateRecallTypeIndeterminate = async ({
   }
 
   // valid
+  const isNoRecall = recallType === 'NO_RECALL'
   const valuesToSave = {
     recallType: {
       selected: {
-        value: recallType,
+        value: isNoRecall ? recallType : 'STANDARD',
       },
-      allOptions: formOptions.recallType,
+      allOptions: formOptions.recallTypeIndeterminate,
     },
+    isThisAnEmergencyRecall: isNoRecall ? null : true,
   }
-  const nextPagePath =
-    recallType === 'NO_RECALL'
-      ? `${urlInfo.basePath}start-no-recall`
-      : nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
+  const nextPagePath = isNoRecall
+    ? `${urlInfo.basePath}start-no-recall`
+    : nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
   return {
     valuesToSave,
     nextPagePath,

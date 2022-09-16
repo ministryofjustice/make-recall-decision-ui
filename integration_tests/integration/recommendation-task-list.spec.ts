@@ -43,7 +43,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Alternatives tried already completed').should('exist')
     cy.getElement('Response to probation so far completed').should('exist')
     cy.getElement('Breached licence condition(s) completed').should('exist')
-    cy.getElement('Emergency recall completed').should('exist')
     cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
     cy.getElement('Is Paula Smith in custody now? completed').should('exist')
@@ -54,6 +53,8 @@ context('Recommendation - task list', () => {
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
+    // should not exist
+    cy.getElement('Emergency recall').should('not.exist')
     cy.clickLink('Create Part A')
   })
 
@@ -67,7 +68,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Alternatives tried already completed').should('exist')
     cy.getElement('Response to probation so far completed').should('exist')
     cy.getElement('Breached licence condition(s) completed').should('exist')
-    cy.getElement('Emergency recall completed').should('exist')
     cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
     cy.getElement('Is Paula Smith in custody now? completed').should('exist')
@@ -87,7 +87,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Alternatives tried already to do').should('exist')
     cy.getElement('Response to probation so far to do').should('exist')
     cy.getElement('Breached licence condition(s) to do').should('exist')
-    cy.getElement('Emergency recall to do').should('exist')
     cy.getElement('Would recall affect vulnerability or additional needs? to do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? to do').should('exist')
     cy.getElement('Is Paula Smith in custody now? to do').should('exist')
@@ -104,14 +103,13 @@ context('Recommendation - task list', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.clickLink('What you recommend')
+    cy.clickLink('Response to probation so far')
     cy.log('============= Back link')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Create a Part A form')
     cy.log('============= Continue button')
-    cy.clickLink('What you recommend')
-    cy.selectRadio('What do you recommend?', 'Standard recall')
-    cy.fillInput('Why do you recommend this recall type?', 'Details...', { parent: '#conditional-recallType-2' })
+    cy.clickLink('Response to probation so far')
+    cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
     cy.clickButton('Continue')
     cy.pageHeading().should('equal', 'Create a Part A form')
   })
@@ -147,10 +145,6 @@ context('Recommendation - task list', () => {
       '/recommendations/123/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
     cy.getLinkHref('What has led to this recall?').should('contain', '/recommendations/123/what-led')
-    cy.getLinkHref('Emergency recall').should(
-      'contain',
-      '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
     cy.getLinkHref('Would recall affect vulnerability or additional needs?').should(
       'contain',
       '/recommendations/123/vulnerabilities'
@@ -189,5 +183,22 @@ context('Recommendation - task list', () => {
       response: licenceConditionsMultipleActiveCustodial,
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+  })
+
+  it('task list - emergency recall link visible if determinate, not extended, standard recall', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...completeRecommendationResponse,
+        isIndeterminateSentence: false,
+        isExtendedSentence: false,
+        recallType: { selected: { value: 'STANDARD' } },
+      },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('Emergency recall').should(
+      'contain',
+      '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
   })
 })

@@ -24,7 +24,7 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
     valuesToSave = {
       isThisAnEmergencyRecall: isThisAnEmergencyRecall === 'YES',
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'custody-status', urlInfo })
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
   }
   return {
     errors,
