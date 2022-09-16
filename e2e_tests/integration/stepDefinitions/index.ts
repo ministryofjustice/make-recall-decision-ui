@@ -63,7 +63,7 @@ When('Maria starts a new recommendation', () => {
 })
 
 When('Maria recommends an emergency recall', () => {
-  cy.selectRadio('What do you recommend?', 'Standard recall')
+  cy.selectRadio('What do you recommend?', 'Emergency recall')
   cy.clickButton('Continue')
 })
 
