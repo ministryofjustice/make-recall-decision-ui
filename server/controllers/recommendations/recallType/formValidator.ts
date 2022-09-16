@@ -2,7 +2,6 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
