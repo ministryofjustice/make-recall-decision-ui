@@ -15,7 +15,7 @@ export const validateRecallTypeIndeterminate = async ({
     const errors = []
     let errorId
     if (!recallType || invalidRecallTypeIndeterminate) {
-      errorId = 'noRecallTypeSelected'
+      errorId = 'noRecallTypeIndeterminateSelected'
       errors.push(
         makeErrorObject({
           id: 'recallType',
