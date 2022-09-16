@@ -10,7 +10,7 @@ describe('validateRecallType', () => {
   }
 
   describe('valid', () => {
-    it('returns valuesToSave and no errors if valid fixed term recall selected', async () => {
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to false if valid fixed term recall selected', async () => {
       const requestBody = {
         recallType: 'FIXED_TERM',
         recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
@@ -26,10 +26,11 @@ describe('validateRecallType', () => {
           },
           allOptions: formOptions.recallType,
         },
+        isThisAnEmergencyRecall: false,
       })
     })
 
-    it('returns valuesToSave and no errors if valid standard recall selected', async () => {
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid standard recall selected', async () => {
       const requestBody = {
         recallType: 'STANDARD',
         recallTypeDetailsStandard: 'I recommend fixed term recall...',
@@ -45,6 +46,7 @@ describe('validateRecallType', () => {
           },
           allOptions: formOptions.recallType,
         },
+        isThisAnEmergencyRecall: null,
       })
     })
 
@@ -62,6 +64,7 @@ describe('validateRecallType', () => {
           },
           allOptions: formOptions.recallType,
         },
+        isThisAnEmergencyRecall: null,
       })
     })
 

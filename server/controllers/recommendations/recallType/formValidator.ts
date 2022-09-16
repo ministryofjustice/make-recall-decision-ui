@@ -6,8 +6,10 @@ import { strings } from '../../../textStrings/en'
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
-  const missingDetailFixedTerm = recallType === 'FIXED_TERM' && !recallTypeDetailsFixedTerm
-  const missingDetailStandard = recallType === 'STANDARD' && !recallTypeDetailsStandard
+  const isFixedTerm = recallType === 'FIXED_TERM'
+  const isStandard = recallType === 'STANDARD'
+  const missingDetailFixedTerm = isFixedTerm && !recallTypeDetailsFixedTerm
+  const missingDetailStandard = isStandard && !recallTypeDetailsStandard
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
   if (hasError) {
     const errors = []
@@ -43,9 +45,9 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
 
   // valid
   let recallTypeDetails
-  if (recallType === 'FIXED_TERM') {
+  if (isFixedTerm) {
     recallTypeDetails = recallTypeDetailsFixedTerm
-  } else if (recallType === 'STANDARD') {
+  } else if (isStandard) {
     recallTypeDetails = recallTypeDetailsStandard
   }
   const valuesToSave = {
@@ -56,6 +58,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
       },
       allOptions: formOptions.recallType,
     },
+    isThisAnEmergencyRecall: isFixedTerm ? false : null,
   }
   // ignore any 'from page', whatever the user selects they'll continue through the flow
   let nextPageId = 'start-no-recall'
