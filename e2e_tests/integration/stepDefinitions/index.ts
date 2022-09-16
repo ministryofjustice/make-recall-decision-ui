@@ -332,6 +332,8 @@ When('Maria changes to a not extended sentence', () => {
   cy.log('========= Fixed term licence conditions')
   cy.selectRadio('Fixed term recall', 'Yes')
   cy.fillInput('Give details', "Additional licence condition for fixed term recall...")
+  cy.clickButton('Continue')
+
   cy.clickLink('Continue') // sensitive information
 
   cy.log('========= Custody')
