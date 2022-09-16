@@ -46,6 +46,7 @@
   "isThisAnEmergencyRecall": false,
   "isIndeterminateSentence": true,
   "isExtendedSentence": true,
+  "fixedTermAdditionalLicenceConditions": null,
   "indeterminateSentenceType": {
     "selected": "LIFE",
     "allOptions": [

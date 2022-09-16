@@ -329,6 +329,11 @@ When('Maria changes to a not extended sentence', () => {
   cy.fillInput('Why do you recommend this recall type?', "Fixed term details...")
   cy.clickButton('Continue')
 
+  cy.log('========= Fixed term licence conditions')
+  cy.selectRadio('Fixed term recall', 'Yes')
+  cy.fillInput('Give details', "Additional licence condition for fixed term recall...")
+  cy.clickButton('Continue')
+
   cy.clickLink('Continue') // sensitive information
 
   cy.log('========= Custody')
@@ -434,5 +439,7 @@ When('Maria generates an updated Part A', () => {
     cy.log('Q22')
     expect(contents).to.contain('Select the proposed recall type, having considered the information above: Fixed')
     expect(contents).to.contain('Explain your reasons for the above recall type recommendation: Fixed term details...')
+    cy.log('Q23')
+    expect(contents).to.contain('Additional licence condition for fixed term recall...')
   })
 })

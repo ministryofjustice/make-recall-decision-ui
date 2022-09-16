@@ -13,6 +13,7 @@ import { isIndeterminateSentence } from '../isIndeterminateSentence/formOptions'
 import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
 import { isExtendedSentence } from '../isExtendedSentence/formOptions'
 import { recallTypeIndeterminate } from '../recallTypeIndeterminate/formOptions'
+import { hasFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/formOptions'
 
 export const formOptions = {
   recallType,
@@ -29,6 +30,7 @@ export const formOptions = {
   isIndeterminateSentence,
   indeterminateSentenceType,
   isExtendedSentence,
+  hasFixedTermLicenceConditions,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

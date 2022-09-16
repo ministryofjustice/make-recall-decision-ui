@@ -56,6 +56,12 @@
                             <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.isExtendedSentence }}</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.isExtendedSentence }) }}
                         </li>
+                        {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false and recommendation.recallType.selected.value === 'FIXED_TERM' %}
+                            <li class="moj-task-list__item">
+                                <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'fixed-licence', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Fixed term recall - additional licence conditions</a>
+                                {{ taskStatus({ hasData: taskCompleteness.statuses.isThisAnEmergencyRecall }) }}
+                            </li>
+                        {% endif %}
                         {% if recommendation.isIndeterminateSentence == true %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'indeterminate-type', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Type of indeterminate sentence</a>

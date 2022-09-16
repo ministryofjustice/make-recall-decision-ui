@@ -1,0 +1,61 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set yesDetailHtml %}
+                {{ govukTextarea({
+                    name: "hasFixedTermLicenceConditionsDetails",
+                    id: "hasFixedTermLicenceConditionsDetails",
+                    label: {
+                        text: "Give details.",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.details,
+                    errorMessage: errorMessage(errors.hasFixedTermLicenceConditionsDetail)
+                }) }}
+            {% endset %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Circumstances</div>
+                {{ govukRadios({
+                    idPrefix: "hasFixedTermLicenceConditions",
+                    name: "hasFixedTermLicenceConditions",
+                    fieldset: {
+                        legend: {
+                            text: pageHeading,
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    hint: {
+                        html: '<p class="govuk-body">You\'re recommending a fixed term recall for ' + recommendation.personOnProbation.name + '. The prison will prepare a new licence.</p><p class="govuk-body">Do you want to add any additional conditions to the licence?</p>'
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.hasFixedTermLicenceConditions,
+                        currentValues: inputDisplayValues.value,
+                        conditionalContent: {
+                            YES: yesDetailHtml
+                        }
+                    }),
+                    errorMessage: errorMessage(errors.hasFixedTermLicenceConditions)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
