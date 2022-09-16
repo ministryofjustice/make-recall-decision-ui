@@ -136,7 +136,7 @@ context('Make a recommendation', () => {
       fieldName: 'recallType',
       errorText: 'You must select a recommendation',
     })
-    cy.selectRadio('What do you recommend?', 'Standard recall')
+    cy.selectRadio('What do you recommend?', 'Emergency recall')
     cy.clickButton('Continue')
 
     cy.pageHeading().should('contain', 'Sensitive information')

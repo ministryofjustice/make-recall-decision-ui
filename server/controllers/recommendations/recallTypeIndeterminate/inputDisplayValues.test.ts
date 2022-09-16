@@ -34,4 +34,38 @@ describe('inputDisplayValuesRecallTypeIndeterminate', () => {
       value: 'NO_RECALL',
     })
   })
+
+  it('should set emergency recall if recallType is standard and emergency recall true, if no error or unsaved values', () => {
+    const apiResponse = {
+      recallType: {
+        selected: {
+          value: 'STANDARD' as RecallTypeSelectedValue.value,
+        },
+        allOptions: formOptions.recallType,
+      },
+      isThisAnEmergencyRecall: true,
+    }
+    const inputDisplayValues = inputDisplayValuesRecallTypeIndeterminate({
+      errors: {},
+      unsavedValues: {},
+      apiValues: apiResponse,
+    })
+    expect(inputDisplayValues).toEqual({
+      value: 'EMERGENCY',
+    })
+  })
+
+  it('should set no value if recallType is not set, if no error or unsaved values', () => {
+    const apiResponse = {
+      isThisAnEmergencyRecall: true,
+    }
+    const inputDisplayValues = inputDisplayValuesRecallTypeIndeterminate({
+      errors: {},
+      unsavedValues: {},
+      apiValues: apiResponse,
+    })
+    expect(inputDisplayValues).toEqual({
+      value: undefined,
+    })
+  })
 })

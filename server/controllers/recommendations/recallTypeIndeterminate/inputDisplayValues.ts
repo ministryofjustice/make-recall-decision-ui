@@ -11,8 +11,16 @@ export const inputDisplayValuesRecallTypeIndeterminate = ({
     value: '',
   }
   if (!isDefined(errors.recallType)) {
-    inputDisplayValues.value = (unsavedValues.recallType ||
-      getProperty<RecommendationResponse, RecallType>(apiValues, 'recallType.selected.value')) as string
+    if (unsavedValues.recallType) {
+      inputDisplayValues.value = unsavedValues.recallType as string
+    } else {
+      const recallType = getProperty<RecommendationResponse, RecallType>(
+        apiValues,
+        'recallType.selected.value'
+      ) as string
+      const isEmergencyRecall = apiValues.isThisAnEmergencyRecall
+      inputDisplayValues.value = recallType === 'STANDARD' && isEmergencyRecall === true ? 'EMERGENCY' : recallType
+    }
   }
   return inputDisplayValues
 }

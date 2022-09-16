@@ -26,15 +26,16 @@ describe('validateRecallTypeIndeterminate', () => {
           selected: {
             value: 'NO_RECALL',
           },
-          allOptions: formOptions.recallType,
+          allOptions: formOptions.recallTypeIndeterminate,
         },
+        isThisAnEmergencyRecall: null,
       })
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
     })
 
-    it('returns valuesToSave and redirects if valid standard recall selected', async () => {
+    it('returns valuesToSave and redirects if emergency recall selected', async () => {
       const requestBody = {
-        recallType: 'STANDARD',
+        recallType: 'EMERGENCY',
         crn: 'X34534',
       }
       const { errors, valuesToSave, nextPagePath } = await validateRecallTypeIndeterminate({
@@ -48,16 +49,17 @@ describe('validateRecallTypeIndeterminate', () => {
           selected: {
             value: 'STANDARD',
           },
-          allOptions: formOptions.recallType,
+          allOptions: formOptions.recallTypeIndeterminate,
         },
+        isThisAnEmergencyRecall: true,
       })
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
     })
 
     describe('Redirects', () => {
-      it('if "from page" is set to recall task list, redirects to it if a standard recall is selected', async () => {
+      it('if "from page" is set to recall task list, redirects to it if an emergency recall is selected', async () => {
         const requestBody = {
-          recallType: 'STANDARD',
+          recallType: 'EMERGENCY',
           crn: 'X34534',
         }
         const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
@@ -97,8 +99,8 @@ describe('validateRecallTypeIndeterminate', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'You must select a recommendation',
-          errorId: 'noRecallTypeSelected',
+          text: 'Select whether you recommend a recall or not',
+          errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])
     })
@@ -114,8 +116,8 @@ describe('validateRecallTypeIndeterminate', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'You must select a recommendation',
-          errorId: 'noRecallTypeSelected',
+          text: 'Select whether you recommend a recall or not',
+          errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])
     })

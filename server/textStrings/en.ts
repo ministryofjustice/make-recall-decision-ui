@@ -4,6 +4,7 @@ export const strings = {
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
     saveChanges: 'An error occurred saving your changes',
     noRecallTypeSelected: 'You must select a recommendation',
+    noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
     missingRecallTypeDetail: 'You must explain why you recommend this recall type',
     missingCustodyPoliceAddressDetail: 'Enter the custody address',
     noCustodyStatusSelected: 'Select whether the person is in custody or not',

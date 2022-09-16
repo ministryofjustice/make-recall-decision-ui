@@ -1,4 +1,4 @@
 export const recallTypeIndeterminate = [
-  { value: 'STANDARD', text: 'Standard recall' },
+  { value: 'EMERGENCY', text: 'Emergency recall' },
   { value: 'NO_RECALL', text: 'No recall' },
 ]
