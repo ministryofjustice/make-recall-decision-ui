@@ -37,6 +37,11 @@ export interface User {
   activeCaseLoadId: string
 }
 
+export interface UserEmailResponse {
+  name: string
+  email: string
+}
+
 export interface UserRole {
   roleCode: string
 }
@@ -51,6 +56,11 @@ export default class HmppsAuthClient {
   getUser(token: string): Promise<User> {
     logger.info(`Getting user details: calling HMPPS Auth`)
     return this.restClient(token).get({ path: '/api/user/me' }) as Promise<User>
+  }
+
+  getUserEmail(token: string): Promise<UserEmailResponse> {
+    logger.info(`Getting user email: calling HMPPS Auth`)
+    return this.restClient(token).get({ path: '/api/me/email' }) as Promise<UserEmailResponse>
   }
 
   getUserRoles(token: string): Promise<string[]> {
