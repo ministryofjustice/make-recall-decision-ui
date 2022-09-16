@@ -12,6 +12,9 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
   return isNotNull(recommendation.hasVictimsInContactScheme?.selected)
 }
 
+const removeStatusChecks = ({ allStatusKeys, keysToRemove }: { allStatusKeys: string[]; keysToRemove: string[] }) =>
+  allStatusKeys.filter(key => !keysToRemove.includes(key))
+
 const areAllTasksComplete = ({
   statuses,
   recommendation,
@@ -19,24 +22,28 @@ const areAllTasksComplete = ({
   statuses: ObjectMap<boolean>
   recommendation: RecommendationResponse
 }) => {
-  let statusesToCheck = Object.keys(statuses)
+  let allStatusKeys = Object.keys(statuses)
+  const isRecallTypeFixedTerm = recommendation.recallType && recommendation.recallType?.selected?.value === 'FIXED_TERM'
   // custody status
   if (['YES_POLICE', 'YES_PRISON'].includes(recommendation.custodyStatus?.selected as string)) {
-    statusesToCheck = statusesToCheck.filter(key => !['hasArrestIssues', 'localPoliceContact'].includes(key))
+    allStatusKeys = removeStatusChecks({ allStatusKeys, keysToRemove: ['hasArrestIssues', 'localPoliceContact'] })
   }
   // active custodial convictions
   if (recommendation.activeCustodialConvictionCount !== 1) {
-    statusesToCheck = statusesToCheck.filter(key => key !== 'licenceConditionsBreached')
+    allStatusKeys = removeStatusChecks({ allStatusKeys, keysToRemove: ['licenceConditionsBreached'] })
   }
   // determinate sentence
   if (recommendation.isIndeterminateSentence === false) {
-    statusesToCheck = statusesToCheck.filter(key => key !== 'indeterminateSentenceType')
+    allStatusKeys = removeStatusChecks({
+      allStatusKeys,
+      keysToRemove: ['indeterminateSentenceType', 'indeterminateOrExtendedSentenceDetails'],
+    })
   }
   // indeterminate sentence
-  if (recommendation.isIndeterminateSentence === true) {
-    statusesToCheck = statusesToCheck.filter(key => key !== 'fixedTermAdditionalLicenceConditions')
+  if (recommendation.isIndeterminateSentence === true || !isRecallTypeFixedTerm) {
+    allStatusKeys = removeStatusChecks({ allStatusKeys, keysToRemove: ['fixedTermAdditionalLicenceConditions'] })
   }
-  return statusesToCheck.every(key => Boolean(statuses[key]))
+  return allStatusKeys.every(key => Boolean(statuses[key]))
 }
 
 export const taskCompleteness = (recommendation: RecommendationResponse) => {
@@ -54,7 +61,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
     isIndeterminateSentence: isNotNull(recommendation.isIndeterminateSentence),
     isExtendedSentence: isNotNull(recommendation.isExtendedSentence),
-    indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
     vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
     custodyStatus: isNotNull(recommendation.custodyStatus) && isNotNull(recommendation.custodyStatus.selected),
@@ -64,8 +70,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       isNotNull(recommendation.isUnderIntegratedOffenderManagement) &&
       isNotNull(recommendation.isUnderIntegratedOffenderManagement.selected),
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
-    fixedTermAdditionalLicenceConditions: isNotNull(recommendation.fixedTermAdditionalLicenceConditions),
     hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
+    // optional fields, depending on indeterminate sentence status
+    indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
+    fixedTermAdditionalLicenceConditions: isNotNull(recommendation.fixedTermAdditionalLicenceConditions),
   }
   const areAllComplete = areAllTasksComplete({ statuses, recommendation })
   return {

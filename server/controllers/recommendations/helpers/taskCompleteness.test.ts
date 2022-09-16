@@ -243,9 +243,19 @@ describe('taskCompleteness', () => {
       expect(areAllComplete).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is false and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns true if isIndeterminateSentence is false, recall type is standard and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
+        isIndeterminateSentence: false,
+        fixedTermAdditionalLicenceConditions: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns false if isIndeterminateSentence is false, recall type is fixed and fixedTermAdditionalLicenceConditions not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        recallType: { selected: { value: 'FIXED_TERM' } },
         isIndeterminateSentence: false,
         fixedTermAdditionalLicenceConditions: null,
       } as RecommendationResponse)

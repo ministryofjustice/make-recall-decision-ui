@@ -59,7 +59,7 @@
                         {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false and recommendation.recallType.selected.value === 'FIXED_TERM' %}
                             <li class="moj-task-list__item">
                                 <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'fixed-licence', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Fixed term recall - additional licence conditions</a>
-                                {{ taskStatus({ hasData: taskCompleteness.statuses.isThisAnEmergencyRecall }) }}
+                                {{ taskStatus({ hasData: taskCompleteness.statuses.fixedTermAdditionalLicenceConditions }) }}
                             </li>
                         {% endif %}
                         {% if recommendation.isIndeterminateSentence == true %}
