@@ -14,6 +14,7 @@ import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffende
 import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { Vulnerabilities } from './Vulnerabilities';
+import { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -38,6 +39,7 @@ export type RecommendationResponse = {
     hasContrabandRisk?: SelectedWithDetails;
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;
+    indeterminateOrExtendedSentenceDetails?: IndeterminateOrExtendedSentenceDetails;
     licenceConditionsBreached?: LicenceConditionsBreached;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
     vulnerabilities?: Vulnerabilities;

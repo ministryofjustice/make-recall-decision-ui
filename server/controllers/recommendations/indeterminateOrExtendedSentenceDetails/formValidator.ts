@@ -1,63 +1,76 @@
 import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { formOptions, isValueValid, optionTextFromValue } from '../helpers/formOptions'
+import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  const { alternativesToRecallTried } = requestBody
-  const alternativesList = Array.isArray(alternativesToRecallTried)
-    ? alternativesToRecallTried
-    : [alternativesToRecallTried]
-  const invalidAlternative = alternativesList.some(
-    alternativeId => !isValueValid(alternativeId, 'alternativesToRecallTried')
+const missingDetailsError = (optionId: string) => {
+  switch (optionId) {
+    case 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE':
+      return strings.errors.missingIndeterminateDetailIndexOffence
+    case 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE':
+      return strings.errors.missingIndeterminateDetailSexualViolent
+    case 'OUT_OF_TOUCH':
+      return strings.errors.missingIndeterminateDetailContact
+    default:
+      return 'Enter details'
+  }
+}
+
+export const validateIndeterminateDetails = async ({
+  requestBody,
+  urlInfo,
+}: FormValidatorArgs): FormValidatorReturn => {
+  const { indeterminateOrExtendedSentenceDetails } = requestBody
+  const selected = Array.isArray(indeterminateOrExtendedSentenceDetails)
+    ? indeterminateOrExtendedSentenceDetails
+    : [indeterminateOrExtendedSentenceDetails]
+  const invalidAlternative = selected.some(
+    selectionId => !isValueValid(selectionId, 'indeterminateOrExtendedSentenceDetails')
   )
-  const missingDetails = alternativesList.filter(alternativeId => {
+  const missingDetails = selected.filter(selectionId => {
     const optionShouldHaveDetails = Boolean(
       findListItemByValue<FormOption>({
-        items: formOptions.alternativesToRecallTried,
-        value: alternativeId,
+        items: formOptions.indeterminateOrExtendedSentenceDetails,
+        value: selectionId,
       })?.detailsLabel
     )
-    if (optionShouldHaveDetails && !requestBody[`alternativesToRecallTriedDetail-${alternativeId}`]) {
-      return alternativeId
+    if (optionShouldHaveDetails && !requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`]) {
+      return selectionId
     }
     return false
   })
-  const hasError = !alternativesToRecallTried || missingDetails.length
+  const hasError = !indeterminateOrExtendedSentenceDetails || missingDetails.length
   if (hasError) {
     const errors = []
     let errorId
-    if (!alternativesToRecallTried || invalidAlternative) {
-      errorId = 'noAlternativesTriedSelected'
+    if (!indeterminateOrExtendedSentenceDetails || invalidAlternative) {
+      errorId = 'noIndeterminateDetailsSelected'
       errors.push(
         makeErrorObject({
-          id: 'alternativesToRecallTried',
+          id: 'indeterminateOrExtendedSentenceDetails',
           text: strings.errors[errorId],
           errorId,
         })
       )
     }
     if (missingDetails.length) {
-      missingDetails.forEach(alternativeId => {
-        errorId = 'missingAlternativesTriedDetail'
+      missingDetails.forEach(selectionId => {
+        errorId = 'missingIndeterminateDetail'
         errors.push(
           makeErrorObject({
-            id: `alternativesToRecallTriedDetail-${alternativeId}`,
-            text: `${strings.errors.missingDetail} for ${optionTextFromValue(
-              alternativeId,
-              'alternativesToRecallTried'
-            ).toLowerCase()}`,
+            id: `indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`,
+            text: missingDetailsError(selectionId),
             errorId,
           })
         )
       })
     }
     const unsavedValues = {
-      alternativesToRecallTried: alternativesList.map(alternativeId => ({
-        value: alternativeId,
-        details: requestBody[`alternativesToRecallTriedDetail-${alternativeId}`],
+      indeterminateOrExtendedSentenceDetails: selected.map(selectionId => ({
+        value: selectionId,
+        details: requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`],
       })),
     }
     return {
@@ -68,15 +81,15 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
 
   // valid
   const valuesToSave = {
-    alternativesToRecallTried: {
-      selected: alternativesList.map(alternative => ({
+    indeterminateOrExtendedSentenceDetails: {
+      selected: selected.map(alternative => ({
         value: alternative,
-        details: requestBody[`alternativesToRecallTriedDetail-${alternative}`],
+        details: requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${alternative}`],
       })),
-      allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
+      allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
     },
   }
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'stop-think', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
   return {
     valuesToSave,
     nextPagePath,

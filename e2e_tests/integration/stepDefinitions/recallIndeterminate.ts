@@ -15,6 +15,24 @@ When('Maria confirms the person is on a life sentence', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria confirms the existing indeterminate and extended sentence criteria', () => {
+  cy.clickButton('Continue')
+})
+
+When('Maria enters indeterminate and extended sentence criteria', () => {
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectCheckboxes('Indeterminate and extended sentences', [
+      'The person has shown behaviour similar to the index offence',
+      'The person has shown behaviour that could lead to a sexual or violent offence',
+      'The person is out of touch'
+    ])
+  )
+  cy.fillInput('Give details', 'Details on behaviour similar to index offence', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' })
+  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', { parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' })
+  cy.fillInput('Give details', 'Details on out of touch', { parent: '#conditional-OUT_OF_TOUCH' })
+  cy.clickButton('Continue')
+})
+
 When('Maria downloads the Part A and confirms the indeterminate recall', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     assertQ1_emergency_recall(contents, 'Yes')
@@ -55,6 +73,13 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     expect(contents).to.contain('Details on drug testing')
 
     assertQ22_recall_type(contents, 'N/A', 'N/A')
+    cy.log('Q23')
+    expect(contents).to.contain('Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes')
+    expect(contents).to.contain('Please Comment: Details on behaviour similar to index offence')
+    expect(contents).to.contain('Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence? Yes')
+    expect(contents).to.contain('Please Comment: Details on behaviour that could lead to a sexual or violent offence')
+    expect(contents).to.contain('Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes')
+    expect(contents).to.contain('Please Comment: Details on out of touch')
   })
 })
 
@@ -161,6 +186,34 @@ When('Maria confirms answers were saved', () => {
     cy.getRadioOptionByLabel(`Do you think ${offenderName} is using recall to bring contraband into prison?`, 'Yes').should('be.checked')
   })
   cy.getTextInputValue('Give details. Also tell your local police contact about your concerns.').should('equal', 'Contraband details...')
+  cy.clickLink('Back')
+
+  cy.log('========= Indeterminate or extended sentence details')
+  cy.clickLink('Indeterminate and extended sentences - recall criteria')
+  cy.getRadioOptionByLabel(
+    'Indeterminate and extended sentences',
+    'The person has shown behaviour similar to the index offence'
+  ).should('be.checked')
+  cy.getRadioOptionByLabel(
+    'Indeterminate and extended sentences',
+    'The person has shown behaviour that could lead to a sexual or violent offence'
+  ).should('be.checked')
+  cy.getRadioOptionByLabel(
+    'Indeterminate and extended sentences',
+    'The person is out of touch'
+  ).should('be.checked')
+  cy.getTextInputValue('Give details', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' }).should(
+    'equal',
+    'Details on behaviour similar to index offence'
+  )
+  cy.getTextInputValue('Give details', { parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' }).should(
+    'equal',
+    'Details on behaviour that could lead to a sexual or violent offence'
+  )
+  cy.getTextInputValue('Give details', { parent: '#conditional-OUT_OF_TOUCH' }).should(
+    'equal',
+    'Details on out of touch'
+  )
   cy.clickLink('Back')
 
   cy.pageHeading().should('equal', 'Create a Part A form')

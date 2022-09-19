@@ -53,7 +53,7 @@ describe('validateRecallTypeIndeterminate', () => {
         },
         isThisAnEmergencyRecall: true,
       })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
+      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/indeterminate-details`)
     })
 
     describe('Redirects', () => {

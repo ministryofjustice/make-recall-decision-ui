@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: nextPageLinkUrl({ nextPageId: 'licence-conditions', urlInfo: urlInfo })
+            href: nextPageLinkUrl({ nextPageId: 'recall-type-indeterminate', urlInfo: urlInfo })
         }) }}
     </nav>
 {% endblock %}
@@ -18,52 +18,41 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <div class="govuk-form-group{% if errors.alternativesToRecallTried %} govuk-form-group--error{% endif %}">
-                  <fieldset class="govuk-fieldset" aria-describedby="contact-hint{% if errors.alternativesToRecallTried %} alternativesToRecallTried-error{% endif %}">
+                <div class="govuk-form-group{% if errors.indeterminateOrExtendedSentenceDetails %} govuk-form-group--error{% endif %}">
+                  <fieldset class="govuk-fieldset" aria-describedby="contact-hint{% if errors.indeterminateOrExtendedSentenceDetails %} indeterminateOrExtendedSentenceDetails-error{% endif %}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <div class="govuk-caption-l">Circumstances</div>
                         <h1 class="govuk-fieldset__heading">
                             {{ pageHeading }}
                         </h1>
                     </legend>
-                  <p id="alternativesToRecallTried-error" class="govuk-error-message">
-                      <span class="govuk-visually-hidden">Error:</span> {{ errors.alternativesToRecallTried.text }}
+                  <p id="indeterminateOrExtendedSentenceDetails-error" class="govuk-error-message">
+                      <span class="govuk-visually-hidden">Error:</span> {{ errors.indeterminateOrExtendedSentenceDetails.text }}
                   </p>
                     <div id="contact-hint" class="govuk-hint">
-                        Give full details, including dates where relevant.
+                        At least one of the following criteria must be met by law. Select all that apply and give details.
                     </div>
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                        {% for item in formOptions.alternativesToRecallTried %}
-                            {% if item.behaviour == 'exclusive' %}
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="{% if loop.index == 1 %}alternativesToRecallTried{% else %}option-{{ loop.index }}{% endif %}" name="alternativesToRecallTried" type="checkbox" value="{{ item.value }}" {% if findListItemByValue({ items: inputDisplayValues, value: item.value }) %}checked{% endif %} data-behaviour="exclusive">
-                                    <label class="govuk-label govuk-checkboxes__label" for="{% if loop.index == 1 %}alternativesToRecallTried{% else %}option-{{ loop.index }}{% endif %}">
-                                        {{ item.text }}
-                                    </label>
-                                </div>
-                                <div class="govuk-checkboxes__divider">or</div>
-                            {% else %}
+                        {% for item in formOptions.indeterminateOrExtendedSentenceDetails %}
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="option-{{ loop.index }}" name="alternativesToRecallTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if findListItemByValue({ items: inputDisplayValues, value: item.value }) %}checked{% endif %}>
+                                <input class="govuk-checkboxes__input" id="option-{{ loop.index }}" name="indeterminateOrExtendedSentenceDetails" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if findListItemByValue({ items: inputDisplayValues, value: item.value }) %}checked{% endif %}>
                                 <label class="govuk-label govuk-checkboxes__label" for="option-{{ loop.index }}">
                                     {{ item.text }}
                                 </label>
                             </div>
                             <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-{{ item.value }}">
                                 {{ govukTextarea({
-                                    name: "alternativesToRecallTriedDetail-" + item.value,
-                                    id: "alternativesToRecallTriedDetail-" + item.value,
+                                    name: "indeterminateOrExtendedSentenceDetailsDetail-" + item.value,
+                                    id: "indeterminateOrExtendedSentenceDetailsDetail-" + item.value,
                                     label: {
                                         text: item.detailsLabel
                                     },
                                     value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
-                                    errorMessage: errorMessage(errors["alternativesToRecallTriedDetail-" + item.value])
+                                    errorMessage: errorMessage(errors["indeterminateOrExtendedSentenceDetailsDetail-" + item.value])
                                 }) }}
                             </div>
-                        {% endif %}
                         {% endfor %}
                     </div>
-
                 </fieldset>
                 </div>
                 {{ formSubmitButton() }}

@@ -39,6 +39,8 @@ import { validateRecallTypeIndeterminate } from '../recallTypeIndeterminate/form
 import { inputDisplayValuesRecallTypeIndeterminate } from '../recallTypeIndeterminate/inputDisplayValues'
 import { validateFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/formValidator'
 import { inputDisplayValuesFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/inputDisplayValues'
+import { validateIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/formValidator'
+import { inputDisplayValuesIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -103,6 +105,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesRecallTypeIndeterminate,
         pageHeading: strings.pageHeadings.recallType,
         pageTitle: strings.pageTitles.recallType,
+      }
+    case 'indeterminate-details':
+      return {
+        templateName: 'indeterminateOrExtendedSentenceDetails',
+        validator: validateIndeterminateDetails,
+        inputDisplayValues: inputDisplayValuesIndeterminateDetails,
+        pageHeading: strings.pageHeadings.indeterminateOrExtendedSentenceDetails,
+        pageTitle: strings.pageTitles.indeterminateOrExtendedSentenceDetails,
       }
     case 'recall-type':
       return {

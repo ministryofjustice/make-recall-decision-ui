@@ -17,6 +17,7 @@ describe('taskCompleteness', () => {
       isExtendedSentence: true,
       fixedTermAdditionalLicenceConditions: false, // indeterminate sentence, so expected false
       indeterminateSentenceType: true,
+      indeterminateOrExtendedSentenceDetails: true,
       isUnderIntegratedOffenderManagement: true,
       licenceConditionsBreached: true,
       localPoliceContact: true,
@@ -38,6 +39,7 @@ describe('taskCompleteness', () => {
     isIndeterminateSentence: null,
     isExtendedSentence: null,
     indeterminateSentenceType: null,
+    indeterminateOrExtendedSentenceDetails: null,
     fixedTermAdditionalLicenceConditions: null,
     isUnderIntegratedOffenderManagement: null,
     licenceConditionsBreached: null,
@@ -60,6 +62,7 @@ describe('taskCompleteness', () => {
       isIndeterminateSentence: false,
       isExtendedSentence: false,
       indeterminateSentenceType: false,
+      indeterminateOrExtendedSentenceDetails: false,
       fixedTermAdditionalLicenceConditions: false,
       isUnderIntegratedOffenderManagement: false,
       licenceConditionsBreached: false,
@@ -219,6 +222,35 @@ describe('taskCompleteness', () => {
         indeterminateSentenceType: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+    })
+
+    it('returns true if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isIndeterminateSentence: true,
+        indeterminateOrExtendedSentenceDetails: {
+          selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'Details' }],
+        },
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns false if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails is not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isIndeterminateSentence: true,
+        indeterminateOrExtendedSentenceDetails: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('returns true if isIndeterminateSentence is false and indeterminateOrExtendedSentenceDetails is not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isIndeterminateSentence: false,
+        indeterminateOrExtendedSentenceDetails: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
     })
   })
 

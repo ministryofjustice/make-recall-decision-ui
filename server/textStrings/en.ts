@@ -16,6 +16,11 @@ export const strings = {
     noIntegratedOffenderManagementSelected:
       'You must select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'You must select which alternatives to recall have been tried already',
+    noIndeterminateDetailsSelected: 'Select at least one of the criteria',
+    missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
+    missingIndeterminateDetailSexualViolent:
+      'Enter details about the behaviour that could lead to a sexual or violent offence',
+    missingIndeterminateDetailContact: 'Enter details about the person being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     missingDetail: 'Enter more detail',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
@@ -44,6 +49,7 @@ export const strings = {
     isIndeterminateSentence: 'Is {{ fullName }} on an indeterminate sentence?',
     isExtendedSentence: 'Is {{ fullName }} on an extended sentence?',
     indeterminateSentenceType: 'What type of sentence is {{ fullName }} on?',
+    indeterminateOrExtendedSentenceDetails: 'Indeterminate and extended sentences',
     recallType: 'What do you recommend?',
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
@@ -69,6 +75,7 @@ export const strings = {
     isIndeterminateSentence: 'Is the person on an indeterminate sentence?',
     isExtendedSentence: 'Is the person on an extended sentence?',
     indeterminateSentenceType: 'What type of sentence is the person on?',
+    indeterminateOrExtendedSentenceDetails: 'Indeterminate and extended sentences',
     recallType: 'What do you recommend?',
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
