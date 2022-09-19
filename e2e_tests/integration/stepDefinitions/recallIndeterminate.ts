@@ -15,6 +15,10 @@ When('Maria confirms the person is on a life sentence', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria confirms the existing indeterminate and extended sentence criteria', () => {
+  cy.clickButton('Continue')
+})
+
 When('Maria enters indeterminate and extended sentence criteria', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectCheckboxes('Indeterminate and extended sentences', [
@@ -70,9 +74,12 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
 
     assertQ22_recall_type(contents, 'N/A', 'N/A')
     cy.log('Q23')
-    expect(contents).to.contain('Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link?  Yes    Please Comment: Details on behaviour similar to index offence')
-    expect(contents).to.contain('Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence? Yes    Please Comment: Details on behaviour that could lead to a sexual or violent offence')
-    expect(contents).to.contain('Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes   Please Comment: Details on out of touch')
+    expect(contents).to.contain('Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes')
+    expect(contents).to.contain('Please Comment: Details on behaviour similar to index offence')
+    expect(contents).to.contain('Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence? Yes')
+    expect(contents).to.contain('Please Comment: Details on behaviour that could lead to a sexual or violent offence')
+    expect(contents).to.contain('Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes')
+    expect(contents).to.contain('Please Comment: Details on out of touch')
   })
 })
 
