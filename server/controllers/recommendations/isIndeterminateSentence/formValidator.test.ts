@@ -8,7 +8,7 @@ describe('validateIsIndeterminateSentence', () => {
     path: `/recommendations/${recommendationId}/is-indeterminate`,
   }
 
-  it('sets indeterminate type to NO, extended sentence / recall type to null and redirects if answer is No', async () => {
+  it('if No selected, sets indeterminateSentenceType, saves value and redirects', async () => {
     const requestBody = {
       isIndeterminateSentence: 'NO',
       crn: 'X34534',
@@ -23,13 +23,11 @@ describe('validateIsIndeterminateSentence', () => {
       indeterminateSentenceType: {
         selected: 'NO',
       },
-      isExtendedSentence: null,
-      recallType: null,
     })
     expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
 
-  it('resets indeterminate type to null, extended sentence to null and redirects, if answer is Yes', async () => {
+  it('if Yes selected, saves value and redirects', async () => {
     const requestBody = {
       isIndeterminateSentence: 'YES',
       crn: 'X34534',
@@ -41,11 +39,52 @@ describe('validateIsIndeterminateSentence', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       isIndeterminateSentence: true,
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
+  })
+
+  it('if answer changes from Yes to No, resets isExtendedSentence / indeterminateSentenceType / recallType / indeterminateOrExtendedSentenceDetails / fixedTermAdditionalLicenceConditions', async () => {
+    const requestBody = {
+      isIndeterminateSentence: 'NO',
+      currentSavedValue: 'YES',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateIsIndeterminateSentence({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      isIndeterminateSentence: false,
+      indeterminateSentenceType: {
+        selected: 'NO',
+      },
+      isExtendedSentence: null,
+      recallType: null,
+      indeterminateOrExtendedSentenceDetails: null,
+      fixedTermAdditionalLicenceConditions: null,
+    })
+  })
+
+  it('if answer changes from No to Yes, resets isExtendedSentence / indeterminateSentenceType / recallType / indeterminateOrExtendedSentenceDetails / fixedTermAdditionalLicenceConditions', async () => {
+    const requestBody = {
+      isIndeterminateSentence: 'YES',
+      currentSavedValue: 'NO',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateIsIndeterminateSentence({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      isIndeterminateSentence: true,
       indeterminateSentenceType: null,
       isExtendedSentence: null,
       recallType: null,
+      indeterminateOrExtendedSentenceDetails: null,
+      fixedTermAdditionalLicenceConditions: null,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {
