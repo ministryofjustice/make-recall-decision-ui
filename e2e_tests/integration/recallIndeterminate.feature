@@ -15,6 +15,7 @@ Feature: Recall (indeterminate)
     And Maria confirms "Yes" for extended sentence
     And Maria confirms the person is on a IPP sentence
     And Maria recommends an emergency recall
+    And Maria enters indeterminate and extended sentence criteria
     And Maria reads the guidance on sensitive information
     And Maria indicates the person is not in custody
     And Maria views the page Create a Part A form

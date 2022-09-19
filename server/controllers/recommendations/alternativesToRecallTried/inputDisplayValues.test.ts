@@ -5,7 +5,7 @@ import { ValueWithDetails } from '../../../@types/make-recall-decision-api'
 describe('inputDisplayValuesAlternativesToRecallTried', () => {
   const apiValues = {
     alternativesToRecallTried: {
-      selected: ['INCREASED_FREQUENCY'] as ValueWithDetails[],
+      selected: [{ value: 'INCREASED_FREQUENCY' }] as ValueWithDetails[],
       allOptions: formOptions.alternativesToRecallTried,
     },
   }
@@ -27,6 +27,29 @@ describe('inputDisplayValuesAlternativesToRecallTried', () => {
     expect(inputDisplayValues).toEqual([])
   })
 
+  it('should use an unsaved value for the selected option, if details are missing', () => {
+    const errors = {
+      alternativesToRecallTried: {
+        text: 'Enter details',
+        href: '#alternativesToRecallTriedDetails',
+      },
+    }
+    const inputDisplayValues = inputDisplayValuesAlternativesToRecallTried({
+      errors,
+      unsavedValues: {
+        alternativesToRecallTried: [
+          { value: 'EXTRA_LICENCE_CONDITIONS', details: 'Details' },
+          { value: 'REFERRAL_TO_APPROVED_PREMISES', details: '' },
+        ],
+      },
+      apiValues,
+    })
+    expect(inputDisplayValues).toEqual([
+      { value: 'EXTRA_LICENCE_CONDITIONS', details: 'Details' },
+      { value: 'REFERRAL_TO_APPROVED_PREMISES', details: '' },
+    ])
+  })
+
   it('should use apiValues for value, if no error or unsaved values', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesAlternativesToRecallTried({
@@ -34,6 +57,6 @@ describe('inputDisplayValuesAlternativesToRecallTried', () => {
       unsavedValues,
       apiValues,
     })
-    expect(inputDisplayValues).toEqual(['INCREASED_FREQUENCY'])
+    expect(inputDisplayValues).toEqual([{ value: 'INCREASED_FREQUENCY' }])
   })
 })

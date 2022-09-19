@@ -73,6 +73,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
     // optional fields, depending on indeterminate sentence status
     indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
+    indeterminateOrExtendedSentenceDetails: isNotNull(recommendation.indeterminateOrExtendedSentenceDetails),
     fixedTermAdditionalLicenceConditions: isNotNull(recommendation.fixedTermAdditionalLicenceConditions),
   }
   const areAllComplete = areAllTasksComplete({ statuses, recommendation })

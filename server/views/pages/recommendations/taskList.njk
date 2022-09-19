@@ -68,6 +68,12 @@
                             {{ taskStatus({ hasData: taskCompleteness.statuses.indeterminateSentenceType }) }}
                         </li>
                         {% endif %}
+                        {% if recommendation.isIndeterminateSentence == true %}
+                            <li class="moj-task-list__item">
+                                <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'indeterminate-details', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Indeterminate and extended sentences - recall criteria</a>
+                                {{ taskStatus({ hasData: taskCompleteness.statuses.indeterminateOrExtendedSentenceDetails }) }}
+                            </li>
+                        {% endif %}
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Response to probation so far</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.responseToProbation }) }}

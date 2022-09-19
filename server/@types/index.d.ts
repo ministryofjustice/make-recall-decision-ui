@@ -148,6 +148,7 @@ export type PageTemplateName =
   | 'responseToProbation'
   | 'licenceConditions'
   | 'alternativesToRecallTried'
+  | 'indeterminateOrExtendedSentenceDetails'
   | 'stopThink'
   | 'isIndeterminateSentence'
   | 'isExtendedSentence'

@@ -68,6 +68,36 @@
       }
     ]
   },
+  "indeterminateOrExtendedSentenceDetails": {
+    "selected": [
+      {
+        "value": "BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE",
+        "details": "Details..."
+      },
+      {
+        "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE",
+        "Details": "Details..."
+      },
+      {
+        "value": "OUT_OF_TOUCH",
+        "Details": "Details..."
+      }
+    ],
+    "allOptions": [
+      {
+        "text": "The person has shown behaviour similar to the index offence",
+        "value": "BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE"
+      },
+      {
+        "text": "The person has shown behaviour that could lead to a sexual or violent offence",
+        "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE"
+      },
+      {
+        "text": "The person is out of touch",
+        "value": "OUT_OF_TOUCH"
+      }
+    ]
+  },
   "alternativesToRecallTried": {
     "selected": [
       {
