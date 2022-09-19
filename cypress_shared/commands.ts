@@ -198,11 +198,13 @@ Cypress.Commands.add('downloadPdf', linkText =>
   cy.downloadFile(linkText).then(response => cy.task('readPdf', response.body).then(pdf => pdf.text))
 )
 
-Cypress.Commands.add('downloadDocX', linkText =>
-  cy
-    .downloadFile(linkText)
-    .then(response => cy.task('readDocX', response.body))
-    .then(({ value }) => value)
+Cypress.Commands.add(
+  'downloadDocX',
+  linkText =>
+    cy
+      .downloadFile(linkText)
+      .then(response => cy.task('readDocX', response.body))
+      .then(({ value }) => value.replace(/[\r\n]/gm, '')) // strip line breaks
 )
 
 Cypress.Commands.add('readBase64File', fileName => {

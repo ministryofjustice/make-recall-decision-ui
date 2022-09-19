@@ -86,7 +86,12 @@ Set the CYPRESS_USERNAME and CYPRESS_PASSWORD env vars in the [.env.sample](./.e
 
 Run all services:
 ```
-./scripts/start-services-for-e2e-tests.sh
+./scripts/start-services-for-e2e-tests-local.sh
+```
+
+Then, run the UI separately:
+```
+npm run start:e2e
 ```
 
 Open Cypress, from there you can run the tests:

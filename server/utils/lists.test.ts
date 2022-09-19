@@ -87,12 +87,12 @@ describe('List utilities', () => {
     it('marks the selected items as checked', () => {
       const items = [
         {
-          text: 'Fixed term recall',
-          value: 'FIXED_TERM',
-        },
-        {
           text: 'Standard recall',
           value: 'STANDARD',
+        },
+        {
+          text: 'Fixed term recall',
+          value: 'FIXED_TERM',
         },
         {
           text: 'No recall',
@@ -102,14 +102,14 @@ describe('List utilities', () => {
       const result = radioCheckboxItems({ items, currentValues: 'FIXED_TERM' })
       expect(result).toEqual([
         {
-          checked: true,
-          text: 'Fixed term recall',
-          value: 'FIXED_TERM',
-        },
-        {
           checked: false,
           text: 'Standard recall',
           value: 'STANDARD',
+        },
+        {
+          checked: true,
+          text: 'Fixed term recall',
+          value: 'FIXED_TERM',
         },
         {
           checked: false,
@@ -130,17 +130,17 @@ describe('List utilities', () => {
       })
       expect(result).toEqual([
         {
+          checked: false,
+          text: 'Standard recall',
+          value: 'STANDARD',
+        },
+        {
           text: 'Fixed term recall',
           value: 'FIXED_TERM',
           checked: true,
           conditional: {
             html: '<div>test</div>',
           },
-        },
-        {
-          checked: false,
-          text: 'Standard recall',
-          value: 'STANDARD',
         },
         {
           checked: false,
