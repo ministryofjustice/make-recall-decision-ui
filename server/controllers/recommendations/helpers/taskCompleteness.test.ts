@@ -261,5 +261,15 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
+
+    it('returns true if isIndeterminateSentence is false, extended sentence is true and indeterminate sentence type not set', () => {
+      const { areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        isIndeterminateSentence: false,
+        isExtendedSentence: true,
+        indeterminateSentenceType: null,
+      } as RecommendationResponse)
+      expect(areAllComplete).toEqual(true)
+    })
   })
 })

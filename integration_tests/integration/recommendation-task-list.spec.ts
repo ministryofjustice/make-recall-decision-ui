@@ -64,24 +64,26 @@ context('Recommendation - task list', () => {
       response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend completed').should('exist')
-    cy.getElement('Alternatives tried already completed').should('exist')
-    cy.getElement('Response to probation so far completed').should('exist')
-    cy.getElement('Breached licence condition(s) completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? completed').should('exist')
-    cy.getElement('Are there any victims in the victim contact scheme? completed').should('exist')
     cy.getElement('Is Paula Smith in custody now? completed').should('exist')
     cy.getElement('Local police contact details completed').should('exist')
-    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
-    cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
-    cy.getElement('Is Paula Smith on an extended sentence? completed').should('exist')
-    cy.getElement('Type of indeterminate sentence completed').should('exist')
     cy.clickLink('Create Part A')
   })
 
-  it('task list - to do', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+  it('task list - completed - determinate sentence', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, isIndeterminateSentence: false },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getElement('Type of indeterminate sentence completed').should('not.exist')
+  })
+
+  it('task list - to do - not in custody', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: recommendationResponse,
+    })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend to do').should('exist')
     cy.getElement('Alternatives tried already to do').should('exist')
@@ -185,7 +187,7 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
   })
 
-  it('task list - emergency recall link visible if determinate, not extended, standard recall', () => {
+  it('task list - determinate, not extended, standard recall', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
       response: {
@@ -199,6 +201,40 @@ context('Recommendation - task list', () => {
     cy.getLinkHref('Emergency recall').should(
       'contain',
       '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
+    cy.getElement('Fixed term recall - additional licence conditions').should('not.exist')
+  })
+
+  it('task list - determinate, not extended, fixed term recall', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...completeRecommendationResponse,
+        isIndeterminateSentence: false,
+        isExtendedSentence: false,
+        recallType: { selected: { value: 'FIXED_TERM' } },
+      },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('Fixed term recall - additional licence conditions').should(
+      'contain',
+      '/recommendations/123/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances'
+    )
+    cy.getElement('Emergency recall').should('not.exist')
+  })
+
+  it('task list - indeterminate sentence type link visible if indeterminate sentence', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...completeRecommendationResponse,
+        isIndeterminateSentence: true,
+      },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('Type of indeterminate sentence').should(
+      'contain',
+      '/recommendations/123/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
   })
 })

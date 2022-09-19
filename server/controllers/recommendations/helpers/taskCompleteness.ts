@@ -63,7 +63,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     isExtendedSentence: isNotNull(recommendation.isExtendedSentence),
     vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
-    custodyStatus: isNotNull(recommendation.custodyStatus) && isNotNull(recommendation.custodyStatus.selected),
+    custodyStatus: isNotNull(recommendation.custodyStatus),
     localPoliceContact:
       isNotNull(recommendation.localPoliceContact) && isNotNull(recommendation.localPoliceContact.contactName),
     isUnderIntegratedOffenderManagement:

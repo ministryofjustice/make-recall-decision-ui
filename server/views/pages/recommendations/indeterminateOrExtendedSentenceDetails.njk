@@ -1,0 +1,74 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'licence-conditions', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-form-group{% if errors.alternativesToRecallTried %} govuk-form-group--error{% endif %}">
+                  <fieldset class="govuk-fieldset" aria-describedby="contact-hint{% if errors.alternativesToRecallTried %} alternativesToRecallTried-error{% endif %}">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <div class="govuk-caption-l">Circumstances</div>
+                        <h1 class="govuk-fieldset__heading">
+                            {{ pageHeading }}
+                        </h1>
+                    </legend>
+                  <p id="alternativesToRecallTried-error" class="govuk-error-message">
+                      <span class="govuk-visually-hidden">Error:</span> {{ errors.alternativesToRecallTried.text }}
+                  </p>
+                    <div id="contact-hint" class="govuk-hint">
+                        Give full details, including dates where relevant.
+                    </div>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        {% for item in formOptions.alternativesToRecallTried %}
+                            {% if item.behaviour == 'exclusive' %}
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="{% if loop.index == 1 %}alternativesToRecallTried{% else %}option-{{ loop.index }}{% endif %}" name="alternativesToRecallTried" type="checkbox" value="{{ item.value }}" {% if findListItemByValue({ items: inputDisplayValues, value: item.value }) %}checked{% endif %} data-behaviour="exclusive">
+                                    <label class="govuk-label govuk-checkboxes__label" for="{% if loop.index == 1 %}alternativesToRecallTried{% else %}option-{{ loop.index }}{% endif %}">
+                                        {{ item.text }}
+                                    </label>
+                                </div>
+                                <div class="govuk-checkboxes__divider">or</div>
+                            {% else %}
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="option-{{ loop.index }}" name="alternativesToRecallTried" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if findListItemByValue({ items: inputDisplayValues, value: item.value }) %}checked{% endif %}>
+                                <label class="govuk-label govuk-checkboxes__label" for="option-{{ loop.index }}">
+                                    {{ item.text }}
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-{{ item.value }}">
+                                {{ govukTextarea({
+                                    name: "alternativesToRecallTriedDetail-" + item.value,
+                                    id: "alternativesToRecallTriedDetail-" + item.value,
+                                    label: {
+                                        text: item.detailsLabel
+                                    },
+                                    value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
+                                    errorMessage: errorMessage(errors["alternativesToRecallTriedDetail-" + item.value])
+                                }) }}
+                            </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+
+                </fieldset>
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
