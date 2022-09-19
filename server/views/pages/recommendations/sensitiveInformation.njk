@@ -4,7 +4,7 @@
 
 {% block beforeContent %}
     {% if recommendation.isIndeterminateSentence == true or recommendation.isExtendedSentence == true %}
-        {% set nextPageId = 'recall-type-indeterminate' %}
+        {% set nextPageId = 'indeterminate-details' %}
     {% elseif recommendation.recallType.selected.value === 'FIXED_TERM' %}
         {% set nextPageId = 'fixed-licence' %}
     {% else %}
