@@ -3,10 +3,17 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
 
 {% block beforeContent %}
+    {% if recommendation.isIndeterminateSentence == true or recommendation.isExtendedSentence == true %}
+        {% set nextPageId = 'recall-type-indeterminate' %}
+    {% elseif recommendation.recallType.selected.value === 'FIXED_TERM' %}
+        {% set nextPageId = 'fixed-licence' %}
+    {% else %}
+        {% set nextPageId = 'emergency-recall' %}
+    {% endif %}
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: '/recommendations/' + recommendation.id + '/emergency-recall'
+            href: '/recommendations/' + recommendation.id + '/' + nextPageId
         }) }}
     </nav>
 {% endblock %}
