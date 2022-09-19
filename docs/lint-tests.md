@@ -98,3 +98,7 @@ Open Cypress, from there you can run the tests:
 ```
 npm run e2e
 ```
+
+## E2E Tests on CircleCI
+
+The E2E tests are ran against the `dev` and `preprod` environments after deployment. The user credentials they use to log into the service are stored as [environment variables (in CircleCI)](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables) called `CYPRESS_USERNAME_<environment>` and `CYPRESS_PASSWORD_<environment>`.

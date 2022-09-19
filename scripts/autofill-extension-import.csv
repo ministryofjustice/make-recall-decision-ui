@@ -164,6 +164,10 @@ r236,3,"^YES$","1","/recommendations/[^\/]+/is-indeterminate",0,c2
 r237,3,"^LIFE$","1","/recommendations/[^\/]+/indeterminate-type",0,c2
 r238,3,"^YES$","1","/recommendations/[^\/]+/is-extended",0,c2
 r239,3,"^STANDARD$","1","/recommendations/[^\/]+/recall-type-indeterminate",0,c2
+r240,3,"^EMERGENCY$","1","/recommendations/[^\/]+/recall-type-indeterminate",0,c2
+r241,3,"^YES$","1","/recommendations/[^\/]+/fixed-licence",0,c2
+r242,0,"^hasFixedTermLicenceConditionsDetails$","To attend weekly appointments with the probation officer.
+To not leave the Birmingham area.","/recommendations/[^\/]+/fixed-licence",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,
