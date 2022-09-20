@@ -40,6 +40,7 @@ export const strings = {
     invalidLocalPoliceEmail: 'Enter an email address in the correct format, like name@example.com',
     invalidLocalPolicePhone: 'Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
     invalidLocalPoliceFax: 'Enter a fax number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
+    noWhyConsideredRecallSelected: 'Select a reason why you considered recall',
   },
   pageHeadings: {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
@@ -66,6 +67,7 @@ export const strings = {
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
     taskListNoRecall: 'Create a Decision not to Recall letter',
+    whyConsideredRecall: 'Why you considered recall',
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
@@ -92,5 +94,6 @@ export const strings = {
     contraband: 'Do you think the person is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
     taskListNoRecall: 'Create a Decision not to Recall letter',
+    whyConsideredRecall: 'Why you considered recall',
   },
 }

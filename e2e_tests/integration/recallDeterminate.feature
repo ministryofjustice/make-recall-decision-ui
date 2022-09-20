@@ -41,3 +41,4 @@ Feature: Recall (determinate)
     And Maria changes the recall type
     And Maria recommends a "No" recall
     And Maria views the no recall task list
+    And Maria confirms why recall was considered

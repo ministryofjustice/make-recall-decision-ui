@@ -1,0 +1,46 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'task-list-no-recall', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Decision not to Recall</div>
+                {{ govukRadios({
+                    idPrefix: "whyConsideredRecall",
+                    name: "whyConsideredRecall",
+                    fieldset: {
+                        legend: {
+                            text: pageHeading,
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    hint: {
+                        html: '<p class="govuk-body">The first line of the Decision not to Recall letter says why you considered recall in the first place.</p><p class="govuk-body">Choose the text for the first line:</p>'
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.whyConsideredRecall,
+                        currentValues: inputDisplayValues.value
+                    }),
+                    errorMessage: errorMessage(errors.whyConsideredRecall)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
