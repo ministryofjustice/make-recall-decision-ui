@@ -42,6 +42,42 @@ describe('validateIsExtendedSentence', () => {
     expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
   })
 
+  it('for determinate sentence, if answer changes from Yes to No, reset recallType', async () => {
+    const requestBody = {
+      isExtendedSentence: 'NO',
+      isIndeterminateSentence: '0',
+      currentSavedValue: 'YES',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateIsExtendedSentence({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      isExtendedSentence: false,
+      recallType: null,
+    })
+  })
+
+  it('for determinate sentence, if answer changes from No to Yes, reset recallType', async () => {
+    const requestBody = {
+      isExtendedSentence: 'YES',
+      isIndeterminateSentence: '0',
+      currentSavedValue: 'NO',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateIsExtendedSentence({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      isExtendedSentence: true,
+      recallType: null,
+    })
+  })
+
   it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       isExtendedSentence: '',
