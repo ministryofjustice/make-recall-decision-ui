@@ -48,27 +48,21 @@ const areAllTasksComplete = ({
 
 export const taskCompleteness = (recommendation: RecommendationResponse) => {
   const statuses = {
-    recallType: isNotNull(recommendation.recallType) && isNotNull(recommendation.recallType.selected),
-    alternativesToRecallTried:
-      isNotNull(recommendation.alternativesToRecallTried) &&
-      recommendation.alternativesToRecallTried.selected?.length > 0,
+    recallType: isNotNull(recommendation.recallType?.selected),
+    alternativesToRecallTried: recommendation.alternativesToRecallTried?.selected?.length > 0,
     responseToProbation: isNotNull(recommendation.responseToProbation),
     whatLedToRecall: isNotNull(recommendation.whatLedToRecall),
     licenceConditionsBreached:
-      isNotNull(recommendation.licenceConditionsBreached) &&
-      (recommendation.licenceConditionsBreached.standardLicenceConditions?.selected?.length > 0 ||
-        recommendation.licenceConditionsBreached.additionalLicenceConditions?.selected?.length > 0),
+      recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected?.length > 0 ||
+      recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selected?.length > 0,
     isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
     isIndeterminateSentence: isNotNull(recommendation.isIndeterminateSentence),
     isExtendedSentence: isNotNull(recommendation.isExtendedSentence),
-    vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
+    vulnerabilities: recommendation.vulnerabilities?.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
     custodyStatus: isNotNull(recommendation.custodyStatus),
-    localPoliceContact:
-      isNotNull(recommendation.localPoliceContact) && isNotNull(recommendation.localPoliceContact.contactName),
-    isUnderIntegratedOffenderManagement:
-      isNotNull(recommendation.isUnderIntegratedOffenderManagement) &&
-      isNotNull(recommendation.isUnderIntegratedOffenderManagement.selected),
+    localPoliceContact: isNotNull(recommendation.localPoliceContact?.contactName),
+    isUnderIntegratedOffenderManagement: isNotNull(recommendation.isUnderIntegratedOffenderManagement?.selected),
     hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
     hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
     // optional fields, depending on indeterminate sentence status
