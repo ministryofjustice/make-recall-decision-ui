@@ -5,7 +5,7 @@
   "activeCustodialConvictionCount": 1,
   "recallType": {
     "selected": {
-      "value": "NO_RECALL",
+      "value": "NO_RECALL"
     },
     "allOptions": [
       {
