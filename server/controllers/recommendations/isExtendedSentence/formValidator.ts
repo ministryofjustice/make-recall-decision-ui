@@ -2,7 +2,6 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 
 export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { isExtendedSentence, isIndeterminateSentence, currentSavedValue } = requestBody
