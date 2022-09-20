@@ -4,35 +4,47 @@ import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 
 export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  let errors
-  let valuesToSave
-  let nextPagePath
+  const { isExtendedSentence, isIndeterminateSentence, currentSavedValue } = requestBody
 
-  const { isExtendedSentence, isIndeterminateSentence } = requestBody
+  const isNo = isExtendedSentence === 'NO'
+  const isYes = isExtendedSentence === 'YES'
+  const changedToNo = isNo && currentSavedValue === 'YES'
+  const changedToYes = isYes && currentSavedValue === 'NO'
+  const isDeterminateSentence = isIndeterminateSentence === '0'
+
   if (!isExtendedSentence || !isValueValid(isExtendedSentence as string, 'isExtendedSentence')) {
     const errorId = 'noIsExtendedSelected'
-    errors = [
+    const errors = [
       makeErrorObject({
         id: 'isExtendedSentence',
         text: strings.errors[errorId],
         errorId,
       }),
     ]
+    return {
+      errors,
+    }
   }
-  if (!errors) {
-    const isYes = isExtendedSentence === 'YES'
+  let valuesToSave
+
+  if (isDeterminateSentence && (changedToNo || changedToYes)) {
+    valuesToSave = {
+      isExtendedSentence: isYes,
+      recallType: null,
+    }
+  } else {
     valuesToSave = {
       isExtendedSentence: isYes,
     }
-    let nextPageId = 'indeterminate-type'
-    if (isIndeterminateSentence === '0') {
-      nextPageId = isYes ? 'recall-type-indeterminate' : 'recall-type'
-    }
-    // ignore any 'fromPage' parameter, user should proceed through entire flow back to task list
-    nextPagePath = `${urlInfo.basePath}${nextPageId}`
   }
+  let nextPageId = 'indeterminate-type'
+  if (isDeterminateSentence) {
+    nextPageId = isYes ? 'recall-type-indeterminate' : 'recall-type'
+  }
+  // ignore any 'fromPage' parameter, user should proceed through entire flow back to task list
+  const nextPagePath = `${urlInfo.basePath}${nextPageId}`
+
   return {
-    errors,
     valuesToSave,
     nextPagePath,
   }
