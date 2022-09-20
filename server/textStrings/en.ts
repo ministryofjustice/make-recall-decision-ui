@@ -65,7 +65,7 @@ export const strings = {
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
-    startNoRecall: 'Start the Decision not to Recall letter',
+    taskListNoRecall: 'Create a Decision not to Recall letter',
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
@@ -91,6 +91,6 @@ export const strings = {
     arrestIssues: 'Is there anything the police should know before they arrest the person?',
     contraband: 'Do you think the person is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
-    startNoRecall: 'Start the Decision not to Recall letter',
+    taskListNoRecall: 'Create a Decision not to Recall letter',
   },
 }

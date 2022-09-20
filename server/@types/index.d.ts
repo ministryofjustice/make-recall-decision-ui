@@ -169,6 +169,6 @@ export type PageTemplateName =
   | 'arrestIssues'
   | 'contraband'
   | 'confirmationPartA'
-  | 'startNoRecall'
+  | 'taskListNoRecall'
 
 export type PageId = 'recall-type' | 'custody-status'

@@ -95,7 +95,7 @@ describe('validateRecallType', () => {
           crn: 'X34534',
         }
         const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
       })
 
       it('if "from page" is set to recall task list, ignore it if a fixed term recall is selected', async () => {
@@ -139,7 +139,7 @@ describe('validateRecallType', () => {
           recommendationId,
           urlInfo: urlInfoWithFromPage,
         })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
       })
     })
   })

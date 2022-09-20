@@ -1,0 +1,30 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+    {{ govukBackLink({
+        text: "Back to overview for " + recommendation.personOnProbation.name,
+        href:  '/cases/' + recommendation.crn + '/overview'
+    }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+            <p class='govuk-body'>
+                You’re not recommending a recall for {{ recommendation.personOnProbation.name }}. You must now create a Decision not to Recall letter.
+            </p>
+            <ol class="moj-task-list govuk-!-margin-top-8">
+                {% include '../../partials/taskList/recommendation.njk' %}
+                {% include '../../partials/taskList/alternatives.njk' %}
+                {% include '../../partials/taskList/circumstances.njk' %}
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}
+
