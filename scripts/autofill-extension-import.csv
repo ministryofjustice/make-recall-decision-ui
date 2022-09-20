@@ -168,6 +168,11 @@ r240,3,"^EMERGENCY$","1","/recommendations/[^\/]+/recall-type-indeterminate",0,c
 r241,3,"^YES$","1","/recommendations/[^\/]+/fixed-licence",0,c2
 r242,0,"^hasFixedTermLicenceConditionsDetails$","To attend weekly appointments with the probation officer.
 To not leave the Birmingham area.","/recommendations/[^\/]+/fixed-licence",0,c2
+r243,3,"^BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE$","1","/recommendations/[^\/]+/indeterminate-details",0,c2
+r244,3,"^OUT_OF_TOUCH$","1","/recommendations/[^\/]+/indeterminate-details",0,c2
+r245,0,"^indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE$","They have been cautioned for being drunk and disorderly in public","/recommendations/[^\/]+/indeterminate-details",0,c2
+r246,0,"^indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH$","They're not answering their phone.
+Attempts to email them have gone unanswered.","/recommendations/[^\/]+/indeterminate-details",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,

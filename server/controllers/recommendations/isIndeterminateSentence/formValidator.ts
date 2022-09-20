@@ -11,7 +11,7 @@ export const validateIsIndeterminateSentence = async ({
   let valuesToSave
   let nextPagePath
 
-  const { isIndeterminateSentence } = requestBody
+  const { isIndeterminateSentence, currentSavedValue } = requestBody
   if (!isIndeterminateSentence || !isValueValid(isIndeterminateSentence as string, 'isIndeterminateSentence')) {
     const errorId = 'noIsIndeterminateSelected'
     errors = [
@@ -25,17 +25,30 @@ export const validateIsIndeterminateSentence = async ({
   if (!errors) {
     const isNo = isIndeterminateSentence === 'NO'
     const isYes = isIndeterminateSentence === 'YES'
+    const changedToNo = isNo && currentSavedValue === 'YES'
+    const changedToYes = isYes && currentSavedValue === 'NO'
     valuesToSave = {
       isIndeterminateSentence: isYes,
-      isExtendedSentence: null,
-      indeterminateSentenceType: isNo
-        ? {
-            selected: 'NO',
-          }
-        : null,
-      recallType: null,
-      // TODO - reset fixed term recall licence conditions, and indeterminate / extended details
+      indeterminateSentenceType: undefined,
     }
+    if (isNo) {
+      valuesToSave.indeterminateSentenceType = {
+        selected: 'NO',
+      }
+    }
+    if (changedToNo || changedToYes) {
+      valuesToSave = {
+        ...valuesToSave,
+        isExtendedSentence: null,
+        recallType: null,
+        indeterminateOrExtendedSentenceDetails: null,
+        fixedTermAdditionalLicenceConditions: null,
+      }
+      if (changedToYes) {
+        valuesToSave.indeterminateSentenceType = null
+      }
+    }
+
     // ignore any 'fromPage' parameter, user should proceed through entire flow back to task list
     nextPagePath = `${urlInfo.basePath}is-extended`
   }

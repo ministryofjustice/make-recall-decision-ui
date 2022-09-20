@@ -484,22 +484,22 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Create a Part A form')
     })
 
-    it('sensitive info - links back to recall type if indeterminate sentence', () => {
+    it('sensitive info - links back to indeterminate/extended criteria if indeterminate sentence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.getLinkHref('Back').should('contain', '/recall-type')
+      cy.getLinkHref('Back').should('contain', '/indeterminate-details')
     })
 
-    it('sensitive info - links back to recall type if extended sentence', () => {
+    it('sensitive info - links back to indeterminate/extended criteria if extended sentence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.getLinkHref('Back').should('contain', '/recall-type')
+      cy.getLinkHref('Back').should('contain', '/indeterminate-details')
     })
 
     it('sensitive info - links back to emergency recall if determinate sentence / standard recall', () => {
