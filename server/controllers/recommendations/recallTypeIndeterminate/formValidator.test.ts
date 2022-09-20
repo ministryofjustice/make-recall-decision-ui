@@ -30,7 +30,7 @@ describe('validateRecallTypeIndeterminate', () => {
         },
         isThisAnEmergencyRecall: null,
       })
-      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+      expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
     })
 
     it('returns valuesToSave and redirects if emergency recall selected', async () => {
@@ -82,7 +82,7 @@ describe('validateRecallTypeIndeterminate', () => {
           recommendationId,
           urlInfo: urlInfoWithFromPage,
         })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/start-no-recall`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
       })
     })
   })

@@ -228,11 +228,11 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.confirmationPartA,
         pageTitle: strings.pageTitles.confirmationPartA,
       }
-    case 'start-no-recall':
+    case 'task-list-no-recall':
       return {
-        templateName: 'startNoRecall',
-        pageHeading: strings.pageHeadings.startNoRecall,
-        pageTitle: strings.pageTitles.startNoRecall,
+        templateName: 'taskListNoRecall',
+        pageHeading: strings.pageHeadings.taskListNoRecall,
+        pageTitle: strings.pageTitles.taskListNoRecall,
       }
     default:
       throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })

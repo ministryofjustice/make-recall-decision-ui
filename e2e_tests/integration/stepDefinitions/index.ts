@@ -84,8 +84,10 @@ defineStep('Maria confirms {string} for extended sentence', (answer: string) => 
 
 defineStep('Maria recommends a {string} recall', (recallType: string) => {
   cy.selectRadio('What do you recommend?', `${recallType} recall`)
-  const parent = recallType === 'Standard' ? '#conditional-recallType' : '#conditional-recallType-2'
-  cy.fillInput('Why do you recommend this recall type?', `${recallType} details...`, { parent })
+  if (recallType !== 'No') {
+    const parent = recallType === 'Standard' ? '#conditional-recallType' : '#conditional-recallType-2'
+    cy.fillInput('Why do you recommend this recall type?', `${recallType} details...`, { parent })
+  }
   cy.clickButton('Continue')
 })
 

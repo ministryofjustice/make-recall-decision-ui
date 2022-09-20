@@ -7,7 +7,7 @@ import {
 } from './index'
 
 When('Maria downloads the Part A and confirms the fixed term recall', () => {
-  cy.downloadDocX('Download the Part A').then(contents => {
+  return cy.downloadDocX('Download the Part A').then(contents => {
     assertQ1_emergency_recall(contents, 'No')
     assertQ2_indeterminate_sentence_type(contents, 'No')
     assertQ3_extended_sentence(contents, 'No')
@@ -19,7 +19,7 @@ When('Maria downloads the Part A and confirms the fixed term recall', () => {
 })
 
 When('Maria downloads the Part A and confirms the standard recall', () => {
-  cy.downloadDocX('Download the Part A').then(contents => {
+  return cy.downloadDocX('Download the Part A').then(contents => {
     assertQ22_recall_type(contents, 'Standard', 'Standard details...')
   })
 })

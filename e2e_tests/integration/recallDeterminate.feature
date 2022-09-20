@@ -35,3 +35,9 @@ Feature: Recall (determinate)
     And Maria confirms the existing custody status
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the standard recall
+
+#    NO RECALL
+    And Maria starts to update the recall
+    And Maria changes the recall type
+    And Maria recommends a "No" recall
+    And Maria views the no recall task list

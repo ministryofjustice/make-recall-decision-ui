@@ -1,0 +1,12 @@
+<li>
+    <h2 class="moj-task-list__section" id='heading-alternatives'>
+        Alternatives to recall
+    </h2>
+    <ul class="moj-task-list__items">
+        <li class="moj-task-list__item">
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-alternatives' }) }}">Alternatives
+                tried already</a>
+            {{ taskStatus({ hasData: taskCompleteness.statuses.alternativesToRecallTried }) }}
+        </li>
+    </ul>
+</li>
