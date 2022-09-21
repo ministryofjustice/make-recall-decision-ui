@@ -171,5 +171,6 @@ export type PageTemplateName =
   | 'confirmationPartA'
   | 'taskListNoRecall'
   | 'whyConsideredRecall'
+  | 'reasonsForNoRecall'
 
 export type PageId = 'recall-type' | 'custody-status'
