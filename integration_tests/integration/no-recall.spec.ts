@@ -42,6 +42,7 @@ context('No recall', () => {
       cy.getElement('Is Paula Smith on an indeterminate sentence? to do').should('exist')
       cy.getElement('Is Paula Smith on an extended sentence? to do').should('exist')
       cy.getElement('Type of indeterminate sentence to do').should('not.exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('Completed', () => {
@@ -54,7 +55,7 @@ context('No recall', () => {
       cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
       cy.getElement('Is Paula Smith on an extended sentence? completed').should('exist')
       cy.getElement('Type of indeterminate sentence completed').should('exist')
-      cy.clickLink('Create Part A')
+      cy.clickLink('Create letter')
     })
   })
 })
