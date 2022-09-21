@@ -28,7 +28,6 @@ export type RecommendationResponse = {
     responseToProbation?: string;
     whatLedToRecall?: string;
     isThisAnEmergencyRecall?: boolean;
-    isDeterminateSentence?: boolean;
     isIndeterminateSentence?: boolean;
     isExtendedSentence?: boolean;
     fixedTermAdditionalLicenceConditions?: SelectedWithDetails;

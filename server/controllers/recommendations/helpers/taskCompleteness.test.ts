@@ -1,78 +1,109 @@
 import { taskCompleteness } from './taskCompleteness'
 import recommendationResponse from '../../../../api/responses/get-recommendation.json'
-import { RecommendationResponse, VictimsInContactScheme } from '../../../@types/make-recall-decision-api'
+import noRecallResponse from '../../../../api/responses/get-recommendation-no-recall.json'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
+import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api/models/VictimsInContactScheme'
+import { ObjectMap } from '../../../@types'
+
+export const setAllProperties = (object: ObjectMap<unknown>, valueToSet: unknown) => {
+  const copy = { ...object }
+  Object.keys(object).forEach(key => {
+    copy[key] = valueToSet
+  })
+  return copy
+}
+
+const sharedProperties: RecommendationResponse = {
+  alternativesToRecallTried: undefined,
+  isIndeterminateSentence: undefined,
+  isExtendedSentence: undefined,
+  licenceConditionsBreached: undefined,
+  recallType: undefined,
+  responseToProbation: undefined,
+}
+
+const recallProperties: RecommendationResponse = {
+  custodyStatus: undefined,
+  hasContrabandRisk: undefined,
+  hasVictimsInContactScheme: undefined,
+  isThisAnEmergencyRecall: undefined,
+  indeterminateOrExtendedSentenceDetails: undefined,
+  isUnderIntegratedOffenderManagement: undefined,
+  whatLedToRecall: undefined,
+  vulnerabilities: undefined,
+}
+
+const indeterminateSentenceProperties: RecommendationResponse = {
+  indeterminateSentenceType: undefined,
+}
+
+const noRecallProperties: RecommendationResponse = {
+  whyConsideredRecall: undefined,
+}
+
+const emptyRecall: RecommendationResponse = {
+  ...setAllProperties(sharedProperties, null),
+  ...setAllProperties(recallProperties, null),
+  activeCustodialConvictionCount: 1,
+  recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } },
+  isIndeterminateSentence: true,
+}
 
 describe('taskCompleteness', () => {
-  it('returns Complete statuses, and areAllComplete is true', () => {
-    const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse)
-    expect(statuses).toEqual({
-      alternativesToRecallTried: true,
-      custodyStatus: true,
-      hasArrestIssues: true,
-      hasContrabandRisk: true,
-      hasVictimsInContactScheme: true,
-      isThisAnEmergencyRecall: true,
-      isIndeterminateSentence: true,
-      isExtendedSentence: true,
-      fixedTermAdditionalLicenceConditions: false, // indeterminate sentence, so expected false
-      indeterminateSentenceType: true,
-      indeterminateOrExtendedSentenceDetails: true,
-      isUnderIntegratedOffenderManagement: true,
-      licenceConditionsBreached: true,
-      localPoliceContact: true,
-      recallType: true,
-      responseToProbation: true,
-      whatLedToRecall: true,
-      vulnerabilities: true,
+  describe('Recall', () => {
+    it('all complete', () => {
+      const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse)
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, true),
+        ...setAllProperties(recallProperties, true),
+        isIndeterminateSentence: true,
+        indeterminateSentenceType: true,
+      })
+      expect(areAllComplete).toEqual(true)
     })
-    expect(areAllComplete).toEqual(true)
+
+    it('indeterminate sentence - partly complete', () => {
+      const { statuses, areAllComplete } = taskCompleteness(emptyRecall)
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, false),
+        ...setAllProperties(recallProperties, false),
+        ...setAllProperties(indeterminateSentenceProperties, false),
+        isIndeterminateSentence: true,
+        recallType: true,
+      })
+      expect(areAllComplete).toEqual(false)
+    })
   })
 
-  const emptyRecommendation: RecommendationResponse = {
-    alternativesToRecallTried: null,
-    custodyStatus: null,
-    hasArrestIssues: null,
-    hasContrabandRisk: null,
-    hasVictimsInContactScheme: null,
-    isThisAnEmergencyRecall: null,
-    isIndeterminateSentence: null,
-    isExtendedSentence: null,
-    indeterminateSentenceType: null,
-    indeterminateOrExtendedSentenceDetails: null,
-    fixedTermAdditionalLicenceConditions: null,
-    isUnderIntegratedOffenderManagement: null,
-    licenceConditionsBreached: null,
-    localPoliceContact: null,
-    recallType: null,
-    responseToProbation: null,
-    whatLedToRecall: null,
-    vulnerabilities: null,
-  }
-
-  it('returns To do statuses, and areAllComplete is false', () => {
-    const { statuses, areAllComplete } = taskCompleteness(emptyRecommendation)
-    expect(statuses).toEqual({
-      alternativesToRecallTried: false,
-      custodyStatus: false,
-      hasArrestIssues: false,
-      hasContrabandRisk: false,
-      hasVictimsInContactScheme: false,
-      isThisAnEmergencyRecall: false,
-      isIndeterminateSentence: false,
-      isExtendedSentence: false,
-      indeterminateSentenceType: false,
-      indeterminateOrExtendedSentenceDetails: false,
-      fixedTermAdditionalLicenceConditions: false,
-      isUnderIntegratedOffenderManagement: false,
-      licenceConditionsBreached: false,
-      localPoliceContact: false,
-      recallType: false,
-      responseToProbation: false,
-      whatLedToRecall: false,
-      vulnerabilities: false,
+  describe('No recall', () => {
+    it('all complete', () => {
+      const { statuses, areAllComplete } = taskCompleteness(noRecallResponse as RecommendationResponse)
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, true),
+        ...setAllProperties(indeterminateSentenceProperties, true),
+        ...setAllProperties(noRecallProperties, true),
+      })
+      expect(areAllComplete).toEqual(true)
     })
-    expect(areAllComplete).toEqual(false)
+
+    const emptyNoRecall: RecommendationResponse = {
+      ...setAllProperties(sharedProperties, null),
+      ...setAllProperties(noRecallProperties, null),
+      activeCustodialConvictionCount: 1,
+      recallType: { selected: { value: RecallTypeSelectedValue.value.NO_RECALL } },
+    }
+
+    it('all incomplete', () => {
+      const { statuses, areAllComplete } = taskCompleteness(emptyNoRecall as RecommendationResponse)
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, false),
+        ...setAllProperties(noRecallProperties, false),
+        recallType: true,
+      })
+      expect(areAllComplete).toEqual(false)
+    })
   })
 
   describe('Custody status', () => {
@@ -137,7 +168,9 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
+  })
 
+  describe('Multiple active convictions', () => {
     it('returns true for areAllComplete if user has no convictions and licenceConditionsBreached is null', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
@@ -160,7 +193,7 @@ describe('taskCompleteness', () => {
   describe('Victim contact scheme', () => {
     it('returns true if hasVictimsInContactScheme is Yes and VLO date set', () => {
       const { statuses } = taskCompleteness({
-        ...emptyRecommendation,
+        ...emptyRecall,
         hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
         dateVloInformed: '2022-09-05',
       })
@@ -169,7 +202,7 @@ describe('taskCompleteness', () => {
 
     it('returns false if hasVictimsInContactScheme is Yes and VLO date not set', () => {
       const { statuses } = taskCompleteness({
-        ...emptyRecommendation,
+        ...emptyRecall,
         hasVictimsInContactScheme: { selected: 'YES' as VictimsInContactScheme.selected },
         dateVloInformed: null,
       })
@@ -178,7 +211,7 @@ describe('taskCompleteness', () => {
 
     it('returns true if hasVictimsInContactScheme is No and VLO date not set', () => {
       const { statuses } = taskCompleteness({
-        ...emptyRecommendation,
+        ...emptyRecall,
         hasVictimsInContactScheme: { selected: 'NO' as VictimsInContactScheme.selected },
         dateVloInformed: null,
       })
@@ -187,7 +220,7 @@ describe('taskCompleteness', () => {
 
     it('returns true if hasVictimsInContactScheme is Not applicable and VLO date not set', () => {
       const { statuses } = taskCompleteness({
-        ...emptyRecommendation,
+        ...emptyRecall,
         hasVictimsInContactScheme: { selected: 'NOT_APPLICABLE' as VictimsInContactScheme.selected },
         dateVloInformed: null,
       })
@@ -225,7 +258,9 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
+  })
 
+  describe('Indeterminate or extended details', () => {
     it('returns true if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails set', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
@@ -256,7 +291,7 @@ describe('taskCompleteness', () => {
     })
   })
 
-  describe('Determinate sentence type', () => {
+  describe('Fixed term licence conditions', () => {
     it('returns true if isIndeterminateSentence is false and fixedTermAdditionalLicenceConditions set', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,

@@ -3,101 +3,6 @@
   "status": "DRAFT",
   "crn": "X12345",
   "activeCustodialConvictionCount": 1,
-  "recallType": {
-    "selected": {
-      "value": "STANDARD",
-      "details": "Details..."
-    },
-    "allOptions": [
-      {
-        "value": "FIXED_TERM",
-        "text": "Fixed term recall"
-      },
-      {
-        "value": "STANDARD",
-        "text": "Standard recall"
-      },
-      {
-        "value": "NO_RECALL",
-        "text": "No recall"
-      }
-    ]
-  },
-  "custodyStatus": {
-    "selected": "YES_POLICE",
-    "details": "West Ham Lane Police Station\r\n18 West Ham Lane\r\nStratford\r\nE15 4SG",
-    "allOptions": [
-      {
-        "value": "YES_PRISON",
-        "text": "Yes, prison custody"
-      },
-      {
-        "value": "YES_POLICE",
-        "text": "Yes, police custody"
-      },
-      {
-        "value": "NO",
-        "text": "No"
-      }
-    ]
-  },
-  "responseToProbation": "Missed appointments\nRe-offending ",
-  "whatLedToRecall": "Increasingly violent behaviour",
-  "isThisAnEmergencyRecall": false,
-  "isIndeterminateSentence": true,
-  "isExtendedSentence": true,
-  "fixedTermAdditionalLicenceConditions": null,
-  "indeterminateSentenceType": {
-    "selected": "LIFE",
-    "allOptions": [
-      {
-        "value": "LIFE",
-        "text": "Life sentence"
-      },
-      {
-        "value": "IPP",
-        "text": "Imprisonment for Public Protection (IPP) sentence"
-      },
-      {
-        "value": "DPP",
-        "text": "Detention for Public Protection (DPP) sentence"
-      },
-      {
-        "value": "NO",
-        "text": "No"
-      }
-    ]
-  },
-  "indeterminateOrExtendedSentenceDetails": {
-    "selected": [
-      {
-        "value": "BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE",
-        "details": "Details..."
-      },
-      {
-        "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE",
-        "Details": "Details..."
-      },
-      {
-        "value": "OUT_OF_TOUCH",
-        "Details": "Details..."
-      }
-    ],
-    "allOptions": [
-      {
-        "text": "The person has shown behaviour similar to the index offence",
-        "value": "BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE"
-      },
-      {
-        "text": "The person has shown behaviour that could lead to a sexual or violent offence",
-        "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE"
-      },
-      {
-        "text": "The person is out of touch",
-        "value": "OUT_OF_TOUCH"
-      }
-    ]
-  },
   "alternativesToRecallTried": {
     "selected": [
       {
@@ -152,6 +57,26 @@
       }
     ]
   },
+  "custodyStatus": {
+    "selected": "YES_POLICE",
+    "details": "West Ham Lane Police Station\r\n18 West Ham Lane\r\nStratford\r\nE15 4SG",
+    "allOptions": [
+      {
+        "value": "YES_PRISON",
+        "text": "Yes, prison custody"
+      },
+      {
+        "value": "YES_POLICE",
+        "text": "Yes, police custody"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      }
+    ]
+  },
+  "dateVloInformed": "2022-05-12",
+  "fixedTermAdditionalLicenceConditions": null,
   "hasArrestIssues": {
     "selected": true,
     "details": "Arrest issues..."
@@ -159,34 +84,6 @@
   "hasContrabandRisk": {
     "selected": true,
     "details": "Contraband detail..."
-  },
-  "personOnProbation": {
-    "name": "Paula Smith",
-    "firstName": "Paula",
-    "surname": "Smith"
-  },
-  "isUnderIntegratedOffenderManagement": {
-    "selected": "YES",
-    "allOptions": [
-      {
-        "value": "YES",
-        "text": "Yes"
-      },
-      {
-        "value": "NO",
-        "text": "No"
-      },
-      {
-        "value": "NOT_APPLICABLE",
-        "text": "Not applicable"
-      }
-    ]
-  },
-  "localPoliceContact": {
-    "contactName": "Thomas Magnum",
-    "phoneNumber": "07337838282",
-    "faxNumber": "02075289289",
-    "emailAddress": "thomas.magnum@gmail.com"
   },
   "hasVictimsInContactScheme": {
     "selected": "YES",
@@ -205,7 +102,77 @@
       }
     ]
   },
-  "dateVloInformed": "2022-05-12",
+  "indeterminateOrExtendedSentenceDetails": {
+    "selected": [
+      {
+        "value": "BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE",
+        "details": "Details..."
+      },
+      {
+        "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE",
+        "Details": "Details..."
+      },
+      {
+        "value": "OUT_OF_TOUCH",
+        "Details": "Details..."
+      }
+    ],
+    "allOptions": [
+      {
+        "text": "The person has shown behaviour similar to the index offence",
+        "value": "BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE"
+      },
+      {
+        "text": "The person has shown behaviour that could lead to a sexual or violent offence",
+        "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE"
+      },
+      {
+        "text": "The person is out of touch",
+        "value": "OUT_OF_TOUCH"
+      }
+    ]
+  },
+  "indeterminateSentenceType": {
+    "selected": "LIFE",
+    "allOptions": [
+      {
+        "value": "LIFE",
+        "text": "Life sentence"
+      },
+      {
+        "value": "IPP",
+        "text": "Imprisonment for Public Protection (IPP) sentence"
+      },
+      {
+        "value": "DPP",
+        "text": "Detention for Public Protection (DPP) sentence"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      }
+    ]
+  },
+  "isExtendedSentence": true,
+  "isIndeterminateSentence": true,
+  "isThisAnEmergencyRecall": false,
+  "isUnderIntegratedOffenderManagement": {
+    "selected": "YES",
+    "allOptions": [
+      {
+        "value": "YES",
+        "text": "Yes"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      },
+      {
+        "value": "NOT_APPLICABLE",
+        "text": "Not applicable"
+      }
+    ]
+  },
   "licenceConditionsBreached": {
     "standardLicenceConditions": {
       "selected": [
@@ -238,6 +205,38 @@
       ]
     }
   },
+  "localPoliceContact": {
+    "contactName": "Thomas Magnum",
+    "phoneNumber": "07337838282",
+    "faxNumber": "02075289289",
+    "emailAddress": "thomas.magnum@gmail.com"
+  },
+  "personOnProbation": {
+    "name": "Paula Smith",
+    "firstName": "Paula",
+    "surname": "Smith"
+  },
+  "recallType": {
+    "selected": {
+      "value": "STANDARD",
+      "details": "Details..."
+    },
+    "allOptions": [
+      {
+        "value": "FIXED_TERM",
+        "text": "Fixed term recall"
+      },
+      {
+        "value": "STANDARD",
+        "text": "Standard recall"
+      },
+      {
+        "value": "NO_RECALL",
+        "text": "No recall"
+      }
+    ]
+  },
+  "responseToProbation": "Missed appointments\nRe-offending ",
   "vulnerabilities": {
     "selected": [
       {
@@ -255,5 +254,6 @@
         "text": "Domestic abuse"
       }
     ]
-  }
+  },
+  "whatLedToRecall": "Increasingly violent behaviour"
 }
