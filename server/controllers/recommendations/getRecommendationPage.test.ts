@@ -37,6 +37,12 @@ describe('getRecommendationPage', () => {
     expect(fetchAndTransformLicenceConditions).toHaveBeenCalledWith({ crn: 'X12345', token: 'abc' })
   })
 
+  it('should prevent page caching', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    await getRecommendationPage(req, res)
+    expect(res.set).toHaveBeenCalledWith({ 'Cache-Control': 'no-store' })
+  })
+
   it('should throw on an API error', async () => {
     const thrownErr = new Error('test')
     ;(getRecommendation as jest.Mock).mockRejectedValue(thrownErr)

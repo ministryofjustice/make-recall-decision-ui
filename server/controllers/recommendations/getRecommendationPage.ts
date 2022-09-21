@@ -46,5 +46,6 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   res.locals.errors = renderErrorMessages(res.locals.errors, stringRenderParams)
   res.locals.formOptions = formOptions
   res.locals.crn = res.locals.recommendation.crn
+  res.set({ 'Cache-Control': 'no-store' })
   res.render(`pages/recommendations/${templateName}`)
 }
