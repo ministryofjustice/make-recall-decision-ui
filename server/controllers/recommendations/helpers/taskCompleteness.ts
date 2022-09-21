@@ -1,5 +1,5 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
-import { isNotNull } from '../../../utils/utils'
+import { isNotNullOrUndefined } from '../../../utils/utils'
 import { ObjectMap } from '../../../@types'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
@@ -7,9 +7,9 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
     return false
   }
   if (recommendation.hasVictimsInContactScheme?.selected === 'YES') {
-    return isNotNull(recommendation.dateVloInformed)
+    return isNotNullOrUndefined(recommendation.dateVloInformed)
   }
-  return isNotNull(recommendation.hasVictimsInContactScheme?.selected)
+  return isNotNullOrUndefined(recommendation.hasVictimsInContactScheme?.selected)
 }
 
 const removeStatusChecks = ({ allStatusKeys, keysToRemove }: { allStatusKeys: string[]; keysToRemove: string[] }) =>
@@ -48,33 +48,29 @@ const areAllTasksComplete = ({
 
 export const taskCompleteness = (recommendation: RecommendationResponse) => {
   const statuses = {
-    recallType: isNotNull(recommendation.recallType) && isNotNull(recommendation.recallType.selected),
-    alternativesToRecallTried:
-      isNotNull(recommendation.alternativesToRecallTried) &&
-      recommendation.alternativesToRecallTried.selected?.length > 0,
-    responseToProbation: isNotNull(recommendation.responseToProbation),
-    whatLedToRecall: isNotNull(recommendation.whatLedToRecall),
+    recallType: isNotNullOrUndefined(recommendation.recallType?.selected),
+    alternativesToRecallTried: recommendation.alternativesToRecallTried?.selected?.length > 0,
+    responseToProbation: isNotNullOrUndefined(recommendation.responseToProbation),
+    whatLedToRecall: isNotNullOrUndefined(recommendation.whatLedToRecall),
     licenceConditionsBreached:
-      isNotNull(recommendation.licenceConditionsBreached) &&
-      (recommendation.licenceConditionsBreached.standardLicenceConditions?.selected?.length > 0 ||
-        recommendation.licenceConditionsBreached.additionalLicenceConditions?.selected?.length > 0),
-    isThisAnEmergencyRecall: isNotNull(recommendation.isThisAnEmergencyRecall),
-    isIndeterminateSentence: isNotNull(recommendation.isIndeterminateSentence),
-    isExtendedSentence: isNotNull(recommendation.isExtendedSentence),
-    vulnerabilities: isNotNull(recommendation.vulnerabilities) && recommendation.vulnerabilities.selected?.length > 0,
+      recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected?.length > 0 ||
+      recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selected?.length > 0,
+    isThisAnEmergencyRecall: isNotNullOrUndefined(recommendation.isThisAnEmergencyRecall),
+    isIndeterminateSentence: isNotNullOrUndefined(recommendation.isIndeterminateSentence),
+    isExtendedSentence: isNotNullOrUndefined(recommendation.isExtendedSentence),
+    vulnerabilities: recommendation.vulnerabilities?.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
-    custodyStatus: isNotNull(recommendation.custodyStatus),
-    localPoliceContact:
-      isNotNull(recommendation.localPoliceContact) && isNotNull(recommendation.localPoliceContact.contactName),
-    isUnderIntegratedOffenderManagement:
-      isNotNull(recommendation.isUnderIntegratedOffenderManagement) &&
-      isNotNull(recommendation.isUnderIntegratedOffenderManagement.selected),
-    hasArrestIssues: isNotNull(recommendation.hasArrestIssues),
-    hasContrabandRisk: isNotNull(recommendation.hasContrabandRisk),
+    custodyStatus: isNotNullOrUndefined(recommendation.custodyStatus),
+    localPoliceContact: isNotNullOrUndefined(recommendation.localPoliceContact?.contactName),
+    isUnderIntegratedOffenderManagement: isNotNullOrUndefined(
+      recommendation.isUnderIntegratedOffenderManagement?.selected
+    ),
+    hasArrestIssues: isNotNullOrUndefined(recommendation.hasArrestIssues),
+    hasContrabandRisk: isNotNullOrUndefined(recommendation.hasContrabandRisk),
     // optional fields, depending on indeterminate sentence status
-    indeterminateSentenceType: isNotNull(recommendation.indeterminateSentenceType),
-    indeterminateOrExtendedSentenceDetails: isNotNull(recommendation.indeterminateOrExtendedSentenceDetails),
-    fixedTermAdditionalLicenceConditions: isNotNull(recommendation.fixedTermAdditionalLicenceConditions),
+    indeterminateSentenceType: isNotNullOrUndefined(recommendation.indeterminateSentenceType),
+    indeterminateOrExtendedSentenceDetails: isNotNullOrUndefined(recommendation.indeterminateOrExtendedSentenceDetails),
+    fixedTermAdditionalLicenceConditions: isNotNullOrUndefined(recommendation.fixedTermAdditionalLicenceConditions),
   }
   const areAllComplete = areAllTasksComplete({ statuses, recommendation })
   return {

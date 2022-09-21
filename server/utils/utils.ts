@@ -32,6 +32,10 @@ export const isNotNull = (val: unknown) => {
   return val !== null
 }
 
+export const isNotNullOrUndefined = (val: unknown) => {
+  return isNotNull(val) && isDefined(val)
+}
+
 export const isString = (val: unknown) => typeof val === 'string'
 
 export const isNumber = (val: unknown) => typeof val === 'number'

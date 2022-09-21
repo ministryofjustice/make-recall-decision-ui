@@ -41,6 +41,8 @@ import { validateFixedTermLicenceConditions } from '../fixedTermAdditionalLicenc
 import { inputDisplayValuesFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/inputDisplayValues'
 import { validateIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/formValidator'
 import { inputDisplayValuesIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/inputDisplayValues'
+import { validateWhyConsideredRecall } from '../whyConsideredRecall/formValidator'
+import { inputDisplayValuesWhyConsideredRecall } from '../whyConsideredRecall/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -233,6 +235,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         templateName: 'taskListNoRecall',
         pageHeading: strings.pageHeadings.taskListNoRecall,
         pageTitle: strings.pageTitles.taskListNoRecall,
+      }
+    case 'why-considered-recall':
+      return {
+        templateName: 'whyConsideredRecall',
+        validator: validateWhyConsideredRecall,
+        inputDisplayValues: inputDisplayValuesWhyConsideredRecall,
+        pageHeading: strings.pageHeadings.whyConsideredRecall,
+        pageTitle: strings.pageTitles.whyConsideredRecall,
       }
     default:
       throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })

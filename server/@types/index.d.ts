@@ -170,5 +170,6 @@ export type PageTemplateName =
   | 'contraband'
   | 'confirmationPartA'
   | 'taskListNoRecall'
+  | 'whyConsideredRecall'
 
 export type PageId = 'recall-type' | 'custody-status'

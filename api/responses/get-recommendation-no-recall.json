@@ -1,0 +1,157 @@
+{
+  "id": 1,
+  "status": "DRAFT",
+  "crn": "X12345",
+  "activeCustodialConvictionCount": 1,
+  "recallType": {
+    "selected": {
+      "value": "NO_RECALL"
+    },
+    "allOptions": [
+      {
+        "value": "FIXED_TERM",
+        "text": "Fixed term recall"
+      },
+      {
+        "value": "STANDARD",
+        "text": "Standard recall"
+      },
+      {
+        "value": "NO_RECALL",
+        "text": "No recall"
+      }
+    ]
+  },
+  "responseToProbation": "Missed appointments\nRe-offending ",
+  "isIndeterminateSentence": true,
+  "isExtendedSentence": true,
+  "indeterminateSentenceType": {
+    "selected": "LIFE",
+    "allOptions": [
+      {
+        "value": "LIFE",
+        "text": "Life sentence"
+      },
+      {
+        "value": "IPP",
+        "text": "Imprisonment for Public Protection (IPP) sentence"
+      },
+      {
+        "value": "DPP",
+        "text": "Detention for Public Protection (DPP) sentence"
+      },
+      {
+        "value": "NO",
+        "text": "No"
+      }
+    ]
+  },
+  "alternativesToRecallTried": {
+    "selected": [
+      {
+        "value": "WARNINGS_LETTER",
+        "details": "We sent a warning letter on 27th July 2022"
+      },
+      {
+        "value": "DRUG_TESTING",
+        "Details": "Failed drug test on 15th June 2022"
+      }
+    ],
+    "allOptions": [
+      {
+        "text": "Warnings / licence breach letters",
+        "value": "WARNINGS_LETTER"
+      },
+      {
+        "text": "Increased frequency of reporting",
+        "value": "INCREASED_FREQUENCY"
+      },
+      {
+        "text": "Additional licence conditions",
+        "value": "EXTRA_LICENCE_CONDITIONS"
+      },
+      {
+        "text": "Referral to other teams (for example, IOM, MAPPA, Gangs Unit)",
+        "value": "REFERRAL_TO_OTHER_TEAMS"
+      },
+      {
+        "text": "Referral to partnership agencies",
+        "value": "REFERRAL_TO_PARTNERSHIP_AGENCIES"
+      },
+      {
+        "text": "Risk Escalation (CRC cases)",
+        "value": "RISK_ESCALATION"
+      },
+      {
+        "text": "Referral to approved premises",
+        "value": "REFERRAL_TO_APPROVED_PREMISES"
+      },
+      {
+        "text": "Drug testing",
+        "value": "DRUG_TESTING"
+      },
+      {
+        "text": "Other",
+        "value": "ALTERNATIVE_TO_RECALL_OTHER"
+      },
+      {
+        "text": "None",
+        "value": "NONE"
+      }
+    ]
+  },
+  "personOnProbation": {
+    "name": "Paula Smith",
+    "firstName": "Paula",
+    "surname": "Smith"
+  },
+  "licenceConditionsBreached": {
+    "standardLicenceConditions": {
+      "selected": [
+        "GOOD_BEHAVIOUR",
+        "NO_OFFENCE"
+      ],
+      "allOptions": [
+        {
+          "value": "GOOD_BEHAVIOUR",
+          "text": "Be of good behaviour"
+        },
+        {
+          "value": "NO_OFFENCE",
+          "text": "Not to commit any offence"
+        }
+      ]
+    },
+    "additionalLicenceConditions": {
+      "selected": [
+        "NST14"
+      ],
+      "allOptions": [
+        {
+          "mainCatCode": "NLC5",
+          "subCatCode": "NST14",
+          "title": "Disclosure of information",
+          "details": "Notify your supervising officer of any intimate relationships",
+          "note": "Persons wife is Joan Smyth"
+        }
+      ]
+    }
+  },
+  "whyConsideredRecall": {
+    "selected": "RISK_INCREASED",
+    "allOptions": [
+      {
+        "value": "RISK_INCREASED",
+        "text": "Your risk is assessed as increased"
+      },
+      {
+        "value": "CONTACT_STOPPED",
+        "text": "Contact with your probation practitioner has broken down"
+      },
+      {
+        "value": "RISK_INCREASED_AND_CONTACT_STOPPED",
+        "text": "Your risk is assessed as increased and contact with your probation practitioner has broken down"
+      }
+    ]
+  }
+}

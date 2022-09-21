@@ -142,6 +142,23 @@ const stubUser = () =>
     },
   })
 
+const stubUserEmail = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/auth/api/me/email',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        email: 'john@gov.uk',
+      },
+    },
+  })
+
 const stubUserRoles = () =>
   stubFor({
     request: {
@@ -162,5 +179,5 @@ export default {
   stubPing: (): Promise<[Response, Response]> => Promise.all([ping(), tokenVerification.stubPing()]),
   stubSignIn: (): Promise<[Response, Response, Response, Response, Response, Response]> =>
     Promise.all([favicon(), redirect(), signOut(), manageDetails(), token(), tokenVerification.stubVerifyToken()]),
-  stubUser: (): Promise<[Response, Response]> => Promise.all([stubUser(), stubUserRoles()]),
+  stubUser: (): Promise<[Response, Response, Response]> => Promise.all([stubUser(), stubUserRoles(), stubUserEmail()]),
 }

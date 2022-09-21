@@ -111,7 +111,9 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: 'details',
-        localPoliceContact: {},
+        localPoliceContact: {
+          contactName: 'Bob',
+        },
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
