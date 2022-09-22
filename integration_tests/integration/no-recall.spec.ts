@@ -11,6 +11,7 @@ context('No recall', () => {
   const recommendationId = '123'
   const recommendationResponse = {
     ...setResponsePropertiesToNull(noRecallResponse),
+    recallType: { selected: { value: 'NO_RECALL' } },
     id: recommendationId,
     crn,
     personOnProbation: {
@@ -27,6 +28,34 @@ context('No recall', () => {
         fieldName: 'whyConsideredRecall',
         errorText: 'Select a reason why you considered recall',
       })
+    })
+  })
+
+  describe('Task list', () => {
+    it('To do', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.getElement('What you recommend completed').should('exist')
+      cy.getElement('Alternatives tried already to do').should('exist')
+      cy.getElement('Response to probation so far to do').should('exist')
+      cy.getElement('Breached licence condition(s) to do').should('exist')
+      cy.getElement('Is Paula Smith on an indeterminate sentence? to do').should('exist')
+      cy.getElement('Is Paula Smith on an extended sentence? to do').should('exist')
+      cy.getElement('Type of indeterminate sentence to do').should('not.exist')
+      cy.getElement('Create letter').should('not.exist')
+    })
+
+    it('Completed', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.getElement('What you recommend completed').should('exist')
+      cy.getElement('Alternatives tried already completed').should('exist')
+      cy.getElement('Response to probation so far completed').should('exist')
+      cy.getElement('Breached licence condition(s) completed').should('exist')
+      cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
+      cy.getElement('Is Paula Smith on an extended sentence? completed').should('exist')
+      cy.getElement('Type of indeterminate sentence completed').should('exist')
+      cy.clickLink('Create letter')
     })
   })
 })
