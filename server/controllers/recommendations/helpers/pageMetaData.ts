@@ -43,6 +43,8 @@ import { validateIndeterminateDetails } from '../indeterminateOrExtendedSentence
 import { inputDisplayValuesIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/inputDisplayValues'
 import { validateWhyConsideredRecall } from '../whyConsideredRecall/formValidator'
 import { inputDisplayValuesWhyConsideredRecall } from '../whyConsideredRecall/inputDisplayValues'
+import { validateReasonsForNoRecall } from '../reasonsForNoRecall/formValidator'
+import { inputDisplayValuesReasonsForNoRecall } from '../reasonsForNoRecall/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -243,6 +245,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesWhyConsideredRecall,
         pageHeading: strings.pageHeadings.whyConsideredRecall,
         pageTitle: strings.pageTitles.whyConsideredRecall,
+      }
+    case 'reasons-no-recall':
+      return {
+        templateName: 'reasonsForNoRecall',
+        validator: validateReasonsForNoRecall,
+        inputDisplayValues: inputDisplayValuesReasonsForNoRecall,
+        pageHeading: strings.pageHeadings.reasonsForNoRecall,
+        pageTitle: strings.pageTitles.reasonsForNoRecall,
       }
     default:
       throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })

@@ -41,6 +41,7 @@ const indeterminateSentenceProperties: RecommendationResponse = {
 
 const noRecallProperties: RecommendationResponse = {
   whyConsideredRecall: undefined,
+  reasonsForNoRecall: undefined,
 }
 
 const emptyRecall: RecommendationResponse = {

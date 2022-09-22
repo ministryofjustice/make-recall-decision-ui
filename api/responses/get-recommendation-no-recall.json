@@ -137,6 +137,12 @@
       ]
     }
   },
+  "reasonsForNoRecall": {
+    "licenceBreach": "Details of breach",
+    "noRecallRationale": "Rationale",
+    "popProgressMade": "Progress made",
+    "futureExpectations": "Future expectations"
+  },
   "whyConsideredRecall": {
     "selected": "RISK_INCREASED",
     "allOptions": [

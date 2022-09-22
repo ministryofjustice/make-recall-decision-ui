@@ -1,0 +1,68 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'task-list-no-recall', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Decision not to Recall</div>
+                <h1 class='govuk-heading-l'>Why do you think {{ recommendation.personOnProbation.name }} should not be recalled?</h1>
+                {{ govukTextarea({
+                    name: "licenceBreach",
+                    id: "licenceBreach",
+                    label: {
+                        text: "Explain the licence breach and why it's a problem",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.licenceBreach,
+                    errorMessage: errorMessage(errors.licenceBreach)
+                }) }}
+                {{ govukTextarea({
+                    name: "noRecallRationale",
+                    id: "noRecallRationale",
+                    label: {
+                        text: "Explain your rationale for not recalling " + recommendation.personOnProbation.name,
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.noRecallRationale,
+                    errorMessage: errorMessage(errors.noRecallRationale)
+                }) }}
+                {{ govukTextarea({
+                    name: "popProgressMade",
+                    id: "popProgressMade",
+                    label: {
+                        text: "What progress has " + recommendation.personOnProbation.name + " made so far?",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.popProgressMade,
+                    errorMessage: errorMessage(errors.popProgressMade)
+                }) }}
+                {{ govukTextarea({
+                    name: "futureExpectations",
+                    id: "futureExpectations",
+                    label: {
+                        text: "What is expected in the future?",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.futureExpectations,
+                    errorMessage: errorMessage(errors.futureExpectations)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

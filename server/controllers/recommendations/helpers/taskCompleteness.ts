@@ -41,6 +41,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
 
   const noRecallStatuses = {
     whyConsideredRecall: isNotNullOrUndefined(recommendation.whyConsideredRecall),
+    reasonsForNoRecall: isNotNullOrUndefined(recommendation.reasonsForNoRecall),
   }
 
   if (recommendation.activeCustodialConvictionCount === 1) {

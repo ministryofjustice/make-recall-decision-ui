@@ -16,6 +16,7 @@ import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { Vulnerabilities } from './Vulnerabilities';
 import { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails'
 import { WhyConsideredRecall } from './WhyConsideredRecall'
+import { ReasonsForNoRecall } from './ReasonsForNoRecall'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -44,6 +45,7 @@ export type RecommendationResponse = {
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
     vulnerabilities?: Vulnerabilities;
     whyConsideredRecall?: WhyConsideredRecall;
+    reasonsForNoRecall?: ReasonsForNoRecall;
 };
 
 export namespace RecommendationResponse {

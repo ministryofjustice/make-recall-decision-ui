@@ -29,6 +29,28 @@ context('No recall', () => {
         errorText: 'Select a reason why you considered recall',
       })
     })
+
+    it('form validation - why you considered recall', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/reasons-no-recall`)
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'licenceBreach',
+        errorText: 'You must explain the licence breach',
+      })
+      cy.assertErrorMessage({
+        fieldName: 'noRecallRationale',
+        errorText: 'You must explain your rationale for not recalling Paula Smith',
+      })
+      cy.assertErrorMessage({
+        fieldName: 'popProgressMade',
+        errorText: 'You must explain what progress Paula Smith has made so far',
+      })
+      cy.assertErrorMessage({
+        fieldName: 'futureExpectations',
+        errorText: 'You must explain what is expected in the future',
+      })
+    })
   })
 
   describe('Task list', () => {
@@ -41,6 +63,8 @@ context('No recall', () => {
       cy.getElement('Breached licence condition(s) to do').should('exist')
       cy.getElement('Is Paula Smith on an indeterminate sentence? to do').should('exist')
       cy.getElement('Is Paula Smith on an extended sentence? to do').should('exist')
+      cy.getElement('Why you considered recall to do').should('exist')
+      cy.getElement('Why Paula Smith should not be recalled to do').should('exist')
       cy.getElement('Type of indeterminate sentence to do').should('not.exist')
       cy.getElement('Create letter').should('not.exist')
     })
@@ -55,6 +79,8 @@ context('No recall', () => {
       cy.getElement('Is Paula Smith on an indeterminate sentence? completed').should('exist')
       cy.getElement('Is Paula Smith on an extended sentence? completed').should('exist')
       cy.getElement('Type of indeterminate sentence completed').should('exist')
+      cy.getElement('Why you considered recall completed').should('exist')
+      cy.getElement('Why Paula Smith should not be recalled completed').should('exist')
       cy.clickLink('Create letter')
     })
   })
