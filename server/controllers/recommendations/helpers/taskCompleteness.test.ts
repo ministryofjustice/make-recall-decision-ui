@@ -42,6 +42,7 @@ const indeterminateSentenceProperties: RecommendationResponse = {
 const noRecallProperties: RecommendationResponse = {
   whyConsideredRecall: undefined,
   reasonsForNoRecall: undefined,
+  nextAppointment: undefined,
 }
 
 const emptyRecall: RecommendationResponse = {

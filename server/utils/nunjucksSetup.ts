@@ -5,7 +5,7 @@ import * as pathModule from 'path'
 import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel, isNotNull } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
-import { dateTimeItems, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
+import { dateTimeItems, isDatePartInvalid, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
@@ -57,6 +57,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('formatDateTimeFromIsoString', formatDateTimeFromIsoString)
   njkEnv.addGlobal('makePageTitle', makePageTitle)
   njkEnv.addGlobal('errorMessage', errorMessage)
+  njkEnv.addGlobal('isDatePartInvalid', isDatePartInvalid)
   njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
   njkEnv.addGlobal('dateTimeItems', dateTimeItems)
   njkEnv.addGlobal('radioCheckboxItems', radioCheckboxItems)

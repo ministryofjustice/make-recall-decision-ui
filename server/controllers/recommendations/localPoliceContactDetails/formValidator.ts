@@ -20,7 +20,7 @@ export const validateLocalPoliceContactDetails = async ({
       errors.push({ id: 'contactName', errorId: 'noLocalPoliceName' })
     }
     if (invalidPhone) {
-      errors.push({ id: 'phoneNumber', errorId: 'invalidLocalPolicePhone' })
+      errors.push({ id: 'phoneNumber', errorId: 'invalidPhoneNumber' })
     }
     if (invalidFax) {
       errors.push({ id: 'faxNumber', errorId: 'invalidLocalPoliceFax' })

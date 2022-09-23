@@ -17,6 +17,7 @@ import type { Vulnerabilities } from './Vulnerabilities';
 import { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails'
 import { WhyConsideredRecall } from './WhyConsideredRecall'
 import { ReasonsForNoRecall } from './ReasonsForNoRecall'
+import { NextAppointment } from './NextAppointment'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -46,6 +47,7 @@ export type RecommendationResponse = {
     vulnerabilities?: Vulnerabilities;
     whyConsideredRecall?: WhyConsideredRecall;
     reasonsForNoRecall?: ReasonsForNoRecall;
+    nextAppointment?: NextAppointment;
 };
 
 export namespace RecommendationResponse {

@@ -1,8 +1,8 @@
 import nunjucks from 'nunjucks'
 import { DatePartsParsed } from '../@types/dates'
-import { ObjectMap, SelectedFilterItem, UrlInfo } from '../@types'
+import { FormError, ObjectMap, SelectedFilterItem, UrlInfo } from '../@types'
 
-export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includeTime?: boolean) => {
+export const dateTimeItems = (fieldName: string, values: DatePartsParsed) => {
   const items = [
     {
       name: `day`,
@@ -33,30 +33,6 @@ export const dateTimeItems = (fieldName: string, values: DatePartsParsed, includ
       value: values?.year,
     },
   ]
-  if (includeTime) {
-    return [
-      ...items,
-      {
-        name: `${fieldName}Hour`,
-        label: 'Hour',
-        classes: 'govuk-input--width-2',
-        type: 'number',
-        attributes: {
-          maxlength: 2,
-        },
-        value: values?.hour,
-      },
-      {
-        name: `${fieldName}Minute`,
-        label: 'Minute',
-        classes: 'govuk-input--width-2',
-        attributes: {
-          maxlength: 2,
-        },
-        value: values?.minute,
-      },
-    ]
-  }
   return items
 }
 
@@ -69,3 +45,5 @@ export const renderTemplateString = (str: string, data: ObjectMap<unknown>): str
   const env = nunjucks.configure({ autoescape: false })
   return env.renderString(str, data)
 }
+export const isDatePartInvalid = (datePart: string, errors: FormError) =>
+  Array.isArray(errors?.invalidParts) && errors.invalidParts.includes(datePart)

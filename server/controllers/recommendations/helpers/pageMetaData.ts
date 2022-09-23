@@ -45,6 +45,8 @@ import { validateWhyConsideredRecall } from '../whyConsideredRecall/formValidato
 import { inputDisplayValuesWhyConsideredRecall } from '../whyConsideredRecall/inputDisplayValues'
 import { validateReasonsForNoRecall } from '../reasonsForNoRecall/formValidator'
 import { inputDisplayValuesReasonsForNoRecall } from '../reasonsForNoRecall/inputDisplayValues'
+import { validateNextAppointment } from '../nextAppointment/formValidator'
+import { inputDisplayValuesNextAppointment } from '../nextAppointment/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -253,6 +255,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesReasonsForNoRecall,
         pageHeading: strings.pageHeadings.reasonsForNoRecall,
         pageTitle: strings.pageTitles.reasonsForNoRecall,
+      }
+    case 'appointment-no-recall':
+      return {
+        templateName: 'nextAppointment',
+        validator: validateNextAppointment,
+        inputDisplayValues: inputDisplayValuesNextAppointment,
+        pageHeading: strings.pageHeadings.nextAppointment,
+        pageTitle: strings.pageTitles.nextAppointment,
       }
     default:
       throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })

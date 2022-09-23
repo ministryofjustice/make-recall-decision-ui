@@ -26,13 +26,13 @@ const filterPartsForValueRange = (parts: unknown[]): DatePartNames[] =>
     )
     .filter(Boolean)
 
-const convertDatePartsToNumbers = (parts: DateTimePart[]) => {
+const convertDatePartsToNumbers = (parts: DateTimePart[], options: Options) => {
   return parts.map(part => {
     let numberValue = parseInt(part.value, 10)
     if (part.name === 'year') {
       if (part.value.length === 2) {
         const currentYear = parseInt(DateTime.now().year.toString().substring(2), 10)
-        if (numberValue <= currentYear) {
+        if (options.dateMustBeInFuture || numberValue <= currentYear) {
           numberValue = 2000 + numberValue
         } else {
           numberValue = 1900 + numberValue
@@ -52,6 +52,7 @@ export const convertGmtDatePartsToUtc = (
   if ([year, month, day, hour, minute].every(part => !isDefined(part) || part === '')) {
     return {
       errorId: 'blankDateTime',
+      invalidParts: options.includeTime ? ['day', 'month', 'year', 'hour', 'minute'] : ['day', 'month', 'year'],
     }
   }
   let dateParts = [
@@ -77,6 +78,7 @@ export const convertGmtDatePartsToUtc = (
     if (areStringArraysTheSame(dateTimePartErrors, ['hour', 'minute'])) {
       return {
         errorId: 'missingTime',
+        invalidParts: ['hour', 'minute'],
       }
     }
     return {
@@ -94,7 +96,7 @@ export const convertGmtDatePartsToUtc = (
     }
   }
 
-  dateParts = convertDatePartsToNumbers(dateParts)
+  dateParts = convertDatePartsToNumbers(dateParts, options)
 
   const [d, m, y, h, min] = dateParts.map(part => part.numberValue)
 

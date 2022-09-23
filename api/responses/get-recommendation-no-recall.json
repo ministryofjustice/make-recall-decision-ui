@@ -159,5 +159,30 @@
         "text": "Your risk is assessed as increased and contact with your probation practitioner has broken down"
       }
     ]
+  },
+  "nextAppointment": {
+    "howWillAppointmentHappen": {
+      "selected": "TELEPHONE",
+      "allOptions": [
+        {
+          "value": "TELEPHONE",
+          "text": "Telephone"
+        },
+        {
+          "value": "VIDEO_CALL",
+          "text": "Video call"
+        },
+        {
+          "value": "OFFICE_VISIT",
+          "text": "Office visit"
+        },
+        {
+          "value": "HOME_VISIT",
+          "text": "Home visit"
+        }
+      ]
+    },
+    "dateTimeOfAppointment": "2022-04-24T20:39:00.000Z",
+    "probationPhoneNumber": "01238282838"
   }
 }

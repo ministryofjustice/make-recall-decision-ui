@@ -83,12 +83,15 @@ describe('convertGmtDatePartsToUtc', () => {
   describe('error - part(s) missing', () => {
     it('error for a date with all parts missing', () => {
       const result = convertGmtDatePartsToUtc({ year: '', month: '', day: '' })
-      expect(result).toEqual({ errorId: 'blankDateTime' })
+      expect(result).toEqual({ errorId: 'blankDateTime', invalidParts: ['day', 'month', 'year'] })
     })
 
     it('error for a date-time with all parts missing', () => {
-      const result = convertGmtDatePartsToUtc({ year: '', month: '', day: '', hour: '', minute: '' })
-      expect(result).toEqual({ errorId: 'blankDateTime' })
+      const result = convertGmtDatePartsToUtc(
+        { year: '', month: '', day: '', hour: '', minute: '' },
+        { includeTime: true }
+      )
+      expect(result).toEqual({ errorId: 'blankDateTime', invalidParts: ['day', 'month', 'year', 'hour', 'minute'] })
     })
 
     it('error for a date with any part missing', () => {
@@ -130,7 +133,7 @@ describe('convertGmtDatePartsToUtc', () => {
         { year: '2021', month: '03', day: '25', hour: '', minute: '' },
         { includeTime: true }
       )
-      expect(result).toEqual({ errorId: 'missingTime' })
+      expect(result).toEqual({ errorId: 'missingTime', invalidParts: ['hour', 'minute'] })
     })
   })
 
