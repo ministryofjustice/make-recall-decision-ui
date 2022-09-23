@@ -218,15 +218,20 @@ When('Maria confirms answers were saved', () => {
 
   cy.log('========= Indeterminate or extended sentence details')
   cy.clickLink('Indeterminate and extended sentences - recall criteria')
-  cy.getRadioOptionByLabel(
-    'Indeterminate and extended sentences',
-    'The person has shown behaviour similar to the index offence'
-  ).should('be.checked')
-  cy.getRadioOptionByLabel(
-    'Indeterminate and extended sentences',
-    'The person has shown behaviour that could lead to a sexual or violent offence'
-  ).should('be.checked')
-  cy.getRadioOptionByLabel('Indeterminate and extended sentences', 'The person is out of touch').should('be.checked')
+  cy.get('@offenderName').then(offenderName => {
+    cy.getRadioOptionByLabel(
+      'Indeterminate and extended sentences',
+      `${offenderName} has shown behaviour similar to the index offence`
+    ).should('be.checked')
+    cy.getRadioOptionByLabel(
+      'Indeterminate and extended sentences',
+      `${offenderName} has shown behaviour that could lead to a sexual or violent offence`
+    ).should('be.checked')
+    cy.getRadioOptionByLabel(
+      'Indeterminate and extended sentences',
+      `${offenderName} is out of touch`
+    ).should('be.checked')
+  })
   cy.getTextInputValue('Give details', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' }).should(
     'equal',
     'Details on behaviour similar to index offence'
