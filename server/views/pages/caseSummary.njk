@@ -42,7 +42,14 @@
                 </div>
                 {% if flags.flagRecommendationProd %}
                     {% if caseSummary.activeRecommendation.recommendationId %}
-                        <a class='govuk-button' href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/task-list'>Update recommendation</a>
+                        {% if caseSummary.activeRecommendation.recallType.selected.value == 'NO_RECALL' %}
+                            {% set pageId = 'task-list-no-recall' %}
+                        {% elseif caseSummary.activeRecommendation.recallType.selected.value in ['STANDARD', 'FIXED_TERM']%}
+                            {% set pageId = 'task-list' %}
+                        {% else %}
+                            {% set pageId = 'response-to-probation' %}
+                        {% endif %}
+                        <a class='govuk-button' href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/{{ pageId }}'>Update recommendation</a>
                     {% else %}
                     <form method='post' action='/recommendations'>
                         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
