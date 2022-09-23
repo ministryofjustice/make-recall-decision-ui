@@ -38,6 +38,7 @@ export type RecommendationResponse = {
     indeterminateSentenceType?: IndeterminateSentenceType;
     dateVloInformed?: string;
     hasArrestIssues?: SelectedWithDetails;
+    isMainAddressWherePersonCanBeFound?: SelectedWithDetails;
     hasContrabandRisk?: SelectedWithDetails;
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;

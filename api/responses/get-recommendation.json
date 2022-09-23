@@ -155,6 +155,10 @@
   },
   "isExtendedSentence": true,
   "isIndeterminateSentence": true,
+  "isMainAddressWherePersonCanBeFound": {
+    "selected": false,
+    "details": "123 Acacia Avenue, Birmingham, B23 1AV"
+  },
   "isThisAnEmergencyRecall": false,
   "isUnderIntegratedOffenderManagement": {
     "selected": "YES",
@@ -214,7 +218,16 @@
   "personOnProbation": {
     "name": "Paula Smith",
     "firstName": "Paula",
-    "surname": "Smith"
+    "surname": "Smith",
+    "addresses": [
+      {
+        "line1": "41 Newport Pagnell Rd",
+        "line2": "Newtown",
+        "town": "Northampton",
+        "postcode": "NN4 6HP",
+        "noFixedAbode": false
+      }
+    ]
   },
   "recallType": {
     "selected": {

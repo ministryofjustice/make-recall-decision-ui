@@ -173,6 +173,9 @@ r244,3,"^OUT_OF_TOUCH$","1","/recommendations/[^\/]+/indeterminate-details",0,c2
 r245,0,"^indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE$","They have been cautioned for being drunk and disorderly in public","/recommendations/[^\/]+/indeterminate-details",0,c2
 r246,0,"^indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH$","They're not answering their phone.
 Attempts to email them have gone unanswered.","/recommendations/[^\/]+/indeterminate-details",0,c2
+r247,0,"^isMainAddressWherePersonCanBeFoundDetailsNo$","41 Newport Pagnell Rd
+Northampton
+NN4 6HP","/recommendations/[^\/]+/address-details",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,

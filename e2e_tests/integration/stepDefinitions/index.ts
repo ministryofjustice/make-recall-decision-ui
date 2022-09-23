@@ -154,6 +154,15 @@ When('Maria enters any arrest issues', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria enters an address where the person can be found', () => {
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink('Address details')
+    cy.selectRadio(`Is this where the police can find ${offenderName}?`, 'No')
+  })
+  cy.fillInput('Give the correct location', '123 Acacia Avenue, Birmingham B23 1AV')
+  cy.clickButton('Continue')
+})
+
 defineStep('Maria confirms {string} to a risk of contraband', (answer: string) => {
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)

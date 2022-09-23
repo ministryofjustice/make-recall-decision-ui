@@ -18,6 +18,14 @@ context('Make a recommendation', () => {
     crn,
     personOnProbation: {
       name: 'Paula Smith',
+      addresses: [
+        {
+          line1: '41 Newport Pagnell Rd',
+          line2: 'Newtown',
+          town: 'Northampton',
+          postcode: 'NN4 6HP',
+        },
+      ],
     },
   }
   const licenceConditionsMultipleActiveCustodial = {
@@ -322,6 +330,22 @@ context('Make a recommendation', () => {
         errorText: 'You must enter details of the contraband concerns',
       })
     })
+
+    it('form validation - Address details', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'isMainAddressWherePersonCanBeFound',
+        errorText: 'Select whether this is where the police can find Paula Smith',
+      })
+      cy.selectRadio('Is this where the police can find Paula Smith?', 'No')
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'isMainAddressWherePersonCanBeFoundDetailsNo',
+        errorText: 'You must enter the correct location',
+      })
+    })
   })
 
   describe('Restricted / excluded CRNs', () => {
@@ -401,6 +425,67 @@ context('Make a recommendation', () => {
       ).should('exist')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
+    })
+  })
+
+  describe('Address details', () => {
+    it('lists multiple addresses', () => {
+      const recommendationWithAddresses = {
+        ...recommendationResponse,
+        personOnProbation: {
+          name: 'Paula Smith',
+          addresses: [
+            {
+              line1: '41 Newport Pagnell Rd',
+              line2: 'Newtown',
+              town: 'Northampton',
+              postcode: 'NN4 6HP',
+            },
+            {
+              line1: 'The Lodge, Hennaway Drive',
+              line2: null,
+              town: 'Corby',
+              postcode: 'S2 3HU',
+            },
+          ],
+        },
+      }
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
+      cy.getElement('These are the last known addresses for Paula Smith')
+      cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
+      cy.getText('address-1').should('contain', 'Newtown')
+      cy.getText('address-1').should('contain', 'Northampton')
+      cy.getText('address-1').should('contain', 'NN4 6HP')
+      cy.getText('address-2').should('contain', 'The Lodge, Hennaway Drive')
+      cy.getText('address-2').should('contain', 'Corby')
+      cy.getText('address-2').should('contain', 'S2 3HU')
+    })
+
+    it('shows a message if no addresses', () => {
+      const recommendationWithAddresses = {
+        ...recommendationResponse,
+        personOnProbation: {
+          name: 'Paula Smith',
+          addresses: [],
+        },
+      }
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
+      cy.fillInput('Where can the police find Paula Smith?', '35 Hayward Rise, Carshalton, Surrey S1 8SH')
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
+
+    it('lists one address', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
+      cy.getElement('This is the last known address for Paula Smith')
+      cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
+      cy.getText('address-1').should('contain', 'Newtown')
+      cy.getText('address-1').should('contain', 'Northampton')
+      cy.getElement({ qaAttr: 'address-2' }).should('not.exist')
     })
   })
 

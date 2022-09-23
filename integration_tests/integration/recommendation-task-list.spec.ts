@@ -54,6 +54,7 @@ context('Recommendation - task list', () => {
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
+    cy.getElement('Address details').should('not.exist')
     // should not exist
     cy.getElement('Emergency recall').should('not.exist')
     cy.clickLink('Create Part A')
@@ -68,6 +69,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Paula Smith in custody now? completed').should('exist')
     cy.getElement('Local police contact details completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? completed').should('exist')
+    cy.getElement('Address details completed').should('exist')
     cy.clickLink('Create Part A')
   })
 
@@ -163,6 +165,7 @@ context('Recommendation - task list', () => {
       '/recommendations/123/custody-status?fromPageId=task-list&fromAnchor=heading-custody'
     )
     cy.getLinkHref('Local police contact details').should('contain', '/recommendations/123/police-details')
+    cy.getLinkHref('Address details').should('contain', '/recommendations/123/address-details')
     cy.getLinkHref('Is Paula Smith under Integrated Offender Management (IOM)?').should(
       'contain',
       '/recommendations/123/iom'

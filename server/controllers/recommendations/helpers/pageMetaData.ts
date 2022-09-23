@@ -47,6 +47,8 @@ import { validateReasonsForNoRecall } from '../reasonsForNoRecall/formValidator'
 import { inputDisplayValuesReasonsForNoRecall } from '../reasonsForNoRecall/inputDisplayValues'
 import { validateNextAppointment } from '../nextAppointment/formValidator'
 import { inputDisplayValuesNextAppointment } from '../nextAppointment/inputDisplayValues'
+import { validateAddress } from '../addressDetails/formValidator'
+import { inputDisplayValuesAddress } from '../addressDetails/inputDisplayValues'
 
 export const pageMetaData = (pageId?: unknown): PageMetaData => {
   switch (pageId) {
@@ -219,6 +221,14 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         inputDisplayValues: inputDisplayValuesArrestIssues,
         pageHeading: strings.pageHeadings.arrestIssues,
         pageTitle: strings.pageTitles.arrestIssues,
+      }
+    case 'address-details':
+      return {
+        templateName: 'addressDetails',
+        validator: validateAddress,
+        inputDisplayValues: inputDisplayValuesAddress,
+        pageHeading: strings.pageHeadings.addressDetails,
+        pageTitle: strings.pageTitles.addressDetails,
       }
     case 'contraband':
       return {

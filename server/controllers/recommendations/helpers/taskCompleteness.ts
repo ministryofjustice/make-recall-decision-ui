@@ -35,7 +35,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     isUnderIntegratedOffenderManagement: isNotNullOrUndefined(
       recommendation.isUnderIntegratedOffenderManagement?.selected
     ),
-
     hasContrabandRisk: isNotNullOrUndefined(recommendation.hasContrabandRisk),
   }
 
@@ -64,6 +63,9 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     if (recommendation.custodyStatus?.selected === 'NO') {
       statuses.hasArrestIssues = isNotNullOrUndefined(recommendation.hasArrestIssues)
       statuses.localPoliceContact = isNotNullOrUndefined(recommendation.localPoliceContact?.contactName)
+      statuses.isMainAddressWherePersonCanBeFound = isNotNullOrUndefined(
+        recommendation.isMainAddressWherePersonCanBeFound
+      )
     }
     if (isRecallTypeFixedTerm) {
       statuses.fixedTermAdditionalLicenceConditions = isNotNullOrUndefined(

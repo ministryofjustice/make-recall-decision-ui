@@ -26,6 +26,7 @@ Feature: Recall (indeterminate)
     And Maria confirms "Yes" to victim contact scheme
     And Maria enters the date the VLO was informed
     And Maria enters any arrest issues
+    And Maria enters an address where the person can be found
     And Maria confirms "Yes" to a risk of contraband
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the indeterminate recall

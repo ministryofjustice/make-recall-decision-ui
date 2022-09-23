@@ -47,3 +47,5 @@ export const renderTemplateString = (str: string, data: ObjectMap<unknown>): str
 }
 export const isDatePartInvalid = (datePart: string, errors: FormError) =>
   Array.isArray(errors?.invalidParts) && errors.invalidParts.includes(datePart)
+
+export const possessiveSuffix = (str: string) => (str.endsWith('s') ? `${str}'` : `${str}'s`)

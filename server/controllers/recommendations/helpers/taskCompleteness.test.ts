@@ -109,21 +109,23 @@ describe('taskCompleteness', () => {
   })
 
   describe('Custody status', () => {
-    it('returns false for areAllComplete if not in custody, and hasArrestIssues / localPoliceContact are null', () => {
+    it('returns false for areAllComplete if not in custody, and related properties are null', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: null,
         localPoliceContact: null,
+        isMainAddressWherePersonCanBeFound: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
 
-    it('returns false for areAllComplete if not in custody, and hasArrestIssues not set', () => {
+    it('returns false for areAllComplete if not in custody, and others not set', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: null,
+        isMainAddressWherePersonCanBeFound: null,
         localPoliceContact: {},
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
@@ -133,17 +135,19 @@ describe('taskCompleteness', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
-        hasArrestIssues: 'details',
+        hasArrestIssues: { selected: true, details: 'details' },
+        isMainAddressWherePersonCanBeFound: { selected: true, details: 'details' },
         localPoliceContact: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
 
-    it('returns true for areAllComplete if not in custody, and hasArrestIssues / localPoliceContact are both set', () => {
+    it('returns true for areAllComplete if not in custody, and related properties are all set', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
-        hasArrestIssues: 'details',
+        hasArrestIssues: { selected: false },
+        isMainAddressWherePersonCanBeFound: { selected: true, details: 'details' },
         localPoliceContact: {
           contactName: 'Bob',
         },
@@ -151,22 +155,24 @@ describe('taskCompleteness', () => {
       expect(areAllComplete).toEqual(true)
     })
 
-    it('returns true for areAllComplete if in police custody, and hasArrestIssues / localPoliceContact are null', () => {
+    it('returns true for areAllComplete if in police custody, and related properties are null', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'YES_POLICE' },
         hasArrestIssues: null,
         localPoliceContact: null,
+        isMainAddressWherePersonCanBeFound: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
 
-    it('returns true for areAllComplete if in prison custody, and hasArrestIssues / localPoliceContact are null', () => {
+    it('returns true for areAllComplete if in prison custody, and related properties are null', () => {
       const { areAllComplete } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'YES_PRISON' },
         hasArrestIssues: null,
         localPoliceContact: null,
+        isMainAddressWherePersonCanBeFound: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
