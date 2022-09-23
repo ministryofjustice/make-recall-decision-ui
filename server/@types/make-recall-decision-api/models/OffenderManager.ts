@@ -9,5 +9,6 @@ export type OffenderManager = {
     phoneNumber?: string;
     email?: string;
     probationTeam?: ProbationTeam;
+    probationAreaDescription?: string;
 };
 

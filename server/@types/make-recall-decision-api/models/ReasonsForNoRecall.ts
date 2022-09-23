@@ -3,9 +3,9 @@
 /* eslint-disable */
 
 export type ReasonsForNoRecall = {
-  licenceBreach?: string;
-  noRecallRationale?: string;
-  popProgressMade?: string;
-  futureExpectations?: string;
+    licenceBreach?: string;
+    noRecallRationale?: string;
+    popProgressMade?: string;
+    futureExpectations?: string;
 };
 

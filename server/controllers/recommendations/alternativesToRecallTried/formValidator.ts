@@ -42,13 +42,13 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
     if (missingDetails.length) {
       missingDetails.forEach(alternativeId => {
         errorId = 'missingAlternativesTriedDetail'
+        const label = optionTextFromValue(alternativeId, 'alternativesToRecallTried')
+        const [firstLetter, ...rest] = label
+        const lowerCased = `${firstLetter.toLowerCase()}${rest.join('')}`
         errors.push(
           makeErrorObject({
             id: `alternativesToRecallTriedDetail-${alternativeId}`,
-            text: `${strings.errors.missingDetail} for ${optionTextFromValue(
-              alternativeId,
-              'alternativesToRecallTried'
-            ).toLowerCase()}`,
+            text: `${strings.errors.missingDetail} for ${lowerCased}`,
             errorId,
           })
         )
