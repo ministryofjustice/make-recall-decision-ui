@@ -78,7 +78,7 @@ describe('validateIndeterminateDetails', () => {
       {
         href: '#indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
         name: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
-        text: 'Enter details about the person being out of touch',
+        text: 'Enter details about {{ fullName }} being out of touch',
         errorId: 'missingIndeterminateDetail',
       },
     ])

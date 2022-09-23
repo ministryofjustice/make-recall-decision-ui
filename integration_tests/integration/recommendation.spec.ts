@@ -182,7 +182,7 @@ context('Make a recommendation', () => {
       })
       cy.assertErrorMessage({
         fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
-        errorText: 'Enter details about the person being out of touch',
+        errorText: 'Enter details about Paula Smith being out of touch',
       })
     })
 
