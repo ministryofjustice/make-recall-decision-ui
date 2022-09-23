@@ -1,5 +1,13 @@
 import { When } from 'cypress-cucumber-preprocessor/steps'
-import { assertQ1_emergency_recall, assertQ2_indeterminate_sentence_type, assertQ22_recall_type, assertQ3_extended_sentence, assertQ6_custody_status, assertQ7_addresses, assertQ8_arrest_issues } from './index'
+import {
+  assertQ1_emergency_recall,
+  assertQ2_indeterminate_sentence_type,
+  assertQ22_recall_type,
+  assertQ3_extended_sentence,
+  assertQ6_custody_status,
+  assertQ7_addresses,
+  assertQ8_arrest_issues,
+} from './index'
 
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
@@ -20,15 +28,17 @@ When('Maria confirms the existing indeterminate and extended sentence criteria',
 })
 
 When('Maria enters indeterminate and extended sentence criteria', () => {
-  cy.get('@offenderName').then(offenderName =>
-    cy.selectCheckboxes('Indeterminate and extended sentences', [
-      'The person has shown behaviour similar to the index offence',
-      'The person has shown behaviour that could lead to a sexual or violent offence',
-      'The person is out of touch'
-    ])
-  )
-  cy.fillInput('Give details', 'Details on behaviour similar to index offence', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' })
-  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', { parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' })
+  cy.selectCheckboxes('Indeterminate and extended sentences', [
+    'The person has shown behaviour similar to the index offence',
+    'The person has shown behaviour that could lead to a sexual or violent offence',
+    'The person is out of touch',
+  ])
+  cy.fillInput('Give details', 'Details on behaviour similar to index offence', {
+    parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
+  })
+  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', {
+    parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+  })
   cy.fillInput('Give details', 'Details on out of touch', { parent: '#conditional-OUT_OF_TOUCH' })
   cy.clickButton('Continue')
 })
@@ -54,8 +64,12 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     expect(contents).to.contain('Details on physical disabilities')
 
     cy.log('Q11')
-    expect(contents).to.contain('Do you have any suspicions that the offender is using recall to bring contraband into the prison estate? Yes')
-    expect(contents).to.contain('If yes, provide details and contact your local police SPOC to share information or concerns: Contraband details...')
+    expect(contents).to.contain(
+      'Do you have any suspicions that the offender is using recall to bring contraband into the prison estate? Yes'
+    )
+    expect(contents).to.contain(
+      'If yes, provide details and contact your local police SPOC to share information or concerns: Contraband details...'
+    )
     cy.log('Q13')
     expect(contents).to.contain('Registered PPO/IOM: Yes')
     cy.log('Q14')
@@ -74,11 +88,17 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
 
     assertQ22_recall_type(contents, 'N/A', 'N/A')
     cy.log('Q23')
-    expect(contents).to.contain('Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes')
+    expect(contents).to.contain(
+      'Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes'
+    )
     expect(contents).to.contain('Please Comment: Details on behaviour similar to index offence')
-    expect(contents).to.contain('Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence? Yes')
+    expect(contents).to.contain(
+      'Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence? Yes'
+    )
     expect(contents).to.contain('Please Comment: Details on behaviour that could lead to a sexual or violent offence')
-    expect(contents).to.contain('Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes')
+    expect(contents).to.contain(
+      'Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes'
+    )
     expect(contents).to.contain('Please Comment: Details on out of touch')
   })
 })
@@ -96,9 +116,10 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Response to probation')
   cy.clickLink('Response to probation so far')
   cy.get('@offenderName').then(offenderName => {
-    cy
-      .getTextInputValue(`How has ${offenderName} responded to probation so far?`)
-      .should('equal', 'Re-offending has occurred')
+    cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should(
+      'equal',
+      'Re-offending has occurred'
+    )
   })
   cy.clickLink('Back')
 
@@ -146,7 +167,9 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= IOM')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} under Integrated Offender Management (IOM)?`)
-    cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Yes').should('be.checked')
+    cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Yes').should(
+      'be.checked'
+    )
   })
   cy.clickLink('Back')
 
@@ -170,9 +193,10 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Arrest issues')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
-    cy
-      .getRadioOptionByLabel(`Is there anything the police should know before they arrest ${offenderName}?`, 'Yes')
-      .should('be.checked')
+    cy.getRadioOptionByLabel(
+      `Is there anything the police should know before they arrest ${offenderName}?`,
+      'Yes'
+    ).should('be.checked')
   })
   cy.getTextInputValue('Give details. Include information about any vulnerable children and adults').should(
     'equal',
@@ -183,9 +207,15 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Contraband')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)
-    cy.getRadioOptionByLabel(`Do you think ${offenderName} is using recall to bring contraband into prison?`, 'Yes').should('be.checked')
+    cy.getRadioOptionByLabel(
+      `Do you think ${offenderName} is using recall to bring contraband into prison?`,
+      'Yes'
+    ).should('be.checked')
   })
-  cy.getTextInputValue('Give details. Also tell your local police contact about your concerns.').should('equal', 'Contraband details...')
+  cy.getTextInputValue('Give details. Also tell your local police contact about your concerns.').should(
+    'equal',
+    'Contraband details...'
+  )
   cy.clickLink('Back')
 
   cy.log('========= Indeterminate or extended sentence details')
@@ -198,18 +228,14 @@ When('Maria confirms answers were saved', () => {
     'Indeterminate and extended sentences',
     'The person has shown behaviour that could lead to a sexual or violent offence'
   ).should('be.checked')
-  cy.getRadioOptionByLabel(
-    'Indeterminate and extended sentences',
-    'The person is out of touch'
-  ).should('be.checked')
+  cy.getRadioOptionByLabel('Indeterminate and extended sentences', 'The person is out of touch').should('be.checked')
   cy.getTextInputValue('Give details', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' }).should(
     'equal',
     'Details on behaviour similar to index offence'
   )
-  cy.getTextInputValue('Give details', { parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' }).should(
-    'equal',
-    'Details on behaviour that could lead to a sexual or violent offence'
-  )
+  cy.getTextInputValue('Give details', {
+    parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+  }).should('equal', 'Details on behaviour that could lead to a sexual or violent offence')
   cy.getTextInputValue('Give details', { parent: '#conditional-OUT_OF_TOUCH' }).should(
     'equal',
     'Details on out of touch'

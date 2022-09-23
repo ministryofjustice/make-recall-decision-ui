@@ -16,7 +16,7 @@ import { getRecommendationPage } from '../controllers/recommendations/getRecomme
 import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
 import { routeUrls } from './routeUrls'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
-import { createAndDownloadPartA } from '../controllers/recommendations/createAndDownloadPartA'
+import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { setAnalyticsId } from '../middleware/setAnalyticsId'
 import { parseUrl } from '../middleware/parseUrl'
 
@@ -35,7 +35,11 @@ export default function routes(router: Router): Router {
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummary)
 
   post(routeUrls.recommendations, createRecommendationController)
-  get(`${routeUrls.recommendations}/:recommendationId/documents/part-a`, createAndDownloadPartA)
+  get(`${routeUrls.recommendations}/:recommendationId/documents/part-a`, createAndDownloadDocument('PART_A'))
+  get(
+    `${routeUrls.recommendations}/:recommendationId/documents/no-recall-letter`,
+    createAndDownloadDocument('NO_RECALL_LETTER')
+  )
   post(`${routeUrls.recommendations}/:recommendationId/status`, updateRecommendationStatus)
   router.get(
     `${routeUrls.recommendations}/:recommendationId/:pageId`,

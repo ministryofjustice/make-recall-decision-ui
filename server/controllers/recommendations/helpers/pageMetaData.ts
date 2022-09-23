@@ -264,6 +264,12 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.nextAppointment,
         pageTitle: strings.pageTitles.nextAppointment,
       }
+    case 'confirmation-no-recall':
+      return {
+        templateName: 'confirmationNoRecallLetter',
+        pageHeading: strings.pageHeadings.confirmationNoRecallLetter,
+        pageTitle: strings.pageTitles.confirmationNoRecallLetter,
+      }
     default:
       throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })
   }
