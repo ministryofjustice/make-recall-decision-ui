@@ -78,7 +78,7 @@ describe('validateAlternativesTried', () => {
       {
         href: '#alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES',
         name: 'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES',
-        text: 'Enter more detail for Referral to approved premises',
+        text: 'Enter more detail for referral to approved premises',
         errorId: 'missingAlternativesTriedDetail',
       },
     ])

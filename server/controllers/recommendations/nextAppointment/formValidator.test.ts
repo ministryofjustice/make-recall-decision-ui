@@ -140,7 +140,7 @@ describe('validateNextAppointment', () => {
         errorId: 'invalidPhoneNumber',
         href: '#probationPhoneNumber',
         name: 'probationPhoneNumber',
-        text: 'Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
+        text: 'Enter a telephone number, like 01277 960 001, 07364 900 982 or +44 808 157 0192',
       },
     ])
   })
