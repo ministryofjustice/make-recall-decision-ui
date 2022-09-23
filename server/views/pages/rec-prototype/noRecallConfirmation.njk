@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Decision not to Recall letter created", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "Decision not to recall letter created", hasErrors: errors }) %}
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -10,12 +10,12 @@
                 <strong>{{ personalDetailsOverview.name }}</strong>
             {% endset %}
             {{ govukPanel({
-                titleText: "Decision not to Recall letter created",
+                titleText: "Decision not to recall letter created",
                 html: html
             }) }}
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
-            <p class='govuk-body'><a class='govuk-link' href='/assets/Decision-not-to-recall-letter-v0.4.docx'>Download the Decision not to Recall letter</a>.</p>
-            <p class='govuk-body'>Upload the Decision not to Recall letter to NDelius.</p>
+            <p class='govuk-body'><a class='govuk-link' href='/assets/Decision-not-to-recall-letter-v0.4.docx'>Download the decision not to recall letter</a>.</p>
+            <p class='govuk-body'>Upload the decision not to recall letter to NDelius.</p>
         </div>
     </div>
 

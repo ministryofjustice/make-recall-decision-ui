@@ -411,7 +411,7 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
       cy.selectRadio('What do you recommend?', 'No recall')
       cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a Decision not to Recall letter')
+      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
     it('recall type - directs "no recall" to the letter page even if from task list', () => {
@@ -422,7 +422,7 @@ context('Make a recommendation', () => {
       )
       cy.selectRadio('What do you recommend?', 'No recall')
       cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a Decision not to Recall letter')
+      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
     it('indeterminate recall type - directs "no recall" to the letter page', () => {
@@ -431,7 +431,7 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
       cy.selectRadio('What do you recommend?', 'No recall')
       cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a Decision not to Recall letter')
+      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
     it('indeterminate recall type - directs "no recall" to the letter page even if from task list', () => {
@@ -442,7 +442,7 @@ context('Make a recommendation', () => {
       )
       cy.selectRadio('What do you recommend?', 'No recall')
       cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a Decision not to Recall letter')
+      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
     it('indeterminate recall type - links back to indeterminate sentence type if indeterminate sentence', () => {
