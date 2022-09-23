@@ -169,6 +169,7 @@ export type PageTemplateName =
   | 'victimLiaisonOfficer'
   | 'arrestIssues'
   | 'contraband'
+  | 'addressDetails'
   | 'confirmationPartA'
   | 'taskListNoRecall'
   | 'whyConsideredRecall'

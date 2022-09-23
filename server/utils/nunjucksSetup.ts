@@ -5,7 +5,13 @@ import * as pathModule from 'path'
 import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel, isNotNull } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
-import { dateTimeItems, isDatePartInvalid, removeUndefinedListItems, selectedFilterItems } from './nunjucks'
+import {
+  dateTimeItems,
+  possessiveSuffix,
+  isDatePartInvalid,
+  removeUndefinedListItems,
+  selectedFilterItems,
+} from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
@@ -69,4 +75,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('isNotNull', isNotNull)
   njkEnv.addGlobal('changeLinkUrl', changeLinkUrl)
   njkEnv.addGlobal('nextPageLinkUrl', nextPageLinkUrl)
+  njkEnv.addGlobal('possessiveSuffix', possessiveSuffix)
 }

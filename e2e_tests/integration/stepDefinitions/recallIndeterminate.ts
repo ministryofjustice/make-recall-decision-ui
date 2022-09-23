@@ -47,6 +47,9 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     assertQ2_indeterminate_sentence_type(contents, 'Yes - IPP')
     assertQ3_extended_sentence(contents, 'Yes')
     assertQ6_custody_status(contents, 'No')
+    cy.log('Q7')
+    expect(contents).to.contain('Provide any other possible addresses: Police can find this person at: 123 Acacia Avenue, Birmingham B23 1AV')
+
     assertQ8_arrest_issues(contents, 'Yes', 'Arrest issues details...')
 
     cy.log('Q9')

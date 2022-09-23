@@ -18,6 +18,7 @@ import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtend
 import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
 import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
 import { renderTemplateString } from '../../../utils/nunjucks'
+import { isMainAddressWherePersonCanBeFound } from '../addressDetails/formOptions'
 
 export const formOptions = {
   recallType,
@@ -38,6 +39,7 @@ export const formOptions = {
   indeterminateOrExtendedSentenceDetails,
   whyConsideredRecall,
   howWillAppointmentHappen,
+  isMainAddressWherePersonCanBeFound,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

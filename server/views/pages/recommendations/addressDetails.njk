@@ -1,0 +1,83 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/task-list#heading-person-details'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set noDetailHtml %}
+                {{ govukTextarea({
+                    name: "isMainAddressWherePersonCanBeFoundDetailsNo",
+                    id: "isMainAddressWherePersonCanBeFoundDetailsNo",
+                    label: {
+                        text: "Give the correct location" if recommendation.personOnProbation.addresses.length else 'Where can the police find ' + recommendation.personOnProbation.name + '?',
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.details,
+                    errorMessage: errorMessage(errors.isMainAddressWherePersonCanBeFoundDetailsNo)
+                }) }}
+            {% endset %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="addressCount" value="{{ recommendation.personOnProbation.addresses.length }}" />
+                <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+                <div class='govuk-!-margin-bottom-6'>
+                    {% if recommendation.personOnProbation.addresses.length %}
+                        <p class="govuk=body">{% if recommendation.personOnProbation.addresses.length === 1 %}This is the last known address{% else %}These are the last known addresses{% endif %}
+                            for {{ recommendation.personOnProbation.name }} in NDelius. If it is incorrect, update
+                            NDelius.</p>
+                        {% for address in recommendation.personOnProbation.addresses %}
+                            <div class='govuk-!-margin-bottom-3'>
+                                <h3 class='govuk-visually-hidden'>Address {{ loop.index }}</h3>
+                                <div data-qa='address-{{ loop.index }}'>
+                                {% if address.line1 %}
+                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.line1 }}</div>{% endif %}
+                                {% if address.line2 %}
+                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.line2 }}</div>{% endif %}
+                                {% if address.town %}
+                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.town }}</div>{% endif %}
+                                {% if address.postcode %}
+                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.postcode }}</div>{% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {{ govukRadios({
+                            idPrefix: "isMainAddressWherePersonCanBeFound",
+                            name: "isMainAddressWherePersonCanBeFound",
+                            fieldset: {
+                                legend: {
+                                    text: 'Is this where the police can find ' + recommendation.personOnProbation.name + '?',
+                                    classes: "govuk-fieldset__legend--m"
+                                }
+                            },
+                            items: radioCheckboxItems({
+                                items: formOptions.isMainAddressWherePersonCanBeFound,
+                                currentValues: inputDisplayValues.value,
+                                conditionalContent: {
+                                    NO: noDetailHtml
+                                }
+                            }),
+                            errorMessage: errorMessage(errors.isMainAddressWherePersonCanBeFound)
+                        }) }}
+                    {% else %}
+                        <p class='govuk-body-m'>There are no address details for {{ recommendation.personOnProbation.name }} in NDelius. Double-check that NDelius is correct. </p>
+                        {{ noDetailHtml | safe }}
+                    {% endif %}
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
