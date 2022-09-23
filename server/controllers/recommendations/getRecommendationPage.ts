@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { getRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
-import { formOptions, renderFormOptions } from './helpers/formOptions'
+import { renderFormOptions } from './helpers/formOptions'
 import { renderTemplateString } from '../../utils/nunjucks'
 import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
