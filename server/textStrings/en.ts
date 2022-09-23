@@ -20,7 +20,7 @@ export const strings = {
     missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
     missingIndeterminateDetailSexualViolent:
       'Enter details about the behaviour that could lead to a sexual or violent offence',
-    missingIndeterminateDetailContact: 'Enter details about the person being out of touch',
+    missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     missingDetail: 'Enter more detail',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
