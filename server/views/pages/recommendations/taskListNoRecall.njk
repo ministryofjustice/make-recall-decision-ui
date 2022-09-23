@@ -24,11 +24,9 @@
                 {% include '../../partials/taskList/circumstances.njk' %}
                 {% include '../../partials/taskList/createLetter.njk' %}
             </ol>
-            {% if taskCompleteness.areAllComplete == true %}
                 <div>
-                    <a href='#' class='govuk-button govuk-button--primary'>Create letter</a>
+                    <a href='{{urlInfo.pageBase}}confirmation-no-recall' class='govuk-button govuk-button--primary'>Create letter</a>
                 </div>
-            {% endif %}
         </div>
     </div>
 
