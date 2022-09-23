@@ -212,6 +212,26 @@
   "activeRecommendation": {
     "recommendationId": 1,
     "lastModifiedDate": "2022-05-03T13.34.23.000Z",
-    "lastModifiedBy": "Belinda Davies"
+    "lastModifiedBy": "Belinda Davies",
+    "recallType": {
+      "selected": {
+        "value": "STANDARD",
+        "details": "Details..."
+      },
+      "allOptions": [
+        {
+          "value": "FIXED_TERM",
+          "text": "Fixed term recall"
+        },
+        {
+          "value": "STANDARD",
+          "text": "Standard recall"
+        },
+        {
+          "value": "NO_RECALL",
+          "text": "No recall"
+        }
+      ]
+    }
   }
 }
