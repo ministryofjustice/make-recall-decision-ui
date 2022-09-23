@@ -6,5 +6,6 @@ export type Offence = {
     mainOffence?: boolean;
     description?: string;
     code?: string;
+    offenceDate?: string;
 };
 

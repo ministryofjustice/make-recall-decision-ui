@@ -13,6 +13,8 @@ export type ConvictionResponse = {
     sentenceDescription?: string;
     sentenceOriginalLength?: number;
     sentenceOriginalLengthUnits?: string;
+    sentenceSecondLength?: number;
+    sentenceSecondLengthUnits?: string;
     sentenceStartDate?: string;
     sentenceExpiryDate?: string;
     licenceExpiryDate?: string;

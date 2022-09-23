@@ -3,21 +3,22 @@
 /* eslint-disable */
 
 import type { AlternativesToRecallTried } from './AlternativesToRecallTried';
+import type { ConvictionDetail } from './ConvictionDetail';
 import type { CustodyStatus } from './CustodyStatus';
+import type { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails';
 import type { IndeterminateSentenceType } from './IndeterminateSentenceType';
 import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
 import type { LocalPoliceContact } from './LocalPoliceContact';
 import type { PersonOnProbation } from './PersonOnProbation';
+import type { ReasonsForNoRecall } from './ReasonsForNoRecall';
 import type { RecallType } from './RecallType';
 import type { SelectedWithDetails } from './SelectedWithDetails';
 import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
 import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { Vulnerabilities } from './Vulnerabilities';
-import { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails'
-import { WhyConsideredRecall } from './WhyConsideredRecall'
-import { ReasonsForNoRecall } from './ReasonsForNoRecall'
-import { NextAppointment } from './NextAppointment'
+import type { WhyConsideredRecall } from './WhyConsideredRecall';
+import type { NextAppointment } from './NextAppointment'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -32,20 +33,27 @@ export type RecommendationResponse = {
     isThisAnEmergencyRecall?: boolean;
     isIndeterminateSentence?: boolean;
     isExtendedSentence?: boolean;
-    fixedTermAdditionalLicenceConditions?: SelectedWithDetails;
     activeCustodialConvictionCount?: number;
     hasVictimsInContactScheme?: VictimsInContactScheme;
     indeterminateSentenceType?: IndeterminateSentenceType;
     dateVloInformed?: string;
     hasArrestIssues?: SelectedWithDetails;
-    isMainAddressWherePersonCanBeFound?: SelectedWithDetails;
     hasContrabandRisk?: SelectedWithDetails;
     personOnProbation?: PersonOnProbation;
     alternativesToRecallTried?: AlternativesToRecallTried;
-    indeterminateOrExtendedSentenceDetails?: IndeterminateOrExtendedSentenceDetails;
     licenceConditionsBreached?: LicenceConditionsBreached;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
     vulnerabilities?: Vulnerabilities;
+    convictionDetail?: ConvictionDetail;
+    region?: string;
+    localDeliveryUnit?: string;
+    userNamePartACompletedBy?: string;
+    userEmailPartACompletedBy?: string;
+    lastPartADownloadDateTime?: string;
+    indexOffenceDetails?: string;
+    fixedTermAdditionalLicenceConditions?: SelectedWithDetails;
+    indeterminateOrExtendedSentenceDetails?: IndeterminateOrExtendedSentenceDetails;
+    isMainAddressWherePersonCanBeFound?: SelectedWithDetails;
     whyConsideredRecall?: WhyConsideredRecall;
     reasonsForNoRecall?: ReasonsForNoRecall;
     nextAppointment?: NextAppointment;
