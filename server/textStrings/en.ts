@@ -38,13 +38,15 @@ export const strings = {
     noActiveCustodial: 'This person has no active custodial convictions',
     noLocalPoliceName: 'Enter the police contact name',
     invalidLocalPoliceEmail: 'Enter an email address in the correct format, like name@example.com',
-    invalidLocalPolicePhone: 'Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
+    invalidPhoneNumber: 'Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
     invalidLocalPoliceFax: 'Enter a fax number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
     noWhyConsideredRecallSelected: 'Select a reason why you considered recall',
     noRecallLicenceBreachDetails: 'You must explain the licence breach',
     noRecallRationale: 'You must explain your rationale for not recalling {{ fullName }}',
     noRecallPopProgressMade: 'You must explain what progress {{ fullName }} has made so far',
     noRecallFutureExpectations: 'You must explain what is expected in the future',
+    noAppointmentTypeSelected: 'You must select how the appointment will happen',
+    missingProbationPhoneNumber: 'You must give a telephone number for probation',
   },
   pageHeadings: {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
@@ -73,6 +75,7 @@ export const strings = {
     taskListNoRecall: 'Create a decision not to recall letter',
     whyConsideredRecall: 'Why you considered recall',
     reasonsForNoRecall: 'Why you think {{ fullName }} should not be recalled?',
+    nextAppointment: 'Next appointment for {{ fullName }}',
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
@@ -101,5 +104,6 @@ export const strings = {
     taskListNoRecall: 'Create a decision not to recall letter',
     whyConsideredRecall: 'Why you considered recall',
     reasonsForNoRecall: 'Why you think the person should not be recalled?',
+    nextAppointment: 'Next appointment for the person',
   },
 }

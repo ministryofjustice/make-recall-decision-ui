@@ -1,0 +1,147 @@
+import { DateTime } from 'luxon'
+import { validateNextAppointment } from './formValidator'
+
+describe('validateNextAppointment', () => {
+  const recommendationId = '34'
+  it('returns valuesToSave and no errors if valid', async () => {
+    const { year } = DateTime.now().plus({ years: 1 })
+    const requestBody = {
+      howWillAppointmentHappen: 'VIDEO_CALL',
+      'dateTimeOfAppointment-day': '12',
+      'dateTimeOfAppointment-month': '05',
+      'dateTimeOfAppointment-year': year.toString(),
+      'dateTimeOfAppointment-hour': '12',
+      'dateTimeOfAppointment-minute': '53',
+      probationPhoneNumber: '01277345263',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateNextAppointment({ requestBody, recommendationId })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      nextAppointment: {
+        dateTimeOfAppointment: `${year}-05-12T11:53:00.000Z`,
+        howWillAppointmentHappen: {
+          allOptions: [
+            {
+              text: 'Telephone',
+              value: 'TELEPHONE',
+            },
+            {
+              text: 'Video call',
+              value: 'VIDEO_CALL',
+            },
+            {
+              text: 'Office visit',
+              value: 'OFFICE_VISIT',
+            },
+            {
+              text: 'Home visit',
+              value: 'HOME_VISIT',
+            },
+          ],
+          selected: 'VIDEO_CALL',
+        },
+        probationPhoneNumber: '01277345263',
+      },
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/task-list-no-recall')
+  })
+
+  it('returns errors, if not set, and no valuesToSave', async () => {
+    const requestBody = {
+      howWillAppointmentHappen: '',
+      'dateTimeOfAppointment-day': '',
+      'dateTimeOfAppointment-month': '',
+      'dateTimeOfAppointment-year': '',
+      'dateTimeOfAppointment-hour': '',
+      'dateTimeOfAppointment-minute': '',
+      probationPhoneNumber: '',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
+      {
+        errorId: 'noAppointmentTypeSelected',
+        href: '#howWillAppointmentHappen',
+        name: 'howWillAppointmentHappen',
+        text: 'You must select how the appointment will happen',
+      },
+      {
+        errorId: 'blankDateTime',
+        href: '#dateTimeOfAppointment-day',
+        invalidParts: ['day', 'month', 'year', 'hour', 'minute'],
+        name: 'dateTimeOfAppointment',
+        text: 'Enter the date and time of the appointment',
+        values: {
+          day: '',
+          hour: '',
+          minute: '',
+          month: '',
+          year: '',
+        },
+      },
+      {
+        errorId: 'missingProbationPhoneNumber',
+        href: '#probationPhoneNumber',
+        name: 'probationPhoneNumber',
+        text: 'You must give a telephone number for probation',
+      },
+    ])
+  })
+
+  it('returns an error, if date set to an invalid value, and no valuesToSave', async () => {
+    const requestBody = {
+      howWillAppointmentHappen: 'VIDEO_CALL',
+      'dateTimeOfAppointment-day': '12',
+      'dateTimeOfAppointment-month': '',
+      'dateTimeOfAppointment-year': '2022',
+      'dateTimeOfAppointment-hour': '12',
+      'dateTimeOfAppointment-minute': '53',
+      probationPhoneNumber: '01277345263',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
+      {
+        errorId: 'missingDateParts',
+        href: '#dateTimeOfAppointment-month',
+        invalidParts: ['month'],
+        name: 'dateTimeOfAppointment',
+        text: 'The date and time of the appointment must include a month',
+        values: {
+          day: '12',
+          hour: '12',
+          minute: '53',
+          month: '',
+          year: '2022',
+        },
+      },
+    ])
+  })
+
+  it('returns an error, if phone number set to an invalid value, and no valuesToSave', async () => {
+    const { year } = DateTime.now().plus({ years: 1 })
+    const requestBody = {
+      howWillAppointmentHappen: 'VIDEO_CALL',
+      'dateTimeOfAppointment-day': '12',
+      'dateTimeOfAppointment-month': '05',
+      'dateTimeOfAppointment-year': year.toString(),
+      'dateTimeOfAppointment-hour': '12',
+      'dateTimeOfAppointment-minute': '53',
+      probationPhoneNumber: '2343453',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
+      {
+        errorId: 'invalidPhoneNumber',
+        href: '#probationPhoneNumber',
+        name: 'probationPhoneNumber',
+        text: 'Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192',
+      },
+    ])
+  })
+})

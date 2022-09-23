@@ -12,18 +12,21 @@ export const makeErrorObject = ({
   text,
   values,
   errorId,
+  invalidParts,
 }: {
   id: string
   name?: string
   text: string
   values?: ObjectMap<string> | string
   errorId?: string
+  invalidParts?: string[]
 }): NamedFormError => ({
   name: name || id,
   text,
   href: `#${id}`,
   values,
   errorId,
+  invalidParts,
 })
 
 export const transformErrorMessages = (errors: NamedFormError[]): KeyedFormErrors => {

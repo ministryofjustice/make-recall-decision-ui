@@ -46,6 +46,6 @@ export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormV
         futureExpectations,
       },
     },
-    nextPagePath: `${urlInfo.basePath}task-list`,
+    nextPagePath: `${urlInfo.basePath}appointment-no-recall`,
   }
 }

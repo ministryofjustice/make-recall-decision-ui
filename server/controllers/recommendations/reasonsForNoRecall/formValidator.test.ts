@@ -23,7 +23,7 @@ describe('validateReasonsForNoRecall', () => {
     expect(valuesToSave).toEqual({
       reasonsForNoRecall: requestBody,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual('/recommendations/34/appointment-no-recall')
   })
 
   it('returns errors for missing fields, and no valuesToSave', async () => {

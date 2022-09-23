@@ -30,7 +30,7 @@ context('No recall', () => {
       })
     })
 
-    it('form validation - why you considered recall', () => {
+    it('form validation - reasons for no recall', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/reasons-no-recall`)
       cy.clickButton('Continue')
@@ -51,6 +51,25 @@ context('No recall', () => {
         errorText: 'You must explain what is expected in the future',
       })
     })
+
+    it('form validation - next appointment', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'howWillAppointmentHappen',
+        errorText: 'You must select how the appointment will happen',
+      })
+      cy.assertErrorMessage({
+        fieldName: 'dateTimeOfAppointment',
+        fieldGroupId: 'dateTimeOfAppointment-day',
+        errorText: 'Enter the date and time of the appointment',
+      })
+      cy.assertErrorMessage({
+        fieldName: 'probationPhoneNumber',
+        errorText: 'You must give a telephone number for probation',
+      })
+    })
   })
 
   describe('Task list', () => {
@@ -63,9 +82,10 @@ context('No recall', () => {
       cy.getElement('Breached licence condition(s) to do').should('exist')
       cy.getElement('Is Paula Smith on an indeterminate sentence? to do').should('exist')
       cy.getElement('Is Paula Smith on an extended sentence? to do').should('exist')
+      cy.getElement('Type of indeterminate sentence to do').should('not.exist')
       cy.getElement('Why you considered recall to do').should('exist')
       cy.getElement('Why Paula Smith should not be recalled to do').should('exist')
-      cy.getElement('Type of indeterminate sentence to do').should('not.exist')
+      cy.getElement('Appointment date and time to do').should('exist')
       cy.getElement('Create letter').should('not.exist')
     })
 
@@ -81,6 +101,7 @@ context('No recall', () => {
       cy.getElement('Type of indeterminate sentence completed').should('exist')
       cy.getElement('Why you considered recall completed').should('exist')
       cy.getElement('Why Paula Smith should not be recalled completed').should('exist')
+      cy.getElement('Appointment date and time completed').should('exist')
       cy.clickLink('Create letter')
     })
   })

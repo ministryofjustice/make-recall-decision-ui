@@ -16,6 +16,7 @@ import { recallTypeIndeterminate } from '../recallTypeIndeterminate/formOptions'
 import { hasFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/formOptions'
 import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtendedSentenceDetails/formOptions'
 import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
+import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
 
 export const formOptions = {
   recallType,
@@ -35,6 +36,7 @@ export const formOptions = {
   hasFixedTermLicenceConditions,
   indeterminateOrExtendedSentenceDetails,
   whyConsideredRecall,
+  howWillAppointmentHappen,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

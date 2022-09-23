@@ -19,6 +19,7 @@ export interface FormError {
   href?: string
   values?: ObjectMap<unknown> | string
   errorId?: string
+  invalidParts?: string[]
 }
 
 export interface NamedFormError extends FormError {
@@ -172,5 +173,6 @@ export type PageTemplateName =
   | 'taskListNoRecall'
   | 'whyConsideredRecall'
   | 'reasonsForNoRecall'
+  | 'nextAppointment'
 
 export type PageId = 'recall-type' | 'custody-status'

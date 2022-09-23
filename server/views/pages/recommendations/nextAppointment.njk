@@ -1,0 +1,170 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'reasons-no-recall', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <div class="govuk-caption-l">Decision not to Recall</div>
+                <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+                <p class='govuk-body'>This appointment will go into the Decision not to Recall letter.</p>
+                {{ govukRadios({
+                    idPrefix: "howWillAppointmentHappen",
+                    name: "howWillAppointmentHappen",
+                    fieldset: {
+                        legend: {
+                            text: 'How will the appointment happen?',
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.howWillAppointmentHappen,
+                        currentValues: inputDisplayValues.howWillAppointmentHappen
+                    }),
+                    errorMessage: errorMessage(errors.howWillAppointmentHappen)
+                }) }}
+
+                <fieldset class="govuk-fieldset" role="group"
+                          aria-describedby="appointment-date-hint appointment-time-hint{% if errors.dateTimeOfAppointment %} dateTimeOfAppointment-error{% endif %}">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">
+                            Date and time of the appointment
+                        </h2>
+                    </legend>
+                    <div id="appointment-date-hint" class="govuk-hint">
+                        For example, 31 3 1980
+                    </div>
+                    <div class="govuk-form-group{% if errors.dateTimeOfAppointment %} govuk-form-group--error{% endif %}">
+                        {% if errors.dateTimeOfAppointment %}
+                        <p id="dateTimeOfAppointment-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> {{ errors.dateTimeOfAppointment.text }}
+                        </p>
+                        {% endif %}
+                        <div class="govuk-date-input" id="appointment-date">
+                            <div class="govuk-date-input__item">
+                                {% from "govuk/components/input/macro.njk" import govukInput %}
+                                {{ govukInput({
+                                    label: {
+                                        text: "Day",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTimeOfAppointment-day",
+                                    name: "dateTimeOfAppointment-day",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('day', errors.dateTimeOfAppointment)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTimeOfAppointment.values.day
+                                }) }}
+                            </div>
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Month",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTimeOfAppointment-month",
+                                    name: "dateTimeOfAppointment-month",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('month', errors.dateTimeOfAppointment)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTimeOfAppointment.values.month
+                                }) }}
+                            </div>
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Year",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTimeOfAppointment-year",
+                                    name: "dateTimeOfAppointment-year",
+                                    classes: 'govuk-input--width-4' + (' govuk-input--error' if isDatePartInvalid('year', errors.dateTimeOfAppointment)),
+                                    attributes: {
+                                        maxlength: 4,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTimeOfAppointment.values.year
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div id="appointment-time-hint" class="govuk-hint govuk-!-margin-top-6">
+                            Use the 24 hour clock
+                        </div>
+                        <div class="govuk-date-input" id="appointment-date">
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Hours",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTimeOfAppointment-hour",
+                                    name: "dateTimeOfAppointment-hour",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('hour', errors.dateTimeOfAppointment)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTimeOfAppointment.values.hour
+                                }) }}
+                            </div> :
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Minutes",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTimeOfAppointment-minute",
+                                    name: "dateTimeOfAppointment-minute",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('minute', errors.dateTimeOfAppointment)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTimeOfAppointment.values.minute
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class='govuk-!-margin-bottom-8'>
+                {{ govukInput({
+                    label: {
+                        text: "Probation telephone",
+                        classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: 'This is the number ' + recommendation.personOnProbation.name + ' will use if he cannot make this appointment'
+                    },
+                    id: "probationPhoneNumber",
+                    name: "probationPhoneNumber",
+                    type: 'tel',
+                    classes: "govuk-input--width-20",
+                    value: inputDisplayValues.probationPhoneNumber,
+                    errorMessage: errorMessage(errors.probationPhoneNumber)
+                }) }}
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
