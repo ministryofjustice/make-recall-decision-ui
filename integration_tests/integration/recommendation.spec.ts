@@ -126,13 +126,12 @@ context('Make a recommendation', () => {
         errorText: 'You must select which alternatives to recall have been tried already',
       })
       cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-        'Increased frequency of reporting',
-        'Drug testing',
+        'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
       ])
       cy.clickButton('Continue')
       cy.assertErrorMessage({
-        fieldName: 'alternativesToRecallTriedDetail-INCREASED_FREQUENCY',
-        errorText: 'Enter more detail for increased frequency of reporting',
+        fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
+        errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
       })
     })
 
