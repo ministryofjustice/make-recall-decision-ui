@@ -28,17 +28,15 @@ When('Maria confirms the existing indeterminate and extended sentence criteria',
 })
 
 When('Maria enters indeterminate and extended sentence criteria', () => {
-  cy.selectCheckboxes('Indeterminate and extended sentences', [
-    'The person has shown behaviour similar to the index offence',
-    'The person has shown behaviour that could lead to a sexual or violent offence',
-    'The person is out of touch',
-  ])
-  cy.fillInput('Give details', 'Details on behaviour similar to index offence', {
-    parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-  })
-  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', {
-    parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-  })
+  cy.get('@offenderName').then(offenderName =>
+    cy.selectCheckboxes('Indeterminate and extended sentences', [
+      `${offenderName} has shown behaviour similar to the index offence`,
+      `${offenderName} has shown behaviour that could lead to a sexual or violent offence`,
+      `${offenderName} is out of touch`
+    ])
+  )
+  cy.fillInput('Give details', 'Details on behaviour similar to index offence', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' })
+  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', { parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' })
   cy.fillInput('Give details', 'Details on out of touch', { parent: '#conditional-OUT_OF_TOUCH' })
   cy.clickButton('Continue')
 })

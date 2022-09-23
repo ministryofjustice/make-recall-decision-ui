@@ -167,9 +167,9 @@ context('Make a recommendation', () => {
         errorText: 'Select at least one of the criteria',
       })
       cy.selectCheckboxes('Indeterminate and extended sentences', [
-        'The person has shown behaviour similar to the index offence',
-        'The person has shown behaviour that could lead to a sexual or violent offence',
-        'The person is out of touch',
+        'Paula Smith has shown behaviour similar to the index offence',
+        'Paula Smith has shown behaviour that could lead to a sexual or violent offence',
+        'Paula Smith is out of touch',
       ])
       cy.clickButton('Continue')
       cy.assertErrorMessage({

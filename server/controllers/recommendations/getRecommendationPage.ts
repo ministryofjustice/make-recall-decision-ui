@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { getRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
-import { formOptions } from './helpers/formOptions'
+import { formOptions, renderFormOptions } from './helpers/formOptions'
 import { renderTemplateString } from '../../utils/nunjucks'
 import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
@@ -44,7 +44,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     })
   }
   res.locals.errors = renderErrorMessages(res.locals.errors, stringRenderParams)
-  res.locals.formOptions = formOptions
+  res.locals.formOptions = renderFormOptions(stringRenderParams)
   res.locals.crn = res.locals.recommendation.crn
   res.set({ 'Cache-Control': 'no-store' })
   res.render(`pages/recommendations/${templateName}`)

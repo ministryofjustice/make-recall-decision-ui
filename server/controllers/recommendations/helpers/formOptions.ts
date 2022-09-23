@@ -1,7 +1,7 @@
 import { recallType } from '../recallType/formOptions'
 import { custodyStatus } from '../custodyStatus/formOptions'
 import { isThisAnEmergencyRecall } from '../emergencyRecall/formOptions'
-import { UiListItem } from '../../../@types'
+import { ObjectMap, UiListItem } from '../../../@types'
 import { standardLicenceConditions } from '../formOptions/licenceConditions'
 import { hasVictimsInContactScheme } from '../victimContactScheme/formOptions'
 import { alternativesToRecallTried } from '../alternativesToRecallTried/formOptions'
@@ -17,6 +17,7 @@ import { hasFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceCond
 import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtendedSentenceDetails/formOptions'
 import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
 import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
+import { renderTemplateString } from '../../../utils/nunjucks'
 
 export const formOptions = {
   recallType,
@@ -44,3 +45,15 @@ export const isValueValid = (val: string, optionId: string) =>
 
 export const optionTextFromValue = (val: string, optionId: string) =>
   formOptions[optionId].find((option: UiListItem) => option.value === val)?.text
+
+export const renderFormOptions = (renderParams: ObjectMap<string>): ObjectMap<UiListItem[]> => {
+  const copy = {}
+  Object.keys(formOptions).forEach(key => {
+    const options = formOptions[key]
+    copy[key] = options.map((option: UiListItem) => ({
+      ...option,
+      text: renderTemplateString(option.text, renderParams),
+    }))
+  })
+  return copy
+}
