@@ -20,6 +20,13 @@ When('Maria confirms why the person should not be recalled', () => {
   cy.clickButton('Continue')
 })
 
+When('Maria enters details of the next appointment', () => {
+  cy.selectRadio('How will the appointment happen?', 'Telephone')
+  cy.enterDateTime('2023-04-14T12:00:00.000Z')
+  cy.fillInput('Probation telephone', '07762906985')
+  cy.clickButton('Continue')
+})
+
 When('Maria downloads the decision not to recall letter and confirms the details', () => {
   cy.clickLink('Create letter')
   cy.downloadDocX('Download the decision not to recall letter').then(contents => {

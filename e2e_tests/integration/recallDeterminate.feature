@@ -50,4 +50,5 @@ Feature: Recall (determinate)
     And Maria views the no recall task list
     And Maria confirms why recall was considered
     And Maria confirms why the person should not be recalled
+    And Maria enters details of the next appointment
     And Maria downloads the decision not to recall letter and confirms the details
