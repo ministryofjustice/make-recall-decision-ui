@@ -1,4 +1,5 @@
 import { When } from 'cypress-cucumber-preprocessor/steps'
+import { addToNow } from '../../../cypress_shared/utils'
 
 When('Maria views the no recall task list', () => {
   cy.pageHeading().should('equal', 'Create a decision not to recall letter')
@@ -22,7 +23,8 @@ When('Maria confirms why the person should not be recalled', () => {
 
 When('Maria enters details of the next appointment', () => {
   cy.selectRadio('How will the appointment happen?', 'Telephone')
-  cy.enterDateTime('2023-04-14T12:00:00.000Z')
+  const nextMonth = addToNow({ month: 1 }, { includeTime: true })
+  cy.enterDateTime(nextMonth)
   cy.fillInput('Probation telephone', '07762906985')
   cy.clickButton('Continue')
 })
