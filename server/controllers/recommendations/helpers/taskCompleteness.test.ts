@@ -106,6 +106,36 @@ describe('taskCompleteness', () => {
       })
       expect(areAllComplete).toEqual(false)
     })
+
+    it('whyConsideredRecall incomplete', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...emptyNoRecall,
+        reasonsForNoRecall: {},
+        nextAppointment: {},
+      } as RecommendationResponse)
+      expect(statuses.whyConsideredRecall).toEqual(false)
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('nextAppointment incomplete', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...emptyNoRecall,
+        reasonsForNoRecall: {},
+        whyConsideredRecall: {},
+      } as RecommendationResponse)
+      expect(statuses.nextAppointment).toEqual(false)
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('reasonsForNoRecall incomplete', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...emptyNoRecall,
+        nextAppointment: {},
+        whyConsideredRecall: {},
+      } as RecommendationResponse)
+      expect(statuses.reasonsForNoRecall).toEqual(false)
+      expect(areAllComplete).toEqual(false)
+    })
   })
 
   describe('Custody status', () => {
