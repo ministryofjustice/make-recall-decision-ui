@@ -17,7 +17,7 @@
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
                 <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1'>{{ recommendation.crn }}</div>
-                <div>{{ recommendation.personOnProbation.name }}</div>
+                <div class='govuk-!-font-weight-bold'>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
                 titleText: pageHeading,
