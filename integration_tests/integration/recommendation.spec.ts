@@ -500,6 +500,34 @@ context('Make a recommendation', () => {
       cy.getText('address-2').should('contain', 'S2 3HU')
     })
 
+    it('lists a mixture of "No fixed abode" and addresses', () => {
+      const recommendationWithAddresses = {
+        ...recommendationResponse,
+        personOnProbation: {
+          name: 'Paula Smith',
+          addresses: [
+            {
+              line1: '41 Newport Pagnell Rd',
+              line2: 'Newtown',
+              town: 'Northampton',
+              postcode: 'NN4 6HP',
+            },
+            {
+              noFixedAbode: true,
+            },
+          ],
+        },
+      }
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
+      cy.getElement('These are the last known addresses for Paula Smith')
+      cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
+      cy.getText('address-1').should('contain', 'Newtown')
+      cy.getText('address-1').should('contain', 'Northampton')
+      cy.getText('address-1').should('contain', 'NN4 6HP')
+      cy.getText('address-2').should('contain', 'No fixed abode')
+    })
+
     it('shows a message if no addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,

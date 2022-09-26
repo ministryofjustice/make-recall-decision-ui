@@ -34,21 +34,26 @@
                 <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
                 <div class='govuk-!-margin-bottom-6'>
                     {% if recommendation.personOnProbation.addresses.length %}
+
                         <p class="govuk=body">{% if recommendation.personOnProbation.addresses.length === 1 %}This is the last known address{% else %}These are the last known addresses{% endif %}
-                            for {{ recommendation.personOnProbation.name }} in NDelius. If it is incorrect, update
+                            for {{ recommendation.personOnProbation.name }} in NDelius. If {% if recommendation.personOnProbation.addresses.length === 1 %}it is{% else %}they are{% endif %} incorrect, update
                             NDelius.</p>
                         {% for address in recommendation.personOnProbation.addresses %}
                             <div class='govuk-!-margin-bottom-3'>
                                 <h3 class='govuk-visually-hidden'>Address {{ loop.index }}</h3>
                                 <div data-qa='address-{{ loop.index }}'>
-                                {% if address.line1 %}
-                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.line1 }}</div>{% endif %}
-                                {% if address.line2 %}
-                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.line2 }}</div>{% endif %}
-                                {% if address.town %}
-                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.town }}</div>{% endif %}
-                                {% if address.postcode %}
-                                    <div class="govuk-body govuk-!-margin-bottom-0">{{ address.postcode }}</div>{% endif %}
+                                    {% if address.noFixedAbode %}
+                                        <div class="govuk-body govuk-!-margin-bottom-0">No fixed abode</div>
+                                    {% else %}
+                                        {% if address.line1 %}
+                                            <div class="govuk-body govuk-!-margin-bottom-0">{{ address.line1 }}</div>{% endif %}
+                                        {% if address.line2 %}
+                                            <div class="govuk-body govuk-!-margin-bottom-0">{{ address.line2 }}</div>{% endif %}
+                                        {% if address.town %}
+                                            <div class="govuk-body govuk-!-margin-bottom-0">{{ address.town }}</div>{% endif %}
+                                        {% if address.postcode %}
+                                            <div class="govuk-body govuk-!-margin-bottom-0">{{ address.postcode }}</div>{% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}

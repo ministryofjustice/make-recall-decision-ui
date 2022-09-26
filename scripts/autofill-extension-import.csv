@@ -176,6 +176,20 @@ Attempts to email them have gone unanswered.","/recommendations/[^\/]+/indetermi
 r247,0,"^isMainAddressWherePersonCanBeFoundDetailsNo$","41 Newport Pagnell Rd
 Northampton
 NN4 6HP","/recommendations/[^\/]+/address-details",0,c2
+r248,3,"^CONTACT_STOPPED$","1","/recommendations/[^\/]+/why-considered-recall",0,c2
+r249,0,"^licenceBreach$","You've been drinking heavily recently which you know is in violation of good behaviour as according to your licence.","/recommendations/[^\/]+/reasons-no-recall",0,c2
+r250,0,"^noRecallRationale$","Heavy drinking in the past has led to increases in risky situations for you and given the recent escalation in drinking we were very close to recalling you.
+Given your contrition and improvement to address this lately we're offering you a chance to put this straight.","/recommendations/[^\/]+/reasons-no-recall",0,c2
+r251,0,"^popProgressMade$","You've been attending all your drink rehabilitation appointments so far. I've seen noticeable improvements while you were focused on attending.","/recommendations/[^\/]+/reasons-no-recall",0,c2
+r252,0,"^futureExpectations$","In future you should keep attending these appointments and I'll increase the amount of alcohol tests you are doing.
+Any evidence of heavy drinking in the future will lead to a recall.","/recommendations/[^\/]+/reasons-no-recall",0,c2
+r253,3,"^VIDEO_CALL$","1","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r254,0,"^dateTimeOfAppointment-day$","12","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r255,0,"^dateTimeOfAppointment-month$","06","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r256,0,"^dateTimeOfAppointment-year$","2023","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r257,0,"^dateTimeOfAppointment-hour$","14","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r258,0,"^dateTimeOfAppointment-minute$","35","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r259,0,"^probationPhoneNumber$","01277 343 454","/recommendations/[^\/]+/appointment-no-recall",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,
