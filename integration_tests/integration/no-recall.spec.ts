@@ -86,6 +86,7 @@ context('No recall', () => {
       cy.getElement('Why you considered recall to do').should('exist')
       cy.getElement('Why Paula Smith should not be recalled to do').should('exist')
       cy.getElement('Appointment date and time to do').should('exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('Completed', () => {

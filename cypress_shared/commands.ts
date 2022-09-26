@@ -132,8 +132,8 @@ Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-cont
   cy.fillInput('Month', month, options)
   cy.fillInput('Year', year, options)
   if (isoDateTime.length > 10) {
-    cy.fillInput('Hour', hour, options)
-    cy.fillInput('Minute', minute, options)
+    cy.fillInput('Hours', hour, options)
+    cy.fillInput('Minutes', minute, options)
   }
 })
 
