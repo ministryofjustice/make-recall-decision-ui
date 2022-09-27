@@ -1,4 +1,5 @@
-import { nextPageLinkUrl, changeLinkUrl } from './urls'
+import { nextPageLinkUrl, changeLinkUrl, validateUpdateRecommendationPageRequest } from './urls'
+import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api'
 
 describe('nextPageLinkUrl', () => {
   it('returns a url back to the "from" page, if supplied', () => {
@@ -48,5 +49,76 @@ describe('changeLinkUrl', () => {
     }
     const url = changeLinkUrl({ pageId: 'recall-type', urlInfo, fromAnchor: 'heading-recommendation' })
     expect(url).toEqual('/recommendations/123/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation')
+  })
+})
+
+describe('validateUpdateRecommendationPageRequest', () => {
+  it('returns null if neither task list was requested', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'emergency-recall',
+      recallType: 'FIXED_TERM' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toBeNull()
+  })
+
+  it('returns null if recall task list requested for standard recall', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list',
+      recallType: 'STANDARD' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toBeNull()
+  })
+
+  it('returns null if recall task list requested for fixed term recall', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list',
+      recallType: 'FIXED_TERM' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toBeNull()
+  })
+
+  it('returns null if no recall task list requested for no recall', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list-no-recall',
+      recallType: 'NO_RECALL' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toBeNull()
+  })
+
+  it('returns no recall task list if recall task list requested for no recall', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list',
+      recallType: 'NO_RECALL' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toEqual('task-list-no-recall')
+  })
+
+  it('returns recall task list if no recall task list requested for standard recall', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list-no-recall',
+      recallType: 'STANDARD' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toEqual('task-list')
+  })
+
+  it('returns recall task list if no recall task list requested for fixed term recall', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list-no-recall',
+      recallType: 'FIXED_TERM' as RecallTypeSelectedValue.value,
+    })
+    expect(pageId).toEqual('task-list')
+  })
+
+  it('returns response to probation if recall task list requested and recall not set', () => {
+    const pageId = validateUpdateRecommendationPageRequest({ requestedPageId: 'task-list', recallType: undefined })
+    expect(pageId).toEqual('response-to-probation')
+  })
+
+  it('returns response to probation if no recall task list requested and recall not set', () => {
+    const pageId = validateUpdateRecommendationPageRequest({
+      requestedPageId: 'task-list-no-recall',
+      recallType: undefined,
+    })
+    expect(pageId).toEqual('response-to-probation')
   })
 })

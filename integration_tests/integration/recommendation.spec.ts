@@ -27,6 +27,7 @@ context('Make a recommendation', () => {
         },
       ],
     },
+    recallType: { selected: { value: 'STANDARD' } },
   }
   const licenceConditionsMultipleActiveCustodial = {
     sectionId: 'licence-conditions',
@@ -80,55 +81,30 @@ context('Make a recommendation', () => {
     })
 
     it('update button links to Part A task list if recall is set', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-        activeRecommendation: {
-          recommendationId: '123',
-          lastModifiedDate: '2022-07-01-01T00:00:000',
-          lastModifiedBy: 'John Smith',
-          recallType: {
-            selected: { value: 'STANDARD' },
-          },
-        },
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
+      })
       cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
 
     it('update button links to no recall task list if no recall is set', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-        activeRecommendation: {
-          recommendationId: '123',
-          lastModifiedDate: '2022-07-01-01T00:00:000',
-          lastModifiedBy: 'John Smith',
-          recallType: {
-            selected: { value: 'NO_RECALL' },
-          },
-        },
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
 
     it('update button links to response to probation if recall decision has not been made yet', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-        activeRecommendation: {
-          recommendationId: '123',
-          lastModifiedDate: '2022-07-01-01T00:00:000',
-          lastModifiedBy: 'John Smith',
-          recallType: null,
-        },
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: null } })
       cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
@@ -233,7 +209,7 @@ context('Make a recommendation', () => {
     })
 
     it('form validation - Recall type', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
@@ -243,7 +219,7 @@ context('Make a recommendation', () => {
     })
 
     it('form validation - Recall type (indeterminate)', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
@@ -556,8 +532,11 @@ context('Make a recommendation', () => {
   })
 
   describe('Branching / redirects', () => {
-    it('recall type - directs "no recall" to the letter page', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    it('recall type - directs "no recall" to the no recall task list', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
       cy.selectRadio('What do you recommend?', 'No recall')
@@ -565,33 +544,45 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
-    it('recall type - directs "no recall" to the letter page even if from task list', () => {
+    it('recall type - directs "no recall" to the no recall task list, even if coming from recall task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(
         `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`
       )
       cy.selectRadio('What do you recommend?', 'No recall')
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
-    it('indeterminate recall type - directs "no recall" to the letter page', () => {
+    it('indeterminate recall type - directs "no recall" to the no recall task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
       cy.selectRadio('What do you recommend?', 'No recall')
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
-    it('indeterminate recall type - directs "no recall" to the letter page even if from task list', () => {
+    it('indeterminate recall type - directs "no recall" to the no recall task list even if coming from task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(
         `${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`
       )
       cy.selectRadio('What do you recommend?', 'No recall')
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
