@@ -209,7 +209,7 @@ context('Make a recommendation', () => {
     })
 
     it('form validation - Recall type', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
@@ -219,7 +219,7 @@ context('Make a recommendation', () => {
     })
 
     it('form validation - Recall type (indeterminate)', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
@@ -532,8 +532,11 @@ context('Make a recommendation', () => {
   })
 
   describe('Branching / redirects', () => {
-    it('recall type - directs "no recall" to the letter page', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    it('recall type - directs "no recall" to the no recall task list', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
       cy.selectRadio('What do you recommend?', 'No recall')
@@ -541,33 +544,45 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
-    it('recall type - directs "no recall" to the letter page even if from task list', () => {
+    it('recall type - directs "no recall" to the no recall task list, even if coming from recall task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(
         `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`
       )
       cy.selectRadio('What do you recommend?', 'No recall')
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
-    it('indeterminate recall type - directs "no recall" to the letter page', () => {
+    it('indeterminate recall type - directs "no recall" to the no recall task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
       cy.selectRadio('What do you recommend?', 'No recall')
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
 
-    it('indeterminate recall type - directs "no recall" to the letter page even if from task list', () => {
+    it('indeterminate recall type - directs "no recall" to the no recall task list even if coming from task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(
         `${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`
       )
       cy.selectRadio('What do you recommend?', 'No recall')
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('contain', 'Create a decision not to recall letter')
     })
