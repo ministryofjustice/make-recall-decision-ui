@@ -125,3 +125,5 @@ export const booleanToYesNo = (val: boolean) => {
   if (val === false) return 'NO'
   return undefined
 }
+
+export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()

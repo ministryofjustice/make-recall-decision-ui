@@ -58,7 +58,7 @@ describe('validateAlternativesTried', () => {
       crn: 'X514364',
       alternativesToRecallTried: ['REFERRAL_TO_PARTNERSHIP_AGENCIES', 'REFERRAL_TO_APPROVED_PREMISES'],
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details',
-      'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
+      'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': ' ', // whitespace
     }
     const { errors, unsavedValues, valuesToSave } = await validateAlternativesTried({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
@@ -69,7 +69,7 @@ describe('validateAlternativesTried', () => {
           value: 'REFERRAL_TO_PARTNERSHIP_AGENCIES',
         },
         {
-          details: '',
+          details: ' ',
           value: 'REFERRAL_TO_APPROVED_PREMISES',
         },
       ],

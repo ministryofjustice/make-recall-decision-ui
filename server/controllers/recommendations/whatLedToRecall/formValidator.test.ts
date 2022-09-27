@@ -17,7 +17,7 @@ describe('validateWhatLedToRecall', () => {
 
   it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
-      whatLedToRecall: '',
+      whatLedToRecall: ' ', // whitespace
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateWhatLedToRecall({ requestBody, recommendationId })

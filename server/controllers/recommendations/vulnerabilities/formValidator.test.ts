@@ -52,7 +52,7 @@ describe('validateVulnerabilities', () => {
       crn: 'X514364',
       vulnerabilities: ['MENTAL_HEALTH_CONCERNS', 'CULTURAL_OR_LANGUAGE_DIFFERENCES'],
       'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': 'Details',
-      'vulnerabilitiesDetail-CULTURAL_OR_LANGUAGE_DIFFERENCES': '',
+      'vulnerabilitiesDetail-CULTURAL_OR_LANGUAGE_DIFFERENCES': ' ', // whitespace
     }
     const { errors, unsavedValues, valuesToSave } = await validateVulnerabilities({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
@@ -63,7 +63,7 @@ describe('validateVulnerabilities', () => {
           value: 'MENTAL_HEALTH_CONCERNS',
         },
         {
-          details: '',
+          details: ' ',
           value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
         },
       ],

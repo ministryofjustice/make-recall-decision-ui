@@ -92,6 +92,7 @@ describe('validateCustodyStatus', () => {
   it('returns an error, if "Yes, police custody" is set, but no details', async () => {
     const requestBody = {
       custodyStatus: 'YES_POLICE',
+      custodyStatusDetailsYesPolice: ' ', // whitespace
       crn: 'X34534',
     }
     const { errors, unsavedValues, valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo })

@@ -23,7 +23,7 @@ describe('validateResponseToProbation', () => {
 
   it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
-      responseToProbation: '',
+      responseToProbation: ' ', // whitespace
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateResponseToProbation({ requestBody, urlInfo })

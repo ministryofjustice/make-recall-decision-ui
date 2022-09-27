@@ -4,6 +4,7 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid, optionTextFromValue } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateVulnerabilities = async ({
   requestBody,
@@ -19,7 +20,7 @@ export const validateVulnerabilities = async ({
         value: id,
       })?.detailsLabel
     )
-    if (optionShouldHaveDetails && !requestBody[`vulnerabilitiesDetail-${id}`]) {
+    if (optionShouldHaveDetails && isEmptyStringOrWhitespace(requestBody[`vulnerabilitiesDetail-${id}`])) {
       return id
     }
     return false

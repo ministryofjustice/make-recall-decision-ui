@@ -2,13 +2,14 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
-  const missingDetailFixedTerm = isFixedTerm && !recallTypeDetailsFixedTerm
+  const missingDetailFixedTerm = isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
   const missingDetailStandard = isStandard && !recallTypeDetailsStandard
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
   if (hasError) {

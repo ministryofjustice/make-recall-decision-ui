@@ -3,6 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
 import { isEmailValid, isPhoneValid } from '../../../utils/validate-formats'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateLocalPoliceContactDetails = async ({
   requestBody,
@@ -11,12 +12,13 @@ export const validateLocalPoliceContactDetails = async ({
   let errors
 
   const { contactName, phoneNumber, faxNumber, emailAddress } = requestBody
+  const missingName = isEmptyStringOrWhitespace(contactName)
   const invalidEmail = emailAddress && !isEmailValid(emailAddress as string)
   const invalidPhone = phoneNumber && !isPhoneValid(phoneNumber as string)
   const invalidFax = faxNumber && !isPhoneValid(faxNumber as string)
-  if (!contactName || invalidPhone || invalidFax || invalidEmail) {
+  if (missingName || invalidPhone || invalidFax || invalidEmail) {
     errors = []
-    if (!contactName) {
+    if (missingName) {
       errors.push({ id: 'contactName', errorId: 'noLocalPoliceName' })
     }
     if (invalidPhone) {

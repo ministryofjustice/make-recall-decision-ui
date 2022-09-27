@@ -59,7 +59,7 @@ describe('validateContraband', () => {
     it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
         hasContrabandRisk: 'YES',
-        hasContrabandRiskDetailsYes: '',
+        hasContrabandRiskDetailsYes: ' ', // whitespace
         crn: 'X34534',
       }
       const { errors, valuesToSave, unsavedValues } = await validateContraband({ requestBody, recommendationId })

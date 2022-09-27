@@ -55,7 +55,7 @@ describe('validateNextAppointment', () => {
       'dateTimeOfAppointment-year': '',
       'dateTimeOfAppointment-hour': '',
       'dateTimeOfAppointment-minute': '',
-      probationPhoneNumber: '',
+      probationPhoneNumber: ' ', // whitespace
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })

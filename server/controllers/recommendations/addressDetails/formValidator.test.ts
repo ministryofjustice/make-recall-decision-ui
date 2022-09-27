@@ -80,7 +80,7 @@ describe('validateAddress', () => {
     it('errors if No is selected but no detail sent', async () => {
       const requestBody = {
         isMainAddressWherePersonCanBeFound: 'NO',
-        isMainAddressWherePersonCanBeFoundDetailsNo: '',
+        isMainAddressWherePersonCanBeFoundDetailsNo: ' ', // whitespace
         addressCount: '1',
         crn: 'X34534',
       }

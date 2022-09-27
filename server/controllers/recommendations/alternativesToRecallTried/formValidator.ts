@@ -4,6 +4,7 @@ import { formOptions, isValueValid, optionTextFromValue } from '../helpers/formO
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { alternativesToRecallTried } = requestBody
@@ -20,7 +21,10 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
         value: alternativeId,
       })?.detailsLabel
     )
-    if (optionShouldHaveDetails && !requestBody[`alternativesToRecallTriedDetail-${alternativeId}`]) {
+    if (
+      optionShouldHaveDetails &&
+      isEmptyStringOrWhitespace(requestBody[`alternativesToRecallTriedDetail-${alternativeId}`])
+    ) {
       return alternativeId
     }
     return false

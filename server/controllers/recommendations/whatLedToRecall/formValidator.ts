@@ -2,6 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateWhatLedToRecall = async ({
   requestBody,
@@ -12,7 +13,7 @@ export const validateWhatLedToRecall = async ({
   let nextPagePath
 
   const { whatLedToRecall } = requestBody
-  if (!whatLedToRecall) {
+  if (isEmptyStringOrWhitespace(whatLedToRecall)) {
     const errorId = 'missingWhatLedToRecall'
     errors = [
       makeErrorObject({

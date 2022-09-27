@@ -3,6 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateArrestIssues = async ({
   requestBody,
@@ -10,7 +11,7 @@ export const validateArrestIssues = async ({
 }: FormValidatorArgs): FormValidatorReturn => {
   const { hasArrestIssues, hasArrestIssuesDetailsYes } = requestBody
   const invalidArrestIssues = !isValueValid(hasArrestIssues as string, 'hasArrestIssues')
-  const missingYesDetail = hasArrestIssues === 'YES' && !hasArrestIssuesDetailsYes
+  const missingYesDetail = hasArrestIssues === 'YES' && isEmptyStringOrWhitespace(hasArrestIssuesDetailsYes)
   const hasError = !hasArrestIssues || invalidArrestIssues || missingYesDetail
   if (hasError) {
     const errors = []

@@ -28,6 +28,7 @@ describe('validateReasonsForNoRecall', () => {
 
   it('returns errors for missing licenceBreach, and no valuesToSave', async () => {
     const requestBody = {
+      licenceBreach: ' ', // whitespace
       noRecallRationale: 'details',
       popProgressMade: 'details',
       futureExpectations: 'details',
@@ -47,6 +48,7 @@ describe('validateReasonsForNoRecall', () => {
   it('returns errors for missing noRecallRationale, and no valuesToSave', async () => {
     const requestBody = {
       licenceBreach: 'details',
+      noRecallRationale: ' ', // whitespace
       popProgressMade: 'details',
       futureExpectations: 'details',
     }
@@ -66,6 +68,7 @@ describe('validateReasonsForNoRecall', () => {
     const requestBody = {
       licenceBreach: 'details',
       noRecallRationale: 'details',
+      popProgressMade: ' ', // whitespace
       futureExpectations: 'details',
     }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
@@ -85,6 +88,7 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: 'details',
       noRecallRationale: 'details',
       popProgressMade: 'details',
+      futureExpectations: ' ', // whitespace
     }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
