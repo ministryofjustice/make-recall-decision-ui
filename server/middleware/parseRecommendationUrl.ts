@@ -1,8 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { isString } from '../utils/utils'
 import { routeUrls } from '../routes/routeUrls'
+import logger from '../../logger'
 
-const isValidFromPage = (pageId: unknown) => isString(pageId) && ['task-list'].includes(pageId as string)
+const isValidFromPage = (pageId: unknown) => {
+  const valid = isString(pageId) && ['task-list', 'task-list-no-recall'].includes(pageId as string)
+  if (!valid) {
+    logger.error(`isValidFromPage: invalid pageId: ${pageId}`)
+  }
+  return valid
+}
 
 export const parseRecommendationUrl = (req: Request, res: Response, next: NextFunction) => {
   const { recommendationId, pageId } = req.params
