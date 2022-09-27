@@ -1,6 +1,6 @@
 import { UrlInfo } from '../../../@types'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { isDefined } from '../../../utils/utils'
+import { isNotNullOrUndefined } from '../../../utils/utils'
 
 export const nextPageLinkUrl = ({
   nextPageId,
@@ -52,7 +52,7 @@ export const validateUpdateRecommendationPageRequest = ({
     recallType
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
-  const isNotSet = !isDefined(recallType)
+  const isNotSet = !isNotNullOrUndefined(recallType)
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
 

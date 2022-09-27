@@ -27,6 +27,7 @@ context('Make a recommendation', () => {
         },
       ],
     },
+    recallType: { selected: { value: 'STANDARD' } },
   }
   const licenceConditionsMultipleActiveCustodial = {
     sectionId: 'licence-conditions',
@@ -103,7 +104,7 @@ context('Make a recommendation', () => {
 
     it('update button links to response to probation if recall decision has not been made yet', () => {
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: null } })
       cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
