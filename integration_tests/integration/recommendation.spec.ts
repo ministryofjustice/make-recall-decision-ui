@@ -228,6 +228,22 @@ context('Make a recommendation', () => {
       })
     })
 
+    it('form validation - fixed term additional licence conditions', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/fixed-licence`)
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'hasFixedTermLicenceConditions',
+        errorText: 'Select whether there are additional licence conditions',
+      })
+      cy.selectRadio('Fixed term recall', 'Yes')
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'hasFixedTermLicenceConditionsDetails',
+        errorText: 'Enter additional licence conditions',
+      })
+    })
+
     it('form validation - Custody status', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/custody-status`)
@@ -267,7 +283,7 @@ context('Make a recommendation', () => {
       })
     })
 
-    it('form validation - Police contact details', () => {
+    it('form validation - Local police contact details', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/police-details`)
       cy.fillInput('Email address', '111')
