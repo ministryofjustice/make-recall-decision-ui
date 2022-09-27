@@ -274,6 +274,12 @@ export const pageMetaData = (pageId?: unknown): PageMetaData => {
         pageHeading: strings.pageHeadings.nextAppointment,
         pageTitle: strings.pageTitles.nextAppointment,
       }
+    case 'preview-no-recall':
+      return {
+        templateName: 'previewNoRecallLetter',
+        pageHeading: strings.pageHeadings.previewNoRecallLetter,
+        pageTitle: strings.pageTitles.previewNoRecallLetter,
+      }
     case 'confirmation-no-recall':
       return {
         templateName: 'confirmationNoRecallLetter',

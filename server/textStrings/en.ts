@@ -80,6 +80,7 @@ export const strings = {
     whyConsideredRecall: 'Why you considered recall',
     reasonsForNoRecall: 'Why you think {{ fullName }} should not be recalled?',
     nextAppointment: 'Next appointment for {{ fullName }}',
+    previewNoRecallLetter: 'Preview the decision not to recall letter',
   },
   pageTitles: {
     responseToProbation: 'How has the person responded to probation so far?',
@@ -111,5 +112,6 @@ export const strings = {
     whyConsideredRecall: 'Why you considered recall',
     reasonsForNoRecall: 'Why you think the person should not be recalled?',
     nextAppointment: 'Next appointment for the person',
+    previewNoRecallLetter: 'Preview the decision not to recall letter',
   },
 }

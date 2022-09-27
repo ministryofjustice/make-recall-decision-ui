@@ -104,5 +104,50 @@ context('No recall', () => {
       cy.getElement('Appointment date and time completed').should('exist')
       cy.clickLink('Create letter')
     })
+
+    it('task list - check links to forms', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.getLinkHref('Why you considered recall').should('contain', '/recommendations/123/why-considered-recall')
+      cy.getLinkHref('Why Paula Smith should not be recalled').should(
+        'contain',
+        '/recommendations/123/reasons-no-recall'
+      )
+      cy.getLinkHref('Appointment date and time').should('contain', '/recommendations/123/appointment-no-recall')
+      cy.getLinkHref('Preview of the letter').should('contain', '/recommendations/123/preview-no-recall')
+    })
+  })
+
+  describe('Preview letter', () => {
+    it('Lets the user edit the letter', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...noRecallResponse,
+          letterContent: {
+            letterAddress: 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC',
+            letterDate: '12/09/2022',
+            salutation: 'Dear Paula',
+            letterTitle: 'DECISION NOT TO RECALL',
+            section1: 'section 1',
+            section2: 'section 2',
+            section3: 'section 3',
+            signedByParagraph: 'Yours sincerely,\nProbation practitioner',
+          },
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-no-recall`)
+      cy.getText('pop-address').should('equal', 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC')
+      cy.getText('probation-address').should('equal', 'Probation office address')
+      cy.getText('pop-salutation').should('equal', 'Dear Paula')
+      cy.getText('letter-date').should('equal', '12/09/2022')
+      cy.getText('letter-title').should('equal', 'DECISION NOT TO RECALL')
+      cy.getText('section-1').should('equal', 'section 1')
+      cy.getText('section-2').should('equal', 'section 2')
+      cy.getText('section-3').should('equal', 'section 3')
+      cy.getText('signature').should('contain', 'Yours sincerely,')
+      cy.clickLink('Edit')
+      cy.pageHeading().should('equal', 'Why you considered recall')
+    })
   })
 })

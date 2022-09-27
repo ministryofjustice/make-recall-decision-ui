@@ -50,7 +50,7 @@ describe('validateNextAppointment', () => {
         probationPhoneNumber: '01277345263',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list-no-recall')
+    expect(nextPagePath).toEqual('/recommendations/34/preview-no-recall')
   })
 
   it('if "from page" is set to no recall task list, redirect to it', async () => {

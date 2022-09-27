@@ -107,7 +107,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
         probationPhoneNumber,
       },
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'task-list-no-recall', urlInfo })
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'preview-no-recall', urlInfo })
     return {
       valuesToSave,
       nextPagePath,
