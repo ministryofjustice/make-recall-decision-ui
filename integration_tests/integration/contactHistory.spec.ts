@@ -142,8 +142,8 @@ context('Contact history', () => {
     cy.getElement('12 contacts').should('exist')
 
     cy.log('invalid dates - from date after to date')
-    cy.enterDateTime('2022-04-14', { parent: '#dateFrom' })
-    cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
+    cy.enterDateTime({ year: '2022', month: '04', day: '14' }, { parent: '#dateFrom' })
+    cy.enterDateTime({ year: '2022', month: '04', day: '13' }, { parent: '#dateTo' })
     cy.clickButton('Apply filters')
     cy.assertErrorMessage({
       fieldGroupId: 'dateFrom-day',
@@ -163,8 +163,8 @@ context('Contact history', () => {
     })
 
     cy.log('successful date filter')
-    cy.enterDateTime('2022-03-13', { parent: '#dateFrom' })
-    cy.enterDateTime('2022-04-13', { parent: '#dateTo' })
+    cy.enterDateTime({ year: '2022', month: '03', day: '13' }, { parent: '#dateFrom' })
+    cy.enterDateTime({ year: '2022', month: '04', day: '13' }, { parent: '#dateTo' })
     cy.clickButton('Apply filters')
     cy.getElement('2 contacts').should('exist')
     cy.getLinkHref('13 Mar 2022 to 13 Apr 2022').should('equal', `/cases/${crn}/contact-history`)
@@ -203,8 +203,8 @@ context('Contact history', () => {
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
     // combine date, contact type and text filters
-    cy.enterDateTime('2022-03-16', { parent: '#dateFrom' })
-    cy.enterDateTime('2022-04-21', { parent: '#dateTo' })
+    cy.enterDateTime({ year: '2022', month: '03', day: '16' }, { parent: '#dateFrom' })
+    cy.enterDateTime({ year: '2022', month: '04', day: '21' }, { parent: '#dateTo' })
     cy.contains('Appointments').click()
     cy.selectCheckboxes('Appointments', ['Planned Office Visit (NS)'])
     cy.clickButton('Apply filters')
