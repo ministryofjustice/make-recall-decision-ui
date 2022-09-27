@@ -141,7 +141,7 @@ defineStep('Maria confirms {string} to victim contact scheme', (answer: string) 
 })
 
 When('Maria enters the date the VLO was informed', () => {
-  cy.enterDateTime('2022-04-14', { parent: '#dateVloInformed' })
+  cy.enterDateTime({ year: '2022', month: '04', day: '14'}, { parent: '#dateVloInformed' })
   cy.clickButton('Continue')
 })
 

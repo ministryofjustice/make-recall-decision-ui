@@ -26,8 +26,12 @@ describe('validateReasonsForNoRecall', () => {
     expect(nextPagePath).toEqual('/recommendations/34/appointment-no-recall')
   })
 
-  it('returns errors for missing fields, and no valuesToSave', async () => {
-    const requestBody = {}
+  it('returns errors for missing licenceBreach, and no valuesToSave', async () => {
+    const requestBody = {
+      noRecallRationale: 'details',
+      popProgressMade: 'details',
+      futureExpectations: 'details',
+    }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
@@ -37,18 +41,54 @@ describe('validateReasonsForNoRecall', () => {
         name: 'licenceBreach',
         text: 'You must explain the licence breach',
       },
+    ])
+  })
+
+  it('returns errors for missing noRecallRationale, and no valuesToSave', async () => {
+    const requestBody = {
+      licenceBreach: 'details',
+      popProgressMade: 'details',
+      futureExpectations: 'details',
+    }
+    const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
       {
         errorId: 'noRecallRationale',
         href: '#noRecallRationale',
         name: 'noRecallRationale',
         text: 'You must explain your rationale for not recalling {{ fullName }}',
       },
+    ])
+  })
+
+  it('returns errors for missing popProgressMade, and no valuesToSave', async () => {
+    const requestBody = {
+      licenceBreach: 'details',
+      noRecallRationale: 'details',
+      futureExpectations: 'details',
+    }
+    const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
       {
         errorId: 'noRecallPopProgressMade',
         href: '#popProgressMade',
         name: 'popProgressMade',
         text: 'You must explain what progress {{ fullName }} has made so far',
       },
+    ])
+  })
+
+  it('returns errors for missing futureExpectations, and no valuesToSave', async () => {
+    const requestBody = {
+      licenceBreach: 'details',
+      noRecallRationale: 'details',
+      popProgressMade: 'details',
+    }
+    const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
       {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',

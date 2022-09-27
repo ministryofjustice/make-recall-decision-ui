@@ -14,7 +14,7 @@ export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormV
     if (!noRecallRationale) {
       errors.push({ id: 'noRecallRationale', errorId: 'noRecallRationale' })
     }
-    if (!noRecallRationale) {
+    if (!popProgressMade) {
       errors.push({ id: 'popProgressMade', errorId: 'noRecallPopProgressMade' })
     }
     if (!futureExpectations) {

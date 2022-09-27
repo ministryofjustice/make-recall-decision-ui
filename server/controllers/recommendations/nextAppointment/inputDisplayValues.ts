@@ -20,7 +20,7 @@ export const inputDisplayValuesNextAppointment = ({ errors, unsavedValues, apiVa
     dateTimeOfAppointment: {
       values: splitIsoDateToParts(nextAppointment?.dateTimeOfAppointment),
     },
-    howWillAppointmentHappen: nextAppointment?.howWillAppointmentHappen,
+    howWillAppointmentHappen: nextAppointment?.howWillAppointmentHappen?.selected,
     probationPhoneNumber: nextAppointment?.probationPhoneNumber,
   }
 }

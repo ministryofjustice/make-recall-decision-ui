@@ -1,6 +1,5 @@
 import path from 'path'
 import { exactMatchIgnoreWhitespace } from './utils'
-import { splitIsoDateToParts } from '../server/utils/dates/convert'
 
 Cypress.Commands.add('pageHeading', () =>
   cy
@@ -125,13 +124,13 @@ Cypress.Commands.add('isDetailsOpen', (summaryLabel, opts = { parent: 'body' }) 
     .then(openAttr => Boolean(openAttr))
 })
 
-Cypress.Commands.add('enterDateTime', (isoDateTime, opts = { parent: '#main-content' }) => {
-  const { day, month, year, hour, minute } = splitIsoDateToParts(isoDateTime)
+Cypress.Commands.add('enterDateTime', (parts, opts = { parent: '#main-content' }) => {
+  const { day, month, year, hour, minute } = parts
   const options = { ...opts, clearExistingText: true }
   cy.fillInput('Day', day, options)
   cy.fillInput('Month', month, options)
   cy.fillInput('Year', year, options)
-  if (isoDateTime.length > 10) {
+  if (hour && minute) {
     cy.fillInput('Hours', hour, options)
     cy.fillInput('Minutes', minute, options)
   }

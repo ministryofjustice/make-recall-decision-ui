@@ -1,1 +1,23 @@
+import { DateTime } from 'luxon'
+
 export const exactMatchIgnoreWhitespace = (str: string): RegExp => new RegExp(`^\\s*${str}\\s*$`, 'g')
+
+export const addToNow = (
+  adjustment: { year?: number; month?: number; day?: number; hour?: number; minute?: number },
+  { includeTime }: { includeTime?: boolean } = {}
+): { year: string; month: string; day: string; hour?: string; minute?: string } => {
+  const futureDateParts = DateTime.now().plus(adjustment).toObject()
+  return Object.entries(futureDateParts).reduce(
+    (acc, [key, value]) => {
+      if (['hour', 'minute'].includes(key) && includeTime !== true) {
+        return acc
+      }
+      return { ...acc, [key]: value.toString() }
+    },
+    {
+      year: undefined,
+      month: undefined,
+      day: undefined,
+    }
+  )
+}

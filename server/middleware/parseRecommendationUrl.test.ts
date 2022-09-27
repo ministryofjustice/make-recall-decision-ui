@@ -44,6 +44,22 @@ describe('parseRecommendationUrl', () => {
     })
   })
 
+  it('allows fromPageId to be no recall task list', () => {
+    const fromPageId = 'task-list-no-recall'
+    const fromAnchor = 'heading-circumstances'
+    const req = mockReq({
+      ...defaultRequest,
+      query: { fromPageId, fromAnchor },
+    })
+    parseRecommendationUrl(req, res, next)
+    expect(res.locals.urlInfo).toEqual({
+      basePath: `/recommendations/${recommendationId}/`,
+      currentPageId,
+      fromPageId,
+      fromAnchor,
+    })
+  })
+
   it("doesn't include fromPageId if it is invalid", () => {
     const fromPageId = 'banana'
     const req = mockReq({

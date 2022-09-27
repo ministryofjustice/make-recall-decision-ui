@@ -38,7 +38,10 @@ declare global {
 
       getTextInputValue(label: string, opts?: CommandOpts): Chainable<string>
 
-      enterDateTime(isoDateTime: string, opts?: CommandOpts): Chainable<void>
+      enterDateTime(
+        parts: { day: string; month: string; year: string; hour?: string; minute?: string },
+        opts?: CommandOpts
+      ): Chainable<void>
 
       clickButton(label: string, opts?: CommandOpts): Chainable<Element>
 
