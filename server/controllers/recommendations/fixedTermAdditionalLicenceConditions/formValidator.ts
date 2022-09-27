@@ -3,6 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateFixedTermLicenceConditions = async ({
   requestBody,
@@ -10,7 +11,8 @@ export const validateFixedTermLicenceConditions = async ({
 }: FormValidatorArgs): FormValidatorReturn => {
   const { hasFixedTermLicenceConditions, hasFixedTermLicenceConditionsDetails } = requestBody
   const invalid = !isValueValid(hasFixedTermLicenceConditions as string, 'hasFixedTermLicenceConditions')
-  const missingYesDetail = hasFixedTermLicenceConditions === 'YES' && !hasFixedTermLicenceConditionsDetails
+  const missingYesDetail =
+    hasFixedTermLicenceConditions === 'YES' && isEmptyStringOrWhitespace(hasFixedTermLicenceConditionsDetails)
   const hasError = !hasFixedTermLicenceConditions || invalid || missingYesDetail
   if (hasError) {
     const errors = []

@@ -7,6 +7,7 @@ import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { isPhoneValid } from '../../../utils/validate-formats'
 import { strings } from '../../../textStrings/en'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateNextAppointment = async ({
   requestBody,
@@ -32,13 +33,14 @@ export const validateNextAppointment = async ({
     validatePartLengths: false,
   })
 
-  const invalidPhone = probationPhoneNumber && !isPhoneValid(probationPhoneNumber as string)
+  const missingPhone = isEmptyStringOrWhitespace(probationPhoneNumber)
+  const invalidPhone = !missingPhone && !isPhoneValid(probationPhoneNumber as string)
 
   // other errors
   if (
     !howWillAppointmentHappen ||
     invalidAppointmentType ||
-    !probationPhoneNumber ||
+    missingPhone ||
     invalidPhone ||
     dateHasError(dateTimeOfAppointmentIso)
   ) {
@@ -67,7 +69,7 @@ export const validateNextAppointment = async ({
         })
       )
     }
-    if (!probationPhoneNumber) {
+    if (missingPhone) {
       errors.push(
         makeErrorObject({
           id: 'probationPhoneNumber',

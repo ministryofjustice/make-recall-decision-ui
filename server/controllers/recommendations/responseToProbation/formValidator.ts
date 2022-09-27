@@ -2,6 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateResponseToProbation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -9,7 +10,7 @@ export const validateResponseToProbation = async ({ requestBody, urlInfo }: Form
   let nextPagePath
 
   const { responseToProbation } = requestBody
-  if (!responseToProbation) {
+  if (isEmptyStringOrWhitespace(responseToProbation)) {
     const errorId = 'missingResponseToProbation'
     errors = [
       makeErrorObject({

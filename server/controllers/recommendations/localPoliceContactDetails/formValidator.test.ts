@@ -21,7 +21,9 @@ describe('validateLocalPoliceContactDetails', () => {
   })
 
   it('returns errors for missing name, and no valuesToSave', async () => {
-    const requestBody = {}
+    const requestBody = {
+      contactName: ' ',
+    }
     const { errors, valuesToSave } = await validateLocalPoliceContactDetails({ requestBody, recommendationId })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([

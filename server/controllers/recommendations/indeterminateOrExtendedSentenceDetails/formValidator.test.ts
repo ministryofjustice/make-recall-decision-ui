@@ -58,7 +58,7 @@ describe('validateIndeterminateDetails', () => {
       crn: 'X514364',
       indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE', 'OUT_OF_TOUCH'],
       'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE': 'Info..',
-      'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH': '',
+      'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH': ' ', // whitespace
     }
     const { errors, unsavedValues, valuesToSave } = await validateIndeterminateDetails({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
@@ -69,7 +69,7 @@ describe('validateIndeterminateDetails', () => {
           value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
         },
         {
-          details: '',
+          details: ' ',
           value: 'OUT_OF_TOUCH',
         },
       ],

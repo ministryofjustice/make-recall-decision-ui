@@ -173,7 +173,7 @@ describe('validateRecallType', () => {
     it('errors if fixed term recall is selected but no detail sent', async () => {
       const requestBody = {
         recallType: 'FIXED_TERM',
-        recallTypeDetailsFixedTerm: '',
+        recallTypeDetailsFixedTerm: ' ', // whitespace
         crn: 'X34534',
       }
       const { errors, valuesToSave, unsavedValues } = await validateRecallType({

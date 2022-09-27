@@ -86,7 +86,7 @@ describe('validateFixedTermLicenceConditions', () => {
     it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
         hasFixedTermLicenceConditions: 'YES',
-        hasFixedTermLicenceConditionsDetails: '',
+        hasFixedTermLicenceConditionsDetails: ' ', // whitespace
         crn: 'X34534',
       }
       const { errors, valuesToSave, unsavedValues } = await validateFixedTermLicenceConditions({

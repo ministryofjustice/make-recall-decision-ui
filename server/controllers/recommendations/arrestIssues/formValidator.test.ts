@@ -59,7 +59,7 @@ describe('validateArrestIssues', () => {
     it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
         hasArrestIssues: 'YES',
-        hasArrestIssuesDetailsYes: '',
+        hasArrestIssuesDetailsYes: ' ', // whitespace
         crn: 'X34534',
       }
       const { errors, valuesToSave, unsavedValues } = await validateArrestIssues({ requestBody, recommendationId })

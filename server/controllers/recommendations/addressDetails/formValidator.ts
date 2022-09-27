@@ -3,6 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateAddress = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { isMainAddressWherePersonCanBeFound, isMainAddressWherePersonCanBeFoundDetailsNo, addressCount } = requestBody
@@ -12,7 +13,7 @@ export const validateAddress = async ({ requestBody, recommendationId }: FormVal
     'isMainAddressWherePersonCanBeFound'
   )
   const isNo = isMainAddressWherePersonCanBeFound === 'NO' || noMainAddresses
-  const missingNoDetail = isNo && !isMainAddressWherePersonCanBeFoundDetailsNo
+  const missingNoDetail = isNo && isEmptyStringOrWhitespace(isMainAddressWherePersonCanBeFoundDetailsNo)
 
   const hasError = noMainAddresses
     ? missingNoDetail

@@ -4,6 +4,7 @@ import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
+import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 const missingDetailsError = (optionId: string) => {
   switch (optionId) {
@@ -36,7 +37,10 @@ export const validateIndeterminateDetails = async ({
         value: selectionId,
       })?.detailsLabel
     )
-    if (optionShouldHaveDetails && !requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`]) {
+    if (
+      optionShouldHaveDetails &&
+      isEmptyStringOrWhitespace(requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`])
+    ) {
       return selectionId
     }
     return false
