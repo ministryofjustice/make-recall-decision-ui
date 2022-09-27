@@ -9,6 +9,7 @@ import type { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrEx
 import type { IndeterminateSentenceType } from './IndeterminateSentenceType';
 import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
 import type { LocalPoliceContact } from './LocalPoliceContact';
+import type { NextAppointment } from './NextAppointment';
 import type { PersonOnProbation } from './PersonOnProbation';
 import type { ReasonsForNoRecall } from './ReasonsForNoRecall';
 import type { RecallType } from './RecallType';
@@ -18,7 +19,6 @@ import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { Vulnerabilities } from './Vulnerabilities';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
-import type { NextAppointment } from './NextAppointment'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;

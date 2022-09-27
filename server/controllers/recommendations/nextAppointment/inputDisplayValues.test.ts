@@ -12,7 +12,7 @@ describe('inputDisplayValuesNextAppointment', () => {
     },
   } as RecommendationResponse
 
-  it("should use empty strings for value if there's an error for value", () => {
+  it("should use empty strings and unsaved values for value if there's an error for value", () => {
     const errors = {
       dateTimeOfAppointment: {
         errorId: 'missingDateParts',
@@ -20,6 +20,18 @@ describe('inputDisplayValuesNextAppointment', () => {
         invalidParts: ['month'],
         name: 'dateTimeOfAppointment',
         text: 'The date and time of the appointment must include a month',
+      },
+      howWillAppointmentHappen: {
+        errorId: 'noAppointmentTypeSelected',
+        href: '#howWillAppointmentHappen',
+        name: 'howWillAppointmentHappen',
+        text: 'None selected',
+      },
+      probationPhoneNumber: {
+        errorId: 'invalidPhoneNumber',
+        href: '#probationPhoneNumber',
+        name: 'probationPhoneNumber',
+        text: 'Invalid',
       },
     }
     const unsavedValues = {
@@ -30,6 +42,7 @@ describe('inputDisplayValuesNextAppointment', () => {
         month: '',
         year: '2022',
       },
+      probationPhoneNumber: '123',
     }
     const inputDisplayValues = inputDisplayValuesNextAppointment({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
@@ -43,6 +56,7 @@ describe('inputDisplayValuesNextAppointment', () => {
           year: '2022',
         },
       },
+      probationPhoneNumber: '123',
     })
   })
 
@@ -62,9 +76,7 @@ describe('inputDisplayValuesNextAppointment', () => {
           year: '2022',
         },
       },
-      howWillAppointmentHappen: {
-        selected: 'VIDEO_CALL',
-      },
+      howWillAppointmentHappen: 'VIDEO_CALL',
       probationPhoneNumber: '01277345263',
     })
   })

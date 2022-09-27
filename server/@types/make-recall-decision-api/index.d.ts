@@ -23,6 +23,7 @@ export { CustodyStatus } from './models/CustodyStatus';
 export type { DocumentResponse } from './models/DocumentResponse';
 export type { FactorsToReduceRisk } from './models/FactorsToReduceRisk';
 export type { HistoricalScore } from './models/HistoricalScore';
+export { HowWillAppointmentHappen } from './models/HowWillAppointmentHappen';
 export type { IndeterminateOrExtendedSentenceDetails } from './models/IndeterminateOrExtendedSentenceDetails';
 export { IndeterminateSentenceType } from './models/IndeterminateSentenceType';
 export type { JsonNode } from './models/JsonNode';
@@ -36,6 +37,7 @@ export type { LicenceConditionTypeSubCat } from './models/LicenceConditionTypeSu
 export type { LocalPoliceContact } from './models/LocalPoliceContact';
 export type { Mappa } from './models/Mappa';
 export type { NatureOfRisk } from './models/NatureOfRisk';
+export type { NextAppointment } from './models/NextAppointment';
 export type { OasysHeading } from './models/OasysHeading';
 export type { Offence } from './models/Offence';
 export type { OffenderManager } from './models/OffenderManager';

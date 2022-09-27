@@ -2,17 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { RecallTypeSelectedValue } from './RecallTypeSelectedValue';
-import type { TextValueOption } from './TextValueOption';
+import type { HowWillAppointmentHappen } from './HowWillAppointmentHappen';
 
 export type NextAppointment = {
+    howWillAppointmentHappen?: HowWillAppointmentHappen;
     dateTimeOfAppointment?: string;
     probationPhoneNumber?: string;
-    howWillAppointmentHappen?: HowWillAppointmentHappen;
-}
-
-export type HowWillAppointmentHappen = {
-    selected?: RecallTypeSelectedValue;
-    allOptions?: Array<TextValueOption>;
 };
 
