@@ -57,7 +57,7 @@ describe('validateRecallTypeIndeterminate', () => {
     })
 
     describe('Redirects', () => {
-      it('if "from page" is set to recall task list, redirects to it if an emergency recall is selected', async () => {
+      it('if "from page" is set, ignore it if an emergency recall is selected', async () => {
         const requestBody = {
           recallType: 'EMERGENCY',
           crn: 'X34534',
@@ -68,10 +68,10 @@ describe('validateRecallTypeIndeterminate', () => {
           recommendationId,
           urlInfo: urlInfoWithFromPage,
         })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-recommendation`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/indeterminate-details`)
       })
 
-      it('if "from page" is set to recall task list, don\'t redirect to it if No recall is selected', async () => {
+      it('if "from page" is set, ignore it if No recall is selected', async () => {
         const requestBody = {
           recallType: 'NO_RECALL',
           crn: 'X34534',

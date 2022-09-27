@@ -44,11 +44,9 @@ export const validateRecallTypeIndeterminate = async ({
     },
     isThisAnEmergencyRecall: isNoRecall ? null : true,
   }
-  const nextPagePath = isNoRecall
-    ? `${urlInfo.basePath}task-list-no-recall`
-    : nextPageLinkUrl({ nextPageId: 'indeterminate-details', urlInfo })
+  const nextPageId = isNoRecall ? 'task-list-no-recall' : 'indeterminate-details'
   return {
     valuesToSave,
-    nextPagePath,
+    nextPagePath: `${urlInfo.basePath}${nextPageId}`,
   }
 }
