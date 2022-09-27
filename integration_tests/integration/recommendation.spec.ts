@@ -47,7 +47,7 @@ context('Make a recommendation', () => {
     },
   }
 
-  describe.only('Create / update a recommendation', () => {
+  describe('Create / update a recommendation', () => {
     it('can create a recommendation', () => {
       const caseResponse = {
         ...getCaseOverviewResponse,

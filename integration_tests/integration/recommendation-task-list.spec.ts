@@ -1,7 +1,6 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
-import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
