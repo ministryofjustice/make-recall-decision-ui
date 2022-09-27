@@ -69,14 +69,14 @@ describe('validateRecallType', () => {
     })
 
     describe('Redirects', () => {
-      it('redirects to custody status if Fixed term recall is selected', async () => {
+      it('redirects to emergency recall if Fixed term recall is selected', async () => {
         const requestBody = {
           recallType: 'FIXED_TERM',
           recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
           crn: 'X34534',
         }
         const { nextPagePath } = await validateRecallType({ requestBody, recommendationId, urlInfo })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/fixed-licence`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
       })
 
       it('redirects to emergency recall if Standard recall is selected', async () => {
@@ -98,7 +98,7 @@ describe('validateRecallType', () => {
         expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
       })
 
-      it('if "from page" is set to recall task list, ignore it if a fixed term recall is selected', async () => {
+      it('if "from page" is set, ignore it if a fixed term recall is selected', async () => {
         const requestBody = {
           recallType: 'FIXED_TERM',
           recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
@@ -110,10 +110,10 @@ describe('validateRecallType', () => {
           recommendationId,
           urlInfo: urlInfoWithFromPage,
         })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/fixed-licence`)
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
       })
 
-      it('if "from page" is set to recall task list, redirects to it if a standard recall is selected', async () => {
+      it('if "from page" is set, ignore it if a standard recall is selected', async () => {
         const requestBody = {
           recallType: 'STANDARD',
           recallTypeDetailsStandard: 'I recommend standard recall...',
@@ -128,7 +128,7 @@ describe('validateRecallType', () => {
         expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
       })
 
-      it('if "from page" is set to recall task list, don\'t redirect to it if No recall is selected', async () => {
+      it('if "from page" is set, ignore it if No recall is selected', async () => {
         const requestBody = {
           recallType: 'NO_RECALL',
           crn: 'X34534',
