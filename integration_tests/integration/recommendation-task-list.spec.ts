@@ -1,6 +1,7 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
+import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -16,6 +17,7 @@ context('Recommendation - task list', () => {
     personOnProbation: {
       name: 'Paula Smith',
     },
+    recallType: { selected: { value: 'STANDARD' } },
   }
   const licenceConditionsMultipleActiveCustodial = {
     sectionId: 'licence-conditions',
@@ -89,7 +91,7 @@ context('Recommendation - task list', () => {
       response: recommendationResponse,
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend to do').should('exist')
+    cy.getElement('What you recommend completed').should('exist')
     cy.getElement('Alternatives tried already to do').should('exist')
     cy.getElement('Response to probation so far to do').should('exist')
     cy.getElement('Breached licence condition(s) to do').should('exist')
@@ -246,5 +248,25 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/indeterminate-details?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
+  })
+
+  describe('Routing', () => {
+    it('redirect recall task list to no recall task list if no recall is set', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
+      cy.visit(`${routeUrls.recommendations}/1/task-list`)
+      cy.pageHeading().should('equal', 'Create a decision not to recall letter')
+    })
+
+    it('redirect no recall task list to recall task list if recall is set', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'FIXED_TERM' } } },
+      })
+      cy.visit(`${routeUrls.recommendations}/1/task-list-no-recall`)
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
   })
 })
