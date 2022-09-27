@@ -2,7 +2,6 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../helpers/formOptions'
 import { strings } from '../../../textStrings/en'
-import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateRecallTypeIndeterminate = async ({
   requestBody,
@@ -44,11 +43,9 @@ export const validateRecallTypeIndeterminate = async ({
     },
     isThisAnEmergencyRecall: isNoRecall ? null : true,
   }
-  const nextPagePath = isNoRecall
-    ? `${urlInfo.basePath}task-list-no-recall`
-    : nextPageLinkUrl({ nextPageId: 'indeterminate-details', urlInfo })
+  const nextPageId = isNoRecall ? 'task-list-no-recall' : 'indeterminate-details'
   return {
     valuesToSave,
-    nextPagePath,
+    nextPagePath: `${urlInfo.basePath}${nextPageId}`,
   }
 }

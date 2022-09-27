@@ -9,7 +9,7 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
   let valuesToSave
   let nextPagePath
 
-  const { isThisAnEmergencyRecall } = requestBody
+  const { isThisAnEmergencyRecall, recallType } = requestBody
   if (!isThisAnEmergencyRecall || !isValueValid(isThisAnEmergencyRecall as string, 'isThisAnEmergencyRecall')) {
     const errorId = 'noEmergencyRecallSelected'
     errors = [
@@ -24,7 +24,8 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
     valuesToSave = {
       isThisAnEmergencyRecall: isThisAnEmergencyRecall === 'YES',
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
+    const nextPageId = recallType === 'FIXED_TERM' ? 'fixed-licence' : 'sensitive-info'
+    nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   }
   return {
     errors,

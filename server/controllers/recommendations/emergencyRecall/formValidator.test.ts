@@ -11,6 +11,7 @@ describe('validateEmergencyRecall', () => {
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
       isThisAnEmergencyRecall: 'YES',
+      recallType: 'STANDARD',
       crn: 'X34534',
     }
     const { errors, valuesToSave, nextPagePath } = await validateEmergencyRecall({ requestBody, urlInfo })
@@ -19,6 +20,20 @@ describe('validateEmergencyRecall', () => {
       isThisAnEmergencyRecall: true,
     })
     expect(nextPagePath).toEqual('/recommendations/34/sensitive-info')
+  })
+
+  it("redirects to fixed term licence conditions if it's a fixed term recall", async () => {
+    const requestBody = {
+      isThisAnEmergencyRecall: 'YES',
+      recallType: 'FIXED_TERM',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateEmergencyRecall({ requestBody, urlInfo })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      isThisAnEmergencyRecall: true,
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/fixed-licence')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

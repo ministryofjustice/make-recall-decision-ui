@@ -61,10 +61,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
     isThisAnEmergencyRecall: isFixedTerm ? false : null,
   }
   // ignore any 'from page', whatever the user selects they'll continue through the flow
-  let nextPageId = 'task-list-no-recall'
-  if (recallType !== 'NO_RECALL') {
-    nextPageId = recallType === 'FIXED_TERM' ? 'fixed-licence' : 'emergency-recall'
-  }
+  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
   return {
     valuesToSave,
     nextPagePath: `${urlInfo.basePath}${nextPageId}`,

@@ -14,6 +14,7 @@ Feature: Recall (determinate)
     And Maria confirms "No" for indeterminate sentence
     And Maria confirms "No" for extended sentence
     And Maria recommends a "Fixed term" recall
+    And Maria confirms "No" for emergency recall
     And Maria adds licence conditions for the fixed term recall
     And Maria reads the guidance on sensitive information
     And Maria confirms the person is in prison custody
