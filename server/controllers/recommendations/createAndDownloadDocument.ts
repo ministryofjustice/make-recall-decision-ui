@@ -9,10 +9,12 @@ export const createAndDownloadDocument =
     const { recommendationId } = req.params
     const { user } = res.locals
     let pathSuffix = 'no-recall-letter'
-    let requestBody = {}
+    const requestBody: Record<string, unknown> = {
+      format: 'download-docx',
+    }
     if (documentType === 'PART_A') {
       pathSuffix = 'part-a'
-      requestBody = { userEmail: user.email }
+      requestBody.userEmail = user.email
     }
     const { fileName, fileContents } = await createDocument(recommendationId, pathSuffix, requestBody, user.token)
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')

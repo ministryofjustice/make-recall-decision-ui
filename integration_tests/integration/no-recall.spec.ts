@@ -122,8 +122,10 @@ context('No recall', () => {
     it('Lets the user edit the letter', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
+        response: noRecallResponse,
+      })
+      cy.task('createNoRecallLetter', {
         response: {
-          ...noRecallResponse,
           letterContent: {
             letterAddress: 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC',
             letterDate: '12/09/2022',

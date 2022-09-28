@@ -177,5 +177,3 @@ export type PageTemplateName =
   | 'nextAppointment'
   | 'previewNoRecallLetter'
   | 'confirmationNoRecallLetter'
-
-export type PageId = 'recall-type' | 'custody-status'

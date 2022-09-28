@@ -123,3 +123,10 @@ export const createPartA = ({ statusCode = 200, response }: { statusCode?; respo
     statusCode,
     response,
   })
+
+export const createNoRecallLetter = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)/no-recall-letter`,
+    statusCode,
+    response,
+  })

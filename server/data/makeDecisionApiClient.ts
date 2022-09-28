@@ -44,7 +44,7 @@ export const getDocumentContents = (crn: string, documentId: string, token: stri
 export const createDocument = (
   recommendationId: string,
   pathSuffix: string,
-  data: ObjectMap<string>,
+  data: Record<string, unknown>,
   token: string
 ): Promise<DocumentResponse> =>
   restClient(token).post({

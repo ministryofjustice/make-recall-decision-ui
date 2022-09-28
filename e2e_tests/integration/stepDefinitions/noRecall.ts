@@ -24,9 +24,14 @@ When('Maria confirms why the person should not be recalled', () => {
 
 When('Maria enters details of the next appointment', () => {
   cy.selectRadio('How will the appointment happen?', 'Telephone')
-  const nextMonth = addToNow({ month: 1 }, { includeTime: true })
-  cy.wrap(nextMonth).as('nextAppointmentDate')
-  cy.enterDateTime(nextMonth)
+  const nextYear = DateTime.now().year + 1
+  cy.enterDateTime({
+    day: '1',
+    month: '2',
+    year: nextYear.toString(),
+    hour: '23',
+    minute: '12'
+  })
   cy.fillInput('Probation telephone', '07762906985')
   cy.clickButton('Continue')
 })
@@ -38,17 +43,15 @@ When('Maria previews the decision not to recall letter', () => {
   cy.getText('probation-address').should('equal', 'Probation office address')
   cy.getText('pop-salutation').should('contain', 'Dear')
   cy.getText('letter-title').should('equal', 'DECISION NOT TO RECALL')
-  cy.getText('paragraph-1').should('contain', 'you have breached your licence conditions in such a way that contact with your probation practitioner has broken down')
-  cy.getText('paragraph-1').should('contain', 'Breach details')
-  cy.getText('paragraph-1').should('contain', 'Rationale details')
-  cy.getText('paragraph-1').should('contain', 'Progress details')
-  cy.getText('paragraph-1').should('contain', 'Future details')
-  cy.getText('paragraph-1').should('contain', 'Your next appointment is by telephone on')
-  cy.get('nextAppointmentDate').then((date: Object) => {
-    const formattedDate = DateTime.fromObject(date).toFormat('EEEE dd MMMM yyyy at HH:mm')
-    cy.getText('paragraph-2').should('contain', formattedDate)
-  })
-  cy.getText('paragraph-3').should('contain', 'please contact me by the following telephone number: 07762906985')
+  cy.getText('section-1').should('contain', 'you have breached your licence conditions in such a way that contact with your probation practitioner has broken down')
+  cy.getText('section-1').should('contain', 'Breach details')
+  cy.getText('section-1').should('contain', 'Rationale details')
+  cy.getText('section-1').should('contain', 'Progress details')
+  cy.getText('section-1').should('contain', 'Future details')
+  cy.getText('section-1').should('contain', 'Your next appointment is by telephone on')
+  const nextYear = DateTime.now().year + 1
+  cy.getText('section-2').should('contain', `01 February ${nextYear} at 11:12pm`)
+  cy.getText('section-3').should('contain', 'please contact me by the following telephone number: 07762906985')
   cy.getText('signature').should('contain', 'Yours sincerely,')
   cy.clickLink('Continue')
 })

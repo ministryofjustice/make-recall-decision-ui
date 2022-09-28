@@ -24,27 +24,27 @@
             <div class='border govuk-body govuk-!-padding-6'>
                 <div class='flex flex--space-between govuk-!-margin-bottom-6'>
                     <div>
-                        <pre class='govuk-body govuk-!-margin-bottom-3' data-qa='pop-address'>{{ recommendation.letterContent.letterAddress }}</pre>
-                        <div data-qa='letter-date'>{{ recommendation.letterContent.letterDate }}</div>
+                        <pre class='govuk-body govuk-!-margin-bottom-3' data-qa='pop-address'>{{ letterContent.letterAddress }}</pre>
+                        <div data-qa='letter-date'>{{ letterContent.letterDate }}</div>
                     </div>
                     <div class='govuk-!-text-align-right' data-qa='probation-address'>
                         Probation office address
                     </div>
                 </div>
                 <div data-qa='pop-salutation'>
-                    {{ recommendation.letterContent.salutation }}
+                    {{ letterContent.salutation }}
                 </div>
-                <div class='govuk-!-text-align-centre govuk-!-font-weight-bold govuk-!-margin-top-4 govuk-!-margin-bottom-4' data-qa='letter-title'>{{ recommendation.letterContent.letterTitle }}</div>
+                <div class='govuk-!-text-align-centre govuk-!-font-weight-bold govuk-!-margin-top-4 govuk-!-margin-bottom-4' data-qa='letter-title'>{{ letterContent.letterTitle }}</div>
                 <pre class='govuk-body' data-qa='section-1'>
-                    {{ recommendation.letterContent.section1 }}
+                    {{ letterContent.section1 }}
                 </pre>
-                <pre class='govuk-body' data-qa='section-2'>
-                    {{ recommendation.letterContent.section2 }}
-                </pre>
+                <div class='govuk-body govuk-!-font-weight-bold govuk-!-text-align-centre' data-qa='section-2'>
+                    {{ letterContent.section2 }}
+                </div>
                 <pre class='govuk-body' data-qa='section-3'>
-                    {{ recommendation.letterContent.section3 }}
+                    {{ letterContent.section3 }}
                 </pre>
-                <pre class='govuk-body' data-qa='signature'>{{ recommendation.letterContent.signedByParagraph }}</pre>
+                <pre class='govuk-body' data-qa='signature'>{{ letterContent.signedByParagraph }}</pre>
             </div>
         </div>
     </div>
