@@ -2,6 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -52,6 +53,6 @@ export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormV
         futureExpectations,
       },
     },
-    nextPagePath: `${urlInfo.basePath}appointment-no-recall`,
+    nextPagePath: nextPageLinkUrl({ nextPageId: 'appointment-no-recall', urlInfo }),
   }
 }

@@ -3,8 +3,14 @@ import { validateNextAppointment } from './formValidator'
 
 describe('validateNextAppointment', () => {
   const recommendationId = '34'
+  const urlInfo = {
+    currentPageId: 'appointment-no-recall',
+    basePath: `/recommendations/${recommendationId}/`,
+    path: `/recommendations/${recommendationId}/appointment-no-recall`,
+  }
+  const { year } = DateTime.now().plus({ years: 1 })
+
   it('returns valuesToSave and no errors if valid', async () => {
-    const { year } = DateTime.now().plus({ years: 1 })
     const requestBody = {
       howWillAppointmentHappen: 'VIDEO_CALL',
       'dateTimeOfAppointment-day': '12',
@@ -15,7 +21,7 @@ describe('validateNextAppointment', () => {
       probationPhoneNumber: '01277345263',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateNextAppointment({ requestBody, recommendationId })
+    const { errors, valuesToSave, nextPagePath } = await validateNextAppointment({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       nextAppointment: {
@@ -47,6 +53,25 @@ describe('validateNextAppointment', () => {
     expect(nextPagePath).toEqual('/recommendations/34/task-list-no-recall')
   })
 
+  it('if "from page" is set to no recall task list, redirect to it', async () => {
+    const requestBody = {
+      howWillAppointmentHappen: 'VIDEO_CALL',
+      'dateTimeOfAppointment-day': '12',
+      'dateTimeOfAppointment-month': '05',
+      'dateTimeOfAppointment-year': year.toString(),
+      'dateTimeOfAppointment-hour': '12',
+      'dateTimeOfAppointment-minute': '53',
+      probationPhoneNumber: '01277345263',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list-no-recall', fromAnchor: 'heading-create-letter' }
+    const { nextPagePath } = await validateNextAppointment({
+      requestBody,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/34/task-list-no-recall#heading-create-letter`)
+  })
+
   it('returns errors, if not set, and no valuesToSave', async () => {
     const requestBody = {
       howWillAppointmentHappen: '',
@@ -58,7 +83,7 @@ describe('validateNextAppointment', () => {
       probationPhoneNumber: ' ', // whitespace
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -101,7 +126,7 @@ describe('validateNextAppointment', () => {
       probationPhoneNumber: '01277345263',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
@@ -122,7 +147,6 @@ describe('validateNextAppointment', () => {
   })
 
   it('returns an error, if phone number set to an invalid value, and no valuesToSave', async () => {
-    const { year } = DateTime.now().plus({ years: 1 })
     const requestBody = {
       howWillAppointmentHappen: 'VIDEO_CALL',
       'dateTimeOfAppointment-day': '12',
@@ -133,7 +157,7 @@ describe('validateNextAppointment', () => {
       probationPhoneNumber: '2343453',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateNextAppointment({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {

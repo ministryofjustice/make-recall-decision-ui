@@ -28,6 +28,19 @@ describe('validateWhyConsideredRecall', () => {
     expect(nextPagePath).toEqual('/recommendations/34/reasons-no-recall')
   })
 
+  it('if "from page" is set to no recall task list, redirect to it', async () => {
+    const requestBody = {
+      whyConsideredRecall: 'RISK_INCREASED',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list-no-recall', fromAnchor: 'heading-create-letter' }
+    const { nextPagePath } = await validateWhyConsideredRecall({
+      requestBody,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall#heading-create-letter`)
+  })
+
   it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       whyConsideredRecall: '',

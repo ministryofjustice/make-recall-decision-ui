@@ -20,12 +20,13 @@
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <div class="govuk-caption-l">Decision not to recall</div>
                 <h1 class='govuk-heading-l'>Why do you think {{ recommendation.personOnProbation.name }} should not be recalled?</h1>
+                <p class='govuk-body'>These answers will go into the Decision not to Recall letter. Make sure you use ‘I’ and ‘you’ in your answers.</p>
                 {{ govukTextarea({
                     name: "licenceBreach",
                     id: "licenceBreach",
                     label: {
                         text: "Explain the licence breach and why it's a problem",
-                        classes: "govuk-label--s"
+                        classes: "govuk-label--m"
                     },
                     value: inputDisplayValues.licenceBreach,
                     errorMessage: errorMessage(errors.licenceBreach)
@@ -35,7 +36,7 @@
                     id: "noRecallRationale",
                     label: {
                         text: "Explain your rationale for not recalling " + recommendation.personOnProbation.name,
-                        classes: "govuk-label--s"
+                        classes: "govuk-label--m"
                     },
                     value: inputDisplayValues.noRecallRationale,
                     errorMessage: errorMessage(errors.noRecallRationale)
@@ -45,7 +46,7 @@
                     id: "popProgressMade",
                     label: {
                         text: "What progress has " + recommendation.personOnProbation.name + " made so far?",
-                        classes: "govuk-label--s"
+                        classes: "govuk-label--m"
                     },
                     value: inputDisplayValues.popProgressMade,
                     errorMessage: errorMessage(errors.popProgressMade)
@@ -55,7 +56,7 @@
                     id: "futureExpectations",
                     label: {
                         text: "What is expected in the future?",
-                        classes: "govuk-label--s"
+                        classes: "govuk-label--m"
                     },
                     value: inputDisplayValues.futureExpectations,
                     errorMessage: errorMessage(errors.futureExpectations)

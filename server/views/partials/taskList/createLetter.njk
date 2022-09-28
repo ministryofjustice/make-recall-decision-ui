@@ -1,19 +1,19 @@
 
 <li>
-    <h2 class="moj-task-list__section" id='heading-circumstances'>
+    <h2 class="moj-task-list__section" id='heading-create-letter'>
         Create the letter
     </h2>
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}why-considered-recall">Why you considered recall</a>
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'why-considered-recall', urlInfo: urlInfo, fromAnchor: 'heading-create-letter' }) if taskCompleteness.statuses.whyConsideredRecall else urlInfo.basePath + 'why-considered-recall' }}">Why you considered recall</a>
             {{ taskStatus({ hasData: taskCompleteness.statuses.whyConsideredRecall }) }}
         </li>
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}reasons-no-recall">Why {{ recommendation.personOnProbation.name }} should not be recalled</a>
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'reasons-no-recall', urlInfo: urlInfo, fromAnchor: 'heading-create-letter' }) if taskCompleteness.statuses.reasonsForNoRecall else urlInfo.basePath + 'reasons-no-recall' }}">Why {{ recommendation.personOnProbation.name }} should not be recalled</a>
             {{ taskStatus({ hasData: taskCompleteness.statuses.reasonsForNoRecall }) }}
         </li>
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}appointment-no-recall">Appointment date and time</a>
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'appointment-no-recall', urlInfo: urlInfo, fromAnchor: 'heading-create-letter' }) if taskCompleteness.statuses.nextAppointment else urlInfo.basePath + 'appointment-no-recall' }}">Appointment date and time</a>
             {{ taskStatus({ hasData: taskCompleteness.statuses.nextAppointment }) }}
         </li>
     </ul>
