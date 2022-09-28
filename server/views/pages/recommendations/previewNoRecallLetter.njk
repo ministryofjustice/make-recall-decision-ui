@@ -1,0 +1,52 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: 'appointment-no-recall', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-caption-l">Decision not to recall</div>
+            <h1 class='govuk-heading-l'>Preview the decision not to recall letter</h1>
+            <div class='flex flex--align-center'>
+                <a href='{{ nextPageLinkUrl({ nextPageId: 'why-considered-recall', urlInfo: urlInfo }) }}'
+                   class='govuk-button govuk-button--secondary govuk-!-margin-right-8'>Edit letter</a>
+                <a href='{{ urlInfo.basePageUrl }}task-list-no-recall' class='govuk-button'>Continue</a>
+            </div>
+            <div class='border govuk-body govuk-!-padding-6'>
+                <div class='flex flex--space-between govuk-!-margin-bottom-6'>
+                    <div>
+                        <pre class='govuk-body govuk-!-margin-bottom-3' data-qa='pop-address'>{{ letterContent.letterAddress }}</pre>
+                        <div data-qa='letter-date'>{{ letterContent.letterDate }}</div>
+                    </div>
+                    <div class='govuk-!-text-align-right' data-qa='probation-address'>
+                        Probation office address
+                    </div>
+                </div>
+                <div data-qa='pop-salutation'>
+                    {{ letterContent.salutation }}
+                </div>
+                <div class='govuk-!-text-align-centre govuk-!-font-weight-bold govuk-!-margin-top-4 govuk-!-margin-bottom-4' data-qa='letter-title'>{{ letterContent.letterTitle }}</div>
+                <pre class='govuk-body' data-qa='section-1'>
+                    {{ letterContent.section1 }}
+                </pre>
+                <div class='govuk-body govuk-!-font-weight-bold govuk-!-text-align-centre' data-qa='section-2'>
+                    {{ letterContent.section2 }}
+                </div>
+                <pre class='govuk-body' data-qa='section-3'>
+                    {{ letterContent.section3 }}
+                </pre>
+                <pre class='govuk-body' data-qa='signature'>{{ letterContent.signedByParagraph }}</pre>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

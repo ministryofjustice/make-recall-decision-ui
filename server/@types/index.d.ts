@@ -175,6 +175,5 @@ export type PageTemplateName =
   | 'whyConsideredRecall'
   | 'reasonsForNoRecall'
   | 'nextAppointment'
+  | 'previewNoRecallLetter'
   | 'confirmationNoRecallLetter'
-
-export type PageId = 'recall-type' | 'custody-status'

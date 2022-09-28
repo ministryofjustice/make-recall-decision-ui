@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendationPage } from './getRecommendationPage'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { getRecommendation } from '../../data/makeDecisionApiClient'
+import { getRecommendation, createDocument } from '../../data/makeDecisionApiClient'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -35,6 +35,14 @@ describe('getRecommendationPage', () => {
     req = mockReq({ params: { recommendationId, pageId: 'licence-conditions' } })
     await getRecommendationPage(req, res)
     expect(fetchAndTransformLicenceConditions).toHaveBeenCalledWith({ crn: 'X12345', token: 'abc' })
+  })
+
+  it('should fetch no recall preview letter if on that page', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(createDocument as jest.Mock).mockResolvedValue({})
+    req = mockReq({ params: { recommendationId, pageId: 'preview-no-recall' } })
+    await getRecommendationPage(req, res)
+    expect(createDocument).toHaveBeenCalledWith('123', 'no-recall-letter', { format: 'preview' }, 'abc')
   })
 
   it('should prevent page caching', async () => {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getRecommendation } from '../../data/makeDecisionApiClient'
+import { createDocument, getRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
 import { renderFormOptions } from './helpers/formOptions'
 import { renderTemplateString } from '../../utils/nunjucks'
@@ -29,6 +29,15 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   }
   res.locals.recommendation.isInCustody = isInCustody(res.locals.recommendation.custodyStatus?.selected)
   res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation)
+  if (pageId === 'preview-no-recall') {
+    const { letterContent } = await createDocument(
+      recommendationId,
+      'no-recall-letter',
+      { format: 'preview' },
+      user.token
+    )
+    res.locals.letterContent = letterContent
+  }
   if (pageId === 'licence-conditions') {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
       crn: res.locals.recommendation.crn,
