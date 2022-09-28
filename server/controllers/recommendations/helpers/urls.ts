@@ -28,17 +28,17 @@ export const makeUrlForFromPage = ({ urlInfo }: { urlInfo: UrlInfo }) => {
 }
 
 export const changeLinkUrl = ({
-  pageId,
+  pageUrlSlug,
   urlInfo,
   fromAnchor,
 }: {
-  pageId: string
+  pageUrlSlug: string
   urlInfo: UrlInfo
   fromAnchor?: string
 }) => {
   const { currentPageId, basePath } = urlInfo
   const queryParam = `?fromPageId=${currentPageId}${fromAnchor ? `&fromAnchor=${fromAnchor}` : ''}`
-  return `${basePath}${pageId}${queryParam}`
+  return `${basePath}${pageUrlSlug}${queryParam}`
 }
 
 export const validateUpdateRecommendationPageRequest = ({

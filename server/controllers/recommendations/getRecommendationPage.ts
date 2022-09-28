@@ -2,26 +2,26 @@ import { Request, Response } from 'express'
 import { createDocument, getRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
 import { renderFormOptions } from './helpers/formOptions'
-import { renderTemplateString } from '../../utils/nunjucks'
 import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { taskCompleteness } from './helpers/taskCompleteness'
 import { isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { isInCustody } from './helpers/isInCustody'
-import { renderPageHeadings } from './helpers/renderPageHeadings'
+import { renderStrings } from './helpers/renderStrings'
 import { validateUpdateRecommendationPageRequest } from './helpers/urls'
+import { strings } from '../../textStrings/en'
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
-  const { recommendationId, pageId } = req.params
+  const { recommendationId, pageUrlSlug } = req.params
   const { user } = res.locals
-  const { templateName, pageHeading, pageTitle, inputDisplayValues } = pageMetaData(pageId)
+  const { id, inputDisplayValues } = pageMetaData(pageUrlSlug)
   res.locals.recommendation = await getRecommendation(recommendationId, user.token)
   if (isCaseRestrictedOrExcluded(res.locals.recommendation.userAccessResponse)) {
     res.locals.caseSummary = res.locals.recommendation
     return res.render('pages/excludedRestrictedCrn')
   }
   const redirectedPageId = validateUpdateRecommendationPageRequest({
-    requestedPageId: pageId,
+    requestedPageId: pageUrlSlug,
     recallType: res.locals.recommendation?.recallType?.selected?.value,
   })
   if (redirectedPageId) {
@@ -29,7 +29,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   }
   res.locals.recommendation.isInCustody = isInCustody(res.locals.recommendation.custodyStatus?.selected)
   res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation)
-  if (pageId === 'preview-no-recall') {
+  if (pageUrlSlug === 'preview-no-recall') {
     const { letterContent } = await createDocument(
       recommendationId,
       'no-recall-letter',
@@ -38,7 +38,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     )
     res.locals.letterContent = letterContent
   }
-  if (pageId === 'licence-conditions') {
+  if (pageUrlSlug === 'licence-conditions') {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
       crn: res.locals.recommendation.crn,
       token: user.token,
@@ -47,11 +47,11 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const stringRenderParams = {
     fullName: res.locals.recommendation.personOnProbation.name,
   }
-
-  // TODO - use pageHeadings instead of pageHeading property
-  res.locals.pageHeading = renderTemplateString(pageHeading, stringRenderParams)
-  res.locals.pageHeadings = renderPageHeadings(stringRenderParams)
-  res.locals.pageTitle = pageTitle
+  res.locals.page = {
+    id,
+  }
+  res.locals.pageHeadings = renderStrings(strings.pageHeadings, stringRenderParams)
+  res.locals.pageTitles = renderStrings(strings.pageHeadings, { fullName: 'the person' })
   // get values to preload into form inputs
   if (inputDisplayValues) {
     res.locals.inputDisplayValues = inputDisplayValues({
@@ -64,5 +64,5 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   res.locals.formOptions = renderFormOptions(stringRenderParams)
   res.locals.crn = res.locals.recommendation.crn
   res.set({ 'Cache-Control': 'no-store' })
-  res.render(`pages/recommendations/${templateName}`)
+  res.render(`pages/recommendations/${id}`)
 }

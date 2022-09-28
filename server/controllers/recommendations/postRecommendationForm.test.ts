@@ -7,7 +7,7 @@ jest.mock('../../data/makeDecisionApiClient')
 
 describe('postRecommendationForm', () => {
   const recommendationId = '123'
-  const pageId = 'recall-type'
+  const pageUrlSlug = 'recall-type'
   const crn = 'X12345'
   const basePath = `/recommendations/${recommendationId}/`
   const currentPageUrl = `${basePath}recall-type`
@@ -27,7 +27,7 @@ describe('postRecommendationForm', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
-      params: { recommendationId, pageId },
+      params: { recommendationId, pageUrlSlug },
       body: requestBody,
     })
     await postRecommendationForm(req, res)
@@ -39,7 +39,7 @@ describe('postRecommendationForm', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
-      params: { recommendationId, pageId },
+      params: { recommendationId, pageUrlSlug },
       body: {
         recallType: 'STANDARD',
         crn,
@@ -62,7 +62,7 @@ describe('postRecommendationForm', () => {
     ;(updateRecommendation as jest.Mock).mockRejectedValueOnce(new Error('API error'))
     const req = mockReq({
       method: 'POST',
-      params: { recommendationId, pageId },
+      params: { recommendationId, pageUrlSlug },
       body: requestBody,
     })
     await postRecommendationForm(req, res)
@@ -80,7 +80,7 @@ describe('postRecommendationForm', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
-      params: { recommendationId, pageId },
+      params: { recommendationId, pageUrlSlug },
       body: {},
     })
     try {

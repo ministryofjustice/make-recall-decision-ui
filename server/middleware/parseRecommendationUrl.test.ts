@@ -11,7 +11,7 @@ describe('parseRecommendationUrl', () => {
   const path = `/recommendations/${recommendationId}/${currentPageId}`
   const defaultRequest = {
     path,
-    params: { recommendationId, pageId: currentPageId },
+    params: { recommendationId, pageUrlSlug: currentPageId },
   }
 
   beforeEach(() => {

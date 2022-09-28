@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -22,7 +22,7 @@
                        value="{{ caseSummary.convictions.activeCustodial.length }}" />
                 {% if caseSummary.convictions.hasMultipleActiveCustodial or caseSummary.convictions.activeCustodial.length == 0 %}
                     <div class="govuk-caption-l">Circumstances</div>
-                    <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
+                    <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
                     {% include '../../partials/multipleActiveCustodialBanner.njk' %}
                     {% if caseSummary.convictions.activeCustodial.length == 0 %}
                         <p class='govuk-body'>There are no licence conditions. This person is not currently on licence.
@@ -34,7 +34,7 @@
                                 class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <div class="govuk-caption-l">Circumstances</div>
-                                <h1 class="govuk-fieldset__heading">{{ pageHeading }}</h1>
+                                <h1 class="govuk-fieldset__heading">{{ pageHeadings[page.id] }}</h1>
                             </legend>
                             {% if errors.licenceConditionsBreached %}
                                 <p id="licenceConditionsBreached-error" class="govuk-error-message">

@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -33,7 +33,7 @@
                     name: "whatLedToRecall",
                     id: "whatLedToRecall",
                     label: {
-                        text: pageHeading,
+                        text: pageHeadings[page.id],
                         classes: "govuk-label--l",
                         isPageHeading: true
                     },

@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -18,7 +18,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <div class="govuk-caption-l">Victim liaison</div>
-                <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <p class='govuk-body'>You must tell the victim liaison officer (VLO) about the recall request.</p>
                 <p class='govuk-body'>You must also tell them that the victim can:</p>
                 <ul class='govuk-list govuk-list--bullet'>

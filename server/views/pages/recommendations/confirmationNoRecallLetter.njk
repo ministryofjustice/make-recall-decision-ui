@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -20,7 +20,7 @@
                 <div class='govuk-!-font-weight-bold'>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
-                titleText: pageHeading,
+                titleText: pageHeadings[page.id],
                 html: html
             }) }}
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>

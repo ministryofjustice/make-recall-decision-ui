@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -23,7 +23,7 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <div class="govuk-caption-l">Alternatives to recall</div>
                         <h1 class="govuk-fieldset__heading">
-                            {{ pageHeading }}
+                            {{ pageHeadings[page.id] }}
                         </h1>
                     </legend>
                   <p id="alternativesToRecallTried-error" class="govuk-error-message">

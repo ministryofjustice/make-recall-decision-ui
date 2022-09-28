@@ -7,13 +7,13 @@ import { routeUrls } from '../../routes/routeUrls'
 import { pageMetaData } from './helpers/pageMetaData'
 
 export const postRecommendationForm = async (req: Request, res: Response): Promise<void> => {
-  const { recommendationId, pageId } = req.params
-  const currentPagePath = `${routeUrls.recommendations}/${recommendationId}/${pageId}`
+  const { recommendationId, pageUrlSlug } = req.params
+  const currentPagePath = `${routeUrls.recommendations}/${recommendationId}/${pageUrlSlug}`
   try {
     if (!req.body.crn) {
       throw new AppError(`Invalid CRN: ${req.body.crn}`, { status: 400 })
     }
-    const { validator } = pageMetaData(pageId)
+    const { validator } = pageMetaData(pageUrlSlug)
     const { user, urlInfo } = res.locals
     const { errors, valuesToSave, unsavedValues, nextPagePath } = await validator({
       requestBody: req.body,
