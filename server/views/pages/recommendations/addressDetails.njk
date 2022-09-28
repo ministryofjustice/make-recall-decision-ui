@@ -62,7 +62,7 @@
                             name: "isMainAddressWherePersonCanBeFound",
                             fieldset: {
                                 legend: {
-                                    text: 'Is this where the police can find ' + recommendation.personOnProbation.name + '?',
+                                    text: 'Is this where the police can find ' + recommendation.personOnProbation.name + '?' if recommendation.personOnProbation.addresses.length === 1 else 'Can the police find ' + recommendation.personOnProbation.name + ' at these addresses?',
                                     classes: "govuk-fieldset__legend--m"
                                 }
                             },

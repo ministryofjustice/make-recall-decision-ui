@@ -482,7 +482,9 @@ context('Make a recommendation', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
-      cy.getElement('These are the last known addresses for Paula Smith')
+      cy.getElement(
+        'These are the last known addresses for Paula Smith in NDelius. If they are incorrect, update NDelius.'
+      )
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
       cy.getText('address-1').should('contain', 'Newtown')
       cy.getText('address-1').should('contain', 'Northampton')
@@ -490,6 +492,7 @@ context('Make a recommendation', () => {
       cy.getText('address-2').should('contain', 'The Lodge, Hennaway Drive')
       cy.getText('address-2').should('contain', 'Corby')
       cy.getText('address-2').should('contain', 'S2 3HU')
+      cy.selectRadio('Can the police find Paula Smith at these addresses?', 'No')
     })
 
     it('lists a mixture of "No fixed abode" and addresses', () => {
