@@ -1,6 +1,5 @@
 import { FormValidatorArgs, FormValidatorReturn, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
@@ -8,11 +7,9 @@ import { formOptions, isValueValid } from '../helpers/formOptions'
 import { isPhoneValid } from '../../../utils/validate-formats'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { nextPageLinkUrl } from '../helpers/urls'
 
-export const validateNextAppointment = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+export const validateNextAppointment = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -110,7 +107,7 @@ export const validateNextAppointment = async ({
         probationPhoneNumber,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`
+    nextPagePath = nextPageLinkUrl({ nextPageId: 'task-list-no-recall', urlInfo })
     return {
       valuesToSave,
       nextPagePath,

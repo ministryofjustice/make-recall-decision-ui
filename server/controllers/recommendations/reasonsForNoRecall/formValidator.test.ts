@@ -26,6 +26,21 @@ describe('validateReasonsForNoRecall', () => {
     expect(nextPagePath).toEqual('/recommendations/34/appointment-no-recall')
   })
 
+  it('if "from page" is set to no recall task list, redirect to it', async () => {
+    const requestBody = {
+      licenceBreach: 'details',
+      noRecallRationale: 'details',
+      popProgressMade: 'details',
+      futureExpectations: 'details',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list-no-recall', fromAnchor: 'heading-create-letter' }
+    const { nextPagePath } = await validateReasonsForNoRecall({
+      requestBody,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall#heading-create-letter`)
+  })
+
   it('returns errors for missing licenceBreach, and no valuesToSave', async () => {
     const requestBody = {
       licenceBreach: ' ', // whitespace
