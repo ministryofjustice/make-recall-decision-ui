@@ -147,7 +147,6 @@ describe('validateNextAppointment', () => {
   })
 
   it('returns an error, if phone number set to an invalid value, and no valuesToSave', async () => {
-    const { year } = DateTime.now().plus({ years: 1 })
     const requestBody = {
       howWillAppointmentHappen: 'VIDEO_CALL',
       'dateTimeOfAppointment-day': '12',
