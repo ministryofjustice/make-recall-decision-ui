@@ -20,7 +20,12 @@ describe('createAndDownloadDocument', () => {
     ;(createDocument as jest.Mock).mockReturnValueOnce({ fileContents, fileName })
     const req = mockReq({ params: { recommendationId } })
     await createAndDownloadDocument('PART_A')(req, res)
-    expect(createDocument).toHaveBeenCalledWith(recommendationId, 'part-a', { userEmail: 'dave@gov.uk' }, token)
+    expect(createDocument).toHaveBeenCalledWith(
+      recommendationId,
+      'part-a',
+      { format: 'download-docx', userEmail: 'dave@gov.uk' },
+      token
+    )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
 
     expect(res.contentType).toHaveBeenCalledWith(
@@ -35,7 +40,12 @@ describe('createAndDownloadDocument', () => {
     ;(createDocument as jest.Mock).mockReturnValueOnce({ fileContents, fileName })
     const req = mockReq({ params: { recommendationId } })
     await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
-    expect(createDocument).toHaveBeenCalledWith(recommendationId, 'no-recall-letter', {}, token)
+    expect(createDocument).toHaveBeenCalledWith(
+      recommendationId,
+      'no-recall-letter',
+      { format: 'download-docx' },
+      token
+    )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
 
     expect(res.contentType).toHaveBeenCalledWith(
