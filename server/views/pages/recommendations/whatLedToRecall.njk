@@ -44,12 +44,15 @@
                     errorMessage: errorMessage(errors.whatLedToRecall)
                 }) }}
                 {{ formSubmitButton() }}
-
-                <div class="govuk-caption-m govuk-!-font-weight-bold govuk-!-margin-top-2">A previous related question:</div>
-                <h2 class='govuk-heading-l'>How has {{ recommendation.personOnProbation.name }} responded to probation so far?</h2>
-                <p class='govuk-body govuk-!-font-weight-bold'>Your response:</p>
-                <pre class='govuk-body grey-panel' data-qa='previous-answer'>{{ recommendation.responseToProbation }}</pre>
             </form>
+        </div>
+        <div class="govuk-grid-column-one-third-from-desktop">
+            <div class="govuk-caption-m govuk-!-margin-top-2">A previous related question:
+            </div>
+            <h2 class='govuk-heading-m'>How has {{ recommendation.personOnProbation.name }} responded to probation so
+                far?</h2>
+            <div class='govuk-body text-secondary govuk-!-margin-bottom-2'>Your response:</div>
+            <pre class='govuk-body grey-panel' data-qa='previous-answer'>{{ recommendation.responseToProbation }}</pre>
         </div>
     </div>
 {% endblock %}
