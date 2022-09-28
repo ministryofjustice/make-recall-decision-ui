@@ -1,5 +1,5 @@
 import { validateAlternativesTried } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 import { cleanseUiList } from '../../../utils/lists'
 
 describe('validateAlternativesTried', () => {

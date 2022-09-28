@@ -1,6 +1,6 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { isValueValid } from '../helpers/formOptions'
+import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 
 export const validateIsIndeterminateSentence = async ({
@@ -12,7 +12,7 @@ export const validateIsIndeterminateSentence = async ({
   let nextPagePath
 
   const { isIndeterminateSentence, currentSavedValue } = requestBody
-  if (!isIndeterminateSentence || !isValueValid(isIndeterminateSentence as string, 'isIndeterminateSentence')) {
+  if (!isIndeterminateSentence || !isValueValid(isIndeterminateSentence as string, 'yesNo')) {
     const errorId = 'noIsIndeterminateSelected'
     errors = [
       makeErrorObject({

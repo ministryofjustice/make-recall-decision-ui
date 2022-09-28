@@ -1,5 +1,5 @@
 import { validateRecallType } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('validateRecallType', () => {
   const recommendationId = '456'

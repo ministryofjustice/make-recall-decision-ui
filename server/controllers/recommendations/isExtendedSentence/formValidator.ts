@@ -1,6 +1,6 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { isValueValid } from '../helpers/formOptions'
+import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 
 export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
@@ -12,7 +12,7 @@ export const validateIsExtendedSentence = async ({ requestBody, urlInfo }: FormV
   const changedToYes = isYes && currentSavedValue === 'NO'
   const isDeterminateSentence = isIndeterminateSentence === '0'
 
-  if (!isExtendedSentence || !isValueValid(isExtendedSentence as string, 'isExtendedSentence')) {
+  if (!isExtendedSentence || !isValueValid(isExtendedSentence as string, 'yesNo')) {
     const errorId = 'noIsExtendedSelected'
     const errors = [
       makeErrorObject({

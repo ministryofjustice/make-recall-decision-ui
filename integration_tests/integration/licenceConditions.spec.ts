@@ -1,5 +1,5 @@
 import { routeUrls } from '../../server/routes/routeUrls'
-import { formOptions } from '../../server/controllers/recommendations/helpers/formOptions'
+import { formOptions } from '../../server/controllers/recommendations/formOptions/formOptions'
 
 context('Licence conditions', () => {
   beforeEach(() => {

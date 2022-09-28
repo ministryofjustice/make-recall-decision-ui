@@ -1,6 +1,6 @@
 import { dedupeList, groupListByValue, radioCheckboxItems, sortList } from './lists'
 import { ObjectMap } from '../@types'
-import { formOptions } from '../controllers/recommendations/helpers/formOptions'
+import { formOptions } from '../controllers/recommendations/formOptions/formOptions'
 
 describe('List utilities', () => {
   describe('groupListByValue', () => {

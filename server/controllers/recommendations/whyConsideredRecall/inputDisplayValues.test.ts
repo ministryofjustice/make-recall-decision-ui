@@ -1,5 +1,5 @@
 import { inputDisplayValuesWhyConsideredRecall } from './inputDisplayValues'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 import { WhyConsideredRecall } from '../../../@types/make-recall-decision-api/models/WhyConsideredRecall'
 
 describe('inputDisplayValuesVictimContactScheme', () => {

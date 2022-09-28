@@ -1,6 +1,6 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { isValueValid } from '../helpers/formOptions'
+import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 
@@ -10,7 +10,7 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
   let nextPagePath
 
   const { isThisAnEmergencyRecall, recallType } = requestBody
-  if (!isThisAnEmergencyRecall || !isValueValid(isThisAnEmergencyRecall as string, 'isThisAnEmergencyRecall')) {
+  if (!isThisAnEmergencyRecall || !isValueValid(isThisAnEmergencyRecall as string, 'yesNo')) {
     const errorId = 'noEmergencyRecallSelected'
     errors = [
       makeErrorObject({
