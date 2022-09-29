@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import { routeUrls } from '../../server/routes/routeUrls'
 import noRecallResponse from '../../api/responses/get-recommendation-no-recall.json'
 import { setResponsePropertiesToNull } from '../support/commands'
@@ -131,6 +132,42 @@ context('No recall', () => {
   })
 
   describe('Preview letter', () => {
+    it('redirects to preview letter after appointment page, if other create letter tasks are complete', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: noRecallResponse,
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
+      const nextYear = DateTime.now().year + 1
+      cy.enterDateTime({
+        day: '1',
+        month: '2',
+        year: nextYear.toString(),
+        hour: '23',
+        minute: '12',
+      })
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Preview the decision not to recall letter')
+    })
+
+    it('redirects to task list after appointment page, if other create letter tasks are not complete', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...noRecallResponse, whyConsideredRecall: null },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
+      const nextYear = DateTime.now().year + 1
+      cy.enterDateTime({
+        day: '1',
+        month: '2',
+        year: nextYear.toString(),
+        hour: '23',
+        minute: '12',
+      })
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Create a decision not to recall letter')
+    })
+
     it('Lets the user edit the letter', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

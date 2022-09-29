@@ -10,7 +10,7 @@ describe('validateNextAppointment', () => {
   }
   const { year } = DateTime.now().plus({ years: 1 })
 
-  it('returns valuesToSave and no errors if valid', async () => {
+  it('returns valuesToSave and no errors, and redirects to preview, if valid and other tasks complete', async () => {
     const requestBody = {
       howWillAppointmentHappen: 'VIDEO_CALL',
       'dateTimeOfAppointment-day': '12',
@@ -19,6 +19,7 @@ describe('validateNextAppointment', () => {
       'dateTimeOfAppointment-hour': '12',
       'dateTimeOfAppointment-minute': '53',
       probationPhoneNumber: '01277345263',
+      createLetterTasksComplete: '1',
       crn: 'X34534',
     }
     const { errors, valuesToSave, nextPagePath } = await validateNextAppointment({ requestBody, urlInfo })
@@ -51,6 +52,23 @@ describe('validateNextAppointment', () => {
       },
     })
     expect(nextPagePath).toEqual('/recommendations/34/preview-no-recall')
+  })
+
+  it('redirects to task list, if valid and other tasks not complete', async () => {
+    const requestBody = {
+      howWillAppointmentHappen: 'VIDEO_CALL',
+      'dateTimeOfAppointment-day': '12',
+      'dateTimeOfAppointment-month': '05',
+      'dateTimeOfAppointment-year': year.toString(),
+      'dateTimeOfAppointment-hour': '12',
+      'dateTimeOfAppointment-minute': '53',
+      probationPhoneNumber: '01277345263',
+      createLetterTasksComplete: '0',
+      crn: 'X34534',
+    }
+    const { errors, nextPagePath } = await validateNextAppointment({ requestBody, urlInfo })
+    expect(errors).toBeUndefined()
+    expect(nextPagePath).toEqual('/recommendations/34/task-list-no-recall#heading-create-letter')
   })
 
   it('if "from page" is set to no recall task list, redirect to it', async () => {

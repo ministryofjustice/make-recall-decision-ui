@@ -11,10 +11,8 @@ import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateNextAppointment = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
-  let valuesToSave
-  let nextPagePath
 
-  const { howWillAppointmentHappen, probationPhoneNumber } = requestBody
+  const { howWillAppointmentHappen, probationPhoneNumber, createLetterTasksComplete } = requestBody
   const invalidAppointmentType = !isValueValid(howWillAppointmentHappen as string, 'howWillAppointmentHappen')
 
   const dateTimeOfAppointmentParts = {
@@ -97,7 +95,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
   }
 
   if (!errors) {
-    valuesToSave = {
+    const valuesToSave = {
       nextAppointment: {
         howWillAppointmentHappen: {
           selected: howWillAppointmentHappen,
@@ -107,7 +105,10 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
         probationPhoneNumber,
       },
     }
-    nextPagePath = nextPageLinkUrl({ nextPageId: 'preview-no-recall', urlInfo })
+    let nextPagePath = nextPageLinkUrl({ nextPageId: 'preview-no-recall', urlInfo })
+    if (createLetterTasksComplete === '0') {
+      nextPagePath = `${urlInfo.basePath}task-list-no-recall#heading-create-letter`
+    }
     return {
       valuesToSave,
       nextPagePath,
