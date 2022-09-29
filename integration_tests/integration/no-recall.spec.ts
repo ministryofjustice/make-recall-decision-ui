@@ -138,6 +138,11 @@ context('No recall', () => {
         response: noRecallResponse,
       })
       cy.task('updateRecommendation', { statusCode: 200, response: noRecallResponse })
+      cy.task('createNoRecallLetter', {
+        response: {
+          letterContent: {},
+        },
+      })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
       const nextYear = DateTime.now().year + 1
       cy.enterDateTime({
