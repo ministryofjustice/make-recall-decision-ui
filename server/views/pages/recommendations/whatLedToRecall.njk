@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -33,7 +33,7 @@
                     name: "whatLedToRecall",
                     id: "whatLedToRecall",
                     label: {
-                        text: pageHeading,
+                        text: pageHeadings[page.id],
                         classes: "govuk-label--l",
                         isPageHeading: true
                     },
@@ -49,8 +49,7 @@
         <div class="govuk-grid-column-one-third-from-desktop">
             <div class="govuk-caption-m govuk-!-margin-top-2">A previous related question:
             </div>
-            <h2 class='govuk-heading-m'>How has {{ recommendation.personOnProbation.name }} responded to probation so
-                far?</h2>
+            <h2 class='govuk-heading-m'>{{ pageHeadings.responseToProbation }}</h2>
             <div class='govuk-body text-secondary govuk-!-margin-bottom-2'>Your response:</div>
             <pre class='govuk-body grey-panel' data-qa='previous-answer'>{{ recommendation.responseToProbation }}</pre>
         </div>

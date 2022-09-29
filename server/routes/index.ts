@@ -42,12 +42,12 @@ export default function routes(router: Router): Router {
   )
   post(`${routeUrls.recommendations}/:recommendationId/status`, updateRecommendationStatus)
   router.get(
-    `${routeUrls.recommendations}/:recommendationId/:pageId`,
+    `${routeUrls.recommendations}/:recommendationId/:pageUrlSlug`,
     asyncMiddleware(parseRecommendationUrl),
     asyncMiddleware(getRecommendationPage)
   )
   router.post(
-    `${routeUrls.recommendations}/:recommendationId/:pageId`,
+    `${routeUrls.recommendations}/:recommendationId/:pageUrlSlug`,
     asyncMiddleware(parseRecommendationUrl),
     asyncMiddleware(postRecommendationForm)
   )

@@ -47,78 +47,78 @@ describe('changeLinkUrl', () => {
       basePath: '/recommendations/123/',
       path: '/recommendations/123/recall-type',
     }
-    const url = changeLinkUrl({ pageId: 'recall-type', urlInfo, fromAnchor: 'heading-recommendation' })
+    const url = changeLinkUrl({ pageUrlSlug: 'recall-type', urlInfo, fromAnchor: 'heading-recommendation' })
     expect(url).toEqual('/recommendations/123/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation')
   })
 })
 
 describe('validateUpdateRecommendationPageRequest', () => {
   it('returns null if neither task list was requested', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'emergency-recall',
       recallType: 'FIXED_TERM' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toBeNull()
+    expect(pageUrlSlug).toBeNull()
   })
 
   it('returns null if recall task list requested for standard recall', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list',
       recallType: 'STANDARD' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toBeNull()
+    expect(pageUrlSlug).toBeNull()
   })
 
   it('returns null if recall task list requested for fixed term recall', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list',
       recallType: 'FIXED_TERM' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toBeNull()
+    expect(pageUrlSlug).toBeNull()
   })
 
   it('returns null if no recall task list requested for no recall', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list-no-recall',
       recallType: 'NO_RECALL' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toBeNull()
+    expect(pageUrlSlug).toBeNull()
   })
 
   it('returns no recall task list if recall task list requested for no recall', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list',
       recallType: 'NO_RECALL' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toEqual('task-list-no-recall')
+    expect(pageUrlSlug).toEqual('task-list-no-recall')
   })
 
   it('returns recall task list if no recall task list requested for standard recall', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list-no-recall',
       recallType: 'STANDARD' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toEqual('task-list')
+    expect(pageUrlSlug).toEqual('task-list')
   })
 
   it('returns recall task list if no recall task list requested for fixed term recall', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list-no-recall',
       recallType: 'FIXED_TERM' as RecallTypeSelectedValue.value,
     })
-    expect(pageId).toEqual('task-list')
+    expect(pageUrlSlug).toEqual('task-list')
   })
 
   it('returns response to probation if recall task list requested and recall not set', () => {
-    const pageId = validateUpdateRecommendationPageRequest({ requestedPageId: 'task-list', recallType: undefined })
-    expect(pageId).toEqual('response-to-probation')
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({ requestedPageId: 'task-list', recallType: undefined })
+    expect(pageUrlSlug).toEqual('response-to-probation')
   })
 
   it('returns response to probation if no recall task list requested and recall not set', () => {
-    const pageId = validateUpdateRecommendationPageRequest({
+    const pageUrlSlug = validateUpdateRecommendationPageRequest({
       requestedPageId: 'task-list-no-recall',
       recallType: undefined,
     })
-    expect(pageId).toEqual('response-to-probation')
+    expect(pageUrlSlug).toEqual('response-to-probation')
   })
 })

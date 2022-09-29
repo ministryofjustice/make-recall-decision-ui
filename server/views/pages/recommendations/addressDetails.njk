@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -31,7 +31,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <input type="hidden" name="addressCount" value="{{ recommendation.personOnProbation.addresses.length }}" />
-                <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <div class='govuk-!-margin-bottom-6'>
                     {% if recommendation.personOnProbation.addresses.length %}
 

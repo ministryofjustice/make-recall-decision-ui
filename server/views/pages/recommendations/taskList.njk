@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -14,7 +14,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
                     Complete the following sections of the Part A form. You can do this in any order.
             </p>
@@ -64,7 +64,7 @@
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'custody-status', urlInfo: urlInfo, fromAnchor: 'heading-custody' }) }}">Is {{ recommendation.personOnProbation.name }} in
+                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'custody-status', urlInfo: urlInfo, fromAnchor: 'heading-custody' }) }}">Is {{ recommendation.personOnProbation.name }} in
                                 custody now?</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.custodyStatus }) }}
                         </li>

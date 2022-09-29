@@ -4,7 +4,7 @@
     </h2>
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageId: 'recall-type-indeterminate' if recommendation.isIndeterminateSentence == true or recommendation.isExtendedSentence == true else 'recall-type', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">What you recommend</a>
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'recall-type-indeterminate' if recommendation.isIndeterminateSentence == true or recommendation.isExtendedSentence == true else 'recall-type', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">What you recommend</a>
             {{ taskStatus({ hasData: taskCompleteness.statuses.recallType }) }}
         </li>
     </ul>

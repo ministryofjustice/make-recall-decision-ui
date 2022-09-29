@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     {% if recommendation.isIndeterminateSentence == true or recommendation.isExtendedSentence == true %}
@@ -21,7 +21,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            <h1 class='govuk-heading-l'>{{ pageHeading }}</h1>
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>
                 You’re about to complete a Part A form. {{ recommendation.personOnProbation.name }} will see it. If you
                 do not want {{ recommendation.personOnProbation.name }} to see certain information, you should:</p>

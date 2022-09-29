@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitle, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles.recallType, hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -24,7 +24,7 @@
                     name: "recallType",
                     fieldset: {
                         legend: {
-                            text: pageHeading,
+                            text: pageHeadings.recallType,
                             classes: "govuk-fieldset__legend--l",
                             isPageHeading: true
                         }

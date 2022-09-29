@@ -37,11 +37,9 @@ interface ListErrors {
 export type KeyedFormErrors = KeyedErrors & ListErrors
 
 export interface PageMetaData {
-  templateName: PageTemplateName
+  id: PageId
   validator?: FormValidator
   inputDisplayValues?: InputDisplayValues
-  pageHeading: string
-  pageTitle: string
 }
 
 export type FormValidator = (args: FormValidatorArgs) => FormValidatorReturn
@@ -145,7 +143,7 @@ export interface ContactHistoryFilters {
   searchFilters: string | string[]
 }
 
-export type PageTemplateName =
+export type PageId =
   | 'responseToProbation'
   | 'licenceConditions'
   | 'alternativesToRecallTried'

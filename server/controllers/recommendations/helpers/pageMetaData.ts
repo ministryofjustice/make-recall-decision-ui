@@ -1,6 +1,5 @@
 import { PageMetaData } from '../../../@types'
 import { AppError } from '../../../AppError'
-import { strings } from '../../../textStrings/en'
 import { validateRecallType } from '../recallType/formValidator'
 import { validateCustodyStatus } from '../custodyStatus/formValidator'
 import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
@@ -50,243 +49,181 @@ import { inputDisplayValuesNextAppointment } from '../nextAppointment/inputDispl
 import { validateAddress } from '../addressDetails/formValidator'
 import { inputDisplayValuesAddress } from '../addressDetails/inputDisplayValues'
 
-export const pageMetaData = (pageId?: unknown): PageMetaData => {
-  switch (pageId) {
+export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
+  switch (pageUrlSlug) {
     case 'response-to-probation':
       return {
-        templateName: 'responseToProbation',
+        id: 'responseToProbation',
         validator: validateResponseToProbation,
         inputDisplayValues: inputDisplayValuesResponseToProbation,
-        pageHeading: strings.pageHeadings.responseToProbation,
-        pageTitle: strings.pageTitles.responseToProbation,
       }
     case 'licence-conditions':
       return {
-        templateName: 'licenceConditions',
+        id: 'licenceConditions',
         validator: validateLicenceConditionsBreached,
         inputDisplayValues: inputDisplayValuesLicenceConditions,
-        pageHeading: strings.pageHeadings.licenceConditions,
-        pageTitle: strings.pageTitles.licenceConditions,
       }
     case 'alternatives-tried':
       return {
-        templateName: 'alternativesToRecallTried',
+        id: 'alternativesToRecallTried',
         validator: validateAlternativesTried,
         inputDisplayValues: inputDisplayValuesAlternativesToRecallTried,
-        pageHeading: strings.pageHeadings.alternativesToRecallTried,
-        pageTitle: strings.pageTitles.alternativesToRecallTried,
       }
     case 'stop-think':
       return {
-        templateName: 'stopThink',
-        pageHeading: strings.pageHeadings.stopThink,
-        pageTitle: strings.pageTitles.stopThink,
+        id: 'stopThink',
       }
     case 'is-indeterminate':
       return {
-        templateName: 'isIndeterminateSentence',
+        id: 'isIndeterminateSentence',
         validator: validateIsIndeterminateSentence,
         inputDisplayValues: inputDisplayValuesIsIndeterminateSentence,
-        pageHeading: strings.pageHeadings.isIndeterminateSentence,
-        pageTitle: strings.pageTitles.isIndeterminateSentence,
       }
     case 'is-extended':
       return {
-        templateName: 'isExtendedSentence',
+        id: 'isExtendedSentence',
         validator: validateIsExtendedSentence,
         inputDisplayValues: inputDisplayValuesIsExtendedSentence,
-        pageHeading: strings.pageHeadings.isExtendedSentence,
-        pageTitle: strings.pageTitles.isExtendedSentence,
       }
     case 'indeterminate-type':
       return {
-        templateName: 'indeterminateSentenceType',
+        id: 'indeterminateSentenceType',
         validator: validateIndeterminateSentenceType,
         inputDisplayValues: inputDisplayValuesIndeterminateSentenceType,
-        pageHeading: strings.pageHeadings.indeterminateSentenceType,
-        pageTitle: strings.pageTitles.indeterminateSentenceType,
       }
     case 'recall-type-indeterminate':
       return {
-        templateName: 'recallTypeIndeterminate',
+        id: 'recallTypeIndeterminate',
         validator: validateRecallTypeIndeterminate,
         inputDisplayValues: inputDisplayValuesRecallTypeIndeterminate,
-        pageHeading: strings.pageHeadings.recallType,
-        pageTitle: strings.pageTitles.recallType,
       }
     case 'indeterminate-details':
       return {
-        templateName: 'indeterminateOrExtendedSentenceDetails',
+        id: 'indeterminateOrExtendedSentenceDetails',
         validator: validateIndeterminateDetails,
         inputDisplayValues: inputDisplayValuesIndeterminateDetails,
-        pageHeading: strings.pageHeadings.indeterminateOrExtendedSentenceDetails,
-        pageTitle: strings.pageTitles.indeterminateOrExtendedSentenceDetails,
       }
     case 'recall-type':
       return {
-        templateName: 'recallType',
+        id: 'recallType',
         validator: validateRecallType,
         inputDisplayValues: inputDisplayValuesRecallType,
-        pageHeading: strings.pageHeadings.recallType,
-        pageTitle: strings.pageTitles.recallType,
       }
     case 'fixed-licence':
       return {
-        templateName: 'fixedTermLicenceConditions',
+        id: 'fixedTermLicenceConditions',
         validator: validateFixedTermLicenceConditions,
         inputDisplayValues: inputDisplayValuesFixedTermLicenceConditions,
-        pageHeading: strings.pageHeadings.fixedTermLicenceConditions,
-        pageTitle: strings.pageTitles.fixedTermLicenceConditions,
       }
     case 'sensitive-info':
       return {
-        templateName: 'sensitiveInformation',
-        pageHeading: strings.pageHeadings.sensitiveInformation,
-        pageTitle: strings.pageTitles.sensitiveInformation,
+        id: 'sensitiveInformation',
       }
     case 'emergency-recall':
       return {
-        templateName: 'emergencyRecall',
+        id: 'emergencyRecall',
         validator: validateEmergencyRecall,
         inputDisplayValues: inputDisplayValuesEmergencyRecall,
-        pageHeading: strings.pageHeadings.emergencyRecall,
-        pageTitle: strings.pageTitles.emergencyRecall,
       }
     case 'custody-status':
       return {
-        templateName: 'custodyStatus',
+        id: 'custodyStatus',
         validator: validateCustodyStatus,
         inputDisplayValues: inputDisplayValuesCustodyStatus,
-        pageHeading: strings.pageHeadings.custodyStatus,
-        pageTitle: strings.pageTitles.custodyStatus,
       }
     case 'vulnerabilities':
       return {
-        templateName: 'vulnerabilities',
+        id: 'vulnerabilities',
         validator: validateVulnerabilities,
         inputDisplayValues: inputDisplayValuesVulnerabilities,
-        pageHeading: strings.pageHeadings.vulnerabilities,
-        pageTitle: strings.pageTitles.vulnerabilities,
       }
     case 'what-led':
       return {
-        templateName: 'whatLedToRecall',
+        id: 'whatLedToRecall',
         validator: validateWhatLedToRecall,
         inputDisplayValues: inputDisplayValuesWhatLedToRecall,
-        pageHeading: strings.pageHeadings.whatLedToRecall,
-        pageTitle: strings.pageTitles.whatLedToRecall,
       }
     case 'task-list':
       return {
-        templateName: 'taskList',
-        pageHeading: strings.pageHeadings.taskList,
-        pageTitle: strings.pageTitles.taskList,
+        id: 'taskList',
       }
     case 'iom':
       return {
-        templateName: 'integratedOffenderManagement',
+        id: 'integratedOffenderManagement',
         validator: validateIntegratedOffenderManagement,
         inputDisplayValues: inputDisplayValuesIntegratedOffenderManagement,
-        pageHeading: strings.pageHeadings.integratedOffenderManagement,
-        pageTitle: strings.pageTitles.integratedOffenderManagement,
       }
     case 'police-details':
       return {
-        templateName: 'localPoliceContactDetails',
+        id: 'localPoliceContactDetails',
         validator: validateLocalPoliceContactDetails,
         inputDisplayValues: inputDisplayValuesLocalPoliceContactDetails,
-        pageHeading: strings.pageHeadings.localPoliceContactDetails,
-        pageTitle: strings.pageTitles.localPoliceContactDetails,
       }
     case 'victim-contact-scheme':
       return {
-        templateName: 'victimContactScheme',
+        id: 'victimContactScheme',
         validator: validateVictimContactScheme,
         inputDisplayValues: inputDisplayValuesVictimContactScheme,
-        pageHeading: strings.pageHeadings.victimContactScheme,
-        pageTitle: strings.pageTitles.victimContactScheme,
       }
     case 'victim-liaison-officer':
       return {
-        templateName: 'victimLiaisonOfficer',
+        id: 'victimLiaisonOfficer',
         validator: validateVictimLiaisonOfficer,
         inputDisplayValues: inputDisplayValuesVictimLiaisonOfficer,
-        pageHeading: strings.pageHeadings.victimLiaisonOfficer,
-        pageTitle: strings.pageTitles.victimLiaisonOfficer,
       }
     case 'arrest-issues':
       return {
-        templateName: 'arrestIssues',
+        id: 'arrestIssues',
         validator: validateArrestIssues,
         inputDisplayValues: inputDisplayValuesArrestIssues,
-        pageHeading: strings.pageHeadings.arrestIssues,
-        pageTitle: strings.pageTitles.arrestIssues,
       }
     case 'address-details':
       return {
-        templateName: 'addressDetails',
+        id: 'addressDetails',
         validator: validateAddress,
         inputDisplayValues: inputDisplayValuesAddress,
-        pageHeading: strings.pageHeadings.addressDetails,
-        pageTitle: strings.pageTitles.addressDetails,
       }
     case 'contraband':
       return {
-        templateName: 'contraband',
+        id: 'contraband',
         validator: validateContraband,
         inputDisplayValues: inputDisplayValuesContraband,
-        pageHeading: strings.pageHeadings.contraband,
-        pageTitle: strings.pageTitles.contraband,
       }
     case 'confirmation-part-a':
       return {
-        templateName: 'confirmationPartA',
-        pageHeading: strings.pageHeadings.confirmationPartA,
-        pageTitle: strings.pageTitles.confirmationPartA,
+        id: 'confirmationPartA',
       }
     case 'task-list-no-recall':
       return {
-        templateName: 'taskListNoRecall',
-        pageHeading: strings.pageHeadings.taskListNoRecall,
-        pageTitle: strings.pageTitles.taskListNoRecall,
+        id: 'taskListNoRecall',
       }
     case 'why-considered-recall':
       return {
-        templateName: 'whyConsideredRecall',
+        id: 'whyConsideredRecall',
         validator: validateWhyConsideredRecall,
         inputDisplayValues: inputDisplayValuesWhyConsideredRecall,
-        pageHeading: strings.pageHeadings.whyConsideredRecall,
-        pageTitle: strings.pageTitles.whyConsideredRecall,
       }
     case 'reasons-no-recall':
       return {
-        templateName: 'reasonsForNoRecall',
+        id: 'reasonsForNoRecall',
         validator: validateReasonsForNoRecall,
         inputDisplayValues: inputDisplayValuesReasonsForNoRecall,
-        pageHeading: strings.pageHeadings.reasonsForNoRecall,
-        pageTitle: strings.pageTitles.reasonsForNoRecall,
       }
     case 'appointment-no-recall':
       return {
-        templateName: 'nextAppointment',
+        id: 'nextAppointment',
         validator: validateNextAppointment,
         inputDisplayValues: inputDisplayValuesNextAppointment,
-        pageHeading: strings.pageHeadings.nextAppointment,
-        pageTitle: strings.pageTitles.nextAppointment,
       }
     case 'preview-no-recall':
       return {
-        templateName: 'previewNoRecallLetter',
-        pageHeading: strings.pageHeadings.previewNoRecallLetter,
-        pageTitle: strings.pageTitles.previewNoRecallLetter,
+        id: 'previewNoRecallLetter',
       }
     case 'confirmation-no-recall':
       return {
-        templateName: 'confirmationNoRecallLetter',
-        pageHeading: strings.pageHeadings.confirmationNoRecallLetter,
-        pageTitle: strings.pageTitles.confirmationNoRecallLetter,
+        id: 'confirmationNoRecallLetter',
       }
     default:
-      throw new AppError(`getPageMetaData - invalid pageId: ${pageId}`, { status: 404 })
+      throw new AppError(`getPageMetaData - invalid pageUrlSlug: ${pageUrlSlug}`, { status: 404 })
   }
 }

@@ -15,7 +15,7 @@ let res: Response
 
 describe('getRecommendationPage', () => {
   beforeEach(() => {
-    req = mockReq({ params: { recommendationId, pageId: 'custody-status' } })
+    req = mockReq({ params: { recommendationId, pageUrlSlug: 'custody-status' } })
     res = mockRes({ token: accessToken })
   })
 
@@ -23,8 +23,9 @@ describe('getRecommendationPage', () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     await getRecommendationPage(req, res)
     expect(res.locals.recommendation).toEqual({ ...recommendationApiResponse, isInCustody: true })
-    expect(res.locals.pageHeading).toEqual('Is Paula Smith in custody now?')
-    expect(res.locals.pageTitle).toEqual('Is the person in custody now?')
+    expect(res.locals.page).toEqual({ id: 'custodyStatus' })
+    expect(res.locals.pageHeadings.custodyStatus).toEqual('Is Paula Smith in custody now?')
+    expect(res.locals.pageTitles.custodyStatus).toEqual('Is the person in custody now?')
     expect(res.locals.inputDisplayValues.value).toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/custodyStatus')
   })
@@ -32,7 +33,7 @@ describe('getRecommendationPage', () => {
   it('should fetch licence conditions if on that page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
-    req = mockReq({ params: { recommendationId, pageId: 'licence-conditions' } })
+    req = mockReq({ params: { recommendationId, pageUrlSlug: 'licence-conditions' } })
     await getRecommendationPage(req, res)
     expect(fetchAndTransformLicenceConditions).toHaveBeenCalledWith({ crn: 'X12345', token: 'abc' })
   })
@@ -40,7 +41,7 @@ describe('getRecommendationPage', () => {
   it('should fetch no recall preview letter if on that page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(createDocument as jest.Mock).mockResolvedValue({})
-    req = mockReq({ params: { recommendationId, pageId: 'preview-no-recall' } })
+    req = mockReq({ params: { recommendationId, pageUrlSlug: 'preview-no-recall' } })
     await getRecommendationPage(req, res)
     expect(createDocument).toHaveBeenCalledWith('123', 'no-recall-letter', { format: 'preview' }, 'abc')
   })
