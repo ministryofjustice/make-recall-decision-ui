@@ -137,6 +137,7 @@ context('No recall', () => {
         statusCode: 200,
         response: noRecallResponse,
       })
+      cy.task('updateRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
       const nextYear = DateTime.now().year + 1
       cy.enterDateTime({
@@ -155,6 +156,7 @@ context('No recall', () => {
         statusCode: 200,
         response: { ...noRecallResponse, whyConsideredRecall: null },
       })
+      cy.task('updateRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
       const nextYear = DateTime.now().year + 1
       cy.enterDateTime({
