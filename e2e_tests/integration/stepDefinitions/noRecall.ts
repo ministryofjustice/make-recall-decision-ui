@@ -38,7 +38,6 @@ When('Maria enters details of the next appointment', () => {
 
 When('Maria previews the decision not to recall letter', () => {
   cy.pageHeading().should('equal', 'Preview the decision not to recall letter')
-  cy.getText('pop-address').should('not.be.empty')
   cy.getText('letter-date').should('not.be.empty')
   cy.getText('probation-address').should('equal', 'Probation office address')
   cy.getText('pop-salutation').should('contain', 'Dear')
