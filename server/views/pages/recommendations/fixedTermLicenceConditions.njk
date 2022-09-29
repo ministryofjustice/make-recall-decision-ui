@@ -45,7 +45,7 @@
                         html: '<p class="govuk-body">You\'re recommending a fixed term recall for ' + recommendation.personOnProbation.name + '. The prison will prepare a new licence.</p><p class="govuk-body">Do you want to add any additional conditions to the licence?</p>'
                     },
                     items: radioCheckboxItems({
-                        items: formOptions.hasFixedTermLicenceConditions,
+                        items: formOptions.yesNo,
                         currentValues: inputDisplayValues.value,
                         conditionalContent: {
                             YES: yesDetailHtml

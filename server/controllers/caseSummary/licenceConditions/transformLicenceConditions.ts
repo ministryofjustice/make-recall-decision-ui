@@ -5,7 +5,7 @@ import {
   UserAccessResponse,
 } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
-import { formOptions } from '../../recommendations/helpers/formOptions'
+import { formOptions } from '../../recommendations/formOptions/formOptions'
 import { sortList } from '../../../utils/lists'
 import { FormOption } from '../../../@types'
 

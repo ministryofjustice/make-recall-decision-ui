@@ -1,5 +1,5 @@
 import { validateVictimContactScheme } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('validateVictimContactScheme', () => {
   const recommendationId = '34'

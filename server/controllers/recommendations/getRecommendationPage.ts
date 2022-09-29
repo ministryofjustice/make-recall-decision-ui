@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { createDocument, getRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
-import { renderFormOptions } from './helpers/formOptions'
+import { renderFormOptions } from './formOptions/formOptions'
 import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { taskCompleteness } from './helpers/taskCompleteness'

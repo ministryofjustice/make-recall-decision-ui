@@ -1,5 +1,5 @@
 import { inputDisplayValuesCustodyStatus } from './inputDisplayValues'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 import { CustodyStatus } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesCustodyStatus', () => {

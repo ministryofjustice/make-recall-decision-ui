@@ -1,5 +1,5 @@
 import { validateIntegratedOffenderManagement } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('validateIntegratedOffenderManagement', () => {
   const recommendationId = '34'

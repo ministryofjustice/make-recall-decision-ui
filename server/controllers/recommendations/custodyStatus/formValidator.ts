@@ -1,6 +1,6 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { formOptions, isValueValid } from '../helpers/formOptions'
+import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isInCustody } from '../helpers/isInCustody'
 import { CustodyStatus } from '../../../@types/make-recall-decision-api'

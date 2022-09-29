@@ -1,5 +1,5 @@
 import { inputDisplayValuesLicenceConditions } from './inputDisplayValues'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('inputDisplayValuesLicenceConditions', () => {
   const apiValues = {

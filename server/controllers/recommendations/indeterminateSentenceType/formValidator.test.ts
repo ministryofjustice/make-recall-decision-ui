@@ -1,5 +1,5 @@
 import { validateIndeterminateSentenceType } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('validateIndeterminateSentenceType', () => {
   const recommendationId = '34'

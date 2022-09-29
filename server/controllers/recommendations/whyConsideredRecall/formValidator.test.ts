@@ -1,5 +1,5 @@
 import { validateWhyConsideredRecall } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('validateWhyConsideredRecall', () => {
   const recommendationId = '34'

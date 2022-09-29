@@ -1,6 +1,6 @@
 import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
-import { formOptions, isValueValid } from '../helpers/formOptions'
+import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'

@@ -1,5 +1,5 @@
 import { validateLicenceConditionsBreached } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 import { cleanseUiList } from '../../../utils/lists'
 import { getCaseSummary } from '../../../data/makeDecisionApiClient'
 import caseApiResponse from '../../../../api/responses/get-case-licence-conditions.json'

@@ -1,7 +1,7 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
-import { formOptions, isValueValid } from '../helpers/formOptions'
+import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 
 export const validateIntegratedOffenderManagement = async ({

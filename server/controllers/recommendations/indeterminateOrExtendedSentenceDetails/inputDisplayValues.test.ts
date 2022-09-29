@@ -1,5 +1,5 @@
 import { inputDisplayValuesIndeterminateDetails } from './inputDisplayValues'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 import { ValueWithDetails } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesIndeterminateDetails', () => {

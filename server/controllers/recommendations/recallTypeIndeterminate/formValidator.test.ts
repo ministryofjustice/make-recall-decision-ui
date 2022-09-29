@@ -1,5 +1,5 @@
 import { validateRecallTypeIndeterminate } from './formValidator'
-import { formOptions } from '../helpers/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 describe('validateRecallTypeIndeterminate', () => {
   const recommendationId = '456'

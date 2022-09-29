@@ -1,13 +1,13 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
-import { isValueValid } from '../helpers/formOptions'
+import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 export const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { hasContrabandRisk, hasContrabandRiskDetailsYes } = requestBody
-  const invalidContraband = !isValueValid(hasContrabandRisk as string, 'hasContrabandRisk')
+  const invalidContraband = !isValueValid(hasContrabandRisk as string, 'yesNo')
   const missingYesDetail =
     hasContrabandRisk === 'YES' && isEmptyStringOrWhitespace(hasContrabandRiskDetailsYes as string)
   const hasError = !hasContrabandRisk || invalidContraband || missingYesDetail
