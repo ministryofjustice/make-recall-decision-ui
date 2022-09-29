@@ -217,9 +217,7 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
       }
     case 'preview-no-recall':
       return {
-        templateName: 'previewNoRecallLetter',
-        pageHeading: strings.pageHeadings.previewNoRecallLetter,
-        pageTitle: strings.pageTitles.previewNoRecallLetter,
+        id: 'previewNoRecallLetter',
       }
     case 'confirmation-no-recall':
       return {

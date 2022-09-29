@@ -41,7 +41,7 @@ describe('getRecommendationPage', () => {
   it('should fetch no recall preview letter if on that page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(createDocument as jest.Mock).mockResolvedValue({})
-    req = mockReq({ params: { recommendationId, pageId: 'preview-no-recall' } })
+    req = mockReq({ params: { recommendationId, pageUrlSlug: 'preview-no-recall' } })
     await getRecommendationPage(req, res)
     expect(createDocument).toHaveBeenCalledWith('123', 'no-recall-letter', { format: 'preview' }, 'abc')
   })
