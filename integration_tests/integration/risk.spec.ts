@@ -12,6 +12,7 @@ context('Risk page', () => {
   it('shows RoSH, MAPPA and predictor scores', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
+    cy.getElement({ qaAttr: 'banner-incomplete-assessment' }).should('not.exist')
     // Content panels
     cy.viewDetails('View more detail on Details of the risk').should(
       'contain',
@@ -72,5 +73,18 @@ context('Risk page', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.getElement('UNKNOWN MAPPA')
+  })
+
+  it('shows a message if the assessment is incomplete', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.getText('banner-incomplete-assessment').should(
+      'equal',
+      'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
+    )
   })
 })
