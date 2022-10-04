@@ -19,9 +19,9 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <input type="hidden" name="createLetterTasksComplete" value="{{ "1" if taskCompleteness.statuses.whyConsideredRecall and taskCompleteness.statuses.reasonsForNoRecall else "0"}}" />
-                <div class="govuk-caption-l">Decision not to Recall</div>
+                <div class="govuk-caption-l">Decision not to recall</div>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-                <p class='govuk-body'>This appointment will go into the Decision not to Recall letter.</p>
+                <p class='govuk-body'>This appointment will go into the decision not to recall letter.</p>
                 {{ govukRadios({
                     idPrefix: "howWillAppointmentHappen",
                     name: "howWillAppointmentHappen",
