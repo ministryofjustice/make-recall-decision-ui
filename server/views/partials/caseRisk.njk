@@ -2,8 +2,19 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="flex-desktop flex--row-reverse">
     <div class="flex__item-one-third-desktop">
-            {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
-            {{ mappaWidget(caseSummary.mappa) }}
+        {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
+        {{ mappaWidget(caseSummary.mappa) }}
+        {% if caseSummary.predictorScores.historical[0].date %}
+            <div class="govuk-body predictor-timeline__heading">
+                <h2 class="govuk-heading-m">Score history</h2>
+            </div>
+            {{ predictorTimeline(caseSummary.predictorScores.historical) }}
+        {% else %}
+            <div class="govuk-body">
+                <h2 class="govuk-heading-m">Score history</h2>
+                <p class='govuk-body' data-qa='score-history-missing'>Not available.</p>
+            </div>
+        {% endif %}
     </div>
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
         {% if caseSummary.assessmentStatus === 'INCOMPLETE' %}
@@ -46,5 +57,36 @@
                 'data-analytics-label': 'Circumstances that will increase the risk'
             }
         }) }}
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+            Risk of serious recidivism (RSR)
+            score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}%{% endif %}
+        </h2>
+        {% if caseSummary.predictorScores.current.RSR.score %}
+            {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
+        {% else %}
+            <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
+        {% endif %}
+        <h2 class="govuk-heading-m score-header">
+            OGRS score - {{ caseSummary.predictorScores.current.OGRS.score }}
+        </h2>
+
+        <div class="govuk-grid-row">
+            {% if caseSummary.predictorScores.current.OSPC.score %}
+            <div class="govuk-grid-column-one-half-from-desktop">
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                    OSP/C score - {{ caseSummary.predictorScores.current.OSPC.score }}%
+                </h2>
+                {{ predictorScore(caseSummary.predictorScores.current.OSPC) }}
+            </div>
+            {% endif %}
+            {% if caseSummary.predictorScores.current.OSPI.score %}
+            <div class="govuk-grid-column-one-half-from-desktop">
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                    OSP/I score - {{ caseSummary.predictorScores.current.OSPI.score }}%
+                </h2>
+                {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>
