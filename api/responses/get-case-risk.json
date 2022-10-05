@@ -45,7 +45,7 @@
     },
     "historical": [
       {
-        "date": "14 May 2019 at 12:00",
+        "date": "2021-07-13",
         "scores": {
           "RSR": {
             "level": "HIGH",
@@ -63,14 +63,24 @@
             "type": "OSP/I"
           },
           "OGRS": {
-            "level": "LOW",
-            "score": 5.43,
+            "level": "MEDIUM",
+            "score": 38,
             "type": "OGRS"
+          },
+          "OGP": {
+            "level": "HIGH",
+            "score": 63,
+            "type": "OGP"
+          },
+          "OVP": {
+            "level": "VERY_HIGH",
+            "score": 84,
+            "type": "OVP"
           }
         }
       },
       {
-        "date": "12 September 2018 at 12:00",
+        "date": "2019-05-04",
         "scores": {
           "RSR": {
             "level": "MEDIUM",
@@ -78,19 +88,29 @@
             "type": "RSR"
           },
           "OSPC": {
-            "level": "LOW",
-            "score": 6.2,
+            "level": "MEDIUM",
+            "score": 8.4,
             "type": "OSP/C"
           },
           "OSPI": {
-            "level": "MEDIUM",
-            "score": 8.6,
+            "level": "LOW",
+            "score": 5.6,
             "type": "OSP/I"
           },
           "OGRS": {
             "level": "MEDIUM",
             "score": 40,
             "type": "OGRS"
+          },
+          "OGP": {
+            "level": "HIGH",
+            "score": 65,
+            "type": "OGP"
+          },
+          "OVP": {
+            "level": "VERY_HIGH",
+            "score": 81,
+            "type": "OVP"
           }
         }
       }

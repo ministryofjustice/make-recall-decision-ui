@@ -39,6 +39,25 @@ context('Risk page', () => {
 
     // MAPPA level
     cy.getElement('Cat 2/Level 1 MAPPA').should('exist')
+
+    // score history
+    let opts = { parent: '[data-qa="timeline-item-1"]' }
+    cy.getElement('13 July 2021', opts).should('be.visible')
+    cy.getElement('RSR HIGH 18', opts).should('be.visible')
+    cy.getElement('OSP/C LOW', opts).should('be.visible')
+    cy.getElement('OSP/I MEDIUM', opts).should('be.visible')
+    cy.getElement('OGRS MEDIUM 38', opts).should('be.visible')
+    cy.getElement('OGP HIGH 63', opts).should('be.visible')
+    cy.getElement('OVP VERY HIGH 84', opts).should('be.visible')
+
+    opts = { parent: '[data-qa="timeline-item-2"]' }
+    cy.getElement('4 May 2019', opts).should('be.visible')
+    cy.getElement('RSR MEDIUM 12', opts).should('be.visible')
+    cy.getElement('OSP/C MEDIUM', opts).should('be.visible')
+    cy.getElement('OSP/I LOW', opts).should('be.visible')
+    cy.getElement('OGRS MEDIUM 40', opts).should('be.visible')
+    cy.getElement('OGP HIGH 65', opts).should('be.visible')
+    cy.getElement('OVP VERY HIGH 81', opts).should('be.visible')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
@@ -53,6 +72,60 @@ context('Risk page', () => {
       'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
     )
     cy.getElement('No MAPPA')
+  })
+
+  it('score timeline - shows message if no predictor data found', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: getCaseRiskNoDataResponse,
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.getText('score-history-missing').should('equal', 'No history found.')
+  })
+
+  it('score timeline - shows message if error occurs fetching predictor data', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskNoDataResponse,
+        predictorScores: {
+          error: 'SERVER_ERROR',
+        },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.getText('score-history-missing').should('equal', 'An error occurred getting the scores history.')
+  })
+
+  it('score timeline - hide individual scores if missing', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+        predictorScores: {
+          historical: [
+            {
+              date: '2021-07-13',
+              scores: {
+                RSR: null,
+                OSPC: {
+                  level: 'LOW',
+                  score: 6.8,
+                  type: 'OSP/C',
+                },
+              },
+            },
+          ],
+        },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    const opts = { parent: '[data-qa="timeline-item-1"]' }
+    cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
+    cy.getElement('OSP/C LOW', opts).should('be.visible')
   })
 
   it('shows Unknown MAPPA if MAPPA data is null', () => {

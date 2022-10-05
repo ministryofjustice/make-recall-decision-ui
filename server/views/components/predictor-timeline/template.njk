@@ -2,16 +2,19 @@
 
 <div class="moj-timeline predictor">
     {%for item in predictorScores %}
-    <div class="moj-timeline__item">
+    <div class="moj-timeline__item" data-qa='timeline-item-{{ loop.index }}'>
         <div class="moj-timeline__header">
-            <p class="moj-timeline__byline">{{ item.date }}</p>
+            <p class="moj-timeline__byline">{{ formatDateTimeFromIsoString({ isoDate: item.date, dateOnly: true }) }}</p>
         </div>
         <div class="moj-timeline__description">
             <div class="predictor-timeline-section">
                 <ul class="govuk-list">
-                    <li>{{ predictorTimelineItem(item.scores.RSR) }}</li>
-                    <li>{{ predictorTimelineItem(item.scores.OSPC) }}</li>
-                    <li>{{ predictorTimelineItem(item.scores.OSPI) }}</li>
+                    {% if item.scores.RSR %}<li>{{ predictorTimelineItem({ predictor: item.scores.RSR, showScore: true }) }}</li>{% endif %}
+                    {% if item.scores.OSPC %}<li>{{ predictorTimelineItem({ predictor: item.scores.OSPC, showScore: false }) }}</li>{% endif %}
+                    {% if item.scores.OSPI %}<li>{{ predictorTimelineItem({ predictor: item.scores.OSPI, showScore: false }) }}</li>{% endif %}
+                    {% if item.scores.OGRS %}<li>{{ predictorTimelineItem({ predictor: item.scores.OGRS, showScore: true }) }}</li>{% endif %}
+                    {% if item.scores.OGP %}<li>{{ predictorTimelineItem({ predictor: item.scores.OGP, showScore: true }) }}</li>{% endif %}
+                    {% if item.scores.OVP %}<li>{{ predictorTimelineItem({ predictor: item.scores.OVP, showScore: true }) }}</li>{% endif %}
                 </ul>
             </div>
         </div>

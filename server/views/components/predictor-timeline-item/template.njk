@@ -1,10 +1,12 @@
-{% if predictor %}
+{% if params.predictor %}
 
 {% set timelineItemClass = '' %}
+{% set label = params.predictor.level %}
 
-{% switch predictor.level %}
+{% switch params.predictor.level %}
     {% case 'VERY_HIGH' %}
         {% set timelineItemClass = 'predictor-timeline-item--very-high'%}
+        {% set label = 'VERY HIGH'%}
     {% case 'HIGH' %}
         {% set timelineItemClass = 'predictor-timeline-item--high'%}
     {% case 'MEDIUM' %}
@@ -14,9 +16,9 @@
 {% endswitch %}
 
 <div class="{{ timelineItemClass }}">
-    <span class="predictor-timeline-item__level"><strong>{{ predictor.type }}</strong> {{ predictor.level }}</span>
-    {% if predictor.score %}
-    <span class="predictor-timeline-item__score">{{ predictor.score }}</span>
+    <span class="predictor-timeline-item__level"><strong>{{ params.predictor.type }}</strong> {{ label }}</span>
+    {% if params.showScore and params.predictor.score %}
+    <span class="predictor-timeline-item__score">{{ params.predictor.score }}</span>
     {% endif %}
 </div>
 {% endif %}
