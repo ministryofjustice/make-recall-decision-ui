@@ -19,7 +19,7 @@
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
         {% if caseSummary.assessmentStatus === 'INCOMPLETE' %}
             <div class='govuk-!-margin-bottom-6'>
-                {% include './notificationBanners/incompleteAssessmentBanner.njk' %}
+                {% include './notificationBanners/latestCompleteAssessment.njk' %}
             </div>
         {% endif %}
         {{ oasysCard({

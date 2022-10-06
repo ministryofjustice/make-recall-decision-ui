@@ -2,7 +2,7 @@
 {% set offenceDescriptionHtml %}
     {% if caseSummary.risk.assessments.offenceDataFromLatestCompleteAssessment === false %}
         <div class='govuk-!-margin-bottom-4'>
-            {% include '../notificationBanners/incompleteAssessmentBanner.njk' %}
+            {% include '../notificationBanners/latestCompleteAssessment.njk' %}
         </div>
     {% endif %}
     {% if caseSummary.risk.assessments.offenceCodesMatch === false %}
@@ -31,11 +31,11 @@
     {% endif %}
 {% endset %}
 
-        {{ appSummaryCard({
-            titleText: 'Offence description',
-            classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
-            attributes: {
-                'data-qa': 'offence-description'
-            },
-            html: offenceDescriptionHtml
-        }) }}
+{{ appSummaryCard({
+    titleText: 'Offence description',
+    classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+    attributes: {
+        'data-qa': 'offence-description'
+    },
+    html: offenceDescriptionHtml
+}) }}
