@@ -1,0 +1,57 @@
+{% set offenceSentenceHtml %}
+    {% if not caseSummary.convictions.active.length %}
+        <p class='govuk-body'>This person has no active offences or convictions.</p>
+    {%  else %}
+        {% for conviction in caseSummary.convictions.active %}
+            {% set mainOffencesHtml %}
+                {% if conviction.offences.main.length %}
+                    <ul class='govuk-list'>
+                        {% for offence in conviction.offences.main %}
+                            <li>{{ offence }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    Not available
+                {% endif %}
+            {% endset %}
+            {% set additonalOffencesHtml %}
+                <ul class='govuk-list'>
+                    {% for offence in conviction.offences.additional %}
+                        <li>{{ offence }}</li>
+                    {% endfor %}
+                </ul>
+            {% endset %}
+            <div {% if loop.index > 1 %} class='govuk-!-margin-top-2 govuk-!-padding-top-2 border-top'{% endif %}>
+                {{ govukSummaryList({
+                    classes: 'govuk-summary-list--no-border',
+                    attributes: {
+                        'data-qa': 'conviction-' + loop.index
+                    },
+                    rows: [
+                        {
+                            key: { html: 'Main offence' },
+                            value: { html: mainOffencesHtml }
+                        },
+                        {
+                            key: { html: 'Additional offence(s)' },
+                            value: { html: additonalOffencesHtml }
+                        } if conviction.offences.additional.length else undefined,
+                        {
+                            key: { html: 'Sentence type' },
+                            value: { text: conviction.sentenceDescription + " (" + conviction.sentenceOriginalLength + " " + conviction.sentenceOriginalLengthUnits + ")" if conviction.sentenceDescription else 'Not available' }
+                        },
+                        {
+                            key: { html: 'Sentence expiry date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentenceExpiryDate if conviction.sentenceExpiryDate else 'Not available' }) }
+                        } if conviction.isCustodial else undefined
+                    ]
+                }) }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endset %}
+        {{ appSummaryCard({
+            titleText: 'Offence and sentence',
+            classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+            html: offenceSentenceHtml
+        }) }}
