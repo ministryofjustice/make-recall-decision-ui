@@ -3,16 +3,17 @@ import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 
 context('Overview', () => {
+  const crn = 'X34983'
+
   beforeEach(() => {
     cy.signIn()
   })
 
   it('shows licence and offence information', () => {
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
     // licence info
-    const { releaseSummary, convictions } = getCaseOverviewResponse
+    const { releaseSummary, convictions, risk } = getCaseOverviewResponse
     cy.getText('lastReleaseDate').should(
       'equal',
       formatDateTimeFromIsoString({ isoDate: releaseSummary.lastRelease.date })
@@ -36,6 +37,12 @@ context('Overview', () => {
     cy.getDefinitionListValue('Sentence type', opts).should('contain', 'ORA Suspended Sentence Order (2 months)')
     cy.getElement('Sentence expiry date', opts).should('not.exist')
 
+    // offence description
+    cy.getDefinitionListValue('Description', { parent: '[data-qa="offence-description"]' }).should(
+      'contain',
+      risk.assessments.offenceDescription
+    )
+
     // risk flags
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
@@ -46,7 +53,6 @@ context('Overview', () => {
   })
 
   it('sort by sentence expiry date; missing data', () => {
-    const crn = 'X34983'
     const convictions = [
       {
         active: true,
@@ -100,7 +106,6 @@ context('Overview', () => {
   })
 
   it('shows "Not available" for last release and licence expiry date if dates are missing', () => {
-    const crn = 'X34983'
     const convictions = [
       {
         active: false,
@@ -134,7 +139,6 @@ context('Overview', () => {
   })
 
   it('shows banner and "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
-    const crn = 'X34983'
     const convictions = [
       {
         active: false,
@@ -185,7 +189,6 @@ context('Overview', () => {
   })
 
   it('shows a message in offence panel, and not available for licence dates, if no active custodial convictions', () => {
-    const crn = 'X34983'
     const convictions = [
       {
         active: false,
@@ -219,7 +222,6 @@ context('Overview', () => {
   })
 
   it('shows a message if no risk flags', () => {
-    const crn = 'X34983'
     cy.task('getCase', {
       sectionId: 'overview',
       statusCode: 200,
@@ -231,7 +233,6 @@ context('Overview', () => {
 
   it('can switch between case summary pages', () => {
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    const crn = 'X34983'
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     // tabs
     cy.clickLink('Personal details')
@@ -242,5 +243,47 @@ context('Overview', () => {
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     cy.clickLink('Overview')
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
+  })
+
+  it('shows a message if the assessment is incomplete', () => {
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        risk: { assessments: { offenceDataFromLatestCompleteAssessment: false } },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('banner-incomplete-assessment').should(
+      'equal',
+      'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
+    )
+  })
+
+  it("shows a message if main offences don't match", () => {
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: { ...getCaseOverviewResponse, risk: { assessments: { offenceCodesMatch: false } } },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('banner-offence-mismatch').should(
+      'equal',
+      'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+    )
+  })
+
+  it('shows a message if call for assessments data errored', () => {
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: { ...getCaseOverviewResponse, risk: { assessments: { error: 'NOT_FOUND' } } },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('offence-description-error').should(
+      'equal',
+      'This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.'
+    )
   })
 })
