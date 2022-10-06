@@ -2,7 +2,7 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include './multipleActiveCustodialBanner.njk' %}
+        {% include './notificationBanners/multipleActiveCustodialBanner.njk' %}
         {% set licenceHtml %}
             <div class='flex flex--space-between'>
                 <div class='flex__item-half-width'>
@@ -81,6 +81,47 @@
             titleText: 'Offence and sentence',
             classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
             html: offenceSentenceHtml
+        }) }}
+
+        {% set offenceDescriptionHtml %}
+        {% if caseSummary.risk.assessments.offenceDataFromLatestCompleteAssessment === false %}
+            <div class='govuk-!-margin-bottom-4'>
+                {% include './notificationBanners/incompleteAssessmentBanner.njk' %}
+            </div>
+        {% endif %}
+        {% if caseSummary.risk.assessments.offenceCodesMatch === false %}
+            <div class='govuk-!-margin-bottom-4'>
+                {% include './notificationBanners/mainOffenceMismatchBanner.njk' %}
+            </div>
+        {% endif %}
+        <div class="govuk-!-margin-bottom-2 text-secondary">
+            OASys 2.1 Offence description
+        </div>
+        {% if caseSummary.risk.assessments.error %}
+            <p class='govuk-body' data-qa='offence-description-error'>This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.</p>
+        {% else %}
+            <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
+                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.risk.assessments.lastUpdatedDate, dateOnly: true }) }}
+            </div>
+            {{ govukSummaryList({
+                classes: 'govuk-summary-list--no-border',
+                rows: [
+                    {
+                        key: { html: 'Description' },
+                        value: { text: caseSummary.risk.assessments.offenceDescription }
+                    }
+                ]
+            })}}
+        {% endif %}
+        {% endset %}
+
+        {{ appSummaryCard({
+            titleText: 'Offence description',
+            classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+            attributes: {
+                'data-qa': 'offence-description'
+            },
+            html: offenceDescriptionHtml
         }) }}
     </div>
     <div class="govuk-grid-column-one-third-from-desktop" data-qa='riskFlags'>

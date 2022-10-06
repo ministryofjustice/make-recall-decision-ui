@@ -80,7 +80,13 @@
     }
   ],
   "risk": {
-    "flags": ["Victim contact", "Mental health issues", "MAPPA"]
+    "flags": ["Victim contact", "Mental health issues", "MAPPA"],
+    "assessments": {
+      "lastUpdatedDate": "2020-07-03T11:42:01.000Z",
+      "offenceDataFromLatestCompleteAssessment": true,
+      "offenceCodesMatch": true,
+      "offenceDescription": "Mr Smith was recalled again on 13/12/2021. He was returned to custody on 27/12/2021. This is the second time Mr Smith has been recalled since his initial release from prison on 18/11/2020"
+    }
   },
   "releaseSummary": {
     "lastRelease": {

@@ -23,7 +23,7 @@
                 {% if caseSummary.convictions.hasMultipleActiveCustodial or caseSummary.convictions.activeCustodial.length == 0 %}
                     <div class="govuk-caption-l">Circumstances</div>
                     <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
-                    {% include '../../partials/multipleActiveCustodialBanner.njk' %}
+                    {% include '../../partials/notificationBanners/multipleActiveCustodialBanner.njk' %}
                     {% if caseSummary.convictions.activeCustodial.length == 0 %}
                         <p class='govuk-body'>There are no licence conditions. This person is not currently on licence.
                             Double-check that the information in NDelius is correct.</p>

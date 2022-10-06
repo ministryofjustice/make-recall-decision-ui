@@ -1,0 +1,9 @@
+{% set html %}
+    <p class="govuk-notification-banner__heading" data-qa='banner-offence-mismatch'>
+        The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.
+    </p>
+{% endset %}
+{{ govukNotificationBanner({
+    html: html,
+    classes: 'govuk-!-margin-bottom-0'
+}) }}

@@ -18,14 +18,9 @@
     </div>
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
         {% if caseSummary.assessmentStatus === 'INCOMPLETE' %}
-            {% set html %}
-                <p class="govuk-notification-banner__heading" data-qa='banner-incomplete-assessment'>
-                    This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.
-                </p>
-            {% endset %}
-            {{ govukNotificationBanner({
-                html: html
-            }) }}
+            <div class='govuk-!-margin-bottom-6'>
+                {% include './notificationBanners/incompleteAssessmentBanner.njk' %}
+            </div>
         {% endif %}
         {{ oasysCard({
             cardHeading: 'Details of the risk',
@@ -58,8 +53,7 @@
             }
         }) }}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            Risk of serious recidivism (RSR)
-            score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}%{% endif %}
+            Risk of serious recidivism (RSR) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}%{% endif %}
         </h2>
         {% if caseSummary.predictorScores.current.RSR.score %}
             {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
