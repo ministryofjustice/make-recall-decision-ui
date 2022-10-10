@@ -9,7 +9,7 @@ context('Risk page', () => {
     cy.signIn()
   })
 
-  it.only('shows RoSH, MAPPA and predictor scores', () => {
+  it('shows RoSH, MAPPA and predictor scores', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
