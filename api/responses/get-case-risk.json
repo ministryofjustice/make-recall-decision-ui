@@ -24,28 +24,41 @@
     "current": {
       "RSR": {
         "level": "HIGH",
-        "score": 23,
+        "score": 18,
         "type": "RSR"
       },
       "OSPC": {
         "level": "LOW",
-        "score": 3.45,
+        "score": 6.8,
         "type": "OSP/C"
       },
       "OSPI": {
         "level": "MEDIUM",
-        "score": 5.3,
+        "score": 8.1,
         "type": "OSP/I"
       },
       "OGRS": {
-        "level": "LOW",
-        "score": 12,
-        "type": "RSR"
+        "level": "MEDIUM",
+        "oneYear": 10,
+        "twoYears": 20,
+        "type": "OGRS"
+      },
+      "OGP": {
+        "level": "HIGH",
+        "ogp1Year": 1,
+        "ogp2Year": 22,
+        "type": "OGP"
+      },
+      "OVP": {
+        "level": "VERY_HIGH",
+        "type": "OVP",
+        "oneYear": 34,
+        "twoYears": 64
       }
     },
     "historical": [
       {
-        "date": "14 May 2019 at 12:00",
+        "date": "2021-07-13",
         "scores": {
           "RSR": {
             "level": "HIGH",
@@ -63,14 +76,27 @@
             "type": "OSP/I"
           },
           "OGRS": {
-            "level": "LOW",
-            "score": 5.43,
+            "level": "MEDIUM",
+            "oneYear": 10,
+            "twoYears": 20,
             "type": "OGRS"
+          },
+          "OGP": {
+            "level": "HIGH",
+            "ogp1Year": 56,
+            "ogp2Year": 63,
+            "type": "OGP"
+          },
+          "OVP": {
+            "level": "VERY_HIGH",
+            "type": "OVP",
+            "oneYear": 34,
+            "twoYears": 64
           }
         }
       },
       {
-        "date": "12 September 2018 at 12:00",
+        "date": "2019-05-04",
         "scores": {
           "RSR": {
             "level": "MEDIUM",
@@ -78,19 +104,32 @@
             "type": "RSR"
           },
           "OSPC": {
-            "level": "LOW",
-            "score": 6.2,
+            "level": "MEDIUM",
+            "score": 8.4,
             "type": "OSP/C"
           },
           "OSPI": {
-            "level": "MEDIUM",
-            "score": 8.6,
+            "level": "LOW",
+            "score": 5.6,
             "type": "OSP/I"
           },
           "OGRS": {
-            "level": "MEDIUM",
-            "score": 40,
+            "level": "HIGH",
+            "oneYear": 45,
+            "twoYears": 55,
             "type": "OGRS"
+          },
+          "OGP": {
+            "level": "VERY_HIGH",
+            "ogp1Year": 77,
+            "ogp2Year": 85,
+            "type": "OGP"
+          },
+          "OVP": {
+            "level": "VERY_HIGH",
+            "oneYear": 82,
+            "twoYears": 91,
+            "type": "OVP"
           }
         }
       }

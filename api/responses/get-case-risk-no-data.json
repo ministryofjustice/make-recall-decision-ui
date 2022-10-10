@@ -19,55 +19,7 @@
     "lastUpdated": ""
   },
   "predictorScores": {
-    "current": {
-      "RSR": {
-        "level": "",
-        "score": "",
-        "type": "RSR"
-      },
-      "OSPC": {
-        "level": "",
-        "score": "",
-        "type": "OSP/C"
-      },
-      "OSPI": {
-        "level": "",
-        "score": "",
-        "type": "OSP/I"
-      },
-      "OGRS": {
-        "level": "",
-        "score": "",
-        "type": "OGRS"
-      }
-    },
-    "historical": [
-      {
-        "date": "",
-        "scores": {
-          "RSR": {
-            "level": "",
-            "score": "",
-            "type": "RSR"
-          },
-          "OSPC": {
-            "level": "",
-            "score": "",
-            "type": "OSP/C"
-          },
-          "OSPI": {
-            "level": "",
-            "score": "",
-            "type": "OSP/I"
-          },
-          "OGRS": {
-            "level": "",
-            "score": "",
-            "type": "OGRS"
-          }
-        }
-      }
-    ]
+    "error": "NOT_FOUND"
   },
   "activeRecommendation": {
     "recommendationId": 1,
