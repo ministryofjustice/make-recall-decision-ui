@@ -13,16 +13,27 @@ context('Risk page', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
+
     // Content panels
-    cy.viewDetails('View more detail on Details of the risk').should(
-      'contain',
-      getCaseRiskResponse.natureOfRisk.description
-    )
-    cy.viewDetails('View more detail on Who is at risk').should('contain', getCaseRiskResponse.whoIsAtRisk.description)
+    const { whoIsAtRisk, natureOfRisk, riskIncreaseFactors, riskImminence, riskMitigationFactors } =
+      getCaseRiskResponse.roshSummary
+    cy.viewDetails('View more detail on Who is at risk').should('contain', whoIsAtRisk.description)
+    cy.getElement('Last updated: 5 October 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
+    cy.viewDetails('View more detail on Details of the risk').should('contain', natureOfRisk.description)
+    cy.getElement('Last updated: 13 November 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
+    cy.viewDetails('View more detail on When the risk will be highest').should('contain', riskImminence.description)
+    cy.getElement('Last updated: 14 December 2020', { parent: '[data-qa="riskImminence"]' }).should('exist')
     cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
       'contain',
-      getCaseRiskResponse.circumstancesIncreaseRisk.description
+      riskIncreaseFactors.description
     )
+    cy.getElement('Last updated: 4 August 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
+    cy.viewDetails('View more detail on Factors that will reduce the risk').should(
+      'contain',
+      riskMitigationFactors.description
+    )
+    cy.getElement('Last updated: 27 June 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
+
     // RoSH table
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
       expect(rowValues[0]).to.equal('Low')
@@ -66,18 +77,51 @@ context('Risk page', () => {
     cy.getElement('OVP 2YR VERY HIGH 91', opts).should('be.visible')
   })
 
-  it('shows messages if RoSH / MAPPA / predictor score data is missing', () => {
+  it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' } },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+
+    // RoSH content boxes
+    ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
+      cy
+        .getElement('This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.', {
+          parent: `[data-qa="${id}"]`,
+        })
+        .should('exist')
+    )
+
+    cy.getElement('UNKNOWN LEVEL RoSH').should('exist')
+    cy.getElement(
+      'This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.'
+    ).should('exist')
+    cy.getElement('No MAPPA').should('exist')
+  })
+
+  it('shows messages if an error occurs fetching RoSH / MAPPA / predictor score data', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
-    cy.getElement('UNKNOWN LEVEL RoSH')
-    cy.getElement(
-      'A RoSH summary has not been completed for this individual. Check OASys for this persons current assessment status.'
+
+    // RoSH content boxes
+    ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
+      cy
+        .getElement('This information cannot be retrieved from OASys.', {
+          parent: `[data-qa="${id}"]`,
+        })
+        .should('exist')
     )
-    cy.getElement('No MAPPA')
+    cy.getElement('UNKNOWN LEVEL RoSH').should('exist')
+    cy.getElement('Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.').should(
+      'exist'
+    )
+    cy.getElement('No MAPPA').should('exist')
   })
 
   it('score timeline - shows message if no predictor data found', () => {

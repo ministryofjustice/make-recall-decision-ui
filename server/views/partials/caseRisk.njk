@@ -2,7 +2,7 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="flex-desktop flex--row-reverse">
     <div class="flex__item-one-third-desktop">
-        {{ roshWidget(caseSummary.riskOfSeriousHarm) }}
+        {{ roshWidget(caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm) }}
         {{ mappaWidget(caseSummary.mappa) }}
         <div class="govuk-body predictor-timeline__heading">
             <h2 class="govuk-heading-m">Scores history</h2>
@@ -23,34 +23,69 @@
             </div>
         {% endif %}
         {{ oasysCard({
-            cardHeading: 'Details of the risk',
-            oasysHeading: caseSummary.natureOfRisk.oasysHeading,
-            content: caseSummary.natureOfRisk.description,
-            attributes: {
-                'data-js': 'viewDetail',
-                'data-analytics-category': 'riskViewDetail',
-                'data-analytics-label': 'Details of the risk'
-            }
-        }) }}
-        {{ oasysCard({
             cardHeading: 'Who is at risk',
-            oasysHeading: caseSummary.whoIsAtRisk.oasysHeading,
-            content: caseSummary.whoIsAtRisk.description,
+            oasysHeading: 'OASys 10.1 Who is at risk?',
+            error: caseSummary.roshSummary.error,
+            content: caseSummary.roshSummary.whoIsAtRisk.description,
+            lastUpdated: caseSummary.roshSummary.whoIsAtRisk.lastUpdated,
             attributes: {
                 'data-js': 'viewDetail',
                 'data-analytics-category': 'riskViewDetail',
                 'data-analytics-label': 'Who is at risk'
-            }
+            },
+            dataQaAttr: 'whoIsAtRisk'
+        }) }}
+        {{ oasysCard({
+            cardHeading: 'Details of the risk',
+            oasysHeading: 'OASys 10.2 What is the nature of the risk?',
+            error: caseSummary.roshSummary.error,
+            content: caseSummary.roshSummary.natureOfRisk.description,
+            lastUpdated: caseSummary.roshSummary.natureOfRisk.lastUpdated,
+            attributes: {
+                'data-js': 'viewDetail',
+                'data-analytics-category': 'riskViewDetail',
+                'data-analytics-label': 'Details of the risk'
+            },
+            dataQaAttr: 'natureOfRisk'
+        }) }}
+        {{ oasysCard({
+            cardHeading: 'When the risk will be highest',
+            oasysHeading: 'OASys 10.3 When is the risk likely to be greatest?',
+            error: caseSummary.roshSummary.error,
+            content: caseSummary.roshSummary.riskImminence.description,
+            lastUpdated: caseSummary.roshSummary.riskImminence.lastUpdated,
+            attributes: {
+                'data-js': 'viewDetail',
+                'data-analytics-category': 'riskViewDetail',
+                'data-analytics-label': 'When the risk will be highest'
+            },
+            dataQaAttr: 'riskImminence'
         }) }}
         {{ oasysCard({
             cardHeading: 'Circumstances that will increase the risk',
-            oasysHeading: caseSummary.circumstancesIncreaseRisk.oasysHeading,
-            content: caseSummary.circumstancesIncreaseRisk.description,
+            oasysHeading: 'OASys 10.4 What circumstances are likely to increase the risk?',
+            error: caseSummary.roshSummary.error,
+            content: caseSummary.roshSummary.riskIncreaseFactors.description,
+            lastUpdated: caseSummary.roshSummary.riskIncreaseFactors.lastUpdated,
             attributes: {
                 'data-js': 'viewDetail',
                 'data-analytics-category': 'riskViewDetail',
                 'data-analytics-label': 'Circumstances that will increase the risk'
-            }
+            },
+            dataQaAttr: 'riskIncreaseFactors'
+        }) }}
+        {{ oasysCard({
+            cardHeading: 'Factors that will reduce the risk',
+            oasysHeading: 'OASys 10.5 What factors are likely to reduce the risk?',
+            error: caseSummary.roshSummary.error,
+            content: caseSummary.roshSummary.riskMitigationFactors.description,
+            lastUpdated: caseSummary.roshSummary.riskMitigationFactors.lastUpdated,
+            attributes: {
+                'data-js': 'viewDetail',
+                'data-analytics-category': 'riskViewDetail',
+                'data-analytics-label': 'Factors that will reduce the risk'
+            },
+            dataQaAttr: 'riskMitigationFactors'
         }) }}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
             Risk of serious recidivism (RSR) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}%{% endif %}

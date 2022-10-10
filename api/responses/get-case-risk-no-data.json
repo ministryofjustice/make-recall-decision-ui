@@ -6,13 +6,8 @@
     "gender": "Male",
     "crn": "A12345"
   },
-  "riskOfSeriousHarm": {
-    "overallRisk": "",
-    "riskToChildren": "",
-    "riskToPublic": "",
-    "riskToKnownAdult": "",
-    "riskToStaff": "",
-    "lastUpdated": ""
+  "roshSummary": {
+    "error": "SERVER_ERROR"
   },
   "mappa": {
     "level": "",
