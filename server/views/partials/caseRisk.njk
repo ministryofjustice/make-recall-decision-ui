@@ -6,6 +6,7 @@
         {{ mappaWidget(caseSummary.mappa) }}
         <div class="govuk-body predictor-timeline__heading">
             <h2 class="govuk-heading-m">Scores history</h2>
+            <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
         </div>
         {% if caseSummary.predictorScores.historical %}
             {{ predictorTimeline(caseSummary.predictorScores.historical) }}

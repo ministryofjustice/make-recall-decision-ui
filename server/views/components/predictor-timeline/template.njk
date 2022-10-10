@@ -9,14 +9,24 @@
         <div class="moj-timeline__description">
             <div class="predictor-timeline-section">
                 <ul class="govuk-list">
-                    {% if item.scores.RSR %}<li>{{ predictorTimelineItem({ predictor: item.scores.RSR, showScore: true }) }}</li>{% endif %}
-                    {% if item.scores.OSPC %}<li>{{ predictorTimelineItem({ predictor: item.scores.OSPC, showScore: false }) }}</li>{% endif %}
-                    {% if item.scores.OSPI %}<li>{{ predictorTimelineItem({ predictor: item.scores.OSPI, showScore: false }) }}</li>{% endif %}
-                    {% if item.scores.OGRS %}<li>{{ predictorTimelineItem({ predictor: item.scores.OGRS, showScore: true }) }}</li>{% endif %}
-                    {% if item.scores.OGP %}<li>{{ predictorTimelineItem({ predictor: item.scores.OGP, showScore: true }) }}</li>{% endif %}
-                    {% if item.scores.OVP %}<li>{{ predictorTimelineItem({ predictor: item.scores.OVP, showScore: true }) }}</li>{% endif %}
+                    {% if item.scores.RSR %}<li>{{ predictorTimelineItem({ type: item.scores.RSR.type, score: item.scores.RSR.score, level: item.scores.RSR.level }) }}</li>{% endif %}
+                    {% if item.scores.OSPC %}<li>{{ predictorTimelineItem({ type: item.scores.OSPC.type, score: item.scores.OSPC.score, level: item.scores.OSPC.level }) }}</li>{% endif %}
+                    {% if item.scores.OSPI %}<li>{{ predictorTimelineItem({ type: item.scores.OSPI.type, score: item.scores.OSPI.score, level: item.scores.OSPI.level }) }}</li>{% endif %}
+                    {% if item.scores.OGRS %}
+                        <li>{{ predictorTimelineItem({ type: item.scores.OGRS.type + ' 1YR', score: item.scores.OGRS.oneYear, level: item.scores.OGRS.level }) }}</li>
+                        <li>{{ predictorTimelineItem({ type: item.scores.OGRS.type + ' 2YR', score: item.scores.OGRS.twoYears, level: item.scores.OGRS.level }) }}</li>
+                    {% endif %}
+                    {% if item.scores.OGP %}
+                        <li>{{ predictorTimelineItem({ type: item.scores.OGP.type + ' 1YR', score: item.scores.OGP.ogp1Year, level: item.scores.OGP.level }) }}</li>
+                        <li>{{ predictorTimelineItem({ type: item.scores.OGP.type + ' 2YR', score: item.scores.OGP.ogp2Year, level: item.scores.OGP.level }) }}</li>
+                    {% endif %}
+                    {% if item.scores.OVP %}
+                        <li>{{ predictorTimelineItem({ type: item.scores.OVP.type + ' 1YR', score: item.scores.OVP.oneYear, level: item.scores.OVP.level }) }}</li>
+                        <li>{{ predictorTimelineItem({ type: item.scores.OVP.type + ' 2YR', score: item.scores.OVP.twoYears, level: item.scores.OVP.level }) }}</li>
+                    {% endif %}
                 </ul>
             </div>
+            <a href="#" class="govuk-link predictor-timeline__toggle-section">Open</a>
         </div>
     </div>
     {% endfor %}

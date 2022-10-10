@@ -24,23 +24,36 @@
     "current": {
       "RSR": {
         "level": "HIGH",
-        "score": 23,
+        "score": 18,
         "type": "RSR"
       },
       "OSPC": {
         "level": "LOW",
-        "score": 3.45,
+        "score": 6.8,
         "type": "OSP/C"
       },
       "OSPI": {
         "level": "MEDIUM",
-        "score": 5.3,
+        "score": 8.1,
         "type": "OSP/I"
       },
       "OGRS": {
-        "level": "LOW",
-        "score": 12,
-        "type": "RSR"
+        "level": "MEDIUM",
+        "oneYear": 10,
+        "twoYears": 20,
+        "type": "OGRS"
+      },
+      "OGP": {
+        "level": "HIGH",
+        "ogp1Year": 1,
+        "ogp2Year": 22,
+        "type": "OGP"
+      },
+      "OVP": {
+        "level": "VERY_HIGH",
+        "type": "OVP",
+        "oneYear": 34,
+        "twoYears": 64
       }
     },
     "historical": [
@@ -64,18 +77,21 @@
           },
           "OGRS": {
             "level": "MEDIUM",
-            "score": 38,
+            "oneYear": 10,
+            "twoYears": 20,
             "type": "OGRS"
           },
           "OGP": {
             "level": "HIGH",
-            "score": 63,
+            "ogp1Year": 56,
+            "ogp2Year": 63,
             "type": "OGP"
           },
           "OVP": {
             "level": "VERY_HIGH",
-            "score": 84,
-            "type": "OVP"
+            "type": "OVP",
+            "oneYear": 34,
+            "twoYears": 64
           }
         }
       },
@@ -98,18 +114,21 @@
             "type": "OSP/I"
           },
           "OGRS": {
-            "level": "MEDIUM",
-            "score": 40,
+            "level": "HIGH",
+            "oneYear": 45,
+            "twoYears": 55,
             "type": "OGRS"
           },
           "OGP": {
-            "level": "HIGH",
-            "score": 65,
+            "level": "VERY_HIGH",
+            "ogp1Year": 77,
+            "ogp2Year": 85,
             "type": "OGP"
           },
           "OVP": {
             "level": "VERY_HIGH",
-            "score": 81,
+            "oneYear": 82,
+            "twoYears": 91,
             "type": "OVP"
           }
         }
