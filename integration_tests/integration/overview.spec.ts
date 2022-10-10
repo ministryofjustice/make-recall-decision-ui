@@ -43,6 +43,9 @@ context('Overview', () => {
       risk.assessments.offenceDescription
     )
 
+    // contingency plan
+    cy.viewDetails('View more detail on contingency plan').should('contain', risk.riskManagementPlan.contingencyPlans)
+
     // risk flags
     cy.getElement('Victim contact', { parent: '[data-qa="riskFlags"]' }).should('exist')
     cy.getElement('Mental health issues', { parent: '[data-qa="riskFlags"]' }).should('exist')
@@ -255,7 +258,7 @@ context('Overview', () => {
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('banner-incomplete-assessment').should(
+    cy.getText('banner-latest-complete-assessment').should(
       'equal',
       'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
     )
@@ -284,6 +287,39 @@ context('Overview', () => {
     cy.getText('offence-description-error').should(
       'equal',
       'This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.'
+    )
+  })
+
+  it('shows a message if the contingency plan is from an incomplete assessment', () => {
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        risk: {
+          riskManagementPlan: {
+            assessmentStatusComplete: false,
+          },
+        },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('banner-contingency-incomplete-assessment').should(
+      'equal',
+      'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.'
+    )
+  })
+
+  it('shows a message if call for contingency plan errored', () => {
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: { ...getCaseOverviewResponse, risk: { riskManagementPlan: { error: 'SERVER_ERROR' } } },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.getText('contingency-plan-error').should(
+      'equal',
+      'This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.'
     )
   })
 })
