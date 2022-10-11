@@ -22,7 +22,6 @@ When('Maria views the overview page', () => {
 When('Maria views the risk page', () => {
   cy.clickLink('Risk')
   cy.pageHeading().should('contain', 'Risk')
-  cy.viewDetails('View more detail on Who is at risk').should('not.be.empty')
 })
 
 When('Maria views the personal details page', () => {
