@@ -10,7 +10,7 @@ context('Risk page', () => {
   })
 
   it('shows RoSH, MAPPA and predictor scores', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
 
@@ -32,17 +32,21 @@ context('Risk page', () => {
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
     // RoSH table
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('Low')
+      expect(rowValues).to.deep.eq(['Medium', 'Low'])
     })
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Public' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('Very high')
+      expect(rowValues).to.deep.eq(['High', 'Very high'])
     })
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Known adult' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('Medium')
+      expect(rowValues).to.deep.eq(['High', 'Medium'])
     })
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Staff' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('High')
+      expect(rowValues).to.deep.eq(['Very high', 'High'])
+    })
+    cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Prisoners' }).then(rowValues => {
+      expect(rowValues).to.deep.eq(['N/A', 'Medium'])
     })
 
     // MAPPA level
@@ -78,24 +82,33 @@ context('Risk page', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
-      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' } },
+      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' }, mappa: { error: 'NOT_FOUND' } },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
-    // RoSH content boxes
-    ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
+    // RoSH content boxes & table
+    ;[
+      'whoIsAtRisk',
+      'natureOfRisk',
+      'riskImminence',
+      'riskIncreaseFactors',
+      'riskMitigationFactors',
+      'roshTable',
+    ].forEach(id =>
       cy
         .getElement('This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.', {
           parent: `[data-qa="${id}"]`,
         })
         .should('exist')
     )
-
-    cy.getElement('UNKNOWN LEVEL RoSH').should('exist')
+    cy.getElement('UNKNOWN RoSH').should('exist')
+    cy.getElement('UNKNOWN MAPPA').should('exist')
     cy.getElement(
-      'This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.'
+      'This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.',
+      {
+        parent: '[data-qa="mappa"]',
+      }
     ).should('exist')
-    cy.getElement('No MAPPA').should('exist')
   })
 
   it('shows messages if an error occurs fetching RoSH / MAPPA / predictor score data', () => {
@@ -104,7 +117,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
     // RoSH content boxes
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
@@ -114,11 +127,14 @@ context('Risk page', () => {
         })
         .should('exist')
     )
-    cy.getElement('UNKNOWN LEVEL RoSH').should('exist')
+    cy.getElement('UNKNOWN RoSH').should('exist')
     cy.getElement('Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.').should(
       'exist'
     )
-    cy.getElement('No MAPPA').should('exist')
+    cy.getElement('UNKNOWN MAPPA').should('exist')
+    cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
   })
 
   it('score timeline - shows message if no predictor data found', () => {
@@ -127,7 +143,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.getText('score-history-missing').should('equal', 'No history found.')
   })
 
@@ -142,7 +158,7 @@ context('Risk page', () => {
         },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.getText('score-history-missing').should('equal', 'An error occurred getting the scores history.')
   })
 
@@ -169,30 +185,10 @@ context('Risk page', () => {
         },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     const opts = { parent: '[data-qa="timeline-item-1"]' }
     cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
     cy.getElement('OSP/C LOW', opts).should('be.visible')
-  })
-
-  it('shows Unknown MAPPA if MAPPA data is null', () => {
-    const riskResponse = {
-      personalDetailsOverview: {
-        name: 'Paula Smith',
-        dateOfBirth: '2000-11-09',
-        age: 21,
-        gender: 'Male',
-        crn: 'A12345',
-      },
-      mappa: null,
-    }
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: riskResponse,
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
-    cy.getElement('UNKNOWN MAPPA')
   })
 
   it('shows a message if the assessment is incomplete', () => {
@@ -201,7 +197,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.getText('banner-latest-complete-assessment').should(
       'equal',
       'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'

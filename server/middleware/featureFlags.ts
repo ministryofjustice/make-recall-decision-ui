@@ -18,6 +18,10 @@ export const featureFlagsDefaults = {
     label: 'Prototype - Make a recommendation',
     default: false,
   },
+  flagShowRiskTab: {
+    label: 'Show Risk tab in case summary',
+    default: false,
+  },
   contactTypesFilter: {
     label: 'Contact types filter',
     default: true,
@@ -28,10 +32,6 @@ export const featureFlagsDefaults = {
   },
   flagShowSystemGenerated: {
     label: 'Show system generated contacts',
-    default: false,
-  },
-  flagShowMockedUi: {
-    label: 'Show UI that uses mocked data',
     default: false,
   },
   flagExcludeFromAnalytics: {

@@ -1,3 +1,4 @@
+
 {% macro getOverallRiskLevelClass(level) %}
 {% if level == 'VERY_HIGH' %}
 rosh-widget--very-high
@@ -34,46 +35,57 @@ rosh-widget__risk--low
 {% endif %}
 {% endmacro %}
 
-{% if not params.error %}
-<div class="rosh-widget {{ getOverallRiskLevelClass(params.overallRisk) }}">
-    <h2 class="govuk-heading-m"><strong>{{ getRiskLevelText(params.overallRisk) | upper }}</strong> RoSH</h2>
+{% set riskOfSeriousHarm = params.riskOfSeriousHarm %}
+{% if not riskOfSeriousHarm.error %}
+<div class="rosh-widget {{ getOverallRiskLevelClass(riskOfSeriousHarm.overallRisk) }}">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-0"><strong>{{ getRiskLevelText(riskOfSeriousHarm.overallRisk) | upper }}</strong> RoSH</h2>
     <table class="govuk-table rosh-widget__table">
         <caption class='govuk-!-text-align-left'>
-            <p class="govuk-body-m">Risk of serious harm</p>
-            <p class="govuk-hint govuk-body-m">Last updated: {{ params.lastUpdated | default("Not known") }}</p>
+            <p class="govuk-body-m govuk-!-margin-bottom-1">Risk of serious harm</p>
+            <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">Last updated: {{ params.lastUpdatedDate | default("Not known") }}</p>
         </caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header">Risk to</th>
                 <th class="govuk-table__header">Community</th>
+                <th class="govuk-table__header">Custody</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header">Children</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToChildren) }}">{{ getRiskLevelText(params.riskToChildren) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCommunity.riskToChildren) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCommunity.riskToChildren) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCustody.riskToChildren) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCustody.riskToChildren) | default("No data") }}</td>
             </tr>
             <tr>
                 <th class="govuk-table__header">Public</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToPublic) }}">{{ getRiskLevelText(params.riskToPublic) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCommunity.riskToPublic) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCommunity.riskToPublic) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCustody.riskToPublic) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCustody.riskToPublic) | default("No data") }}</td>
             </tr>
             <tr>
                 <th class="govuk-table__header">Known adult</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToKnownAdult) }}">{{ getRiskLevelText(params.riskToKnownAdult) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCommunity.riskToKnownAdult) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCommunity.riskToKnownAdult) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCustody.riskToKnownAdult) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCustody.riskToKnownAdult) | default("No data") }}</td>
             </tr>
             <tr>
                 <th class="govuk-table__header">Staff</th>
-                <td class="govuk-table__cell {{ getRiskLevelClass(params.riskToStaff) }}">{{ getRiskLevelText(params.riskToStaff) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCommunity.riskToStaff) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCommunity.riskToStaff) | default("No data") }}</td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCustody.riskToStaff) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCustody.riskToStaff) | default("No data") }}</td>
+            </tr>
+            <tr>
+                <th class="govuk-table__header">Prisoners</th>
+                <td class="govuk-table__cell"><span class='text-secondary'>N/A</span></td>
+                <td class="govuk-table__cell {{ getRiskLevelClass(riskOfSeriousHarm.riskInCustody.riskToPrisoners) }}">{{ getRiskLevelText(riskOfSeriousHarm.riskInCustody.riskToPrisoners) | default("No data") }}</td>
             </tr>
         </tbody>
     </table>
 </div>
 {% else %}
     <div class="rosh-widget rosh-widget--unknown">
-        <h3 class="govuk-heading-m"><strong>UNKNOWN LEVEL</strong> RoSH</h3>
-        <p class="govuk-body-m">Risk of serious harm</p>
-        <p class="govuk-hint govuk-body-m">
-            {% if params.error == 'NOT_FOUND' %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-0"><strong>UNKNOWN</strong> RoSH</h3>
+        <p class="govuk-body-m govuk-!-margin-bottom-1">Risk of serious harm</p>
+        <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">
+            {% if riskOfSeriousHarm.error == 'NOT_FOUND' %}
                 This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.
             {% else %}
                 Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.
