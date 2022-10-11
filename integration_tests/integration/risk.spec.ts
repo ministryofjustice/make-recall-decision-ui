@@ -191,26 +191,6 @@ context('Risk page', () => {
     cy.getElement('OSP/C LOW', opts).should('be.visible')
   })
 
-  it('shows Unknown MAPPA if MAPPA data is null', () => {
-    const riskResponse = {
-      personalDetailsOverview: {
-        name: 'Paula Smith',
-        dateOfBirth: '2000-11-09',
-        age: 21,
-        gender: 'Male',
-        crn: 'A12345',
-      },
-      mappa: null,
-    }
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: riskResponse,
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
-    cy.getElement('UNKNOWN MAPPA')
-  })
-
   it('shows a message if the assessment is incomplete', () => {
     cy.task('getCase', {
       sectionId: 'risk',
