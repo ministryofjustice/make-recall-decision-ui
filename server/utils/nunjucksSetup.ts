@@ -11,6 +11,7 @@ import {
   isDatePartInvalid,
   removeUndefinedListItems,
   selectedFilterItems,
+  riskLevelLabel,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
@@ -76,4 +77,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('changeLinkUrl', changeLinkUrl)
   njkEnv.addGlobal('nextPageLinkUrl', nextPageLinkUrl)
   njkEnv.addGlobal('possessiveSuffix', possessiveSuffix)
+  njkEnv.addGlobal('riskLevelLabel', riskLevelLabel)
 }

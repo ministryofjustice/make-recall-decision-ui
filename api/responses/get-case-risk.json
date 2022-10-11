@@ -38,6 +38,7 @@
   },
   "predictorScores": {
     "current": {
+      "date": "2021-10-24",
       "RSR": {
         "level": "HIGH",
         "score": 18,
