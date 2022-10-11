@@ -17,22 +17,19 @@ context('Risk page', () => {
     // Content panels
     const { whoIsAtRisk, natureOfRisk, riskIncreaseFactors, riskImminence, riskMitigationFactors } =
       getCaseRiskResponse.roshSummary
-    cy.viewDetails('View more detail on Who is at risk').should('contain', whoIsAtRisk.description)
-    cy.getElement('Last updated: 5 October 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on Details of the risk').should('contain', natureOfRisk.description)
-    cy.getElement('Last updated: 13 November 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on When the risk will be highest').should('contain', riskImminence.description)
-    cy.getElement('Last updated: 14 December 2020', { parent: '[data-qa="riskImminence"]' }).should('exist')
+    cy.viewDetails('View more detail on Who is at risk').should('contain', whoIsAtRisk)
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
+    cy.viewDetails('View more detail on Details of the risk').should('contain', natureOfRisk)
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
+    cy.viewDetails('View more detail on When the risk will be highest').should('contain', riskImminence)
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskImminence"]' }).should('exist')
     cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
       'contain',
-      riskIncreaseFactors.description
+      riskIncreaseFactors
     )
-    cy.getElement('Last updated: 4 August 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
-    cy.viewDetails('View more detail on Factors that will reduce the risk').should(
-      'contain',
-      riskMitigationFactors.description
-    )
-    cy.getElement('Last updated: 27 June 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
+    cy.viewDetails('View more detail on Factors that will reduce the risk').should('contain', riskMitigationFactors)
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
     // RoSH table
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
