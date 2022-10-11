@@ -49,3 +49,18 @@ export const isDatePartInvalid = (datePart: string, errors: FormError) =>
   Array.isArray(errors?.invalidParts) && errors.invalidParts.includes(datePart)
 
 export const possessiveSuffix = (str: string) => (str.endsWith('s') ? `${str}'` : `${str}'s`)
+
+export const riskLevelLabel = (level: string) => {
+  switch (level) {
+    case 'VERY_HIGH':
+      return 'Very high'
+    case 'HIGH':
+      return 'High'
+    case 'MEDIUM':
+      return 'Medium'
+    case 'LOW':
+      return 'Low'
+    default:
+      return level
+  }
+}
