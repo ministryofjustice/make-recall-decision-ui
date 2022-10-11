@@ -10,7 +10,7 @@ context('Risk page', () => {
   })
 
   it('shows RoSH, MAPPA and predictor scores', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
 
@@ -84,7 +84,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' }, mappa: { error: 'NOT_FOUND' } },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
     // RoSH content boxes & table
     ;[
@@ -117,7 +117,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
     // RoSH content boxes
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
@@ -143,7 +143,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.getText('score-history-missing').should('equal', 'No history found.')
   })
 
@@ -158,7 +158,7 @@ context('Risk page', () => {
         },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.getText('score-history-missing').should('equal', 'An error occurred getting the scores history.')
   })
 
@@ -185,7 +185,7 @@ context('Risk page', () => {
         },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     const opts = { parent: '[data-qa="timeline-item-1"]' }
     cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
     cy.getElement('OSP/C LOW', opts).should('be.visible')
@@ -197,7 +197,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     cy.getText('banner-latest-complete-assessment').should(
       'equal',
       'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
