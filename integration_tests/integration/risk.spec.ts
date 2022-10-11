@@ -32,17 +32,21 @@ context('Risk page', () => {
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
     // RoSH table
+    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('Low')
+      expect(rowValues).to.deep.eq(['Medium', 'Low'])
     })
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Public' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('Very high')
+      expect(rowValues).to.deep.eq(['High', 'Very high'])
     })
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Known adult' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('Medium')
+      expect(rowValues).to.deep.eq(['High', 'Medium'])
     })
     cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Staff' }).then(rowValues => {
-      expect(rowValues[0]).to.equal('High')
+      expect(rowValues).to.deep.eq(['Very high', 'High'])
+    })
+    cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Prisoners' }).then(rowValues => {
+      expect(rowValues).to.deep.eq(['N/A', 'Medium'])
     })
 
     // MAPPA level
@@ -78,24 +82,33 @@ context('Risk page', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
-      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' } },
+      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' }, mappa: { error: 'NOT_FOUND' } },
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowMockedUi=1`)
 
-    // RoSH content boxes
-    ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
+    // RoSH content boxes & table
+    ;[
+      'whoIsAtRisk',
+      'natureOfRisk',
+      'riskImminence',
+      'riskIncreaseFactors',
+      'riskMitigationFactors',
+      'roshTable',
+    ].forEach(id =>
       cy
         .getElement('This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.', {
           parent: `[data-qa="${id}"]`,
         })
         .should('exist')
     )
-
-    cy.getElement('UNKNOWN LEVEL RoSH').should('exist')
+    cy.getElement('UNKNOWN RoSH').should('exist')
+    cy.getElement('UNKNOWN MAPPA').should('exist')
     cy.getElement(
-      'This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.'
+      'This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.',
+      {
+        parent: '[data-qa="mappa"]',
+      }
     ).should('exist')
-    cy.getElement('No MAPPA').should('exist')
   })
 
   it('shows messages if an error occurs fetching RoSH / MAPPA / predictor score data', () => {
@@ -114,11 +127,14 @@ context('Risk page', () => {
         })
         .should('exist')
     )
-    cy.getElement('UNKNOWN LEVEL RoSH').should('exist')
+    cy.getElement('UNKNOWN RoSH').should('exist')
     cy.getElement('Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.').should(
       'exist'
     )
-    cy.getElement('No MAPPA').should('exist')
+    cy.getElement('UNKNOWN MAPPA').should('exist')
+    cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
   })
 
   it('score timeline - shows message if no predictor data found', () => {

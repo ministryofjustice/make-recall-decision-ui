@@ -14,7 +14,7 @@ $mappa-colour: #4c2c92;
   padding: govuk-spacing(4);
   margin-bottom: govuk-spacing(4);
 
-  & h3 {
+  & h2 {
     margin-bottom: govuk-spacing(1);
     font-weight: 400;
   }
@@ -27,7 +27,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--low {
   border: 2px solid $low-score-border-colour;
 
-  & h3 {
+  & h2 {
     color: $low-score-colour;
   }
 }
@@ -35,7 +35,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--medium {
   border: 2px solid $medium-score-border-colour;
 
-  & h3 {
+  & h2 {
     color: $medium-score-colour;
   }
 }
@@ -43,7 +43,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--high {
   border: 2px solid $high-score-border-colour;
 
-  & h3 {
+  & h2 {
     color: $high-score-colour;
   }
 }
@@ -51,7 +51,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--very-high {
   border: 2px solid $very-high-score-border-colour;
 
-  & h3 {
+  & h2 {
     color: $very-high-score-colour;
   }
 }
@@ -68,6 +68,10 @@ $mappa-colour: #4c2c92;
     & td {
       font-weight: bold;
     }
+  }
+  thead,
+  tbody {
+    @include govuk-font($size: 16);
   }
 }
 

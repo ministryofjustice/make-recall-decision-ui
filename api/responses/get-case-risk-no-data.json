@@ -10,8 +10,7 @@
     "error": "SERVER_ERROR"
   },
   "mappa": {
-    "level": "",
-    "lastUpdated": ""
+    "error": "SERVER_ERROR"
   },
   "predictorScores": {
     "error": "NOT_FOUND"

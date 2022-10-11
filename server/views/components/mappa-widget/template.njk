@@ -1,15 +1,19 @@
 <div class="mappa-widget">
-{% if mappa != null %}
-    <h3 class="govuk-heading-m text-uppercase"><strong>{% if mappa.category %}Cat {{ mappa.category }}/{% endif %}{% if mappa.level %}Level {{ mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h3>
+{% if not params.mappa.error %}
+    <h3 class="govuk-heading-m text-uppercase"><strong>{% if params.mappa.category %}Cat {{ params.mappa.category }}/{% endif %}{% if params.mappa.level %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h3>
     <p class="govuk-body-m">Multi-agency public protection arrangements</p>
-    {% if mappa.level and mappa.lastUpdated %}
+    {% if params.mappa.level and params.lastUpdated %}
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <p class="govuk-hint govuk-body-m">Last updated: {{ mappa.lastUpdated }}</p>
+        <p class="text-secondary govuk-body-s">Last updated: {{ params.lastUpdated }}</p>
     {% endif %}
 {% else %}
     <h3 class="govuk-heading-m"><strong>UNKNOWN</strong> MAPPA</h3>
     <p class="govuk-body-m">Multi-agency public protection arrangements</p>
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <p class="govuk-body-m">Something went wrong. We are unable to show MAPPA information at this time. Try again later.</p>
+    <p class="text-secondary govuk-body-s">
+        {% if params.mappa.error == 'NOT_FOUND' %}
+            This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.
+        {% else %}
+            Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.
+        {% endif %}</p>
 {% endif %}
 </div>

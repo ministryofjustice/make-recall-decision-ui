@@ -2,8 +2,12 @@
             class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
 <div class="flex-desktop flex--row-reverse">
     <div class="flex__item-one-third-desktop">
-        {{ roshWidget(caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm) }}
-        {{ mappaWidget(caseSummary.mappa) }}
+        <div data-qa='roshTable'>
+        {{ roshWidget({ riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
+        </div>
+        <div data-qa='mappa'>
+            {{ mappaWidget({ mappa: caseSummary.mappa, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true }) }) }}
+        </div>
         <div class="govuk-body predictor-timeline__heading">
             <h2 class="govuk-heading-m">Scores history</h2>
             <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>

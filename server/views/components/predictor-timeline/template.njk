@@ -17,8 +17,8 @@
                         <li>{{ predictorTimelineItem({ type: item.scores.OGRS.type + ' 2YR', score: item.scores.OGRS.twoYears, level: item.scores.OGRS.level }) }}</li>
                     {% endif %}
                     {% if item.scores.OGP %}
-                        <li>{{ predictorTimelineItem({ type: item.scores.OGP.type + ' 1YR', score: item.scores.OGP.ogp1Year, level: item.scores.OGP.level }) }}</li>
-                        <li>{{ predictorTimelineItem({ type: item.scores.OGP.type + ' 2YR', score: item.scores.OGP.ogp2Year, level: item.scores.OGP.level }) }}</li>
+                        <li>{{ predictorTimelineItem({ type: item.scores.OGP.type + ' 1YR', score: item.scores.OGP.oneYear, level: item.scores.OGP.level }) }}</li>
+                        <li>{{ predictorTimelineItem({ type: item.scores.OGP.type + ' 2YR', score: item.scores.OGP.twoYears, level: item.scores.OGP.level }) }}</li>
                     {% endif %}
                     {% if item.scores.OVP %}
                         <li>{{ predictorTimelineItem({ type: item.scores.OVP.type + ' 1YR', score: item.scores.OVP.oneYear, level: item.scores.OVP.level }) }}</li>
