@@ -4,7 +4,6 @@
 
 import type { ActiveRecommendation } from './ActiveRecommendation';
 import type { CircumstancesIncreaseRisk } from './CircumstancesIncreaseRisk';
-import type { ContingencyPlan } from './ContingencyPlan';
 import type { FactorsToReduceRisk } from './FactorsToReduceRisk';
 import type { Mappa } from './Mappa';
 import type { NatureOfRisk } from './NatureOfRisk';
@@ -18,15 +17,17 @@ import type { WhoIsAtRisk } from './WhoIsAtRisk';
 export type RiskResponse = {
     userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: RiskPersonalDetails;
-    riskOfSeriousHarm?: RiskOfSeriousHarm;
+    roshSummary: {
+        riskOfSeriousHarm?: RiskOfSeriousHarm;
+        natureOfRisk?: NatureOfRisk;
+        whoIsAtRisk?: WhoIsAtRisk;
+        riskIncreaseFactors?: CircumstancesIncreaseRisk;
+        factorsToReduceRisk?: FactorsToReduceRisk;
+        riskImminence?: WhenRiskHighest;
+        error?: string;
+    }
     mappa?: Mappa;
     predictorScores?: PredictorScores;
-    natureOfRisk?: NatureOfRisk;
-    contingencyPlan?: ContingencyPlan;
-    whoIsAtRisk?: WhoIsAtRisk;
-    circumstancesIncreaseRisk?: CircumstancesIncreaseRisk;
-    factorsToReduceRisk?: FactorsToReduceRisk;
-    whenRiskHighest?: WhenRiskHighest;
     activeRecommendation?: ActiveRecommendation;
 };
 

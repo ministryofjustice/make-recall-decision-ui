@@ -6,23 +6,40 @@
 {% endset %}
 
 {% set sectionHtml %}
-  <div class="govuk-!-padding-bottom-6 govuk-!-margin-bottom-6 govuk-section-break--visible text-secondary">
-    {{ params.oasysHeading.number }} {{ params.oasysHeading.description }}
+  <div class="govuk-!-margin-bottom-2 text-secondary">
+    {{ params.oasysHeading }}
   </div>
-  {% if params.content %}
-  {{ govukDetails({
-    summaryHtml: "View more detail<span class='govuk-visually-hidden'> on " + params.cardHeading + "</span>",
-    html: contentHtml,
-    open: params.open,
-    attributes: params.attributes
-  }) }}
+  {% if params.error %}
+    <div class='govuk-!-padding-bottom-2 govuk-!-margin-bottom-4 govuk-section-break--visible'></div>
+    <p class='govuk-body' data-qa='offence-description-error'>
+      {% if params.error == 'NOT_FOUND' %}
+        This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.
+      {% else %}
+        This information cannot be retrieved from OASys.
+      {% endif %}
+    </p>
   {% else %}
-  <p class='govuk-body'>Not available</p>
+    <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
+      Last updated: {{ formatDateTimeFromIsoString({ isoDate: params.lastUpdated, dateOnly: true }) }}
+    </div>
+    {% if params.content %}
+      {{ govukDetails({
+        summaryHtml: "View more detail<span class='govuk-visually-hidden'> on " + params.cardHeading + "</span>",
+        html: contentHtml,
+        open: params.open,
+        attributes: params.attributes
+      }) }}
+    {% else %}
+      <p class='govuk-body'>Not available</p>
+    {% endif %}
   {% endif %}
 {% endset %}
 
 {{ appSummaryCard({
   titleHtml: params.cardHeading,
   classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
-  html: sectionHtml
+  html: sectionHtml,
+  attributes: {
+    'data-qa': params.dataQaAttr
+  }
 }) }}
