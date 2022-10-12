@@ -94,15 +94,13 @@
         }) }}
         </div>
         <div class='govuk-!-margin-bottom-4 govuk-section-break--visible'>
-        {% if caseSummary.predictorScores.current.scores.RSR or caseSummary.predictorScores.current.scores.OSPC or caseSummary.predictorScores.current.scores.OSPI %}
-            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-            </div>
-        {% endif %}
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
             RSR (Risk of Serious Recidivism) score{% if caseSummary.predictorScores.current.scores.RSR.score %} - {{ caseSummary.predictorScores.current.scores.RSR.score }}{% endif %}
         </h2>
         {% if caseSummary.predictorScores.current.scores.RSR %}
+            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+            </div>
             {{ predictorScore(caseSummary.predictorScores.current.scores.RSR) }}
         {% else %}
             <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
@@ -110,11 +108,14 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half-from-desktop">
-                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
                     OSP/C
                 </h2>
                 <div data-qa='scale-ospc'>
                     {% if caseSummary.predictorScores.current.scores.OSPC %}
+                        <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+                        </div>
                         {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
                     {% else %}
                         <p class='govuk-body' data-qa='ospc-missing'>Not available.</p>
@@ -122,11 +123,14 @@
                 </div>
             </div>
             <div class="govuk-grid-column-one-half-from-desktop">
-                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
                     OSP/I
                 </h2>
                 <div data-qa='scale-ospi'>
                     {% if caseSummary.predictorScores.current.scores.OSPI %}
+                        <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+                        </div>
                         {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
                     {% else %}
                         <p class='govuk-body' data-qa='ospi-missing'>Not available.</p>
