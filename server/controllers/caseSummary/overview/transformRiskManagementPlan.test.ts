@@ -50,6 +50,17 @@ describe('transformRiskManagementPlan', () => {
       })
       expect(transformed.lastCompletedAssessmentAtLeastTwentyTwoWeeksOld).toEqual(true)
     })
+
+    it('returns unaltered property, if missing date', () => {
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        latestDateCompleted: undefined,
+      })
+      expect(transformed).toEqual({
+        ...riskManagementPlan,
+        latestDateCompleted: undefined,
+      })
+    })
   })
 
   describe('recentIncompleteAssessment', () => {
@@ -81,6 +92,17 @@ describe('transformRiskManagementPlan', () => {
         initiationDate: lessThanTwentyTwoWeeksAgo,
       })
       expect(transformed.recentIncompleteAssessment).toEqual(false)
+    })
+
+    it('returns unaltered property, if missing date', () => {
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        initiationDate: undefined,
+      })
+      expect(transformed).toEqual({
+        ...riskManagementPlan,
+        initiationDate: undefined,
+      })
     })
   })
 })
