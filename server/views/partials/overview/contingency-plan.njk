@@ -14,7 +14,18 @@
         OASys 11.9 Contingency plan
     </div>
     {% if caseSummary.risk.riskManagementPlan.error %}
-        <p class='govuk-body' data-qa='contingency-plan-error'>This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.</p>
+        {% set html %}
+            <p class="govuk-notification-banner__heading">
+                This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.
+            </p>
+        {% endset %}
+        {{ govukNotificationBanner({
+            html: html,
+            attributes: {
+                'data-qa': 'contingency-plan-error'
+            },
+            classes: "govuk-notification-banner--error govuk-!-margin-bottom-0"
+        }) }}
     {% else %}
         <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.risk.riskManagementPlan.lastUpdatedDate, dateOnly: true }) }}

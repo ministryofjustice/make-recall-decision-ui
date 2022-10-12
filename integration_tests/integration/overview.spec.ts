@@ -285,7 +285,7 @@ context('Overview', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getText('offence-description-error').should(
-      'equal',
+      'contain',
       'This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.'
     )
   })
@@ -305,7 +305,7 @@ context('Overview', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getText('banner-contingency-incomplete-assessment').should(
-      'equal',
+      'contain',
       'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.'
     )
   })
@@ -318,7 +318,7 @@ context('Overview', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getText('contingency-plan-error').should(
-      'equal',
+      'contain',
       'This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.'
     )
   })
