@@ -2,12 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { RiskTo } from './RiskTo';
+
 export type RiskOfSeriousHarm = {
     overallRisk?: string;
-    riskToChildren?: string;
-    riskToPublic?: string;
-    riskToKnownAdult?: string;
-    riskToStaff?: string;
-    lastUpdated?: string;
+    riskInCustody?: RiskTo;
+    riskInCommunity?: RiskTo;
 };
 

@@ -2,18 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { UserAccessResponse } from './UserAccessResponse'
-
-export type LetterContent = {
-    letterAddress: string;
-    letterDate: string;
-    salutation: string;
-    letterTitle: string;
-    section1: string;
-    section2: string;
-    section3: string;
-    signedByParagraph: string;
-}
+import type { LetterContent } from './LetterContent';
+import type { UserAccessResponse } from './UserAccessResponse';
 
 export type DocumentResponse = {
     userAccessResponse?: UserAccessResponse;

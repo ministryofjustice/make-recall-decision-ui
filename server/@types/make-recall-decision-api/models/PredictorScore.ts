@@ -4,7 +4,7 @@
 
 import type { Scores } from './Scores';
 
-export type HistoricalScore = {
+export type PredictorScore = {
     date?: string;
     scores?: Scores;
 };

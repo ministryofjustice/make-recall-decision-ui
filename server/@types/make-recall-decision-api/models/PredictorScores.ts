@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { HistoricalScore } from './HistoricalScore';
-import type { Scores } from './Scores';
+import type { PredictorScore } from './PredictorScore';
 
 export type PredictorScores = {
-    current?: Scores;
-    historical?: Array<HistoricalScore>;
+    error?: string;
+    current?: PredictorScore;
+    historical?: Array<PredictorScore>;
 };
 

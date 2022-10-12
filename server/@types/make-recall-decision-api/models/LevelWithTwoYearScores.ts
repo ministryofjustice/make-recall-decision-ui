@@ -2,9 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type OSPI = {
+export type LevelWithTwoYearScores = {
     level?: string;
-    score?: string;
     type?: string;
+    oneYear?: string;
+    twoYears?: string;
 };
 
