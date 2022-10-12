@@ -11,6 +11,7 @@ import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { AppError } from '../../AppError'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import getRecommendationsResponse from '../../../api/responses/get-recommendations.json'
+import { transformRiskManagementPlan } from './overview/transformRiskManagementPlan'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -30,7 +31,8 @@ export const getCaseSection = async (
     case 'overview':
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        caseSummary = transformLicenceConditions(caseSummaryRaw)
+        caseSummary = transformLicenceConditions(caseSummaryRaw) as unknown as CaseSummaryOverviewResponse
+        caseSummary.risk.riskManagementPlan = transformRiskManagementPlan(caseSummary.risk.riskManagementPlan)
       }
       sectionLabel = 'Overview'
       break

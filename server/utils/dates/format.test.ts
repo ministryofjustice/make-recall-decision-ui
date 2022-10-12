@@ -45,6 +45,11 @@ describe('formatDateTimeFromIsoString', () => {
     const formatted = formatDateTimeFromIsoString({ isoDate: '22-1-5' })
     expect(formatted).toEqual('22-1-5')
   })
+
+  it('formats a date as month and year if monthAndYear param is true', () => {
+    const formatted = formatDateTimeFromIsoString({ isoDate: '2021-12-22T19:43:00.000Z', monthAndYear: true })
+    expect(formatted).toEqual('December 2021')
+  })
 })
 
 describe('formatDateRange', () => {

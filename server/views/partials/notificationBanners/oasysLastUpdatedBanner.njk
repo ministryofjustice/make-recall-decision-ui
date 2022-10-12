@@ -1,0 +1,22 @@
+{% if caseSummary.risk.riskManagementPlan.lastCompletedAssessmentAtLeastTwentyTwoWeeksOld %}
+    {% set html %}
+        <p class="govuk-notification-banner__heading">
+            OASys was last updated in {{ formatDateTimeFromIsoString({isoDate: caseSummary.risk.riskManagementPlan.latestDateCompleted, monthAndYear: true }) }}.
+        </p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+        html: html,
+        attributes: {
+            'data-qa': 'banner-oasys-last-updated'
+        },
+        classes: 'govuk-!-margin-bottom-6'
+    }) }}
+    <script nonce='{{ cspNonce }}'>
+        gtag('event', 'oasysLastUpdatedBanner', {
+          'event_category': '{{ crn }}',
+          'event_label': '{{ caseSummary.risk.riskManagementPlan.latestDateCompleted }}',
+          'non_interaction': true
+        });
+    </script>
+{% endif %}

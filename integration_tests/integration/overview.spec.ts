@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
@@ -55,242 +56,41 @@ context('Overview', () => {
     cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('not.exist')
   })
 
-  it('sort by sentence expiry date; missing data', () => {
-    const convictions = [
-      {
-        active: true,
-        isCustodial: false,
-        offences: [{ mainOffence: true, description: 'Non-custodial' }],
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        isCustodial: true,
-        sentenceExpiryDate: '2020-06-16',
-        offences: [{ mainOffence: true, description: 'Custodial' }],
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        isCustodial: true,
-        sentenceExpiryDate: null,
-        offences: [{ mainOffence: true, description: 'Custodial' }],
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        isCustodial: true,
-        sentenceExpiryDate: '2023-06-17',
-        offences: [{ mainOffence: true, description: 'Custodial' }],
-        licenceConditions: [],
-      },
-    ]
+  it('no risk flags', () => {
     cy.task('getCase', {
       sectionId: 'overview',
       statusCode: 200,
-      response: {
-        ...getCaseOverviewResponse,
-        convictions,
-      },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    const opts = { parent: '[data-qa="conviction-1"]' }
-    cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', '17 June 2023')
-    cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Not available')
-    cy.getDefinitionListValue('Sentence expiry date', { parent: '[data-qa="conviction-2"]' }).should(
-      'contain',
-      '16 June 2020'
-    )
-    cy.getElement('Sentence expiry date', { parent: '[data-qa="conviction-3"]' }).should('not.exist')
-    cy.getDefinitionListValue('Sentence expiry date', { parent: '[data-qa="conviction-4"]' }).should(
-      'contain',
-      'Not available'
-    )
-  })
-
-  it('shows "Not available" for last release and licence expiry date if dates are missing', () => {
-    const convictions = [
-      {
-        active: false,
-        isCustodial: false,
-        offences: [],
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        isCustodial: true,
-        offences: [],
-        licenceConditions: [],
-      },
-    ]
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: {
-        ...getCaseOverviewResponse,
-        convictions,
-        releaseSummary: {
-          lastRelease: {
-            date: null,
-          },
-        },
-      },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('lastReleaseDate').should('equal', 'Not available')
-    cy.getText('licenceExpiryDate').should('equal', 'Not available')
-  })
-
-  it('shows banner and "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
-    const convictions = [
-      {
-        active: false,
-        licenceExpiryDate: '2020-07-16',
-        offences: [],
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        isCustodial: true,
-        licenceExpiryDate: '2020-06-16',
-        offences: [],
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        isCustodial: true,
-        licenceExpiryDate: '2023-06-17',
-        offences: [],
-        licenceConditions: [],
-      },
-    ]
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: {
-        ...getCaseOverviewResponse,
-        convictions,
-      },
-    })
-
-    cy.interceptGoogleAnalyticsEvent(
-      {
-        ea: 'multipleCustodialConvictionsBanner',
-        ec: crn,
-        el: '2',
-      },
-      'multipleConvictionsEvent'
-    )
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('lastReleaseDate').should('equal', 'Not available')
-    cy.getText('licenceExpiryDate').should('equal', 'Not available')
-
-    // banner
-    cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('exist')
-    cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
-    cy.wait('@multipleConvictionsEvent')
-  })
-
-  it('shows a message in offence panel, and not available for licence dates, if no active custodial convictions', () => {
-    const convictions = [
-      {
-        active: false,
-        isCustodial: false,
-        licenceExpiryDate: '2020-07-16',
-        offences: [],
-        licenceConditions: [],
-      },
-      {
-        active: false,
-        isCustodial: true,
-        licenceExpiryDate: '2020-06-16',
-        offences: [],
-        licenceConditions: [],
-      },
-    ]
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: {
-        ...getCaseOverviewResponse,
-        convictions,
-      },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getElement('This person has no active offences or convictions.').should('exist')
-    cy.getText('lastReleaseDate').should('equal', 'Not available')
-    cy.getText('licenceExpiryDate').should('equal', 'Not available')
-    // warning banner should not be there
-    cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('not.exist')
-  })
-
-  it('shows a message if no risk flags', () => {
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: { ...getCaseOverviewResponse, risk: { flags: [] } },
+      response: { ...getCaseOverviewResponse, risk: { ...getCaseOverviewResponse.risk, flags: [] } },
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getElement('No risks').should('exist')
   })
 
-  it('can switch between case summary pages', () => {
-    cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    // tabs
-    cy.clickLink('Personal details')
-    cy.pageHeading().should('equal', 'Personal details for Paula Smith')
-    cy.clickLink('Contact history')
-    cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
-    cy.clickLink('Licence conditions')
-    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
-    cy.clickLink('Overview')
-    cy.pageHeading().should('equal', 'Overview for Paula Smith')
-  })
-
-  it('shows a message if the assessment is incomplete', () => {
+  it('OASys last updated banner', () => {
+    const latestDateCompleted = DateTime.now().minus({ week: 22 }).toISODate()
     cy.task('getCase', {
       sectionId: 'overview',
       statusCode: 200,
       response: {
         ...getCaseOverviewResponse,
-        risk: { assessments: { offenceDataFromLatestCompleteAssessment: false } },
+        risk: {
+          riskManagementPlan: {
+            assessmentStatusComplete: true,
+            lastUpdatedDate: '2022-09-24T08:39:00.000Z',
+            contingencyPlans: 'Text from contingency plan',
+            latestDateCompleted,
+            initiationDate: '2022-10-09T01:02:03.123Z',
+          },
+        },
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('banner-latest-complete-assessment').should(
-      'equal',
-      'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
-    )
+    const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
+    cy.getElement(`OASys was last updated in ${date}`).should('exist')
   })
 
-  it("shows a message if main offences don't match", () => {
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: { ...getCaseOverviewResponse, risk: { assessments: { offenceCodesMatch: false } } },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('banner-offence-mismatch').should(
-      'equal',
-      'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
-    )
-  })
-
-  it('shows a message if call for assessments data errored', () => {
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: { ...getCaseOverviewResponse, risk: { assessments: { error: 'NOT_FOUND' } } },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('offence-description-error').should(
-      'contain',
-      'This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.'
-    )
-  })
-
-  it('shows a message if the contingency plan is from an incomplete assessment', () => {
+  it('More recent OASys banner', () => {
+    const initiationDate = DateTime.now().minus({ week: 21 }).toISODate()
     cy.task('getCase', {
       sectionId: 'overview',
       statusCode: 200,
@@ -299,27 +99,283 @@ context('Overview', () => {
         risk: {
           riskManagementPlan: {
             assessmentStatusComplete: false,
+            lastUpdatedDate: '2022-09-24T08:39:00.000Z',
+            contingencyPlans: 'Text from contingency plan',
+            latestDateCompleted: '2022-10-09T01:02:03.123Z',
+            initiationDate,
           },
         },
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('banner-contingency-incomplete-assessment').should(
-      'contain',
-      'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.'
-    )
+    const date = formatDateTimeFromIsoString({ isoDate: initiationDate, monthAndYear: true })
+    cy.getElement(
+      `OASys was last updated in ${date}. There’s a more recent assessment in OASys that’s not complete.`
+    ).should('exist')
   })
 
-  it('shows a message if call for contingency plan errored', () => {
-    cy.task('getCase', {
-      sectionId: 'overview',
-      statusCode: 200,
-      response: { ...getCaseOverviewResponse, risk: { riskManagementPlan: { error: 'SERVER_ERROR' } } },
+  describe('Licence / Offence and sentence', () => {
+    it('sort by sentence expiry date; missing data', () => {
+      const convictions = [
+        {
+          active: true,
+          isCustodial: false,
+          offences: [{ mainOffence: true, description: 'Non-custodial' }],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          sentenceExpiryDate: '2020-06-16',
+          offences: [{ mainOffence: true, description: 'Custodial' }],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          sentenceExpiryDate: null,
+          offences: [{ mainOffence: true, description: 'Custodial' }],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          sentenceExpiryDate: '2023-06-17',
+          offences: [{ mainOffence: true, description: 'Custodial' }],
+          licenceConditions: [],
+        },
+      ]
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          convictions,
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      const opts = { parent: '[data-qa="conviction-1"]' }
+      cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', '17 June 2023')
+      cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Not available')
+      cy.getDefinitionListValue('Sentence expiry date', { parent: '[data-qa="conviction-2"]' }).should(
+        'contain',
+        '16 June 2020'
+      )
+      cy.getElement('Sentence expiry date', { parent: '[data-qa="conviction-3"]' }).should('not.exist')
+      cy.getDefinitionListValue('Sentence expiry date', { parent: '[data-qa="conviction-4"]' }).should(
+        'contain',
+        'Not available'
+      )
     })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.getText('contingency-plan-error').should(
-      'contain',
-      'This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.'
-    )
+
+    it('shows "Not available" for last release and licence expiry date if dates are missing', () => {
+      const convictions = [
+        {
+          active: false,
+          isCustodial: false,
+          offences: [],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          offences: [],
+          licenceConditions: [],
+        },
+      ]
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          convictions,
+          releaseSummary: {
+            lastRelease: {
+              date: null,
+            },
+          },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('lastReleaseDate').should('equal', 'Not available')
+      cy.getText('licenceExpiryDate').should('equal', 'Not available')
+    })
+
+    it('shows banner and "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
+      const convictions = [
+        {
+          active: false,
+          licenceExpiryDate: '2020-07-16',
+          offences: [],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          licenceExpiryDate: '2020-06-16',
+          offences: [],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          licenceExpiryDate: '2023-06-17',
+          offences: [],
+          licenceConditions: [],
+        },
+      ]
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          convictions,
+        },
+      })
+
+      cy.interceptGoogleAnalyticsEvent(
+        {
+          ea: 'multipleCustodialConvictionsBanner',
+          ec: crn,
+          el: '2',
+        },
+        'multipleConvictionsEvent'
+      )
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('lastReleaseDate').should('equal', 'Not available')
+      cy.getText('licenceExpiryDate').should('equal', 'Not available')
+
+      // banner
+      cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('exist')
+      cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+      cy.wait('@multipleConvictionsEvent')
+    })
+
+    it('message in offence panel, and not available for licence dates, if no active custodial convictions', () => {
+      const convictions = [
+        {
+          active: false,
+          isCustodial: false,
+          licenceExpiryDate: '2020-07-16',
+          offences: [],
+          licenceConditions: [],
+        },
+        {
+          active: false,
+          isCustodial: true,
+          licenceExpiryDate: '2020-06-16',
+          offences: [],
+          licenceConditions: [],
+        },
+      ]
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          convictions,
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getElement('This person has no active offences or convictions.').should('exist')
+      cy.getText('lastReleaseDate').should('equal', 'Not available')
+      cy.getText('licenceExpiryDate').should('equal', 'Not available')
+      // warning banner should not be there
+      cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('not.exist')
+    })
+  })
+
+  describe('Offence description', () => {
+    it('the assessment is incomplete', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          risk: { ...getCaseOverviewResponse.risk, assessments: { offenceDataFromLatestCompleteAssessment: false } },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('banner-latest-complete-assessment').should(
+        'contain',
+        'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
+      )
+    })
+
+    it("main offences don't match", () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          risk: { ...getCaseOverviewResponse.risk, assessments: { offenceCodesMatch: false } },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('banner-offence-mismatch').should(
+        'contain',
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+      )
+    })
+
+    it('call for assessments data errored', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          risk: { ...getCaseOverviewResponse.risk, assessments: { error: 'NOT_FOUND' } },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('offence-description-error').should(
+        'contain',
+        'This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.'
+      )
+    })
+  })
+
+  describe('Contingency plan', () => {
+    it('the contingency plan is from an incomplete assessment', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          risk: {
+            riskManagementPlan: {
+              ...getCaseOverviewResponse.risk.riskManagementPlan,
+              assessmentStatusComplete: false,
+            },
+          },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('banner-contingency-incomplete-assessment').should(
+        'contain',
+        'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.'
+      )
+    })
+
+    it('call for contingency plan errored', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          risk: {
+            riskManagementPlan: {
+              ...getCaseOverviewResponse.risk.riskManagementPlan,
+              error: 'SERVER_ERROR',
+            },
+          },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('contingency-plan-error').should(
+        'contain',
+        'This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.'
+      )
+    })
   })
 })
