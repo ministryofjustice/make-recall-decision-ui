@@ -39,38 +39,40 @@
   "predictorScores": {
     "current": {
       "date": "2021-10-24",
-      "RSR": {
-        "level": "HIGH",
-        "score": 18,
-        "type": "RSR"
-      },
-      "OSPC": {
-        "level": "LOW",
-        "score": 6.8,
-        "type": "OSP/C"
-      },
-      "OSPI": {
-        "level": "MEDIUM",
-        "score": 8.1,
-        "type": "OSP/I"
-      },
-      "OGRS": {
-        "level": "MEDIUM",
-        "oneYear": 10,
-        "twoYears": 20,
-        "type": "OGRS"
-      },
-      "OGP": {
-        "level": "HIGH",
-        "oneYear": 1,
-        "twoYears": 22,
-        "type": "OGP"
-      },
-      "OVP": {
-        "level": "VERY_HIGH",
-        "type": "OVP",
-        "oneYear": 34,
-        "twoYears": 64
+      "scores": {
+        "RSR": {
+          "level": "HIGH",
+          "score": 18,
+          "type": "RSR"
+        },
+        "OSPC": {
+          "level": "LOW",
+          "score": 6.8,
+          "type": "OSP/C"
+        },
+        "OSPI": {
+          "level": "MEDIUM",
+          "score": 8.1,
+          "type": "OSP/I"
+        },
+        "OGRS": {
+          "level": "MEDIUM",
+          "oneYear": 10,
+          "twoYears": 20,
+          "type": "OGRS"
+        },
+        "OGP": {
+          "level": "HIGH",
+          "oneYear": 1,
+          "twoYears": 22,
+          "type": "OGP"
+        },
+        "OVP": {
+          "level": "VERY_HIGH",
+          "type": "OVP",
+          "oneYear": 34,
+          "twoYears": 64
+        }
       }
     },
     "historical": [

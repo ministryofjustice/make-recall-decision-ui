@@ -1,5 +1,5 @@
 /* eslint-disable */
-var allHidden = false
+var allHidden = true
 var openText = 'Open'
 var closeText = 'Close'
 

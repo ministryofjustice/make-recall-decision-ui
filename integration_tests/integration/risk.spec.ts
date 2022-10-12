@@ -65,8 +65,10 @@ context('Risk page', () => {
 
     // MAPPA level
     cy.getElement('Cat 2/Level 1 MAPPA').should('exist')
+    cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="mappa"]' }).should('exist')
 
     // score history
+    cy.clickLink('Open all')
     let opts = { parent: '[data-qa="timeline-item-1"]' }
     cy.getElement('13 July 2021', opts).should('be.visible')
     cy.getElement('RSR HIGH 18', opts).should('be.visible')
@@ -209,6 +211,7 @@ context('Risk page', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
     const opts = { parent: '[data-qa="timeline-item-1"]' }
+    cy.clickLink('Open all')
     cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
     cy.getElement('OSP/C LOW', opts).should('be.visible')
   })
