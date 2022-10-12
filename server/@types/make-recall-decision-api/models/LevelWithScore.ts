@@ -2,9 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type OGRS = {
+export type LevelWithScore = {
     level?: string;
-    score?: string;
     type?: string;
+    score?: string;
 };
 

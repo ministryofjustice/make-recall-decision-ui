@@ -2,15 +2,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { OGRS } from './OGRS';
-import type { OSPC } from './OSPC';
-import type { OSPI } from './OSPI';
-import type { RSR } from './RSR';
+import type { LevelWithScore } from './LevelWithScore';
+import type { LevelWithTwoYearScores } from './LevelWithTwoYearScores';
 
 export type Scores = {
-    RSR?: RSR;
-    OSPC?: OSPC;
-    OSPI?: OSPI;
-    OGRS?: OGRS;
+    RSR?: LevelWithScore;
+    OSPC?: LevelWithScore;
+    OSPI?: LevelWithScore;
+    OGRS?: LevelWithTwoYearScores;
+    OGP?: LevelWithTwoYearScores;
+    OVP?: LevelWithTwoYearScores;
 };
 
