@@ -94,16 +94,16 @@
         }) }}
         </div>
         <div class='govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible'>
-        {% if caseSummary.predictorScores.current.RSR or caseSummary.predictorScores.current.OSPC or caseSummary.predictorScores.current.OSPI %}
+        {% if caseSummary.predictorScores.current.scores.RSR or caseSummary.predictorScores.current.scores.OSPC or caseSummary.predictorScores.current.scores.OSPI %}
             <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
                 Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
             </div>
         {% endif %}
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-2">
-            RSR (Risk of Serious Recidivism) score{% if caseSummary.predictorScores.current.RSR.score %} - {{ caseSummary.predictorScores.current.RSR.score }}{% endif %}
+            RSR (Risk of Serious Recidivism) score{% if caseSummary.predictorScores.current.scores.RSR.score %} - {{ caseSummary.predictorScores.current.scores.RSR.score }}{% endif %}
         </h2>
-        {% if caseSummary.predictorScores.current.RSR %}
-            {{ predictorScore(caseSummary.predictorScores.current.RSR) }}
+        {% if caseSummary.predictorScores.current.scores.RSR %}
+            {{ predictorScore(caseSummary.predictorScores.current.scores.RSR) }}
         {% else %}
             <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
         {% endif %}
@@ -114,8 +114,8 @@
                     OSP/C
                 </h2>
                 <div data-qa='scale-ospc'>
-                    {% if caseSummary.predictorScores.current.OSPC %}
-                        {{ predictorScore(caseSummary.predictorScores.current.OSPC) }}
+                    {% if caseSummary.predictorScores.current.scores.OSPC %}
+                        {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
                     {% else %}
                         <p class='govuk-body' data-qa='ospc-missing'>Not available.</p>
                     {% endif %}
@@ -126,8 +126,8 @@
                     OSP/I
                 </h2>
                 <div data-qa='scale-ospi'>
-                    {% if caseSummary.predictorScores.current.OSPI %}
-                        {{ predictorScore(caseSummary.predictorScores.current.OSPI) }}
+                    {% if caseSummary.predictorScores.current.scores.OSPI %}
+                        {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
                     {% else %}
                         <p class='govuk-body' data-qa='ospi-missing'>Not available.</p>
                     {% endif %}</div>
@@ -138,26 +138,26 @@
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1">
             OGRS (offender group reconviction scale)
         </h2>
-        {% if caseSummary.predictorScores.current.OGRS %}
+        {% if caseSummary.predictorScores.current.scores.OGRS %}
         <div class="text-secondary govuk-body govuk-!-margin-bottom-6">
             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
         </div>
         {% endif %}
         <div class="govuk-grid-row  govuk-!-margin-bottom-4 govuk-section-break--visible">
             <div class="govuk-grid-column-three-quarters-from-desktop">
-                {% if caseSummary.predictorScores.current.OGRS %}
+                {% if caseSummary.predictorScores.current.scores.OGRS %}
                 <div class="flex-mobile">
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>1 Year %</h3>
-                        <div class='govuk-body' data-qa='ogrs-1yr'>{{ caseSummary.predictorScores.current.OGRS.oneYear }}</div>
+                        <div class='govuk-body' data-qa='ogrs-1yr'>{{ caseSummary.predictorScores.current.scores.OGRS.oneYear }}</div>
                     </div>
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>2 Year %</h3>
-                        <div class='govuk-body' data-qa='ogrs-2yr'>{{ caseSummary.predictorScores.current.OGRS.twoYears }}</div>
+                        <div class='govuk-body' data-qa='ogrs-2yr'>{{ caseSummary.predictorScores.current.scores.OGRS.twoYears }}</div>
                     </div>
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>Level</h3>
-                        <div class='govuk-body' data-qa='ogrs-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.OGRS.level) }}</div>
+                        <div class='govuk-body' data-qa='ogrs-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.scores.OGRS.level) }}</div>
                     </div>
                 </div>
                 {% else %}
@@ -168,26 +168,26 @@
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1">
             OGP (OASys general reoffending predictor)
         </h2>
-        {% if caseSummary.predictorScores.current.OGP %}
+        {% if caseSummary.predictorScores.current.scores.OGP %}
         <div class="text-secondary govuk-body govuk-!-margin-bottom-6">
             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
         </div>
         {% endif %}
         <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-section-break--visible">
             <div class="govuk-grid-column-three-quarters-from-desktop">
-                {% if caseSummary.predictorScores.current.OGP %}
+                {% if caseSummary.predictorScores.current.scores.OGP %}
                 <div class="flex-mobile">
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>1 Year %</h3>
-                        <div class='govuk-body' data-qa='ogp-1yr'>{{ caseSummary.predictorScores.current.OGP.oneYear }}</div>
+                        <div class='govuk-body' data-qa='ogp-1yr'>{{ caseSummary.predictorScores.current.scores.OGP.oneYear }}</div>
                     </div>
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>2 Year %</h3>
-                        <div class='govuk-body' data-qa='ogp-2yr'>{{ caseSummary.predictorScores.current.OGP.twoYears }}</div>
+                        <div class='govuk-body' data-qa='ogp-2yr'>{{ caseSummary.predictorScores.current.scores.OGP.twoYears }}</div>
                     </div>
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>Level</h3>
-                        <div class='govuk-body' data-qa='ogp-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.OGP.level) }}</div>
+                        <div class='govuk-body' data-qa='ogp-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.scores.OGP.level) }}</div>
                     </div>
                 </div>
                 {% else %}
@@ -198,26 +198,26 @@
         <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1">
             OVP (OASys violence predictor)
         </h2>
-        {% if caseSummary.predictorScores.current.OVP %}
+        {% if caseSummary.predictorScores.current.scores.OVP %}
         <div class="text-secondary govuk-body govuk-!-margin-bottom-6">
             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
         </div>
         {% endif %}
         <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-section-break--visible">
             <div class="govuk-grid-column-three-quarters-from-desktop">
-                {% if caseSummary.predictorScores.current.OVP %}
+                {% if caseSummary.predictorScores.current.scores.OVP %}
                 <div class="flex-mobile">
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>1 Year %</h3>
-                        <div class='govuk-body' data-qa='ovp-1yr'>{{ caseSummary.predictorScores.current.OVP.oneYear }}</div>
+                        <div class='govuk-body' data-qa='ovp-1yr'>{{ caseSummary.predictorScores.current.scores.OVP.oneYear }}</div>
                     </div>
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>2 Year %</h3>
-                        <div class='govuk-body' data-qa='ovp-2yr'>{{ caseSummary.predictorScores.current.OVP.twoYears }}</div>
+                        <div class='govuk-body' data-qa='ovp-2yr'>{{ caseSummary.predictorScores.current.scores.OVP.twoYears }}</div>
                     </div>
                     <div class='flex__item-one-third-mobile'>
                         <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>Level</h3>
-                        <div class='govuk-body' data-qa='ovp-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.OVP.level) }}</div>
+                        <div class='govuk-body' data-qa='ovp-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.scores.OVP.level) }}</div>
                     </div>
                 </div>
                 {% else %}
