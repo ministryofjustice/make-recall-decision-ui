@@ -93,7 +93,7 @@
             dataQaAttr: 'riskMitigationFactors'
         }) }}
         </div>
-        <div class='govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible'>
+        <div class='govuk-!-margin-bottom-4 govuk-section-break--visible'>
         {% if caseSummary.predictorScores.current.scores.RSR or caseSummary.predictorScores.current.scores.OSPC or caseSummary.predictorScores.current.scores.OSPI %}
             <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
                 Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
