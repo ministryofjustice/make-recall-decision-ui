@@ -13,7 +13,7 @@ export const transformRiskManagementPlan = (riskManagementPlan: RiskManagementPl
   try {
     const lastAssessmentMoreThanTwentyTwoWeeksOld =
       DateTime.fromISO(latestDateCompleted, { zone: europeLondon }) <= twentyTwoWeeksAgo
-    const recentIncompleteAssessment = DateTime.fromISO(initiationDate, { zone: europeLondon }) > twentyTwoWeeksAgo
+    const recentIncompleteAssessment = DateTime.fromISO(initiationDate, { zone: europeLondon }) <= twentyTwoWeeksAgo
     return {
       ...riskManagementPlan,
       lastCompletedAssessmentAtLeastTwentyTwoWeeksOld:

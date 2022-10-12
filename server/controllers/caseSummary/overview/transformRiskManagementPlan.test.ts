@@ -64,32 +64,42 @@ describe('transformRiskManagementPlan', () => {
   })
 
   describe('recentIncompleteAssessment', () => {
-    it('sets flag to true if last assessment is incomplete and less than 22 weeks old', () => {
-      const lessThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 21 }).toISODate()
+    it('sets flag to true if last assessment is incomplete and more than 22 weeks old', () => {
+      const initiationDate = DateTime.now().minus({ week: 23 }).toISODate()
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
         assessmentStatusComplete: false,
-        initiationDate: lessThanTwentyTwoWeeksAgo,
+        initiationDate,
       })
       expect(transformed.recentIncompleteAssessment).toEqual(true)
     })
 
-    it('sets flag to false if last assessment is complete and less than 22 weeks old', () => {
-      const lessThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 21 }).toISODate()
+    it('sets flag to true if last assessment is incomplete and 22 weeks old', () => {
+      const initiationDate = DateTime.now().minus({ week: 22 }).toISODate()
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        assessmentStatusComplete: false,
+        initiationDate,
+      })
+      expect(transformed.recentIncompleteAssessment).toEqual(true)
+    })
+
+    it('sets flag to false if last assessment is complete and more than 22 weeks old', () => {
+      const initiationDate = DateTime.now().minus({ week: 22 }).toISODate()
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
         assessmentStatusComplete: true,
-        initiationDate: lessThanTwentyTwoWeeksAgo,
+        initiationDate,
       })
       expect(transformed.recentIncompleteAssessment).toEqual(false)
     })
 
-    it('sets flag to false if last assessment is incomplete and 22 weeks old', () => {
-      const lessThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 22 }).toISODate()
+    it('sets flag to false if last assessment is incomplete and less than 22 weeks old', () => {
+      const initiationDate = DateTime.now().minus({ week: 21 }).toISODate()
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
         assessmentStatusComplete: false,
-        initiationDate: lessThanTwentyTwoWeeksAgo,
+        initiationDate,
       })
       expect(transformed.recentIncompleteAssessment).toEqual(false)
     })

@@ -90,7 +90,7 @@ context('Overview', () => {
   })
 
   it('More recent OASys banner', () => {
-    const initiationDate = DateTime.now().minus({ week: 21 }).toISODate()
+    const initiationDate = DateTime.now().minus({ week: 23 }).toISODate()
     cy.task('getCase', {
       sectionId: 'overview',
       statusCode: 200,
