@@ -2,9 +2,9 @@
 {% if not params.mappa.error %}
     <h3 class="govuk-heading-m text-uppercase"><strong>{% if params.mappa.category %}Cat {{ params.mappa.category }}/{% endif %}{% if params.mappa.level %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h3>
     <p class="govuk-body-m">Multi-agency public protection arrangements</p>
-    {% if params.mappa.level and params.lastUpdated %}
+    {% if params.mappa.level and params.lastUpdatedDate %}
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <p class="text-secondary govuk-body-s">Last updated: {{ params.lastUpdated }}</p>
+        <p class="text-secondary govuk-body-s">Last updated: {{ params.lastUpdatedDate }}</p>
     {% endif %}
 {% else %}
     <h3 class="govuk-heading-m"><strong>UNKNOWN</strong> MAPPA</h3>

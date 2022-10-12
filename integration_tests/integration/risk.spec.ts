@@ -65,6 +65,7 @@ context('Risk page', () => {
 
     // MAPPA level
     cy.getElement('Cat 2/Level 1 MAPPA').should('exist')
+    cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="mappa"]' }).should('exist')
 
     // score history
     cy.clickLink('Open all')
