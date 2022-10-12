@@ -9,8 +9,10 @@
             {{ mappaWidget({ mappa: caseSummary.mappa, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true }) }) }}
         </div>
         <div class="govuk-body predictor-timeline__heading">
-            <h2 class="govuk-heading-m">Scores history</h2>
-            <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Scores history</h2>
+            <div>
+                <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+            </div>
         </div>
         {% if caseSummary.predictorScores.historical %}
             {{ predictorTimeline(caseSummary.predictorScores.historical) }}
