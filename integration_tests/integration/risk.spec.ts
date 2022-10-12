@@ -32,17 +32,17 @@ context('Risk page', () => {
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
     // predictor scores
-    cy.getElement('RSR (Risk of Serious Recidivism) score - 18').should('exist')
+    cy.getElement('RSR (risk of serious recidivism) score - 18%').should('exist')
     cy.getText('scale-ospc').should('contain', 'LOW')
     cy.getText('scale-ospi').should('contain', 'MEDIUM')
-    cy.getText('ogrs-1yr').should('equal', '10')
-    cy.getText('ogrs-2yr').should('equal', '20')
+    cy.getText('ogrs-1yr').should('equal', '10%')
+    cy.getText('ogrs-2yr').should('equal', '20%')
     cy.getText('ogrs-level').should('equal', 'Medium')
-    cy.getText('ogp-1yr').should('equal', '1')
-    cy.getText('ogp-2yr').should('equal', '22')
+    cy.getText('ogp-1yr').should('equal', '1%')
+    cy.getText('ogp-2yr').should('equal', '22%')
     cy.getText('ogp-level').should('equal', 'High')
-    cy.getText('ovp-1yr').should('equal', '34')
-    cy.getText('ovp-2yr').should('equal', '64')
+    cy.getText('ovp-1yr').should('equal', '34%')
+    cy.getText('ovp-2yr').should('equal', '64%')
     cy.getText('ovp-level').should('equal', 'Very high')
 
     // RoSH table
