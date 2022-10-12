@@ -41,8 +41,8 @@ describe('transformRiskManagementPlan', () => {
       expect(transformed.lastCompletedAssessmentAtLeastTwentyTwoWeeksOld).toEqual(false)
     })
 
-    it('sets flag to true if last assessment is complete and 22 weeks old', () => {
-      const moreThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 22 }).toISODate()
+    it('sets flag to true if last assessment is complete and more than 22 weeks old', () => {
+      const moreThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 23 }).toISODate()
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
         assessmentStatusComplete: true,
