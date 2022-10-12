@@ -14,7 +14,18 @@
         OASys 2.1 Offence description
     </div>
     {% if caseSummary.risk.assessments.error %}
-        <p class='govuk-body' data-qa='offence-description-error'>This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.</p>
+        {% set html %}
+            <p class="govuk-notification-banner__heading">
+                This information cannot be retrieved from OASys. Double-check OASys for the latest description of the index offence.
+            </p>
+        {% endset %}
+        {{ govukNotificationBanner({
+            html: html,
+            attributes: {
+                'data-qa': 'offence-description-error'
+            },
+            classes: "govuk-notification-banner--error govuk-!-margin-bottom-0"
+        }) }}
     {% else %}
         <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.risk.assessments.lastUpdatedDate, dateOnly: true }) }}

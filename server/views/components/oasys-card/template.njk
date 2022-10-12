@@ -1,4 +1,5 @@
 {% from "govuk/components/details/macro.njk"             import govukDetails %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "components/summary-card/macro.njk"             import appSummaryCard %}
 
 {% set contentHtml %}
@@ -11,13 +12,19 @@
   </div>
   {% if params.error %}
     <div class='govuk-!-padding-bottom-2 govuk-!-margin-bottom-4 govuk-section-break--visible'></div>
-    <p class='govuk-body' data-qa='offence-description-error'>
-      {% if params.error == 'NOT_FOUND' %}
-        This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.
-      {% else %}
-        This information cannot be retrieved from OASys.
-      {% endif %}
-    </p>
+    {% set html %}
+      <p class="govuk-notification-banner__heading">
+        {% if params.error == 'NOT_FOUND' %}
+          This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.
+        {% else %}
+          This information cannot be retrieved from OASys.
+        {% endif %}
+      </p>
+    {% endset %}
+    {{ govukNotificationBanner({
+      html: html,
+      classes: "govuk-notification-banner--error govuk-!-margin-bottom-0"
+    }) }}
   {% else %}
     <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
       Last updated: {{ formatDateTimeFromIsoString({ isoDate: params.lastUpdated, dateOnly: true }) }}

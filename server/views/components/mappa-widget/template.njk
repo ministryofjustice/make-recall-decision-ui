@@ -1,15 +1,14 @@
 <div class="mappa-widget">
 {% if not params.mappa.error %}
     <h3 class="govuk-heading-m text-uppercase"><strong>{% if params.mappa.category %}Cat {{ params.mappa.category }}/{% endif %}{% if params.mappa.level %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h3>
-    <p class="govuk-body-m">Multi-agency public protection arrangements</p>
+    <p class="govuk-body-m govuk-!-margin-bottom-2">Multi-agency public protection arrangements</p>
     {% if params.mappa.level and params.lastUpdatedDate %}
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <p class="text-secondary govuk-body-s">Last updated: {{ params.lastUpdatedDate }}</p>
+        <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">Last updated: {{ params.lastUpdatedDate }}</p>
     {% endif %}
 {% else %}
     <h3 class="govuk-heading-m"><strong>UNKNOWN</strong> MAPPA</h3>
-    <p class="govuk-body-m">Multi-agency public protection arrangements</p>
-    <p class="text-secondary govuk-body-s">
+    <p class="govuk-body-m govuk-!-margin-bottom-2">Multi-agency public protection arrangements</p>
+    <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">
         {% if params.mappa.error == 'NOT_FOUND' %}
             This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.
         {% else %}
