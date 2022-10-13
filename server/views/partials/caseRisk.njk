@@ -18,10 +18,8 @@
         </div>
         {% if caseSummary.predictorScores.historical %}
             {{ predictorTimeline(caseSummary.predictorScores.historical) }}
-        {% elseif caseSummary.predictorScores.error == 'NOT_FOUND' %}
+        {% elseif caseSummary.predictorScores.error %}
             <p class='govuk-body' data-qa='score-history-missing'>Predictor scores cannot be retrieved from OASys. Double-check OASys.</p>
-        {% elseif caseSummary.predictorScores.error and caseSummary.predictorScores.error != 'NOT_FOUND' %}
-            <p class='govuk-body' data-qa='score-history-missing'>An error occurred getting the scores history.</p>
         {% endif %}
     </div>
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">

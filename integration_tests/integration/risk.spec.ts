@@ -187,7 +187,10 @@ context('Risk page', () => {
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
-    cy.getText('score-history-missing').should('equal', 'An error occurred getting the scores history.')
+    cy.getText('score-history-missing').should(
+      'equal',
+      'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
+    )
   })
 
   it('score timeline - hide individual scores if missing', () => {
