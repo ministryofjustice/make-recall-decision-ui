@@ -145,7 +145,6 @@
             "type": "OGP"
           },
           "OVP": {
-            "level": "VERY_HIGH",
             "oneYear": 82,
             "twoYears": 91,
             "type": "OVP"

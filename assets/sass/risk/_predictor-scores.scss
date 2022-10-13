@@ -92,6 +92,10 @@ $predictor-score-background-colour: #f3f2f1;
   }
 }
 
+.predictor-timeline-item {
+  @include predictor-timeline-item-base($govuk-secondary-text-colour, govuk-colour("light-grey"), $govuk-secondary-text-colour);
+}
+
 .predictor-timeline-item--very-high {
   @include predictor-timeline-item-base(
                   $very-high-score-colour,
