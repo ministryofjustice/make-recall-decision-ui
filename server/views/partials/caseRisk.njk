@@ -17,7 +17,7 @@
         {% if caseSummary.predictorScores.historical %}
             {{ predictorTimeline(caseSummary.predictorScores.historical) }}
         {% elseif caseSummary.predictorScores.error == 'NOT_FOUND' %}
-            <p class='govuk-body' data-qa='score-history-missing'>No history found.</p>
+            <p class='govuk-body' data-qa='score-history-missing'>Predictor scores cannot be retrieved from OASys. Double-check OASys.</p>
         {% elseif caseSummary.predictorScores.error and caseSummary.predictorScores.error != 'NOT_FOUND' %}
             <p class='govuk-body' data-qa='score-history-missing'>An error occurred getting the scores history.</p>
         {% endif %}
@@ -105,7 +105,7 @@
             </div>
             {{ predictorScore(caseSummary.predictorScores.current.scores.RSR) }}
         {% else %}
-            <p class='govuk-body' data-qa='rsr-missing'>Not available.</p>
+            <p class='govuk-body' data-qa='rsr-missing'>Data not available.</p>
         {% endif %}
 
         <div class="govuk-grid-row">
@@ -120,7 +120,7 @@
                         </div>
                         {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
                     {% else %}
-                        <p class='govuk-body' data-qa='ospc-missing'>Not available.</p>
+                        <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
                     {% endif %}
                 </div>
             </div>
@@ -135,7 +135,7 @@
                         </div>
                         {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
                     {% else %}
-                        <p class='govuk-body' data-qa='ospi-missing'>Not available.</p>
+                        <p class='govuk-body' data-qa='ospi-missing'>Data not available.</p>
                     {% endif %}</div>
             </div>
         </div>
@@ -167,7 +167,7 @@
                     </div>
                 </div>
                 {% else %}
-                    <p class='govuk-body' data-qa='ogrs-missing'>Not available.</p>
+                    <p class='govuk-body' data-qa='ogrs-missing'>Data not available.</p>
                 {% endif %}
             </div>
         </div>
@@ -197,7 +197,7 @@
                     </div>
                 </div>
                 {% else %}
-                    <p class='govuk-body' data-qa='ogp-missing'>Not available.</p>
+                    <p class='govuk-body' data-qa='ogp-missing'>Data not available.</p>
                 {% endif %}
             </div>
         </div>
@@ -227,7 +227,7 @@
                     </div>
                 </div>
                 {% else %}
-                    <p class='govuk-body' data-qa='ovp-missing'>Not available.</p>
+                    <p class='govuk-body' data-qa='ovp-missing'>Data not available.</p>
                 {% endif %}
             </div>
         </div>
