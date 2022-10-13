@@ -90,8 +90,9 @@ context('Risk page', () => {
     cy.getElement('OGRS 2YR HIGH 55', opts).should('be.visible')
     cy.getElement('OGP 1YR VERY HIGH 77', opts).should('be.visible')
     cy.getElement('OGP 2YR VERY HIGH 85', opts).should('be.visible')
-    cy.getElement('OVP 1YR VERY HIGH 82', opts).should('be.visible')
-    cy.getElement('OVP 2YR VERY HIGH 91', opts).should('be.visible')
+    // scores missing a level
+    cy.getElement('OVP 1YR 82', opts).should('be.visible')
+    cy.getElement('OVP 2YR 91', opts).should('be.visible')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
@@ -103,12 +104,12 @@ context('Risk page', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
     // predictor scores
-    cy.getText('rsr-missing').should('contain', 'Not available.')
-    cy.getText('ospc-missing').should('contain', 'Not available.')
-    cy.getText('ospi-missing').should('contain', 'Not available.')
-    cy.getText('ogrs-missing').should('contain', 'Not available.')
-    cy.getText('ogp-missing').should('contain', 'Not available.')
-    cy.getText('ovp-missing').should('contain', 'Not available.')
+    cy.getText('rsr-missing').should('contain', 'Data not available.')
+    cy.getText('ospc-missing').should('contain', 'Data not available.')
+    cy.getText('ospi-missing').should('contain', 'Data not available.')
+    cy.getText('ogrs-missing').should('contain', 'Data not available.')
+    cy.getText('ogp-missing').should('contain', 'Data not available.')
+    cy.getText('ovp-missing').should('contain', 'Data not available.')
 
     // RoSH content boxes & table
     ;[
@@ -168,7 +169,10 @@ context('Risk page', () => {
       response: getCaseRiskNoDataResponse,
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
-    cy.getText('score-history-missing').should('equal', 'No history found.')
+    cy.getText('score-history-missing').should(
+      'equal',
+      'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
+    )
   })
 
   it('score timeline - shows message if error occurs fetching predictor data', () => {

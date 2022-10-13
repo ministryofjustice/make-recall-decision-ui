@@ -14,7 +14,7 @@
         {% set timelineItemClass = 'predictor-timeline-item--low' %}
 {% endswitch %}
 
-<div class="{{ timelineItemClass }}">
+<div class="predictor-timeline-item {{ timelineItemClass }}">
     <span class="predictor-timeline-item__level"><strong>{{ params.type }}</strong> {{ level }}</span>
     {% if params.score %}
     <span class="predictor-timeline-item__score">{{ params.score }}</span>
