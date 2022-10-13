@@ -41,6 +41,16 @@ describe('transformRiskManagementPlan', () => {
       expect(transformed.lastCompletedAssessmentAtLeastTwentyTwoWeeksOld).toEqual(false)
     })
 
+    it('sets flag to false if last assessment is incomplete and less than 22 weeks old', () => {
+      const lessThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 21 }).toISODate()
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        assessmentStatusComplete: false,
+        latestDateCompleted: lessThanTwentyTwoWeeksAgo,
+      })
+      expect(transformed.lastCompletedAssessmentAtLeastTwentyTwoWeeksOld).toEqual(false)
+    })
+
     it('sets flag to true if last assessment is complete and more than 22 weeks old', () => {
       const moreThanTwentyTwoWeeksAgo = DateTime.now().minus({ week: 23 }).toISODate()
       const transformed = transformRiskManagementPlan({
@@ -51,13 +61,28 @@ describe('transformRiskManagementPlan', () => {
       expect(transformed.lastCompletedAssessmentAtLeastTwentyTwoWeeksOld).toEqual(true)
     })
 
-    it('returns unaltered property, if missing date', () => {
+    it('returns unaltered, if assessment complete and missing date', () => {
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
+        assessmentStatusComplete: true,
         latestDateCompleted: undefined,
       })
       expect(transformed).toEqual({
         ...riskManagementPlan,
+        assessmentStatusComplete: true,
+        latestDateCompleted: undefined,
+      })
+    })
+
+    it('returns unaltered, if assessment incomplete and missing date', () => {
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        assessmentStatusComplete: false,
+        latestDateCompleted: undefined,
+      })
+      expect(transformed).toEqual({
+        ...riskManagementPlan,
+        assessmentStatusComplete: false,
         latestDateCompleted: undefined,
       })
     })
@@ -94,6 +119,16 @@ describe('transformRiskManagementPlan', () => {
       expect(transformed.recentIncompleteAssessment).toEqual(false)
     })
 
+    it('sets flag to false if last assessment is complete and less than 22 weeks old', () => {
+      const initiationDate = DateTime.now().minus({ week: 21 }).toISODate()
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        assessmentStatusComplete: true,
+        initiationDate,
+      })
+      expect(transformed.recentIncompleteAssessment).toEqual(false)
+    })
+
     it('sets flag to false if last assessment is incomplete and less than 22 weeks old', () => {
       const initiationDate = DateTime.now().minus({ week: 21 }).toISODate()
       const transformed = transformRiskManagementPlan({
@@ -104,13 +139,28 @@ describe('transformRiskManagementPlan', () => {
       expect(transformed.recentIncompleteAssessment).toEqual(false)
     })
 
-    it('returns unaltered property, if missing date', () => {
+    it('returns unaltered, if assessment complete and date is missing', () => {
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
+        assessmentStatusComplete: true,
         initiationDate: undefined,
       })
       expect(transformed).toEqual({
         ...riskManagementPlan,
+        assessmentStatusComplete: true,
+        initiationDate: undefined,
+      })
+    })
+
+    it('returns unaltered, if assessment incomplete and date is missing', () => {
+      const transformed = transformRiskManagementPlan({
+        ...riskManagementPlan,
+        assessmentStatusComplete: false,
+        initiationDate: undefined,
+      })
+      expect(transformed).toEqual({
+        ...riskManagementPlan,
+        assessmentStatusComplete: false,
         initiationDate: undefined,
       })
     })
