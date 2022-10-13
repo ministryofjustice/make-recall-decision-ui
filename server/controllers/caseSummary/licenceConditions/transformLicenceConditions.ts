@@ -1,4 +1,5 @@
 import {
+  CaseSummaryOverviewResponse,
   ConvictionResponse,
   LicenceCondition,
   LicenceConditionsResponse,
@@ -47,7 +48,7 @@ export interface TransformedLicenceConditionsResponse {
 }
 
 export const transformLicenceConditions = (
-  caseSummary: LicenceConditionsResponse
+  caseSummary: LicenceConditionsResponse | CaseSummaryOverviewResponse
 ): TransformedLicenceConditionsResponse => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []

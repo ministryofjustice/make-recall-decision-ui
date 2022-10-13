@@ -90,7 +90,9 @@
     "riskManagementPlan": {
       "assessmentStatusComplete": true,
       "lastUpdatedDate": "2022-09-24T08:39:00.000Z",
-      "contingencyPlans": "Text from contingency plan"
+      "contingencyPlans": "Text from contingency plan",
+      "latestDateCompleted": "2022-10-09T01:02:03.123Z",
+      "initiationDate": "2022-10-09T01:02:03.123Z"
     }
   },
   "releaseSummary": {

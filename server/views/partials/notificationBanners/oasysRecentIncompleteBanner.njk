@@ -1,0 +1,22 @@
+{% if caseSummary.risk.riskManagementPlan.recentIncompleteAssessment %}
+    {% set html %}
+        <p class="govuk-notification-banner__heading">
+            OASys was last updated in {{ formatDateTimeFromIsoString({isoDate: caseSummary.risk.riskManagementPlan.initiationDate, monthAndYear: true }) }}. There’s a more recent assessment in OASys that’s not complete. Double-check this for any new information.
+        </p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+        html: html,
+        attributes: {
+            'data-qa': 'banner-oasys-recent-incomplete'
+        },
+        classes: 'govuk-!-margin-bottom-6'
+    }) }}
+    <script nonce='{{ cspNonce }}'>
+        gtag('event', 'oasysRecentIncompleteBanner', {
+          'event_category': '{{ crn }}',
+          'event_label': '{{ caseSummary.risk.riskManagementPlan.initiationDate }}',
+          'non_interaction': true
+        });
+    </script>
+{% endif %}
