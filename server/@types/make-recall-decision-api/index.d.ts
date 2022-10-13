@@ -7,6 +7,7 @@ export type { AdditionalLicenceConditionOption } from './models/AdditionalLicenc
 export type { AdditionalLicenceConditions } from './models/AdditionalLicenceConditions';
 export type { Address } from './models/Address';
 export type { AlternativesToRecallTried } from './models/AlternativesToRecallTried';
+export type { AssessmentInfo } from './models/AssessmentInfo';
 export type { CaseDocument } from './models/CaseDocument';
 export type { CaseDocumentType } from './models/CaseDocumentType';
 export type { CaseSummaryOverviewResponse } from './models/CaseSummaryOverviewResponse';
