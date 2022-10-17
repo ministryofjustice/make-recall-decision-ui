@@ -78,7 +78,7 @@ export const strings = {
     confirmationNoRecallLetter: 'Decision not to recall letter created',
     taskListNoRecall: 'Create a decision not to recall letter',
     whyConsideredRecall: 'Why you considered recall',
-    reasonsForNoRecall: 'Why you think {{ fullName }} should not be recalled?',
+    reasonsForNoRecall: 'Why do you think {{ fullName }} should not be recalled?',
     nextAppointment: 'Next appointment for {{ fullName }}',
     previewNoRecallLetter: 'Preview the decision not to recall letter',
   },

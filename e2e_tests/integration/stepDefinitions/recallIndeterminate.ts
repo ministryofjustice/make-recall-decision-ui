@@ -115,8 +115,8 @@ When('Maria downloads an updated Part A and confirms the changes to the indeterm
 
 When('Maria confirms answers were saved', () => {
   cy.log('========= Response to probation')
-  cy.clickLink('Response to probation so far')
   cy.get('@offenderName').then(offenderName => {
+  cy.clickLink(`How has ${offenderName} responded to probation so far?`)
     cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should(
       'equal',
       'Re-offending has occurred'
@@ -125,19 +125,19 @@ When('Maria confirms answers were saved', () => {
   cy.clickLink('Back')
 
   cy.log('========= Licence conditions')
-  cy.clickLink('Breached licence condition(s)')
-  cy.get('@offenderName').then(offenderName =>
+  cy.get('@offenderName').then(offenderName => {
+    cy.clickLink(`What licence conditions has ${offenderName} breached?`)
     cy
       .getRadioOptionByLabel(
         `What licence conditions has ${offenderName} breached?`,
         'Receive visits from the supervising officer in accordance with instructions given by the supervising officer'
       )
       .should('be.checked')
-  )
+  })
   cy.clickLink('Back')
 
   cy.log('========= Alternatives to recall')
-  cy.clickLink('Alternatives tried already')
+  cy.clickLink('What alternatives to recall have been tried already?')
   cy.getRadioOptionByLabel(
     'What alternatives to recall have been tried already?',
     'Increased frequency of reporting'
@@ -220,7 +220,7 @@ When('Maria confirms answers were saved', () => {
   cy.clickLink('Back')
 
   cy.log('========= Indeterminate or extended sentence details')
-  cy.clickLink('Indeterminate and extended sentences - recall criteria')
+  cy.clickLink('Confirm the recall criteria - indeterminate and extended sentences')
   cy.get('@offenderName').then(offenderName => {
     cy.getRadioOptionByLabel(
       'Indeterminate and extended sentences',
