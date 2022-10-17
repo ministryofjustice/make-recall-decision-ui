@@ -5,7 +5,7 @@
     </h2>
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'why-considered-recall', urlInfo: urlInfo, fromAnchor: 'heading-create-letter' }) if taskCompleteness.statuses.whyConsideredRecall else urlInfo.basePath + 'why-considered-recall' }}">Why you considered recall</a>
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'why-considered-recall', urlInfo: urlInfo, fromAnchor: 'heading-create-letter' }) if taskCompleteness.statuses.whyConsideredRecall else urlInfo.basePath + 'why-considered-recall' }}">{{ pageHeadings.whyConsideredRecall }}</a>
             {{ taskStatus({ hasData: taskCompleteness.statuses.whyConsideredRecall }) }}
         </li>
         <li class="moj-task-list__item">

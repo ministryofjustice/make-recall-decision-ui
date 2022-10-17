@@ -20,24 +20,23 @@
             </p>
             <ol class="moj-task-list govuk-!-margin-top-8">
                 {% include '../../partials/taskList/recommendation.njk' %}
-                {% include '../../partials/taskList/alternatives.njk' %}
+                {% include '../../partials/taskList/circumstances.njk' %}
                 {% if recommendation.isInCustody == false %}
                 <li>
                     <h2 class="moj-task-list__section" id='heading-person-details'>
-                        {{ possessiveSuffix(recommendation.personOnProbation.name) }} details
+                        Confirm details for {{ recommendation.personOnProbation.name }}
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}address-details">Address details</a>
+                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}address-details">Address</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.isMainAddressWherePersonCanBeFound }) }}
                         </li>
                     </ul>
                 </li>
                 {% endif %}
-                {% include '../../partials/taskList/circumstances.njk' %}
                 <li>
                     <h2 class="moj-task-list__section" id='heading-vulnerability'>
-                        Vulnerability and additional needs
+                        Confirm any vulnerability and additional needs
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
@@ -49,47 +48,16 @@
                 </li>
                 <li>
                     <h2 class="moj-task-list__section" id='heading-victim-liaison'>
-                        Victim liaison
+                        Confirm victim liaison information
                     </h2>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}victim-contact-scheme">Are there any victims in the victim contact scheme?</a>
+                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}victim-contact-scheme">{{ pageHeadings.victimContactScheme }}</a>
                             {{ taskStatus({ hasData: taskCompleteness.statuses.hasVictimsInContactScheme }) }}
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <h2 class="moj-task-list__section" id='heading-custody'>
-                        Custody
-                    </h2>
-                    <ul class="moj-task-list__items">
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'custody-status', urlInfo: urlInfo, fromAnchor: 'heading-custody' }) }}">Is {{ recommendation.personOnProbation.name }} in
-                                custody now?</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.custodyStatus }) }}
-                        </li>
-                        {% if recommendation.isInCustody == false %}
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}police-details">Local police contact details</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.localPoliceContact }) }}
-                        </li>
-                        {% endif %}
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}iom">Is {{ recommendation.personOnProbation.name }} under Integrated Offender Management (IOM)?</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.isUnderIntegratedOffenderManagement }) }}
-                        </li>
-                        {% if recommendation.isInCustody == false %}
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}arrest-issues">Is there anything the police should know before they arrest {{ recommendation.personOnProbation.name }}?</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.hasArrestIssues }) }}
-                        </li>
-                        {% endif %}
-                        <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" href="{{ urlInfo.basePath }}contraband">Do you think {{ recommendation.personOnProbation.name }} is using recall to bring contraband into prison?</a>
-                            {{ taskStatus({ hasData: taskCompleteness.statuses.hasContrabandRisk }) }}
-                        </li>
-                    </ul>
-                </li>
+                {% include '../../partials/taskList/custody.njk' %}
             </ol>
             {% if taskCompleteness.areAllComplete == true %}
             <div>
