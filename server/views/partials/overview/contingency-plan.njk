@@ -13,7 +13,7 @@
     <div class="govuk-!-margin-bottom-2 text-secondary">
         OASys 11.9 Contingency plan
     </div>
-    {% if caseSummary.risk.riskManagementPlan.error %}
+    {% if caseSummary.risk.riskManagementPlan.error or not caseSummary.risk.riskManagementPlan.contingencyPlans %}
         {% set html %}
             <p class="govuk-notification-banner__heading">
                 This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.
