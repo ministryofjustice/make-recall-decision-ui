@@ -7,3 +7,10 @@
     html: html,
     classes: 'govuk-!-margin-bottom-0'
 }) }}
+
+<script nonce='{{ cspNonce }}'>
+  gtag('event', 'latestCompleteAssessmentBanner', {
+    'event_category': '{{ crn }}',
+    'non_interaction': true
+  });
+</script>
