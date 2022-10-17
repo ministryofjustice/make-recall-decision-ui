@@ -7,3 +7,9 @@
     html: notificationHtml,
     classes: 'govuk-!-margin-bottom-4'
 }) }}
+<script nonce='{{ cspNonce }}'>
+  gtag('event', 'contingencyPlanIncompleteAssessmentBanner', {
+    'event_category': '{{ crn }}',
+    'non_interaction': true
+  });
+</script>
