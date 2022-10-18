@@ -1,0 +1,15 @@
+{% set notificationHtml %}
+    <p class="govuk-notification-banner__heading" data-qa='banner-contingency-incomplete-assessment'>
+        This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.
+    </p>
+{% endset %}
+{{ govukNotificationBanner({
+    html: notificationHtml,
+    classes: 'govuk-!-margin-bottom-4'
+}) }}
+<script nonce='{{ cspNonce }}'>
+  gtag('event', 'contingencyPlanIncompleteAssessmentBanner', {
+    'event_category': '{{ crn }}',
+    'non_interaction': true
+  });
+</script>

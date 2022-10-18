@@ -7,3 +7,9 @@
     html: html,
     classes: 'govuk-!-margin-bottom-0'
 }) }}
+<script nonce='{{ cspNonce }}'>
+  gtag('event', 'offenceMismatchBanner', {
+    'event_category': '{{ crn }}',
+    'non_interaction': true
+  });
+</script>

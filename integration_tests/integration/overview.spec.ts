@@ -394,7 +394,7 @@ context('Overview', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
-        'This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.'
+        'This information cannot be found in OASys. Double-check OASys.'
       )
     })
   })

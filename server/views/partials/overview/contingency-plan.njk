@@ -1,14 +1,6 @@
 {% set html %}
     {% if caseSummary.risk.riskManagementPlan.assessmentStatusComplete === false %}
-        {% set notificationHtml %}
-            <p class="govuk-notification-banner__heading" data-qa='banner-contingency-incomplete-assessment'>
-                This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.
-            </p>
-        {% endset %}
-        {{ govukNotificationBanner({
-            html: notificationHtml,
-            classes: 'govuk-!-margin-bottom-4'
-        }) }}
+        {% include '../notificationBanners/contingencyIncompleteAssessment.njk' %}
     {% endif %}
     <div class="govuk-!-margin-bottom-2 text-secondary">
         OASys 11.9 Contingency plan
@@ -16,7 +8,11 @@
     {% if caseSummary.risk.riskManagementPlan.error or not caseSummary.risk.riskManagementPlan.contingencyPlans %}
         {% set html %}
             <p class="govuk-notification-banner__heading">
+                {% if caseSummary.risk.riskManagementPlan.error %}
                 This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.
+                {% else %}
+                This information cannot be found in OASys. Double-check OASys.
+                {% endif %}
             </p>
         {% endset %}
         {{ govukNotificationBanner({
