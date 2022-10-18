@@ -8,7 +8,11 @@
     {% if caseSummary.risk.riskManagementPlan.error or not caseSummary.risk.riskManagementPlan.contingencyPlans %}
         {% set html %}
             <p class="govuk-notification-banner__heading">
+                {% if caseSummary.risk.riskManagementPlan.error %}
                 This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.
+                {% else %}
+                This information cannot be found in OASys. Double-check OASys.
+                {% endif %}
             </p>
         {% endset %}
         {{ govukNotificationBanner({
