@@ -365,8 +365,28 @@ context('Overview', () => {
           ...getCaseOverviewResponse,
           risk: {
             riskManagementPlan: {
-              ...getCaseOverviewResponse.risk.riskManagementPlan,
               error: 'SERVER_ERROR',
+            },
+          },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getText('contingency-plan-error').should(
+        'contain',
+        'This information cannot be retrieved from OASys. Double-check OASys for the latest contingency plan.'
+      )
+    })
+
+    it('contingency plan data missing', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          risk: {
+            riskManagementPlan: {
+              ...getCaseOverviewResponse.risk.riskManagementPlan,
+              contingencyPlans: null,
             },
           },
         },
