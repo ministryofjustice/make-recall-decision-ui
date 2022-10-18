@@ -34,4 +34,14 @@ export const standardLicenceConditionsRefData = [
     value: 'APPROVED_WORK',
     text: 'Not to travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purpose of immigration deportation or removaL',
   },
+  {
+    id: 8,
+    value: 'NAME_CHANGE',
+    text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
+  },
+  {
+    id: 9,
+    value: 'CONTACT_DETAILS',
+    text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
+  },
 ]
