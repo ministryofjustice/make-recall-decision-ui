@@ -16,7 +16,7 @@
     "start": "node $NODE_OPTIONS dist/server.js | bunyan -o short",
     "start:dev": "export $(cat .env) && npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run watch-node\" \"npm run watch-sass\"",
     "start-feature": "export $(cat feature.env) && node $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
-    "start:e2e": "export $(cat e2e.env) && npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run watch-node\" \"npm run watch-sass\"",
+    "start:e2e": "export $(cat e2e.env) && npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run start\" \"npm run watch-sass\"",
     "watch-node-feature": "export $(cat feature.env) && nodemon --watch dist/ --inspect=0.0.0.0 $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
     "start-feature:dev": "npm run build && concurrently -k -p \"[{name}]\" -n \"Views,TypeScript,Node,Sass\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-ts\" \"npm run watch-node-feature\" \"npm run watch-sass\"",
     "record-build-info": "node ./bin/record-build-info",

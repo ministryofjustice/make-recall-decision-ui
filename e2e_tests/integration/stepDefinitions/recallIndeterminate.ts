@@ -4,9 +4,14 @@ import {
   assertQ2_indeterminate_sentence_type,
   assertQ22_recall_type,
   assertQ3_extended_sentence,
+  assertQ4_offender_details,
+  assertQ5_sentence_details,
   assertQ6_custody_status,
   assertQ7_addresses,
   assertQ8_arrest_issues,
+  assertQ12_mappa_details,
+  assertQ16_index_offence_details,
+  assertQ25_probation_details,
 } from './index'
 
 When('Maria confirms the person is on a IPP sentence', () => {
@@ -32,11 +37,15 @@ When('Maria enters indeterminate and extended sentence criteria', () => {
     cy.selectCheckboxes('Indeterminate and extended sentences', [
       `${offenderName} has shown behaviour similar to the index offence`,
       `${offenderName} has shown behaviour that could lead to a sexual or violent offence`,
-      `${offenderName} is out of touch`
+      `${offenderName} is out of touch`,
     ])
   )
-  cy.fillInput('Give details', 'Details on behaviour similar to index offence', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' })
-  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', { parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' })
+  cy.fillInput('Give details', 'Details on behaviour similar to index offence', {
+    parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
+  })
+  cy.fillInput('Give details', 'Details on behaviour that could lead to a sexual or violent offence', {
+    parent: '#conditional-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+  })
   cy.fillInput('Give details', 'Details on out of touch', { parent: '#conditional-OUT_OF_TOUCH' })
   cy.clickButton('Continue')
 })
@@ -46,9 +55,15 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     assertQ1_emergency_recall(contents, 'Yes')
     assertQ2_indeterminate_sentence_type(contents, 'Yes - IPP')
     assertQ3_extended_sentence(contents, 'Yes')
+    cy.log('Q4')
+    assertQ4_offender_details(contents)
+    cy.log('Q5')
+    assertQ5_sentence_details(contents)
     assertQ6_custody_status(contents, 'No')
     cy.log('Q7')
-    expect(contents).to.contain('Provide any other possible addresses: Police can find this person at: 123 Acacia Avenue, Birmingham B23 1AV')
+    expect(contents).to.contain(
+      'Provide any other possible addresses: Police can find this person at: 123 Acacia Avenue, Birmingham B23 1AV'
+    )
 
     assertQ8_arrest_issues(contents, 'Yes', 'Arrest issues details...')
 
@@ -71,6 +86,8 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     expect(contents).to.contain(
       'If yes, provide details and contact your local police SPOC to share information or concerns: Contraband details...'
     )
+    cy.log('Q12')
+    assertQ12_mappa_details(contents)
     cy.log('Q13')
     expect(contents).to.contain('Registered PPO/IOM: Yes')
     cy.log('Q14')
@@ -78,6 +95,8 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
     )
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
+    cy.log('Q16')
+    assertQ16_index_offence_details(contents)
     // TODO - Q18 - additional licence conditions
     cy.log('Q19')
     expect(contents).to.contain('Increasingly violent behaviour')
@@ -101,6 +120,8 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
       'Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes'
     )
     expect(contents).to.contain('Please Comment: Details on out of touch')
+    cy.log('Q25')
+    assertQ25_probation_details(contents)
   })
 })
 
@@ -116,7 +137,7 @@ When('Maria downloads an updated Part A and confirms the changes to the indeterm
 When('Maria confirms answers were saved', () => {
   cy.log('========= Response to probation')
   cy.get('@offenderName').then(offenderName => {
-  cy.clickLink(`How has ${offenderName} responded to probation so far?`)
+    cy.clickLink(`How has ${offenderName} responded to probation so far?`)
     cy.getTextInputValue(`How has ${offenderName} responded to probation so far?`).should(
       'equal',
       'Re-offending has occurred'
@@ -127,12 +148,10 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Licence conditions')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`What licence conditions has ${offenderName} breached?`)
-    cy
-      .getRadioOptionByLabel(
-        `What licence conditions has ${offenderName} breached?`,
-        'Receive visits from the supervising officer in accordance with instructions given by the supervising officer'
-      )
-      .should('be.checked')
+    cy.getRadioOptionByLabel(
+      `What licence conditions has ${offenderName} breached?`,
+      'Receive visits from the supervising officer in accordance with instructions given by the supervising officer'
+    ).should('be.checked')
   })
   cy.clickLink('Back')
 
@@ -230,10 +249,9 @@ When('Maria confirms answers were saved', () => {
       'Indeterminate and extended sentences',
       `${offenderName} has shown behaviour that could lead to a sexual or violent offence`
     ).should('be.checked')
-    cy.getRadioOptionByLabel(
-      'Indeterminate and extended sentences',
-      `${offenderName} is out of touch`
-    ).should('be.checked')
+    cy.getRadioOptionByLabel('Indeterminate and extended sentences', `${offenderName} is out of touch`).should(
+      'be.checked'
+    )
   })
   cy.getTextInputValue('Give details', { parent: '#conditional-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' }).should(
     'equal',
