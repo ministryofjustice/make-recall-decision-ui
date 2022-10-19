@@ -104,7 +104,7 @@ describe('transformContactHistory', () => {
               systemGenerated: false,
               searchTextMatch: {
                 allTermsMatched: true,
-                notesMatched: false,
+                notesOrDescriptionMatched: false,
               },
             },
           ],
