@@ -30,11 +30,6 @@ export const alternativesToRecallTried = [
     detailsLabel: 'Give details',
   },
   {
-    text: 'Risk Escalation (CRC cases)',
-    value: 'RISK_ESCALATION',
-    detailsLabel: 'Give details',
-  },
-  {
     text: 'Referral to approved premises',
     value: 'REFERRAL_TO_APPROVED_PREMISES',
     detailsLabel: 'Give details',

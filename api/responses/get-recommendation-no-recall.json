@@ -79,10 +79,6 @@
         "value": "REFERRAL_TO_PARTNERSHIP_AGENCIES"
       },
       {
-        "text": "Risk Escalation (CRC cases)",
-        "value": "RISK_ESCALATION"
-      },
-      {
         "text": "Referral to approved premises",
         "value": "REFERRAL_TO_APPROVED_PREMISES"
       },
