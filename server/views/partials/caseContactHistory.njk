@@ -42,6 +42,9 @@
                     {% endif %}
                 {% endset %}
                 {% set notesHtml %}
+                    {% if contact.description %}
+                    <pre class='govuk-body govuk-!-margin-bottom-2' data-qa='contact-description'>{{ contact.description }}</pre>
+                    {% endif %}
                     <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
                 {% endset %}
                 {% set sectionHtml %}
@@ -49,7 +52,7 @@
                     {{ govukDetails({
                         summaryText: "View more detail",
                         html: notesHtml,
-                        open: contact.searchTextMatch.notesMatched,
+                        open: contact.searchTextMatch.notesOrDescriptionMatched,
                         attributes: {
                             'data-js': 'viewDetail',
                             'data-analytics-action': contact.contactStartDate,
