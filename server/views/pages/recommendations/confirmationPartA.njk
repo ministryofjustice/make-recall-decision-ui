@@ -7,9 +7,9 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
-                {{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}
-                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1'>{{ recommendation.crn }}</div>
-                <div class='govuk-!-font-weight-bold'>{{ recommendation.personOnProbation.name }}</div>
+                <div>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
+                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1>{{ recommendation.crn }}</div>
+                <div>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
                 titleText: pageHeadings[page.id],
@@ -18,10 +18,25 @@
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
             <p class='govuk-body'>
                 <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a' download>
-                    Download the Part A.</a> Then you can upload it to NDelius.
+                    Download the Part A.</a> It includes information from NDelius. You’ll need to check this information.
             </p>
-            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to case overview</a></p>
+            <p class='govuk-body'>Check the answers for:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+                <li>question 4 - personal information for Duncann Cardours</li>
+                <li>question 5 - sentence details</li>
+                <li>question 12 - MAPPA (multi-agency public protection arrangements)</li>
+                <li>question 16 - offence details</li>
+            </ul>
+            <p class='govuk-body'>You’ll also need to answer these questions:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+                <li>question 15 - RoSH (risk of serious harm) assessment</li>
+                <li>question 25 onwards - your details and sign off by managers</li>
+            </ul>
+            <p class='govuk-body'>Upload the Part A to NDelius when you’ve checked it. Update OASys with any new risk information.</p>
+            <p class='govuk-body govuk-!-margin-top-6 govuk-visually-hidden'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to case overview</a></p>
         </div>
     </div>
 {% endblock %}
+
+
 
