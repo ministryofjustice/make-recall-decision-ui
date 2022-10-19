@@ -62,7 +62,7 @@ context('Contact history', () => {
     cy.getElement('12 contacts').should('exist')
   })
 
-  it('can view collapsible notes on the contact history page', () => {
+  it('can view collapsible description & notes on the contact history page', () => {
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
     // contacts
@@ -79,7 +79,10 @@ context('Contact history', () => {
       dates.push(contact.contactStartDate.substring(0, 10))
       const opts = { parent: `[data-qa="contact-${index}"]` }
       if (contact.notes) {
-        cy.viewDetails('View more detail', opts).should('equal', contact.notes)
+        cy.viewDetails('View more detail', opts).should('contain', contact.notes)
+      }
+      if (contact.description) {
+        cy.viewDetails('View more detail', opts).should('contain', contact.description)
       }
     })
   })
