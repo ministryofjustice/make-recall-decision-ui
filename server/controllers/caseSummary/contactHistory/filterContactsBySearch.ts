@@ -6,10 +6,14 @@ import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/er
 const MINIMUM_SEARCH_TERM_LENGTH = 2
 
 const checkIfAllTermsMatch = ({ patterns, contact }: { patterns: RegExp[]; contact: ContactSummaryResponse }) => {
-  const { notes, descriptionType, outcome, enforcementAction } = contact
+  const { notes, description, descriptionType, outcome, enforcementAction } = contact
   return patterns.every(
     pattern =>
-      pattern.test(notes) || pattern.test(descriptionType) || pattern.test(outcome) || pattern.test(enforcementAction)
+      pattern.test(notes) ||
+      pattern.test(description) ||
+      pattern.test(descriptionType) ||
+      pattern.test(outcome) ||
+      pattern.test(enforcementAction)
   )
 }
 
@@ -49,7 +53,9 @@ export const filterContactsBySearch = ({
             ...contact,
             startDate: null,
             searchTextMatch: {
-              notesMatched: patterns.some(pattern => pattern.test(contact.notes)),
+              notesOrDescriptionMatched: patterns.some(
+                pattern => pattern.test(contact.notes) || pattern.test(contact.description)
+              ),
               allTermsMatched: checkIfAllTermsMatch({ patterns, contact }),
             },
           }

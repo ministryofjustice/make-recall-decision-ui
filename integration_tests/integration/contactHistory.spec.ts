@@ -178,15 +178,18 @@ context('Contact history', () => {
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
     cy.fillInput('Search term', 'letter')
     cy.clickButton('Apply filters')
-    cy.getElement('3 contacts').should('exist')
-    // one of the 3 contacts was matched on notes, so check the notes were expanded
+    cy.getElement('4 contacts').should('exist')
+    // one of the contacts was matched on notes, so check the details were expanded
     cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
+    // one of the contacts was matched on description, so check the details were expanded
+    cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-3"]' }).should('equal', true)
     cy.fillInput('Search term', 'Eliot Prufrock')
     cy.clickButton('Apply filters')
+    // all text search terms are required, so result set is reduced
     cy.getElement('3 contacts').should('exist')
     // clear filters
     cy.clickLink('letter')
-    cy.getElement('8 contacts').should('exist')
+    cy.getElement('7 contacts').should('exist')
     cy.clickLink('Eliot Prufrock')
     cy.getElement('12 contacts').should('exist')
   })
