@@ -1,5 +1,6 @@
 import { defineStep, When } from 'cypress-cucumber-preprocessor/steps'
-import { getTestDataPerEnvironment, formatDate } from '../../utils'
+import { DateTime } from 'luxon'
+import { getTestDataPerEnvironment } from '../../utils'
 
 export const crn = Cypress.env('CRN') || 'X098092'
 
@@ -230,24 +231,24 @@ export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
 export const q3ExtendedSentence = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
 export const q4OffenderDetails = (contents: string) => {
-  expect(contents).to.contain(data.fullName)
-  expect(contents).to.contain(data.dateOfBirth)
-  expect(contents).to.contain(data.ethnicity)
-  expect(contents).to.contain(data.gender)
-  expect(contents).to.contain(data.cro)
-  expect(contents).to.contain(data.pnc)
-  expect(contents).to.contain(data.prisonNo)
-  expect(contents).to.contain(data.noms)
+  expect(contents).to.match(data.fullName as RegExp)
+  expect(contents).to.match(data.dateOfBirth as RegExp)
+  expect(contents).to.match(data.ethnicity as RegExp)
+  expect(contents).to.match(data.gender as RegExp)
+  expect(contents).to.match(data.cro as RegExp)
+  expect(contents).to.match(data.pnc as RegExp)
+  expect(contents).to.match(data.prisonNo as RegExp)
+  expect(contents).to.match(data.noms as RegExp)
 }
 export const q5SentenceDetails = (contents: string) => {
-  expect(contents).to.contain(data.indexOffence)
-  expect(contents).to.contain(data.dateOfOriginalOffence)
-  expect(contents).to.contain(data.dateOfSentence)
-  expect(contents).to.contain(data.lengthOfSentence)
-  expect(contents).to.contain(data.licenceExpiryDate)
-  expect(contents).to.contain(data.sentenceExpiryDate)
-  expect(contents).to.contain(data.custodialTerm)
-  expect(contents).to.contain(data.extendedTerm)
+  expect(contents).to.match(data.indexOffence as RegExp)
+  expect(contents).to.match(data.dateOfOriginalOffence as RegExp)
+  expect(contents).to.match(data.dateOfSentence as RegExp)
+  expect(contents).to.match(data.lengthOfSentence as RegExp)
+  expect(contents).to.match(data.licenceExpiryDate as RegExp)
+  expect(contents).to.match(data.sentenceExpiryDate as RegExp)
+  expect(contents).to.match(data.custodialTerm as RegExp)
+  expect(contents).to.match(data.extendedTerm as RegExp)
 }
 export const q6CustodyStatus = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender currently in police custody or prison custody? ${answer}`)
@@ -260,12 +261,12 @@ export const q8ArrestIssues = (contents: string, answer: string, details: string
   )
 }
 export const q12MappaDetails = (contents: string) => {
-  expect(contents).to.contain(data.mappaCategory)
-  expect(contents).to.contain(data.mappaLevel)
+  expect(contents).to.match(data.mappaCategory as RegExp)
+  expect(contents).to.match(data.mappaLevel as RegExp)
 }
 export const q16IndexOffenceDetails = (contents: string) => {
   // FIXME: For this to work on dev and preprod, we need a corresponding record in OASys for our CRN
-  expect(contents).to.contain(data.indexOffenceDetails)
+  expect(contents).to.match(data.indexOffenceDetails as RegExp)
 }
 export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)
@@ -273,11 +274,10 @@ export const q22RecallType = (contents: string, answer: string, details: string)
 }
 export const q25ProbationDetails = (contents: string) => {
   // FIXME: Name of our user not getting pulled through
-  expect(contents).to.contain(data.nameOfPersonCompletingForm)
-  expect(contents).to.contain(data.emailAddressOfPersonCompletingForm)
-  expect(contents).to.contain(data.region)
-  expect(contents).to.contain(data.ldu)
-  expect(contents).to.contain(data.dateOfDecision + formatDate())
-  // FIXME: Maybe check the time using regex? Otherwise could lead to random test failures
-  expect(contents).to.contain(data.timeOfDecision)
+  expect(contents).to.match(data.nameOfPersonCompletingForm as RegExp)
+  expect(contents).to.match(data.emailAddressOfPersonCompletingForm as RegExp)
+  expect(contents).to.match(data.region as RegExp)
+  expect(contents).to.match(data.ldu as RegExp)
+  expect(contents).to.contain(`${data.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`)
+  expect(contents).to.match(data.timeOfDecision as RegExp)
 }
