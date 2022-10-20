@@ -274,7 +274,8 @@ jobs:
 
   e2e_local_test:
     machine:
-      image: macos:14.0.0
+      image: ubuntu-2004:202210-01
+    resource_class: xlarge
     parallelism: << pipeline.parameters.e2e-parallelism >>
     steps:
       - run:
