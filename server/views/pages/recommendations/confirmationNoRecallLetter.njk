@@ -16,8 +16,8 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
-                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1'>{{ recommendation.crn }}</div>
-                <div class='govuk-!-font-weight-bold'>{{ recommendation.personOnProbation.name }}</div>
+                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>{{ recommendation.crn }}</div>
+                <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
                 titleText: pageHeadings[page.id],

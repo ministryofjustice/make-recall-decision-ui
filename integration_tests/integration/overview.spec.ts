@@ -308,7 +308,7 @@ context('Overview', () => {
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          risk: { ...getCaseOverviewResponse.risk, assessments: { offenceCodesMatch: false } },
+          risk: { ...getCaseOverviewResponse.risk, assessments: { offencesMatch: false } },
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
