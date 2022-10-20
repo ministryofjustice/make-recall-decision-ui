@@ -265,7 +265,6 @@ export const q12MappaDetails = (contents: string) => {
   expect(contents).to.match(data.mappaLevel as RegExp)
 }
 export const q16IndexOffenceDetails = (contents: string) => {
-  // FIXME: For this to work on dev and preprod, we need a corresponding record in OASys for our CRN
   expect(contents).to.match(data.indexOffenceDetails as RegExp)
 }
 export const q22RecallType = (contents: string, answer: string, details: string) => {
@@ -273,7 +272,6 @@ export const q22RecallType = (contents: string, answer: string, details: string)
   expect(contents).to.contain(`Explain your reasons for the above recall type recommendation: ${details}`)
 }
 export const q25ProbationDetails = (contents: string) => {
-  // FIXME: Name of our user not getting pulled through
   expect(contents).to.match(data.nameOfPersonCompletingForm as RegExp)
   expect(contents).to.match(data.emailAddressOfPersonCompletingForm as RegExp)
   expect(contents).to.match(data.region as RegExp)

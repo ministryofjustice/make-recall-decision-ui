@@ -20,7 +20,7 @@ export const localData = {
   mappaLevel: /MAPPA Level: Level 1/,
   indexOffenceDetails:
     /Provide details of the index offence\(s\) and write a succinct offence analysis:Juicy offence details./,
-  nameOfPersonCompletingForm: /Name of person completing the form: /,
+  nameOfPersonCompletingForm: /Name of person completing the form: Making Recall Decisions User/,
   emailAddressOfPersonCompletingForm: /Email Address: making-recall-decisions-tech@digital.justice.gov.uk/,
   region: /Region: {2}NPS London/,
   ldu: /LDU: All NPS London/,

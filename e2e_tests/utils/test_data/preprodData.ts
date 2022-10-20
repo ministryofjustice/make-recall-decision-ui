@@ -18,7 +18,7 @@ export const preprodData = {
   mappaCategory: /MAPPA Category:.+/,
   mappaLevel: /MAPPA Level:.+/,
   indexOffenceDetails: /Provide details of the index offence\(s\) and write a succinct offence analysis:.*/,
-  nameOfPersonCompletingForm: /Name of person completing the form:.*/,
+  nameOfPersonCompletingForm: /Name of person completing the form: .*/,
   emailAddressOfPersonCompletingForm: /Email Address: .*/,
   region: /Region:.*/,
   ldu: /LDU:.*/,
