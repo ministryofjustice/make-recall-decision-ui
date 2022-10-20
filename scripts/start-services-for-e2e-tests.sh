@@ -76,7 +76,7 @@ function wait_for {
   docker run --rm --network host docker.io/jwilder/dockerize -wait "${1}" -wait-retry-interval 2s -timeout 120s
 }
 
-wait_for "http://localhost:9090/health/ping" "${AUTH_NAME}"
+wait_for "http://localhost:9090/auth/health/ping" "${AUTH_NAME}"
 wait_for "http://localhost:3000/ping" "${UI_NAME}"
 wait_for "http://localhost:8081/health/readiness" "${API_NAME}"
 
