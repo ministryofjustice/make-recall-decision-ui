@@ -5,7 +5,7 @@
             {% include '../notificationBanners/latestCompleteAssessment.njk' %}
         </div>
     {% endif %}
-    {% if caseSummary.risk.assessments.offenceCodesMatch === false %}
+    {% if caseSummary.risk.assessments.offencesMatch === false %}
         <div class='govuk-!-margin-bottom-4'>
             {% include '../notificationBanners/mainOffenceMismatchBanner.njk' %}
         </div>
