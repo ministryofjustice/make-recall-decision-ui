@@ -1,37 +1,37 @@
 import { defineStep, When } from 'cypress-cucumber-preprocessor/steps'
 import {
-  assertQ1_emergency_recall,
-  assertQ22_recall_type,
-  assertQ2_indeterminate_sentence_type,
-  assertQ3_extended_sentence,
-  assertQ4_offender_details,
-  assertQ5_sentence_details,
-  assertQ6_custody_status,
-  assertQ12_mappa_details,
-  assertQ16_index_offence_details,
-  assertQ25_probation_details,
+  q1EmergencyRecall,
+  q22RecallType,
+  q2IndeterminateSentenceType,
+  q3ExtendedSentence,
+  q4OffenderDetails,
+  q5SentenceDetails,
+  q6CustodyStatus,
+  q12MappaDetails,
+  q16IndexOffenceDetails,
+  q25ProbationDetails,
 } from './index'
 
 When('Maria downloads the Part A and confirms the fixed term recall', () => {
   return cy.downloadDocX('Download the Part A').then(contents => {
-    assertQ1_emergency_recall(contents, 'No')
-    assertQ2_indeterminate_sentence_type(contents, 'No')
-    assertQ3_extended_sentence(contents, 'No')
-    assertQ4_offender_details(contents)
-    assertQ5_sentence_details(contents)
-    assertQ6_custody_status(contents, 'Prison Custody')
-    assertQ12_mappa_details(contents)
-    assertQ16_index_offence_details(contents)
-    assertQ22_recall_type(contents, 'Fixed', 'Fixed term details...')
+    q1EmergencyRecall(contents, 'No')
+    q2IndeterminateSentenceType(contents, 'No')
+    q3ExtendedSentence(contents, 'No')
+    q4OffenderDetails(contents)
+    q5SentenceDetails(contents)
+    q6CustodyStatus(contents, 'Prison Custody')
+    q12MappaDetails(contents)
+    q16IndexOffenceDetails(contents)
+    q22RecallType(contents, 'Fixed', 'Fixed term details...')
     cy.log('Q23')
     expect(contents).to.contain('Additional licence condition for fixed term recall...')
-    assertQ25_probation_details(contents)
+    q25ProbationDetails(contents)
   })
 })
 
 When('Maria downloads the Part A and confirms the standard recall', () => {
   return cy.downloadDocX('Download the Part A').then(contents => {
-    assertQ22_recall_type(contents, 'Standard', 'Standard details...')
+    q22RecallType(contents, 'Standard', 'Standard details...')
   })
 })
 

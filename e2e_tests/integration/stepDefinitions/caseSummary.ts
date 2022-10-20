@@ -45,8 +45,8 @@ When('Maria filters contacts by date range', () => {
     .then(numberOfContacts => {
       cy.getElement(`${numberOfContacts} contacts`).should('exist')
     })
-  cy.enterDateTime({ year: '2022', month: '03', day: '13'}, { parent: '#dateFrom' })
-  cy.enterDateTime({ year: '2022', month: '04', day: '13'}, { parent: '#dateTo' })
+  cy.enterDateTime({ year: '2022', month: '03', day: '13' }, { parent: '#dateFrom' })
+  cy.enterDateTime({ year: '2022', month: '04', day: '13' }, { parent: '#dateTo' })
   cy.clickButton('Apply filters')
   cy.getLinkHref('13 Mar 2022 to 13 Apr 2022').should('equal', `/cases/${crn}/contact-history`)
 })

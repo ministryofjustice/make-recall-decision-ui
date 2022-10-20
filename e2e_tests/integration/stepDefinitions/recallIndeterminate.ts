@@ -1,17 +1,17 @@
 import { When } from 'cypress-cucumber-preprocessor/steps'
 import {
-  assertQ1_emergency_recall,
-  assertQ2_indeterminate_sentence_type,
-  assertQ22_recall_type,
-  assertQ3_extended_sentence,
-  assertQ4_offender_details,
-  assertQ5_sentence_details,
-  assertQ6_custody_status,
-  assertQ7_addresses,
-  assertQ8_arrest_issues,
-  assertQ12_mappa_details,
-  assertQ16_index_offence_details,
-  assertQ25_probation_details,
+  q1EmergencyRecall,
+  q2IndeterminateSentenceType,
+  q22RecallType,
+  q3ExtendedSentence,
+  q4OffenderDetails,
+  q5SentenceDetails,
+  q6CustodyStatus,
+  q7Addresses,
+  q8ArrestIssues,
+  q12MappaDetails,
+  q16IndexOffenceDetails,
+  q25ProbationDetails,
 } from './index'
 
 When('Maria confirms the person is on a IPP sentence', () => {
@@ -52,20 +52,20 @@ When('Maria enters indeterminate and extended sentence criteria', () => {
 
 When('Maria downloads the Part A and confirms the indeterminate recall', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
-    assertQ1_emergency_recall(contents, 'Yes')
-    assertQ2_indeterminate_sentence_type(contents, 'Yes - IPP')
-    assertQ3_extended_sentence(contents, 'Yes')
+    q1EmergencyRecall(contents, 'Yes')
+    q2IndeterminateSentenceType(contents, 'Yes - IPP')
+    q3ExtendedSentence(contents, 'Yes')
     cy.log('Q4')
-    assertQ4_offender_details(contents)
+    q4OffenderDetails(contents)
     cy.log('Q5')
-    assertQ5_sentence_details(contents)
-    assertQ6_custody_status(contents, 'No')
+    q5SentenceDetails(contents)
+    q6CustodyStatus(contents, 'No')
     cy.log('Q7')
     expect(contents).to.contain(
       'Provide any other possible addresses: Police can find this person at: 123 Acacia Avenue, Birmingham B23 1AV'
     )
 
-    assertQ8_arrest_issues(contents, 'Yes', 'Arrest issues details...')
+    q8ArrestIssues(contents, 'Yes', 'Arrest issues details...')
 
     cy.log('Q9')
     expect(contents).to.contain('Police single point of contact name: Bob Wiggins')
@@ -87,7 +87,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
       'If yes, provide details and contact your local police SPOC to share information or concerns: Contraband details...'
     )
     cy.log('Q12')
-    assertQ12_mappa_details(contents)
+    q12MappaDetails(contents)
     cy.log('Q13')
     expect(contents).to.contain('Registered PPO/IOM: Yes')
     cy.log('Q14')
@@ -96,7 +96,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     )
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
     cy.log('Q16')
-    assertQ16_index_offence_details(contents)
+    q16IndexOffenceDetails(contents)
     // TODO - Q18 - additional licence conditions
     cy.log('Q19')
     expect(contents).to.contain('Increasingly violent behaviour')
@@ -106,7 +106,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     expect(contents).to.contain('Details on reporting')
     expect(contents).to.contain('Details on drug testing')
 
-    assertQ22_recall_type(contents, 'N/A', 'N/A')
+    q22RecallType(contents, 'N/A', 'N/A')
     cy.log('Q23')
     expect(contents).to.contain(
       'Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes'
@@ -121,16 +121,16 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     )
     expect(contents).to.contain('Please Comment: Details on out of touch')
     cy.log('Q25')
-    assertQ25_probation_details(contents)
+    q25ProbationDetails(contents)
   })
 })
 
 When('Maria downloads an updated Part A and confirms the changes to the indeterminate recall', () => {
   cy.clickLink('Create Part A')
   cy.downloadDocX('Download the Part A').then(contents => {
-    assertQ3_extended_sentence(contents, 'No')
-    assertQ6_custody_status(contents, 'Police Custody')
-    assertQ7_addresses(contents, 'West Ham Lane Police Station, 18 West Ham Lane, Stratford, E15 4SG')
+    q3ExtendedSentence(contents, 'No')
+    q6CustodyStatus(contents, 'Police Custody')
+    q7Addresses(contents, 'West Ham Lane Police Station, 18 West Ham Lane, Stratford, E15 4SG')
   })
 })
 

@@ -2,7 +2,6 @@ import { defineStep, When } from 'cypress-cucumber-preprocessor/steps'
 import { getTestDataPerEnvironment, formatDate } from '../../utils'
 
 export const crn = Cypress.env('CRN') || 'X098092'
-export const crn2 = Cypress.env('CRN2') || 'X098092' || 'X430109'
 
 // ==================================== Recall
 
@@ -12,8 +11,6 @@ When('Maria signs in to the case overview', () => {
 })
 
 When('Maria starts a new recommendation', () => {
-  cy.log('ENVIRONMENT: ' + process.env.ENVIRONMENT)
-
   cy.clickLink('Recommendations')
   cy.get('body').then($body => {
     if ($body.find('[data-qa="delete-recommendation"]').length) {
@@ -224,15 +221,15 @@ When('Maria confirms the existing custody status', () => {
   cy.clickButton('Continue')
 })
 
-var data = getTestDataPerEnvironment()
+const data = getTestDataPerEnvironment()
 
-export const assertQ1_emergency_recall = (contents: string, answer: string) =>
+export const q1EmergencyRecall = (contents: string, answer: string) =>
   expect(contents).to.contain(`until PPCS has issued the revocation order.  ${answer}`)
-export const assertQ2_indeterminate_sentence_type = (contents: string, answer: string) =>
+export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving a life or IPP/DPP sentence? ${answer}`)
-export const assertQ3_extended_sentence = (contents: string, answer: string) =>
+export const q3ExtendedSentence = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
-export const assertQ4_offender_details = (contents: string) => {
+export const q4OffenderDetails = (contents: string) => {
   expect(contents).to.contain(data.fullName)
   expect(contents).to.contain(data.dateOfBirth)
   expect(contents).to.contain(data.ethnicity)
@@ -242,7 +239,7 @@ export const assertQ4_offender_details = (contents: string) => {
   expect(contents).to.contain(data.prisonNo)
   expect(contents).to.contain(data.noms)
 }
-export const assertQ5_sentence_details = (contents: string) => {
+export const q5SentenceDetails = (contents: string) => {
   expect(contents).to.contain(data.indexOffence)
   expect(contents).to.contain(data.dateOfOriginalOffence)
   expect(contents).to.contain(data.dateOfSentence)
@@ -252,30 +249,30 @@ export const assertQ5_sentence_details = (contents: string) => {
   expect(contents).to.contain(data.custodialTerm)
   expect(contents).to.contain(data.extendedTerm)
 }
-export const assertQ6_custody_status = (contents: string, answer: string) =>
+export const q6CustodyStatus = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender currently in police custody or prison custody? ${answer}`)
-export const assertQ7_addresses = (contents: string, answer: string) =>
+export const q7Addresses = (contents: string, answer: string) =>
   expect(contents).to.contain(`If the offender is in police custody, state where: ${answer}`)
-export const assertQ8_arrest_issues = (contents: string, answer: string, details: string) => {
+export const q8ArrestIssues = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Are there any arrest issues of which police should be aware?  ${answer}`)
   expect(contents).to.contain(
     `If yes, provide details below, including information about any children or vulnerable adults linked to any of the above addresses: ${details}`
   )
 }
-export const assertQ12_mappa_details = (contents: string) => {
+export const q12MappaDetails = (contents: string) => {
   expect(contents).to.contain(data.mappaCategory)
   expect(contents).to.contain(data.mappaLevel)
 }
-export const assertQ16_index_offence_details = (contents: string) => {
-  //FIXME: For this to work on dev and preprod, we need a corresponding record in OASys for our CRN
+export const q16IndexOffenceDetails = (contents: string) => {
+  // FIXME: For this to work on dev and preprod, we need a corresponding record in OASys for our CRN
   expect(contents).to.contain(data.indexOffenceDetails)
 }
-export const assertQ22_recall_type = (contents: string, answer: string, details: string) => {
+export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)
   expect(contents).to.contain(`Explain your reasons for the above recall type recommendation: ${details}`)
 }
-export const assertQ25_probation_details = (contents: string) => {
-  //FIXME: Name of our user not getting pulled through
+export const q25ProbationDetails = (contents: string) => {
+  // FIXME: Name of our user not getting pulled through
   expect(contents).to.contain(data.nameOfPersonCompletingForm)
   expect(contents).to.contain(data.emailAddressOfPersonCompletingForm)
   expect(contents).to.contain(data.region)
