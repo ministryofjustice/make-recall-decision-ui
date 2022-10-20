@@ -6,7 +6,7 @@ export type AssessmentInfo = {
     error?: string;
     lastUpdatedDate?: string;
     offenceDataFromLatestCompleteAssessment?: boolean;
-    offenceCodesMatch?: boolean;
+    offencesMatch?: boolean;
     offenceDescription?: string;
 };
 

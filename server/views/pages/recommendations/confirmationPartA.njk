@@ -7,8 +7,8 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
-                <div class='govuk-!-font-size-36'>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
-                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-19'>{{ recommendation.crn }}</div>
+                <div class='govuk-!-font-size-24'>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
+                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>{{ recommendation.crn }}</div>
                 <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
