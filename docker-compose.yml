@@ -24,7 +24,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/auth/ping"]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_H2_CONSOLE_SETTINGS_WEBALLOWOTHERS=true
+      - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
   make-recall-decision-ui:
     build:
