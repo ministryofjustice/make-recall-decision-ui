@@ -24,5 +24,5 @@ export const devData = {
   region: /Region: {2}NPS London/,
   ldu: /LDU: All NPS London/,
   dateOfDecision: 'Date of decision to request revocation:',
-  timeOfDecision: /Time \(24 hour\) of decision to request information:/,
+  timeOfDecision: /Time \(24 hour\) of decision to request information: \d{2}:\d{2}/,
 }
