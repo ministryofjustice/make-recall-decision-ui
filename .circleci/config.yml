@@ -234,6 +234,7 @@ jobs:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
     parallelism: << pipeline.parameters.e2e-parallelism >>
+    resource_class: xlarge
     parameters:
       environment:
         type: string
