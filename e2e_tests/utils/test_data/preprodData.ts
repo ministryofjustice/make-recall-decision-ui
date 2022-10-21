@@ -3,7 +3,7 @@ export const preprodData = {
   dateOfBirth: /Date of birth: \d{2}\/\d{2}\/\d{4}/,
   ethnicity: /Ethnic category: .+/,
   gender: /Gender: Male/,
-  cro: /CRO No: [A-Z0-9]{8}/,
+  cro: /CRO No: [A-Z0-9]{9}/,
   pnc: /PNC No: [A-Z0-9/]{13}.*/,
   prisonNo: /Prison No: [A-Z0-9]{6}/,
   noms: /PNOMIS No: [A-Z0-9]{7}/,
