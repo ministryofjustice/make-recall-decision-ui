@@ -99,7 +99,11 @@ context('Risk page', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
-      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' }, mappa: { error: 'NOT_FOUND' } },
+      response: {
+        ...getCaseRiskNoDataResponse,
+        roshSummary: { error: 'NOT_FOUND_LATEST_COMPLETE' },
+        mappa: { error: 'NOT_FOUND' },
+      },
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
