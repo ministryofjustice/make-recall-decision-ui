@@ -1,5 +1,4 @@
 import { When } from 'cypress-cucumber-preprocessor/steps'
-import { addToNow } from '../../../cypress_shared/utils'
 import { DateTime } from 'luxon'
 
 When('Maria views the no recall task list', () => {

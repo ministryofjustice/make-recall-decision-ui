@@ -274,7 +274,7 @@ jobs:
 
   e2e_local_test:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:2022.10.1
     parallelism: << pipeline.parameters.e2e-parallelism >>
     steps:
       - run:

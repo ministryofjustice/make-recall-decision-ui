@@ -1,37 +1,48 @@
 import { defineStep, When } from 'cypress-cucumber-preprocessor/steps'
 import {
-  assertQ1_emergency_recall,
-  assertQ22_recall_type,
-  assertQ2_indeterminate_sentence_type,
-  assertQ3_extended_sentence, assertQ6_custody_status,
+  q1EmergencyRecall,
+  q22RecallType,
+  q2IndeterminateSentenceType,
+  q3ExtendedSentence,
+  q4OffenderDetails,
+  q5SentenceDetails,
+  q6CustodyStatus,
+  q12MappaDetails,
+  q16IndexOffenceDetails,
+  q25ProbationDetails,
 } from './index'
 
 When('Maria downloads the Part A and confirms the fixed term recall', () => {
   return cy.downloadDocX('Download the Part A').then(contents => {
-    assertQ1_emergency_recall(contents, 'No')
-    assertQ2_indeterminate_sentence_type(contents, 'No')
-    assertQ3_extended_sentence(contents, 'No')
-    assertQ6_custody_status(contents, 'Prison Custody')
-    assertQ22_recall_type(contents, 'Fixed', 'Fixed term details...')
+    q1EmergencyRecall(contents, 'No')
+    q2IndeterminateSentenceType(contents, 'No')
+    q3ExtendedSentence(contents, 'No')
+    q4OffenderDetails(contents)
+    q5SentenceDetails(contents)
+    q6CustodyStatus(contents, 'Prison Custody')
+    q12MappaDetails(contents)
+    q16IndexOffenceDetails(contents)
+    q22RecallType(contents, 'Fixed', 'Fixed term details...')
     cy.log('Q23')
     expect(contents).to.contain('Additional licence condition for fixed term recall...')
+    q25ProbationDetails(contents)
   })
 })
 
 When('Maria downloads the Part A and confirms the standard recall', () => {
   return cy.downloadDocX('Download the Part A').then(contents => {
-    assertQ22_recall_type(contents, 'Standard', 'Standard details...')
+    q22RecallType(contents, 'Standard', 'Standard details...')
   })
 })
 
 When('Maria adds licence conditions for the fixed term recall', () => {
   cy.log('========= Fixed term licence conditions')
   cy.selectRadio('Fixed term recall', 'Yes')
-  cy.fillInput('Give details', "Additional licence condition for fixed term recall...")
+  cy.fillInput('Give details', 'Additional licence condition for fixed term recall...')
   cy.clickButton('Continue')
 })
 
-defineStep("Maria confirms {string} for emergency recall", (answer: string) => {
+defineStep('Maria confirms {string} for emergency recall', (answer: string) => {
   cy.selectRadio('Is this an emergency recall?', answer)
   cy.clickButton('Continue')
 })

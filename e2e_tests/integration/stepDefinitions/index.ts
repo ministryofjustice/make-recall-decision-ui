@@ -1,8 +1,8 @@
 import { defineStep, When } from 'cypress-cucumber-preprocessor/steps'
+import { DateTime } from 'luxon'
+import { getTestDataPerEnvironment } from '../../utils'
 
 export const crn = Cypress.env('CRN') || 'X098092'
-export const crn2 = Cypress.env('CRN2') || 'X098092' || 'X430109'
-
 
 // ==================================== Recall
 
@@ -76,9 +76,7 @@ defineStep('Maria confirms {string} for indeterminate sentence', (answer: string
 })
 
 defineStep('Maria confirms {string} for extended sentence', (answer: string) => {
-  cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, answer)
-  )
+  cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} on an extended sentence?`, answer))
   cy.clickButton('Continue')
 })
 
@@ -96,9 +94,7 @@ When('Maria changes the recall type', () => {
 })
 
 When('Maria indicates the person is not in custody', () => {
-  cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} in custody now?`, 'No')
-  )
+  cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'No'))
   cy.clickButton('Continue')
 })
 
@@ -141,7 +137,7 @@ defineStep('Maria confirms {string} to victim contact scheme', (answer: string) 
 })
 
 When('Maria enters the date the VLO was informed', () => {
-  cy.enterDateTime({ year: '2022', month: '04', day: '14'}, { parent: '#dateVloInformed' })
+  cy.enterDateTime({ year: '2022', month: '04', day: '14' }, { parent: '#dateVloInformed' })
   cy.clickButton('Continue')
 })
 
@@ -226,16 +222,60 @@ When('Maria confirms the existing custody status', () => {
   cy.clickButton('Continue')
 })
 
-export const assertQ1_emergency_recall = (contents: string, answer: string) => expect(contents).to.contain(`until PPCS has issued the revocation order.  ${answer}`)
-export const assertQ2_indeterminate_sentence_type = (contents: string, answer: string) => expect(contents).to.contain(`Is the offender serving a life or IPP/DPP sentence? ${answer}`)
-export const assertQ3_extended_sentence = (contents: string, answer: string) => expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
-export const assertQ6_custody_status = (contents: string, answer: string) => expect(contents).to.contain(`Is the offender currently in police custody or prison custody? ${answer}`)
-export const assertQ7_addresses = (contents: string, answer: string) => expect(contents).to.contain(`If the offender is in police custody, state where: ${answer}`)
-export const assertQ8_arrest_issues = (contents: string, answer: string, details: string) => {
-  expect(contents).to.contain(`Are there any arrest issues of which police should be aware?  ${answer}`)
-  expect(contents).to.contain(`If yes, provide details below, including information about any children or vulnerable adults linked to any of the above addresses: ${details}`)
+const data = getTestDataPerEnvironment()
+
+export const q1EmergencyRecall = (contents: string, answer: string) =>
+  expect(contents).to.contain(`until PPCS has issued the revocation order.  ${answer}`)
+export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
+  expect(contents).to.contain(`Is the offender serving a life or IPP/DPP sentence? ${answer}`)
+export const q3ExtendedSentence = (contents: string, answer: string) =>
+  expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
+export const q4OffenderDetails = (contents: string) => {
+  expect(contents).to.match(data.fullName as RegExp)
+  expect(contents).to.match(data.dateOfBirth as RegExp)
+  expect(contents).to.match(data.ethnicity as RegExp)
+  expect(contents).to.match(data.gender as RegExp)
+  expect(contents).to.match(data.cro as RegExp)
+  expect(contents).to.match(data.pnc as RegExp)
+  expect(contents).to.match(data.prisonNo as RegExp)
+  expect(contents).to.match(data.noms as RegExp)
 }
-export const assertQ22_recall_type = (contents: string, answer: string, details: string) => {
+export const q5SentenceDetails = (contents: string) => {
+  expect(contents).to.match(data.indexOffence as RegExp)
+  expect(contents).to.match(data.dateOfOriginalOffence as RegExp)
+  expect(contents).to.match(data.dateOfSentence as RegExp)
+  expect(contents).to.match(data.lengthOfSentence as RegExp)
+  expect(contents).to.match(data.licenceExpiryDate as RegExp)
+  expect(contents).to.match(data.sentenceExpiryDate as RegExp)
+  expect(contents).to.match(data.custodialTerm as RegExp)
+  expect(contents).to.match(data.extendedTerm as RegExp)
+}
+export const q6CustodyStatus = (contents: string, answer: string) =>
+  expect(contents).to.contain(`Is the offender currently in police custody or prison custody? ${answer}`)
+export const q7Addresses = (contents: string, answer: string) =>
+  expect(contents).to.contain(`If the offender is in police custody, state where: ${answer}`)
+export const q8ArrestIssues = (contents: string, answer: string, details: string) => {
+  expect(contents).to.contain(`Are there any arrest issues of which police should be aware?  ${answer}`)
+  expect(contents).to.contain(
+    `If yes, provide details below, including information about any children or vulnerable adults linked to any of the above addresses: ${details}`
+  )
+}
+export const q12MappaDetails = (contents: string) => {
+  expect(contents).to.match(data.mappaCategory as RegExp)
+  expect(contents).to.match(data.mappaLevel as RegExp)
+}
+export const q16IndexOffenceDetails = (contents: string) => {
+  expect(contents).to.match(data.indexOffenceDetails as RegExp)
+}
+export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)
   expect(contents).to.contain(`Explain your reasons for the above recall type recommendation: ${details}`)
+}
+export const q25ProbationDetails = (contents: string) => {
+  expect(contents).to.match(data.nameOfPersonCompletingForm as RegExp)
+  expect(contents).to.match(data.emailAddressOfPersonCompletingForm as RegExp)
+  expect(contents).to.match(data.region as RegExp)
+  expect(contents).to.match(data.ldu as RegExp)
+  expect(contents).to.contain(`${data.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`)
+  expect(contents).to.match(data.timeOfDecision as RegExp)
 }

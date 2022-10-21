@@ -28,7 +28,7 @@ function generateReport() {
   }
 }
 
-//Mapping cucumber json files from the cucumber-json directory to the features
+// Mapping cucumber json files from the cucumber-json directory to the features
 function getCucumberReportMaps() {
   const files = fs.readdirSync(cucumberJsonDir).filter(file => {
     return file.indexOf('.json') > -1
@@ -44,7 +44,7 @@ function getCucumberReportMaps() {
   })
 }
 
-//Adding screenshots to the respective failed test steps in the feature files
+// Adding screenshots to the respective failed test steps in the feature files
 function addScreenshots() {
   if (!fs.existsSync(screenshotsDir)) {
     return
@@ -105,7 +105,7 @@ function addScreenshots() {
           }
         }
       })
-      //Write JSON with screenshot back to report file.
+      // Write JSON with screenshot back to report file.
       fs.writeFileSync(
         path.join(cucumberJsonDir, cucumberReportFileMap[feature]),
         JSON.stringify(cucumberReportMap[feature], null, jsonIndentLevel)

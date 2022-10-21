@@ -14,14 +14,14 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   hmpps-auth:
-    image: quay.io/hmpps/hmpps-auth:2022-07-19.16018.cf96cd0
+    image: quay.io/hmpps/hmpps-auth:latest
     networks:
       - hmpps
     container_name: hmpps-auth
     ports:
       - "9090:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health/ping"]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
