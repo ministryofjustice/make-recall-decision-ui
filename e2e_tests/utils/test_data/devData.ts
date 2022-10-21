@@ -15,7 +15,7 @@ export const devData = {
   licenceExpiryDate: /Licence expiry date: \t18\/10\/2025/,
   sentenceExpiryDate: /Sentence expiry date: \t18\/10\/2025/,
   custodialTerm: /Custodial term: \t36 Months/,
-  extendedTerm: /Extended term: \t12 Months/,
+  extendedTerm: /Extended term:\t12 Months/,
   mappaCategory: /MAPPA Category: Category 0/,
   mappaLevel: /MAPPA Level: Level 1/,
   indexOffenceDetails: /Provide details of the index offence\(s\) and write a succinct offence analysis:/,
