@@ -8,7 +8,7 @@ export const devData = {
   prisonNo: /Prison No:/,
   noms: /PNOMIS No: B8411AV/,
   indexOffence:
-    /Index offence of current sentence which has led to the offender’s recall: \nAbstracting electricity - 04300/,
+    /Index offence of current sentence which has led to the offender’s recall: Cause serious injury by dangerous driving - 00412/,
   dateOfOriginalOffence: /Date of original offence: 03\/10\/2022/,
   dateOfSentence: /Date of sentence: 19\/10\/2022/,
   lengthOfSentence: /Length of sentence: 36 Months/,
