@@ -10,7 +10,7 @@ export const preprodData = {
   indexOffence: /Index offence of current sentence which has led to the offender’s recall:.*/,
   dateOfOriginalOffence: /Date of original offence: \t\d{2}\/\d{2}\/\d{4}/,
   dateOfSentence: /Date of sentence: \t\d{2}\/\d{2}\/\d{4}/,
-  lengthOfSentence: /Length of sentence: \d{2} Months/,
+  lengthOfSentence: /Length of sentence: \t\d{2} Months/,
   licenceExpiryDate: /Licence expiry date: \t\d{2}\/\d{2}\/\d{4}/,
   sentenceExpiryDate: /Sentence expiry date: \t\d{2}\/\d{2}\/\d{4}/,
   custodialTerm: /Custodial term:/,
