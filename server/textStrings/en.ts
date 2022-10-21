@@ -50,6 +50,14 @@ export const strings = {
     noAddressConfirmationSelected: 'Select whether this is where the police can find {{ fullName }}',
     missingLocationDetail: 'You must enter the correct location',
   },
+  notifications: {
+    oasysNotFoundLatestComplete:
+      'This information cannot be retrieved from OASys. Double-check as it may be out of date.',
+    oasysMissingRoshSummaries: 'The latest complete OASys assessment does not have full RoSH information.',
+    oasysMissingRoshLevels:
+      'A RoSH summary has not been completed for this individual. Check OASys for the person’s current assessment status.',
+    oasysApiError: 'This information cannot be retrieved from OASys.',
+  },
   pageHeadings: {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',

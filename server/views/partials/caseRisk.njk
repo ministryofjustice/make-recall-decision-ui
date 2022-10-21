@@ -3,7 +3,7 @@
 <div class="flex-desktop flex--row-reverse">
     <div class="flex__item-one-third-desktop">
         <div data-qa='roshTable'>
-        {{ roshWidget({ riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
+        {{ roshWidget({ riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm, notifications: notifications, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
         </div>
         <div data-qa='mappa'>
             {{ mappaWidget({ mappa: caseSummary.mappa, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true }) }) }}
@@ -33,6 +33,7 @@
             cardHeading: 'Who is at risk',
             oasysHeading: 'OASys 10.1 Who is at risk?',
             error: caseSummary.roshSummary.error,
+            notifications: notifications,
             content: caseSummary.roshSummary.whoIsAtRisk,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
@@ -46,6 +47,7 @@
             cardHeading: 'Details of the risk',
             oasysHeading: 'OASys 10.2 What is the nature of the risk?',
             error: caseSummary.roshSummary.error,
+            notifications: notifications,
             content: caseSummary.roshSummary.natureOfRisk,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
@@ -59,6 +61,7 @@
             cardHeading: 'When the risk will be highest',
             oasysHeading: 'OASys 10.3 When is the risk likely to be greatest?',
             error: caseSummary.roshSummary.error,
+            notifications: notifications,
             content: caseSummary.roshSummary.riskImminence,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
@@ -72,6 +75,7 @@
             cardHeading: 'Circumstances that will increase the risk',
             oasysHeading: 'OASys 10.4 What circumstances are likely to increase the risk?',
             error: caseSummary.roshSummary.error,
+            notifications: notifications,
             content: caseSummary.roshSummary.riskIncreaseFactors,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
@@ -85,6 +89,7 @@
             cardHeading: 'Factors that will reduce the risk',
             oasysHeading: 'OASys 10.5 What factors are likely to reduce the risk?',
             error: caseSummary.roshSummary.error,
+            notifications: notifications,
             content: caseSummary.roshSummary.riskMitigationFactors,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {

@@ -5,6 +5,7 @@ import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
 import { AuditService } from '../../services/auditService'
 import { AppError } from '../../AppError'
+import { strings } from '../../textStrings/en'
 
 const auditService = new AuditService()
 
@@ -29,6 +30,7 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     ...res.locals,
     crn: normalizedCrn,
     ...caseSection,
+    notifications: strings.notifications,
   }
   res.locals.pageUrlBase = `/cases/${normalizedCrn}/`
   const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)

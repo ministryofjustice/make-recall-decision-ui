@@ -99,7 +99,11 @@ context('Risk page', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
-      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'NOT_FOUND' }, mappa: { error: 'NOT_FOUND' } },
+      response: {
+        ...getCaseRiskNoDataResponse,
+        roshSummary: { error: 'NOT_FOUND_LATEST_COMPLETE' },
+        mappa: { error: 'NOT_FOUND' },
+      },
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
 
@@ -153,9 +157,7 @@ context('Risk page', () => {
         .should('exist')
     )
     cy.getElement('UNKNOWN RoSH').should('exist')
-    cy.getElement('Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.').should(
-      'exist'
-    )
+    cy.getElement('This information cannot be retrieved from OASys.').should('exist')
     cy.getElement('UNKNOWN MAPPA').should('exist')
     cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
       parent: '[data-qa="mappa"]',
