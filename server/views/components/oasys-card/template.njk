@@ -15,7 +15,9 @@
     {% set html %}
       <p class="govuk-notification-banner__heading">
         {% if params.error == 'NOT_FOUND' %}
-          This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.
+          This information cannot be retrieved from OASys. Double-check as it may be out of date.
+        {% elseif params.error == 'MISSING_DATA' %}
+          The latest complete OASys assessment does not have full RoSH information.
         {% else %}
           This information cannot be retrieved from OASys.
         {% endif %}

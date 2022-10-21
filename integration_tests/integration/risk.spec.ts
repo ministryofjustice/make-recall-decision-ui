@@ -121,7 +121,7 @@ context('Risk page', () => {
       'roshTable',
     ].forEach(id =>
       cy
-        .getElement('This information cannot be retrieved from OASys. Double-check OASys as it might be out of date.', {
+        .getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
           parent: `[data-qa="${id}"]`,
         })
         .should('exist')
@@ -160,6 +160,24 @@ context('Risk page', () => {
     cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
       parent: '[data-qa="mappa"]',
     }).should('exist')
+  })
+
+  it('shows messages if RoSH data empty', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'MISSING_DATA' } },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+
+    // RoSH content boxes
+    ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
+      cy
+        .getElement('The latest complete OASys assessment does not have full RoSH information.', {
+          parent: `[data-qa="${id}"]`,
+        })
+        .should('exist')
+    )
   })
 
   it('score timeline - shows message if no predictor data found', () => {
