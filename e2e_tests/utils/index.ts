@@ -3,10 +3,10 @@ import { devData } from './test_data/devData'
 import { preprodData } from './test_data/preprodData'
 
 export const getTestDataPerEnvironment = () => {
-  if (process.env.ENVIRONMENT === 'dev') {
+  if (Cypress.env('ENV') === 'dev') {
     return devData
   }
-  if (process.env.ENVIRONMENT === 'preprod') {
+  if (Cypress.env('ENV') === 'preprod') {
     return preprodData
   }
   return localData
