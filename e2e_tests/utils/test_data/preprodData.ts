@@ -19,7 +19,7 @@ export const preprodData = {
   mappaLevel: /MAPPA Level: Level \d/,
   indexOffenceDetails: /Provide details of the index offence\(s\) and write a succinct offence analysis:.*/,
   nameOfPersonCompletingForm: /Name of person completing the form: Jon Wyatt/,
-  emailAddressOfPersonCompletingForm: /Email Address: jon.wyatt@digital.justice.gov.uk/,
+  emailAddressOfPersonCompletingForm: /Email Address: .*@digital\.justice\.gov\.uk/,
   region: /Region:.*/,
   ldu: /LDU:.*/,
   dateOfDecision: 'Date of decision to request revocation:',

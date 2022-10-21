@@ -20,7 +20,7 @@ export const devData = {
   mappaLevel: /MAPPA Level: Level 1/,
   indexOffenceDetails: /Provide details of the index offence\(s\) and write a succinct offence analysis:/,
   nameOfPersonCompletingForm: /Name of person completing the form: Jack Maloney/,
-  emailAddressOfPersonCompletingForm: /Email Address: jack.maloney@digital.justice.gov.uk/,
+  emailAddressOfPersonCompletingForm: /Email Address: .*@digital\.justice\.gov\.uk/,
   region: /Region: {2}NPS London/,
   ldu: /LDU: All NPS London/,
   dateOfDecision: 'Date of decision to request revocation:',
