@@ -153,9 +153,7 @@ context('Risk page', () => {
         .should('exist')
     )
     cy.getElement('UNKNOWN RoSH').should('exist')
-    cy.getElement('Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.').should(
-      'exist'
-    )
+    cy.getElement('This information cannot be retrieved from OASys.').should('exist')
     cy.getElement('UNKNOWN MAPPA').should('exist')
     cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
       parent: '[data-qa="mappa"]',

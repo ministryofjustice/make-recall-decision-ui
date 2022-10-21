@@ -86,9 +86,11 @@ rosh-widget__risk--low
         <p class="govuk-body-m govuk-!-margin-bottom-1">Risk of serious harm</p>
         <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">
             {% if riskOfSeriousHarm.error == 'NOT_FOUND' %}
-                This information cannot be retrieved from OASys. Double-check as it may be out of date.
+                {{ params.notifications.oasysNotFound }}
+            {% elseif riskOfSeriousHarm.error == 'MISSING_DATA' %}
+                {{ params.notifications.oasysMissingRoshLevels }}
             {% else %}
-                Something went wrong. Sorry, RoSH data is not available at the moment. Try again later.
+                {{ params.notifications.oasysApiError }}
             {% endif %}
         </p>
     </div>
