@@ -38,6 +38,10 @@ export const featureFlagsDefaults = {
     label: "Don't send my data to Google Analytics (in prod only)",
     default: false,
   },
+  flagCreateVaryLicenceData: {
+    label: "Show tab for 'Create & vary a licence' data",
+    default: false,
+  },
 }
 
 export const readFeatureFlags =

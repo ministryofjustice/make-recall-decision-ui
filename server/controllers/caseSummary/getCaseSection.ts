@@ -51,6 +51,10 @@ export const getCaseSection = async (
         caseSummary = transformLicenceConditions(caseSummaryRaw)
       }
       break
+    case 'licence-conditions-cvl':
+      sectionLabel = 'Licence conditions (Create & vary a licence)'
+      caseSummary = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
+      break
     case 'contact-history':
       sectionLabel = 'Contact history'
       caseSummaryRaw = await fetchFromCacheOrApi({
