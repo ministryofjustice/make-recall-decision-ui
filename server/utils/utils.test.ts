@@ -220,6 +220,11 @@ describe('validateCrn', () => {
     const result = validateCrn(' x12345 ')
     expect(result).toEqual('X12345')
   })
+
+  it('removes invalid characters', () => {
+    const result = validateCrn('​​V127804')
+    expect(result).toEqual('V127804')
+  })
 })
 
 describe('isPreprodOrProd', () => {

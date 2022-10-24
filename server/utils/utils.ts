@@ -116,7 +116,10 @@ export const validateCrn = (crn: unknown) => {
   }
 }
 
-export const normalizeCrn = (crn: string) => crn.trim().toUpperCase()
+export const normalizeCrn = (crn: string) => {
+  const invalidCharsRemoved = crn.replace(/[^A-Z0-9]/gi, '')
+  return invalidCharsRemoved.toUpperCase()
+}
 
 export const isPreprodOrProd = (env?: string) => ['PREPRODUCTION', 'PRODUCTION'].includes(env)
 
