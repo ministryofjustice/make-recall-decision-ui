@@ -88,7 +88,7 @@ rosh-widget__risk--low
             {% if riskOfSeriousHarm.error == 'NOT_FOUND_LATEST_COMPLETE' %}
                 {{ params.notifications.oasysNotFoundLatestComplete }}
             {% elseif riskOfSeriousHarm.error == 'MISSING_DATA' %}
-                {{ params.notifications.oasysMissingRoshLevels }}
+                {{ params.notifications.oasysMissingRosh }}
             {% else %}
                 {{ params.notifications.oasysApiError }}
             {% endif %}

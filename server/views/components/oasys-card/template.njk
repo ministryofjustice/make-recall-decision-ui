@@ -17,7 +17,7 @@
         {% if params.error == 'NOT_FOUND_LATEST_COMPLETE' %}
           {{ params.notifications.oasysNotFoundLatestComplete }}
         {% elseif params.error == 'MISSING_DATA' %}
-          {{ params.notifications.oasysMissingRoshSummaries }}
+          {{ params.notifications.oasysMissingRosh }}
         {% else %}
           {{ params.notifications.oasysApiError }}
         {% endif %}
