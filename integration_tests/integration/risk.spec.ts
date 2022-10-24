@@ -180,6 +180,9 @@ context('Risk page', () => {
         })
         .should('exist')
     )
+    cy.getElement('The latest complete OASys assessment does not have full RoSH information.', {
+      parent: '[data-qa="roshTable"]',
+    }).should('exist')
   })
 
   it('score timeline - shows message if no predictor data found', () => {

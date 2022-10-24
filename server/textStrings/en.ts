@@ -53,9 +53,7 @@ export const strings = {
   notifications: {
     oasysNotFoundLatestComplete:
       'This information cannot be retrieved from OASys. Double-check as it may be out of date.',
-    oasysMissingRoshSummaries: 'The latest complete OASys assessment does not have full RoSH information.',
-    oasysMissingRoshLevels:
-      'A RoSH summary has not been completed for this individual. Check OASys for the person’s current assessment status.',
+    oasysMissingRosh: 'The latest complete OASys assessment does not have full RoSH information.',
     oasysApiError: 'This information cannot be retrieved from OASys.',
   },
   pageHeadings: {
