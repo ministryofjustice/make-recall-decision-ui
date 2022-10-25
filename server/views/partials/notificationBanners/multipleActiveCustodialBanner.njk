@@ -8,15 +8,11 @@
     {{ govukNotificationBanner({
         html: html,
         attributes: {
-            'data-qa': 'banner-multiple-active-custodial'
+            'data-qa': 'banner-multiple-active-custodial',
+            'data-analytics-event': 'multipleCustodialConvictionsBanner',
+            'data-analytics-event-category': crn,
+            'data-analytics-event-label': caseSummary.convictions.activeCustodial.length
         },
         classes: "govuk-notification-banner--error"
     }) }}
-    <script nonce='{{ cspNonce }}'>
-        gtag('event', 'multipleCustodialConvictionsBanner', {
-          'event_category': '{{ crn }}',
-          'event_label': '{{ caseSummary.convictions.activeCustodial.length }}',
-          'non_interaction': true
-        });
-    </script>
 {% endif %}

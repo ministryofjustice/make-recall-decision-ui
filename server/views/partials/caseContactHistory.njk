@@ -41,25 +41,21 @@
                         </div>
                     {% endif %}
                 {% endset %}
-                {% set notesHtml %}
-                    {% if contact.description %}
-                    <pre class='govuk-body govuk-!-margin-bottom-2' data-qa='contact-description'>{{ contact.description }}</pre>
-                    {% endif %}
-                    <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
-                {% endset %}
                 {% set sectionHtml %}
-                    {% if contact.notes %}
-                    {{ govukDetails({
-                        summaryText: "View more detail",
-                        html: notesHtml,
-                        open: contact.searchTextMatch.notesOrDescriptionMatched,
-                        attributes: {
-                            'data-js': 'viewDetail',
-                            'data-analytics-action': contact.contactStartDate,
-                            'data-analytics-category': 'contactViewDetail',
-                            'data-analytics-label': 'Sensitive' if contact.sensitive else contact.descriptionType
-                        }
-                    }) }}
+                    {% if contact.notes or contact.description %}
+                        <details class="govuk-details" data-module="govuk-details"{{ " open" if contact.searchTextMatch.notesOrDescriptionMatched }}>
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text" data-analytics-event="select_content" data-analytics-event-category="contactViewDetail" data-analytics-event-label="{{ 'Sensitive' if contact.sensitive else contact.descriptionType }}" data-analytics-event-action="{{ contact.contactStartDate }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                {% if contact.description %}
+                                    <pre class='govuk-body govuk-!-margin-bottom-2' data-qa='contact-description'>{{ contact.description }}</pre>
+                                {% endif %}
+                                {% if contact.notes %}
+                                    <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
+                                {% endif %}
+                            </div>
+                        </details>
                     {% endif %}
                     {% if flags.flagContactDocuments and contact.contactDocuments.length %}
                     <div class='govuk-!-margin-top-1'>

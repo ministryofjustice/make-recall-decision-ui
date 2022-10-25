@@ -5,12 +5,9 @@
 {% endset %}
 {{ govukNotificationBanner({
     html: html,
-    classes: 'govuk-!-margin-bottom-0'
+    classes: 'govuk-!-margin-bottom-0',
+    attributes: {
+        'data-analytics-event': 'latestCompleteAssessmentBanner',
+        'data-analytics-event-category': crn
+    }
 }) }}
-
-<script nonce='{{ cspNonce }}'>
-  gtag('event', 'latestCompleteAssessmentBanner', {
-    'event_category': '{{ crn }}',
-    'non_interaction': true
-  });
-</script>

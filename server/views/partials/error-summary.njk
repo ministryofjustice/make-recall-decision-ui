@@ -1,18 +1,16 @@
 {% if errors %}
-    {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors.list,
-        attributes: {
-            'data-qa': 'error-list'
-        }
-    }) }}
-    <script nonce='{{ cspNonce }}'>
-        {% for error in errors.list %}
-        gtag('event', 'formValidationError', {
-          'event_category': '{{ error.errorId }}',
-          'event_label': '{{ error.name }}',
-          'non_interaction': true
-          });
-        {% endfor %}
-    </script>
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary" data-qa="error-list">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+            There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                {% for error in errors.list %}
+                <li>
+                    <a href="{{ error.href }}" data-analytics-event='formValidationError' data-analytics-event-category='{{ error.errorId }}' data-analytics-event-label='{{ error.name }}'>{{ error.text }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endif %}

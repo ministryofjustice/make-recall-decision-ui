@@ -15,15 +15,14 @@ Cypress.Commands.add('signIn', () => {
   cy.mockCaseSummaryData()
   cy.intercept(
     {
-      method: 'GET',
-      url: 'https://www.google-analytics.com/collect?*',
+      method: 'POST',
+      url: 'https://region1.google-analytics.com/g/collect?*',
       query: {
-        t: 'pageview',
+        en: 'page_view',
       },
     },
-    { statusCode: 200 }
+    { statusCode: 204 }
   ).as('googleAnalyticsPageView')
-  cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
   cy.request('/')
   return cy.task('getSignInUrl').then(cy.visit)
 })

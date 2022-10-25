@@ -8,15 +8,11 @@
     {{ govukNotificationBanner({
         html: html,
         attributes: {
-            'data-qa': 'banner-oasys-last-updated'
+            'data-qa': 'banner-oasys-last-updated',
+            'data-analytics-event': 'oasysLastUpdatedBanner',
+            'data-analytics-event-category': crn,
+            'data-analytics-event-label': caseSummary.risk.riskManagementPlan.latestDateCompleted
         },
         classes: 'govuk-!-margin-bottom-6'
     }) }}
-    <script nonce='{{ cspNonce }}'>
-        gtag('event', 'oasysLastUpdatedBanner', {
-          'event_category': '{{ crn }}',
-          'event_label': '{{ caseSummary.risk.riskManagementPlan.latestDateCompleted }}',
-          'non_interaction': true
-        });
-    </script>
 {% endif %}
