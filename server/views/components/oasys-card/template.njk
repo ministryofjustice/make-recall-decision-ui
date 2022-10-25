@@ -2,10 +2,6 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "components/summary-card/macro.njk"             import appSummaryCard %}
 
-{% set contentHtml %}
-  <pre class='govuk-body'>{{ params.content }}</pre>
-{% endset %}
-
 {% set sectionHtml %}
   <div class="govuk-!-margin-bottom-2 text-secondary">
     {{ params.oasysHeading }}
@@ -32,12 +28,14 @@
       Last updated: {{ formatDateTimeFromIsoString({ isoDate: params.lastUpdated, dateOnly: true }) }}
     </div>
     {% if params.content %}
-      {{ govukDetails({
-        summaryHtml: "View more detail<span class='govuk-visually-hidden'> on " + params.cardHeading + "</span>",
-        html: contentHtml,
-        open: params.open,
-        attributes: params.attributes
-      }) }}
+      <details class="govuk-details" data-module="govuk-details"{{ " open" if params.open }}>
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text" data-analytics-event="{{ params.attributes['data-analytics-event'] }}" data-analytics-event-category="{{ params.attributes['data-analytics-event-category'] }}" data-analytics-event-label="{{ params.attributes['data-analytics-event-label'] }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
+        </summary>
+        <div class="govuk-details__text">
+          <pre class='govuk-body'>{{ params.content }}</pre>
+        </div>
+      </details>
     {% else %}
       <p class='govuk-body'>Not available</p>
     {% endif %}

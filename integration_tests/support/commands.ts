@@ -13,17 +13,6 @@ Cypress.Commands.add('signIn', () => {
   cy.task('stubSignIn')
   cy.task('stubAuthUser')
   cy.mockCaseSummaryData()
-  cy.intercept(
-    {
-      method: 'GET',
-      url: 'https://www.google-analytics.com/collect?*',
-      query: {
-        t: 'pageview',
-      },
-    },
-    { statusCode: 200 }
-  ).as('googleAnalyticsPageView')
-  cy.intercept('POST', 'https://www.google-analytics.com/j/collect?*', { statusCode: 200 })
   cy.request('/')
   return cy.task('getSignInUrl').then(cy.visit)
 })

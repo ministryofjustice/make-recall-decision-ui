@@ -18,6 +18,7 @@ If a person on probation breaches their licence conditions, they could be recall
 ## Automated tests, linting and typescript
 
 [Doc](./docs/lint-tests.md)
+
 ## Feature flags
 
 A simple [feature flags mechanism](./docs/feature-flags.md) is available to show or hide new features.
@@ -30,6 +31,9 @@ A simple [feature flags mechanism](./docs/feature-flags.md) is available to show
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+
+## Google analytics
+[Doc](./docs/analytics.md)
 
 ## Form auto-filler
 [Doc](./docs/autofill-forms.md)

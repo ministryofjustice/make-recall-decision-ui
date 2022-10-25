@@ -5,11 +5,9 @@
 {% endset %}
 {{ govukNotificationBanner({
     html: notificationHtml,
-    classes: 'govuk-!-margin-bottom-4'
+    classes: 'govuk-!-margin-bottom-4',
+    attributes: {
+        'data-analytics-event': 'contingencyPlanIncompleteAssessmentBanner',
+        'data-analytics-event-category': crn
+    }
 }) }}
-<script nonce='{{ cspNonce }}'>
-  gtag('event', 'contingencyPlanIncompleteAssessmentBanner', {
-    'event_category': '{{ crn }}',
-    'non_interaction': true
-  });
-</script>
