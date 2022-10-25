@@ -45,6 +45,7 @@ context('Overview', () => {
     )
 
     // contingency plan
+    cy.getElement('Started on: 9 October 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
     cy.viewDetails('View more detail on contingency plan').should('contain', risk.riskManagementPlan.contingencyPlans)
 
     // risk flags
