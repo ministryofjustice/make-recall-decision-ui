@@ -234,14 +234,6 @@ context('Overview', () => {
         },
       })
 
-      cy.interceptGoogleAnalyticsEvent(
-        {
-          ea: 'multipleCustodialConvictionsBanner',
-          ec: crn,
-          el: '2',
-        },
-        'multipleConvictionsEvent'
-      )
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
@@ -249,7 +241,6 @@ context('Overview', () => {
       // banner
       cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('exist')
       cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
-      cy.wait('@multipleConvictionsEvent')
     })
 
     it('message in offence panel, and not available for licence dates, if no active custodial convictions', () => {

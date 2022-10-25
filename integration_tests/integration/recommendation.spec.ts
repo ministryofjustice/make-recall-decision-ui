@@ -413,17 +413,8 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.interceptGoogleAnalyticsEvent(
-        {
-          ea: 'multipleCustodialConvictionsBanner',
-          ec: crn,
-          el: '2',
-        },
-        'multipleConvictionsEvent'
-      )
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
-      cy.wait('@multipleConvictionsEvent')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
     })
