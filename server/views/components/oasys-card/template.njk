@@ -25,7 +25,7 @@
     {% endset %}
     {{ govukNotificationBanner({
       html: html,
-      classes: "govuk-notification-banner--error govuk-!-margin-bottom-0"
+      classes: ("govuk-notification-banner--error" if params.error !== 'MISSING_DATA' else "") + " govuk-!-margin-bottom-0"
     }) }}
   {% else %}
     <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
