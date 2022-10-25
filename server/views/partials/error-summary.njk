@@ -7,7 +7,11 @@
             <ul class="govuk-list govuk-error-summary__list">
                 {% for error in errors.list %}
                 <li>
-                    <a href="{{ error.href }}" data-analytics-event='formValidationError' data-analytics-event-category='{{ error.errorId }}' data-analytics-event-label='{{ error.name }}'>{{ error.text }}</a>
+                    {% if error.href %}
+                        <a href="{{ error.href }}" data-analytics-event='formValidationError' data-analytics-event-category='{{ error.errorId }}' data-analytics-event-label='{{ error.name }}'>{{ error.html | safe if error.html else error.text }}</a>
+                    {% else %}
+                        {{ error.html | safe if error.html else error.text }}
+                    {% endif %}
                 </li>
                 {% endfor %}
             </ul>
