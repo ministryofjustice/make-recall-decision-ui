@@ -15,6 +15,10 @@
                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: licenceCondition.topupSupervisionStartDate, dateOnly: true }) }}</td>
                     </tr>
                      <tr class="govuk-table__row">
+                         <th class='govuk-table__header'>topupSupervisionExpiryDate</th>
+                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: licenceCondition.topupSupervisionExpiryDate, dateOnly: true }) }}</td>
+                     </tr>
+                     <tr class="govuk-table__row">
                         <th class='govuk-table__header'>actualReleaseDate</th>
                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: licenceCondition.actualReleaseDate, dateOnly: true }) }}</td>
                     </tr>
@@ -25,10 +29,6 @@
                      <tr class="govuk-table__row">
                         <th class='govuk-table__header'>conditionalReleaseDate</th>
                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: licenceCondition.conditionalReleaseDate, dateOnly: true }) }}</td>
-                    </tr>
-                     <tr class="govuk-table__row">
-                        <th class='govuk-table__header'>topupSupervisionExpiryDate</th>
-                        <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: licenceCondition.topupSupervisionExpiryDate, dateOnly: true }) }}</td>
                     </tr>
                      <tr class="govuk-table__row">
                         <th class='govuk-table__header'>sentenceStartDate</th>
@@ -42,8 +42,8 @@
                         <th class='govuk-table__header'>additionalPssConditions</th>
                         <td class="govuk-table__cell">
                             {% for item in licenceCondition.additionalPssConditions %}
-                                <div>text: {{ item.text }}</div>
-                                <div>expandedText: {{ item.expandedText }}</div>
+                                <div>{{ item.text }}</div>
+                                {% if item.expandedText %}<div>expandedText: {{ item.expandedText }}</div>{% endif %}
                             {% endfor %}
                         </td>
                     </tr>
@@ -51,8 +51,8 @@
                         <th class='govuk-table__header'>bespokeConditions</th>
                         <td class="govuk-table__cell">
                             {% for item in licenceCondition.bespokeConditions %}
-                                <div>text: {{ item.text }}</div>
-                                <div>expandedText: {{ item.expandedText }}</div>
+                                <div>{{ item.text }}</div>
+                                {% if item.expandedText %}<div>expandedText: {{ item.expandedText }}</div>{% endif %}
                             {% endfor %}
                         </td>
                     </tr>
@@ -60,8 +60,8 @@
                         <th class='govuk-table__header'>standardLicenceConditions</th>
                         <td class="govuk-table__cell">
                             {% for item in licenceCondition.standardLicenceConditions %}
-                                <div>text: {{ item.text }}</div>
-                                <div>expandedText: {{ item.expandedText }}</div>
+                                <div>{{ item.text }}</div>
+                                {% if item.expandedText %}<div>expandedText: {{ item.expandedText }}</div>{% endif %}
                             {% endfor %}
                         </td>
                     </tr>
@@ -69,8 +69,8 @@
                         <th class='govuk-table__header'>additionalLicenceConditions</th>
                         <td class="govuk-table__cell">
                             {% for item in licenceCondition.additionalLicenceConditions %}
-                                <div>text: {{ item.text }}</div>
-                                <div>expandedText: {{ item.expandedText }}</div>
+                                <div>{{ item.text }}</div>
+                                {% if item.expandedText %}<div>expandedText: {{ item.expandedText }}</div>{% endif %}
                             {% endfor %}
                         </td>
                     </tr>
@@ -78,8 +78,8 @@
                         <th class='govuk-table__header'>standardPssConditions</th>
                         <td class="govuk-table__cell">
                             {% for item in licenceCondition.standardPssConditions %}
-                                <div>text: {{ item.text }}</div>
-                                <div>expandedText: {{ item.expandedText }}</div>
+                                <div>{{ item.text }}</div>
+                                {% if item.expandedText %}<div>expandedText: {{ item.expandedText }}</div>{% endif %}
                             {% endfor %}
                         </td>
                     </tr>

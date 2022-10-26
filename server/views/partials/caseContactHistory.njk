@@ -45,7 +45,7 @@
                     {% if contact.notes or contact.description %}
                         <details class="govuk-details" data-module="govuk-details"{{ " open" if contact.searchTextMatch.notesOrDescriptionMatched }}>
                             <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text" data-analytics-event="select_content" data-analytics-event-category="contactViewDetail" data-analytics-event-label="{{ 'Sensitive' if contact.sensitive else contact.descriptionType }}" data-analytics-event-action="{{ contact.contactStartDate }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
+                                <span class="govuk-details__summary-text" data-analytics-event="contactHistory" data-analytics-event-category="{{ group.groupValue }}" data-analytics-event-label="{{ 'Sensitive' if contact.sensitive else contact.descriptionType }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
                             </summary>
                             <div class="govuk-details__text">
                                 {% if contact.description %}
