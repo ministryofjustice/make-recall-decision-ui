@@ -85,12 +85,12 @@
       "lastUpdatedDate": "2020-07-03T11:42:01.000Z",
       "offenceDataFromLatestCompleteAssessment": true,
       "offencesMatch": true,
-      "offenceDescription": "Mr Smith was recalled again on 13/12/2021. He was returned to custody on 27/12/2021. This is the second time Mr Smith has been recalled since his initial release from prison on 18/11/2020"
+      "offenceDescription": "Mr Smith was recalled again on 13/12/2021.\nHe was returned to custody on 27/12/2021. This is the second time Mr Smith has been recalled since his initial release from prison on 18/11/2020"
     },
     "riskManagementPlan": {
       "assessmentStatusComplete": true,
       "lastUpdatedDate": "2022-09-24T08:39:00.000Z",
-      "contingencyPlans": "Text from contingency plan",
+      "contingencyPlans": "- If any changes/escalation in risk occur then OM should complete case discussion with SPO line manager, arrange a professionals meetings if appropriate with all relevant agencies, and consider a referral to MAPPA level 2 management.\n\nIf the risk is assessed as escalating towards known adult or public then recall should be considered if it is no longer deemed that the risk posed by the person is no longer safely manageable within the community.",
       "latestDateCompleted": "2022-10-09T01:02:03.123Z",
       "initiationDate": "2022-10-09T01:02:03.123Z"
     }

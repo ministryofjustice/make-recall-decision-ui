@@ -41,7 +41,7 @@ context('Overview', () => {
     // offence description
     cy.getDefinitionListValue('Description', { parent: '[data-qa="offence-description"]' }).should(
       'contain',
-      risk.assessments.offenceDescription
+      'Mr Smith was recalled again on 13/12/2021.'
     )
 
     // contingency plan
