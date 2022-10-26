@@ -37,8 +37,8 @@
             content: caseSummary.roshSummary.whoIsAtRisk,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'select_content',
-                'data-analytics-event-category': 'riskViewDetail',
+                'data-analytics-event': 'risk',
+                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
                 'data-analytics-event-label': 'Who is at risk'
             },
             dataQaAttr: 'whoIsAtRisk'
@@ -51,9 +51,9 @@
             content: caseSummary.roshSummary.natureOfRisk,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'select_content',
-                'data-analytics-category': 'riskViewDetail',
-                'data-analytics-label': 'Details of the risk'
+                'data-analytics-event': 'risk',
+                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+                'data-analytics-event-label': 'Details of the risk'
             },
             dataQaAttr: 'natureOfRisk'
         }) }}
@@ -65,9 +65,9 @@
             content: caseSummary.roshSummary.riskImminence,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'select_content',
-                'data-analytics-category': 'riskViewDetail',
-                'data-analytics-label': 'When the risk will be highest'
+                'data-analytics-event': 'risk',
+                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+                'data-analytics-event-label': 'When the risk will be highest'
             },
             dataQaAttr: 'riskImminence'
         }) }}
@@ -79,9 +79,9 @@
             content: caseSummary.roshSummary.riskIncreaseFactors,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'select_content',
-                'data-analytics-category': 'riskViewDetail',
-                'data-analytics-label': 'Circumstances that will increase the risk'
+                'data-analytics-event': 'risk',
+                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+                'data-analytics-event-label': 'Circumstances that will increase the risk'
             },
             dataQaAttr: 'riskIncreaseFactors'
         }) }}
@@ -93,9 +93,9 @@
             content: caseSummary.roshSummary.riskMitigationFactors,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'select_content',
-                'data-analytics-category': 'riskViewDetail',
-                'data-analytics-label': 'Factors that will reduce the risk'
+                'data-analytics-event': 'risk',
+                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+                'data-analytics-event-label': 'Factors that will reduce the risk'
             },
             dataQaAttr: 'riskMitigationFactors'
         }) }}
