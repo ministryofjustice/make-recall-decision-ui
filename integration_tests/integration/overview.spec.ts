@@ -45,7 +45,7 @@ context('Overview', () => {
     )
 
     // contingency plan
-    cy.getElement('Started on: 9 October 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
+    cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
     cy.viewDetails('View more detail on contingency plan').should('contain', risk.riskManagementPlan.contingencyPlans)
 
     // risk flags
@@ -338,11 +338,13 @@ context('Overview', () => {
             riskManagementPlan: {
               ...getCaseOverviewResponse.risk.riskManagementPlan,
               assessmentStatusComplete: false,
+              lastUpdatedDate: '2021-05-23T00:00:00.000Z',
             },
           },
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getElement('Started on: 1 September 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
       cy.getText('banner-contingency-incomplete-assessment').should(
         'contain',
         'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.'
