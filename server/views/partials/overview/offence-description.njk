@@ -11,7 +11,7 @@
         </div>
     {% endif %}
     <div class="govuk-!-margin-bottom-2 text-secondary">
-        OASys 2.1 Offence description
+        OASys 2.1 Brief offence(s) details
     </div>
     {% if caseSummary.risk.assessments.error %}
         {% set html %}
@@ -22,7 +22,7 @@
         {{ govukNotificationBanner({
             html: html,
             attributes: {
-                'data-qa': 'offence-description-error'
+                'data-qa': 'offence-analysis-error'
             },
             classes: "govuk-notification-banner--error govuk-!-margin-bottom-0"
         }) }}
@@ -34,7 +34,7 @@
             classes: 'govuk-summary-list--no-border',
             rows: [
                 {
-                    key: { html: 'Description' },
+                    key: { html: 'Analysis' },
                     value: { html: '<pre class="govuk-body">' + caseSummary.risk.assessments.offenceDescription + '</pre>' }
                 }
             ]
@@ -43,10 +43,10 @@
 {% endset %}
 
 {{ appSummaryCard({
-    titleText: 'Offence description',
+    titleText: 'Offence analysis',
     classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
     attributes: {
-        'data-qa': 'offence-description'
+        'data-qa': 'offence-analysis'
     },
     html: offenceDescriptionHtml
 }) }}

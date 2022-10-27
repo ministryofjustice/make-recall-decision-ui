@@ -38,8 +38,8 @@ context('Overview', () => {
     cy.getDefinitionListValue('Sentence type', opts).should('contain', 'ORA Suspended Sentence Order (2 months)')
     cy.getElement('Sentence expiry date', opts).should('not.exist')
 
-    // offence description
-    cy.getDefinitionListValue('Description', { parent: '[data-qa="offence-description"]' }).should(
+    // offence analysis
+    cy.getDefinitionListValue('Analysis', { parent: '[data-qa="offence-analysis"]' }).should(
       'contain',
       'Mr Smith was recalled again on 13/12/2021.'
     )
@@ -277,7 +277,7 @@ context('Overview', () => {
     })
   })
 
-  describe('Offence description', () => {
+  describe('Offence analysis', () => {
     it('the assessment is incomplete', () => {
       cy.task('getCase', {
         sectionId: 'overview',
@@ -320,7 +320,7 @@ context('Overview', () => {
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
-      cy.getText('offence-description-error').should(
+      cy.getText('offence-analysis-error').should(
         'contain',
         'This information cannot be found in OASys. Double-check OASys for the latest description of the index offence.'
       )
