@@ -4,12 +4,7 @@ import {
   q22RecallType,
   q2IndeterminateSentenceType,
   q3ExtendedSentence,
-  q4OffenderDetails,
-  q5SentenceDetails,
   q6CustodyStatus,
-  q12MappaDetails,
-  q16IndexOffenceDetails,
-  q25ProbationDetails,
 } from './index'
 
 When('Maria downloads the Part A and confirms the fixed term recall', () => {
@@ -17,15 +12,10 @@ When('Maria downloads the Part A and confirms the fixed term recall', () => {
     q1EmergencyRecall(contents, 'No')
     q2IndeterminateSentenceType(contents, 'No')
     q3ExtendedSentence(contents, 'No')
-    q4OffenderDetails(contents)
-    q5SentenceDetails(contents)
     q6CustodyStatus(contents, 'Prison Custody')
-    q12MappaDetails(contents)
-    q16IndexOffenceDetails(contents)
     q22RecallType(contents, 'Fixed', 'Fixed term details...')
     cy.log('Q23')
     expect(contents).to.contain('Additional licence condition for fixed term recall...')
-    q25ProbationDetails(contents)
   })
 })
 

@@ -1,7 +1,7 @@
 Feature: Recall (indeterminate)
 
   Background:
-    Given Maria signs in to the case overview
+    Given Maria signs in to the case overview for CRN "1"
 
   Scenario: Extended sentence changed to non-extended
     Given Maria starts a new recommendation

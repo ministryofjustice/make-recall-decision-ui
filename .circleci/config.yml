@@ -28,7 +28,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 1
+    default: 3
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -251,7 +251,7 @@ jobs:
             echo "Running feature spec(s): ${SPECS}"
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.json \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --browser edge \
