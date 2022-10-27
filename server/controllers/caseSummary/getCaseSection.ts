@@ -7,7 +7,7 @@ import { RiskResponse } from '../../@types/make-recall-decision-api/models/RiskR
 import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
 import { transformContactHistory } from './contactHistory/transformContactHistory'
-import { countLabel, isCaseRestrictedOrExcluded } from '../../utils/utils'
+import { isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { AppError } from '../../AppError'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import getRecommendationsResponse from '../../../api/responses/get-recommendations.json'
