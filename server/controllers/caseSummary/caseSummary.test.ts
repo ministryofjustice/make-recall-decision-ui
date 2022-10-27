@@ -152,7 +152,7 @@ describe('caseSummary', () => {
     })
     expect(res.locals.section).toEqual({
       id: 'contact-history',
-      label: '2 contacts for A1234AB - Contact history',
+      label: 'Contact history',
     })
   })
 

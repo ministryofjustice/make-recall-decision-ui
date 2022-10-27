@@ -71,10 +71,7 @@ export const getCaseSection = async (
         })
         errors = transformed.errors
         caseSummary = transformed.data
-        sectionLabel = `${countLabel({
-          count: transformed.data.contactCount,
-          noun: 'contact',
-        })} for ${trimmedCrn} - Contact history`
+        sectionLabel = 'Contact history'
       }
       break
     case 'recommendations':
