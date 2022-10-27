@@ -24,7 +24,11 @@
         }) }}
     {% else %}
         <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
+        {% if caseSummary.risk.riskManagementPlan.assessmentStatusComplete === true %}
+            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.risk.riskManagementPlan.lastUpdatedDate, dateOnly: true }) }}
+        {% else %}
             Started on: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.risk.riskManagementPlan.initiationDate, dateOnly: true }) }}
+        {% endif %}
         </div>
         {% set contentHtml %}
             <pre class='govuk-body'>{{ caseSummary.risk.riskManagementPlan.contingencyPlans }}</pre>
