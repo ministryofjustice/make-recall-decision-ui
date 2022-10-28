@@ -295,8 +295,6 @@ jobs:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
           command: |
-            nvm use $(jq -r '.engines.node' <package.json)
-
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --total=3 | tr "\n" "," | tr " " ",")
             echo "Running feature spec(s): ${SPECS}"
 
