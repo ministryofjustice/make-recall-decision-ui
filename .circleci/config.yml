@@ -28,7 +28,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 2
+    default: 3
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -295,7 +295,9 @@ jobs:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --total=3 | tr "\n" "," | tr " " ",")
+            nvm install $(jq -r '.engines.node' <package.json)
+
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
             echo "Running feature spec(s): ${SPECS}"
 
             set +e
