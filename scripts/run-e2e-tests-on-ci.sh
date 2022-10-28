@@ -4,10 +4,7 @@ set -euo pipefail
 
 npm ci --no-audit
 
-echo "Tests:"
-echo $(circleci tests glob e2e_tests/integration/*.feature)
-
-SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --split-by=timings | tr "\n" "," | tr " " ",")
+SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --total=3 | tr "\n" "," | tr " " ",")
 echo "Running feature spec(s): ${SPECS}"
 
 npx cypress run \
