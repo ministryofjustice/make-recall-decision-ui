@@ -28,7 +28,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 3
+    default: 2
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -275,6 +275,7 @@ jobs:
   e2e_local_test:
     machine:
       image: ubuntu-2004:2022.10.1
+    resource_class: large
     parallelism: << pipeline.parameters.e2e-parallelism >>
     steps:
       - run:
