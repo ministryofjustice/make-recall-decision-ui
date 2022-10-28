@@ -3,11 +3,13 @@ import { DateTime } from 'luxon'
 import { getTestDataPerEnvironment } from '../../utils'
 
 export const crn = Cypress.env('CRN') || 'X098092'
+export const crn2 = Cypress.env('CRN2') || 'X514364'
 
 // ==================================== Recall
 
-When('Maria signs in to the case overview', () => {
-  cy.visitPage(`/cases/${crn}/overview?flagRecommendationProd=1&flagRecommendationsPageProd=1`)
+When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
+  const crnToUse = crnNum === '1' ? crn : crn2
+  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationProd=1&flagRecommendationsPageProd=1`)
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
 })
 
