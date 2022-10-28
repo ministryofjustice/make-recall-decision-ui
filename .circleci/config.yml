@@ -234,6 +234,7 @@ jobs:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
     parallelism: << pipeline.parameters.e2e-parallelism >>
+    resource_class: large
     parameters:
       environment:
         type: string
@@ -247,8 +248,8 @@ jobs:
       - run:
           name: E2E Check - << parameters.environment >>
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split --split-by=timings | tr "\n" "," | tr " " ",")
-            echo "Running feature spec(s): ${SPECS} with parallelism: ${<< pipeline.parameters.e2e-parallelism >>}"
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
+            echo "Running feature spec(s): ${SPECS}"
 
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},ENV=<< parameters.environment >> \
@@ -257,7 +258,6 @@ jobs:
               --browser edge \
               --record false \
               --spec $SPECS
-
             npm run e2e:report
             node scripts/fix-junit-reports.js
       - store_artifacts:
@@ -291,12 +291,11 @@ jobs:
           name: Start components
           working_directory: make-recall-decision-ui
           command: ./scripts/start-services-for-e2e-tests.sh -p
+      - node/install-packages
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
           command: |
-            npm ci --no-audit
-
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
             echo "Running feature spec(s): ${SPECS}"
 
