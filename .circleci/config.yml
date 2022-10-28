@@ -346,6 +346,11 @@ workflows:
           - << pipeline.parameters.e2e-check-dev >>
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
+      - e2e_local_test:
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
       - build:
           filters:
             tags:
@@ -371,11 +376,6 @@ workflows:
       - accessibility_test:
           requires:
             - build
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
-
-      - e2e_local_test:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
