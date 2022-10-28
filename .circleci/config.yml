@@ -291,11 +291,12 @@ jobs:
           name: Start components
           working_directory: make-recall-decision-ui
           command: ./scripts/start-services-for-e2e-tests.sh -p
-      - node/install-packages
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
           command: |
+            npm ci --no-audit
+            
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
             echo "Running feature spec(s): ${SPECS}"
 
