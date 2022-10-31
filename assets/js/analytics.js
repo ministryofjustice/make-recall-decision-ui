@@ -20,3 +20,26 @@ $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
     console.error(err)
   }
 })
+
+// page load performance data (web vitals)
+// https://github.com/GoogleChrome/web-vitals#using-gtagjs-google-analytics-4
+try {
+  const { onCLS, onFID, onLCP } = window.webVitals
+
+  function sendToGoogleAnalytics({ name, delta, id }) {
+    dataLayer.push({
+      event: 'coreWebVitals',
+      webVitalsMeasurement: {
+        name: 'page_load_' + name,
+        value: delta,
+        id,
+      },
+    });
+  }
+
+  onCLS(sendToGoogleAnalytics);
+  onFID(sendToGoogleAnalytics);
+  onLCP(sendToGoogleAnalytics);
+} catch(err) {
+  console.error(err)
+}
