@@ -22,10 +22,6 @@ export const featureFlagsDefaults = {
     label: 'Show Risk tab in case summary',
     default: true,
   },
-  contactTypesFilter: {
-    label: 'Contact types filter',
-    default: true,
-  },
   flagContactDocuments: {
     label: 'Show contact documents',
     default: true,
