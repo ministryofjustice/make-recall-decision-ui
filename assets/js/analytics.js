@@ -1,9 +1,11 @@
+window.dataLayer = window.dataLayer || [];
+
 // contact history filters
 $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
   try {
     const $form = $(evt.target)
     $form.find('[name="contactTypes"]:checked').each((idx, el) => {
-      dataLayer.push({
+      window.dataLayer.push({
         event : 'contact_type_filter_submitted',
         type: el.dataset.type,
         category: el.dataset.group,
@@ -11,7 +13,7 @@ $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
     })
     const searchTerm = $form.find('[name="searchFilters"]').val()
     if (searchTerm) {
-      dataLayer.push({
+      window.dataLayer.push({
         event : 'contact_search_term_submitted',
         search_term: searchTerm,
       })
@@ -27,7 +29,7 @@ try {
   const { onCLS, onFID, onLCP } = window.webVitals
 
   function sendToGoogleAnalytics({ name, delta, id }) {
-    dataLayer.push({
+    window.dataLayer.push({
       event: 'coreWebVitals',
       webVitalsMeasurement: {
         name: 'page_load_' + name,
