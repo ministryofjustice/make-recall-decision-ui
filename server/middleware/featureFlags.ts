@@ -4,7 +4,7 @@ import { FeatureFlag, ObjectMap } from '../@types'
 export const featureFlagsDefaults = {
   flagRecommendationProd: {
     label: 'Make a recommendation',
-    default: false,
+    default: true,
   },
   flagRecommendationsPageProd: {
     label: 'Recommendations list',
@@ -20,7 +20,7 @@ export const featureFlagsDefaults = {
   },
   flagShowRiskTab: {
     label: 'Show Risk tab in case summary',
-    default: false,
+    default: true,
   },
   contactTypesFilter: {
     label: 'Contact types filter',
@@ -28,7 +28,7 @@ export const featureFlagsDefaults = {
   },
   flagContactDocuments: {
     label: 'Show contact documents',
-    default: false,
+    default: true,
   },
   flagShowSystemGenerated: {
     label: 'Show system generated contacts',

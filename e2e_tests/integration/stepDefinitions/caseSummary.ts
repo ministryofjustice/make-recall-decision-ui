@@ -2,7 +2,7 @@ import { When } from 'cypress-cucumber-preprocessor/steps'
 import { crn } from './index'
 
 When('Maria signs in to start page', () => {
-  cy.visitPage('/?flagShowRiskTab=1')
+  cy.visitPage('/')
 })
 
 When('Maria searches for a case', () => {

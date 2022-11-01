@@ -63,7 +63,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: getCaseLicenceConditionsResponse,
       })
-      cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.clickButton('Make a recommendation')
       cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
     })
@@ -75,7 +75,7 @@ context('Make a recommendation', () => {
       }
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
       cy.task('createRecommendation', { statusCode: 500, response: 'API save error' })
-      cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.clickButton('Make a recommendation')
       cy.getElement('An error occurred creating a new recommendation').should('exist')
     })
@@ -86,7 +86,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
       })
-      cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
@@ -97,7 +97,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
       })
-      cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
@@ -105,7 +105,7 @@ context('Make a recommendation', () => {
     it('update button links to response to probation if recall decision has not been made yet', () => {
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
       cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: null } })
-      cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
     })
@@ -386,7 +386,7 @@ context('Make a recommendation', () => {
       }
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
       cy.task('createRecommendation', { statusCode: 403, response: excludedResponse })
-      cy.visit(`${routeUrls.cases}/${crn}/overview?flagRecommendationProd=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.clickButton('Make a recommendation')
       cy.getElement('There is a problem').should('exist')
     })

@@ -10,7 +10,7 @@ context('Risk page', () => {
   })
 
   it('shows RoSH, MAPPA and predictor scores', () => {
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
 
@@ -105,7 +105,7 @@ context('Risk page', () => {
         mappa: { error: 'NOT_FOUND' },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
     // predictor scores
     cy.getText('rsr-missing').should('contain', 'Data not available.')
@@ -146,7 +146,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
     // RoSH content boxes
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
@@ -170,7 +170,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'MISSING_DATA' } },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
     // RoSH content boxes
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
@@ -191,7 +191,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.getText('score-history-missing').should(
       'equal',
       'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
@@ -209,7 +209,7 @@ context('Risk page', () => {
         },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.getText('score-history-missing').should(
       'equal',
       'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
@@ -239,7 +239,7 @@ context('Risk page', () => {
         },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
     const opts = { parent: '[data-qa="timeline-item-1"]' }
     cy.clickLink('Open all')
     cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
@@ -252,7 +252,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk?flagShowRiskTab=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.getText('banner-latest-complete-assessment').should(
       'equal',
       'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
