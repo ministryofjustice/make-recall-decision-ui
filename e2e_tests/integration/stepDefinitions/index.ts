@@ -9,7 +9,7 @@ export const crn2 = Cypress.env('CRN2') || 'X514364'
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   const crnToUse = crnNum === '1' ? crn : crn2
-  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationProd=1&flagRecommendationsPageProd=1`)
+  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`)
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
 })
 

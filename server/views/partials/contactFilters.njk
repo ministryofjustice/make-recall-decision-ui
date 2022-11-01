@@ -41,7 +41,6 @@
             items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
             errorMessage: errorMessage(errors.dateTo)
         }) }}
-        {% if flags.contactTypesFilter %}
             <div class='govuk-form-group'>
                 <h2 class='govuk-heading-s'>Contact types</h2>
                 {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
@@ -68,7 +67,6 @@
                     </details>
                 {% endfor %}
             </div>
-        {% endif %}
     {% endset -%}
     <div class='govuk-!-margin-bottom-4'>
         <form data-js='contactTypeFiltersForm'>

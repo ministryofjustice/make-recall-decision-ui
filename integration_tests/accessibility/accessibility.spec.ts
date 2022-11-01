@@ -10,7 +10,7 @@ const urls = [
   { url: `${routeUrls.cases}/123/risk` },
   { url: `${routeUrls.cases}/123/personal-details` },
   { url: `${routeUrls.cases}/123/licence-conditions` },
-  { url: `${routeUrls.cases}/123/contact-history?flagRecommendationProd=1` },
+  { url: `${routeUrls.cases}/123/contact-history` },
   // contact filter with valid dates
   {
     url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
