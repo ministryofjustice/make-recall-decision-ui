@@ -3,8 +3,10 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% include './notificationBanners/multipleActiveCustodialBanner.njk' %}
-        {% if caseSummary.convictions.activeCustodial.length %}
-        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-with-summary-sections">
+        {% include './notificationBanners/singleActiveCustodialNotOnLicenceBanner.njk' %}
+        {% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}
+            {% if caseSummary.convictions.activeCustodial.length %}
+            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-with-summary-sections">
             <div class="govuk-accordion__section" data-qa='standard'>
                 <div class="govuk-accordion__section-header">
                     <h2 class="govuk-accordion__section-heading">
@@ -79,8 +81,9 @@
                 </div>
             </div>
         </div>
-        {% else %}
-        <p class='govuk-body'>This person has no active convictions.</p>
+            {% else %}
+            <p class='govuk-body'>This person has no active convictions.</p>
+            {% endif %}
         {% endif %}
     </div>
 </div>
