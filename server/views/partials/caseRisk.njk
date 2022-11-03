@@ -37,7 +37,6 @@
             content: caseSummary.roshSummary.whoIsAtRisk,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'risk',
                 'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
                 'data-analytics-event-label': 'Who is at risk'
             },
@@ -51,7 +50,6 @@
             content: caseSummary.roshSummary.natureOfRisk,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'risk',
                 'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
                 'data-analytics-event-label': 'Details of the risk'
             },
@@ -65,7 +63,6 @@
             content: caseSummary.roshSummary.riskImminence,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'risk',
                 'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
                 'data-analytics-event-label': 'When the risk will be highest'
             },
@@ -79,7 +76,6 @@
             content: caseSummary.roshSummary.riskIncreaseFactors,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'risk',
                 'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
                 'data-analytics-event-label': 'Circumstances that will increase the risk'
             },
@@ -93,7 +89,6 @@
             content: caseSummary.roshSummary.riskMitigationFactors,
             lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
             attributes: {
-                'data-analytics-event': 'risk',
                 'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
                 'data-analytics-event-label': 'Factors that will reduce the risk'
             },
@@ -101,7 +96,7 @@
         }) }}
         </div>
         <div class='govuk-!-margin-bottom-4 govuk-section-break--visible'>
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="RSR score">
             RSR (risk of serious recidivism) score{% if caseSummary.predictorScores.current.scores.RSR.score %} - {{ caseSummary.predictorScores.current.scores.RSR.score }}%{% endif %}
         </h2>
         {% if caseSummary.predictorScores.current.scores.RSR %}
@@ -115,7 +110,7 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half-from-desktop">
-                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/C score">
                     OSP/C
                 </h2>
                 <div data-qa='scale-ospc'>
@@ -130,7 +125,7 @@
                 </div>
             </div>
             <div class="govuk-grid-column-one-half-from-desktop">
-                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/I score">
                     OSP/I
                 </h2>
                 <div data-qa='scale-ospi'>
@@ -146,7 +141,7 @@
         </div>
         </div>
 
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1">
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1" data-analytics-event-scroll="OGRS score">
             OGRS (offender group reconviction scale)
         </h2>
         {% if caseSummary.predictorScores.current.scores.OGRS %}
@@ -176,7 +171,7 @@
                 {% endif %}
             </div>
         </div>
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1">
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1" data-analytics-event-scroll="OGP score">
             OGP (OASys general reoffending predictor)
         </h2>
         {% if caseSummary.predictorScores.current.scores.OGP %}
@@ -206,7 +201,7 @@
                 {% endif %}
             </div>
         </div>
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1">
+        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1" data-analytics-event-scroll="OVP score">
             OVP (OASys violence predictor)
         </h2>
         {% if caseSummary.predictorScores.current.scores.OVP %}

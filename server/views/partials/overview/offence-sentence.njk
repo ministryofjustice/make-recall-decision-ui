@@ -53,5 +53,8 @@
         {{ appSummaryCard({
             titleText: 'Offence and sentence',
             classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
-            html: offenceSentenceHtml
+            html: offenceSentenceHtml,
+            attributes: {
+                'data-analytics-event-scroll': 'Offence and sentence'
+            }
         }) }}
