@@ -157,7 +157,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesMatched: true,
+          notesMatched: false,
         },
         startDate: null,
       },
