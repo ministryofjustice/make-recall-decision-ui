@@ -53,9 +53,7 @@ export const filterContactsBySearch = ({
             ...contact,
             startDate: null,
             searchTextMatch: {
-              notesOrDescriptionMatched: patterns.some(
-                pattern => pattern.test(contact.notes) || pattern.test(contact.description)
-              ),
+              notesMatched: patterns.some(pattern => pattern.test(contact.notes)),
               allTermsMatched: checkIfAllTermsMatch({ patterns, contact }),
             },
           }

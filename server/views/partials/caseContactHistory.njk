@@ -12,75 +12,7 @@
                 {{ formatDateTimeFromIsoString({ isoDate: group.groupValue, dateOnly: true}) }}
             </h3>
             {% for contact in group.items %}
-                {% set titleHtml %}
-                    <div>
-                        <div class='govuk-!-font-weight-bold' data-qa='heading'>{{ contact.descriptionType }}{% if contact.sensitive %}<span data-qa='sensitive'> (sensitive)</span>{% endif %} </div>
-                        <div class='govuk-!-margin-bottom-0' data-qa='time'>
-                            At {{ formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true }) }}</div>
-                    </div>
-                {% endset %}
-                {% set actionsHtml %}
-                    {% if contact.outcome or contact.enforcementAction %}
-                        <div>
-                            {% if contact.outcome %}
-                                <div class='govuk-!-margin-bottom-1'>
-                                    {{ mojBadge({
-                                        text: contact.outcome,
-                                        attributes: {
-                                            'data-qa': 'outcome'
-                                        }
-                                    })}}
-                                </div>
-                            {% endif %}
-                            {{ mojBadge({
-                                text: contact.enforcementAction,
-                                attributes: {
-                                    'data-qa': 'enforcementAction'
-                                }
-                            }) if contact.enforcementAction else undefined }}
-                        </div>
-                    {% endif %}
-                {% endset %}
-                {% set sectionHtml %}
-                    {% if contact.notes or contact.description %}
-                        <details class="govuk-details" data-module="govuk-details"{{ " open" if contact.searchTextMatch.notesOrDescriptionMatched }}>
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text" data-analytics-event="contactHistory" data-analytics-event-category="{{ group.groupValue }}" data-analytics-event-label="{{ 'Sensitive' if contact.sensitive else contact.descriptionType }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                {% if contact.description %}
-                                    <pre class='govuk-body govuk-!-margin-bottom-2' data-qa='contact-description'>{{ contact.description }}</pre>
-                                {% endif %}
-                                {% if contact.notes %}
-                                    <pre class='govuk-body' data-qa='notes'>{{ contact.notes }}</pre>
-                                {% endif %}
-                            </div>
-                        </details>
-                    {% endif %}
-                    {% if flags.flagContactDocuments and contact.contactDocuments.length %}
-                    <div class='govuk-!-margin-top-1'>
-                        <ul class='govuk-list govuk-!-margin-bottom-0'>
-                        {% for document in contact.contactDocuments %}
-                            <li>
-                                <a href='{{ pageUrlBase }}documents/{{ document.id }}' class='govuk-link' download>
-                                    <img aria-hidden='true' class='valign-middle govuk-!-margin-right-2' src="/assets/images/download-icon.svg" width="15" height="21" />
-                                    <span class='govuk-visually-hidden'>Download document </span><span data-qa='contact-document-label'>{{ document.documentName }}</span>
-                                </a>
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                {% endset %}
-                <div data-qa='contact-{{ innerLoopIndex }}'>
-                    {{ appSummaryCard({
-                        titleHtml: titleHtml,
-                        headingLevel: 4,
-                        classes: 'govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
-                        html: sectionHtml if (contact.notes or (flags.flagContactDocuments and contact.contactDocuments.length)) else undefined,
-                        actionsHtml: actionsHtml
-                    }) }}
-                </div>
+                {% include './contactHistory/contact.njk' %}
                 {% set innerLoopIndex = innerLoopIndex + 1 %}
             {% endfor %}
         {% endfor %}
