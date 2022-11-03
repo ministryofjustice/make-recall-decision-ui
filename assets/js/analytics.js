@@ -14,8 +14,13 @@ $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
     const searchTerm = $form.find('[name="searchFilters"]').val()
     if (searchTerm) {
       window.dataLayer.push({
-        event : 'contact_search_term_submitted',
-        search_term: searchTerm,
+        event : 'contact_search_term_submitted'
+      })
+    }
+    const dateInput = $form.find('.govuk-date-input__input').val()
+    if (dateInput) {
+      window.dataLayer.push({
+        event : 'contact_date_filter_submitted'
       })
     }
   } catch (err) {
