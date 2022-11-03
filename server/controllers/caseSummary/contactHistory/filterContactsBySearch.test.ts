@@ -73,7 +73,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: false,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -100,7 +100,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: false,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -129,7 +129,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: true,
+          notesMatched: true,
         },
         startDate: null,
       },
@@ -157,7 +157,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: true,
+          notesMatched: true,
         },
         startDate: null,
       },
@@ -185,7 +185,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: false,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -199,7 +199,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: false,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -226,7 +226,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: false,
+          notesMatched: false,
         },
         startDate: null,
       },
@@ -285,7 +285,7 @@ describe('filterContactsBySearch', () => {
         systemGenerated: false,
         searchTextMatch: {
           allTermsMatched: true,
-          notesOrDescriptionMatched: true,
+          notesMatched: true,
         },
         startDate: null,
       },
