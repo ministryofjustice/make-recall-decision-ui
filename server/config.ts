@@ -82,7 +82,7 @@ export default {
       secretAccessKey: get('AUDIT_SQS_SECRET_ACCESS_KEY', 'foobar', requiredInProduction),
       endpoint: production ? null : 'http://localhost:4566',
       queueUrl: get('AUDIT_SQS_QUEUE_URL', 'foobar', requiredInProduction),
-      serviceName: get('AUDIT_SERVICE_NAME', 'book-a-prison-visit-staff-ui', requiredInProduction),
+      serviceName: get('AUDIT_SERVICE_NAME', 'make-recall-decision-ui', requiredInProduction),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

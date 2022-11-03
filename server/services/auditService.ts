@@ -62,6 +62,31 @@ export class AuditService {
     })
   }
 
+  async recommendationView({
+    recommendationId,
+    pageUrlSlug,
+    crn,
+    username,
+    logErrors,
+  }: {
+    recommendationId: string
+    pageUrlSlug: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'VIEWED_RECOMMENDATION_PAGE',
+      who: username,
+      details: {
+        crn,
+        recommendationId,
+        pageUrlSlug,
+      },
+      logErrors,
+    })
+  }
+
   async sendAuditMessage({
     action,
     who,

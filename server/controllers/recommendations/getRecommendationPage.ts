@@ -5,11 +5,14 @@ import { renderFormOptions } from './formOptions/formOptions'
 import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { taskCompleteness } from './helpers/taskCompleteness'
-import { isCaseRestrictedOrExcluded } from '../../utils/utils'
+import { isCaseRestrictedOrExcluded, isPreprodOrProd } from '../../utils/utils'
 import { isInCustody } from './helpers/isInCustody'
 import { renderStrings } from './helpers/renderStrings'
 import { validateUpdateRecommendationPageRequest } from './helpers/urls'
 import { strings } from '../../textStrings/en'
+import { AuditService } from '../../services/auditService'
+
+const auditService = new AuditService()
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageUrlSlug } = req.params
@@ -65,4 +68,11 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   res.locals.crn = res.locals.recommendation.crn
   res.set({ 'Cache-Control': 'no-store' })
   res.render(`pages/recommendations/${id}`)
+  auditService.recommendationView({
+    crn: res.locals.crn,
+    recommendationId,
+    pageUrlSlug,
+    username: res.locals.user.username,
+    logErrors: isPreprodOrProd(res.locals.env) && process.env.NODE_ENV !== 'test',
+  })
 }

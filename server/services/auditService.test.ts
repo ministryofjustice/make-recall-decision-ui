@@ -17,9 +17,40 @@ describe('Audit service', () => {
     expect(QueueUrl).toEqual('foobar')
     expect(what).toEqual('SEARCHED_PERSONS')
     expect(who).toEqual('username')
-    expect(service).toEqual('book-a-prison-visit-staff-ui')
+    expect(service).toEqual('make-recall-decision-ui')
     expect(when).toBeDefined()
     expect(details).toEqual('{"searchTerm":"sdsd"}')
+  })
+
+  it('sends a case summary audit message', async () => {
+    jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
+    const crn = '123'
+    const sectionId = 'overview'
+    await auditService.caseSummaryView({ crn, sectionId, username: 'username', logErrors: true })
+    const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
+    const { what, who, service, when, details } = JSON.parse(MessageBody)
+    expect(QueueUrl).toEqual('foobar')
+    expect(what).toEqual('VIEWED_CASE_SUMMARY')
+    expect(who).toEqual('username')
+    expect(service).toEqual('make-recall-decision-ui')
+    expect(when).toBeDefined()
+    expect(details).toEqual(`{"crn":"${crn}","sectionId":"${sectionId}"}`)
+  })
+
+  it('sends a Make a recommendation audit message', async () => {
+    jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
+    const crn = '123'
+    const recommendationId = '456'
+    const pageUrlSlug = 'confirmation'
+    await auditService.recommendationView({ crn, recommendationId, pageUrlSlug, username: 'username', logErrors: true })
+    const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
+    const { what, who, service, when, details } = JSON.parse(MessageBody)
+    expect(QueueUrl).toEqual('foobar')
+    expect(what).toEqual('VIEWED_RECOMMENDATION_PAGE')
+    expect(who).toEqual('username')
+    expect(service).toEqual('make-recall-decision-ui')
+    expect(when).toBeDefined()
+    expect(details).toEqual(`{"crn":"${crn}","recommendationId":"${recommendationId}","pageUrlSlug":"${pageUrlSlug}"}`)
   })
 
   it('logs out errors if logErrors is true', async () => {
