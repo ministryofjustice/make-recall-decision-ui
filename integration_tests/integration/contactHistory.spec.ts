@@ -62,7 +62,7 @@ context('Contact history', () => {
     cy.getElement('12 contacts').should('exist')
   })
 
-  it('can view collapsible description & notes on the contact history page', () => {
+  it('can view collapsible notes on the contact history page', () => {
     cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
     // contacts
@@ -82,7 +82,7 @@ context('Contact history', () => {
         cy.viewDetails('View more detail', opts).should('contain', contact.notes)
       }
       if (contact.description) {
-        cy.viewDetails('View more detail', opts).should('contain', contact.description)
+        cy.getElement({ qaAttr: 'description' }, opts).should('contain', contact.description)
       }
     })
   })
@@ -184,8 +184,8 @@ context('Contact history', () => {
     cy.getElement('4 contacts').should('exist')
     // one of the contacts was matched on notes, so check the details were expanded
     cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
-    // one of the contacts was matched on description, so check the details were expanded
-    cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-3"]' }).should('equal', true)
+    // one of the contacts was matched on description, so check the details were not expanded
+    cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-3"]' }).should('equal', false)
     cy.fillInput('Search term', 'Eliot Prufrock')
     cy.clickButton('Apply filters')
     // all text search terms are required, so result set is reduced
