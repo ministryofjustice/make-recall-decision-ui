@@ -45,8 +45,8 @@ export const trackEvent = (eventName: string, req: Request) => {
   if (appInsightsClient && eventName) {
     const eventProperties = {
       crn: requestBody?.crn,
-      author: req.user?.username,
+      userName: req.user?.username,
     }
-    appInsightsClient.trackEvent({ name: eventName, properties: { ...eventProperties } })
+    appInsightsClient.trackEvent({ name: eventName, properties: eventProperties })
   }
 }

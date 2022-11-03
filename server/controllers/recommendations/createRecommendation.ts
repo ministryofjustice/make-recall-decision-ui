@@ -10,9 +10,9 @@ export const createRecommendationController = async (req: Request, res: Response
   const normalizedCrn = validateCrn(req.body.crn)
   try {
     logger.info(`About to track the MRD_RECOMMENDATION_STARTED event to app insights`)
-    trackEvent(EVENTS.MRD_RECOMMENDATION_STARTED, req)
     const recommendation = await createRecommendation(normalizedCrn, res.locals.user.token)
     res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
+    trackEvent(EVENTS.MRD_RECOMMENDATION_STARTED, req)
   } catch (err) {
     req.session.errors = [
       {
