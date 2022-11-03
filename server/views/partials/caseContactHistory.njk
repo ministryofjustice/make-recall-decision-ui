@@ -8,7 +8,7 @@
         </h2>
         <div class="filter-toggle"></div>
         {% for group in caseSummary.contactSummary.items %}
-            <h3 class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}'>
+            <h3 class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}' data-analytics-event-scroll='{{ group.groupValue }}'>
                 {{ formatDateTimeFromIsoString({ isoDate: group.groupValue, dateOnly: true}) }}
             </h3>
             {% for contact in group.items %}
