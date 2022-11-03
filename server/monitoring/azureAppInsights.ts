@@ -1,6 +1,9 @@
 import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
+import { Request } from 'express'
 import applicationVersion from '../applicationVersion'
+
+const appInsightsClient = buildAppInsightsClient()
 
 function defaultName(): string {
   const {
@@ -27,9 +30,23 @@ export function initialiseAppInsights(): void {
 
 export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
   if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-    defaultClient.context.tags['ai.cloud.role'] = name
-    defaultClient.context.tags['ai.application.ver'] = version()
+    if (defaultClient) {
+      defaultClient.context.tags['ai.cloud.role'] = name
+      defaultClient.context.tags['ai.application.ver'] = version()
+    }
     return defaultClient
   }
   return null
+}
+
+export const trackEvent = (eventName: string, req: Request) => {
+  const requestBody = req.body
+
+  if (appInsightsClient && eventName) {
+    const eventProperties = {
+      crn: requestBody?.crn,
+      userName: req.user?.username,
+    }
+    appInsightsClient.trackEvent({ name: eventName, properties: eventProperties })
+  }
 }
