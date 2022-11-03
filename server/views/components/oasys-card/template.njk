@@ -30,7 +30,7 @@
     {% if params.content %}
       <details class="govuk-details" data-module="govuk-details"{{ " open" if params.open }}>
         <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text" data-analytics-event="{{ params.attributes['data-analytics-event'] }}" data-analytics-event-category="{{ params.attributes['data-analytics-event-category'] }}" data-analytics-event-label="{{ params.attributes['data-analytics-event-label'] }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
+          <span class="govuk-details__summary-text" data-analytics-event-category="{{ params.attributes['data-analytics-event-category'] }}" data-analytics-event-label="{{ params.attributes['data-analytics-event-label'] }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
         </summary>
         <div class="govuk-details__text">
           <pre class='govuk-body'>{{ params.content }}</pre>
@@ -47,6 +47,7 @@
   classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
   html: sectionHtml,
   attributes: {
-    'data-qa': params.dataQaAttr
+    'data-qa': params.dataQaAttr,
+    'data-analytics-event-scroll': params.oasysHeading
   }
 }) }}
