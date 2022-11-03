@@ -31,6 +31,7 @@ context('Licence conditions', () => {
           {
             active: true,
             isCustodial: true,
+            statusCode: 'B',
             offences: [
               {
                 mainOffence: true,
@@ -78,6 +79,7 @@ context('Licence conditions', () => {
           {
             active: true,
             isCustodial: true,
+            statusCode: 'B',
             offences: [
               {
                 mainOffence: true,
@@ -108,6 +110,7 @@ context('Licence conditions', () => {
           {
             active: true,
             isCustodial: true,
+            statusCode: 'B',
             offences: [
               {
                 mainOffence: true,
@@ -151,5 +154,77 @@ context('Licence conditions', () => {
     cy.getElement('Notes', {
       parent: '[data-qa="additional-condition-3"]',
     }).should('not.exist')
+  })
+
+  it('shows no conditions for multiple active custodial convictions where one is not released on licence, and a banner', () => {
+    const crn = 'X34983'
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        convictions: [
+          {
+            active: true,
+            isCustodial: true,
+            statusCode: 'B',
+            offences: [
+              {
+                mainOffence: true,
+                description: 'Burglary - 05714',
+              },
+            ],
+            licenceConditions: [],
+          },
+          {
+            active: true,
+            isCustodial: true,
+            statusCode: 'A',
+            offences: [
+              {
+                mainOffence: true,
+                description: 'Robbery',
+              },
+            ],
+            licenceConditions: [],
+          },
+        ],
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    cy.getElement({ qaAttr: 'standard' }).should('not.exist')
+    cy.getElement({ qaAttr: 'additional' }).should('not.exist')
+    cy.getElement(
+      'This person has 2 or more active convictions in NDelius. They are not on licence in NDelius for at least one of these convictions. Check the throughcare details in NDelius are correct.'
+    ).should('exist')
+  })
+
+  it('shows no conditions for a single active custodial conviction which is not released on licence, and a banner', () => {
+    const crn = 'X34983'
+    cy.task('getCase', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        convictions: [
+          {
+            active: true,
+            isCustodial: true,
+            statusCode: 'A',
+            offences: [
+              {
+                mainOffence: true,
+                description: 'Robbery',
+              },
+            ],
+            licenceConditions: [],
+          },
+        ],
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    cy.getElement({ qaAttr: 'standard' }).should('not.exist')
+    cy.getElement({ qaAttr: 'additional' }).should('not.exist')
+    cy.getElement(
+      'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+    ).should('exist')
   })
 })

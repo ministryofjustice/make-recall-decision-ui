@@ -28,6 +28,8 @@ export interface DecoratedConviction {
   convictionId?: number
   active?: boolean
   isCustodial?: boolean
+  statusDescription?: string
+  statusCode?: string
   licenceExpiryDate?: string
   sentenceExpiryDate?: string
   offences: {
@@ -43,6 +45,7 @@ export interface TransformedLicenceConditionsResponse {
     active: DecoratedConviction[]
     activeCustodial: DecoratedConviction[]
     hasMultipleActiveCustodial: boolean
+    hasAllConvictionsReleasedOnLicence: boolean
   }
   standardLicenceConditions?: FormOption[]
 }
@@ -52,11 +55,13 @@ export const transformLicenceConditions = (
 ): TransformedLicenceConditionsResponse => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
+  let hasAllConvictionsReleasedOnLicence = false
   if (caseSummary.convictions) {
     activeConvictions = caseSummary.convictions
       .filter(conviction => conviction.active)
       .map(conviction => transformConviction(conviction))
     activeCustodialConvictions = activeConvictions.filter(conviction => conviction.isCustodial)
+    hasAllConvictionsReleasedOnLicence = activeCustodialConvictions.every(conviction => conviction.statusCode === 'B')
     activeConvictions = sortListByDateField({
       list: activeConvictions,
       dateKey: 'sentenceExpiryDate',
@@ -70,6 +75,7 @@ export const transformLicenceConditions = (
       active: activeConvictions,
       activeCustodial: activeCustodialConvictions,
       hasMultipleActiveCustodial: activeCustodialConvictions.length > 1,
+      hasAllConvictionsReleasedOnLicence,
     },
     standardLicenceConditions: formOptions.standardLicenceConditions,
   }

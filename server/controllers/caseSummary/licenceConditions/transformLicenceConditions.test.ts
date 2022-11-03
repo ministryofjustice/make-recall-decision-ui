@@ -1,5 +1,5 @@
 import { transformLicenceConditions } from './transformLicenceConditions'
-import { CaseSummaryOverviewResponse } from '../../../@types/make-recall-decision-api'
+import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-api'
 
 describe('transformLicenceConditions', () => {
   it('should add an active convictions list with custodial and non-custodial convictions, ordered by sentence expiry date', () => {
@@ -26,7 +26,7 @@ describe('transformLicenceConditions', () => {
           offences: [],
         },
       ],
-    } as CaseSummaryOverviewResponse
+    } as LicenceConditionsResponse
 
     const transformed = transformLicenceConditions(response)
     expect(transformed.convictions.active).toEqual([
@@ -61,38 +61,56 @@ describe('transformLicenceConditions', () => {
     expect(transformed.convictions.active).toEqual([])
   })
 
-  it('sets an activeCustodial property if there are active custodial convictions', () => {
+  it('sets hasAllConvictionsReleasedOnLicence property to false if there are active custodial convictions with statusCode not set to "Released - on licence"', () => {
     const transformed = transformLicenceConditions({
       convictions: [
         { convictionId: 1, active: true, isCustodial: false, offences: [], licenceConditions: [] },
-        { convictionId: 2, active: true, isCustodial: true, offences: [], licenceConditions: [] },
+        {
+          convictionId: 2,
+          active: true,
+          isCustodial: true,
+          statusCode: 'A',
+          offences: [],
+          licenceConditions: [],
+        },
         { convictionId: 3, active: false, isCustodial: true, offences: [], licenceConditions: [] },
-        { convictionId: 4, active: true, isCustodial: true, offences: [], licenceConditions: [] },
+        {
+          convictionId: 4,
+          active: true,
+          isCustodial: true,
+          statusCode: 'B',
+          offences: [],
+          licenceConditions: [],
+        },
       ],
     })
-    expect(transformed.convictions.activeCustodial).toEqual([
-      {
-        active: true,
-        convictionId: 2,
-        isCustodial: true,
-        offences: {
-          additional: [],
-          main: [],
+    expect(transformed.convictions.hasAllConvictionsReleasedOnLicence).toEqual(false)
+  })
+
+  it('sets hasAllConvictionsReleasedOnLicence property to true if all active custodial convictions have statusCode set to "Released - on licence"', () => {
+    const transformed = transformLicenceConditions({
+      convictions: [
+        { convictionId: 1, active: true, isCustodial: false, offences: [], licenceConditions: [] },
+        {
+          convictionId: 2,
+          active: true,
+          isCustodial: true,
+          statusCode: 'B',
+          offences: [],
+          licenceConditions: [],
         },
-        licenceConditions: [],
-      },
-      {
-        active: true,
-        convictionId: 4,
-        isCustodial: true,
-        offences: {
-          additional: [],
-          main: [],
+        { convictionId: 3, active: false, isCustodial: true, offences: [], licenceConditions: [] },
+        {
+          convictionId: 4,
+          active: true,
+          isCustodial: true,
+          statusCode: 'B',
+          offences: [],
+          licenceConditions: [],
         },
-        licenceConditions: [],
-      },
-    ])
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(true)
+      ],
+    })
+    expect(transformed.convictions.hasAllConvictionsReleasedOnLicence).toEqual(true)
   })
 
   it('sets activeCustodial property to an empty array there are no active custodial convictions', () => {
@@ -109,7 +127,16 @@ describe('transformLicenceConditions', () => {
 
   it('sets hasMultipleActiveCustodial to false if one active custodial conviction', () => {
     const transformed = transformLicenceConditions({
-      convictions: [{ convictionId: 3, active: true, isCustodial: true, offences: [], licenceConditions: [] }],
+      convictions: [
+        {
+          convictionId: 3,
+          active: true,
+          isCustodial: true,
+          statusDescription: 'Released - On Licence',
+          offences: [],
+          licenceConditions: [],
+        },
+      ],
     })
     expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
   })
