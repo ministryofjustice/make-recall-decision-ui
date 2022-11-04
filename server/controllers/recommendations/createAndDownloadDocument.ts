@@ -9,6 +9,7 @@ export const createAndDownloadDocument =
   (documentType: DocumentType) =>
   async (req: Request, res: Response): Promise<Response | void> => {
     const { recommendationId } = req.params
+    const { crn } = req.query
     const { user } = res.locals
     let pathSuffix = 'no-recall-letter'
     const requestBody: Record<string, unknown> = {
@@ -21,9 +22,9 @@ export const createAndDownloadDocument =
     const { fileName, fileContents } = await createDocument(recommendationId, pathSuffix, requestBody, user.token)
 
     if (documentType === 'PART_A') {
-      trackEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, req)
+      trackEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, crn, user.username)
     } else {
-      trackEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, req)
+      trackEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, crn, user.username)
     }
 
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')

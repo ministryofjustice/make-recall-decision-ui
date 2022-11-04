@@ -36,14 +36,13 @@ export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
   return null
 }
 
-export const trackEvent = (eventName: string, req: Request) => {
-  const requestBody = req.body
-
+export const trackEvent = (eventName: string, crn: string, username: string) => {
   if (defaultClient && eventName) {
     const eventProperties = {
-      crn: requestBody?.crn,
-      userName: req.user?.username,
+      crn,
+      userName: username,
     }
+
     logger.info(`About to track the ${eventName} event to app insights`)
     defaultClient.trackEvent({ name: eventName, properties: eventProperties })
     logger.info(`Tracked the ${eventName} event to app insights`)
