@@ -2,6 +2,7 @@ import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
 import { Request } from 'express'
 import applicationVersion from '../applicationVersion'
+import logger from '../../logger'
 
 const appInsightsClient = buildAppInsightsClient()
 
@@ -47,6 +48,8 @@ export const trackEvent = (eventName: string, req: Request) => {
       crn: requestBody?.crn,
       userName: req.user?.username,
     }
+    logger.info(`About to track the ${eventName} event to app insights`)
     appInsightsClient.trackEvent({ name: eventName, properties: eventProperties })
+    logger.info(`Tracked the ${eventName} event to app insights`)
   }
 }
