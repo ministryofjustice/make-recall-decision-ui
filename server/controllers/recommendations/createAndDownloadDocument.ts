@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
 import { createDocument } from '../../data/makeDecisionApiClient'
+import { trackEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 type DocumentType = 'PART_A' | 'NO_RECALL_LETTER'
 
@@ -17,6 +19,13 @@ export const createAndDownloadDocument =
       requestBody.userEmail = user.email
     }
     const { fileName, fileContents } = await createDocument(recommendationId, pathSuffix, requestBody, user.token)
+
+    if (documentType === 'PART_A') {
+      trackEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, req)
+    } else {
+      trackEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, req)
+    }
+
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     res.header('Content-Disposition', `attachment; filename="${fileName}"`)
     res.send(Buffer.from(fileContents, 'base64'))
