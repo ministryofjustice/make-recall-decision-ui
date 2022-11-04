@@ -90,8 +90,29 @@ context('Overview', () => {
     cy.getElement(`OASys was last updated in ${date}`).should('exist')
   })
 
-  it('More recent OASys banner', () => {
-    const initiationDate = DateTime.now().minus({ week: 23 }).toISODate()
+  it('Most recent assessment is complete and over 22 weeks old', () => {
+    const latestDateCompleted = DateTime.now().minus({ week: 23 }).toISODate()
+    cy.task('getCase', {
+      sectionId: 'overview',
+      statusCode: 200,
+      response: {
+        ...getCaseOverviewResponse,
+        risk: {
+          riskManagementPlan: {
+            assessmentStatusComplete: true,
+            contingencyPlans: 'Text from contingency plan',
+            latestDateCompleted,
+          },
+        },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
+    cy.getElement(`OASys was last updated in ${date}.`).should('exist')
+  })
+
+  it('Most recent assessment is incomplete and the last complete one is over 22 weeks old', () => {
+    const latestDateCompleted = DateTime.now().minus({ week: 23 }).toISODate()
     cy.task('getCase', {
       sectionId: 'overview',
       statusCode: 200,
@@ -100,18 +121,16 @@ context('Overview', () => {
         risk: {
           riskManagementPlan: {
             assessmentStatusComplete: false,
-            lastUpdatedDate: '2022-09-24T08:39:00.000Z',
             contingencyPlans: 'Text from contingency plan',
-            latestDateCompleted: '2022-10-09T01:02:03.123Z',
-            initiationDate,
+            latestDateCompleted,
           },
         },
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    const date = formatDateTimeFromIsoString({ isoDate: initiationDate, monthAndYear: true })
+    const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(
-      `OASys was last updated in ${date}. There’s a more recent assessment in OASys that’s not complete.`
+      `OASys was last updated in ${date}. There's a more recent assessment in OASys that's not complete. Double-check this for any new information.`
     ).should('exist')
   })
 
