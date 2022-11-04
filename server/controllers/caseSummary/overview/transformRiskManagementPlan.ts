@@ -9,6 +9,9 @@ interface Decorated extends RiskManagementPlan {
 }
 export const transformRiskManagementPlan = (riskManagementPlan: RiskManagementPlan): Decorated => {
   const { latestDateCompleted } = riskManagementPlan
+  if (!latestDateCompleted) {
+    return riskManagementPlan
+  }
   const twentyTwoWeeksAgo = DateTime.now().minus({ week: 22 })
   try {
     const lastAssessmentMoreThanTwentyTwoWeeksOld =
