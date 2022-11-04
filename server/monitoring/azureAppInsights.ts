@@ -4,8 +4,6 @@ import { Request } from 'express'
 import applicationVersion from '../applicationVersion'
 import logger from '../../logger'
 
-const appInsightsClient = buildAppInsightsClient()
-
 function defaultName(): string {
   const {
     packageData: { name },
@@ -31,10 +29,8 @@ export function initialiseAppInsights(): void {
 
 export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
   if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-    if (defaultClient) {
-      defaultClient.context.tags['ai.cloud.role'] = name
-      defaultClient.context.tags['ai.application.ver'] = version()
-    }
+    defaultClient.context.tags['ai.cloud.role'] = name
+    defaultClient.context.tags['ai.application.ver'] = version()
     return defaultClient
   }
   return null
@@ -43,13 +39,14 @@ export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
 export const trackEvent = (eventName: string, req: Request) => {
   const requestBody = req.body
 
-  if (appInsightsClient && eventName) {
+  logger.info(`About to trackEvent with defaultClient: ${defaultClient} and event name: ${eventName}`)
+  if (defaultClient && eventName) {
     const eventProperties = {
       crn: requestBody?.crn,
       userName: req.user?.username,
     }
     logger.info(`About to track the ${eventName} event to app insights`)
-    appInsightsClient.trackEvent({ name: eventName, properties: eventProperties })
+    defaultClient.trackEvent({ name: eventName, properties: eventProperties })
     logger.info(`Tracked the ${eventName} event to app insights`)
   }
 }
