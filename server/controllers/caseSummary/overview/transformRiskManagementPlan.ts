@@ -5,20 +5,18 @@ import logger from '../../../../logger'
 
 interface Decorated extends RiskManagementPlan {
   lastCompletedAssessmentAtLeastTwentyTwoWeeksOld?: boolean
-  recentIncompleteAssessment?: boolean
+  incompleteAssessment?: boolean
 }
 export const transformRiskManagementPlan = (riskManagementPlan: RiskManagementPlan): Decorated => {
-  const { latestDateCompleted, initiationDate } = riskManagementPlan
+  const { latestDateCompleted } = riskManagementPlan
   const twentyTwoWeeksAgo = DateTime.now().minus({ week: 22 })
   try {
     const lastAssessmentMoreThanTwentyTwoWeeksOld =
       DateTime.fromISO(latestDateCompleted, { zone: europeLondon }) <= twentyTwoWeeksAgo
-    const recentIncompleteAssessment = DateTime.fromISO(initiationDate, { zone: europeLondon }) <= twentyTwoWeeksAgo
     return {
       ...riskManagementPlan,
-      lastCompletedAssessmentAtLeastTwentyTwoWeeksOld:
-        riskManagementPlan.assessmentStatusComplete && lastAssessmentMoreThanTwentyTwoWeeksOld,
-      recentIncompleteAssessment: riskManagementPlan.assessmentStatusComplete === false && recentIncompleteAssessment,
+      lastCompletedAssessmentAtLeastTwentyTwoWeeksOld: lastAssessmentMoreThanTwentyTwoWeeksOld,
+      incompleteAssessment: riskManagementPlan.assessmentStatusComplete === false,
     }
   } catch (err) {
     logger.info(err)
