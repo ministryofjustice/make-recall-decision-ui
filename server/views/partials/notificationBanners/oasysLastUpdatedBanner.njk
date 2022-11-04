@@ -2,6 +2,9 @@
     {% set html %}
         <p class="govuk-notification-banner__heading">
             OASys was last updated in {{ formatDateTimeFromIsoString({isoDate: caseSummary.risk.riskManagementPlan.latestDateCompleted, monthAndYear: true }) }}.
+            {% if caseSummary.risk.riskManagementPlan.incompleteAssessment %}
+                There's a more recent assessment in OASys that's not complete. Double-check this for any new information.
+            {% endif %}
         </p>
     {% endset %}
 
@@ -10,7 +13,7 @@
         attributes: {
             'data-qa': 'banner-oasys-last-updated',
             'data-analytics-event': 'notification_banner',
-            'data-analytics-event-category': 'oasysLastUpdated',
+            'data-analytics-event-category': 'oasysRecentIncomplete' if caseSummary.risk.riskManagementPlan.incompleteAssessment else 'oasysLastUpdated',
             'data-analytics-event-label': caseSummary.risk.riskManagementPlan.latestDateCompleted
         },
         classes: 'govuk-!-margin-bottom-6'
