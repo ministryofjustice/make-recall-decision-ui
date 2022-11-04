@@ -218,6 +218,7 @@ context('Contact history', () => {
     cy.fillInput('Search term', 'Failed to attend')
     cy.clickButton('Apply filters')
     cy.getElement('1 contact').should('exist')
+    cy.focused().should('have.attr', 'data-js', 'focus-on-page-load')
 
     // clear the contact type filter
     cy.clickLink('Planned Office Visit (NS)')
