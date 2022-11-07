@@ -233,6 +233,7 @@ jobs:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+
     parallelism: << pipeline.parameters.e2e-parallelism >>
     resource_class: large
     parameters:
@@ -249,13 +250,13 @@ jobs:
           name: E2E Check - << parameters.environment >>
           command: |
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
-            echo "Running feature spec(s): ${SPECS}"
+            echo $SPECS
 
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
-              --config specPattern=$SPECS \
+              --spec $SPECS \
               --browser edge \
               --record false
             npm run e2e:report
@@ -298,7 +299,7 @@ jobs:
             npm ci --no-audit
             
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
-            echo "Running feature spec(s): ${SPECS}"
+            echo $SPECS
 
             set +e
 
