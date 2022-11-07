@@ -218,8 +218,8 @@ jobs:
           command: |
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
-              --config-file integration_tests/cypress.json \
-              --config integrationFolder=integration_tests/accessibility \
+              --config-file integration_tests/cypress.config.ts \
+              --config specPattern=integration_tests/accessibility/*.spec.ts \
               --browser chrome \
               --record false
       - store_test_results:
@@ -253,11 +253,11 @@ jobs:
 
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},ENV=<< parameters.environment >> \
-              --config-file e2e_tests/cypress.json \
+              --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
+              --config specPattern=$SPECS \
               --browser edge \
-              --record false \
-              --spec $SPECS
+              --record false
             npm run e2e:report
             node scripts/fix-junit-reports.js
       - store_artifacts:
@@ -304,7 +304,7 @@ jobs:
 
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local},CRN2=${CRN2_local} \
-              --config-file e2e_tests/cypress.json \
+              --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \
               --spec $SPECS
