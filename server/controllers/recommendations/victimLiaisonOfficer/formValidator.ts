@@ -21,7 +21,7 @@ export const validateVictimLiaisonOfficer = async ({
   const dateVloInformedIso = convertGmtDatePartsToUtc(dateVloInformedParts as ObjectMap<string>, {
     includeTime: false,
     dateMustBeInPast: true,
-    validatePartLengths: true,
+    validatePartLengths: false,
   })
 
   // other errors
