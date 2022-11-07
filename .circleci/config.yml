@@ -259,7 +259,6 @@ jobs:
               --spec $SPECS \
               --browser edge \
               --record false
-            npm run e2e:report
             node scripts/fix-junit-reports.js
       - store_artifacts:
           path: e2e_tests/screenshots
