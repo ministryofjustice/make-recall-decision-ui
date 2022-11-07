@@ -30,7 +30,7 @@
     "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.config.ts",
     "int-test-ui": "cypress open --config-file integration_tests/cypress.config.ts",
     "e2e": "export $(cat .env) && npx cypress open --config-file e2e_tests/cypress.config.ts",
-    "e2e:report": "rm -rf e2e_tests/cucumber-json/*.* && node e2e_tests/cucumber-report.js",
+    "e2e:report": "node e2e_tests/cucumber-report.js",
     "accessibility-test": "cypress run --browser chrome --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "accessibility-test-ui": "cypress open --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "clean": "rm -rf dist build node_modules stylesheets"
