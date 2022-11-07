@@ -2,8 +2,10 @@ import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { createRecommendationController } from './createRecommendation'
 import { createRecommendation } from '../../data/makeDecisionApiClient'
+import { trackEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 const crn = ' A1234AB '
 let res: Response
@@ -21,6 +23,7 @@ describe('createRecommendationController', () => {
     expect(createRecommendation).toHaveBeenCalledWith(crn.trim(), token)
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
+    expect(trackEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'A1234AB', 'Dave')
   })
 
   it('should reload with a stored error, on a failed API call', async () => {

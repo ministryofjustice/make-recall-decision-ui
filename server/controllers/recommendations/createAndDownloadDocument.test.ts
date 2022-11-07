@@ -2,8 +2,10 @@ import { Response } from 'express'
 import { createAndDownloadDocument } from './createAndDownloadDocument'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { createDocument } from '../../data/makeDecisionApiClient'
+import { trackEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 const recommendationId = '987'
 let res: Response
@@ -18,7 +20,7 @@ describe('createAndDownloadDocument', () => {
     const fileContents = '123'
     const fileName = 'Part-A.docx'
     ;(createDocument as jest.Mock).mockReturnValueOnce({ fileContents, fileName })
-    const req = mockReq({ params: { recommendationId } })
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
     await createAndDownloadDocument('PART_A')(req, res)
     expect(createDocument).toHaveBeenCalledWith(
       recommendationId,
@@ -27,6 +29,7 @@ describe('createAndDownloadDocument', () => {
       token
     )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
+    expect(trackEvent).toHaveBeenCalledWith('mrdPartADocumentDownloaded', 'AB1234C', 'Dave')
 
     expect(res.contentType).toHaveBeenCalledWith(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
