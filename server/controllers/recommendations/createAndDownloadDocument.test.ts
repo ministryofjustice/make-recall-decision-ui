@@ -29,7 +29,7 @@ describe('createAndDownloadDocument', () => {
       token
     )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
-    expect(trackEvent).toHaveBeenCalledWith('mrdPartADocumentDownloaded', 'AB1234C', 'Dave')
+    expect(trackEvent).toHaveBeenCalledWith('mrdPartADocumentDownloaded', 'AB1234C', 'Dave', '987')
 
     expect(res.contentType).toHaveBeenCalledWith(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -41,7 +41,7 @@ describe('createAndDownloadDocument', () => {
     const fileContents = '123'
     const fileName = 'Letter.docx'
     ;(createDocument as jest.Mock).mockReturnValueOnce({ fileContents, fileName })
-    const req = mockReq({ params: { recommendationId } })
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
     await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
     expect(createDocument).toHaveBeenCalledWith(
       recommendationId,
@@ -50,6 +50,7 @@ describe('createAndDownloadDocument', () => {
       token
     )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
+    expect(trackEvent).toHaveBeenCalledWith('mrdDecisionNotToRecallLetterDownloaded', 'AB1234C', 'Dave', '987')
 
     expect(res.contentType).toHaveBeenCalledWith(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'

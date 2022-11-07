@@ -22,9 +22,9 @@ export const createAndDownloadDocument =
     const { fileName, fileContents } = await createDocument(recommendationId, pathSuffix, requestBody, user.token)
 
     if (documentType === 'PART_A') {
-      trackEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, crn as string, user.username)
+      trackEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, crn as string, user.username, recommendationId)
     } else {
-      trackEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, crn as string, user.username)
+      trackEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, crn as string, user.username, recommendationId)
     }
 
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
