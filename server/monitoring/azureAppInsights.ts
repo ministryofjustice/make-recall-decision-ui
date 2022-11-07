@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
-import { Request } from 'express'
 import applicationVersion from '../applicationVersion'
 import logger from '../../logger'
 
