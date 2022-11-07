@@ -1,13 +1,11 @@
-{
-  "baseUrl": "http://localhost:3000",
+import { defineConfig } from 'cypress'
+import { readDocX } from '../cypress_shared/plugins'
+
+export default defineConfig({
   "chromeWebSecurity": false,
-  "testFiles": "**/*.{feature,features}",
   "downloadsFolder": "e2e_tests/downloads",
   "fixturesFolder": "e2e_tests/fixtures",
-  "integrationFolder": "e2e_tests/integration",
-  "pluginsFile": "e2e_tests/plugins/index.ts",
   "screenshotsFolder": "e2e_tests/screenshots",
-  "supportFile": "e2e_tests/support/index.ts",
   "videosFolder": "e2e_tests/videos",
   "video": false,
   "reporter": "cypress-multi-reporters",
@@ -24,5 +22,18 @@
   "retries": {
     "runMode": 2,
     "openMode": 0
-  }
-}
+  },
+  e2e: {
+    // We've imported your old cypress plugins here.
+    // You may want to clean this up later by importing these.
+    setupNodeEvents(on) {
+      on('task', {
+        readDocX,
+      })
+    },
+    "baseUrl": "http://localhost:3000",
+    excludeSpecPattern: '**/!(*.cy).ts',
+    specPattern: '**/*.{feature,features}',
+    "supportFile": "e2e_tests/support/index.ts",
+  },
+})
