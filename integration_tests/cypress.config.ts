@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress'
 import {
+  createNoRecallLetter,
   createPartA,
   createRecommendation,
   getCase,
@@ -49,6 +50,7 @@ export default defineConfig({
         readBase64File,
         readDocX,
         createPartA,
+        createNoRecallLetter,
       })
     },
     baseUrl: 'http://localhost:3007',
