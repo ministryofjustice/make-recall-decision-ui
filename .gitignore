@@ -126,7 +126,6 @@ integration_tests/screenshots/
 integration_tests/downloads/
 */*.iml
 **/Chart.lock
-e2e_tests/cucumber-json/*.*
 e2e_tests/junit
 e2e_tests/screenshots
 e2e_tests/reports
