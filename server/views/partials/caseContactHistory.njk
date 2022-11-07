@@ -3,7 +3,7 @@
     {% include './contactFilters.njk' %}
     <div class="flex__item-two-thirds-desktop govuk-!-padding-left-4">
         {% set innerLoopIndex = 0 %}
-        <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'>
+        <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'{% if caseSummary.hasActiveFilters %} data-js='focus-on-page-load'{% endif %}>
             {{ countLabel({ count: caseSummary.contactCount, noun: 'contact'}) }}
         </h2>
         <div class="filter-toggle"></div>
