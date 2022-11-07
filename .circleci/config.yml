@@ -249,7 +249,7 @@ jobs:
       - run:
           name: E2E Check - << parameters.environment >>
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split )
             echo $SPECS
 
             npx cypress run \
@@ -298,7 +298,7 @@ jobs:
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split)
             echo $SPECS
 
             set +e
