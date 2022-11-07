@@ -206,7 +206,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('readBase64File', fileName => {
-  const filePath = Cypress.config('fixturesFolder') + fileName
+  const filePath = `${Cypress.config('fixturesFolder')}/${fileName}`
   return cy.task('readBase64File', filePath)
 })
 
