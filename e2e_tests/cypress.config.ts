@@ -1,4 +1,7 @@
 import { defineConfig } from 'cypress'
+import createBundler from '@bahmutov/cypress-esbuild-preprocessor'
+import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor'
+import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild'
 import { readDocX } from '../cypress_shared/plugins'
 
 export default defineConfig({
@@ -24,16 +27,29 @@ export default defineConfig({
     openMode: 0,
   },
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
-    setupNodeEvents(on) {
+    async setupNodeEvents(
+      on: Cypress.PluginEvents,
+      config: Cypress.PluginConfigOptions
+    ): Promise<Cypress.PluginConfigOptions> {
+      // This is required for the preprocessor to be able to generate JSON reports after each run, and more,
+      await addCucumberPreprocessorPlugin(on, config)
+
+      on(
+        'file:preprocessor',
+        createBundler({
+          plugins: [createEsbuildPlugin(config)],
+        })
+      )
+
       on('task', {
         readDocX,
       })
+
+      return config
     },
     baseUrl: 'http://localhost:3000',
     excludeSpecPattern: '**/!(*.cy).ts',
-    specPattern: '**/*.{feature,features}',
+    specPattern: '**/*.feature',
     supportFile: 'e2e_tests/support/index.ts',
   },
 })

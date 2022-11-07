@@ -103,7 +103,7 @@
     ]
   },
   "cypress-cucumber-preprocessor": {
-    "step_definitions": "e2e_tests/integration/stepDefinitions/",
+    "stepDefinitions": "e2e_tests/integration/stepDefinitions/*.ts",
     "nonGlobalStepDefinitions": false,
     "cucumberJson": {
       "generate": true,
@@ -148,6 +148,7 @@
     "prom-client": "^14.1.0",
     "redis": "^3.1.2",
     "superagent": "^8.0.3",
+    "ts-loader": "^9.4.1",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0",
     "web-vitals": "^3.0.4"
@@ -155,6 +156,7 @@
   "devDependencies": {
     "@aws-sdk/types": "^3.201.0",
     "@badeball/cypress-cucumber-preprocessor": "^13.0.3",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-format": "^0.2.5",
     "@types/compression": "^1.7.2",
@@ -186,7 +188,6 @@
     "concurrently": "^7.5.0",
     "cypress": "^10.11.0",
     "cypress-axe": "^1.0.0",
-    "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-multi-reporters": "^1.6.1",
     "eslint": "^8.26.0",
     "eslint-config-airbnb-base": "^15.0.0",

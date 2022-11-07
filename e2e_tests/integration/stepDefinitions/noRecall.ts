@@ -1,4 +1,4 @@
-import { When } from 'cypress-cucumber-preprocessor/steps'
+import { When } from '@badeball/cypress-cucumber-preprocessor'
 import { DateTime } from 'luxon'
 
 When('Maria views the no recall task list', () => {
