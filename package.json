@@ -105,11 +105,8 @@
   "cypress-cucumber-preprocessor": {
     "stepDefinitions": "e2e_tests/integration/stepDefinitions/*.ts",
     "nonGlobalStepDefinitions": false,
-    "cucumberJson": {
-      "generate": true,
-      "outputFolder": "e2e_tests/cucumber-json",
-      "filePrefix": "",
-      "fileSuffix": ".cucumber"
+    "json": {
+      "enabled": false
     }
   },
   "dependencies": {
