@@ -8,20 +8,27 @@
   </div>
   {% if params.error %}
     <div class='govuk-!-padding-bottom-2 govuk-!-margin-bottom-4 govuk-section-break--visible'></div>
+    {% if params.error == 'NOT_FOUND_LATEST_COMPLETE' %}
+      {% set message = params.notifications.oasysNotFoundLatestComplete %}
+      {% set bannerId = 'oasysNotFoundLatestComplete' %}
+    {% elseif params.error == 'MISSING_DATA' %}
+      {% set message = params.notifications.oasysMissingRosh %}
+      {% set bannerId = 'oasysMissingRosh' %}
+    {% else %}
+      {% set message = params.notifications.oasysApiError %}
+    {% endif %}
     {% set html %}
       <p class="govuk-notification-banner__heading">
-        {% if params.error == 'NOT_FOUND_LATEST_COMPLETE' %}
-          {{ params.notifications.oasysNotFoundLatestComplete }}
-        {% elseif params.error == 'MISSING_DATA' %}
-          {{ params.notifications.oasysMissingRosh }}
-        {% else %}
-          {{ params.notifications.oasysApiError }}
-        {% endif %}
+        {{ message }}
       </p>
     {% endset %}
     {{ govukNotificationBanner({
       html: html,
-      classes: ("govuk-notification-banner--error" if params.error !== 'MISSING_DATA' else "") + " govuk-!-margin-bottom-0"
+      classes: ("govuk-notification-banner--error" if params.error !== 'MISSING_DATA' else "") + " govuk-!-margin-bottom-0",
+      attributes: {
+        'data-analytics-event': 'notification_banner',
+        'data-analytics-event-category': bannerId
+      } if bannerId else undefined
     }) }}
   {% else %}
     <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
