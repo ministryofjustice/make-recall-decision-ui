@@ -218,8 +218,8 @@ jobs:
           command: |
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
-              --config-file integration_tests/cypress.json \
-              --config integrationFolder=integration_tests/accessibility \
+              --config-file integration_tests/cypress.config.ts \
+              --config specPattern=integration_tests/accessibility/*.spec.ts \
               --browser chrome \
               --record false
       - store_test_results:
@@ -233,6 +233,7 @@ jobs:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+
     parallelism: << pipeline.parameters.e2e-parallelism >>
     resource_class: large
     parameters:
@@ -248,17 +249,16 @@ jobs:
       - run:
           name: E2E Check - << parameters.environment >>
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
-            echo "Running feature spec(s): ${SPECS}"
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split )
+            echo $SPECS
 
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},ENV=<< parameters.environment >> \
-              --config-file e2e_tests/cypress.json \
+              --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
+              --spec $SPECS \
               --browser edge \
-              --record false \
-              --spec $SPECS
-            npm run e2e:report
+              --record false
             node scripts/fix-junit-reports.js
       - store_artifacts:
           path: e2e_tests/screenshots
@@ -297,14 +297,14 @@ jobs:
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split | tr "\n" "," | tr " " ",")
-            echo "Running feature spec(s): ${SPECS}"
+            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split)
+            echo $SPECS
 
             set +e
 
             npx cypress run \
               --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local},CRN2=${CRN2_local} \
-              --config-file e2e_tests/cypress.json \
+              --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \
               --spec $SPECS

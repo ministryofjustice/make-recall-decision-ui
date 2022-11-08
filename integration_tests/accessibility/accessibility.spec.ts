@@ -20,8 +20,8 @@ const urls = [
     url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
   },
   // recommendation flow
-  // { url: `${routeUrls.recommendations}/456/recall-type` },
-  // { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true },
+  { url: `${routeUrls.recommendations}/456/recall-type` },
+  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true },
   { url: `${routeUrls.recommendations}/456/emergency-recall` },
   { url: `${routeUrls.recommendations}/456/emergency-recall`, validationError: true },
 ]
@@ -41,7 +41,11 @@ context('Accessibility (a11y) Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y()
+      cy.checkA11y('body', {
+        rules: {
+          'aria-allowed-attr': { enabled: false },
+        },
+      })
     })
   })
 })

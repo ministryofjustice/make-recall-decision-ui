@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "noEmit": true,
     "lib": ["es5", "dom", "es2015.promise"],
     "types": ["node", "cypress"],
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["cypress.config.ts"]
 }

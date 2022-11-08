@@ -1,4 +1,4 @@
-import { defineStep, When } from 'cypress-cucumber-preprocessor/steps'
+import { defineStep, When } from '@badeball/cypress-cucumber-preprocessor'
 import { DateTime } from 'luxon'
 import { getTestDataPerEnvironment } from '../../utils'
 

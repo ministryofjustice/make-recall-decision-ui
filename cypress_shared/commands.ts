@@ -1,4 +1,3 @@
-import path from 'path'
 import { exactMatchIgnoreWhitespace } from './utils'
 
 Cypress.Commands.add('pageHeading', () =>
@@ -207,7 +206,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('readBase64File', fileName => {
-  const filePath = path.join(Cypress.config('fixturesFolder') as string, fileName)
+  const filePath = `${Cypress.config('fixturesFolder')}/${fileName}`
   return cy.task('readBase64File', filePath)
 })
 

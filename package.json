@@ -27,12 +27,12 @@
     "test": "jest --forceExit",
     "test:coverage": "jest --coverage --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.json",
-    "int-test-ui": "cypress open --config-file integration_tests/cypress.json",
-    "e2e": "export $(cat .env) && npx cypress open --config-file e2e_tests/cypress.json",
+    "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.config.ts",
+    "int-test-ui": "cypress open --config-file integration_tests/cypress.config.ts",
+    "e2e": "export $(cat .env) && npx cypress open --config-file e2e_tests/cypress.config.ts",
     "e2e:report": "node e2e_tests/cucumber-report.js",
-    "accessibility-test": "cypress run --browser chrome --config integrationFolder=integration_tests/accessibility --config-file integration_tests/cypress.json",
-    "accessibility-test-ui": "cypress open --config integrationFolder=integration_tests/accessibility --config-file integration_tests/cypress.json",
+    "accessibility-test": "cypress run --browser chrome --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
+    "accessibility-test-ui": "cypress open --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "clean": "rm -rf dist build node_modules stylesheets"
   },
   "engines": {
@@ -103,13 +103,10 @@
     ]
   },
   "cypress-cucumber-preprocessor": {
-    "step_definitions": "e2e_tests/integration/stepDefinitions/",
+    "stepDefinitions": "e2e_tests/integration/stepDefinitions/*.ts",
     "nonGlobalStepDefinitions": false,
-    "cucumberJson": {
-      "generate": true,
-      "outputFolder": "e2e_tests/cucumber-json",
-      "filePrefix": "",
-      "fileSuffix": ".cucumber"
+    "json": {
+      "enabled": false
     }
   },
   "dependencies": {
@@ -148,12 +145,15 @@
     "prom-client": "^14.1.0",
     "redis": "^3.1.2",
     "superagent": "^8.0.3",
+    "ts-loader": "^9.4.1",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0",
     "web-vitals": "^3.0.4"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.201.0",
+    "@badeball/cypress-cucumber-preprocessor": "^13.0.3",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-format": "^0.2.5",
     "@types/compression": "^1.7.2",
@@ -183,9 +183,8 @@
     "audit-ci": "^6.3.0",
     "axe-core": "4.5.1",
     "concurrently": "^7.5.0",
-    "cypress": "^9.7.0",
-    "cypress-axe": "^0.14.0",
-    "cypress-cucumber-preprocessor": "^4.3.1",
+    "cypress": "^10.11.0",
+    "cypress-axe": "^1.0.0",
     "cypress-multi-reporters": "^1.6.1",
     "eslint": "^8.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
