@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { hasContrabandRisk, hasContrabandRiskDetailsYes } = requestBody
@@ -47,7 +47,7 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
   const valuesToSave = {
     hasContrabandRisk: {
       selected: hasContrabandRisk === 'YES',
-      details: hasContrabandRisk === 'YES' ? hasContrabandRiskDetailsYes : null,
+      details: hasContrabandRisk === 'YES' ? stripHtmlTags(hasContrabandRiskDetailsYes as string) : null,
     },
   }
   return {

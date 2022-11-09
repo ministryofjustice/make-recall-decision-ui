@@ -32,6 +32,20 @@ describe('validateCustodyStatus', () => {
     expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
 
+  it('strips HTML tags from "Yes, police custody" details', async () => {
+    const requestBody = {
+      custodyStatus: 'YES_POLICE',
+      custodyStatusDetailsYesPolice:
+        '<script>alert("hey")</script>West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
+      crn: 'X34534',
+    }
+    const { valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo })
+    expect(valuesToSave).toHaveProperty(
+      'custodyStatus.details',
+      'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG'
+    )
+  })
+
   it('returns valuesToSave and no errors if Yes, prison selected, and resets details / arrest issues / local police contact', async () => {
     const requestBody = {
       custodyStatus: 'YES_PRISON',

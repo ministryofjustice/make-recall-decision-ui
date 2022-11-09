@@ -2,7 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 
 export const validateResponseToProbation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -10,7 +10,8 @@ export const validateResponseToProbation = async ({ requestBody, urlInfo }: Form
   let nextPagePath
 
   const { responseToProbation } = requestBody
-  if (isEmptyStringOrWhitespace(responseToProbation)) {
+  const sanitized = isString(responseToProbation) ? stripHtmlTags(responseToProbation as string) : ''
+  if (isEmptyStringOrWhitespace(sanitized)) {
     const errorId = 'missingResponseToProbation'
     errors = [
       makeErrorObject({
@@ -22,7 +23,7 @@ export const validateResponseToProbation = async ({ requestBody, urlInfo }: Form
   }
   if (!errors) {
     valuesToSave = {
-      responseToProbation,
+      responseToProbation: sanitized,
     }
     nextPagePath = nextPageLinkUrl({ nextPageId: 'licence-conditions', urlInfo })
   }

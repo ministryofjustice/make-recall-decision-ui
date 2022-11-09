@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateFixedTermLicenceConditions = async ({
   requestBody,
@@ -50,7 +50,8 @@ export const validateFixedTermLicenceConditions = async ({
   const valuesToSave = {
     fixedTermAdditionalLicenceConditions: {
       selected: hasFixedTermLicenceConditions === 'YES',
-      details: hasFixedTermLicenceConditions === 'YES' ? hasFixedTermLicenceConditionsDetails : null,
+      details:
+        hasFixedTermLicenceConditions === 'YES' ? stripHtmlTags(hasFixedTermLicenceConditionsDetails as string) : null,
     },
   }
   return {

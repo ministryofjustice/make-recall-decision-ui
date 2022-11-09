@@ -1,4 +1,5 @@
 import qs from 'qs'
+import { stripHtml } from 'string-strip-html'
 import config from '../config'
 import { Address } from '../@types/make-recall-decision-api/models/Address'
 import { FormError, ObjectMap } from '../@types'
@@ -99,25 +100,28 @@ export const removeParamsFromQueryString = ({
   return queryString ? `?${queryString}` : ''
 }
 
-export const isCaseRestrictedOrExcluded = (userAccessResponse: UserAccessResponse) =>
-  userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
+export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {
+  return userAccessResponse?.userNotFound || userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
+}
 
 export const validateCrn = (crn: unknown) => {
   try {
     if (!isString(crn)) {
       throw new Error()
     }
-    if ((crn as string).trim() === '') {
+    const normalized = normalizeCrn(crn as string)
+    if (isEmptyStringOrWhitespace(normalized)) {
       throw new Error()
     }
-    return normalizeCrn(crn as string)
+    return normalized
   } catch (err) {
     throw new AppError('Invalid CRN', { status: 400, errorType: 'INVALID_CRN' })
   }
 }
 
 export const normalizeCrn = (crn: string) => {
-  const invalidCharsRemoved = crn.replace(/[^A-Z0-9]/gi, '')
+  const sanitized = stripHtmlTags(crn)
+  const invalidCharsRemoved = sanitized.replace(/[^A-Z0-9]/gi, '')
   return invalidCharsRemoved.toUpperCase()
 }
 
@@ -130,3 +134,9 @@ export const booleanToYesNo = (val: boolean) => {
 }
 
 export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()
+
+export const stripHtmlTags = (str: string): string => {
+  return stripHtml(str, {
+    stripTogetherWithTheirContents: ['script', 'style', 'xml'],
+  }).result
+}
