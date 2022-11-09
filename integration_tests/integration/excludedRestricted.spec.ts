@@ -109,4 +109,24 @@ context('Excluded and restricted cases', () => {
       cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
     })
   })
+
+  context('User not found', () => {
+    it('overview page', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          userAccessResponse: {
+            userNotFound: true,
+          },
+        },
+      })
+      const crn = 'X34983'
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.pageHeading().should('equal', 'User not found')
+      cy.contains(
+        'There is a problem with your NDelius account. Contact support on the HMPPS Technology Portal for help.'
+      ).should('exist')
+    })
+  })
 })
