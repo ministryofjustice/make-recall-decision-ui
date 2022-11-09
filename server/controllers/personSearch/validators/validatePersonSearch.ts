@@ -1,14 +1,13 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { strings } from '../../../textStrings/en'
-import { isString, normalizeCrn } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, isString, normalizeCrn } from '../../../utils/utils'
 
 export const validatePersonSearch = (crn?: string) => {
   let errors
   let unsavedValues
   const invalidType = !isString(crn)
   let searchValue = invalidType ? crn : normalizeCrn(crn)
-  const emptyString = searchValue === ''
-  if (invalidType || emptyString) {
+  if (invalidType || isEmptyStringOrWhitespace(searchValue)) {
     errors = []
     const errorId = invalidType ? 'invalidCrnFormat' : 'missingCrn'
     errors = [
@@ -18,7 +17,7 @@ export const validatePersonSearch = (crn?: string) => {
         errorId,
       }),
     ]
-    unsavedValues = { crn }
+    unsavedValues = { crn: searchValue }
     searchValue = undefined
   }
 

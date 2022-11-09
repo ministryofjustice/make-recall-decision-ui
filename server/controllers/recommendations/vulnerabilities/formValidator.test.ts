@@ -8,7 +8,7 @@ describe('validateVulnerabilities', () => {
     const requestBody = {
       crn: 'X514364',
       vulnerabilities: ['MENTAL_HEALTH_CONCERNS', 'BEING_BULLIED_BY_OTHERS'],
-      'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': 'Info..',
+      'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': '<br />Info..',
       'vulnerabilitiesDetail-BEING_BULLIED_BY_OTHERS': 'Details for..',
     }
     const { errors, valuesToSave, nextPagePath } = await validateVulnerabilities({ requestBody, recommendationId })

@@ -4,7 +4,7 @@ import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 const missingDetailsError = (optionId: string) => {
   switch (optionId) {
@@ -86,10 +86,13 @@ export const validateIndeterminateDetails = async ({
   // valid
   const valuesToSave = {
     indeterminateOrExtendedSentenceDetails: {
-      selected: selected.map(alternative => ({
-        value: alternative,
-        details: requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${alternative}`],
-      })),
+      selected: selected.map(alternative => {
+        const details = requestBody[`indeterminateOrExtendedSentenceDetailsDetail-${alternative}`]
+        return {
+          value: alternative,
+          details: details ? stripHtmlTags(details as string) : undefined,
+        }
+      }),
       allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
     },
   }

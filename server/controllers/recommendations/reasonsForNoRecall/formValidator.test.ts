@@ -8,12 +8,12 @@ describe('validateReasonsForNoRecall', () => {
     path: `/recommendations/${recommendationId}/reasons-no-recall`,
   }
 
-  it('returns valuesToSave and no errors if valid', async () => {
+  it('returns valuesToSave with HTML tags stripped and no errors if valid', async () => {
     const requestBody = {
-      licenceBreach: 'details',
-      noRecallRationale: 'details',
-      popProgressMade: 'details',
-      futureExpectations: 'details',
+      licenceBreach: 'details<b>',
+      noRecallRationale: '<br />details',
+      popProgressMade: '<a>details</a>',
+      futureExpectations: 'details<script>test</script>',
     }
     const { errors, valuesToSave, nextPagePath } = await validateReasonsForNoRecall({
       requestBody,
@@ -21,7 +21,12 @@ describe('validateReasonsForNoRecall', () => {
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
-      reasonsForNoRecall: requestBody,
+      reasonsForNoRecall: {
+        licenceBreach: 'details',
+        noRecallRationale: 'details',
+        popProgressMade: 'details',
+        futureExpectations: 'details',
+      },
     })
     expect(nextPagePath).toEqual('/recommendations/34/appointment-no-recall')
   })

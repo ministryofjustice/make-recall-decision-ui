@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
 import { isEmailValid, isPhoneValid } from '../../../utils/validate-formats'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateLocalPoliceContactDetails = async ({
   requestBody,
@@ -50,10 +50,10 @@ export const validateLocalPoliceContactDetails = async ({
   return {
     valuesToSave: {
       localPoliceContact: {
-        contactName,
-        phoneNumber,
-        faxNumber,
-        emailAddress,
+        contactName: stripHtmlTags(contactName as string),
+        phoneNumber: stripHtmlTags(phoneNumber as string),
+        faxNumber: stripHtmlTags(faxNumber as string),
+        emailAddress: stripHtmlTags(emailAddress as string),
       },
     },
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,

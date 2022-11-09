@@ -2,7 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateWhatLedToRecall = async ({
   requestBody,
@@ -25,7 +25,7 @@ export const validateWhatLedToRecall = async ({
   }
   if (!errors) {
     valuesToSave = {
-      whatLedToRecall,
+      whatLedToRecall: stripHtmlTags(whatLedToRecall as string),
     }
     nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-circumstances`
   }

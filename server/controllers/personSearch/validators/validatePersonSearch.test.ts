@@ -47,6 +47,22 @@ describe('validatePersonSearch', () => {
     })
   })
 
+  it('returns an error if CRN is empty after HTML stripped out', () => {
+    expect(validatePersonSearch('<script>alert("yo")</script>')).toEqual({
+      errors: [
+        {
+          href: '#crn',
+          name: 'crn',
+          text: 'Enter a Case Reference Number (CRN)',
+          errorId: 'missingCrn',
+        },
+      ],
+      unsavedValues: {
+        crn: '',
+      },
+    })
+  })
+
   it('returns the search value, converted to uppercase', () => {
     expect(validatePersonSearch('abc')).toEqual({
       searchValue: 'ABC',
