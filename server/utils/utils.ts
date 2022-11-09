@@ -99,8 +99,9 @@ export const removeParamsFromQueryString = ({
   return queryString ? `?${queryString}` : ''
 }
 
-export const isCaseRestrictedOrExcluded = (userAccessResponse: UserAccessResponse) =>
-  userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
+export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {
+  return userAccessResponse?.userNotFound || userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
+}
 
 export const validateCrn = (crn: unknown) => {
   try {
