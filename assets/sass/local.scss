@@ -104,3 +104,7 @@ pre.govuk-body {
 .govuk-tag--lower {
   text-transform: none;
 }
+
+[data-js="focus-on-page-load"]:focus {
+  outline: $govuk-focus-width solid $govuk-focus-colour;
+}
