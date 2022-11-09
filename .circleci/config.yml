@@ -310,7 +310,6 @@ jobs:
               --spec $SPECS
 
             export E2E_RESULT=$?
-            npm run e2e:report
             node scripts/fix-junit-reports.js
 
             set -e
