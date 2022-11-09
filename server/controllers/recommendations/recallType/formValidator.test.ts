@@ -33,7 +33,7 @@ describe('validateRecallType', () => {
     it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid standard recall selected', async () => {
       const requestBody = {
         recallType: 'STANDARD',
-        recallTypeDetailsStandard: 'I recommend fixed term recall...',
+        recallTypeDetailsStandard: '<br />I recommend standard recall...',
         crn: 'X34534',
       }
       const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
@@ -42,7 +42,7 @@ describe('validateRecallType', () => {
         recallType: {
           selected: {
             value: 'STANDARD',
-            details: requestBody.recallTypeDetailsStandard,
+            details: 'I recommend standard recall...',
           },
           allOptions: formOptions.recallType,
         },

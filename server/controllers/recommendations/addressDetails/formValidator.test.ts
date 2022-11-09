@@ -22,6 +22,17 @@ describe('validateAddress', () => {
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-person-details`)
     })
 
+    it('strips HTML tags from No details', async () => {
+      const requestBody = {
+        isMainAddressWherePersonCanBeFound: 'NO',
+        isMainAddressWherePersonCanBeFoundDetailsNo: '<script>Details...</script>',
+        addressCount: '1',
+        crn: 'X34534',
+      }
+      const { valuesToSave } = await validateAddress({ requestBody, recommendationId })
+      expect(valuesToSave).toHaveProperty('isMainAddressWherePersonCanBeFound.details', '')
+    })
+
     it('returns valuesToSave and no errors if Yes selected, and resets details', async () => {
       const requestBody = {
         isMainAddressWherePersonCanBeFound: 'YES',

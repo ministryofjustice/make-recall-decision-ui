@@ -51,4 +51,17 @@ describe('validateResponseToProbation', () => {
     })
     expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
   })
+
+  it('strip out HTML tags from the input', async () => {
+    const requestBody = {
+      responseToProbation: 'Re-off<script>alert("")</script>ending',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateResponseToProbation({ requestBody, urlInfo })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      responseToProbation: 'Re-off ending',
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/licence-conditions')
+  })
 })

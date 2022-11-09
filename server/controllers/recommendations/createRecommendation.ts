@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { createRecommendation } from '../../data/makeDecisionApiClient'
 import { validateCrn } from '../../utils/utils'
 import { routeUrls } from '../../routes/routeUrls'
-import { trackEvent } from '../../monitoring/azureAppInsights'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 
 export const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
@@ -10,7 +10,12 @@ export const createRecommendationController = async (req: Request, res: Response
   try {
     const recommendation = await createRecommendation(normalizedCrn, res.locals.user.token)
     res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
-    trackEvent(EVENTS.MRD_RECOMMENDATION_STARTED, normalizedCrn, res.locals.user.username, recommendation.id.toString())
+    appInsightsEvent(
+      EVENTS.MRD_RECOMMENDATION_STARTED,
+      normalizedCrn,
+      res.locals.user.username,
+      recommendation.id.toString()
+    )
   } catch (err) {
     req.session.errors = [
       {

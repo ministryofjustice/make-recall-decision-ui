@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateAddress = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { isMainAddressWherePersonCanBeFound, isMainAddressWherePersonCanBeFoundDetailsNo, addressCount } = requestBody
@@ -52,7 +52,7 @@ export const validateAddress = async ({ requestBody, recommendationId }: FormVal
   const valuesToSave = {
     isMainAddressWherePersonCanBeFound: {
       selected: isMainAddressWherePersonCanBeFound === 'YES',
-      details: isNo ? isMainAddressWherePersonCanBeFoundDetailsNo : null,
+      details: isNo ? stripHtmlTags(isMainAddressWherePersonCanBeFoundDetailsNo as string) : null,
     },
   }
   return {

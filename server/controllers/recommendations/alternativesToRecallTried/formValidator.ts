@@ -4,7 +4,7 @@ import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/f
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 
 export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { alternativesToRecallTried } = requestBody
@@ -21,10 +21,9 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
         value: alternativeId,
       })?.detailsLabel
     )
-    if (
-      optionShouldHaveDetails &&
-      isEmptyStringOrWhitespace(requestBody[`alternativesToRecallTriedDetail-${alternativeId}`])
-    ) {
+    const detail = requestBody[`alternativesToRecallTriedDetail-${alternativeId}`]
+    const sanitizedDetail = isString(detail) ? stripHtmlTags(detail as string) : ''
+    if (optionShouldHaveDetails && isEmptyStringOrWhitespace(sanitizedDetail)) {
       return alternativeId
     }
     return false
@@ -73,10 +72,13 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
   // valid
   const valuesToSave = {
     alternativesToRecallTried: {
-      selected: alternativesList.map(alternative => ({
-        value: alternative,
-        details: requestBody[`alternativesToRecallTriedDetail-${alternative}`],
-      })),
+      selected: alternativesList.map(alternative => {
+        const details = requestBody[`alternativesToRecallTriedDetail-${alternative}`]
+        return {
+          value: alternative,
+          details: details ? stripHtmlTags(details as string) : undefined,
+        }
+      }),
       allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
     },
   }

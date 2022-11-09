@@ -5,7 +5,7 @@ import { strings } from '../../../textStrings/en'
 import { isInCustody } from '../helpers/isInCustody'
 import { CustodyStatus } from '../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../helpers/urls'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -53,7 +53,7 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
   const valuesToSave = {
     custodyStatus: {
       selected: custodyStatus,
-      details: custodyStatus === 'YES_POLICE' ? custodyStatusDetailsYesPolice : null,
+      details: custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
       allOptions: formOptions.custodyStatus,
     },
     ...resets,

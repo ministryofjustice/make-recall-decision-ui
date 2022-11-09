@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { createAndDownloadDocument } from './createAndDownloadDocument'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { createDocument } from '../../data/makeDecisionApiClient'
-import { trackEvent } from '../../monitoring/azureAppInsights'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -29,7 +29,7 @@ describe('createAndDownloadDocument', () => {
       token
     )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
-    expect(trackEvent).toHaveBeenCalledWith('mrdPartADocumentDownloaded', 'AB1234C', 'Dave', '987')
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdPartADocumentDownloaded', 'AB1234C', 'Dave', '987')
 
     expect(res.contentType).toHaveBeenCalledWith(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -50,7 +50,7 @@ describe('createAndDownloadDocument', () => {
       token
     )
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
-    expect(trackEvent).toHaveBeenCalledWith('mrdDecisionNotToRecallLetterDownloaded', 'AB1234C', 'Dave', '987')
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdDecisionNotToRecallLetterDownloaded', 'AB1234C', 'Dave', '987')
 
     expect(res.contentType).toHaveBeenCalledWith(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'

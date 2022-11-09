@@ -21,6 +21,16 @@ describe('validateArrestIssues', () => {
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
     })
 
+    it('strips HTML tags from details', async () => {
+      const requestBody = {
+        hasArrestIssues: 'YES',
+        hasArrestIssuesDetailsYes: '<p>Details...</p>',
+        crn: 'X34534',
+      }
+      const { valuesToSave } = await validateArrestIssues({ requestBody, recommendationId })
+      expect(valuesToSave).toHaveProperty('hasArrestIssues.details', 'Details...')
+    })
+
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
         hasArrestIssues: 'NO',

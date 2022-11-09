@@ -2,7 +2,7 @@ import { validateLocalPoliceContactDetails } from './formValidator'
 
 describe('validateLocalPoliceContactDetails', () => {
   const recommendationId = '34'
-  it('returns valuesToSave and no errors if valid', async () => {
+  it('returns valuesToSave with HTML tags stripped, and no errors if valid', async () => {
     const requestBody = {
       contactName: 'Thomas Magnum',
       phoneNumber: '+44 808 157 0192',

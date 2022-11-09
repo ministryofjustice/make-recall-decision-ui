@@ -1,5 +1,5 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
-import { isDefined, removeParamsFromQueryString } from '../../../utils/utils'
+import { isDefined, removeParamsFromQueryString, stripHtmlTags } from '../../../utils/utils'
 import { ContactHistoryFilters, DecoratedContact, NamedFormError, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/errors'
 
@@ -34,7 +34,7 @@ export const filterContactsBySearch = ({
   let errors
   if (isDefined(searchFilters) && searchFilters !== '') {
     let selectedFilters = Array.isArray(searchFilters) ? searchFilters : [searchFilters]
-    selectedFilters = selectedFilters.filter(term => term !== '')
+    selectedFilters = selectedFilters.map(stripHtmlTags).filter(term => term !== '')
     const invalidLength = selectedFilters.find(filter => filter.length < MINIMUM_SEARCH_TERM_LENGTH)
     if (invalidLength) {
       errors = [

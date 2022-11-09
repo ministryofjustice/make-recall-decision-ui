@@ -4,7 +4,7 @@ import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 
 export const validateVulnerabilities = async ({
   requestBody,
@@ -66,10 +66,13 @@ export const validateVulnerabilities = async ({
   // valid
   const valuesToSave = {
     vulnerabilities: {
-      selected: vulnerabilitiesList.map(alternative => ({
-        value: alternative,
-        details: requestBody[`vulnerabilitiesDetail-${alternative}`],
-      })),
+      selected: vulnerabilitiesList.map(alternative => {
+        const details = requestBody[`vulnerabilitiesDetail-${alternative}`]
+        return {
+          value: alternative,
+          details: isString(details) ? stripHtmlTags(details as string) : undefined,
+        }
+      }),
       allOptions: cleanseUiList(formOptions.vulnerabilities),
     },
   }

@@ -4,7 +4,7 @@ describe('validateWhatLedToRecall', () => {
   const recommendationId = '34'
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
-      whatLedToRecall: 'Re-offending',
+      whatLedToRecall: 'Re-offending<p></p>',
       crn: 'X34534',
     }
     const { errors, valuesToSave, nextPagePath } = await validateWhatLedToRecall({ requestBody, recommendationId })

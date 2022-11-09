@@ -6,7 +6,7 @@ import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { isPhoneValid } from '../../../utils/validate-formats'
 import { strings } from '../../../textStrings/en'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { nextPageLinkUrl } from '../helpers/urls'
 
 export const validateNextAppointment = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
@@ -102,7 +102,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
           allOptions: formOptions.howWillAppointmentHappen,
         },
         dateTimeOfAppointment: dateTimeOfAppointmentIso,
-        probationPhoneNumber,
+        probationPhoneNumber: stripHtmlTags(probationPhoneNumber as string),
       },
     }
     let nextPagePath = nextPageLinkUrl({ nextPageId: 'preview-no-recall', urlInfo })

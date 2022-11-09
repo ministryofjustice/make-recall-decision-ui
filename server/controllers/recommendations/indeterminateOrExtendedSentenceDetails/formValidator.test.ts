@@ -37,6 +37,26 @@ describe('validateIndeterminateDetails', () => {
     expect(nextPagePath).toEqual('/recommendations/34/sensitive-info')
   })
 
+  it('strips HTML tags out of details', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      indeterminateOrExtendedSentenceDetails: ['OUT_OF_TOUCH'],
+      'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH': '<br />Details for..',
+    }
+    const { valuesToSave } = await validateIndeterminateDetails({ requestBody, urlInfo })
+    expect(valuesToSave).toEqual({
+      indeterminateOrExtendedSentenceDetails: {
+        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
+        selected: [
+          {
+            details: 'Details for..',
+            value: 'OUT_OF_TOUCH',
+          },
+        ],
+      },
+    })
+  })
+
   it('returns an error, if no checkbox is selected, and no valuesToSave', async () => {
     const requestBody = {
       crn: 'X34534',

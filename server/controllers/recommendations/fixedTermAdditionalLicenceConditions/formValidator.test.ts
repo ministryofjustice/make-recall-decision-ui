@@ -29,6 +29,19 @@ describe('validateFixedTermLicenceConditions', () => {
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/sensitive-info`)
     })
 
+    it('strips HTML tags from details', async () => {
+      const requestBody = {
+        hasFixedTermLicenceConditions: 'YES',
+        hasFixedTermLicenceConditionsDetails: '<style></style>Details...',
+        crn: 'X34534',
+      }
+      const { valuesToSave } = await validateFixedTermLicenceConditions({
+        requestBody,
+        urlInfo,
+      })
+      expect(valuesToSave).toHaveProperty('fixedTermAdditionalLicenceConditions.details', 'Details...')
+    })
+
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
         hasFixedTermLicenceConditions: 'NO',

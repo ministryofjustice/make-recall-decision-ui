@@ -3,7 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 
 export const validateArrestIssues = async ({
   requestBody,
@@ -49,7 +49,7 @@ export const validateArrestIssues = async ({
   const valuesToSave = {
     hasArrestIssues: {
       selected: hasArrestIssues === 'YES',
-      details: hasArrestIssues === 'YES' ? hasArrestIssuesDetailsYes : null,
+      details: hasArrestIssues === 'YES' ? stripHtmlTags(hasArrestIssuesDetailsYes as string) : null,
     },
   }
   return {

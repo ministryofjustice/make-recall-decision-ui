@@ -2,7 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
@@ -55,7 +55,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
     recallType: {
       selected: {
         value: recallType,
-        details: recallTypeDetails,
+        details: isString(recallTypeDetails) ? stripHtmlTags(recallTypeDetails as string) : undefined,
       },
       allOptions: formOptions.recallType,
     },

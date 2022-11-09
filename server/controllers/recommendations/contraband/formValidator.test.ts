@@ -21,6 +21,16 @@ describe('validateContraband', () => {
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
     })
 
+    it('strips HTML tags from details', async () => {
+      const requestBody = {
+        hasContrabandRisk: 'YES',
+        hasContrabandRiskDetailsYes: '<b>Details...',
+        crn: 'X34534',
+      }
+      const { valuesToSave } = await validateContraband({ requestBody, recommendationId })
+      expect(valuesToSave).toHaveProperty('hasContrabandRisk.details', 'Details...')
+    })
+
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
         hasContrabandRisk: 'NO',
