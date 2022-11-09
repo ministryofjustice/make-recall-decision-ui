@@ -54,6 +54,18 @@ describe('filterContactsBySearch', () => {
     expect(selected).toBeUndefined()
   })
 
+  it('strips out script tags and their contents from search terms', () => {
+    const { contacts, selected } = filterContactsBySearch({
+      contacts: contactList,
+      filters: {
+        ...defaultFilters,
+        searchFilters: '<script>alert("hi")</script>NS',
+      },
+    })
+    expect(contacts).toHaveLength(1)
+    expect(selected).toEqual([{ text: 'NS', href: '' }])
+  })
+
   it('filters contacts by the supplied search filter and returns selected filters', () => {
     const { contacts, selected } = filterContactsBySearch({
       contacts: contactList,

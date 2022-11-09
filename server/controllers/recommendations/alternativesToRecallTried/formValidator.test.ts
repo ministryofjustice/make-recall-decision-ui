@@ -37,6 +37,24 @@ describe('validateAlternativesTried', () => {
     expect(nextPagePath).toEqual('/recommendations/34/stop-think')
   })
 
+  it('strips HTML tags out of details', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      alternativesToRecallTried: ['EXTRA_LICENCE_CONDITIONS'],
+      'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '<p>Info..</p>',
+    }
+    const { valuesToSave } = await validateAlternativesTried({ requestBody, urlInfo })
+    expect(valuesToSave.alternativesToRecallTried).toEqual({
+      allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
+      selected: [
+        {
+          details: 'Info..',
+          value: 'EXTRA_LICENCE_CONDITIONS',
+        },
+      ],
+    })
+  })
+
   it('returns an error, if no checkbox is selected, and no valuesToSave', async () => {
     const requestBody = {
       crn: 'X34534',

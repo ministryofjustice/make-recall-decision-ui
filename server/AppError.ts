@@ -1,4 +1,4 @@
-type AppErrorType = 'INVALID_CRN'
+type AppErrorType = 'INVALID_CRN' | 'INVALID_RECOMMENDATION_STATUS'
 
 export interface AppErrorData {
   [key: string]: unknown
