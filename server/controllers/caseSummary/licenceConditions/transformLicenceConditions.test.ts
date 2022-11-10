@@ -132,7 +132,6 @@ describe('transformLicenceConditions', () => {
           convictionId: 3,
           active: true,
           isCustodial: true,
-          statusDescription: 'Released - On Licence',
           offences: [],
           licenceConditions: [],
         },
