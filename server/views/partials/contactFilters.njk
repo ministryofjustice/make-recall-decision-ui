@@ -41,6 +41,7 @@
             items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
             errorMessage: errorMessage(errors.dateTo)
         }) }}
+        {% if caseSummary.filters.contactTypes.contactTypeGroups.length %}
             <fieldset class="govuk-fieldset govuk-!-margin-top-6">
                 <legend class='govuk-fieldset__legend govuk-fieldset__legend--s'>Contact types</legend>
                 {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
@@ -67,6 +68,7 @@
                     </details>
                 {% endfor %}
             </fieldset>
+        {% endif %}
     {% endset -%}
     <div class='govuk-!-margin-bottom-4'>
         <form data-js='contactTypeFiltersForm' novalidate>

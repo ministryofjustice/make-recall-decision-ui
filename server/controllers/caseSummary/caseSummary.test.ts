@@ -10,8 +10,10 @@ import casePersonalDetailsResponse from '../../../api/responses/get-case-persona
 import excludedResponse from '../../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 import { AuditService } from '../../services/auditService'
+import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 const crn = ' A1234AB '
 let res: Response
@@ -27,6 +29,9 @@ describe('caseSummary', () => {
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'risk', token)
+    const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
+    expect(metricsArg.name).toEqual('getCaseRisk')
+    expect(typeof metricsArg.startTime).toEqual('number')
     expect(res.render).toHaveBeenCalledWith('pages/caseSummary')
     expect(res.locals.caseSummary).toEqual(caseRiskApiResponse)
     expect(res.locals.section).toEqual({
@@ -40,6 +45,9 @@ describe('caseSummary', () => {
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'overview', token)
+    const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
+    expect(metricsArg.name).toEqual('getCaseOverview')
+    expect(typeof metricsArg.startTime).toEqual('number')
     expect(res.locals.caseSummary).toBeDefined()
     expect(res.locals.section).toEqual({
       id: 'overview',
@@ -52,6 +60,9 @@ describe('caseSummary', () => {
     const req = mockReq({ params: { crn, sectionId: 'licence-conditions' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
+    const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
+    expect(metricsArg.name).toEqual('getCaseLicenceConditions')
+    expect(typeof metricsArg.startTime).toEqual('number')
     expect(res.locals.caseSummary.convictions).toBeDefined()
     expect(res.locals.section).toEqual({
       id: 'licence-conditions',
