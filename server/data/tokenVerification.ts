@@ -1,8 +1,10 @@
 import superagent from 'superagent'
 import type { Request } from 'express'
+import { performance } from 'perf_hooks'
 import getSanitisedError from '../sanitisedError'
 import config from '../config'
 import logger from '../../logger'
+import { appInsightsTimingMetric } from '../monitoring/azureAppInsights'
 
 function getApiClientToken(token: string) {
   return superagent
@@ -31,7 +33,9 @@ const tokenVerifier: TokenVerifier = async request => {
 
   logger.debug(`token request for user "${user.username}'`)
 
+  const startTime = performance.now()
   const result = await getApiClientToken(user.token)
+  appInsightsTimingMetric({ name: 'getAuthToken', startTime })
   if (result) {
     request.verified = true
   }
