@@ -180,20 +180,7 @@ context('No recall', () => {
         statusCode: 200,
         response: noRecallResponse,
       })
-      cy.task('createNoRecallLetter', {
-        response: {
-          letterContent: {
-            letterAddress: 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC',
-            letterDate: '12/09/2022',
-            salutation: 'Dear Paula',
-            letterTitle: 'DECISION NOT TO RECALL',
-            section1: 'section 1',
-            section2: 'section 2',
-            section3: 'section 3',
-            signedByParagraph: 'Yours sincerely,\nProbation practitioner',
-          },
-        },
-      })
+      cy.createNoRecallLetter()
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-no-recall`)
       cy.getText('pop-address').should('equal', 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC')
       cy.getText('probation-address').should('equal', 'Probation office address')

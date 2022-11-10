@@ -7,5 +7,6 @@ declare namespace Cypress {
     signIn(): Chainable<AUTWindow>
     mockCaseSummaryData(): Chainable<AUTWindow>
     mockRecommendationData(): Chainable<AUTWindow>
+    createNoRecallLetter(): Chainable<AUTWindow>
   }
 }

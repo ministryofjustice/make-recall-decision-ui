@@ -47,6 +47,23 @@ Cypress.Commands.add('mockRecommendationData', () => {
   })
 })
 
+Cypress.Commands.add('createNoRecallLetter', () => {
+  cy.task('createNoRecallLetter', {
+    response: {
+      letterContent: {
+        letterAddress: 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC',
+        letterDate: '12/09/2022',
+        salutation: 'Dear Paula',
+        letterTitle: 'DECISION NOT TO RECALL',
+        section1: 'section 1',
+        section2: 'section 2',
+        section3: 'section 3',
+        signedByParagraph: 'Yours sincerely,\nProbation practitioner',
+      },
+    },
+  })
+})
+
 Cypress.Keyboard.defaults({
   keystrokeDelay: 0,
 })

@@ -1,5 +1,11 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import { routeUrls } from '../../server/routes/routeUrls'
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
+
+const noRecallResponse = {
+  ...completeRecommendationResponse,
+  recallType: { selected: { value: 'NO_RECALL' } },
+}
 
 const urls = [
   { url: '/' },
@@ -22,8 +28,11 @@ const urls = [
   // recommendation flow
   { url: `${routeUrls.recommendations}/456/recall-type` },
   { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true },
-  { url: `${routeUrls.recommendations}/456/emergency-recall` },
-  { url: `${routeUrls.recommendations}/456/emergency-recall`, validationError: true },
+  { url: `${routeUrls.recommendations}/456/alternatives-tried` },
+  { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
+  { url: `${routeUrls.recommendations}/456/task-list`, fullRecommendationData: true },
+  { url: `${routeUrls.recommendations}/456/confirmation-part-a` },
+  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true },
 ]
 
 context('Accessibility (a11y) Checks', () => {
@@ -36,6 +45,13 @@ context('Accessibility (a11y) Checks', () => {
 
   urls.forEach(item => {
     it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
+      if (item.fullRecommendationData) {
+        cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      }
+      if (item.noRecallData) {
+        cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
+        cy.createNoRecallLetter()
+      }
       cy.visit(item.url)
       if (item.validationError) {
         cy.clickButton('Continue')
