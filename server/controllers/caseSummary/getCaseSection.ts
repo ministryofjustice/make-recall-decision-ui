@@ -1,4 +1,5 @@
 import { ParsedQs } from 'qs'
+import { performance } from 'perf_hooks'
 import { CaseSectionId, ContactHistoryFilters, ObjectMap } from '../../@types'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
@@ -12,6 +13,7 @@ import { AppError } from '../../AppError'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 import getRecommendationsResponse from '../../../api/responses/get-recommendations.json'
 import { transformRiskManagementPlan } from './overview/transformRiskManagementPlan'
+import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -26,10 +28,13 @@ export const getCaseSection = async (
   let caseSummaryRaw
   let transformed
   let errors
+  let startTime
   const trimmedCrn = crn.trim()
   switch (sectionId) {
     case 'overview':
+      startTime = performance.now()
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
+      appInsightsTimingMetric({ name: 'getCaseOverview', startTime })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         caseSummary = transformLicenceConditions(caseSummaryRaw) as unknown as CaseSummaryOverviewResponse
         caseSummary.risk.riskManagementPlan = transformRiskManagementPlan(caseSummary.risk.riskManagementPlan)
@@ -37,7 +42,9 @@ export const getCaseSection = async (
       sectionLabel = 'Overview'
       break
     case 'risk':
+      startTime = performance.now()
       caseSummary = await getCaseSummary<RiskResponse>(trimmedCrn, sectionId, token)
+      appInsightsTimingMetric({ name: 'getCaseRisk', startTime })
       sectionLabel = 'Risk'
       break
     case 'personal-details':
@@ -46,7 +53,9 @@ export const getCaseSection = async (
       break
     case 'licence-conditions':
       sectionLabel = 'Licence conditions'
+      startTime = performance.now()
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
+      appInsightsTimingMetric({ name: 'getCaseLicenceConditions', startTime })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         caseSummary = transformLicenceConditions(caseSummaryRaw)
       }

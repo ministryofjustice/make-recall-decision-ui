@@ -1,5 +1,6 @@
 import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
+import { performance } from 'perf_hooks'
 import applicationVersion from '../applicationVersion'
 import logger from '../../logger'
 
@@ -47,4 +48,8 @@ export const appInsightsEvent = (eventName: string, crn: string, username: strin
     defaultClient.trackEvent({ name: eventName, properties: eventProperties })
     logger.info(`Tracked the ${eventName} event to app insights`)
   }
+}
+
+export const appInsightsTimingMetric = ({ name, startTime }: { name: string; startTime: number }) => {
+  defaultClient?.trackMetric({ name, value: Math.round(performance.now() - startTime) })
 }
