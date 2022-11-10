@@ -16,6 +16,7 @@ context('SignIn', () => {
   it('User name visible in header', () => {
     cy.signIn()
     cy.getText('header-user-name').should('contain', 'J. Smith')
+    cy.getText('env-tag').should('equal', 'test')
   })
 
   it('User can log out', () => {
