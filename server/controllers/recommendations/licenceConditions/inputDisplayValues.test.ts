@@ -52,4 +52,23 @@ describe('inputDisplayValuesLicenceConditions', () => {
       standardLicenceConditions: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
     })
   })
+
+  it('should use apiValues for value, if no error or unsaved values', () => {
+    const unsavedValues = {}
+    const inputDisplayValues = inputDisplayValuesLicenceConditions({
+      errors: undefined,
+      unsavedValues,
+      apiValues: {
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+            allOptions: formOptions.standardLicenceConditions,
+          },
+        },
+      },
+    })
+    expect(inputDisplayValues).toEqual({
+      standardLicenceConditions: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+    })
+  })
 })
