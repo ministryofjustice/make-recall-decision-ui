@@ -5,7 +5,8 @@
     "lib": ["es5", "dom", "es2015.promise"],
     "types": ["node", "cypress"],
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
   },
   "include": ["**/*.ts"],
   "exclude": ["cypress.config.ts"]
