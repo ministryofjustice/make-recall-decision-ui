@@ -99,6 +99,11 @@ describe('convertGmtDatePartsToUtc', () => {
       expect(result).toEqual({ errorId: 'missingDateParts', invalidParts: ['year'] })
     })
 
+    it('error for a date with undefined missing parts', () => {
+      const result = convertGmtDatePartsToUtc({ month: '3' })
+      expect(result).toEqual({ errorId: 'missingDateParts', invalidParts: ['year', 'day'] })
+    })
+
     it('error for a date-time with parts missing from date and time', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '', month: '03', day: '20', hour: '', minute: '05' },

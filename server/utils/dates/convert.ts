@@ -3,7 +3,7 @@ import { DatePartNames, DatePartsParsed, DateTimePart, ValidationError } from '.
 import { ObjectMap } from '../../@types'
 import { padWithZeroes } from './format'
 import logger from '../../../logger'
-import { areStringArraysTheSame, isDefined } from '../utils'
+import { areStringArraysTheSame, isDefined, isEmptyStringOrWhitespace } from '../utils'
 import { europeLondon, getDateTimeInEuropeLondon } from './index'
 
 interface Options {
@@ -14,7 +14,7 @@ interface Options {
 }
 
 const filterPartsForEmptyStrings = (parts: unknown[]): DatePartNames[] =>
-  parts.map(({ name, value }) => (value === '' ? name : undefined)).filter(Boolean)
+  parts.map(({ name, value }) => (isEmptyStringOrWhitespace(value) ? name : undefined)).filter(Boolean)
 
 const filterPartsForMinimumLength = (parts: unknown[]): DatePartNames[] =>
   parts.map(({ name, value, minLength }) => (value.length < minLength ? name : undefined)).filter(Boolean)
