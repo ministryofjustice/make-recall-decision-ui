@@ -7,7 +7,7 @@ import { alternativesToRecallTried } from '../alternativesToRecallTried/formOpti
 import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
 import { vulnerabilities } from '../vulnerabilities/formOptions'
 import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
-import { recallTypeIndeterminate } from '../recallTypeIndeterminate/formOptions'
+import { recallTypeIndeterminate, recallTypeIndeterminateApi } from '../recallTypeIndeterminate/formOptions'
 import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtendedSentenceDetails/formOptions'
 import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
 import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
@@ -17,6 +17,7 @@ import { yesNo } from './yesNo'
 export const formOptions = {
   recallType,
   recallTypeIndeterminate,
+  recallTypeIndeterminateApi,
   standardLicenceConditions,
   custodyStatus,
   alternativesToRecallTried,

@@ -39,7 +39,7 @@ export const validateRecallTypeIndeterminate = async ({
       selected: {
         value: isNoRecall ? recallType : 'STANDARD',
       },
-      allOptions: formOptions.recallTypeIndeterminate,
+      allOptions: formOptions.recallTypeIndeterminateApi,
     },
     isThisAnEmergencyRecall: isNoRecall ? null : true,
   }
