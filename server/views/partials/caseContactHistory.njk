@@ -3,9 +3,11 @@
     {% include './contactFilters.njk' %}
     <div class="flex__item-two-thirds-desktop govuk-!-padding-left-4">
         {% set innerLoopIndex = 0 %}
-        <h2 class='govuk-body govuk-!-margin-bottom-4 govuk-!-font-weight-bold'{% if caseSummary.hasActiveFilters %} data-js='focus-on-page-load'{% endif %}>
+        <div>
+        <h2 class='govuk-body govuk-!-display-inline-block govuk-!-margin-bottom-4 govuk-!-font-weight-bold'{% if caseSummary.hasActiveFilters %} data-js='focus-on-page-load'{% endif %}>
             {{ countLabel({ count: caseSummary.contactCount, noun: 'contact'}) }}
         </h2>
+        </div>
         <div class="filter-toggle"></div>
         {% for group in caseSummary.contactSummary.items %}
             <h3 class='govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2' data-qa='date-{{ loop.index0 }}' data-analytics-event-scroll='{{ group.groupValue }}'>

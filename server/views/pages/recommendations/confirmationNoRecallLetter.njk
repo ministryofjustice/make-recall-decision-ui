@@ -25,7 +25,7 @@
             }) }}
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
             <p class='govuk-body'>
-                <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/no-recall-letter?crn={{ recommendation.crn }}' download>
+                <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/no-recall-letter?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_no_recall_letter_click'>
                     Download the decision not to recall letter.</a>
             </p>
             <p class='govuk-body'>Upload the decision not to recall letter to NDelius.</p>
