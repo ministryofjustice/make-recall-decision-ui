@@ -107,4 +107,5 @@ pre.govuk-body {
 
 [data-js="focus-on-page-load"]:focus {
   outline: $govuk-focus-width solid $govuk-focus-colour;
+  background-color: $govuk-focus-colour;
 }
