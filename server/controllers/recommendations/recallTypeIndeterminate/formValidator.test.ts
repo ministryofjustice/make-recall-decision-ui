@@ -26,7 +26,7 @@ describe('validateRecallTypeIndeterminate', () => {
           selected: {
             value: 'NO_RECALL',
           },
-          allOptions: formOptions.recallTypeIndeterminate,
+          allOptions: formOptions.recallTypeIndeterminateApi,
         },
         isThisAnEmergencyRecall: null,
       })
@@ -49,7 +49,7 @@ describe('validateRecallTypeIndeterminate', () => {
           selected: {
             value: 'STANDARD',
           },
-          allOptions: formOptions.recallTypeIndeterminate,
+          allOptions: formOptions.recallTypeIndeterminateApi,
         },
         isThisAnEmergencyRecall: true,
       })
