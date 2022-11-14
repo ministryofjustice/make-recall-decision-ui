@@ -87,6 +87,50 @@ export class AuditService {
     })
   }
 
+  async createPartA({
+    recommendationId,
+    crn,
+    username,
+    logErrors,
+  }: {
+    recommendationId: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'CREATED_PART_A',
+      who: username,
+      details: {
+        crn,
+        recommendationId,
+      },
+      logErrors,
+    })
+  }
+
+  async createNoRecallLetter({
+    recommendationId,
+    crn,
+    username,
+    logErrors,
+  }: {
+    recommendationId: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'CREATED_NO_RECALL_LETTER',
+      who: username,
+      details: {
+        crn,
+        recommendationId,
+      },
+      logErrors,
+    })
+  }
+
   async sendAuditMessage({
     action,
     who,
