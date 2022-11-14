@@ -14,6 +14,7 @@
       "sentenceDescription": "ORA Suspended Sentence Order",
       "sentenceOriginalLength": 2,
       "sentenceOriginalLengthUnits": "months",
+      "statusCode": "B",
       "offences": [
         {
           "mainOffence": true,
@@ -46,6 +47,7 @@
       "sentenceDescription": "ORA Adult Custody (inc PSS)",
       "sentenceOriginalLength": 16,
       "sentenceOriginalLengthUnits": "weeks",
+      "statusCode": "B",
       "offences": [
         {
           "mainOffence": true,
@@ -66,6 +68,7 @@
       "active": false,
       "isCustodial": true,
       "licenceExpiryDate": "2021-03-24",
+      "statusCode": "B",
       "offences": [
         {
           "mainOffence": true,
