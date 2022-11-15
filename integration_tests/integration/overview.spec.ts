@@ -199,6 +199,7 @@ context('Overview', () => {
         {
           active: true,
           isCustodial: true,
+          statusCode: 'B',
           offences: [],
           licenceConditions: [],
         },
@@ -221,11 +222,42 @@ context('Overview', () => {
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
     })
 
+    it('shows a banner and no licence box if a single active custodial conviction which is not released on licence', () => {
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          convictions: [
+            {
+              active: true,
+              isCustodial: true,
+              statusCode: 'A',
+              offences: [
+                {
+                  mainOffence: true,
+                  description: 'Robbery',
+                },
+              ],
+              licenceConditions: [],
+            },
+          ],
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.getElement(
+        'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+      ).should('exist')
+      cy.getElement({ qaAttr: 'lastReleaseDate' }).should('not.exist')
+      cy.getElement({ qaAttr: 'licenceExpiryDate' }).should('not.exist')
+    })
+
     it('shows banner and "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
       const convictions = [
         {
           active: false,
           licenceExpiryDate: '2020-07-16',
+          statusCode: 'B',
           offences: [],
           licenceConditions: [],
         },
@@ -233,6 +265,7 @@ context('Overview', () => {
           active: true,
           isCustodial: true,
           licenceExpiryDate: '2020-06-16',
+          statusCode: 'B',
           offences: [],
           licenceConditions: [],
         },
@@ -240,6 +273,7 @@ context('Overview', () => {
           active: true,
           isCustodial: true,
           licenceExpiryDate: '2023-06-17',
+          statusCode: 'B',
           offences: [],
           licenceConditions: [],
         },
@@ -260,6 +294,45 @@ context('Overview', () => {
       // banner
       cy.getElement({ qaAttr: 'banner-multiple-active-custodial' }).should('exist')
       cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+    })
+
+    it('shows "not on licence" banner and no licence box if there are multiple active custodial convictions and not all are released on licence', () => {
+      const convictions = [
+        {
+          active: true,
+          isCustodial: true,
+          licenceExpiryDate: '2020-07-16',
+          statusCode: 'B',
+          offences: [],
+          licenceConditions: [],
+        },
+        {
+          active: true,
+          isCustodial: true,
+          licenceExpiryDate: '2020-06-16',
+          statusCode: 'A',
+          offences: [],
+          licenceConditions: [],
+        },
+      ]
+      cy.task('getCase', {
+        sectionId: 'overview',
+        statusCode: 200,
+        response: {
+          ...getCaseOverviewResponse,
+          convictions,
+        },
+      })
+
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+
+      // banner
+      cy.getElement(
+        'This person has 2 or more active convictions in NDelius. They are not on licence in NDelius for at least one of these convictions. Check the throughcare details in NDelius are correct.',
+        { parent: '[data-qa="banner-multiple-active-custodial"]' }
+      ).should('exist')
+      cy.getElement({ qaAttr: 'lastReleaseDate' }).should('not.exist')
+      cy.getElement({ qaAttr: 'licenceExpiryDate' }).should('not.exist')
     })
 
     it('message in offence panel, and not available for licence dates, if no active custodial convictions', () => {
