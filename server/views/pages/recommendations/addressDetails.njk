@@ -29,7 +29,7 @@
             {% endset %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
                 <input type="hidden" name="addressCount" value="{{ recommendation.personOnProbation.addresses.length }}" />
                 <div class="govuk-caption-l">{{ possessiveSuffix(recommendation.personOnProbation.name) }} details</div>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>

@@ -16,7 +16,7 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
                 <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
                 <div class="govuk-caption-l">Circumstances</div>
                 {{ govukRadios({
