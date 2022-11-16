@@ -31,6 +31,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <input type="hidden" name="addressCount" value="{{ recommendation.personOnProbation.addresses.length }}" />
+                <div class="govuk-caption-l">{{ possessiveSuffix(recommendation.personOnProbation.name) }} details</div>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <div class='govuk-!-margin-bottom-6'>
                     {% if recommendation.personOnProbation.addresses.length %}

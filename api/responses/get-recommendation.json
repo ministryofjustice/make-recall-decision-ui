@@ -215,6 +215,20 @@
     "name": "Paula Smith",
     "firstName": "Paula",
     "surname": "Smith",
+    "middleNames": "",
+    "gender": "Female",
+    "ethnicity": "White British",
+    "dateOfBirth": "2003-11-14",
+    "croNumber": "1234",
+    "mostRecentPrisonerNumber": "456",
+    "nomsNumber": "A12345",
+    "pncNumber": "1970/92832",
+    "primaryLanguage": "English",
+    "mappa": {
+      "level": 0,
+      "lastUpdatedDate": "2022-11-04",
+      "category": 0
+    },
     "addresses": [
       {
         "line1": "41 Newport Pagnell Rd",
@@ -223,7 +237,8 @@
         "postcode": "NN4 6HP",
         "noFixedAbode": false
       }
-    ]
+    ],
+    "hasBeenReviewed": true
   },
   "recallType": {
     "selected": {

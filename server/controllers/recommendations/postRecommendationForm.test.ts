@@ -8,13 +8,11 @@ jest.mock('../../data/makeDecisionApiClient')
 describe('postRecommendationForm', () => {
   const recommendationId = '123'
   const pageUrlSlug = 'recall-type'
-  const crn = 'X12345'
   const basePath = `/recommendations/${recommendationId}/`
   const currentPageUrl = `${basePath}recall-type`
   const requestBody = {
     recallType: 'STANDARD',
     recallTypeDetailsStandard: 'Details...',
-    crn,
   }
   let res: Response
 
@@ -42,7 +40,6 @@ describe('postRecommendationForm', () => {
       params: { recommendationId, pageUrlSlug },
       body: {
         recallType: 'STANDARD',
-        crn,
       },
     })
     await postRecommendationForm(req, res)

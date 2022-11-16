@@ -19,5 +19,7 @@ export type PersonOnProbation = {
     pncNumber?: string;
     mappa?: Mappa;
     addresses?: Array<Address>;
+    primaryLanguage?: string;
+    hasBeenReviewed?: boolean;
 };
 

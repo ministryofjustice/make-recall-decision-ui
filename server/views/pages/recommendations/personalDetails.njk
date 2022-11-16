@@ -1,0 +1,117 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/task-list#heading-person-details'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-caption-l">{{ possessiveSuffix(recommendation.personOnProbation.name) }} details</div>
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                <p class='govuk-body'>This information is from NDelius. Update NDelius if anything is incorrect.</p>
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.name | defaultValue }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Gender
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.gender  | defaultValue}}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Date of birth
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) | defaultValue }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Ethnic group
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.ethnicity | defaultValue }}
+                        </dd>
+                    </div>
+                </dl>
+
+                <h2 class='govuk-heading-s govuk-!-margin-bottom-1'>Preferred languages</h2>
+                <p class='govuk-body govuk-!-margin-bottom-0'>This information is from the ‘primary language’ field in NDelius. You can change it in the Part A later if you need to.</p>
+                <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+                    <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
+                        <dt class="govuk-summary-list__key">
+                            Spoken
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.primaryLanguage | defaultValue }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Written
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.primaryLanguage | defaultValue }}
+                        </dd>
+                    </div>
+                </dl>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            CRO number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.croNumber | defaultValue }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            PNC number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.pncNumber | defaultValue }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Prison number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.mostRecentPrisonerNumber | defaultValue }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            PNOMIS number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.nomsNumber | defaultValue }}
+                        </dd>
+                    </div>
+                </dl>
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

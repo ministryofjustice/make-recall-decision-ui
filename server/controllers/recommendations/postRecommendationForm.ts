@@ -10,9 +10,6 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
   const { recommendationId, pageUrlSlug } = req.params
   const currentPagePath = `${routeUrls.recommendations}/${recommendationId}/${pageUrlSlug}`
   try {
-    if (!req.body.crn) {
-      throw new AppError(`Invalid CRN: ${req.body.crn}`, { status: 400 })
-    }
     const { validator } = pageMetaData(pageUrlSlug)
     const { user, urlInfo } = res.locals
     const { errors, valuesToSave, unsavedValues, nextPagePath } = await validator({

@@ -13,6 +13,6 @@ export type OverviewConvictionResponse = {
     sentenceExpiryDate?: string;
     licenceExpiryDate?: string;
     isCustodial?: boolean;
-    statusDescription?: string;
+    statusCode?: string;
 };
 

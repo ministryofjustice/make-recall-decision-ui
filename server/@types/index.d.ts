@@ -168,6 +168,7 @@ export type PageId =
   | 'victimLiaisonOfficer'
   | 'arrestIssues'
   | 'contraband'
+  | 'personalDetails'
   | 'addressDetails'
   | 'confirmationPartA'
   | 'taskListNoRecall'

@@ -31,6 +31,7 @@ const recallProperties: RecommendationResponse = {
   isThisAnEmergencyRecall: undefined,
   indeterminateOrExtendedSentenceDetails: undefined,
   isUnderIntegratedOffenderManagement: undefined,
+  personOnProbation: undefined,
   whatLedToRecall: undefined,
   vulnerabilities: undefined,
 }

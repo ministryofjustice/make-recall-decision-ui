@@ -3,14 +3,14 @@
 /* eslint-disable */
 
 import type { ActiveRecommendation } from './ActiveRecommendation';
-import type { ConvictionResponse } from './ConvictionResponse';
+import type { LicenceConditionResponse } from './LicenceConditionResponse';
 import type { PersonDetails } from './PersonDetails';
 import type { UserAccessResponse } from './UserAccessResponse';
 
-export type LicenceConditionsResponse = {
+export type LicenceConditionsCvlResponse = {
     userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: PersonDetails;
-    convictions?: Array<ConvictionResponse>;
+    licenceConditions?: Array<LicenceConditionResponse>;
     activeRecommendation?: ActiveRecommendation;
 };
 

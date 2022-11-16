@@ -1,4 +1,12 @@
-{% if params.hasData %}
+{% if params.hasBeenReviewed == true %}
+<strong class="govuk-tag govuk-tag--lower govuk-tag--blue moj-task-list__task-completed">
+    Reviewed
+</strong>
+{% elseif params.hasBeenReviewed == false %}
+<strong class="govuk-tag govuk-tag--lower govuk-tag--grey moj-task-list__task-completed">
+    To review
+</strong>
+{% elseif params.hasData == true %}
     <strong class="govuk-tag govuk-tag--lower govuk-tag--blue moj-task-list__task-completed">
         Completed
     </strong>

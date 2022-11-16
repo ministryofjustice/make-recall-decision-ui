@@ -100,7 +100,20 @@
   },
   "releaseSummary": {
     "lastRelease": {
-      "date": "2022-05-23"
+      "date": "2022-05-23",
+      "notes": null,
+      "reason": {
+        "code": "ADL",
+        "description": "Adult Licence"
+      }
+    },
+    "lastRecall": {
+      "date": "2022-05-20",
+      "notes": "I am a note",
+      "reason": {
+        "code": "ADL",
+        "description": "Adult Licence"
+      }
     }
   },
   "activeRecommendation": {

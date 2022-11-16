@@ -16,5 +16,6 @@ export type PersonDetails = {
     mostRecentPrisonerNumber?: string;
     pncNumber?: string;
     nomsNumber?: string;
+    primaryLanguage?: string;
 };
 
