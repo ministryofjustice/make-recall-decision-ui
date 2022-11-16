@@ -461,7 +461,7 @@ context('Make a recommendation', () => {
       cy.getDefinitionListValue('Written').should('contain', 'English')
       cy.getDefinitionListValue('CRO number').should('contain', '1234')
       cy.getDefinitionListValue('PNC number').should('contain', '1970/92832')
-      cy.getDefinitionListValue('Prison number').should('contain', '234234')
+      cy.getDefinitionListValue('Prison number').should('contain', '456')
       cy.getDefinitionListValue('PNOMIS number').should('contain', 'A12345')
     })
 
