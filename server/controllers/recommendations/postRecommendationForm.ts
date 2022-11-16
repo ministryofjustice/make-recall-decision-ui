@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import logger from '../../../logger'
 import { saveErrorWithDetails } from '../../utils/errors'
-import { AppError } from '../../AppError'
 import { routeUrls } from '../../routes/routeUrls'
 import { pageMetaData } from './helpers/pageMetaData'
 
