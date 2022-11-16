@@ -56,7 +56,9 @@
                 </dl>
 
                 <h2 class='govuk-heading-s govuk-!-margin-bottom-1'>Preferred languages</h2>
+                {% if recommendation.personOnProbation.primaryLanguage %}
                 <p class='govuk-body govuk-!-margin-bottom-0'>This information is from the ‘primary language’ field in NDelius. You can change it in the Part A later if you need to.</p>
+                {% endif %}
                 <dl class="govuk-summary-list govuk-!-margin-bottom-0">
                     <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
                         <dt class="govuk-summary-list__key">
