@@ -48,6 +48,7 @@ import { validateNextAppointment } from '../nextAppointment/formValidator'
 import { inputDisplayValuesNextAppointment } from '../nextAppointment/inputDisplayValues'
 import { validateAddress } from '../addressDetails/formValidator'
 import { inputDisplayValuesAddress } from '../addressDetails/inputDisplayValues'
+import { validatePersonalDetails } from '../personalDetails/formValidator'
 
 export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
   switch (pageUrlSlug) {
@@ -176,6 +177,11 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
         id: 'arrestIssues',
         validator: validateArrestIssues,
         inputDisplayValues: inputDisplayValuesArrestIssues,
+      }
+    case 'personal-details':
+      return {
+        id: 'personalDetails',
+        validator: validatePersonalDetails,
       }
     case 'address-details':
       return {

@@ -16,7 +16,7 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
                 <div class="govuk-caption-l">Custody</div>
                 {{ govukRadios({
                     idPrefix: "isUnderIntegratedOffenderManagement",

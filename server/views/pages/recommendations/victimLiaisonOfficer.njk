@@ -16,7 +16,7 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
                 <div class="govuk-caption-l">Victim liaison</div>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <p class='govuk-body'>You must tell the victim liaison officer (VLO) about the recall request.</p>

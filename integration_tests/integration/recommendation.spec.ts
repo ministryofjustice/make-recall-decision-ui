@@ -449,7 +449,22 @@ context('Make a recommendation', () => {
     })
   })
 
-  describe('Address details', () => {
+  describe('Personal details', () => {
+    it('lists personal details', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/personal-details`)
+      cy.getDefinitionListValue('Name').should('contain', 'Paula Smith')
+      cy.getDefinitionListValue('Gender').should('contain', 'Female')
+      cy.getDefinitionListValue('Date of birth').should('contain', '14 November 2003')
+      cy.getDefinitionListValue('Ethnic group').should('contain', 'White British')
+      cy.getDefinitionListValue('Spoken').should('contain', 'English')
+      cy.getDefinitionListValue('Written').should('contain', 'English')
+      cy.getDefinitionListValue('CRO number').should('contain', '1234')
+      cy.getDefinitionListValue('PNC number').should('contain', '1970/92832')
+      cy.getDefinitionListValue('Prison number').should('contain', '456')
+      cy.getDefinitionListValue('PNOMIS number').should('contain', 'A12345')
+    })
+
     it('lists multiple addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,

@@ -17,6 +17,7 @@ context('Recommendation - task list', () => {
       name: 'Paula Smith',
     },
     recallType: { selected: { value: 'STANDARD' } },
+    activeCustodialConvictionCount: 1,
   }
   const licenceConditionsMultipleActiveCustodial = {
     sectionId: 'licence-conditions',
@@ -52,6 +53,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Paula Smith on an extended sentence? Completed').should('exist')
     cy.getElement('Type of indeterminate sentence Completed').should('exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should('exist')
+    cy.getElement('Personal details Reviewed').should('exist')
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
@@ -104,6 +106,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
+    cy.getElement('Personal details To review').should('exist')
     cy.getElement('Create Part A').should('not.exist')
   })
 
@@ -125,7 +128,7 @@ context('Recommendation - task list', () => {
   it('task list - check links to forms', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: true },
+      response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('What alternatives to recall have been tried already?').should(
@@ -178,6 +181,14 @@ context('Recommendation - task list', () => {
     cy.getLinkHref('Do you think Paula Smith is using recall to bring contraband into prison?').should(
       'contain',
       '/recommendations/123/contraband'
+    )
+    cy.getLinkHref('Address').should(
+      'contain',
+      '/recommendations/123/address-details?fromPageId=task-list&fromAnchor=heading-person-details'
+    )
+    cy.getLinkHref('Personal details').should(
+      'contain',
+      '/recommendations/123/personal-details?fromPageId=task-list&fromAnchor=heading-person-details'
     )
   })
 

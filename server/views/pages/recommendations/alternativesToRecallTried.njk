@@ -17,7 +17,7 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
                 <div class="govuk-form-group{% if errors.alternativesToRecallTried %} govuk-form-group--error{% endif %}">
                   <fieldset class="govuk-fieldset" aria-describedby="contact-hint{% if errors.alternativesToRecallTried %} alternativesToRecallTried-error{% endif %}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">

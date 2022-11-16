@@ -1,0 +1,17 @@
+<li>
+    <h2 class="moj-task-list__section" id='heading-person-details'>
+        Confirm details for {{ recommendation.personOnProbation.name }}
+    </h2>
+    <ul class="moj-task-list__items">
+        <li class="moj-task-list__item">
+            <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'personal-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">Personal details</a>
+            {{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.personOnProbation }) }}
+        </li>
+        {% if recommendation.isInCustody == false %}
+            <li class="moj-task-list__item">
+                <a class="moj-task-list__task-name" href="{{ changeLinkUrl({ pageUrlSlug: 'address-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">Address</a>
+                {{ taskStatus({ hasData: taskCompleteness.statuses.isMainAddressWherePersonCanBeFound }) }}
+            </li>
+        {% endif %}
+    </ul>
+</li>

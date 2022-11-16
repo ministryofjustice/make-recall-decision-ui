@@ -4,14 +4,14 @@
 
 import type { ActiveRecommendation } from './ActiveRecommendation';
 import type { Mappa } from './Mappa';
+import type { PersonDetails } from './PersonDetails';
 import type { PredictorScores } from './PredictorScores';
-import type { RiskPersonalDetails } from './RiskPersonalDetails';
 import type { RoshSummary } from './RoshSummary';
 import type { UserAccessResponse } from './UserAccessResponse';
 
 export type RiskResponse = {
     userAccessResponse?: UserAccessResponse;
-    personalDetailsOverview?: RiskPersonalDetails;
+    personalDetailsOverview?: PersonDetails;
     roshSummary?: RoshSummary;
     mappa?: Mappa;
     predictorScores?: PredictorScores;

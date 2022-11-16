@@ -64,3 +64,5 @@ export const riskLevelLabel = (level: string) => {
       return level
   }
 }
+
+export const defaultValue = (val?: string) => val || '-'

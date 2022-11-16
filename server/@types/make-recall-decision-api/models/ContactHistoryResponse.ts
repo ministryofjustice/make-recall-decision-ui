@@ -6,7 +6,6 @@ import type { ActiveRecommendation } from './ActiveRecommendation';
 import type { ContactGroupResponse } from './ContactGroupResponse';
 import type { ContactSummaryResponse } from './ContactSummaryResponse';
 import type { PersonDetails } from './PersonDetails';
-import type { ReleaseSummaryResponse } from './ReleaseSummaryResponse';
 import type { UserAccessResponse } from './UserAccessResponse';
 
 export type ContactHistoryResponse = {
@@ -14,7 +13,6 @@ export type ContactHistoryResponse = {
     personalDetailsOverview?: PersonDetails;
     contactSummary?: Array<ContactSummaryResponse>;
     contactTypeGroups?: Array<ContactGroupResponse>;
-    releaseSummary?: ReleaseSummaryResponse;
     activeRecommendation?: ActiveRecommendation;
 };
 
