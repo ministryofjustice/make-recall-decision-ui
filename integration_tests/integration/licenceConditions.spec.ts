@@ -12,7 +12,7 @@ context('Licence conditions', () => {
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     // Standard licence conditions
-    cy.clickButton('Show this section')
+    cy.clickButton('Show', { parent: '[data-qa="standard"]' })
     formOptions.standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
     // Additional licence conditions
     cy.getElement('Murder - 00100').should('exist')
