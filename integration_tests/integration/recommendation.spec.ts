@@ -414,7 +414,9 @@ context('Make a recommendation', () => {
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-      cy.getElement('This person has 2 or more active convictions in NDelius').should('exist')
+      cy.getElement(
+        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
+      ).should('exist')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
     })
