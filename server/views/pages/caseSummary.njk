@@ -3,11 +3,13 @@
 {% set pageTitle = makePageTitle({ pageHeading: section.label + " - Case summary", hasErrors: errors }) %}
 
 {% block headEnd %}
-    <link rel="prefetch" href="{{ pageUrlBase }}contact-history">
-    <link rel="prefetch" href="{{ pageUrlBase }}overview">
-    <link rel="prefetch" href="{{ pageUrlBase }}risk">
-    <link rel="prefetch" href="{{ pageUrlBase }}personal-details">
-    <link rel="prefetch" href="{{ pageUrlBase }}licence-conditions">
+    {% if section.id == 'overview' %}
+    <link rel="prefetch" href="{{ pageUrlBase }}contact-history" as="document">
+    <link rel="prefetch" href="{{ pageUrlBase }}overview" as="document">
+    <link rel="prefetch" href="{{ pageUrlBase }}risk" as="document">
+    <link rel="prefetch" href="{{ pageUrlBase }}personal-details" as="document">
+    <link rel="prefetch" href="{{ pageUrlBase }}licence-conditions" as="document">
+    {% endif %}
 {% endblock %}
 
 {% block beforeContent %}

@@ -240,6 +240,13 @@
     ],
     "hasBeenReviewed": true
   },
+  "convictionDetail": {
+    "indexOffenceDescription": "Burglary",
+    "dateOfOriginalOffence": "2021-10-03",
+    "licenceExpiryDate": "2022-02-05",
+    "sentenceExpiryDate": "2022-03-10",
+    "hasBeenReviewed": true
+  },
   "recallType": {
     "selected": {
       "value": "STANDARD",

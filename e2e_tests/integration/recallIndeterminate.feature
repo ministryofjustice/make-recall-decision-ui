@@ -27,6 +27,7 @@ Feature: Recall (indeterminate)
     And Maria enters the date the VLO was informed
     And Maria enters any arrest issues
     And Maria reviews the personal details
+    And Maria reviews the offence details
     And Maria enters an address where the person can be found
     And Maria confirms "Yes" to a risk of contraband
     And Maria clicks Create Part A

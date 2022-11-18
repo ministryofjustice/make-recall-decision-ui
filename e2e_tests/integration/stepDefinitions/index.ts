@@ -179,6 +179,13 @@ When('Maria reviews the personal details', () => {
   cy.getElement('Personal details Reviewed').should('exist')
 })
 
+When('Maria reviews the offence details', () => {
+  cy.getElement('Offence details To review').should('exist')
+  cy.clickLink('Offence details')
+  cy.clickButton('Continue')
+  cy.getElement('Offence details Reviewed').should('exist')
+})
+
 When('Maria clicks Create Part A', () => {
   cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')

@@ -13,5 +13,6 @@ export type ConvictionDetail = {
     sentenceExpiryDate?: string;
     sentenceSecondLength?: number;
     sentenceSecondLengthUnits?: string;
+    hasBeenReviewed?: boolean;
 };
 
