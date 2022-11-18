@@ -328,7 +328,7 @@ context('Overview', () => {
 
       // banner
       cy.getElement(
-        'This person is not on licence for at least one of their active convictions. Check the thoroughcare details in NDelius are correct.',
+        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
         { parent: '[data-qa="banner-multiple-active-custodial"]' }
       ).should('exist')
       cy.getElement({ qaAttr: 'lastReleaseDate' }).should('not.exist')
