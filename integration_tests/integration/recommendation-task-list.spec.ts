@@ -132,7 +132,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
     })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagRecommendationOffenceDetails=1`)
     cy.getLinkHref('What alternatives to recall have been tried already?').should(
       'contain',
       '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
