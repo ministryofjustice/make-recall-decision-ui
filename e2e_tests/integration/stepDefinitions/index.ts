@@ -9,7 +9,7 @@ export const crn2 = Cypress.env('CRN2') || 'X514364'
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   const crnToUse = crnNum === '1' ? crn : crn2
-  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`)
+  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationsPageProd=1&flagRecommendationOffenceDetails=1`)
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
 })
 
@@ -177,6 +177,13 @@ When('Maria reviews the personal details', () => {
   cy.clickLink('Personal details')
   cy.clickButton('Continue')
   cy.getElement('Personal details Reviewed').should('exist')
+})
+
+When('Maria reviews the offence details', () => {
+  cy.getElement('Offence details To review').should('exist')
+  cy.clickLink('Offence details')
+  cy.clickButton('Continue')
+  cy.getElement('Offence details Reviewed').should('exist')
 })
 
 When('Maria clicks Create Part A', () => {

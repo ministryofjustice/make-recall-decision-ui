@@ -65,4 +65,5 @@ export const riskLevelLabel = (level: string) => {
   }
 }
 
-export const defaultValue = (val?: string) => val || '-'
+export const defaultValue = (val?: string) =>
+  val || '-<span class="govuk-visually-hidden">This is information missing from NDelius.</span>'

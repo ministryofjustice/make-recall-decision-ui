@@ -467,6 +467,19 @@ context('Make a recommendation', () => {
       cy.getDefinitionListValue('PNOMIS number').should('contain', 'A12345')
     })
 
+    it('lists offence details', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
+      cy.getDefinitionListValue('Main offence').should('equal', 'Burglary')
+      cy.getDefinitionListValue('Date of offence').should('equal', '3 October 2021')
+      cy.getDefinitionListValue('Date of sentence').should('equal', '11 March 2022')
+      cy.getDefinitionListValue('Length of sentence').should('equal', '3 months')
+      cy.getDefinitionListValue('Licence expiry date').should('equal', '5 February 2022')
+      cy.getDefinitionListValue('Sentence expiry date').should('equal', '10 March 2022')
+      cy.getDefinitionListValue('Custodial term').should('equal', '5 months')
+      cy.getDefinitionListValue('Extended term').should('equal', '1 year')
+    })
+
     it('lists multiple addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,

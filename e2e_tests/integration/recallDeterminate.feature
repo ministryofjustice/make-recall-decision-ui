@@ -25,6 +25,7 @@ Feature: Recall (determinate)
     And Maria confirms "No" to victim contact scheme
     And Maria confirms "No" to a risk of contraband
     And Maria reviews the personal details
+    And Maria reviews the offence details
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the fixed term recall
 

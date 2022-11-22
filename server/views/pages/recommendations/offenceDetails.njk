@@ -23,93 +23,75 @@
                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Name
+                            Main offence
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.name | defaultValue | safe }}
+                            {{ recommendation.convictionDetail.indexOffenceDescription | defaultValue | safe }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Gender
+                            Date of offence
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.gender  | defaultValue | safe }}
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.dateOfOriginalOffence, dateOnly: true}) | defaultValue | safe }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Date of birth
+                            Date of sentence
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) | defaultValue | safe }}
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.dateOfSentence, dateOnly: true}) | defaultValue | safe }}
+                        </dd>
+                    </div>
+                    {% if recommendation.isExtendedSentence %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Custodial term
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.convictionDetail.custodialTerm | defaultValue | safe }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Ethnic group
+                            Extended term
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.ethnicity | defaultValue | safe }}
+                            {{ recommendation.convictionDetail.extendedTerm | defaultValue | safe }}
                         </dd>
                     </div>
-                </dl>
+                    {% endif %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Length of sentence
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if recommendation.convictionDetail.lengthOfSentence and recommendation.convictionDetail.lengthOfSentenceUnits %}
+                            {{ recommendation.convictionDetail.lengthOfSentence + " " + recommendation.convictionDetail.lengthOfSentenceUnits }}
+                            {% else %}
+                            {{ "" | defaultValue | safe }}
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Licence expiry date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.licenceExpiryDate, dateOnly: true}) | defaultValue | safe }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Sentence expiry date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.sentenceExpiryDate, dateOnly: true}) | defaultValue | safe }}
+                        </dd>
+                    </div>
 
-                <h2 class='govuk-heading-s govuk-!-margin-bottom-1'>Preferred languages</h2>
-                {% if recommendation.personOnProbation.primaryLanguage %}
-                <p class='govuk-body govuk-!-margin-bottom-0'>This information is from the ‘primary language’ field in NDelius. You can change it in the Part A later if you need to.</p>
-                {% endif %}
-                <dl class="govuk-summary-list govuk-!-margin-bottom-0">
-                    <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
-                        <dt class="govuk-summary-list__key">
-                            Spoken
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.primaryLanguage | defaultValue | safe }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Written
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.primaryLanguage | defaultValue | safe }}
-                        </dd>
-                    </div>
-                </dl>
-                <dl class="govuk-summary-list">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            CRO number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.croNumber | defaultValue | safe }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            PNC number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.pncNumber | defaultValue | safe }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Prison number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.mostRecentPrisonerNumber | defaultValue | safe }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            PNOMIS number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.nomsNumber | defaultValue | safe }}
-                        </dd>
-                    </div>
                 </dl>
                 {{ formSubmitButton() }}
             </form>

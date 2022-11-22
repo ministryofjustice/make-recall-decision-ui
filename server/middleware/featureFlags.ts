@@ -2,29 +2,13 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlag, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
-  flagRecommendationProd: {
-    label: 'Make a recommendation',
-    default: true,
+  flagRecommendationOffenceDetails: {
+    label: 'Make a recommendation - offence details',
+    default: false,
   },
   flagRecommendationsPageProd: {
     label: 'Recommendations list',
     default: false,
-  },
-  flagRecommendationsPagePrototype: {
-    label: 'Prototype - Recommendations list',
-    default: false,
-  },
-  flagRecommendationPrototype: {
-    label: 'Prototype - Make a recommendation',
-    default: false,
-  },
-  flagShowRiskTab: {
-    label: 'Show Risk tab in case summary',
-    default: true,
-  },
-  flagContactDocuments: {
-    label: 'Show contact documents',
-    default: true,
   },
   flagShowSystemGenerated: {
     label: 'Show system generated contacts',
@@ -36,6 +20,14 @@ export const featureFlagsDefaults = {
   },
   flagCreateVaryLicenceData: {
     label: "Show tab for 'Create & vary a licence' data",
+    default: false,
+  },
+  flagRecommendationsPagePrototype: {
+    label: 'Prototype - Recommendations list',
+    default: false,
+  },
+  flagRecommendationPrototype: {
+    label: 'Prototype - Make a recommendation',
     default: false,
   },
 }

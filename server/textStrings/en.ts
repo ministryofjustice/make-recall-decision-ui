@@ -78,6 +78,7 @@ export const strings = {
     victimLiaisonOfficer: 'Victim Liaison Officer (VLO)',
     whatLedToRecall: 'What has led to this recall?',
     personalDetails: 'Personal details',
+    offenceDetails: 'Offence details',
     addressDetails: 'Address details',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
