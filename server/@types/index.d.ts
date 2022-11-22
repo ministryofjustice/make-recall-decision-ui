@@ -170,6 +170,7 @@ export type PageId =
   | 'contraband'
   | 'personalDetails'
   | 'offenceDetails'
+  | 'offenceAnalysis'
   | 'addressDetails'
   | 'confirmationPartA'
   | 'taskListNoRecall'
