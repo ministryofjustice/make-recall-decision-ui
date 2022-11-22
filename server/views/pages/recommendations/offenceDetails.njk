@@ -45,13 +45,31 @@
                             {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.dateOfSentence, dateOnly: true}) | defaultValue | safe }}
                         </dd>
                     </div>
+                    {% if recommendation.isExtendedSentence %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Custodial term
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.convictionDetail.custodialTerm | defaultValue | safe }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Extended term
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.convictionDetail.extendedTerm | defaultValue | safe }}
+                        </dd>
+                    </div>
+                    {% endif %}
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Length of sentence
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {% if conviction.sentenceOriginalLength and conviction.sentenceOriginalLengthUnits %}
-                            {{ conviction.sentenceOriginalLength + " " + conviction.sentenceOriginalLengthUnits }}
+                            {% if recommendation.convictionDetail.lengthOfSentence and recommendation.convictionDetail.lengthOfSentenceUnits %}
+                            {{ recommendation.convictionDetail.lengthOfSentence + " " + recommendation.convictionDetail.lengthOfSentenceUnits }}
                             {% else %}
                             {{ "" | defaultValue | safe }}
                             {% endif %}
@@ -74,22 +92,6 @@
                         </dd>
                     </div>
 
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Custodial term
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.convictionDetail.custodialTerm | defaultValue | safe }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Extended term
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ recommendation.convictionDetail.extendedTerm | defaultValue | safe }}
-                        </dd>
-                    </div>
                 </dl>
                 {{ formSubmitButton() }}
             </form>

@@ -245,6 +245,12 @@
     "dateOfOriginalOffence": "2021-10-03",
     "licenceExpiryDate": "2022-02-05",
     "sentenceExpiryDate": "2022-03-10",
+    "dateOfSentence": "2022-03-11",
+    "lengthOfSentence": 3,
+    "lengthOfSentenceUnits": "months",
+    "sentenceDescription": "Bad boy",
+    "custodialTerm": "5 months",
+    "extendedTerm": "1 year",
     "hasBeenReviewed": true
   },
   "recallType": {
