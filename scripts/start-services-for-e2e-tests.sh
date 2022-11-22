@@ -61,6 +61,7 @@ fi
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
+docker-compose -f docker-compose-localstack.yml up -d
 docker-compose build
 docker-compose up -d
 popd
