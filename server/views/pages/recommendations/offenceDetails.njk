@@ -15,8 +15,6 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <div class="govuk-caption-l">{{ possessiveSuffix(recommendation.personOnProbation.name) }} details</div>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <p class='govuk-body'>This information is from NDelius. Update NDelius if anything is incorrect.</p>
@@ -91,10 +89,10 @@
                             {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.sentenceExpiryDate, dateOnly: true}) | defaultValue | safe }}
                         </dd>
                     </div>
-
                 </dl>
-                {{ formSubmitButton() }}
-            </form>
+            <div class='govuk-!-margin-top-6'>
+                <a class='govuk-button' href='{{ urlInfo.basePath }}task-list#heading-person-details'>Continue</a>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -11,18 +11,23 @@ import { renderStrings } from './helpers/renderStrings'
 import { validateUpdateRecommendationPageRequest } from './helpers/urls'
 import { strings } from '../../textStrings/en'
 import { AuditService } from '../../services/auditService'
+import { updatePageReviewedStatus } from './helpers/updatePageReviewedStatus'
 
 const auditService = new AuditService()
 
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageUrlSlug } = req.params
-  const { user } = res.locals
+  const {
+    user: { token: userToken },
+  } = res.locals
   const { id, inputDisplayValues } = pageMetaData(pageUrlSlug)
-  res.locals.recommendation = await getRecommendation(recommendationId, user.token)
+  res.locals.recommendation = await getRecommendation(recommendationId, userToken)
   if (isCaseRestrictedOrExcluded(res.locals.recommendation.userAccessResponse)) {
     res.locals.caseSummary = res.locals.recommendation
     return res.render('pages/excludedRestrictedCrn')
   }
+
+  // the user clicked "Update recommendation" button - work out where to redirect them to
   const redirectedPageId = validateUpdateRecommendationPageRequest({
     requestedPageId: pageUrlSlug,
     recallType: res.locals.recommendation?.recallType?.selected?.value,
@@ -37,14 +42,14 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
       recommendationId,
       'no-recall-letter',
       { format: 'preview' },
-      user.token
+      userToken
     )
     res.locals.letterContent = letterContent
   }
   if (pageUrlSlug === 'licence-conditions') {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
       crn: res.locals.recommendation.crn,
-      token: user.token,
+      token: userToken,
     })
   }
   const stringRenderParams = {
@@ -68,6 +73,11 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   res.locals.crn = res.locals.recommendation.crn
   res.set({ 'Cache-Control': 'no-store' })
   res.render(`pages/recommendations/${id}`)
+  updatePageReviewedStatus({
+    pageUrlSlug,
+    recommendationId,
+    userToken,
+  })
   auditService.recommendationView({
     crn: res.locals.crn,
     recommendationId,
