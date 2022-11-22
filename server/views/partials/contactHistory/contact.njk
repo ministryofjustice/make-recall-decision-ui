@@ -46,23 +46,21 @@
             </div>
         </details>
     {% endif %}
-    {% if flags.flagContactDocuments and contact.contactDocuments.length %}
-        <div class='govuk-!-margin-top-1'>
-            <ul class='govuk-list govuk-!-margin-bottom-0'>
-                {% for document in contact.contactDocuments %}
-                    <li>
-                        <a href='{{ pageUrlBase }}documents/{{ document.id }}' class='govuk-link'
-                           download>
-                            <img aria-hidden='true' class='valign-middle govuk-!-margin-right-2'
-                                 src="/assets/images/download-icon.svg" width="15" height="21" />
-                            <span class='govuk-visually-hidden'>Download document </span><span
-                                    data-qa='contact-document-label'>{{ document.documentName }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
+    <div class='govuk-!-margin-top-1'>
+        <ul class='govuk-list govuk-!-margin-bottom-0'>
+            {% for document in contact.contactDocuments %}
+                <li>
+                    <a href='{{ pageUrlBase }}documents/{{ document.id }}' class='govuk-link'
+                       download>
+                        <img aria-hidden='true' class='valign-middle govuk-!-margin-right-2'
+                             src="/assets/images/download-icon.svg" width="15" height="21" />
+                        <span class='govuk-visually-hidden'>Download document </span><span
+                                data-qa='contact-document-label'>{{ document.documentName }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endset %}
 <div data-qa='contact-{{ innerLoopIndex }}'>
     {{ appSummaryCard({
