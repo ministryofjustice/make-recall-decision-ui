@@ -57,10 +57,9 @@ popd
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-docker-compose -f docker-compose-localstack.yml up -d
 docker-compose up -d --scale=${API_NAME}=0
 ./gradlew --stop
-SYSTEM_CLIENT_ID=make-recall-decision-api SYSTEM_CLIENT_SECRET=clientsecret HMPPS_AUTH_URL=http://localhost:9090/auth OFFENDER_SEARCH_ENDPOINT_URL=http://localhost:9080 CVL_API_ENDPOINT_URL=http://localhost:9070 COMMUNITY_API_ENDPOINT_URL=http://localhost:9081 ARN_API_ENDPOINT_URL=http://localhost:9071 GOTENBERG_ENDPOINT_URL=http://localhost:9091 POSTGRES_HOST=localhost:5432 POSTGRES_DBNAME=make_recall_decision POSTGRES_USERNAME=mrd_user POSTGRES_PASSWORD=secret SPRING_PROFILES_ACTIVE=dev,localstack ./gradlew bootRun
+SYSTEM_CLIENT_ID=make-recall-decision-api SYSTEM_CLIENT_SECRET=clientsecret HMPPS_AUTH_URL=http://localhost:9090/auth OFFENDER_SEARCH_ENDPOINT_URL=http://localhost:9080 CVL_API_ENDPOINT_URL=http://localhost:9070 COMMUNITY_API_ENDPOINT_URL=http://localhost:9081 ARN_API_ENDPOINT_URL=http://localhost:9071 GOTENBERG_ENDPOINT_URL=http://localhost:9091 POSTGRES_HOST=localhost:5432 POSTGRES_DBNAME=make_recall_decision POSTGRES_USERNAME=mrd_user POSTGRES_PASSWORD=secret SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 popd
 
 function wait_for {
