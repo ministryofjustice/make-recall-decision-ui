@@ -17,7 +17,7 @@ import type { SelectedWithDetails } from './SelectedWithDetails';
 import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
 import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
-import type { Vulnerabilities } from './Vulnerabilities';
+import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
 
 export type RecommendationResponse = {
@@ -43,7 +43,7 @@ export type RecommendationResponse = {
     alternativesToRecallTried?: AlternativesToRecallTried;
     licenceConditionsBreached?: LicenceConditionsBreached;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
-    vulnerabilities?: Vulnerabilities;
+    vulnerabilities?: VulnerabilitiesRecommendation;
     convictionDetail?: ConvictionDetail;
     region?: string;
     localDeliveryUnit?: string;

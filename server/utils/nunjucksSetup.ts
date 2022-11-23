@@ -13,6 +13,7 @@ import {
   selectedFilterItems,
   riskLevelLabel,
   defaultValue,
+  yesNoLabel,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
@@ -80,4 +81,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('nextPageLinkUrl', nextPageLinkUrl)
   njkEnv.addGlobal('possessiveSuffix', possessiveSuffix)
   njkEnv.addGlobal('riskLevelLabel', riskLevelLabel)
+  njkEnv.addGlobal('yesNoLabel', yesNoLabel)
 }

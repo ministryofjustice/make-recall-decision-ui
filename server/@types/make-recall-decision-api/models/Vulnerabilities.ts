@@ -2,11 +2,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { TextValueOption } from './TextValueOption';
-import type { ValueWithDetails } from './ValueWithDetails';
+import type { VulnerabilityDetail } from './VulnerabilityDetail';
 
 export type Vulnerabilities = {
-    selected?: Array<ValueWithDetails>;
-    allOptions?: Array<TextValueOption>;
+    error?: string;
+    lastUpdatedDate?: string;
+    suicide?: VulnerabilityDetail;
+    selfHarm?: VulnerabilityDetail;
+    vulnerability?: VulnerabilityDetail;
+    custody?: VulnerabilityDetail;
+    hostelSetting?: VulnerabilityDetail;
 };
 

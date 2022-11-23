@@ -1,0 +1,15 @@
+{% set html %}
+    <div data-qa='banner-vulnerabilities-no-data'>
+        <p class="govuk-notification-banner__heading">
+            This information cannot be retrieved from OASys. Double-check as it may be out of date.
+        </p>
+    </div>
+{% endset %}
+{{ govukNotificationBanner({
+    html: html,
+    classes: "govuk-notification-banner--error",
+    attributes: {
+        'data-analytics-event': 'notification_banner',
+        'data-analytics-event-category': 'oasysVulnerabilitiesError'
+    }
+}) }}
