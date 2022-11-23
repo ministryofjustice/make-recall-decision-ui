@@ -61,8 +61,8 @@ fi
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-docker-compose build
-docker-compose up -d
+docker-compose -f docker-compose-e2e.yml build
+docker-compose -f docker-compose-e2e.yml up -d
 popd
 
 pushd "${UI_DIR}"
