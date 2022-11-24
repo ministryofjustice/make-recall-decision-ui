@@ -13,6 +13,8 @@ export type ConvictionDetail = {
     sentenceExpiryDate?: string;
     sentenceSecondLength?: number;
     sentenceSecondLengthUnits?: string;
+    custodialTerm?: string;
+    extendedTerm?: string;
     hasBeenReviewed?: boolean;
 };
 

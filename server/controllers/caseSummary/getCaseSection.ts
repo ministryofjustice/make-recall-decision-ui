@@ -14,6 +14,8 @@ import { transformLicenceConditions } from './licenceConditions/transformLicence
 import getRecommendationsResponse from '../../../api/responses/get-recommendations.json'
 import { transformRiskManagementPlan } from './overview/transformRiskManagementPlan'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
+import { VulnerabilitiesResponse } from '../../@types/make-recall-decision-api/models/VulnerabilitiesResponse'
+import { transformVulnerabilities } from './vulnerabilities/transformVulnerabilities'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -46,6 +48,15 @@ export const getCaseSection = async (
       caseSummary = await getCaseSummary<RiskResponse>(trimmedCrn, sectionId, token)
       appInsightsTimingMetric({ name: 'getCaseRisk', startTime })
       sectionLabel = 'Risk'
+      break
+    case 'vulnerabilities':
+      startTime = performance.now()
+      caseSummaryRaw = await getCaseSummary<VulnerabilitiesResponse>(trimmedCrn, sectionId, token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = transformVulnerabilities(caseSummaryRaw)
+      }
+      appInsightsTimingMetric({ name: 'getCaseVulnerabilities', startTime })
+      sectionLabel = 'Vulnerabilities'
       break
     case 'personal-details':
       caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, sectionId, token)

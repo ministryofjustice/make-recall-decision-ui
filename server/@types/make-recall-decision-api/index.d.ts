@@ -73,4 +73,7 @@ export type { UserAccessResponse } from './models/UserAccessResponse';
 export type { ValueWithDetails } from './models/ValueWithDetails';
 export { VictimsInContactScheme } from './models/VictimsInContactScheme';
 export type { Vulnerabilities } from './models/Vulnerabilities';
+export type { VulnerabilitiesRecommendation } from './models/VulnerabilitiesRecommendation';
+export type { VulnerabilitiesResponse } from './models/VulnerabilitiesResponse';
+export type { VulnerabilityDetail } from './models/VulnerabilityDetail';
 export { WhyConsideredRecall } from './models/WhyConsideredRecall';

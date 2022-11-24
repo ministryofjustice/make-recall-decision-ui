@@ -2,7 +2,7 @@ import { When } from '@badeball/cypress-cucumber-preprocessor'
 import { crn } from './index'
 
 When('Maria signs in to start page', () => {
-  cy.visitPage('/')
+  cy.visitPage('/?flagVulnerabilities=1')
 })
 
 When('Maria searches for a case', () => {
@@ -20,6 +20,11 @@ When('Maria views the overview page', () => {
 When('Maria views the risk page', () => {
   cy.clickLink('Risk')
   cy.pageHeading().should('contain', 'Risk')
+})
+
+When('Maria views the vulnerabilities page', () => {
+  cy.clickLink('Vulnerabilities')
+  cy.pageHeading().should('contain', 'Vulnerabilities')
 })
 
 When('Maria views the personal details page', () => {

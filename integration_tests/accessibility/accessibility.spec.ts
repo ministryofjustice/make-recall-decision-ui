@@ -14,6 +14,7 @@ const urls = [
   { url: '/search-results?crn=123' },
   { url: `${routeUrls.cases}/123/overview` },
   { url: `${routeUrls.cases}/123/risk` },
+  { url: `${routeUrls.cases}/123/vulnerabilities` },
   { url: `${routeUrls.cases}/123/personal-details` },
   { url: `${routeUrls.cases}/123/licence-conditions` },
   { url: `${routeUrls.cases}/123/contact-history` },

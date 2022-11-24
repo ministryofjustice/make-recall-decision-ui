@@ -8,6 +8,7 @@ export interface ObjectMap<T> {
 export type CaseSectionId =
   | 'overview'
   | 'risk'
+  | 'vulnerabilities'
   | 'personal-details'
   | 'licence-conditions'
   | 'licence-conditions-cvl'

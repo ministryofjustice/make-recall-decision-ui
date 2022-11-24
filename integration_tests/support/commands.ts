@@ -4,6 +4,7 @@ import 'cypress-axe'
 import '../../cypress_shared/commands'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
+import getCaseVulnerabilitiesResponse from '../../api/responses/get-case-vulnerabilities.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
@@ -20,6 +21,7 @@ Cypress.Commands.add('signIn', () => {
 Cypress.Commands.add('mockCaseSummaryData', () => {
   cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
   cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
+  cy.task('getCase', { sectionId: 'vulnerabilities', statusCode: 200, response: getCaseVulnerabilitiesResponse })
   cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
   cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: getCaseContactHistoryResponse })
   cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })

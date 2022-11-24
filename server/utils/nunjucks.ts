@@ -65,5 +65,20 @@ export const riskLevelLabel = (level: string) => {
   }
 }
 
+export const yesNoLabel = (level: string) => {
+  switch (level) {
+    case 'YES':
+      return 'Yes'
+    case 'NO':
+      return 'No'
+    case 'DONT_KNOW':
+      return "Don't know"
+    case 'N/A':
+      return 'N/A'
+    default:
+      return level
+  }
+}
+
 export const defaultValue = (val?: string) =>
   val || '-<span class="govuk-visually-hidden">This is information missing from NDelius.</span>'

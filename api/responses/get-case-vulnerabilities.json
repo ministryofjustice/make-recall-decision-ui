@@ -1,0 +1,42 @@
+{
+  "personalDetailsOverview": {
+    "name": "Paula Smith",
+    "dateOfBirth": "2000-11-09",
+    "age": 21,
+    "gender": "Male",
+    "crn": "A12345"
+  },
+  "activeRecommendation": {
+  },
+  "vulnerabilities": {
+    "lastUpdatedDate": "2022-10-05",
+    "suicide": {
+      "current": "YES",
+      "currentConcernsText": "He is expressing suicidal thoughts. Scars were visible on his forearms at our last meeting",
+      "previous": "NO",
+      "previousConcernsText": "He has been hospitalised in the past due to self-harming injuries"
+    },
+    "selfHarm": {
+      "current": "YES",
+      "previous": "YES"
+    },
+    "vulnerability": {
+      "current": "YES",
+      "currentConcernsText": "He is currently being bullied by his associates",
+      "previous": "DONT_KNOW",
+      "previousConcernsText": "He has previously been financially exploited by his brother"
+    },
+    "custody": {
+      "current": "YES",
+      "currentConcernsText": "Current custody detail",
+      "previous": "YES",
+      "previousConcernsText": "Past custody detail"
+    },
+    "hostelSetting": {
+      "current": "YES",
+      "currentConcernsText": "Current hostel detail",
+      "previous": "YES",
+      "previousConcernsText": "Past hostel detail"
+    }
+  }
+}

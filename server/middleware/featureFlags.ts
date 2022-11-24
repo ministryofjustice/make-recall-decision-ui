@@ -6,6 +6,10 @@ export const featureFlagsDefaults = {
     label: 'Make a recommendation - offence details',
     default: false,
   },
+  flagVulnerabilities: {
+    label: 'Case overview - vulnerabilities tab',
+    default: false,
+  },
   flagRecommendationsPageProd: {
     label: 'Recommendations list',
     default: false,
