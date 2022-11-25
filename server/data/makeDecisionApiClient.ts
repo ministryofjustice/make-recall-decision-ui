@@ -3,7 +3,7 @@ import RestClient from './restClient'
 import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
-import { CaseSectionId, FeatureFlag, ObjectMap } from '../@types'
+import { CaseSectionId, ObjectMap } from '../@types'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
 
