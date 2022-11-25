@@ -1,9 +1,7 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { postRecommendationForm } from './postRecommendationForm'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
-
-jest.mock('../../data/makeDecisionApiClient')
+import RestClient from '../../data/restClient'
 
 describe('postRecommendationForm', () => {
   const recommendationId = '123'
@@ -22,7 +20,7 @@ describe('postRecommendationForm', () => {
 
   it('should update recommendation and redirect to next page', async () => {
     const recallDetails = { recommendationId }
-    ;(updateRecommendation as jest.Mock).mockResolvedValueOnce(recallDetails)
+    jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
       params: { recommendationId, pageUrlSlug },
@@ -32,9 +30,23 @@ describe('postRecommendationForm', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/emergency-recall`)
   })
 
+  it('should send feature flags to the API', async () => {
+    const recallDetails = { recommendationId }
+    res = mockRes({ locals: { urlInfo: { basePath }, flags: { flagVulnerabilities: true } } })
+    jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
+    const req = mockReq({
+      method: 'POST',
+      params: { recommendationId, pageUrlSlug },
+      body: requestBody,
+    })
+    await postRecommendationForm(req, res)
+    const lastCall = (RestClient.prototype.patch as jest.Mock).mock.calls[0]
+    expect(lastCall[0].headers).toEqual({ 'X-Feature-Flags': '{"flagVulnerabilities":true}' })
+  })
+
   it('should reload the page and save errors if the user input is invalid', async () => {
     const recallDetails = { recommendationId }
-    ;(updateRecommendation as jest.Mock).mockResolvedValueOnce(recallDetails)
+    jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
       params: { recommendationId, pageUrlSlug },
@@ -56,7 +68,7 @@ describe('postRecommendationForm', () => {
   })
 
   it('should reload the page if the API errors', async () => {
-    ;(updateRecommendation as jest.Mock).mockRejectedValueOnce(new Error('API error'))
+    jest.spyOn(RestClient.prototype, 'patch').mockRejectedValueOnce(new Error('API error'))
     const req = mockReq({
       method: 'POST',
       params: { recommendationId, pageUrlSlug },
@@ -74,7 +86,7 @@ describe('postRecommendationForm', () => {
 
   it('should throw if a CRN is not in the request body', async () => {
     const recallDetails = { recommendationId }
-    ;(updateRecommendation as jest.Mock).mockResolvedValueOnce(recallDetails)
+    jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
       params: { recommendationId, pageUrlSlug },

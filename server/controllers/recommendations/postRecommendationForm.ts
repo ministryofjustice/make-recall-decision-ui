@@ -22,7 +22,7 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
       req.session.unsavedValues = unsavedValues
       return res.redirect(303, currentPagePath)
     }
-    await updateRecommendation(recommendationId, valuesToSave, user.token)
+    await updateRecommendation(recommendationId, valuesToSave, user.token, res.locals.flags)
     res.redirect(303, nextPagePath)
   } catch (err) {
     if (err.name === 'AppError') {

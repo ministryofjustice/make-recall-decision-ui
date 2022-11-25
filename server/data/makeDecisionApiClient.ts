@@ -3,7 +3,7 @@ import RestClient from './restClient'
 import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
-import { CaseSectionId, ObjectMap } from '../@types'
+import { CaseSectionId, FeatureFlag, ObjectMap } from '../@types'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
 
@@ -26,11 +26,13 @@ export const getRecommendation = (recommendationId: string, token: string): Prom
 export const updateRecommendation = (
   recommendationId: string,
   updatedFields: ObjectMap<unknown>,
-  token: string
+  token: string,
+  featureFlags?: ObjectMap<boolean>
 ): Promise<RecommendationResponse> =>
   restClient(token).patch({
     path: `${routes.recommendations}/${recommendationId}`,
     data: updatedFields,
+    headers: featureFlags ? { 'X-Feature-Flags': JSON.stringify(featureFlags) } : undefined,
   }) as Promise<RecommendationResponse>
 
 export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<Response> => {
