@@ -51,6 +51,7 @@ export type RecommendationResponse = {
     userEmailPartACompletedBy?: string;
     lastPartADownloadDateTime?: string;
     indexOffenceDetails?: string;
+    offenceAnalysis?: string;
     fixedTermAdditionalLicenceConditions?: SelectedWithDetails;
     indeterminateOrExtendedSentenceDetails?: IndeterminateOrExtendedSentenceDetails;
     isMainAddressWherePersonCanBeFound?: SelectedWithDetails;

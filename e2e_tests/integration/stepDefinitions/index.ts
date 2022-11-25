@@ -186,6 +186,15 @@ When('Maria reviews the offence details', () => {
   cy.getElement('Offence details Reviewed').should('exist')
 })
 
+When('Maria enters the offence analysis', () => {
+  cy.getElement('Offence analysis To do').should('exist')
+  cy.clickLink('Offence details')
+  cy.clickLink('Back')
+  // TODO - uncomment when API supports the new property
+  // cy.clickButton('Continue')
+  // cy.getElement('Offence analysis Completed').should('exist')
+})
+
 When('Maria clicks Create Part A', () => {
   cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')

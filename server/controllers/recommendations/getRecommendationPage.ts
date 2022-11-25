@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createDocument, getRecommendation } from '../../data/makeDecisionApiClient'
+import { createDocument, getCaseSummary, getRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
 import { renderFormOptions } from './formOptions/formOptions'
 import { renderErrorMessages } from '../../utils/errors'
@@ -12,6 +12,7 @@ import { validateUpdateRecommendationPageRequest } from './helpers/urls'
 import { strings } from '../../textStrings/en'
 import { AuditService } from '../../services/auditService'
 import { updatePageReviewedStatus } from './helpers/updatePageReviewedStatus'
+import { RiskResponse } from '../../@types/make-recall-decision-api'
 
 const auditService = new AuditService()
 
@@ -52,6 +53,9 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
       token: userToken,
     })
   }
+  // if (pageUrlSlug === 'offence-analysis') {
+  //   res.locals.caseSummary = await getCaseSummary<RiskResponse>(res.locals.recommendation.crn, 'risk', userToken)
+  // }
   const stringRenderParams = {
     fullName: res.locals.recommendation.personOnProbation.name,
   }

@@ -35,6 +35,7 @@ const recallProperties: RecommendationResponse = {
   convictionDetail: undefined,
   whatLedToRecall: undefined,
   vulnerabilities: undefined,
+  indexOffenceDetails: undefined,
 }
 
 const indeterminateSentenceProperties: RecommendationResponse = {

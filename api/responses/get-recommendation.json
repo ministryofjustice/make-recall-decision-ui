@@ -253,6 +253,8 @@
     "extendedTerm": "1 year",
     "hasBeenReviewed": true
   },
+  "indexOffenceDetails": "Index offence details",
+  "offenceAnalysis": "Analysis",
   "recallType": {
     "selected": {
       "value": "STANDARD",
