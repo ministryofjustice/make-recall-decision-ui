@@ -1,9 +1,14 @@
 {% set html %}
-    <div data-qa='banner-vulnerabilities-no-data'>
+    {% if caseSummary.vulnerabilities.error == 'NOT_FOUND' %}
+        {% set message = 'This information cannot be retrieved from OASys. Double-check as it may be out of date.'  %}
+    {% elseif caseSummary.vulnerabilities.error == 'NOT_FOUND_LATEST_COMPLETE' %}
+        {% set message = notifications.oasysNotFoundLatestComplete %}
+    {% endif %}
+    <div data-qa='banner-vulnerabilities-{{ caseSummary.vulnerabilities.error }}'>
         <p class="govuk-notification-banner__heading">
-            {% if caseSummary.vulnerabilities.error == 'NOT_FOUND' %}
-            This information cannot be retrieved from OASys. Double-check as it may be out of date.
-            {% else %}
+        {% if message %}
+            {{ message }}
+        {% else %}
             Vulnerability information cannot be retrieved from OASys.
             <ul class='govuk-list govuk-heading-s'>
                 <li>R8.1 Suicide and/or self-harm</li>
