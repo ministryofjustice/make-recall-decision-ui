@@ -189,10 +189,8 @@ When('Maria reviews the offence details', () => {
 When('Maria enters the offence analysis', () => {
   cy.getElement('Offence analysis To do').should('exist')
   cy.clickLink('Offence details')
-  cy.clickLink('Back')
-  // TODO - uncomment when API supports the new property
-  // cy.clickButton('Continue')
-  // cy.getElement('Offence analysis Completed').should('exist')
+  cy.clickButton('Continue')
+  cy.getElement('Offence analysis Completed').should('exist')
 })
 
 When('Maria clicks Create Part A', () => {
