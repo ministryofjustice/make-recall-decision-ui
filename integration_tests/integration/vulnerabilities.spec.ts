@@ -54,6 +54,29 @@ context('Vulnerabilities page', () => {
     })
   })
 
+  it('shows No for null fields', () => {
+    cy.task('getCase', {
+      sectionId: 'vulnerabilities',
+      statusCode: 200,
+      response: {
+        ...getCaseVulnerabilitiesResponse,
+        vulnerabilities: {
+          lastUpdatedDate: '2022-10-05',
+          ...getCaseVulnerabilitiesResponse.vulnerabilities,
+          suicide: {
+            current: null,
+            previous: null,
+          },
+        },
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
+      expect(text).to.contain('Current concerns (suicide): No')
+      expect(text).to.contain('Previous concerns (suicide): No')
+    })
+  })
+
   it('shows banner if no data', () => {
     const vulnerabilitiesNoData = ['suicide', 'selfHarm', 'vulnerability', 'custody', 'hostelSetting'].reduce(
       (acc, curr) => ({
@@ -91,7 +114,7 @@ context('Vulnerabilities page', () => {
     })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    // cy.getElement({ qaAttr: 'banner-vulnerabilities-no-data' }).should('exist')
+    cy.getElement({ qaAttr: 'banner-vulnerabilities-SERVER_ERROR' }).should('exist')
   })
 
   it('shows banner if data not found', () => {
@@ -107,6 +130,22 @@ context('Vulnerabilities page', () => {
     })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    // cy.getElement({ qaAttr: 'banner-vulnerabilities-no-data' }).should('exist')
+    cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND' }).should('exist')
+  })
+
+  it('shows banner if data out of date', () => {
+    cy.task('getCase', {
+      sectionId: 'vulnerabilities',
+      statusCode: 200,
+      response: {
+        ...getCaseVulnerabilitiesResponse,
+        vulnerabilities: {
+          error: 'NOT_FOUND_LATEST_COMPLETE',
+        },
+      },
+    })
+
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND_LATEST_COMPLETE' }).should('exist')
   })
 })
