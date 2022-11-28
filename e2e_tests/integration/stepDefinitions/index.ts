@@ -188,7 +188,7 @@ When('Maria reviews the offence details', () => {
 
 When('Maria enters the offence analysis', () => {
   cy.getElement('Offence analysis To do').should('exist')
-  cy.clickLink('Offence details')
+  cy.clickLink('Offence analysis')
   cy.clickButton('Continue')
   cy.getElement('Offence analysis Completed').should('exist')
 })
