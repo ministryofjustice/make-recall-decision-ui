@@ -24,7 +24,13 @@ export const createAndDownloadDocument =
       pathSuffix = 'part-a'
       requestBody.userEmail = user.email
     }
-    const { fileName, fileContents } = await createDocument(recommendationId, pathSuffix, requestBody, user.token)
+    const { fileName, fileContents } = await createDocument(
+      recommendationId,
+      pathSuffix,
+      requestBody,
+      user.token,
+      res.locals.flags
+    )
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     res.header('Content-Disposition', `attachment; filename="${fileName}"`)
     res.send(Buffer.from(fileContents, 'base64'))

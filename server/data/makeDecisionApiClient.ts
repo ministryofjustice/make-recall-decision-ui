@@ -11,6 +11,9 @@ function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
 }
 
+const featureFlagHeaders = (featureFlags?: ObjectMap<boolean>) =>
+  featureFlags ? { 'X-Feature-Flags': JSON.stringify(featureFlags) } : undefined
+
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
 
@@ -32,7 +35,7 @@ export const updateRecommendation = (
   restClient(token).patch({
     path: `${routes.recommendations}/${recommendationId}`,
     data: updatedFields,
-    headers: featureFlags ? { 'X-Feature-Flags': JSON.stringify(featureFlags) } : undefined,
+    headers: featureFlagHeaders(featureFlags),
   }) as Promise<RecommendationResponse>
 
 export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<Response> => {
@@ -47,9 +50,11 @@ export const createDocument = (
   recommendationId: string,
   pathSuffix: string,
   data: Record<string, unknown>,
-  token: string
+  token: string,
+  featureFlags?: ObjectMap<boolean>
 ): Promise<DocumentResponse> =>
   restClient(token).post({
     path: `${routes.recommendations}/${recommendationId}/${pathSuffix}`,
     data,
+    headers: featureFlagHeaders(featureFlags),
   }) as Promise<DocumentResponse>
