@@ -91,7 +91,7 @@ context('Vulnerabilities page', () => {
     })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    // cy.getElement({ qaAttr: 'banner-vulnerabilities-no-data' }).should('exist')
+    cy.getElement({ qaAttr: 'banner-vulnerabilities-SERVER_ERROR' }).should('exist')
   })
 
   it('shows banner if data not found', () => {
@@ -107,6 +107,22 @@ context('Vulnerabilities page', () => {
     })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    // cy.getElement({ qaAttr: 'banner-vulnerabilities-no-data' }).should('exist')
+    cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND' }).should('exist')
+  })
+
+  it('shows banner if data out of date', () => {
+    cy.task('getCase', {
+      sectionId: 'vulnerabilities',
+      statusCode: 200,
+      response: {
+        ...getCaseVulnerabilitiesResponse,
+        vulnerabilities: {
+          error: 'NOT_FOUND_LATEST_COMPLETE',
+        },
+      },
+    })
+
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND_LATEST_COMPLETE' }).should('exist')
   })
 })

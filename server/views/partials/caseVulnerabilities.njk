@@ -44,8 +44,8 @@
             {% if isNotNull(suicide.current) or isNotNull(suicide.previous) or isNotNull(selfHarm.current) or isNotNull(selfHarm.previous) %}
                 {% set suicideSelfHarmHtml %}
                     <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>Current circumstances, issues and needs</h3>
-                    <p class='govuk-body'>Current concerns (suicide): {{ yesNoLabel(suicide.current) }}</p>
-                    <p class='govuk-body'>Current concerns (self-harm): {{ yesNoLabel(selfHarm.current) }}</p>
+                    {% if isNotNull(suicide.current) %}<p class='govuk-body'>Current concerns (suicide): {{ yesNoLabel(suicide.current) }}</p>{% endif %}
+                    {% if isNotNull(selfHarm.current) %}<p class='govuk-body'>Current concerns (self-harm): {{ yesNoLabel(selfHarm.current) }}</p>{% endif %}
                     {% if suicide.currentConcernsText %}
                         <pre class='govuk-body govuk-!-margin-top-2'>{{ suicide.currentConcernsText }}</pre>
                     {% endif %}
