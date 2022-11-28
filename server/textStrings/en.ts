@@ -53,6 +53,7 @@ export const strings = {
   notifications: {
     oasysNotFoundLatestComplete:
       'This information cannot be retrieved from OASys. Double-check as it may be out of date.',
+    oasysVulnerabilityError: 'Vulnerability information cannot be retrieved from OASys.',
     oasysMissingRosh: 'The latest complete OASys assessment does not have full RoSH information.',
     oasysApiError: 'This information cannot be retrieved from OASys.',
   },
