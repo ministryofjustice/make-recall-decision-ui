@@ -44,15 +44,15 @@
             {% if isNotNull(suicide.current) or isNotNull(suicide.previous) or isNotNull(selfHarm.current) or isNotNull(selfHarm.previous) %}
                 {% set suicideSelfHarmHtml %}
                     <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>Current circumstances, issues and needs</h3>
-                    {% if isNotNull(suicide.current) %}<p class='govuk-body'>Current concerns (suicide): {{ yesNoLabel(suicide.current) }}</p>{% endif %}
-                    {% if isNotNull(selfHarm.current) %}<p class='govuk-body'>Current concerns (self-harm): {{ yesNoLabel(selfHarm.current) }}</p>{% endif %}
+                    <p class='govuk-body'>Current concerns (suicide): {{ yesNoLabel(suicide.current) or 'No' }}</p>
+                    <p class='govuk-body'>Current concerns (self-harm): {{ yesNoLabel(selfHarm.current) or 'No' }}</p>
                     {% if suicide.currentConcernsText %}
                         <pre class='govuk-body govuk-!-margin-top-2'>{{ suicide.currentConcernsText }}</pre>
                     {% endif %}
                     <h3 class='govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2'>Past circumstances, issues
                         and needs</h3>
-                    <p class='govuk-body'>Previous concerns (suicide): {{ yesNoLabel(suicide.previous) }}</p>
-                    <p class='govuk-body'>Previous concerns (self-harm): {{ yesNoLabel(selfHarm.previous) }}</p>
+                    <p class='govuk-body'>Previous concerns (suicide): {{ yesNoLabel(suicide.previous) or 'No' }}</p>
+                    <p class='govuk-body'>Previous concerns (self-harm): {{ yesNoLabel(selfHarm.previous) or 'No' }}</p>
                     {% if suicide.previousConcernsText %}
                         <pre class='govuk-body govuk-!-margin-top-2'>{{ suicide.previousConcernsText }}</pre>
                     {% endif %}
@@ -76,15 +76,15 @@
             {% if isNotNull(custody.current) or isNotNull(custody.previous) or isNotNull(hostelSetting.current) or isNotNull(hostelSetting.previous) %}
                 {% set copingHtml %}
                     <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>Current circumstances, issues and needs</h3>
-                    <p class='govuk-body'>Current concerns (custody): {{ yesNoLabel(custody.current) }}</p>
-                    <p class='govuk-body'>Current concerns (hostel): {{ yesNoLabel(hostelSetting.current) }}</p>
+                    <p class='govuk-body'>Current concerns (custody): {{ yesNoLabel(custody.current) or 'No' }}</p>
+                    <p class='govuk-body'>Current concerns (hostel): {{ yesNoLabel(hostelSetting.current) or 'No' }}</p>
                     {% if custody.currentConcernsText %}
                         <pre class='govuk-body govuk-!-margin-top-2'>{{ custody.currentConcernsText }}</pre>
                     {% endif %}
                     <h3 class='govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2'>Past circumstances, issues
                         and needs</h3>
-                    <p class='govuk-body'>Previous concerns (custody): {{ yesNoLabel(custody.previous) }}</p>
-                    <p class='govuk-body'>Previous concerns (hostel): {{ yesNoLabel(hostelSetting.previous) }}</p>
+                    <p class='govuk-body'>Previous concerns (custody): {{ yesNoLabel(custody.previous) or 'No' }}</p>
+                    <p class='govuk-body'>Previous concerns (hostel): {{ yesNoLabel(hostelSetting.previous) or 'No' }}</p>
                     {% if custody.previousConcernsText %}
                         <pre class='govuk-body govuk-!-margin-top-2'>{{ custody.previousConcernsText }}</pre>
                     {% endif %}
