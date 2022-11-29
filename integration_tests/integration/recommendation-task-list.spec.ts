@@ -108,7 +108,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
     cy.getElement('Personal details To review').should('exist')
-    cy.getElement('Offence details To review').should('exist')
     cy.getElement('Create Part A').should('not.exist')
   })
 
