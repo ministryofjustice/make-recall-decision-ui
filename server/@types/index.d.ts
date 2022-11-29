@@ -1,4 +1,3 @@
-import exp from 'constants'
 import { ContactSummaryResponse } from './make-recall-decision-api/models/ContactSummaryResponse'
 import { RecommendationResponse } from './make-recall-decision-api'
 
