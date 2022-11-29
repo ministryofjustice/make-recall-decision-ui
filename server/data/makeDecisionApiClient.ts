@@ -3,7 +3,7 @@ import RestClient from './restClient'
 import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
-import { CaseSectionId, ObjectMap } from '../@types'
+import { CaseSectionId, FeatureFlags, ObjectMap } from '../@types'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
 
@@ -11,7 +11,7 @@ function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
 }
 
-const featureFlagHeaders = (featureFlags?: ObjectMap<boolean>) =>
+const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
   featureFlags ? { 'X-Feature-Flags': JSON.stringify(featureFlags) } : undefined
 
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
@@ -30,7 +30,7 @@ export const updateRecommendation = (
   recommendationId: string,
   updatedFields: ObjectMap<unknown>,
   token: string,
-  featureFlags?: ObjectMap<boolean>
+  featureFlags?: FeatureFlags
 ): Promise<RecommendationResponse> =>
   restClient(token).patch({
     path: `${routes.recommendations}/${recommendationId}`,
@@ -51,7 +51,7 @@ export const createDocument = (
   pathSuffix: string,
   data: Record<string, unknown>,
   token: string,
-  featureFlags?: ObjectMap<boolean>
+  featureFlags?: FeatureFlags
 ): Promise<DocumentResponse> =>
   restClient(token).post({
     path: `${routes.recommendations}/${recommendationId}/${pathSuffix}`,

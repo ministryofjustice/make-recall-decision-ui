@@ -36,7 +36,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectedPageId}`)
   }
   res.locals.recommendation.isInCustody = isInCustody(res.locals.recommendation.custodyStatus?.selected)
-  res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation)
+  res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation, res.locals.flags)
   if (pageUrlSlug === 'preview-no-recall') {
     const { letterContent } = await createDocument(
       recommendationId,

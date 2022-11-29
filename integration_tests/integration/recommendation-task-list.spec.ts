@@ -54,6 +54,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Type of indeterminate sentence Completed').should('exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should('exist')
     cy.getElement('Personal details Reviewed').should('exist')
+    cy.getElement('Offence details Reviewed').should('exist')
+    cy.getElement('Offence analysis Completed').should('exist')
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
@@ -107,6 +109,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
     cy.getElement('Personal details To review').should('exist')
+    cy.getElement('Offence details To review').should('exist')
+    cy.getElement('Offence analysis To do').should('exist')
     cy.getElement('Create Part A').should('not.exist')
   })
 

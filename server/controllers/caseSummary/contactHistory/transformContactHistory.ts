@@ -1,4 +1,4 @@
-import { ContactHistoryFilters, ObjectMap } from '../../../@types'
+import { ContactHistoryFilters, FeatureFlags } from '../../../@types'
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
@@ -17,7 +17,7 @@ export const transformContactHistory = ({
 }: {
   caseSummary: ContactHistoryResponse
   filters: ContactHistoryFilters
-  featureFlags: ObjectMap<boolean>
+  featureFlags: FeatureFlags
 }) => {
   const allContacts = featureFlags.flagShowSystemGenerated
     ? caseSummary.contactSummary

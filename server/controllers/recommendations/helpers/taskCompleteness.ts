@@ -1,6 +1,7 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { isNotNullOrUndefined } from '../../../utils/utils'
+import { FeatureFlags } from '../../../@types'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -12,7 +13,7 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
   return isNotNullOrUndefined(recommendation.hasVictimsInContactScheme?.selected)
 }
 
-export const taskCompleteness = (recommendation: RecommendationResponse) => {
+export const taskCompleteness = (recommendation: RecommendationResponse, featureFlags?: FeatureFlags) => {
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
     recommendation.recallType?.selected?.value
   )
@@ -37,6 +38,12 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
     ),
     hasContrabandRisk: isNotNullOrUndefined(recommendation.hasContrabandRisk),
     personOnProbation: recommendation.personOnProbation?.hasBeenReviewed === true,
+    ...(featureFlags?.flagRecommendationOffenceDetails === true
+      ? {
+          offenceAnalysis: isNotNullOrUndefined(recommendation.offenceAnalysis),
+          convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
+        }
+      : {}),
   }
 
   const noRecallStatuses = {

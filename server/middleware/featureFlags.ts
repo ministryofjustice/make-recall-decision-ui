@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { FeatureFlag, ObjectMap } from '../@types'
+import { FeatureFlagDefault, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
   flagRecommendationOffenceDetails: {
@@ -37,7 +37,7 @@ export const featureFlagsDefaults = {
 }
 
 export const readFeatureFlags =
-  (flags: ObjectMap<FeatureFlag>) => (req: Request, res: Response, next: NextFunction) => {
+  (flags: ObjectMap<FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
     res.locals.flags = Object.keys(flags).reduce((acc, key) => {
       acc[key] = flags[key].default
       return acc

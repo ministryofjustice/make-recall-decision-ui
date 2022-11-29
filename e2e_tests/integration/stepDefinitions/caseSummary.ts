@@ -2,7 +2,7 @@ import { When } from '@badeball/cypress-cucumber-preprocessor'
 import { crn } from './index'
 
 When('Maria signs in to start page', () => {
-  cy.visitPage('/?flagVulnerabilities=1')
+  cy.visitPage('/')
 })
 
 When('Maria searches for a case', () => {

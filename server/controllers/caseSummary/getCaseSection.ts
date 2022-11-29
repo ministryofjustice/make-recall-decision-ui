@@ -1,6 +1,6 @@
 import { ParsedQs } from 'qs'
 import { performance } from 'perf_hooks'
-import { CaseSectionId, ContactHistoryFilters, ObjectMap } from '../../@types'
+import { CaseSectionId, ContactHistoryFilters, FeatureFlags } from '../../@types'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/models/ContactHistoryResponse'
@@ -23,7 +23,7 @@ export const getCaseSection = async (
   token: string,
   userId: string,
   reqQuery: ParsedQs,
-  featureFlags: ObjectMap<boolean>
+  featureFlags: FeatureFlags
 ) => {
   let sectionLabel
   let caseSummary
