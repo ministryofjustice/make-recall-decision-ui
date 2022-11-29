@@ -9,7 +9,7 @@ export const crn2 = Cypress.env('CRN2') || 'X514364'
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   const crnToUse = crnNum === '1' ? crn : crn2
-  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationsPageProd=1&flagRecommendationOffenceDetails=1`)
+  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`)
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
 })
 
@@ -289,7 +289,7 @@ export const q12MappaDetails = (contents: string) => {
   expect(contents).to.match(data.mappaLevel as RegExp)
 }
 export const q16IndexOffenceDetails = (contents: string) => {
-  expect(contents).to.contain('Offence analysis details')
+  expect(contents).to.match(data.indexOffenceDetails as RegExp)
 }
 export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)

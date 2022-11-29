@@ -1,6 +1,6 @@
 {% set html %}
     <p class="govuk-notification-banner__heading" data-qa='banner-vulnerabilities'>
-        This information is from OASys. <a href='{{ urlInfo.baseUrl }}contact-history'>Check the contact history</a> for vulnerability information from NDelius.
+        {% if not caseSummary.vulnerabilities.error %}This information is from OASys. {% endif %}<a href='{{ urlInfo.baseUrl }}contact-history'>Check the contact history</a> for vulnerability information from NDelius.
     </p>
 {% endset %}
 {{ govukNotificationBanner({
