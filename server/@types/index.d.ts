@@ -112,9 +112,13 @@ export interface UrlInfo {
   basePath?: string
 }
 
-export interface FeatureFlag {
+export interface FeatureFlagDefault {
   label: string
   default: boolean
+}
+
+export type FeatureFlags = {
+  [key: string]: boolean
 }
 
 export interface ContactTypeDecorated {

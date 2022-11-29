@@ -67,6 +67,21 @@ describe('taskCompleteness', () => {
       expect(areAllComplete).toEqual(true)
     })
 
+    it('all complete (with feature flag flagRecommendationOffenceDetails)', () => {
+      const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse, {
+        flagRecommendationOffenceDetails: true,
+      })
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, true),
+        ...setAllProperties(recallProperties, true),
+        isIndeterminateSentence: true,
+        indeterminateSentenceType: true,
+        convictionDetail: true,
+        offenceAnalysis: true,
+      })
+      expect(areAllComplete).toEqual(true)
+    })
+
     it('indeterminate sentence - partly complete', () => {
       const { statuses, areAllComplete } = taskCompleteness(emptyRecall)
       expect(statuses).toEqual({
