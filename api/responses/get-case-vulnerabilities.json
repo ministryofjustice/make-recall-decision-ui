@@ -18,7 +18,9 @@
     },
     "selfHarm": {
       "current": "YES",
-      "previous": "YES"
+      "currentConcernsText": "He has been hospitalised in the past due to self-harming injuries",
+      "previous": "YES",
+      "previousConcernsText": "He has been hospitalised in the past due to self-harming injuries"
     },
     "vulnerability": {
       "current": "YES",

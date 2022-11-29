@@ -77,7 +77,7 @@ context('Vulnerabilities page', () => {
     })
   })
 
-  it('shows banner if no data', () => {
+  it('shows No for each null value', () => {
     const vulnerabilitiesNoData = ['suicide', 'selfHarm', 'vulnerability', 'custody', 'hostelSetting'].reduce(
       (acc, curr) => ({
         ...acc,
@@ -98,7 +98,20 @@ context('Vulnerabilities page', () => {
     })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    cy.getElement({ qaAttr: 'banner-vulnerabilities-no-data' }).should('exist')
+    cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
+      expect(text).to.contain('Current concerns: No')
+      expect(text).to.contain('Previous concerns: No')
+    })
+    cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
+      expect(text).to.contain('Current concerns (suicide): No')
+      expect(text).to.contain('Previous concerns (suicide): No')
+      expect(text).to.contain('Current concerns (self-harm): No')
+      expect(text).to.contain('Previous concerns (self-harm): No')
+    })
+    cy.viewDetails('View more detail on Coping in custody or a hostel').then(text => {
+      expect(text).to.contain('Current concerns (custody): No')
+      expect(text).to.contain('Current concerns (hostel): No')
+    })
   })
 
   it('shows banner if error fetching data', () => {
@@ -115,22 +128,6 @@ context('Vulnerabilities page', () => {
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-SERVER_ERROR' }).should('exist')
-  })
-
-  it('shows banner if data not found', () => {
-    cy.task('getCase', {
-      sectionId: 'vulnerabilities',
-      statusCode: 200,
-      response: {
-        ...getCaseVulnerabilitiesResponse,
-        vulnerabilities: {
-          error: 'NOT_FOUND',
-        },
-      },
-    })
-
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND' }).should('exist')
   })
 
   it('shows banner if data out of date', () => {
