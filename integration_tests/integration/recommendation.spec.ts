@@ -376,6 +376,20 @@ context('Make a recommendation', () => {
         errorText: 'You must enter the correct location',
       })
     })
+
+    it('form validation - offence analysis', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
+      cy.getText('indexOffenceDetails').should('equal', 'Index offence details')
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'offenceAnalysis',
+        errorText: 'Enter the offence analysis',
+      })
+    })
   })
 
   describe('Restricted / excluded CRNs', () => {

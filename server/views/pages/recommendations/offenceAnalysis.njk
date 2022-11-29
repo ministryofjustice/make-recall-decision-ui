@@ -1,0 +1,61 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/task-list#heading-person-details'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <div class="govuk-caption-l">{{ possessiveSuffix(recommendation.personOnProbation.name) }} details</div>
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukTextarea({
+                    name: "offenceAnalysis",
+                    id: "offenceAnalysis",
+                    label: {
+                        text: 'Write the offence analysis',
+                        classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: 'You can use the R2 Offence analysis from OASys to get you started.'
+                    },
+                    value: inputDisplayValues.value,
+                    rows: 10,
+                    errorMessage: errorMessage(errors.offenceAnalysis)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+        <div class="govuk-grid-column-one-third-from-desktop">
+            <h2 class='govuk-heading-m govuk-!-margin-bottom-2'>OASys - R2 Offence Analysis</h2>
+            <div class='mid-grey-panel'>
+                <div class='js-display-block'>
+                    <div class='govuk-body flex flex--align-center govuk-!-margin-bottom-6'>
+                        <button class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-right-6' data-js='copy-to-clipboard-btn'>Copy this text</button>
+                        <div aria-live='polite' data-js='aria-live-region' class='govuk-!-font-size-16'></div>
+                    </div>
+                </div>
+                <pre class='govuk-body' data-js='copy-to-clipboard-text' data-qa='indexOffenceDetails'>{{ recommendation.indexOffenceDetails }}</pre>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    {{ super() }}
+    <script src="/assets/copyToClipboard.js" defer></script>
+{% endblock %}

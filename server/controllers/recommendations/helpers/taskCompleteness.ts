@@ -36,6 +36,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse) => {
       recommendation.isUnderIntegratedOffenderManagement?.selected
     ),
     hasContrabandRisk: isNotNullOrUndefined(recommendation.hasContrabandRisk),
+    offenceAnalysis: isNotNullOrUndefined(recommendation.offenceAnalysis),
     personOnProbation: recommendation.personOnProbation?.hasBeenReviewed === true,
     convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
   }

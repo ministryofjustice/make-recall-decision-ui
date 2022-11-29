@@ -186,6 +186,14 @@ When('Maria reviews the offence details', () => {
   cy.getElement('Offence details Reviewed').should('exist')
 })
 
+When('Maria enters the offence analysis', () => {
+  cy.getElement('Offence analysis To do').should('exist')
+  cy.clickLink('Offence analysis')
+  cy.fillInput('Write the offence analysis', 'Offence analysis details')
+  cy.clickButton('Continue')
+  cy.getElement('Offence analysis Completed').should('exist')
+})
+
 When('Maria clicks Create Part A', () => {
   cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')
@@ -281,7 +289,7 @@ export const q12MappaDetails = (contents: string) => {
   expect(contents).to.match(data.mappaLevel as RegExp)
 }
 export const q16IndexOffenceDetails = (contents: string) => {
-  expect(contents).to.match(data.indexOffenceDetails as RegExp)
+  expect(contents).to.contain('Offence analysis details')
 }
 export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)

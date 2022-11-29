@@ -52,6 +52,9 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
       token: userToken,
     })
   }
+  // if (pageUrlSlug === 'offence-analysis') {
+  //   res.locals.caseSummary = await getCaseSummary<RiskResponse>(res.locals.recommendation.crn, 'risk', userToken)
+  // }
   const stringRenderParams = {
     fullName: res.locals.recommendation.personOnProbation.name,
   }
