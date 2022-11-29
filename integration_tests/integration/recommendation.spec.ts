@@ -494,6 +494,59 @@ context('Make a recommendation', () => {
       cy.getDefinitionListValue('Extended term').should('equal', '1 year')
     })
 
+    it('offence details - banner if single conviction not on release', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getCase', {
+        sectionId: 'licence-conditions',
+        statusCode: 200,
+        response: {
+          convictions: [
+            {
+              active: true,
+              isCustodial: true,
+              statusCode: 'D',
+              offences: [],
+              licenceConditions: [],
+            },
+          ],
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
+      cy.getElement(
+        'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+      ).should('exist')
+    })
+
+    it('offence details - banner if multiples convictions and one not on release', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getCase', {
+        sectionId: 'licence-conditions',
+        statusCode: 200,
+        response: {
+          convictions: [
+            {
+              active: true,
+              isCustodial: true,
+              statusCode: 'B',
+              offences: [],
+              licenceConditions: [],
+            },
+            {
+              active: true,
+              isCustodial: true,
+              statusCode: 'D',
+              offences: [],
+              licenceConditions: [],
+            },
+          ],
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
+      cy.getElement(
+        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
+      ).should('exist')
+    })
+
     it('lists multiple addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,

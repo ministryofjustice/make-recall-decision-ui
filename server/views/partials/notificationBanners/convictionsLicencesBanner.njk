@@ -19,4 +19,20 @@
         },
         classes: "govuk-notification-banner--error"
     }) }}
+{% elseif (not caseSummary.convictions.hasAllConvictionsReleasedOnLicence) and (caseSummary.convictions.activeCustodial.length === 1) %}
+    {% set html %}
+        <p class="govuk-notification-banner__heading">
+            This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.
+        </p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+        html: html,
+        attributes: {
+            'data-qa': 'banner-single-active-custodial-not-on-licence',
+            'data-analytics-event': 'notification_banner',
+            'data-analytics-event-category': 'singleCustodialConvictionNotReleasedOnLicence'
+        },
+        classes: "govuk-notification-banner--error"
+    }) }}
 {% endif %}

@@ -46,15 +46,12 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     )
     res.locals.letterContent = letterContent
   }
-  if (pageUrlSlug === 'licence-conditions') {
+  if (['licence-conditions', 'offence-details'].includes(pageUrlSlug)) {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
       crn: res.locals.recommendation.crn,
       token: userToken,
     })
   }
-  // if (pageUrlSlug === 'offence-analysis') {
-  //   res.locals.caseSummary = await getCaseSummary<RiskResponse>(res.locals.recommendation.crn, 'risk', userToken)
-  // }
   const stringRenderParams = {
     fullName: res.locals.recommendation.personOnProbation.name,
   }
