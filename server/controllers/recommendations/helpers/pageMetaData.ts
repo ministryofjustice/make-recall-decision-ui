@@ -193,6 +193,10 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
         validator: validateOffenceAnalysis,
         inputDisplayValues: inputDisplayValuesOffenceAnalysis,
       }
+    case 'mappa':
+      return {
+        id: 'mappa',
+      }
     case 'address-details':
       return {
         id: 'addressDetails',

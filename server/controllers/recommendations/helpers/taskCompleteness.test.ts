@@ -24,7 +24,7 @@ const sharedProperties: RecommendationResponse = {
   responseToProbation: undefined,
 }
 
-const recallProperties: RecommendationResponse = {
+const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   custodyStatus: undefined,
   hasContrabandRisk: undefined,
   hasVictimsInContactScheme: undefined,
@@ -78,6 +78,7 @@ describe('taskCompleteness', () => {
         indeterminateSentenceType: true,
         convictionDetail: true,
         offenceAnalysis: true,
+        mappa: true,
       })
       expect(areAllComplete).toEqual(true)
     })

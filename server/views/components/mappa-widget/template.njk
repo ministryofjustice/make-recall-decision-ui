@@ -1,6 +1,6 @@
 <div class="mappa-widget">
 {% if not params.mappa.error %}
-    <h2 class="govuk-heading-m text-uppercase"><strong>{% if params.mappa.category %}Cat {{ params.mappa.category }}/{% endif %}{% if params.mappa.level %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h2>
+    <h2 class="govuk-heading-m text-uppercase"><strong>{% if isDefined(params.mappa.category) %}Cat {{ params.mappa.category }}/{% endif %}{% if params.mappa.level %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h2>
     <p class="govuk-body-m govuk-!-margin-bottom-2">Multi-agency public protection arrangements</p>
     {% if params.mappa.level and params.lastUpdatedDate %}
         <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">Last updated: {{ params.lastUpdatedDate }}</p>

@@ -2,7 +2,7 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel, isNotNull } from './utils'
+import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel, isNotNull, isDefined } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
 import {
@@ -82,4 +82,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('possessiveSuffix', possessiveSuffix)
   njkEnv.addGlobal('riskLevelLabel', riskLevelLabel)
   njkEnv.addGlobal('yesNoLabel', yesNoLabel)
+  njkEnv.addGlobal('isDefined', isDefined)
 }

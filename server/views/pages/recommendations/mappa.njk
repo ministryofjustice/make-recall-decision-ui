@@ -1,0 +1,32 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/task-list#heading-risk-profile'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <div class="govuk-caption-l">Risk profile</div>
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class='govuk-body'>This information is from NDelius. Update NDelius if anything is incorrect.</p>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third-from-desktop">
+            {{ mappaWidget({ mappa: recommendation.personOnProbation.mappa, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: recommendation.personOnProbation.mappa.lastUpdatedDate, dateOnly: true }) }) }}
+            <div class='govuk-!-margin-top-6'>
+                <a class='govuk-button' href='{{ urlInfo.basePath }}task-list#heading-risk-profile'>Continue</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

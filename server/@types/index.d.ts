@@ -176,6 +176,7 @@ export type PageId =
   | 'personalDetails'
   | 'offenceDetails'
   | 'offenceAnalysis'
+  | 'mappa'
   | 'addressDetails'
   | 'confirmationPartA'
   | 'taskListNoRecall'
