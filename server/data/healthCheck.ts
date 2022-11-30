@@ -6,9 +6,9 @@ import { AgentConfig } from '../config'
 export type ServiceCheck = () => Promise<string>
 
 export class ServiceTimeout {
-  response = 1500
+  response = 5000
 
-  deadline = 2000
+  deadline = 5500
 }
 
 export function serviceCheckFactory(
