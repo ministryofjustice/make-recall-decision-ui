@@ -7,11 +7,24 @@ export const crn2 = Cypress.env('CRN2') || 'X514364'
 
 // ==================================== Recall
 
-When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
+const defaultStartPath = (crnNum: string) => {
   const crnToUse = crnNum === '1' ? crn : crn2
-  cy.visitPage(`/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`)
+  return `/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`
+}
+
+When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
+  cy.visitPage(defaultStartPath(crnNum))
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
 })
+
+When(
+  'Maria signs in to the case overview for CRN {string} with feature flag {string} enabled',
+  (crnNum: string, featureFlag: string) => {
+    const flags = featureFlag ? `&${featureFlag}=1` : ''
+    cy.visitPage(`${defaultStartPath(crnNum)}${flags}`)
+    cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
+  }
+)
 
 When('Maria starts a new recommendation', () => {
   cy.clickLink('Recommendations')
@@ -288,11 +301,14 @@ export const q12MappaDetails = (contents: string) => {
   expect(contents).to.match(data.mappaCategory as RegExp)
   expect(contents).to.match(data.mappaLevel as RegExp)
 }
-export const q16IndexOffenceDetails = (contents: string) => {
-  expect(contents).to.match(data.indexOffenceDetails as RegExp)
-  // TODO - uncomment when flagRecommendationOffenceDetails is enabled
-  // expect(contents).to.contain('Offence analysis details')
+export const q16IndexOffenceDetails = (contents: string, offenceAnalysis?: string) => {
+  if (offenceAnalysis) {
+    expect(contents).to.contain(offenceAnalysis)
+  } else {
+    expect(contents).to.match(data.indexOffenceDetails as RegExp)
+  }
 }
+
 export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)
   expect(contents).to.contain(`Explain your reasons for the above recall type recommendation: ${details}`)
