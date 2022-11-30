@@ -32,7 +32,7 @@
                     },
                     hint: {
                         text: 'You can use the R2 Offence analysis from OASys to get you started.'
-                    },
+                    } if recommendation.indexOffenceDetails else undefined,
                     value: inputDisplayValues.value,
                     rows: 10,
                     errorMessage: errorMessage(errors.offenceAnalysis)
@@ -40,6 +40,7 @@
                 {{ formSubmitButton() }}
             </form>
         </div>
+        {% if recommendation.indexOffenceDetails %}
         <div class="govuk-grid-column-one-third-from-desktop">
             <h2 class='govuk-heading-m govuk-!-margin-bottom-2'>OASys - R2 Offence Analysis</h2>
             <div class='mid-grey-panel'>
@@ -52,6 +53,7 @@
                 <pre class='govuk-body' data-js='copy-to-clipboard-text' data-qa='indexOffenceDetails'>{{ recommendation.indexOffenceDetails }}</pre>
             </div>
         </div>
+        {% endif %}
     </div>
 {% endblock %}
 

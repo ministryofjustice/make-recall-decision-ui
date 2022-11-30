@@ -547,6 +547,22 @@ context('Make a recommendation', () => {
       ).should('exist')
     })
 
+    it('offence analysis - show index offence details', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
+      cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
+    })
+
+    it('offence analysis - hide index offence details if not available', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, indexOffenceDetails: null },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
+      cy.getElement('OASys - R2 Offence Analysis').should('not.exist')
+      cy.getElement({ qaAttr: 'indexOffenceDetails' }).should('not.exist')
+    })
+
     it('lists multiple addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,
