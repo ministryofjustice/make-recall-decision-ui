@@ -256,6 +256,12 @@
   },
   "indexOffenceDetails": "Index offence details",
   "offenceAnalysis": "Analysis",
+  "previousReleases": {
+    "lastReleaseDate": "2022-03-11",
+    "lastReleasingPrisonOrCustodialEstablishment": "Holloway",
+    "hasBeenReleasedPreviously": true,
+    "previousReleaseDates": ["2022-03-11"]
+  },
   "recallType": {
     "selected": {
       "value": "STANDARD",
