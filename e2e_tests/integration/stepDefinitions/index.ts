@@ -207,6 +207,13 @@ When('Maria enters the offence analysis', () => {
   cy.getElement('Offence analysis Completed').should('exist')
 })
 
+When('Maria reviews the MAPPA details', () => {
+  cy.getElement('MAPPA To review').should('exist')
+  cy.clickLink('MAPPA')
+  cy.clickLink('Continue')
+  cy.getElement('MAPPA Reviewed').should('exist')
+})
+
 When('Maria clicks Create Part A', () => {
   cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')

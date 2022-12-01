@@ -6,6 +6,8 @@ const reviewedProperty = (pageUrlSlug: string): string | undefined => {
       return 'convictionDetail'
     case 'personal-details':
       return 'personOnProbation'
+    case 'mappa':
+      return 'mappa'
     default:
       return undefined
   }

@@ -7,5 +7,6 @@ export type Mappa = {
     lastUpdatedDate?: string;
     category?: number;
     error?: string;
+    hasBeenReviewed?: boolean;
 };
 

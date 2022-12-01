@@ -227,7 +227,8 @@
     "mappa": {
       "level": 0,
       "lastUpdatedDate": "2022-11-04",
-      "category": 0
+      "category": 0,
+      "hasBeenReviewed": true
     },
     "addresses": [
       {

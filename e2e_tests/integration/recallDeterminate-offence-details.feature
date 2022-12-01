@@ -27,5 +27,6 @@ Feature: Recall (determinate) with offence details feature flag enabled
     And Maria reviews the personal details
     And Maria reviews the offence details
     And Maria enters the offence analysis
+    And Maria reviews the MAPPA details
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the fixed term recall with offence analysis

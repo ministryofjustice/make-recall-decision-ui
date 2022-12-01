@@ -33,6 +33,15 @@ describe('updatePageReviewedStatus', () => {
     )
   })
 
+  it('updates the status for MAPPA page', async () => {
+    await updatePageReviewedStatus({
+      pageUrlSlug: 'mappa',
+      recommendationId,
+      userToken,
+    })
+    expect(updateRecommendation).toHaveBeenCalledWith(recommendationId, { hasBeenReviewed: { mappa: true } }, userToken)
+  })
+
   it('does not update the status for an unrecognised page', async () => {
     await updatePageReviewedStatus({
       pageUrlSlug: 'task-list',

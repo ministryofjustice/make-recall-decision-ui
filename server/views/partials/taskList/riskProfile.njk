@@ -1,0 +1,14 @@
+{% if flags.flagRecommendationOffenceDetails %}
+<li>
+    <h2 class="moj-task-list__section" id='heading-risk-profile'>
+        Risk profile
+    </h2>
+    <ul class="moj-task-list__items">
+        <li class="moj-task-list__item">
+            <a class="moj-task-list__task-name"
+               href="{{ changeLinkUrl({ pageUrlSlug: 'mappa', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">MAPPA</a>
+            {{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.mappa }) }}
+        </li>
+    </ul>
+</li>
+{% endif %}

@@ -83,6 +83,7 @@ export const strings = {
     offenceDetails: 'Offence details',
     offenceAnalysis: 'Offence analysis',
     addressDetails: 'Address details',
+    mappa: 'MAPPA for {{ fullName }}',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
