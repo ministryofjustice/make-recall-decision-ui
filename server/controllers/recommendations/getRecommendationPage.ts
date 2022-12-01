@@ -20,8 +20,8 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const {
     user: { token: userToken },
   } = res.locals
-  const { id, inputDisplayValues } = pageMetaData(pageUrlSlug)
-  res.locals.recommendation = await getRecommendation(recommendationId, userToken)
+  const { id, inputDisplayValues, reviewedProperty, propertyToRefresh } = pageMetaData(pageUrlSlug)
+  res.locals.recommendation = await getRecommendation(recommendationId, userToken, propertyToRefresh)
   if (isCaseRestrictedOrExcluded(res.locals.recommendation.userAccessResponse)) {
     res.locals.caseSummary = res.locals.recommendation
     return res.render('pages/excludedRestrictedCrn')
@@ -73,11 +73,13 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   res.locals.crn = res.locals.recommendation.crn
   res.set({ 'Cache-Control': 'no-store' })
   res.render(`pages/recommendations/${id}`)
-  updatePageReviewedStatus({
-    pageUrlSlug,
-    recommendationId,
-    userToken,
-  })
+  if (reviewedProperty) {
+    updatePageReviewedStatus({
+      reviewedProperty,
+      recommendationId,
+      userToken,
+    })
+  }
   auditService.recommendationView({
     crn: res.locals.crn,
     recommendationId,

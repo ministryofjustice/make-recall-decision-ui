@@ -30,6 +30,14 @@ describe('getRecommendationPage', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/custodyStatus')
   })
 
+  it('should send a parameter to the GET recommendation endpoint if the page needs data refreshed', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
+    req = mockReq({ params: { recommendationId, pageUrlSlug: 'previous-releases' } })
+    await getRecommendationPage(req, res)
+    expect(getRecommendation).toHaveBeenCalledWith('123', 'abc', 'previousReleases')
+  })
+
   it('should fetch licence conditions if on that page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})

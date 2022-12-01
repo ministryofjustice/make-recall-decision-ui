@@ -50,6 +50,8 @@ import { validateAddress } from '../addressDetails/formValidator'
 import { inputDisplayValuesAddress } from '../addressDetails/inputDisplayValues'
 import { validateOffenceAnalysis } from '../offenceAnalysis/formValidator'
 import { inputDisplayValuesOffenceAnalysis } from '../offenceAnalysis/inputDisplayValues'
+import { validatePreviousReleases } from '../previousReleases/formValidator'
+import { inputDisplayValuesPreviousReleases } from '../previousReleases/inputDisplayValues'
 
 export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
   switch (pageUrlSlug) {
@@ -182,10 +184,19 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
     case 'personal-details':
       return {
         id: 'personalDetails',
+        reviewedProperty: 'personOnProbation',
       }
     case 'offence-details':
       return {
         id: 'offenceDetails',
+        reviewedProperty: 'convictionDetail',
+      }
+    case 'previous-releases':
+      return {
+        id: 'previousReleases',
+        propertyToRefresh: 'previousReleases',
+        validator: validatePreviousReleases,
+        inputDisplayValues: inputDisplayValuesPreviousReleases,
       }
     case 'offence-analysis':
       return {
@@ -196,6 +207,7 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
     case 'mappa':
       return {
         id: 'mappa',
+        reviewedProperty: 'mappa',
       }
     case 'address-details':
       return {
