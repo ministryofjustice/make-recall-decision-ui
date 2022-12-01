@@ -4,7 +4,7 @@
 
 export type PreviousReleases = {
     lastReleaseDate?: string;
-    lastReleasingPrisonOrCustodialEstablishment?: number;
+    lastReleasingPrisonOrCustodialEstablishment?: string;
     hasBeenReleasedPreviously?: boolean;
     previousReleaseDates?: string[]
 };

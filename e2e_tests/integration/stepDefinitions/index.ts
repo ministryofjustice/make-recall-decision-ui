@@ -207,6 +207,16 @@ When('Maria enters the offence analysis', () => {
   cy.getElement('Offence analysis Completed').should('exist')
 })
 
+When('Maria enters the previous releases', () => {
+  cy.getElement('Previous releases To do').should('exist')
+  cy.clickLink('Previous releases')
+  cy.get('@offenderName').then(offenderName => {
+    cy.selectRadio(`Has ${offenderName} been released previously?`, 'Yes')
+  })
+  cy.clickButton('Continue')
+  cy.getElement('Previous releases Completed').should('exist')
+})
+
 When('Maria reviews the MAPPA details', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.getElement(`MAPPA for ${offenderName} To review`).should('exist')
