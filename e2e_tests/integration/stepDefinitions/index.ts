@@ -208,10 +208,12 @@ When('Maria enters the offence analysis', () => {
 })
 
 When('Maria reviews the MAPPA details', () => {
-  cy.getElement('MAPPA To review').should('exist')
-  cy.clickLink('MAPPA')
-  cy.clickLink('Continue')
-  cy.getElement('MAPPA Reviewed').should('exist')
+  cy.get('@offenderName').then(offenderName => {
+    cy.getElement(`MAPPA for ${offenderName} To review`).should('exist')
+    cy.clickLink(`MAPPA for ${offenderName}`)
+    cy.clickLink('Continue')
+    cy.getElement(`MAPPA for ${offenderName} Reviewed`).should('exist')
+  })
 })
 
 When('Maria clicks Create Part A', () => {
