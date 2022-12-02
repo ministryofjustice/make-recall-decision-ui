@@ -495,7 +495,10 @@ context('Make a recommendation', () => {
     })
 
     it('offence details - banner if single conviction not on release', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, isExtendedSentence: false },
+      })
       cy.task('getCase', {
         sectionId: 'licence-conditions',
         statusCode: 200,
@@ -515,6 +518,23 @@ context('Make a recommendation', () => {
       cy.getElement(
         'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
       ).should('exist')
+      cy.getElement('Custodial term').should('not.exist')
+      cy.getElement('Extended term').should('not.exist')
+    })
+
+    it('offence details - show custodial & extended term if extended sentence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, isExtendedSentence: true },
+      })
+      cy.task('getCase', {
+        sectionId: 'licence-conditions',
+        statusCode: 200,
+        response: getCaseLicenceConditionsResponse,
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
+      cy.getDefinitionListValue('Custodial term').should('contain', '5 months')
+      cy.getDefinitionListValue('Extended term').should('contain', '1 year')
     })
 
     it('offence details - banner if multiples convictions and one not on release', () => {
@@ -559,7 +579,7 @@ context('Make a recommendation', () => {
         response: { ...completeRecommendationResponse, indexOffenceDetails: null },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
-      cy.getElement('OASys - R2 Offence Analysis').should('not.exist')
+      cy.getElement('OASys 2.1 Brief offence(s) details').should('not.exist')
       cy.getElement({ qaAttr: 'indexOffenceDetails' }).should('not.exist')
     })
 
