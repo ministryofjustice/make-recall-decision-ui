@@ -41,8 +41,6 @@
             </dl>
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="lastReleasingPrisonOrCustodialEstablishment" value="{{ recommendation.previousReleases.lastReleasingPrisonOrCustodialEstablishment }}" />
-                <input type="hidden" name="lastReleaseDate" value="{{ recommendation.previousReleases.lastReleaseDate }}" />
                 {{ govukRadios({
                     idPrefix: "hasBeenReleasedPreviously",
                     name: "hasBeenReleasedPreviously",
