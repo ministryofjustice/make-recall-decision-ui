@@ -214,6 +214,8 @@ When('Maria enters the previous releases', () => {
     cy.selectRadio(`Has ${offenderName} been released previously?`, 'Yes')
   })
   cy.clickButton('Continue')
+  cy.enterDateTime({ year: '2022', month: '04', day: '14' })
+  cy.clickButton('Continue')
   cy.getElement('Previous releases Completed').should('exist')
 })
 

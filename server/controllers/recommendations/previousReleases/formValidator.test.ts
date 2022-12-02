@@ -21,7 +21,7 @@ describe('validatePreviousReleases', () => {
         hasBeenReleasedPreviously: true,
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')
+    expect(nextPagePath).toEqual('/recommendations/34/add-previous-release')
   })
 
   it('returns valuesToSave and no errors if NO', async () => {
@@ -38,7 +38,7 @@ describe('validatePreviousReleases', () => {
         hasBeenReleasedPreviously: false,
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')
+    expect(nextPagePath).toEqual('/recommendations/34/add-previous-release')
   })
 
   it('returns an error, if hasBeenReleasedPreviously not set, and no valuesToSave', async () => {

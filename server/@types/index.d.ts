@@ -181,6 +181,7 @@ export type PageId =
   | 'mappa'
   | 'addressDetails'
   | 'previousReleases'
+  | 'addPreviousRelease'
   | 'confirmationPartA'
   | 'taskListNoRecall'
   | 'whyConsideredRecall'

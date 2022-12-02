@@ -59,7 +59,7 @@ export const validatePreviousReleases = async ({
         hasBeenReleasedPreviously: hasBeenReleasedPreviously === 'YES',
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details` // add-previous-release`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/add-previous-release`
   }
   return {
     errors,
