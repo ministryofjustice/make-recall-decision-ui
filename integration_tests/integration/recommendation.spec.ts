@@ -687,6 +687,43 @@ context('Make a recommendation', () => {
     })
   })
 
+  describe('Risk profile', () => {
+    it('shows MAPPA data', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          personOnProbation: {
+            ...completeRecommendationResponse.personOnProbation,
+            mappa: {
+              category: 1,
+              level: 1,
+              lastUpdatedDate: '2022-11-04',
+            },
+          },
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
+      cy.getElement('Cat 1/Level 1 MAPPA').should('exist')
+      cy.getElement('Last updated: 4 November 2022').should('exist')
+    })
+
+    it('shows a No MAPPA heading if no data', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          personOnProbation: {
+            ...completeRecommendationResponse.personOnProbation,
+            mappa: null,
+          },
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
+      cy.getElement('No MAPPA').should('exist')
+    })
+  })
+
   describe('Branching / redirects', () => {
     it('recall type - directs "no recall" to the no recall task list', () => {
       cy.task('getRecommendation', {

@@ -223,6 +223,8 @@ When('Maria reviews the MAPPA details', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.getElement(`MAPPA for ${offenderName} To review`).should('exist')
     cy.clickLink(`MAPPA for ${offenderName}`)
+    const heading = data.mappaCategory ? `Cat ${data.mappaCategory}/Level ${data.mappaLevel} MAPPA` : 'No MAPPA'
+    cy.getElement(heading).should('exist')
     cy.clickLink('Continue')
     cy.getElement(`MAPPA for ${offenderName} Reviewed`).should('exist')
   })
