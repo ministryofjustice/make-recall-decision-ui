@@ -19,6 +19,7 @@ import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
+import { PreviousReleases } from './PreviousReleases'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -58,6 +59,7 @@ export type RecommendationResponse = {
     whyConsideredRecall?: WhyConsideredRecall;
     reasonsForNoRecall?: ReasonsForNoRecall;
     nextAppointment?: NextAppointment;
+    previousReleases?: PreviousReleases;
 };
 
 export namespace RecommendationResponse {

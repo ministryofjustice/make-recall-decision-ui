@@ -79,6 +79,7 @@ describe('taskCompleteness', () => {
         convictionDetail: true,
         offenceAnalysis: true,
         mappa: true,
+        previousReleases: true,
       })
       expect(areAllComplete).toEqual(true)
     })

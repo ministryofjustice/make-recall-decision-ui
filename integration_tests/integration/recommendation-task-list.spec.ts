@@ -57,6 +57,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Offence details Reviewed').should('exist')
     cy.getElement('Offence analysis Completed').should('exist')
     cy.getElement('MAPPA for Paula Smith Reviewed').should('exist')
+    cy.getElement('Previous releases Completed').should('exist')
     // the following 2 links should not be present, as person is in custody
     cy.getElement('Local police contact details').should('not.exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
@@ -113,6 +114,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Offence details To review').should('exist')
     cy.getElement('Offence analysis To do').should('exist')
     cy.getElement('MAPPA for Paula Smith To review').should('exist')
+    cy.getElement('Previous releases To do').should('exist')
     cy.getElement('Create Part A').should('not.exist')
   })
 
@@ -203,6 +205,10 @@ context('Recommendation - task list', () => {
     cy.getLinkHref('Offence analysis').should(
       'contain',
       '/recommendations/123/offence-analysis?fromPageId=task-list&fromAnchor=heading-person-details'
+    )
+    cy.getLinkHref('Previous releases').should(
+      'contain',
+      '/recommendations/123/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details'
     )
     cy.getLinkHref('MAPPA for Paula Smith').should(
       'contain',

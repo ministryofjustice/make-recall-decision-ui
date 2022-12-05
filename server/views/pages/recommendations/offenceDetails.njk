@@ -15,7 +15,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-                <div class="govuk-caption-l">{{ possessiveSuffix(recommendation.personOnProbation.name) }} details</div>
+                <div class="govuk-caption-l">Confirm details for {{ recommendation.personOnProbation.name }}</div>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
                 {% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}

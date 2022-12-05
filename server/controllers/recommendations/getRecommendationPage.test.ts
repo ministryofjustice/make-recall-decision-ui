@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendationPage } from './getRecommendationPage'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { getRecommendation, createDocument } from '../../data/makeDecisionApiClient'
+import { getRecommendation, updateRecommendation, createDocument } from '../../data/makeDecisionApiClient'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -28,6 +28,14 @@ describe('getRecommendationPage', () => {
     expect(res.locals.pageTitles.custodyStatus).toEqual('Is the person in custody now?')
     expect(res.locals.inputDisplayValues.value).toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/custodyStatus')
+  })
+
+  it('should send a parameter to the UPDATE recommendation endpoint if the page needs data refreshed', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
+    req = mockReq({ params: { recommendationId, pageUrlSlug: 'previous-releases' } })
+    await getRecommendationPage(req, res)
+    expect(updateRecommendation).toHaveBeenCalledWith('123', {}, 'abc', {}, 'previousReleases')
   })
 
   it('should fetch licence conditions if on that page', async () => {

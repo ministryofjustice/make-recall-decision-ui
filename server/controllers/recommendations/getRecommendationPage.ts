@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createDocument, getRecommendation } from '../../data/makeDecisionApiClient'
+import { createDocument, getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
 import { renderFormOptions } from './formOptions/formOptions'
 import { renderErrorMessages } from '../../utils/errors'
@@ -19,9 +19,14 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const { recommendationId, pageUrlSlug } = req.params
   const {
     user: { token: userToken },
+    flags,
   } = res.locals
-  const { id, inputDisplayValues } = pageMetaData(pageUrlSlug)
-  res.locals.recommendation = await getRecommendation(recommendationId, userToken)
+  const { id, inputDisplayValues, reviewedProperty, propertyToRefresh } = pageMetaData(pageUrlSlug)
+  if (propertyToRefresh) {
+    res.locals.recommendation = await updateRecommendation(recommendationId, {}, userToken, flags, propertyToRefresh)
+  } else {
+    res.locals.recommendation = await getRecommendation(recommendationId, userToken)
+  }
   if (isCaseRestrictedOrExcluded(res.locals.recommendation.userAccessResponse)) {
     res.locals.caseSummary = res.locals.recommendation
     return res.render('pages/excludedRestrictedCrn')
@@ -36,7 +41,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectedPageId}`)
   }
   res.locals.recommendation.isInCustody = isInCustody(res.locals.recommendation.custodyStatus?.selected)
-  res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation, res.locals.flags)
+  res.locals.taskCompleteness = taskCompleteness(res.locals.recommendation, flags)
   if (pageUrlSlug === 'preview-no-recall') {
     const { letterContent } = await createDocument(
       recommendationId,
@@ -73,11 +78,13 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   res.locals.crn = res.locals.recommendation.crn
   res.set({ 'Cache-Control': 'no-store' })
   res.render(`pages/recommendations/${id}`)
-  updatePageReviewedStatus({
-    pageUrlSlug,
-    recommendationId,
-    userToken,
-  })
+  if (reviewedProperty) {
+    updatePageReviewedStatus({
+      reviewedProperty,
+      recommendationId,
+      userToken,
+    })
+  }
   auditService.recommendationView({
     crn: res.locals.crn,
     recommendationId,

@@ -1,31 +1,17 @@
 import { updateRecommendation } from '../../../data/makeDecisionApiClient'
 
-const reviewedProperty = (pageUrlSlug: string): string | undefined => {
-  switch (pageUrlSlug) {
-    case 'offence-details':
-      return 'convictionDetail'
-    case 'personal-details':
-      return 'personOnProbation'
-    case 'mappa':
-      return 'mappa'
-    default:
-      return undefined
-  }
-}
-
 export const updatePageReviewedStatus = async ({
-  pageUrlSlug,
+  reviewedProperty,
   recommendationId,
   userToken,
 }: {
-  pageUrlSlug: string
+  reviewedProperty?: string
   recommendationId: string
   userToken: string
 }) => {
-  const propertyName = reviewedProperty(pageUrlSlug)
-  if (propertyName) {
+  if (reviewedProperty) {
     const valuesToSave = { hasBeenReviewed: {} }
-    valuesToSave.hasBeenReviewed[propertyName] = true
+    valuesToSave.hasBeenReviewed[reviewedProperty] = true
     await updateRecommendation(recommendationId, valuesToSave, userToken)
   }
 }

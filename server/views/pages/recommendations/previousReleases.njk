@@ -1,0 +1,63 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/task-list#heading-person-details'
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <div class="govuk-caption-l">Confirm details for {{ recommendation.personOnProbation.name }}</div>
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-8">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-summary-list__key--wide">
+                        Releasing prison or custodial establishment
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ recommendation.previousReleases.lastReleasingPrisonOrCustodialEstablishment | defaultValue | safe }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-summary-list__key--wide">
+                        Last release
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ formatDateTimeFromIsoString({isoDate: recommendation.previousReleases.lastReleaseDate, dateOnly: true}) | defaultValue | safe }}
+                    </dd>
+                </div>
+            </dl>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukRadios({
+                    idPrefix: "hasBeenReleasedPreviously",
+                    name: "hasBeenReleasedPreviously",
+                    fieldset: {
+                        legend: {
+                            text: 'Has ' + recommendation.personOnProbation.name + ' been released previously?',
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: inputDisplayValues.value
+                    }),
+                    errorMessage: errorMessage(errors.hasBeenReleasedPreviously)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

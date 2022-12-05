@@ -30,13 +30,16 @@ export const updateRecommendation = (
   recommendationId: string,
   updatedFields: ObjectMap<unknown>,
   token: string,
-  featureFlags?: FeatureFlags
-): Promise<RecommendationResponse> =>
-  restClient(token).patch({
-    path: `${routes.recommendations}/${recommendationId}`,
+  featureFlags?: FeatureFlags,
+  propertyToRefresh?: string
+): Promise<RecommendationResponse> => {
+  const queryString = propertyToRefresh ? `?propertyToRefresh=${propertyToRefresh}` : ''
+  return restClient(token).patch({
+    path: `${routes.recommendations}/${recommendationId}${queryString}`,
     data: updatedFields,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<RecommendationResponse>
+}
 
 export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<Response> => {
   return restClient(token).get({

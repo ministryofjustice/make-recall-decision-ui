@@ -40,6 +40,8 @@ export type KeyedFormErrors = KeyedErrors & ListErrors
 
 export interface PageMetaData {
   id: PageId
+  reviewedProperty?: string
+  propertyToRefresh?: string
   validator?: FormValidator
   inputDisplayValues?: InputDisplayValues
 }
@@ -178,6 +180,8 @@ export type PageId =
   | 'offenceAnalysis'
   | 'mappa'
   | 'addressDetails'
+  | 'previousReleases'
+  | 'addPreviousRelease'
   | 'confirmationPartA'
   | 'taskListNoRecall'
   | 'whyConsideredRecall'

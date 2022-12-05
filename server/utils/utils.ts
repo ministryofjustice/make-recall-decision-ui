@@ -136,7 +136,9 @@ export const booleanToYesNo = (val: boolean) => {
 export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()
 
 export const stripHtmlTags = (str: string): string => {
-  return stripHtml(str, {
-    stripTogetherWithTheirContents: ['script', 'style', 'xml'],
-  }).result
+  return isString(str)
+    ? stripHtml(str, {
+        stripTogetherWithTheirContents: ['script', 'style', 'xml'],
+      }).result
+    : str
 }

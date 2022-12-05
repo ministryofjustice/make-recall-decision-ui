@@ -43,6 +43,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, feature
           offenceAnalysis: isNotNullOrUndefined(recommendation.offenceAnalysis),
           convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
           mappa: recommendation.personOnProbation?.mappa?.hasBeenReviewed === true,
+          previousReleases: isNotNullOrUndefined(recommendation.previousReleases),
         }
       : {}),
   }

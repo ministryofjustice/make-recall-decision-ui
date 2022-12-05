@@ -377,7 +377,7 @@ context('Make a recommendation', () => {
       })
     })
 
-    it('form validation - offence analysis', () => {
+    it('form validation - Offence analysis', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
@@ -388,6 +388,19 @@ context('Make a recommendation', () => {
       cy.assertErrorMessage({
         fieldName: 'offenceAnalysis',
         errorText: 'Enter the offence analysis',
+      })
+    })
+
+    it('form validation - Previous releases', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-releases`)
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'hasBeenReleasedPreviously',
+        errorText: 'Select whether Paula Smith has been released previously',
       })
     })
   })
