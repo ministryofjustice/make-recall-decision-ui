@@ -53,6 +53,7 @@ import { inputDisplayValuesOffenceAnalysis } from '../offenceAnalysis/inputDispl
 import { validatePreviousReleases } from '../previousReleases/formValidator'
 import { inputDisplayValuesPreviousReleases } from '../previousReleases/inputDisplayValues'
 import { validateAddPreviousRelease } from '../addPreviousRelease/formValidator'
+import { inputDisplayValuesAddPreviousRelease } from '../addPreviousRelease/inputDisplayValues'
 
 export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
   switch (pageUrlSlug) {
@@ -203,7 +204,7 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
       return {
         id: 'addPreviousRelease',
         validator: validateAddPreviousRelease,
-        inputDisplayValues: inputDisplayValuesPreviousReleases,
+        inputDisplayValues: inputDisplayValuesAddPreviousRelease,
       }
     case 'offence-analysis':
       return {

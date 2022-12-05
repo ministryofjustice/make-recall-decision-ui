@@ -30,7 +30,7 @@ describe('validatePreviousReleases', () => {
         hasBeenReleasedPreviously: false,
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/add-previous-release')
+    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')
   })
 
   it('returns an error, if hasBeenReleasedPreviously not set, and no valuesToSave', async () => {
