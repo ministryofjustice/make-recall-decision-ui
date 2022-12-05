@@ -130,8 +130,8 @@ context('Risk page', () => {
         })
         .should('exist')
     )
-    cy.getElement('UNKNOWN RoSH').should('exist')
-    cy.getElement('UNKNOWN MAPPA').should('exist')
+    cy.getElement('Unknown RoSH').should('exist')
+    cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement(
       'This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.',
       {
@@ -156,9 +156,9 @@ context('Risk page', () => {
         })
         .should('exist')
     )
-    cy.getElement('UNKNOWN RoSH').should('exist')
+    cy.getElement('Unknown RoSH').should('exist')
     cy.getElement('This information cannot be retrieved from OASys.').should('exist')
-    cy.getElement('UNKNOWN MAPPA').should('exist')
+    cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
       parent: '[data-qa="mappa"]',
     }).should('exist')
