@@ -710,7 +710,7 @@ context('Make a recommendation', () => {
       cy.getElement('Last updated: 4 November 2022').should('exist')
     })
 
-    it('shows a No MAPPA heading if no data', () => {
+    it('shows a Unknown MAPPA heading if no data', () => {
       cy.task('updateRecommendation', {
         statusCode: 200,
         response: {
@@ -722,7 +722,7 @@ context('Make a recommendation', () => {
         },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
-      cy.getElement('No MAPPA').should('exist')
+      cy.getElement('Unknown MAPPA').should('exist')
     })
   })
 
