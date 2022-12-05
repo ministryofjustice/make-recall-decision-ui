@@ -584,6 +584,8 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
+      cy.clickButton('Copy this text')
+      cy.getText('aria-live-region').should('equal', 'Text copied to clipboard')
     })
 
     it('offence analysis - hide index offence details if not available', () => {
