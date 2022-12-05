@@ -33,7 +33,7 @@ export const updateRecommendation = (
   featureFlags?: FeatureFlags,
   propertyToRefresh?: string
 ): Promise<RecommendationResponse> => {
-  const queryString = propertyToRefresh ? `?propertyToRefresh=${propertyToRefresh}` : ''
+  const queryString = propertyToRefresh ? `?refreshProperty=${propertyToRefresh}` : ''
   return restClient(token).patch({
     path: `${routes.recommendations}/${recommendationId}${queryString}`,
     data: updatedFields,

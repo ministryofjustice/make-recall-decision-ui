@@ -215,6 +215,7 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
       return {
         id: 'mappa',
         reviewedProperty: 'mappa',
+        propertyToRefresh: 'mappa',
       }
     case 'address-details':
       return {

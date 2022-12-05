@@ -584,6 +584,8 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
+      cy.clickButton('Copy this text')
+      cy.getText('aria-live-region').should('equal', 'Text copied to clipboard')
     })
 
     it('offence analysis - hide index offence details if not available', () => {
@@ -684,6 +686,43 @@ context('Make a recommendation', () => {
       cy.getText('address-1').should('contain', 'Newtown')
       cy.getText('address-1').should('contain', 'Northampton')
       cy.getElement({ qaAttr: 'address-2' }).should('not.exist')
+    })
+  })
+
+  describe('Risk profile', () => {
+    it('shows MAPPA data', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          personOnProbation: {
+            ...completeRecommendationResponse.personOnProbation,
+            mappa: {
+              category: 0,
+              level: 1,
+              lastUpdatedDate: '2022-11-04',
+            },
+          },
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
+      cy.getElement('Cat 0/Level 1 MAPPA').should('exist')
+      cy.getElement('Last updated: 4 November 2022').should('exist')
+    })
+
+    it('shows a Unknown MAPPA heading if no data', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          personOnProbation: {
+            ...completeRecommendationResponse.personOnProbation,
+            mappa: null,
+          },
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
+      cy.getElement('Unknown MAPPA').should('exist')
     })
   })
 

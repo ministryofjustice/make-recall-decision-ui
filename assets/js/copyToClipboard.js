@@ -8,7 +8,9 @@ $('[data-js="copy-to-clipboard-btn"]').on('click', (evt) => {
   } else {
     navigator.clipboard.writeText(text).then(
       () => {
-        $ariaLiveRegion.text('Text copied')
+        $ariaLiveRegion.text('Text copied to clipboard')
+  const $button = $(evt.target)
+        $button.text('Text copied')
       },
       showError
     );

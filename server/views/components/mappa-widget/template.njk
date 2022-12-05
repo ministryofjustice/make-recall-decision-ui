@@ -1,12 +1,13 @@
 <div class="mappa-widget">
-{% if not params.mappa.error %}
-    <h2 class="govuk-heading-m text-uppercase"><strong>{% if isDefined(params.mappa.category) %}Cat {{ params.mappa.category }}/{% endif %}{% if params.mappa.level %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h2>
+{% if isNotNull(params.mappa) and params.mappa.error == null %}
+    <h2 class="govuk-heading-m text-uppercase" data-qa='mappa-heading'>
+        <strong>{% if isNotNull(params.mappa.category) %}Cat {{ params.mappa.category }}/{% endif %}{% if isNotNull(params.mappa.level) %}Level {{ params.mappa.level }}{% else %}No{% endif %}</strong> MAPPA</h2>
     <p class="govuk-body-m govuk-!-margin-bottom-2">Multi-agency public protection arrangements</p>
     {% if params.mappa.level and params.lastUpdatedDate %}
         <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">Last updated: {{ params.lastUpdatedDate }}</p>
     {% endif %}
 {% else %}
-    <h2 class="govuk-heading-m"><strong>UNKNOWN</strong> MAPPA</h2>
+    <h2 class="govuk-heading-m text-uppercase"><strong>Unknown</strong> MAPPA</h2>
     <p class="govuk-body-m govuk-!-margin-bottom-2">Multi-agency public protection arrangements</p>
     <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">
         {% if params.mappa.error == 'NOT_FOUND' %}
