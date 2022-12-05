@@ -696,7 +696,7 @@ context('Make a recommendation', () => {
           personOnProbation: {
             ...completeRecommendationResponse.personOnProbation,
             mappa: {
-              category: 1,
+              category: 0,
               level: 1,
               lastUpdatedDate: '2022-11-04',
             },
@@ -704,7 +704,7 @@ context('Make a recommendation', () => {
         },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
-      cy.getElement('Cat 1/Level 1 MAPPA').should('exist')
+      cy.getElement('Cat 0/Level 1 MAPPA').should('exist')
       cy.getElement('Last updated: 4 November 2022').should('exist')
     })
 
