@@ -88,6 +88,7 @@ export const strings = {
     addressDetails: 'Address details',
     mappa: 'MAPPA for {{ fullName }}',
     previousReleases: 'Previous releases',
+    addPreviousRelease: 'Add previous release',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
