@@ -1,6 +1,8 @@
 import { defineStep, When } from '@badeball/cypress-cucumber-preprocessor'
 import { DateTime } from 'luxon'
-import { getTestDataPerEnvironment } from '../../utils'
+import { formatObjectDate, getTestDataPerEnvironment, isoDateToObject } from '../../utils'
+
+const apiDataForCrn = getTestDataPerEnvironment()
 
 export const crn = Cypress.env('CRN') || 'X098092'
 export const crn2 = Cypress.env('CRN2') || 'X514364'
@@ -213,8 +215,10 @@ When('Maria enters the previous releases', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.selectRadio(`Has ${offenderName} been released previously?`, 'Yes')
   })
+  // store last release date so it can be checked for later in the Part A
+  cy.get(`[data-qa="lastReleaseDate"]`).invoke('attr', 'data-date').as('lastReleaseDate')
   cy.clickButton('Continue')
-  cy.enterDateTime({ year: '2022', month: '04', day: '14' })
+  cy.enterDateTime(apiDataForCrn.previousReleaseDate)
   cy.clickButton('Continue')
   cy.getElement('Previous releases Completed').should('exist')
 })
@@ -281,8 +285,6 @@ When('Maria confirms the existing custody status', () => {
   cy.clickButton('Continue')
 })
 
-const data = getTestDataPerEnvironment()
-
 export const q1EmergencyRecall = (contents: string, answer: string) =>
   expect(contents).to.contain(`until PPCS has issued the revocation order.  ${answer}`)
 export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
@@ -290,24 +292,32 @@ export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
 export const q3ExtendedSentence = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
 export const q4OffenderDetails = (contents: string) => {
-  expect(contents).to.match(data.fullName as RegExp)
-  expect(contents).to.match(data.dateOfBirth as RegExp)
-  expect(contents).to.match(data.ethnicity as RegExp)
-  expect(contents).to.match(data.gender as RegExp)
-  expect(contents).to.match(data.cro as RegExp)
-  expect(contents).to.match(data.pnc as RegExp)
-  expect(contents).to.match(data.prisonNo as RegExp)
-  expect(contents).to.match(data.noms as RegExp)
+  expect(contents).to.match(apiDataForCrn.fullName as RegExp)
+  expect(contents).to.match(apiDataForCrn.dateOfBirth as RegExp)
+  expect(contents).to.match(apiDataForCrn.ethnicity as RegExp)
+  expect(contents).to.match(apiDataForCrn.gender as RegExp)
+  expect(contents).to.match(apiDataForCrn.cro as RegExp)
+  expect(contents).to.match(apiDataForCrn.pnc as RegExp)
+  expect(contents).to.match(apiDataForCrn.prisonNo as RegExp)
+  expect(contents).to.match(apiDataForCrn.noms as RegExp)
+
+  cy.get('@lastReleaseDate').then(lastReleaseDate => {
+    const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(lastReleaseDate))
+    const previousReleaseDateFormatted = formatObjectDate(apiDataForCrn.previousReleaseDate)
+    expect(contents).to.contain(
+      `Date of last release and previous release: ${lastReleaseDateFormatted}, ${previousReleaseDateFormatted}`
+    )
+  })
 }
 export const q5SentenceDetails = (contents: string) => {
-  expect(contents).to.match(data.indexOffence as RegExp)
-  expect(contents).to.match(data.dateOfOriginalOffence as RegExp)
-  expect(contents).to.match(data.dateOfSentence as RegExp)
-  expect(contents).to.match(data.lengthOfSentence as RegExp)
-  expect(contents).to.match(data.licenceExpiryDate as RegExp)
-  expect(contents).to.match(data.sentenceExpiryDate as RegExp)
-  expect(contents).to.match(data.custodialTerm as RegExp)
-  expect(contents).to.match(data.extendedTerm as RegExp)
+  expect(contents).to.match(apiDataForCrn.indexOffence as RegExp)
+  expect(contents).to.match(apiDataForCrn.dateOfOriginalOffence as RegExp)
+  expect(contents).to.match(apiDataForCrn.dateOfSentence as RegExp)
+  expect(contents).to.match(apiDataForCrn.lengthOfSentence as RegExp)
+  expect(contents).to.match(apiDataForCrn.licenceExpiryDate as RegExp)
+  expect(contents).to.match(apiDataForCrn.sentenceExpiryDate as RegExp)
+  expect(contents).to.match(apiDataForCrn.custodialTerm as RegExp)
+  expect(contents).to.match(apiDataForCrn.extendedTerm as RegExp)
 }
 export const q6CustodyStatus = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender currently in police custody or prison custody? ${answer}`)
@@ -320,14 +330,14 @@ export const q8ArrestIssues = (contents: string, answer: string, details: string
   )
 }
 export const q12MappaDetails = (contents: string) => {
-  expect(contents).to.match(data.mappaCategory as RegExp)
-  expect(contents).to.match(data.mappaLevel as RegExp)
+  expect(contents).to.match(apiDataForCrn.mappaCategory as RegExp)
+  expect(contents).to.match(apiDataForCrn.mappaLevel as RegExp)
 }
 export const q16IndexOffenceDetails = (contents: string, offenceAnalysis?: string) => {
   if (offenceAnalysis) {
     expect(contents).to.contain(offenceAnalysis)
   } else {
-    expect(contents).to.match(data.indexOffenceDetails as RegExp)
+    expect(contents).to.match(apiDataForCrn.indexOffenceDetails as RegExp)
   }
 }
 
@@ -336,10 +346,10 @@ export const q22RecallType = (contents: string, answer: string, details: string)
   expect(contents).to.contain(`Explain your reasons for the above recall type recommendation: ${details}`)
 }
 export const q25ProbationDetails = (contents: string) => {
-  expect(contents).to.match(data.nameOfPersonCompletingForm as RegExp)
-  expect(contents).to.match(data.emailAddressOfPersonCompletingForm as RegExp)
-  expect(contents).to.match(data.region as RegExp)
-  expect(contents).to.match(data.ldu as RegExp)
-  expect(contents).to.contain(`${data.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`)
-  expect(contents).to.match(data.timeOfDecision as RegExp)
+  expect(contents).to.match(apiDataForCrn.nameOfPersonCompletingForm as RegExp)
+  expect(contents).to.match(apiDataForCrn.emailAddressOfPersonCompletingForm as RegExp)
+  expect(contents).to.match(apiDataForCrn.region as RegExp)
+  expect(contents).to.match(apiDataForCrn.ldu as RegExp)
+  expect(contents).to.contain(`${apiDataForCrn.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`)
+  expect(contents).to.match(apiDataForCrn.timeOfDecision as RegExp)
 }
