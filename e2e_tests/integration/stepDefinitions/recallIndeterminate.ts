@@ -11,6 +11,7 @@ import {
   q12MappaDetails,
   q16IndexOffenceDetails,
   q25ProbationDetails,
+  q4OffenderDetails,
 } from './index'
 
 When('Maria confirms the person is on a IPP sentence', () => {
@@ -119,6 +120,15 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     expect(contents).to.contain('Please Comment: Details on out of touch')
     cy.log('Q25')
     q25ProbationDetails(contents)
+  })
+})
+
+When('Maria downloads the Part A and confirms the indeterminate recall with details', () => {
+  return cy.downloadDocX('Download the Part A').then(contents => {
+    q4OffenderDetails(contents)
+    q5SentenceDetails(contents)
+    q12MappaDetails(contents)
+    q16IndexOffenceDetails(contents, 'Offence analysis details')
   })
 })
 

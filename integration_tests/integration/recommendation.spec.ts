@@ -378,7 +378,7 @@ context('Make a recommendation', () => {
     })
 
     it('form validation - Offence analysis', () => {
-      cy.task('getRecommendation', {
+      cy.task('updateRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
       })
@@ -392,9 +392,9 @@ context('Make a recommendation', () => {
     })
 
     it('form validation - Previous releases', () => {
-      cy.task('getRecommendation', {
+      cy.task('updateRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
+        response: { ...completeRecommendationResponse, previousReleases: null },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-releases`)
       cy.clickButton('Continue')
@@ -480,7 +480,7 @@ context('Make a recommendation', () => {
 
   describe('Personal details', () => {
     it('lists personal details', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/personal-details`)
       cy.getDefinitionListValue('Name').should('contain', 'Paula Smith')
       cy.getDefinitionListValue('Gender').should('contain', 'Female')
@@ -495,7 +495,7 @@ context('Make a recommendation', () => {
     })
 
     it('lists offence details', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getDefinitionListValue('Main offence').should('equal', 'Burglary')
       cy.getDefinitionListValue('Date of offence').should('equal', '3 October 2021')
@@ -508,7 +508,7 @@ context('Make a recommendation', () => {
     })
 
     it('offence details - banner if single conviction not on release', () => {
-      cy.task('getRecommendation', {
+      cy.task('updateRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, isExtendedSentence: false },
       })
@@ -536,7 +536,7 @@ context('Make a recommendation', () => {
     })
 
     it('offence details - show custodial & extended term if extended sentence', () => {
-      cy.task('getRecommendation', {
+      cy.task('updateRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, isExtendedSentence: true },
       })
@@ -551,7 +551,7 @@ context('Make a recommendation', () => {
     })
 
     it('offence details - banner if multiples convictions and one not on release', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.task('getCase', {
         sectionId: 'licence-conditions',
         statusCode: 200,
@@ -581,15 +581,13 @@ context('Make a recommendation', () => {
     })
 
     it('offence analysis - show index offence details', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
-      cy.clickButton('Copy this text')
-      cy.getText('aria-live-region').should('equal', 'Text copied to clipboard')
     })
 
     it('offence analysis - hide index offence details if not available', () => {
-      cy.task('getRecommendation', {
+      cy.task('updateRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, indexOffenceDetails: null },
       })

@@ -10,20 +10,9 @@ import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-
 import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licence-conditions.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
-const allowClipboardPermission = () =>
-  cy.wrap(
-    Cypress.automation('remote:debugger:protocol', {
-      command: 'Browser.grantPermissions',
-      params: {
-        permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'],
-      },
-    })
-  )
-
 Cypress.Commands.add('signIn', () => {
   cy.task('stubSignIn')
   cy.task('stubAuthUser')
-  allowClipboardPermission()
   cy.mockCaseSummaryData()
   cy.request('/')
   return cy.task('getSignInUrl').then(cy.visit)

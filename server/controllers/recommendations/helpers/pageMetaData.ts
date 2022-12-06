@@ -187,11 +187,13 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
       return {
         id: 'personalDetails',
         reviewedProperty: 'personOnProbation',
+        propertyToRefresh: 'personOnProbation',
       }
     case 'offence-details':
       return {
         id: 'offenceDetails',
         reviewedProperty: 'convictionDetail',
+        propertyToRefresh: 'convictionDetail',
       }
     case 'previous-releases':
       return {
@@ -209,6 +211,7 @@ export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
     case 'offence-analysis':
       return {
         id: 'offenceAnalysis',
+        propertyToRefresh: 'indexOffenceDetails',
         validator: validateOffenceAnalysis,
         inputDisplayValues: inputDisplayValuesOffenceAnalysis,
       }
