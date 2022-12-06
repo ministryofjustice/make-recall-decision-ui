@@ -18,7 +18,7 @@ describe('validatePreviousReleases', () => {
     expect(nextPagePath).toEqual('/recommendations/34/add-previous-release')
   })
 
-  it('returns valuesToSave and no errors if NO', async () => {
+  it('returns valuesToSave and resets previousReleaseDates to null if NO', async () => {
     const requestBody = {
       crn: 'X34534',
       hasBeenReleasedPreviously: 'NO',
@@ -28,6 +28,7 @@ describe('validatePreviousReleases', () => {
     expect(valuesToSave).toEqual({
       previousReleases: {
         hasBeenReleasedPreviously: false,
+        previousReleaseDates: null,
       },
     })
     expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')

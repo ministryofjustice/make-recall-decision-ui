@@ -30,6 +30,7 @@ export const validatePreviousReleases = async ({
     valuesToSave = {
       previousReleases: {
         hasBeenReleasedPreviously: isYes,
+        ...(!isYes ? { previousReleaseDates: null } : {}), // if No selected, reset previous release dates to null
       },
     }
     nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
