@@ -13,6 +13,16 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
   return isNotNullOrUndefined(recommendation.hasVictimsInContactScheme?.selected)
 }
 
+const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
+  if (recommendation.previousReleases === null) {
+    return false
+  }
+  if (recommendation.previousReleases.hasBeenReleasedPreviously === true) {
+    return recommendation.previousReleases.previousReleaseDates?.length > 0
+  }
+  return recommendation.previousReleases.hasBeenReleasedPreviously === false
+}
+
 export const taskCompleteness = (recommendation: RecommendationResponse, featureFlags?: FeatureFlags) => {
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
     recommendation.recallType?.selected?.value
@@ -43,7 +53,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, feature
           offenceAnalysis: isNotNullOrUndefined(recommendation.offenceAnalysis),
           convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
           mappa: recommendation.personOnProbation?.mappa?.hasBeenReviewed === true,
-          previousReleases: isNotNullOrUndefined(recommendation.previousReleases),
+          previousReleases: isPreviousReleasesComplete(recommendation),
         }
       : {}),
   }

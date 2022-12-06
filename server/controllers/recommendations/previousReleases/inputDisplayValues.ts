@@ -1,5 +1,5 @@
 import { InputDisplayValuesArgs } from '../../../@types'
-import { getProperty, isDefined } from '../../../utils/utils'
+import { booleanToYesNo, getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 
 export const inputDisplayValuesPreviousReleases = ({ errors = {}, apiValues }: InputDisplayValuesArgs) => {
@@ -7,10 +7,11 @@ export const inputDisplayValuesPreviousReleases = ({ errors = {}, apiValues }: I
     value: '',
   }
   if (!isDefined(errors.hasBeenReleasedPreviously)) {
-    inputDisplayValues.value = getProperty<RecommendationResponse, string>(
+    const apiValue = getProperty<RecommendationResponse, boolean>(
       apiValues,
       'previousReleases.hasBeenReleasedPreviously'
     )
+    inputDisplayValues.value = booleanToYesNo(apiValue)
   }
   return inputDisplayValues
 }

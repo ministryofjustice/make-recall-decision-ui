@@ -9,6 +9,6 @@ export const inputDisplayValuesAddPreviousRelease = ({ errors = {}, apiValues }:
     }
   }
   return {
-    value: splitIsoDateToParts(apiValues.previousReleases.previousReleaseDates[0]),
+    value: splitIsoDateToParts(apiValues.previousReleases?.previousReleaseDates?.[0]),
   }
 }

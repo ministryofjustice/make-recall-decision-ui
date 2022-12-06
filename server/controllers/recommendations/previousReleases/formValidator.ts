@@ -25,12 +25,15 @@ export const validatePreviousReleases = async ({
     )
   }
   if (!errors) {
+    const isYes = hasBeenReleasedPreviously === 'YES'
+    const nextPageId = isYes ? 'add-previous-release' : 'task-list#heading-person-details'
     valuesToSave = {
       previousReleases: {
-        hasBeenReleasedPreviously: hasBeenReleasedPreviously === 'YES',
+        hasBeenReleasedPreviously: isYes,
+        ...(!isYes ? { previousReleaseDates: null } : {}), // if No selected, reset previous release dates to null
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/add-previous-release`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
   }
   return {
     errors,

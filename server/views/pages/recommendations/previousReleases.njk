@@ -34,7 +34,7 @@
                     <dt class="govuk-summary-list__key govuk-summary-list__key--wide">
                         Last release
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-qa='lastReleaseDate' data-date='{{ recommendation.previousReleases.lastReleaseDate }}'>
                         {{ formatDateTimeFromIsoString({isoDate: recommendation.previousReleases.lastReleaseDate, dateOnly: true}) | defaultValue | safe }}
                     </dd>
                 </div>

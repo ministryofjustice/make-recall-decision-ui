@@ -26,7 +26,7 @@ describe('inputDisplayValuesPreviousReleases', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesPreviousReleases({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: true,
+      value: 'YES',
     })
   })
 })

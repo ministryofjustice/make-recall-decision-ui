@@ -284,6 +284,47 @@ describe('taskCompleteness', () => {
     })
   })
 
+  describe('Previous releases', () => {
+    it('returns true if hasBeenReleasedPreviously is true and previous release date set', () => {
+      const { statuses } = taskCompleteness(
+        {
+          ...emptyRecall,
+          previousReleases: { hasBeenReleasedPreviously: true, previousReleaseDates: ['2022-09-05'] },
+        },
+        {
+          flagRecommendationOffenceDetails: true,
+        }
+      )
+      expect(statuses.previousReleases).toEqual(true)
+    })
+
+    it('returns false if hasBeenReleasedPreviously is true and previous release date not set', () => {
+      const { statuses } = taskCompleteness(
+        {
+          ...emptyRecall,
+          previousReleases: { hasBeenReleasedPreviously: true },
+        },
+        {
+          flagRecommendationOffenceDetails: true,
+        }
+      )
+      expect(statuses.previousReleases).toEqual(false)
+    })
+
+    it('returns true if hasBeenReleasedPreviously is false and previous release date not set', () => {
+      const { statuses } = taskCompleteness(
+        {
+          ...emptyRecall,
+          previousReleases: { hasBeenReleasedPreviously: false },
+        },
+        {
+          flagRecommendationOffenceDetails: true,
+        }
+      )
+      expect(statuses.previousReleases).toEqual(true)
+    })
+  })
+
   describe('Indeterminate sentence type', () => {
     it('returns true if isIndeterminateSentence is true and indeterminateSentenceType set', () => {
       const { areAllComplete } = taskCompleteness({

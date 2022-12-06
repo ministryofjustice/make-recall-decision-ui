@@ -1,10 +1,12 @@
 import { defineStep, When } from '@badeball/cypress-cucumber-preprocessor'
 import {
+  q12MappaDetails,
   q16IndexOffenceDetails,
   q1EmergencyRecall,
   q22RecallType,
   q2IndeterminateSentenceType,
   q3ExtendedSentence,
+  q4OffenderDetails,
   q6CustodyStatus,
 } from './index'
 
@@ -26,7 +28,9 @@ When('Maria downloads the Part A and confirms the fixed term recall with offence
     q1EmergencyRecall(contents, 'No')
     q2IndeterminateSentenceType(contents, 'No')
     q3ExtendedSentence(contents, 'No')
+    q4OffenderDetails(contents)
     q6CustodyStatus(contents, 'Prison Custody')
+    q12MappaDetails(contents)
     q16IndexOffenceDetails(contents, 'Offence analysis details')
     q22RecallType(contents, 'Fixed', 'Fixed term details...')
     cy.log('Q23')

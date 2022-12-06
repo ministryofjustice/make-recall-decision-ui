@@ -42,4 +42,13 @@ describe('inputDisplayValuesAddPreviousRelease', () => {
       },
     })
   })
+
+  it('should return undefined if no error or apiValue', () => {
+    const errors = {}
+    const unsavedValues = {}
+    const inputDisplayValues = inputDisplayValuesAddPreviousRelease({ errors, unsavedValues, apiValues: {} })
+    expect(inputDisplayValues).toEqual({
+      value: undefined,
+    })
+  })
 })
