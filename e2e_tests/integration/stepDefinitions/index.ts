@@ -4,8 +4,8 @@ import { formatObjectDate, getTestDataPerEnvironment, isoDateToObject } from '..
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
-export const crn = Cypress.env('CRN') || 'X514364'
-export const crn2 = Cypress.env('CRN2') || 'X098092'
+export const crn = Cypress.env('CRN') || 'X098092'
+export const crn2 = Cypress.env('CRN2') || 'X514364'
 
 // ==================================== Recall
 
