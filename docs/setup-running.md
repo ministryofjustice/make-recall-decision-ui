@@ -18,7 +18,7 @@ export SYSTEM_CLIENT_SECRET='<YOUR DEV CLIENT SECRET, INSIDE SINGLE QUOTES>'
 
 ### Run against dev env
 
-NOTE - you should be connected to the MoJ digital VPN, because you'll be connecting to services in dev env.
+NOTE - you should be connected to the VPN, because you'll be connecting to services in dev env.
 
 To start the API and local dependencies, excluding the UI:
 

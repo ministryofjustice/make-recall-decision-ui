@@ -8,7 +8,7 @@ After `npm install`, files will be created under both .git/hooks and .husky, tha
 npm run swagger-to-ts
 ```
 
-Note - you should be connected to the MoJ digital VPN when running this script, or it won't be authorized to hit the Swagger endpoint.
+Note - you should be connected to the VPN when running this script, or it won't be authorized to hit the Swagger endpoint.
 
 Types are output to `./server/@types/make-recall-decision-api`.
 The online swagger, for comparison, is [here]
