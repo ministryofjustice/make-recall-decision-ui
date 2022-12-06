@@ -1,4 +1,4 @@
-import { FeatureFlags, PageMetaData } from '../../../@types'
+import { PageMetaData } from '../../../@types'
 import { AppError } from '../../../AppError'
 import { validateRecallType } from '../recallType/formValidator'
 import { validateCustodyStatus } from '../custodyStatus/formValidator'
