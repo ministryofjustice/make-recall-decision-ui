@@ -55,8 +55,6 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     q1EmergencyRecall(contents, 'Yes')
     q2IndeterminateSentenceType(contents, 'Yes - IPP')
     q3ExtendedSentence(contents, 'Yes')
-    cy.log('Q4')
-    q4OffenderDetails(contents)
     cy.log('Q5')
     q5SentenceDetails(contents)
     q6CustodyStatus(contents, 'No')
