@@ -4,7 +4,6 @@ import {
   q2IndeterminateSentenceType,
   q22RecallType,
   q3ExtendedSentence,
-  q4OffenderDetails,
   q5SentenceDetails,
   q6CustodyStatus,
   q7Addresses,
