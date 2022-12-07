@@ -204,7 +204,7 @@ When('Maria reviews the offence details', () => {
 When('Maria enters the offence analysis', () => {
   cy.getElement('Offence analysis To do').should('exist')
   cy.clickLink('Offence analysis')
-  cy.fillInput('Write the offence analysis', 'Offence analysis details')
+  cy.fillInput('Write the offence analysis', apiDataForCrn.offenceAnalysis)
   cy.clickButton('Continue')
   cy.getElement('Offence analysis Completed').should('exist')
 })
