@@ -45,4 +45,6 @@ Feature: Recall (indeterminate)
     And Maria confirms the existing indeterminate and extended sentence criteria
     And Maria reads the guidance on sensitive information
     And Maria changes custody status to "In police custody"
+#    TODO - REMOVE WHEN API CHANGE IS MERGED
+    And Maria reviews the MAPPA details
     And Maria downloads an updated Part A and confirms the changes to the indeterminate recall
