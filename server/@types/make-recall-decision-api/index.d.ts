@@ -46,7 +46,7 @@ export type { OffenderManager } from './models/OffenderManager';
 export type { OverviewConvictionResponse } from './models/OverviewConvictionResponse';
 export type { PersonDetails } from './models/PersonDetails';
 export type { PersonDetailsResponse } from './models/PersonDetailsResponse';
-export type { PersonOnProbation } from './models/PersonOnProbation';
+export type { PersonOnProbationDto } from './models/PersonOnProbationDto';
 export type { PredictorScore } from './models/PredictorScore';
 export type { PredictorScores } from './models/PredictorScores';
 export type { ProbationTeam } from './models/ProbationTeam';

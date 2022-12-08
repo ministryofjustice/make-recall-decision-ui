@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 export type PersonDetails = {
+    fullName?: string;
     name?: string;
     firstName?: string;
     middleNames?: string;

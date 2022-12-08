@@ -5,7 +5,8 @@
 import type { Address } from './Address';
 import type { Mappa } from './Mappa';
 
-export type PersonOnProbation = {
+export type PersonOnProbationDto = {
+    fullName?: string;
     name?: string;
     firstName?: string;
     surname?: string;
