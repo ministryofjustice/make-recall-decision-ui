@@ -23,7 +23,7 @@
                         <dt class="govuk-summary-list__key">
                             Name
                         </dt>
-                        <dd class="govuk-summary-list__value">
+                        <dd class="govuk-summary-list__value" data-qa='fullName'>
                             {{ recommendation.personOnProbation.fullName | defaultValue | safe }}
                         </dd>
                     </div>
@@ -31,7 +31,7 @@
                         <dt class="govuk-summary-list__key">
                             Gender
                         </dt>
-                        <dd class="govuk-summary-list__value">
+                        <dd class="govuk-summary-list__value" data-qa='gender'>
                             {{ recommendation.personOnProbation.gender  | defaultValue | safe }}
                         </dd>
                     </div>
@@ -39,7 +39,7 @@
                         <dt class="govuk-summary-list__key">
                             Date of birth
                         </dt>
-                        <dd class="govuk-summary-list__value">
+                        <dd class="govuk-summary-list__value" data-qa='dateOfBirth' data-date='{{ recommendation.personOnProbation.dateOfBirth }}'>
                             {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) | defaultValue | safe }}
                         </dd>
                     </div>

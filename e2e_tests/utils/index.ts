@@ -6,15 +6,16 @@ import { sharedInputData } from './test_data/sharedInputData'
 import { DatePartNames } from '../../server/@types/dates'
 
 export const getTestDataPerEnvironment = () => {
-  let data = localData
+  let overrides = {}
   if (Cypress.env('ENV') === 'dev') {
-    data = devData
+    overrides = devData
   } else if (Cypress.env('ENV') === 'preprod') {
-    data = preprodData
+    overrides = preprodData
   }
   return {
     ...sharedInputData,
-    ...data,
+    ...localData,
+    ...overrides,
   }
 }
 

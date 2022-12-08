@@ -1,19 +1,19 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor'
+import { getTestDataPerEnvironment } from '../../utils'
 import {
+  q12MappaDetails,
+  q16IndexOffenceDetails,
   q1EmergencyRecall,
-  q2IndeterminateSentenceType,
   q22RecallType,
+  q25ProbationDetails,
+  q2IndeterminateSentenceType,
   q3ExtendedSentence,
+  q4OffenderDetails,
   q5SentenceDetails,
   q6CustodyStatus,
   q7Addresses,
   q8ArrestIssues,
-  q12MappaDetails,
-  q16IndexOffenceDetails,
-  q25ProbationDetails,
-  q4OffenderDetails,
-} from './index'
-import { getTestDataPerEnvironment } from '../../utils'
+} from './assertionsPartA'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 

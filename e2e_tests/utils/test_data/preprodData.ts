@@ -1,8 +1,8 @@
 export const preprodData = {
-  fullName: /Full name: .*/,
-  dateOfBirth: /Date of birth: \d{2}\/\d{2}\/\d{4}/,
+  fullName: /.*/,
+  gender: /.*/,
+  dateOfBirth: null,
   ethnicity: /Ethnic category: .+/,
-  gender: /Gender: Male/,
   cro: /CRO No: [A-Z0-9/]{9}/,
   pnc: /PNC No: [A-Z0-9/]{13}.*/,
   prisonNo: /Prison No: [A-Z0-9]{6}/,

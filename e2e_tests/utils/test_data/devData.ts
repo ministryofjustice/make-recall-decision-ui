@@ -1,8 +1,5 @@
 export const devData = {
-  fullName: /Full name: harry Tom smith/,
-  dateOfBirth: /Date of birth: 15\/09\/1990/,
   ethnicity: /Ethnic category: Not specified/,
-  gender: /Gender: Male/,
   cro: /CRO No: 64941\/08C/,
   pnc: /PNC No: 2008\/0545166T/,
   prisonNo: /Prison No:/,

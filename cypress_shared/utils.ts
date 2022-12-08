@@ -21,3 +21,11 @@ export const addToNow = (
     }
   )
 }
+
+export const formatIsoDate = (isoDate: string) => DateTime.fromISO(isoDate, { zone: 'utc' }).toFormat('d MMMM yyyy')
+
+export const formatIsoDateShort = (isoDate: string) => DateTime.fromISO(isoDate, { zone: 'utc' }).toFormat('dd/MM/yyyy')
+
+export const longDateMatchPattern = (isoDate: string | null) => {
+  return isoDate !== null ? new RegExp(formatIsoDate(isoDate)) : /\d{1,2} [a-zA-Z]* \d{4}/
+}
