@@ -1,6 +1,6 @@
 import { defineStep, When } from '@badeball/cypress-cucumber-preprocessor'
 import { getTestDataPerEnvironment } from '../../utils'
-import { longDateMatchPattern, formatIsoDate } from '../../../cypress_shared/utils'
+import { longDateMatchPattern } from '../../../cypress_shared/utils'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
