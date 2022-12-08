@@ -223,3 +223,7 @@ Cypress.Commands.add('interceptGoogleAnalyticsEvent', (query, id) => {
     { statusCode: 200 }
   ).as(id)
 })
+
+Cypress.Commands.add('getDateAttribute', propertyName =>
+  cy.getElement({ qaAttr: propertyName }).invoke('attr', 'data-date')
+)

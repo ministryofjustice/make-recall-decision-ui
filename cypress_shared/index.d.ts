@@ -63,6 +63,8 @@ declare global {
 
       interceptGoogleAnalyticsEvent(query: ObjectMap<string>, id: string): Chainable<void>
 
+      getDateAttribute(propertyName: string): Chainable<string>
+
       assertErrorMessage(args: { fieldGroupId?: string; fieldName?: string; errorText: string; fieldError?: string })
 
       downloadFile(linkText: string): Chainable<Response<unknown>>

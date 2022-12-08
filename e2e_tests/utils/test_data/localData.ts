@@ -1,14 +1,15 @@
 export const localData = {
-  fullName: /Full name: Harry Tom Smith/,
-  dateOfBirth: /Date of birth: 15\/09\/1990/,
+  fullName: /Harry Tom Smith/,
+  gender: /Male/,
+  dateOfBirth: '1990-09-15',
   ethnicity: /Ethnic category: White/,
-  gender: /Gender: Male/,
   cro: /CRO No: AB123XYZ/,
   pnc: /PNC No: GD123TEF/,
   prisonNo: /Prison No: MV123EDR/,
   noms: /PNOMIS No: JG123POE/,
   indexOffence:
     /Index offence of current sentence which has led to the offender’s recall: \(Buggery and attempted buggery - 01600\)/,
+  lastReleaseDate: '2017-09-15',
   dateOfOriginalOffence: /Date of original offence: \t24\/04\/2022/,
   dateOfSentence: /Date of sentence: \t26\/04\/2022/,
   lengthOfSentence: /Length of sentence: \t2 Months/,

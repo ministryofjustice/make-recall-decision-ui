@@ -6,7 +6,7 @@ import {
   q2IndeterminateSentenceType,
   q3ExtendedSentence,
   q6CustodyStatus,
-} from './index'
+} from './assertionsPartA'
 
 When('Maria downloads the Part A and confirms the fixed term recall', () => {
   return cy.downloadDocX('Download the Part A').then(contents => {
