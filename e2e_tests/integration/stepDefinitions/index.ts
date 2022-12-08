@@ -187,6 +187,13 @@ defineStep('Maria confirms {string} to a risk of contraband', (answer: string) =
   cy.clickButton('Continue')
 })
 
+When('Maria confirms the personal details', () => {
+  cy.getElement('Personal details To review').should('exist')
+  cy.clickLink('Personal details')
+  cy.clickLink('Continue')
+  cy.getElement('Personal details Reviewed').should('exist')
+})
+
 When('Maria reviews the personal details', () => {
   cy.getElement('Personal details To review').should('exist')
   cy.clickLink('Personal details')
