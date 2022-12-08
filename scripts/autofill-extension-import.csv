@@ -190,6 +190,11 @@ r256,0,"^dateTimeOfAppointment-year$","2023","/recommendations/[^\/]+/appointmen
 r257,0,"^dateTimeOfAppointment-hour$","14","/recommendations/[^\/]+/appointment-no-recall",0,c2
 r258,0,"^dateTimeOfAppointment-minute$","35","/recommendations/[^\/]+/appointment-no-recall",0,c2
 r259,0,"^probationPhoneNumber$","01277 343 454","/recommendations/[^\/]+/appointment-no-recall",0,c2
+r260,0,"^previousReleaseDate-day$","12","/recommendations/[^\/]+/add-previous-release",0,c2
+r261,0,"^previousReleaseDate-month$","03","/recommendations/[^\/]+/add-previous-release",0,c2
+r262,0,"^previousReleaseDate-year$","2022","/recommendations/[^\/]+/add-previous-release",0,c2
+r263,3,"^YES$","1","/recommendations/[^\/]+/previous-releases",0,c2
+r267,0,"^offenceAnalysis$","Offence analysis detail","/recommendations/[^\/]+/offence-analysis",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,

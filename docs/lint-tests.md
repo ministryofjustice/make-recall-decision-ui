@@ -19,11 +19,7 @@ To run a Typescript compilation check:
 npm run typecheck
 ```
 
-## Run linter
-
-`npm run lint`
-
-to fix any lint issues automatically:
+## Run linter and fix issues
 
 `npm run lint:fix`
 
@@ -79,7 +75,9 @@ To get debug output when running cypress:
 4. put a break point on the needed line or type the word `debugger` in the cypress code and save if break points are unreliable 
 5. rerun the test 
 
-## Run E2E tests against local containers
+## E2E tests
+
+### Run E2E tests against local containers
 All dependencies will be mocked, including upstream APIs used by make-recall-decision-api, and HMPPS Auth.
 
 Set the CYPRESS_USERNAME and CYPRESS_PASSWORD env vars in the [.env.sample](./.env.sample) file when you copy it to .env. You can obtain the username and password from the team.
@@ -99,6 +97,16 @@ Open Cypress, from there you can run the tests:
 npm run e2e
 ```
 
-## E2E Tests on CircleCI
+### Run E2E tests against dev
+```
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,CRN=X098092,CRN2=X514364,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
+```
+
+### Run E2E tests against preprod
+```
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,CRN=<crn1>,CRN2=<crn2>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
+```
+
+### E2E Tests on CircleCI
 
 The E2E tests are ran against the `dev` and `preprod` environments after deployment. The user credentials they use to log into the service are stored as [environment variables (in CircleCI)](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables) called `CYPRESS_USERNAME_<environment>` and `CYPRESS_PASSWORD_<environment>`.

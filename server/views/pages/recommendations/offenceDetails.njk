@@ -19,7 +19,7 @@
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
                 {% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}
-                <p class='govuk-body'>This information is from NDelius. Update NDelius if anything is incorrect.</p>
+                {{ deliusDetailsMessage({ pageTitle: 'offence details'}) }}
                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">

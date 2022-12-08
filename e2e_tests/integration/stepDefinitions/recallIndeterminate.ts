@@ -13,6 +13,9 @@ import {
   q25ProbationDetails,
   q4OffenderDetails,
 } from './index'
+import { getTestDataPerEnvironment } from '../../utils'
+
+const apiDataForCrn = getTestDataPerEnvironment()
 
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
@@ -128,7 +131,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall with deta
     q4OffenderDetails(contents)
     q5SentenceDetails(contents)
     q12MappaDetails(contents)
-    q16IndexOffenceDetails(contents, 'Offence analysis details')
+    q16IndexOffenceDetails(contents, apiDataForCrn.offenceAnalysis)
   })
 })
 
