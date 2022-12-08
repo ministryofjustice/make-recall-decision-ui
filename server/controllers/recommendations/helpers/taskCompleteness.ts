@@ -14,13 +14,13 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
 }
 
 const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
-  if (recommendation.previousReleases === null) {
+  if (isNotNullOrUndefined(recommendation.previousReleases)) {
     return false
   }
-  if (recommendation.previousReleases.hasBeenReleasedPreviously === true) {
-    return recommendation.previousReleases.previousReleaseDates?.length > 0
+  if (recommendation.previousReleases?.hasBeenReleasedPreviously === true) {
+    return recommendation.previousReleases?.previousReleaseDates?.length > 0
   }
-  return recommendation.previousReleases.hasBeenReleasedPreviously === false
+  return recommendation.previousReleases?.hasBeenReleasedPreviously === false
 }
 
 export const taskCompleteness = (recommendation: RecommendationResponse, featureFlags?: FeatureFlags) => {
