@@ -17,7 +17,7 @@
             {% include '../../partials/error-summary.njk' %}
             <div class="govuk-caption-l">Confirm details for {{ recommendation.personOnProbation.name }}</div>
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-            {{ deliusDetailsMessage({ pageTitle: 'previous releases'}) }}
+            {{ deliusDetailsMessage() }}
             <dl class="govuk-summary-list govuk-!-margin-bottom-8">
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key govuk-summary-list__key--wide">
