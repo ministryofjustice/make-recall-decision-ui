@@ -10,7 +10,7 @@ import type { IndeterminateSentenceType } from './IndeterminateSentenceType';
 import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
 import type { LocalPoliceContact } from './LocalPoliceContact';
 import type { NextAppointment } from './NextAppointment';
-import type { PersonOnProbation } from './PersonOnProbation';
+import type { PersonOnProbationDto } from './PersonOnProbationDto';
 import type { ReasonsForNoRecall } from './ReasonsForNoRecall';
 import type { RecallType } from './RecallType';
 import type { SelectedWithDetails } from './SelectedWithDetails';
@@ -40,7 +40,7 @@ export type RecommendationResponse = {
     dateVloInformed?: string;
     hasArrestIssues?: SelectedWithDetails;
     hasContrabandRisk?: SelectedWithDetails;
-    personOnProbation?: PersonOnProbation;
+    personOnProbation?: PersonOnProbationDto;
     alternativesToRecallTried?: AlternativesToRecallTried;
     licenceConditionsBreached?: LicenceConditionsBreached;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;

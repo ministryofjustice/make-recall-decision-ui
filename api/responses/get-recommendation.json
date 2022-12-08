@@ -216,6 +216,7 @@
     "firstName": "Paula",
     "surname": "Smith",
     "middleNames": "",
+    "fullName": "Paula Smith",
     "gender": "Female",
     "ethnicity": "White British",
     "dateOfBirth": "2003-11-14",
