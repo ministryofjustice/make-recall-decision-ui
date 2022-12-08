@@ -58,6 +58,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     q1EmergencyRecall(contents, 'Yes')
     q2IndeterminateSentenceType(contents, 'Yes - IPP')
     q3ExtendedSentence(contents, 'Yes')
+    q4OffenderDetails(contents)
     cy.log('Q5')
     q5SentenceDetails(contents)
     q6CustodyStatus(contents, 'No')
@@ -65,9 +66,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
     expect(contents).to.contain(
       'Provide any other possible addresses: Police can find this person at: 123 Acacia Avenue, Birmingham B23 1AV'
     )
-
     q8ArrestIssues(contents, 'Yes', 'Arrest issues details...')
-
     cy.log('Q9')
     expect(contents).to.contain('Police single point of contact name: Bob Wiggins')
     expect(contents).to.contain('Current contact telephone number: 07936 737 387')
