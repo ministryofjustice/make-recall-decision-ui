@@ -14,7 +14,7 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
 }
 
 const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
-  if (isNotNullOrUndefined(recommendation.previousReleases)) {
+  if (recommendation.previousReleases === null || typeof recommendation.previousReleases === 'undefined') {
     return false
   }
   if (recommendation.previousReleases?.hasBeenReleasedPreviously === true) {
