@@ -535,21 +535,6 @@ context('Make a recommendation', () => {
       cy.getElement('Extended term').should('not.exist')
     })
 
-    it('offence details - show custodial & extended term if extended sentence', () => {
-      cy.task('updateRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, isExtendedSentence: true },
-      })
-      cy.task('getCase', {
-        sectionId: 'licence-conditions',
-        statusCode: 200,
-        response: getCaseLicenceConditionsResponse,
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
-      cy.getDefinitionListValue('Custodial term').should('contain', '5 months')
-      cy.getDefinitionListValue('Extended term').should('contain', '1 year')
-    })
-
     it('offence details - banner if multiples convictions and one not on release', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.task('getCase', {

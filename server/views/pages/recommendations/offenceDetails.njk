@@ -45,7 +45,6 @@
                             {{ formatDateTimeFromIsoString({isoDate: recommendation.convictionDetail.dateOfSentence, dateOnly: true}) | defaultValue | safe }}
                         </dd>
                     </div>
-                    {% if recommendation.isExtendedSentence %}
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Custodial term
@@ -62,7 +61,6 @@
                             {{ recommendation.convictionDetail.extendedTerm | defaultValue | safe }}
                         </dd>
                     </div>
-                    {% endif %}
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Length of sentence
