@@ -40,7 +40,7 @@ context('Recommendation - task list', () => {
 
   it('task list - Completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagRecommendationOffenceDetails=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')
@@ -95,7 +95,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: recommendationResponse,
     })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagRecommendationOffenceDetails=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
@@ -138,7 +138,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
     })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagRecommendationOffenceDetails=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('What alternatives to recall have been tried already?').should(
       'contain',
       '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
