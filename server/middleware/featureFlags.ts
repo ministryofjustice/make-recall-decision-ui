@@ -4,7 +4,7 @@ import { FeatureFlagDefault, ObjectMap } from '../@types'
 export const featureFlagsDefaults = {
   flagRecommendationOffenceDetails: {
     label: 'Make a recommendation - offence details, MAPPA',
-    default: false,
+    default: true,
   },
   flagVulnerabilities: {
     label: 'Case overview - vulnerabilities tab',

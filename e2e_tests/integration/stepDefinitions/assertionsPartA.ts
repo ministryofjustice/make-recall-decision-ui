@@ -62,12 +62,8 @@ export const q12MappaDetails = (contents: string) => {
   expect(contents).to.match(apiDataForCrn.mappaLevel as RegExp)
 }
 
-export const q16IndexOffenceDetails = (contents: string, offenceAnalysis?: string) => {
-  if (offenceAnalysis) {
-    expect(contents).to.contain(offenceAnalysis)
-  } else {
-    expect(contents).to.match(apiDataForCrn.indexOffenceDetails as RegExp)
-  }
+export const q16IndexOffenceDetails = (contents: string) => {
+  expect(contents).to.contain(apiDataForCrn.offenceAnalysis)
 }
 
 export const q22RecallType = (contents: string, answer: string, details: string) => {
