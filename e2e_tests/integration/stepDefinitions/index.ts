@@ -207,9 +207,18 @@ When('Maria reviews the personal details', () => {
   cy.getElement('Personal details Reviewed').should('exist')
 })
 
+When('Maria confirms the offence details', () => {
+  cy.getElement('Offence details To review').should('exist')
+  cy.clickLink('Offence details')
+  cy.clickLink('Continue')
+  cy.getElement('Offence details Reviewed').should('exist')
+})
+
 When('Maria reviews the offence details', () => {
   cy.getElement('Offence details To review').should('exist')
   cy.clickLink('Offence details')
+  cy.getText('indexOffenceDescription').as('indexOffenceDescription')
+  cy.getDefinitionListValue('Main offence').should('contain', apiDataForCrn.indexOffenceDescription)
   cy.clickLink('Continue')
   cy.getElement('Offence details Reviewed').should('exist')
 })

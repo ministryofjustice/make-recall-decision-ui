@@ -25,7 +25,7 @@ Feature: Recall (determinate)
     And Maria confirms "No" to victim contact scheme
     And Maria confirms "No" to a risk of contraband
     And Maria confirms the personal details
-    And Maria reviews the offence details
+    And Maria confirms the offence details
     And Maria enters the offence analysis
     And Maria enters the previous releases
     And Maria reviews the MAPPA details
