@@ -34,7 +34,11 @@ export const q4OffenderDetails = (contents: string) => {
 }
 
 export const q5SentenceDetails = (contents: string) => {
-  expect(contents).to.match(apiDataForCrn.indexOffence as RegExp)
+  cy.get('@indexOffenceDescription').then(indexOffenceDescription => {
+    expect(contents).to.contain(
+      `Index offence of current sentence which has led to the offender’s recall: ${indexOffenceDescription}`
+    )
+  })
   expect(contents).to.match(apiDataForCrn.dateOfOriginalOffence as RegExp)
   expect(contents).to.match(apiDataForCrn.dateOfSentence as RegExp)
   expect(contents).to.match(apiDataForCrn.lengthOfSentence as RegExp)

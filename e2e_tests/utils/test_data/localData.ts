@@ -7,8 +7,6 @@ export const localData = {
   pnc: /PNC No: GD123TEF/,
   prisonNo: /Prison No: MV123EDR/,
   noms: /PNOMIS No: JG123POE/,
-  indexOffence:
-    /Index offence of current sentence which has led to the offender’s recall: \(Buggery and attempted buggery - 01600\)/,
   lastReleaseDate: '2017-09-15',
   dateOfOriginalOffence: /Date of original offence: \t24\/04\/2022/,
   dateOfSentence: /Date of sentence: \t26\/04\/2022/,
@@ -19,8 +17,7 @@ export const localData = {
   extendedTerm: /Extended term:\t3 Months/,
   mappaCategory: /MAPPA Category: Category 0/,
   mappaLevel: /MAPPA Level: Level 1/,
-  indexOffenceDetails:
-    /Provide details of the index offence\(s\) and write a succinct offence analysis:Juicy offence details./,
+  indexOffenceDescription: '(Buggery and attempted buggery - 01600)',
   nameOfPersonCompletingForm: /Name of person completing the form: Making Recall Decisions User/,
   emailAddressOfPersonCompletingForm: /Email Address: making-recall-decisions-tech@digital.justice.gov.uk/,
   region: /Region: {2}NPS London/,
