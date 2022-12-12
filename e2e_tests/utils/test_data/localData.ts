@@ -17,7 +17,7 @@ export const localData = {
   extendedTerm: /Extended term:\t3 Months/,
   mappaCategory: /MAPPA Category: Category 0/,
   mappaLevel: /MAPPA Level: Level 1/,
-  indexOffenceDescription: '(Buggery and attempted buggery - 01600)',
+  indexOffenceDescription: /\(Buggery and attempted buggery - 01600\)/,
   nameOfPersonCompletingForm: /Name of person completing the form: Making Recall Decisions User/,
   emailAddressOfPersonCompletingForm: /Email Address: making-recall-decisions-tech@digital.justice.gov.uk/,
   region: /Region: {2}NPS London/,

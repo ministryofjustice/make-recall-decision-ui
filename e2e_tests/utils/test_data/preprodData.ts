@@ -1,6 +1,6 @@
 export const preprodData = {
-  fullName: /.*/,
-  gender: /.*/,
+  fullName: /.+/,
+  gender: /.+/,
   dateOfBirth: null,
   ethnicity: /Ethnic category: .+/,
   cro: /CRO No: [A-Z0-9/]{9}/,
@@ -16,7 +16,7 @@ export const preprodData = {
   extendedTerm: /Extended term:/,
   mappaCategory: /MAPPA Category: Category \d/,
   mappaLevel: /MAPPA Level: Level \d/,
-  indexOffenceDescription: null,
+  indexOffenceDescription: /.+/,
   nameOfPersonCompletingForm: /Name of person completing the form: Jon Wyatt/,
   emailAddressOfPersonCompletingForm: /Email Address: .*@digital\.justice\.gov\.uk/,
   region: /Region:.*/,
