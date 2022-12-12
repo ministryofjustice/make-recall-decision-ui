@@ -37,14 +37,12 @@ Feature: Recall (indeterminate)
     And Maria downloads the Part A and confirms the indeterminate recall
 
 #    NON-EXTENDED SENTENCE / IN POLICE CUSTODY
-    And Maria starts to update the recall
-    And Maria confirms answers were saved
-    And Maria confirms a not extended sentence
-    And Maria confirms the person is on a life sentence
-    And Maria recommends an emergency recall
-    And Maria confirms the existing indeterminate and extended sentence criteria
-    And Maria reads the guidance on sensitive information
-    And Maria changes custody status to "In police custody"
-#    TODO - REMOVE WHEN API CHANGE IS MERGED
-    And Maria reviews the MAPPA details
-    And Maria downloads an updated Part A and confirms the changes to the indeterminate recall
+#    And Maria starts to update the recall
+#    And Maria confirms answers were saved
+#    And Maria confirms a not extended sentence
+#    And Maria confirms the person is on a life sentence
+#    And Maria recommends an emergency recall
+#    And Maria confirms the existing indeterminate and extended sentence criteria
+#    And Maria reads the guidance on sensitive information
+#    And Maria changes custody status to "In police custody"
+#    And Maria downloads an updated Part A and confirms the changes to the indeterminate recall
