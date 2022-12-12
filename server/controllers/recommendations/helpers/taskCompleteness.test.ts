@@ -34,6 +34,10 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   personOnProbation: undefined,
   whatLedToRecall: undefined,
   vulnerabilities: undefined,
+  convictionDetail: undefined,
+  offenceAnalysis: undefined,
+  mappa: undefined,
+  previousReleases: undefined,
 }
 
 const indeterminateSentenceProperties: RecommendationResponse = {
@@ -63,23 +67,6 @@ describe('taskCompleteness', () => {
         ...setAllProperties(recallProperties, true),
         isIndeterminateSentence: true,
         indeterminateSentenceType: true,
-      })
-      expect(areAllComplete).toEqual(true)
-    })
-
-    it('all complete (with feature flag flagRecommendationOffenceDetails)', () => {
-      const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse, {
-        flagRecommendationOffenceDetails: true,
-      })
-      expect(statuses).toEqual({
-        ...setAllProperties(sharedProperties, true),
-        ...setAllProperties(recallProperties, true),
-        isIndeterminateSentence: true,
-        indeterminateSentenceType: true,
-        convictionDetail: true,
-        offenceAnalysis: true,
-        mappa: true,
-        previousReleases: true,
       })
       expect(areAllComplete).toEqual(true)
     })
@@ -286,41 +273,26 @@ describe('taskCompleteness', () => {
 
   describe('Previous releases', () => {
     it('returns true if hasBeenReleasedPreviously is true and previous release date set', () => {
-      const { statuses } = taskCompleteness(
-        {
-          ...emptyRecall,
-          previousReleases: { hasBeenReleasedPreviously: true, previousReleaseDates: ['2022-09-05'] },
-        },
-        {
-          flagRecommendationOffenceDetails: true,
-        }
-      )
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        previousReleases: { hasBeenReleasedPreviously: true, previousReleaseDates: ['2022-09-05'] },
+      })
       expect(statuses.previousReleases).toEqual(true)
     })
 
     it('returns false if hasBeenReleasedPreviously is true and previous release date not set', () => {
-      const { statuses } = taskCompleteness(
-        {
-          ...emptyRecall,
-          previousReleases: { hasBeenReleasedPreviously: true },
-        },
-        {
-          flagRecommendationOffenceDetails: true,
-        }
-      )
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        previousReleases: { hasBeenReleasedPreviously: true },
+      })
       expect(statuses.previousReleases).toEqual(false)
     })
 
     it('returns true if hasBeenReleasedPreviously is false and previous release date not set', () => {
-      const { statuses } = taskCompleteness(
-        {
-          ...emptyRecall,
-          previousReleases: { hasBeenReleasedPreviously: false },
-        },
-        {
-          flagRecommendationOffenceDetails: true,
-        }
-      )
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        previousReleases: { hasBeenReleasedPreviously: false },
+      })
       expect(statuses.previousReleases).toEqual(true)
     })
   })

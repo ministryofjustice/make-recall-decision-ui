@@ -2,10 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlagDefault, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
-  flagRecommendationOffenceDetails: {
-    label: 'Make a recommendation - offence details, MAPPA',
-    default: true,
-  },
   flagVulnerabilities: {
     label: 'Case overview - vulnerabilities tab',
     default: false,
