@@ -33,16 +33,14 @@ Feature: Recall (determinate)
     And Maria downloads the Part A and confirms the fixed term recall
 
 #    STANDARD RECALL
-    And Maria starts to update the recall
-    And Maria changes the recall type
-    And Maria recommends a "Standard" recall
-    And Maria confirms "No" for emergency recall
-    And Maria reads the guidance on sensitive information
-    And Maria confirms the existing custody status
-#    TODO - REMOVE WHEN API CHANGE IS MERGED
-    And Maria reviews the MAPPA details
-    And Maria clicks Create Part A
-    And Maria downloads the Part A and confirms the standard recall
+#    And Maria starts to update the recall
+#    And Maria changes the recall type
+#    And Maria recommends a "Standard" recall
+#    And Maria confirms "No" for emergency recall
+#    And Maria reads the guidance on sensitive information
+#    And Maria confirms the existing custody status
+#    And Maria clicks Create Part A
+#    And Maria downloads the Part A and confirms the standard recall
 
   Scenario: No recall
     Given Maria starts a new recommendation
