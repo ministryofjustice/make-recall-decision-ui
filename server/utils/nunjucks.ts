@@ -71,7 +71,7 @@ export const yesNoLabel = (level: string) => {
       return 'Yes'
     case 'NO':
       return 'No'
-    case 'DONT_KNOW':
+    case 'DK':
       return "Don't know"
     case 'N/A':
       return 'N/A'
