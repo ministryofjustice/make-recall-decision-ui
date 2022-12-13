@@ -54,7 +54,7 @@ context('Vulnerabilities page', () => {
     })
   })
 
-  it('shows No for null fields', () => {
+  it('shows No value for null fields', () => {
     cy.task('getCase', {
       sectionId: 'vulnerabilities',
       statusCode: 200,
@@ -72,8 +72,8 @@ context('Vulnerabilities page', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
     cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
-      expect(text).to.contain('Current concerns (suicide): No')
-      expect(text).to.contain('Previous concerns (suicide): No')
+      expect(text).to.contain('Current concerns (suicide): No value - check OASys')
+      expect(text).to.contain('Previous concerns (suicide): No value - check OASys')
     })
   })
 
