@@ -65,7 +65,7 @@ export const riskLevelLabel = (level: string) => {
   }
 }
 
-export const yesNoLabel = (level: string) => {
+export const roshYesNoLabel = (level: string | null) => {
   switch (level) {
     case 'YES':
       return 'Yes'
@@ -75,6 +75,8 @@ export const yesNoLabel = (level: string) => {
       return "Don't know"
     case 'N/A':
       return 'N/A'
+    case null:
+      return 'No value - check OASys'
     default:
       return level
   }
