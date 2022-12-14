@@ -4,7 +4,7 @@ import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
 import { CaseSectionId, FeatureFlags, ObjectMap } from '../@types'
-import { RecommendationResponse } from '../@types/make-recall-decision-api'
+import { CreateRecommendationRequest, RecommendationResponse } from '../@types/make-recall-decision-api'
 import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
 
 function restClient(token?: string): RestClient {
@@ -20,8 +20,16 @@ export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetai
 export const getCaseSummary = <T>(crn: string, sectionId: CaseSectionId, token: string): Promise<T> =>
   restClient(token).get({ path: `${routes.getCaseSummary}/${crn}/${sectionId}` }) as Promise<T>
 
-export const createRecommendation = (crn: string, token: string): Promise<RecommendationResponse> =>
-  restClient(token).post({ path: routes.recommendations, data: { crn } }) as Promise<RecommendationResponse>
+export const createRecommendation = (
+  data: CreateRecommendationRequest,
+  token: string,
+  featureFlags?: FeatureFlags
+): Promise<RecommendationResponse> =>
+  restClient(token).post({
+    path: routes.recommendations,
+    data,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<RecommendationResponse>
 
 export const getRecommendation = (recommendationId: string, token: string): Promise<RecommendationResponse> =>
   restClient(token).get({ path: `${routes.recommendations}/${recommendationId}` }) as Promise<RecommendationResponse>
