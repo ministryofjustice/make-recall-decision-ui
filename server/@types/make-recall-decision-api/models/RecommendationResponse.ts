@@ -20,6 +20,7 @@ import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
 import { PreviousReleases } from './PreviousReleases'
+import { RecallConsidered } from './RecallConsidered'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -60,11 +61,13 @@ export type RecommendationResponse = {
     reasonsForNoRecall?: ReasonsForNoRecall;
     nextAppointment?: NextAppointment;
     previousReleases?: PreviousReleases;
+    recallConsideredList?: RecallConsidered[]
 };
 
 export namespace RecommendationResponse {
 
     export enum status {
+        RECALL_CONSIDERED = 'RECALL_CONSIDERED',
         DRAFT = 'DRAFT',
         DOCUMENT_CREATED = 'DOCUMENT_CREATED',
         DELETED = 'DELETED',

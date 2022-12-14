@@ -20,7 +20,7 @@ describe('createRecommendationController', () => {
     ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
-    expect(createRecommendation).toHaveBeenCalledWith(crn.trim(), token)
+    expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token)
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
     expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'A1234AB', 'Dave', '123')
