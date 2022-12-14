@@ -4,5 +4,6 @@
 
 export type CreateRecommendationRequest = {
     crn?: string;
+    recallConsideredDetail?: string;
 };
 
