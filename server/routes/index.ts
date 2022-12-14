@@ -19,6 +19,8 @@ import { updateRecommendationStatus } from '../controllers/recommendations/updat
 import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { setAnalyticsId } from '../middleware/setAnalyticsId'
 import { parseUrl } from '../middleware/parseUrl'
+import { getConsiderRecall } from '../controllers/recommendations/getConsiderRecall'
+import { postConsiderRecall } from '../controllers/recommendations/postConsiderRecall'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -32,6 +34,8 @@ export default function routes(router: Router): Router {
   get(routeUrls.search, personSearch)
   get(routeUrls.searchResults, personSearchResults)
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
+  get(`${routeUrls.cases}/:crn/consider-recall`, getConsiderRecall)
+  post(`${routeUrls.cases}/:crn/consider-recall`, postConsiderRecall)
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummary)
 
   post(routeUrls.recommendations, createRecommendationController)

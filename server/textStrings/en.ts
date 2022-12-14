@@ -53,6 +53,7 @@ export const strings = {
     missingProbationPhoneNumber: 'You must give a telephone number for probation',
     noAddressConfirmationSelected: 'Select whether this is where the police can find {{ fullName }}',
     missingLocationDetail: 'You must enter the correct location',
+    missingRecallConsideredDetail: "Enter details about why you're considering a recall",
   },
   notifications: {
     oasysNotFoundLatestComplete:
