@@ -15,8 +15,6 @@ import {
   q8ArrestIssues,
 } from './assertionsPartA'
 
-const apiDataForCrn = getTestDataPerEnvironment()
-
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
     cy.selectRadio(`What type of sentence is ${offenderName} on?`, 'Imprisonment for Public Protection (IPP) sentence')

@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import { formatObjectDate, getTestDataPerEnvironment, isoDateToObject } from '../../utils'
 import { formatIsoDateShort } from '../../../cypress_shared/utils'
-import { ObjectMap } from '../../../server/@types'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
