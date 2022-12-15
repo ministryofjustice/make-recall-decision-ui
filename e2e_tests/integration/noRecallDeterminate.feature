@@ -1,4 +1,4 @@
-Feature: Recall (determinate)
+Feature: No Recall (determinate)
 
   Background:
     Given Maria signs in to the case overview for CRN "2"
