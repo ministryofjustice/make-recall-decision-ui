@@ -7,7 +7,7 @@ import { isEmptyStringOrWhitespace, stripHtmlTags, validateCrn } from '../../../
 export const validateConsiderRecall = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
-  const { crn, recallConsideredDetail } = requestBody
+  const { crn, recallConsideredDetail, recommendationId } = requestBody
   const normalizedCrn = validateCrn(crn)
   if (isEmptyStringOrWhitespace(recallConsideredDetail)) {
     const errorId = 'missingRecallConsideredDetail'
@@ -25,11 +25,21 @@ export const validateConsiderRecall = async ({ requestBody }: FormValidatorArgs)
       nextPagePath: `${routeUrls.cases}/${normalizedCrn}/consider-recall`,
     }
   }
+  const sanitizedDetail = stripHtmlTags(recallConsideredDetail as string)
+  const valuesToSave = recommendationId
+    ? {
+        recallConsideredList: [
+          {
+            recallConsideredDetail: sanitizedDetail,
+          },
+        ],
+      }
+    : {
+        crn: normalizedCrn,
+        recallConsideredDetail: sanitizedDetail,
+      }
   return {
-    valuesToSave: {
-      crn: normalizedCrn,
-      recallConsideredDetail: stripHtmlTags(recallConsideredDetail as string),
-    },
+    valuesToSave,
     nextPagePath: `${routeUrls.cases}/${normalizedCrn}/overview`,
   }
 }

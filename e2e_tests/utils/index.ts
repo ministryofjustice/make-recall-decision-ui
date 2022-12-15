@@ -3,7 +3,7 @@ import { localData } from './test_data/localData'
 import { devData } from './test_data/devData'
 import { preprodData } from './test_data/preprodData'
 import { sharedInputData } from './test_data/sharedInputData'
-import { DatePartNames } from '../../server/@types/dates'
+import { ObjectMap } from '../../server/@types'
 
 export const getTestDataPerEnvironment = () => {
   let overrides = {}
@@ -21,10 +21,11 @@ export const getTestDataPerEnvironment = () => {
 
 export const isoDateToObject = (isoDate: string) => {
   const d = DateTime.fromISO(isoDate)
-  return d.toObject()
+  const { day, month, year } = d.toObject()
+  return { day, month, year }
 }
 
-export const formatObjectDate = (objectDate: Record<DatePartNames, string>) => {
+export const formatObjectDate = (objectDate: ObjectMap<number | string>) => {
   const d = DateTime.fromObject(objectDate)
   return d.toFormat('dd/LL/yyyy')
 }

@@ -14,9 +14,9 @@ export const q3ExtendedSentence = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
 
 export const q4OffenderDetails = (contents: string) => {
-  cy.get('@fullName').then(fullName => expect(contents).to.contain(`Full name: ${fullName}`))
-  cy.get('@gender').then(gender => expect(contents).to.contain(`Gender: ${gender}`))
-  cy.get('@dateOfBirth').then(dateOfBirth =>
+  cy.get<string>('@fullName').then(fullName => expect(contents).to.contain(`Full name: ${fullName}`))
+  cy.get<string>('@gender').then(gender => expect(contents).to.contain(`Gender: ${gender}`))
+  cy.get<string>('@dateOfBirth').then(dateOfBirth =>
     expect(contents).to.contain(`Date of birth: ${formatIsoDateShort(dateOfBirth)}`)
   )
   expect(contents).to.match(apiDataForCrn.ethnicity as RegExp)
@@ -24,7 +24,7 @@ export const q4OffenderDetails = (contents: string) => {
   expect(contents).to.match(apiDataForCrn.pnc as RegExp)
   expect(contents).to.match(apiDataForCrn.prisonNo as RegExp)
   expect(contents).to.match(apiDataForCrn.noms as RegExp)
-  cy.get('@lastReleaseDate').then(lastReleaseDate => {
+  cy.get<string>('@lastReleaseDate').then(lastReleaseDate => {
     const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(lastReleaseDate))
     const previousReleaseDateFormatted = formatObjectDate(apiDataForCrn.previousReleaseDate)
     expect(contents).to.contain(

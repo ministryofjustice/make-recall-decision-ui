@@ -1,5 +1,4 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor'
-import { getTestDataPerEnvironment } from '../../utils'
 import {
   q12MappaDetails,
   q16IndexOffenceDetails,
@@ -14,8 +13,6 @@ import {
   q7Addresses,
   q8ArrestIssues,
 } from './assertionsPartA'
-
-const apiDataForCrn = getTestDataPerEnvironment()
 
 When('Maria confirms the person is on a IPP sentence', () => {
   cy.get('@offenderName').then(offenderName =>
@@ -130,7 +127,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall with deta
     q4OffenderDetails(contents)
     q5SentenceDetails(contents)
     q12MappaDetails(contents)
-    q16IndexOffenceDetails(contents, apiDataForCrn.offenceAnalysis)
+    q16IndexOffenceDetails(contents)
   })
 })
 

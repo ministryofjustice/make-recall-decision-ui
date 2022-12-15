@@ -125,3 +125,7 @@ pre.govuk-body {
 .govuk-summary-list__key--wide {
   width: 40%;
 }
+
+.govuk-notification-banner--full-width .govuk-notification-banner__content > * {
+  max-width: none;
+}

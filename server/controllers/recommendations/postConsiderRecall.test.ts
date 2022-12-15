@@ -44,7 +44,7 @@ describe('postConsiderRecall', () => {
     })
     await postConsiderRecall(req, res)
     expect(RestClient.prototype.patch).toHaveBeenCalledWith({
-      data: { crn: '123', recallConsideredDetail: 'Details...' },
+      data: { recallConsideredList: [{ recallConsideredDetail: 'Details...' }] },
       headers: { 'X-Feature-Flags': '{}' },
       path: '/recommendations/abc',
     })

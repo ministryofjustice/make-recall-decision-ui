@@ -6,7 +6,7 @@
                 <pre class='govuk-body govuk-!-margin-bottom-2' data-qa='recallConsideredDetail'>{{ caseSummary.activeRecommendation.recallConsideredList[0].recallConsideredDetail }}</pre>
                 <div class='govuk-body-s text-secondary govuk-!-margin-bottom-0' data-qa='recallConsideredUserDate'>{{ caseSummary.activeRecommendation.recallConsideredList[0].userName }}, {{ formatDateTimeFromIsoString({isoDate: caseSummary.activeRecommendation.recallConsideredList[0].createdDate}) }}</div>
             </div>
-            <div class='flex__item-one-third-desktop govuk-!-text-align-right'>
+            <div class='flex__item-one-third-desktop govuk-!-text-align-right govuk-!-margin-top-6'>
                 {% if caseSummary.activeRecommendation.status == 'RECALL_CONSIDERED' %}
                     <form method='post'
                           action='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/status'>
@@ -25,8 +25,8 @@
         </div>
     {% endset %}
 
-    {{ mojBanner({
-        type: 'information',
-        html: bannerHtml
+    {{ govukNotificationBanner({
+        html: bannerHtml,
+        classes: 'govuk-notification-banner--full-width'
     }) }}
 {% endif %}
