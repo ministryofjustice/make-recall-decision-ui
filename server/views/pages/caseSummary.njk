@@ -25,6 +25,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             {% include '../partials/error-summary.njk' %}
+            {% include '../partials/considerRecallBanner.njk' %}
             <div class='flex-desktop flex--space-between flex--align-center'>
                 <div class='govuk-!-margin-bottom-8'>
                     <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
@@ -43,20 +44,7 @@
                     <div class="govuk-heading-xl govuk-!-margin-bottom-0"
                          data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
                 </div>
-                {% if caseSummary.activeRecommendation.recommendationId %}
-                    <a class='govuk-button' href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/task-list' data-analytics-event='click_cta' data-analytics-event-category='update_recommendation_click'>Update recommendation</a>
-                {% else %}
-                <form method='post' action='/recommendations'>
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                    <input type="hidden" name="crn" value="{{ caseSummary.personalDetailsOverview.crn }}" />
-                    <button class='govuk-button no-wrap-tablet' data-analytics-event='click_cta' data-analytics-event-category='make_recommendation_click'>Make a recommendation</button>
-                </form>
-                {% endif %}
-                {% if flags.flagRecommendationPrototype %}
-                    <div>
-                        Prototype: <a href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/no-recall-summary?partClearNoRecall=1' class='govuk-button no-wrap-tablet'>Update recommendation</a>
-                    </div>
-                {% endif %}
+                {% include '../partials/recommendationButtons.njk' %}
             </div>
             {{ mojSubNavigation({
                 label: 'Case summary sections',

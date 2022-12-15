@@ -19,14 +19,30 @@ describe('updateRecommendationStatus', () => {
     res = mockRes({ locals: { urlInfo: { basePath } } })
   })
 
-  it('should update recommendation and redirect', async () => {
+  it('should update recommendation and redirect to recommendations tab if set to DOCUMENT_CREATED', async () => {
     const req = mockReq({
       method: 'POST',
       params: { recommendationId },
-      body: requestBody,
+      body: {
+        status: 'DOCUMENT_CREATED',
+        crn,
+      },
     })
     await updateRecommendationStatus(req, res)
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/recommendations`)
+  })
+
+  it('should update recommendation and redirect to recommendations tab if set to DRAFT', async () => {
+    const req = mockReq({
+      method: 'POST',
+      params: { recommendationId },
+      body: {
+        status: 'DRAFT',
+        crn,
+      },
+    })
+    await updateRecommendationStatus(req, res)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/response-to-probation`)
   })
 
   it('should throw if the API errors', async () => {

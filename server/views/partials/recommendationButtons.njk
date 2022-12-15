@@ -1,0 +1,29 @@
+{% if flags.flagConsiderRecall == true %}
+    {% if not caseSummary.activeRecommendation.recommendationId %}
+        <a class='govuk-button'
+           href='{{ pageUrlBase }}consider-recall'
+           data-analytics-event='click_cta' data-analytics-event-category='consider_recall_click'>Consider a recall</a>
+    {% endif %}
+{% else %}
+    {% if caseSummary.activeRecommendation.recommendationId %}
+        <a class='govuk-button'
+           href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/task-list'
+           data-analytics-event='click_cta' data-analytics-event-category='update_recommendation_click'>Update
+            recommendation</a>
+    {% else %}
+        <form method='post' action='/recommendations'>
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <input type="hidden" name="crn" value="{{ caseSummary.personalDetailsOverview.crn }}" />
+            <button class='govuk-button no-wrap-tablet' data-analytics-event='click_cta'
+                    data-analytics-event-category='make_recommendation_click'>Make a recommendation
+            </button>
+        </form>
+    {% endif %}
+{% endif %}
+{% if flags.flagRecommendationPrototype %}
+    <div>
+        Prototype: <a
+                href='/rec-prototype/{{ caseSummary.personalDetailsOverview.crn }}/no-recall-summary?partClearNoRecall=1'
+                class='govuk-button no-wrap-tablet'>Update recommendation</a>
+    </div>
+{% endif %}
