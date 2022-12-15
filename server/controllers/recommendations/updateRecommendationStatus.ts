@@ -10,6 +10,16 @@ const isValidStatus = (status: string) => {
   return validValues.includes(status)
 }
 
+const getRedirectPath = (status: string, crn: string, recommendationId: string) => {
+  switch (status) {
+    case 'DOCUMENT_CREATED':
+      return `${routeUrls.cases}/${crn}/recommendations`
+    case 'DRAFT':
+      return `${routeUrls.recommendations}/${recommendationId}/response-to-probation`
+    default:
+      return `${routeUrls.cases}/${crn}/overview`
+  }
+}
 export const updateRecommendationStatus = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId } = req.params
   const { status, crn } = req.body
@@ -19,5 +29,6 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
   }
   const normalizedCrn = validateCrn(crn)
   await updateRecommendation(recommendationId, { status }, user.token)
-  res.redirect(303, `${routeUrls.cases}/${normalizedCrn}/recommendations`)
+  const redirectPath = getRedirectPath(status, normalizedCrn, recommendationId)
+  res.redirect(303, redirectPath)
 }
