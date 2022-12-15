@@ -1,5 +1,4 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor'
-import { getTestDataPerEnvironment } from '../../utils'
 import {
   q12MappaDetails,
   q16IndexOffenceDetails,
