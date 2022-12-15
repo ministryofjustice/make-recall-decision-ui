@@ -297,7 +297,3 @@ When('Maria confirms the person is in prison custody', () => {
   })
   cy.clickButton('Continue')
 })
-
-When('Maria confirms the existing custody status', () => {
-  cy.clickButton('Continue')
-})
