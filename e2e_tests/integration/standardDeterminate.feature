@@ -10,7 +10,8 @@ Feature: Standard (determinate)
     And Maria selects the alternatives to recall that have been tried
     And Maria continues from the Stop and Think page
 
-    And Maria changes the recall type
+    And Maria confirms "No" for indeterminate sentence
+    And Maria confirms "No" for extended sentence
     And Maria recommends a "Standard" recall
     And Maria confirms "No" for emergency recall
     And Maria reads the guidance on sensitive information

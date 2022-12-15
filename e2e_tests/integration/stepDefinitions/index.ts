@@ -106,10 +106,6 @@ defineStep('Maria recommends a {string} recall', (recallType: string) => {
   cy.clickButton('Continue')
 })
 
-When('Maria changes the recall type', () => {
-  cy.clickLink('What you recommend')
-})
-
 When('Maria indicates the person is not in custody', () => {
   cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'No'))
   cy.clickButton('Continue')
