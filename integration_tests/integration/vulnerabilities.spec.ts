@@ -38,6 +38,8 @@ context('Vulnerabilities page', () => {
     cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
       expect(text).to.contain('Current concerns (suicide): Yes')
       expect(text).to.contain('Current concerns (self-harm): Yes')
+      expect(text).to.contain('Previous concerns (suicide): No')
+      expect(text).to.contain('Previous concerns (self-harm): Yes')
       const { suicide } = getCaseVulnerabilitiesResponse.vulnerabilities
       expect(text).to.contain(suicide.currentConcernsText)
       expect(text).to.contain(suicide.previousConcernsText)
@@ -48,36 +50,15 @@ context('Vulnerabilities page', () => {
     cy.viewDetails('View more detail on Coping in custody or a hostel').then(text => {
       expect(text).to.contain('Current concerns (custody): Yes')
       expect(text).to.contain('Current concerns (hostel): Yes')
+      expect(text).to.contain('Previous concerns (custody): Yes')
+      expect(text).to.contain('Previous concerns (hostel): N/A')
       const { custody } = getCaseVulnerabilitiesResponse.vulnerabilities
       expect(text).to.contain(custody.currentConcernsText)
       expect(text).to.contain(custody.previousConcernsText)
     })
   })
 
-  it('shows No value for null fields', () => {
-    cy.task('getCase', {
-      sectionId: 'vulnerabilities',
-      statusCode: 200,
-      response: {
-        ...getCaseVulnerabilitiesResponse,
-        vulnerabilities: {
-          lastUpdatedDate: '2022-10-05',
-          ...getCaseVulnerabilitiesResponse.vulnerabilities,
-          suicide: {
-            current: null,
-            previous: null,
-          },
-        },
-      },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
-    cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
-      expect(text).to.contain('Current concerns (suicide): No value - check OASys')
-      expect(text).to.contain('Previous concerns (suicide): No value - check OASys')
-    })
-  })
-
-  it('shows No for each null value', () => {
+  it('shows No for each null or undefined value', () => {
     const vulnerabilitiesNoData = ['suicide', 'selfHarm', 'vulnerability', 'custody', 'hostelSetting'].reduce(
       (acc, curr) => ({
         ...acc,
@@ -99,18 +80,64 @@ context('Vulnerabilities page', () => {
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
-      expect(text).to.contain('Current concerns: No')
-      expect(text).to.contain('Previous concerns: No')
+      expect(text).to.contain('Current concerns: No value - check OASys')
+      expect(text).to.contain('Previous concerns: No value - check OASys')
     })
     cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
-      expect(text).to.contain('Current concerns (suicide): No')
-      expect(text).to.contain('Previous concerns (suicide): No')
-      expect(text).to.contain('Current concerns (self-harm): No')
-      expect(text).to.contain('Previous concerns (self-harm): No')
+      expect(text).to.contain('Current concerns (suicide): No value - check OASys')
+      expect(text).to.contain('Previous concerns (suicide): No value - check OASys')
+      expect(text).to.contain('Current concerns (self-harm): No value - check OASys')
+      expect(text).to.contain('Previous concerns (self-harm): No value - check OASys')
     })
     cy.viewDetails('View more detail on Coping in custody or a hostel').then(text => {
-      expect(text).to.contain('Current concerns (custody): No')
-      expect(text).to.contain('Current concerns (hostel): No')
+      expect(text).to.contain('Current concerns (custody): No value - check OASys')
+      expect(text).to.contain('Current concerns (hostel): No value - check OASys')
+    })
+  })
+
+  it('uses risk value from question 3 if no value', () => {
+    cy.task('getCase', {
+      sectionId: 'vulnerabilities',
+      statusCode: 200,
+      response: {
+        ...getCaseVulnerabilitiesResponse,
+        vulnerabilities: {
+          lastUpdatedDate: '2022-10-05',
+          suicide: {
+            risk: 'DK',
+          },
+          selfHarm: {
+            risk: 'DK',
+          },
+          vulnerability: {
+            risk: 'DK',
+          },
+          custody: {
+            risk: 'DK',
+          },
+          hostelSetting: {
+            risk: 'DK',
+          },
+        },
+      },
+    })
+
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
+      expect(text).to.contain("Current concerns: Don't know")
+      expect(text).to.contain("Previous concerns: Don't know")
+    })
+    cy.viewDetails('View more detail on Suicide and/or self-harm').then(text => {
+      expect(text).to.contain("Current concerns (suicide): Don't know")
+      expect(text).to.contain("Current concerns (self-harm): Don't know")
+      expect(text).to.contain("Previous concerns (suicide): Don't know")
+      expect(text).to.contain("Previous concerns (self-harm): Don't know")
+    })
+    cy.viewDetails('View more detail on Coping in custody or a hostel').then(text => {
+      expect(text).to.contain("Current concerns (custody): Don't know")
+      expect(text).to.contain("Current concerns (hostel): Don't know")
+      expect(text).to.contain("Previous concerns (custody): Don't know")
+      expect(text).to.contain("Previous concerns (hostel): Don't know")
     })
   })
 

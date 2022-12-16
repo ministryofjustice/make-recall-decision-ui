@@ -37,7 +37,7 @@
     "hostelSetting": {
       "current": "YES",
       "currentConcernsText": "Current hostel detail",
-      "previous": "YES",
+      "previous": "NA",
       "previousConcernsText": "Past hostel detail"
     }
   }
