@@ -10,13 +10,13 @@
             {% set vulnerability = caseSummary.vulnerabilities.vulnerability %}
             {% set vulnerabilityHtml %}
                 <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>Current circumstances, issues and needs</h3>
-                <p class='govuk-body'>Current concerns: {{ roshYesNoLabel(vulnerability.current) }}</p>
+                <p class='govuk-body'>Current concerns: {{ roshYesNoLabel(vulnerability.current or vulnerability.risk) }}</p>
                 {% if vulnerability.currentConcernsText %}
                     <pre class='govuk-body govuk-!-margin-top-2'>{{ vulnerability.currentConcernsText }}</pre>
                 {% endif %}
                 <h3 class='govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2'>Past circumstances, issues
                     and needs</h3>
-                <p class='govuk-body'>Previous concerns: {{ roshYesNoLabel(vulnerability.previous) }}</p>
+                <p class='govuk-body'>Previous concerns: {{ roshYesNoLabel(vulnerability.previous or vulnerability.risk) }}</p>
                 {% if vulnerability.previousConcernsText %}
                     <pre class='govuk-body govuk-!-margin-top-2'>{{ vulnerability.previousConcernsText }}</pre>
                 {% endif %}
@@ -38,15 +38,15 @@
             {% set selfHarm = caseSummary.vulnerabilities.selfHarm %}
             {% set suicideSelfHarmHtml %}
                 <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>Current circumstances, issues and needs</h3>
-                <p class='govuk-body'>Current concerns (suicide): {{ roshYesNoLabel(suicide.current) }}</p>
-                <p class='govuk-body'>Current concerns (self-harm): {{ roshYesNoLabel(selfHarm.current) }}</p>
+                <p class='govuk-body'>Current concerns (suicide): {{ roshYesNoLabel(suicide.current or suicide.risk) }}</p>
+                <p class='govuk-body'>Current concerns (self-harm): {{ roshYesNoLabel(selfHarm.current or selfHarm.risk) }}</p>
                 {% if suicide.currentConcernsText or selfHarm.currentConcernsText %}
                     <pre class='govuk-body govuk-!-margin-top-2'>{{ suicide.currentConcernsText or selfHarm.currentConcernsText }}</pre>
                 {% endif %}
                 <h3 class='govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2'>Past circumstances, issues
                     and needs</h3>
-                <p class='govuk-body'>Previous concerns (suicide): {{ roshYesNoLabel(suicide.previous) }}</p>
-                <p class='govuk-body'>Previous concerns (self-harm): {{ roshYesNoLabel(selfHarm.previous) }}</p>
+                <p class='govuk-body'>Previous concerns (suicide): {{ roshYesNoLabel(suicide.previous or suicide.risk) }}</p>
+                <p class='govuk-body'>Previous concerns (self-harm): {{ roshYesNoLabel(selfHarm.previous or selfHarm.risk) }}</p>
                 {% if suicide.previousConcernsText or selfHarm.previousConcernsText %}
                     <pre class='govuk-body govuk-!-margin-top-2'>{{ suicide.previousConcernsText or selfHarm.previousConcernsText }}</pre>
                 {% endif %}
@@ -68,15 +68,15 @@
             {% set hostelSetting = caseSummary.vulnerabilities.hostelSetting %}
             {% set copingHtml %}
                 <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>Current circumstances, issues and needs</h3>
-                <p class='govuk-body'>Current concerns (custody): {{ roshYesNoLabel(custody.current) }}</p>
-                <p class='govuk-body'>Current concerns (hostel): {{ roshYesNoLabel(hostelSetting.current) }}</p>
+                <p class='govuk-body'>Current concerns (custody): {{ roshYesNoLabel(custody.current or custody.risk) }}</p>
+                <p class='govuk-body'>Current concerns (hostel): {{ roshYesNoLabel(hostelSetting.current or hostelSetting.risk) }}</p>
                 {% if custody.currentConcernsText or hostelSetting.currentConcernsText %}
                     <pre class='govuk-body govuk-!-margin-top-2'>{{ custody.currentConcernsText or hostelSetting.currentConcernsText }}</pre>
                 {% endif %}
                 <h3 class='govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2'>Past circumstances, issues
                     and needs</h3>
-                <p class='govuk-body'>Previous concerns (custody): {{ roshYesNoLabel(custody.previous) }}</p>
-                <p class='govuk-body'>Previous concerns (hostel): {{ roshYesNoLabel(hostelSetting.previous) }}</p>
+                <p class='govuk-body'>Previous concerns (custody): {{ roshYesNoLabel(custody.previous or custody.risk) }}</p>
+                <p class='govuk-body'>Previous concerns (hostel): {{ roshYesNoLabel(hostelSetting.previous or hostelSetting.risk) }}</p>
                 {% if custody.previousConcernsText or hostelSetting.previousConcernsText %}
                     <pre class='govuk-body govuk-!-margin-top-2'>{{ custody.previousConcernsText or hostelSetting.previousConcernsText }}</pre>
                 {% endif %}

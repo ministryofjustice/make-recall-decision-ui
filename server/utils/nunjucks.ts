@@ -73,9 +73,10 @@ export const roshYesNoLabel = (level: string | null) => {
       return 'No'
     case 'DK':
       return "Don't know"
-    case 'N/A':
+    case 'NA':
       return 'N/A'
     case null:
+    case undefined:
       return 'No value - check OASys'
     default:
       return level
