@@ -131,8 +131,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall with deta
   })
 })
 
-When('Maria downloads an updated Part A and confirms the changes to the indeterminate recall', () => {
-  cy.clickLink('Create Part A')
+When('Maria downloads the Part A and confirms the indeterminate recall with police custody', () => {
   cy.downloadDocX('Download the Part A').then(contents => {
     q3ExtendedSentence(contents, 'No')
     q6CustodyStatus(contents, 'Police Custody')

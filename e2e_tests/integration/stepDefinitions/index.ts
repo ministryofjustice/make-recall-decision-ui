@@ -276,8 +276,14 @@ When('Maria confirms a not extended sentence', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria changes custody status to "In police custody"', () => {
-  cy.log('========== Change to "In police custody"')
+When('Maria confirms the person is in prison custody', () => {
+  cy.get('@offenderName').then(offenderName => {
+    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, prison custody')
+  })
+  cy.clickButton('Continue')
+})
+
+When('Maria confirms the person is in police custody', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody')
   })
@@ -289,11 +295,4 @@ When('Maria changes custody status to "In police custody"', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.getElement(`Is there anything the police should know before they arrest ${offenderName}?`).should('not.exist')
   })
-})
-
-When('Maria confirms the person is in prison custody', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, prison custody')
-  })
-  cy.clickButton('Continue')
 })
