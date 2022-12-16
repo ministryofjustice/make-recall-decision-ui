@@ -6,6 +6,10 @@ export const featureFlagsDefaults = {
     label: 'Consider a recall',
     default: false,
   },
+  flagDomainEventRecommendationStarted: {
+    label: "Create Delius contact when user clicks 'Make recommendation' button",
+    default: false,
+  },
   flagRecommendationsPageProd: {
     label: 'Recommendations list',
     default: false,

@@ -8,7 +8,8 @@ import { EVENTS } from '../../utils/constants'
 export const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
   const normalizedCrn = validateCrn(req.body.crn)
   try {
-    const recommendation = await createRecommendation({ crn: normalizedCrn }, res.locals.user.token)
+    const { user, flags } = res.locals
+    const recommendation = await createRecommendation({ crn: normalizedCrn }, user.token, flags)
     res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
     appInsightsEvent(EVENTS.MRD_RECOMMENDATION_STARTED, res.locals.user.username, {
       crn: normalizedCrn,

@@ -13,14 +13,19 @@ const token = 'token'
 
 describe('createRecommendationController', () => {
   beforeEach(() => {
-    res = mockRes({ token, locals: { user: { username: 'Dave' } } })
+    res = mockRes({
+      token,
+      locals: { user: { username: 'Dave' }, flags: { flagDomainEventRecommendationStarted: true } },
+    })
   })
 
   it('should redirect if successful', async () => {
     ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
-    expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token)
+    expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token, {
+      flagDomainEventRecommendationStarted: true,
+    })
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
     expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Dave', {
