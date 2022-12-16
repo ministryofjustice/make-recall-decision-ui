@@ -43,9 +43,12 @@ export const createAndDownloadDocument =
     }
     if (documentType === 'PART_A') {
       auditService.createPartA(auditData)
-      appInsightsEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, normalizedCrn, user.username, recommendationId)
+      appInsightsEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, user.username, { crn: normalizedCrn, recommendationId })
     } else {
       auditService.createNoRecallLetter(auditData)
-      appInsightsEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, normalizedCrn, user.username, recommendationId)
+      appInsightsEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, user.username, {
+        crn: normalizedCrn,
+        recommendationId,
+      })
     }
   }

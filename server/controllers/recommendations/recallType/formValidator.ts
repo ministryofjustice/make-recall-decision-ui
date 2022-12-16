@@ -3,6 +3,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
+import { EVENTS } from '../../../utils/constants'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
@@ -63,8 +64,15 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
   }
   // ignore any 'from page', whatever the user selects they'll continue through the flow
   const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
+
   return {
     valuesToSave,
     nextPagePath: `${urlInfo.basePath}${nextPageId}`,
+    monitoringEvent: {
+      eventName: EVENTS.MRD_RECALL_TYPE,
+      data: {
+        recallType,
+      },
+    },
   }
 }

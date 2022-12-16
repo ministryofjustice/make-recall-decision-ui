@@ -4,6 +4,8 @@ import logger from '../../../logger'
 import { saveErrorWithDetails } from '../../utils/errors'
 import { routeUrls } from '../../routes/routeUrls'
 import { pageMetaData } from './helpers/pageMetaData'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 
 export const postRecommendationForm = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageUrlSlug } = req.params
@@ -11,7 +13,7 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
   try {
     const { validator } = pageMetaData(pageUrlSlug)
     const { user, urlInfo } = res.locals
-    const { errors, valuesToSave, unsavedValues, nextPagePath } = await validator({
+    const { errors, valuesToSave, unsavedValues, nextPagePath, monitoringEvent } = await validator({
       requestBody: req.body,
       recommendationId,
       urlInfo,
@@ -24,6 +26,16 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
     }
     await updateRecommendation(recommendationId, valuesToSave, user.token, res.locals.flags)
     res.redirect(303, nextPagePath)
+    if (monitoringEvent) {
+      const crn = normalizeCrn(req.body.crn)
+      if (!isEmptyStringOrWhitespace(crn)) {
+        appInsightsEvent(monitoringEvent.eventName, user.username, {
+          ...monitoringEvent.data,
+          crn,
+          recommendationId,
+        })
+      }
+    }
   } catch (err) {
     if (err.name === 'AppError') {
       throw err

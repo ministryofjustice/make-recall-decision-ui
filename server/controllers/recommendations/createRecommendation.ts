@@ -10,12 +10,10 @@ export const createRecommendationController = async (req: Request, res: Response
   try {
     const recommendation = await createRecommendation({ crn: normalizedCrn }, res.locals.user.token)
     res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
-    appInsightsEvent(
-      EVENTS.MRD_RECOMMENDATION_STARTED,
-      normalizedCrn,
-      res.locals.user.username,
-      recommendation.id.toString()
-    )
+    appInsightsEvent(EVENTS.MRD_RECOMMENDATION_STARTED, res.locals.user.username, {
+      crn: normalizedCrn,
+      recommendationId: recommendation.id.toString(),
+    })
   } catch (err) {
     req.session.errors = [
       {

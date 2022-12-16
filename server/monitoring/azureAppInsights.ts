@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
 import { performance } from 'perf_hooks'
 import applicationVersion from '../applicationVersion'
-import logger from '../../logger'
+import { ObjectMap } from '../@types'
 
 function defaultName(): string {
   const {
@@ -36,17 +36,9 @@ export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
   return null
 }
 
-export const appInsightsEvent = (eventName: string, crn: string, username: string, recommendationId: string) => {
+export const appInsightsEvent = (eventName: string, userName: string, eventData: ObjectMap<unknown>) => {
   if (defaultClient && eventName) {
-    const eventProperties = {
-      crn,
-      userName: username,
-      recommendationId,
-    }
-
-    logger.info(`About to track the ${eventName} event to app insights`)
-    defaultClient.trackEvent({ name: eventName, properties: eventProperties })
-    logger.info(`Tracked the ${eventName} event to app insights`)
+    defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
   }
 }
 

@@ -2,6 +2,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
+import { EVENTS } from '../../../utils/constants'
 
 export const validateRecallTypeIndeterminate = async ({
   requestBody,
@@ -47,5 +48,11 @@ export const validateRecallTypeIndeterminate = async ({
   return {
     valuesToSave,
     nextPagePath: `${urlInfo.basePath}${nextPageId}`,
+    monitoringEvent: {
+      eventName: EVENTS.MRD_RECALL_TYPE,
+      data: {
+        recallType: valuesToSave.recallType.selected.value,
+      },
+    },
   }
 }

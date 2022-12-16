@@ -23,7 +23,10 @@ describe('createRecommendationController', () => {
     expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token)
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'A1234AB', 'Dave', '123')
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Dave', {
+      crn: 'A1234AB',
+      recommendationId: '123',
+    })
   })
 
   it('should reload with a stored error, on a failed API call', async () => {
