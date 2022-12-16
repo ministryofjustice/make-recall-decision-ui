@@ -1,5 +1,6 @@
 import { validateRecallType } from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
+import { EVENTS } from '../../../utils/constants'
 
 describe('validateRecallType', () => {
   const recommendationId = '456'
@@ -27,6 +28,21 @@ describe('validateRecallType', () => {
           allOptions: formOptions.recallType,
         },
         isThisAnEmergencyRecall: false,
+      })
+    })
+
+    it('returns monitoring event data', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+      }
+      const { monitoringEvent } = await validateRecallType({ requestBody, recommendationId, urlInfo })
+      expect(monitoringEvent).toEqual({
+        eventName: EVENTS.MRD_RECALL_TYPE,
+        data: {
+          recallType: 'FIXED_TERM',
+        },
       })
     })
 

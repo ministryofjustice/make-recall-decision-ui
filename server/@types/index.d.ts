@@ -1,5 +1,6 @@
 import { ContactSummaryResponse } from './make-recall-decision-api/models/ContactSummaryResponse'
 import { RecommendationResponse } from './make-recall-decision-api'
+import { EVENTS } from '../utils/constants'
 
 export interface ObjectMap<T> {
   [key: string]: T
@@ -60,6 +61,10 @@ export type FormValidatorReturn = Promise<{
   valuesToSave?: ObjectMap<unknown>
   unsavedValues?: ObjectMap<unknown>
   nextPagePath?: string
+  monitoringEvent?: {
+    eventName: EVENTS
+    data: ObjectMap<unknown>
+  }
 }>
 
 export interface InputDisplayValuesArgs {

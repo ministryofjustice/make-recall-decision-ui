@@ -1,5 +1,6 @@
 import { validateRecallTypeIndeterminate } from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
+import { EVENTS } from '../../../utils/constants'
 
 describe('validateRecallTypeIndeterminate', () => {
   const recommendationId = '456'
@@ -31,6 +32,20 @@ describe('validateRecallTypeIndeterminate', () => {
         isThisAnEmergencyRecall: null,
       })
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
+    })
+
+    it('returns monitoring event data', async () => {
+      const requestBody = {
+        recallType: 'EMERGENCY',
+        crn: 'X34534',
+      }
+      const { monitoringEvent } = await validateRecallTypeIndeterminate({ requestBody, recommendationId, urlInfo })
+      expect(monitoringEvent).toEqual({
+        eventName: EVENTS.MRD_RECALL_TYPE,
+        data: {
+          recallType: 'STANDARD',
+        },
+      })
     })
 
     it('returns valuesToSave and redirects if emergency recall selected', async () => {
