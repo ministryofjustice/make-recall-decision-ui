@@ -3,8 +3,10 @@ import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { personSearchResults } from './personSearchResults'
 import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
 import { AuditService } from '../../services/auditService'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 const crn = ' A1234AB '
 let res: Response
@@ -29,6 +31,9 @@ describe('personSearchResults', () => {
     expect(getPersonsByCrn).toHaveBeenCalledWith(crn.trim(), token)
     expect(res.render).toHaveBeenCalledWith('pages/personSearchResults')
     expect(res.locals.persons).toEqual(persons)
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdPersonSearchResults', 'Dave', {
+      crn: 'A1234AB',
+    })
   })
 
   it('should return an error if no search query submitted', async () => {
