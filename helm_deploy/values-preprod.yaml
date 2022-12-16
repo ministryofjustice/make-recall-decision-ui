@@ -8,7 +8,7 @@ generic-service:
 
   env:
     INGRESS_URL: "https://make-recall-decision-preprod.hmpps.service.justice.gov.uk"
-    HMPPS_AUTH_URL: "http://hmpps-auth.hmpps-auth-preprod.svc.cluster.local/auth"
+    HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-preprod.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PRE-PROD"
