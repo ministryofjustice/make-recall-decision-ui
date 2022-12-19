@@ -4,6 +4,7 @@ import { getRecommendationPage } from './getRecommendationPage'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { getRecommendation, updateRecommendation, createDocument } from '../../data/makeDecisionApiClient'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
+import { AuditService } from '../../services/auditService'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('./licenceConditions/transform')
@@ -16,7 +17,7 @@ let res: Response
 describe('getRecommendationPage', () => {
   beforeEach(() => {
     req = mockReq({ params: { recommendationId, pageUrlSlug: 'custody-status' } })
-    res = mockRes({ token: accessToken })
+    res = mockRes({ token: accessToken, locals: { user: { username: 'Bill' } } })
   })
 
   it('should fetch data and render a recommendation page', async () => {
@@ -68,5 +69,18 @@ describe('getRecommendationPage', () => {
     } catch (err) {
       expect(err).toEqual(thrownErr)
     }
+  })
+
+  it('should send an audit event', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    jest.spyOn(AuditService.prototype, 'recommendationView')
+    await getRecommendationPage(req, res)
+    expect(AuditService.prototype.recommendationView).toHaveBeenCalledWith({
+      crn: 'X12345',
+      recommendationId,
+      pageUrlSlug: 'custody-status',
+      username: 'Bill',
+      logErrors: false,
+    })
   })
 })

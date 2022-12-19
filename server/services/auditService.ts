@@ -62,6 +62,28 @@ export class AuditService {
     })
   }
 
+  async submitConsiderRecall({
+    crn,
+    recommendationId,
+    username,
+    logErrors,
+  }: {
+    crn: string
+    recommendationId: string
+    username: string
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'SUBMITTED_CONSIDER_RECALL_FORM',
+      who: username,
+      details: {
+        crn,
+        recommendationId,
+      },
+      logErrors,
+    })
+  }
+
   async recommendationView({
     recommendationId,
     pageUrlSlug,
