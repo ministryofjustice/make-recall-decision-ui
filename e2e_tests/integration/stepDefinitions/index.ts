@@ -7,10 +7,9 @@ const apiDataForCrn = getTestDataPerEnvironment()
 export const crns = {
   1: Cypress.env('CRN') || 'X098092',
   2: Cypress.env('CRN2') || 'X514364',
-  3: Cypress.env('CRN3') || 'X430109',
+  3: Cypress.env('CRN3') || 'X252642',
   4: Cypress.env('CRN4') || 'X487027',
   5: Cypress.env('CRN5') || 'X476202',
-  6: Cypress.env('CRN6') || 'X430112',
 }
 
 // ==================================== Recall
@@ -263,7 +262,6 @@ When('Maria reviews the MAPPA details', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.getElement(`MAPPA for ${offenderName} To review`).should('exist')
     cy.clickLink(`MAPPA for ${offenderName}`)
-    cy.getText('mappa-heading').should('match', /MAPPA/)
     cy.clickLink('Continue')
     cy.getElement(`MAPPA for ${offenderName} Reviewed`).should('exist')
   })

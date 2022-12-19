@@ -1,7 +1,7 @@
 Feature: Standard (determinate)
 
   Background:
-    Given Maria signs in to the case overview for CRN "5"
+    Given Maria signs in to the case overview for CRN "4"
 
   Scenario: Not extended / fixed term changed to standard recall
     Given Maria starts a new recommendation

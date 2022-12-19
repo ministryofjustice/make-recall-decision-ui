@@ -1,7 +1,7 @@
 Feature: Recall (indeterminate)
 
   Background:
-    Given Maria signs in to the case overview for CRN "6"
+    Given Maria signs in to the case overview for CRN "5"
 
   Scenario: Extended sentence changed to non-extended
     Given Maria starts a new recommendation
@@ -24,8 +24,8 @@ Feature: Recall (indeterminate)
     And Maria confirms "Yes" to integrated offender management
     And Maria confirms "Yes" to victim contact scheme
     And Maria enters the date the VLO was informed
-    And Maria reviews the personal details
-    And Maria reviews the offence details
+    And Maria confirms the personal details
+    And Maria confirms the offence details
     And Maria enters the offence analysis
     And Maria enters the previous releases
     And Maria confirms "Yes" to a risk of contraband
