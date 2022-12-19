@@ -14,9 +14,19 @@ const defaultStartPath = (crnNum: string) => {
   return `/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`
 }
 
+const deleteOldRecommendation = () => {
+  cy.clickLink('Recommendations')
+  cy.get('body').then($body => {
+    if ($body.find('[data-qa="delete-recommendation"]').length) {
+      cy.clickButton('Delete')
+    }
+  })
+}
+
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   cy.visitPage(defaultStartPath(crnNum))
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
+  deleteOldRecommendation()
 })
 
 When(
@@ -25,16 +35,19 @@ When(
     const flags = featureFlag ? `&${featureFlag}=1` : ''
     cy.visitPage(`${defaultStartPath(crnNum)}${flags}`)
     cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
+    deleteOldRecommendation()
   }
 )
 
+When('Maria considers a new recall', () => {
+  const detail = 'Risk has increased. Considering a recall.'
+  cy.clickLink('Consider a recall')
+  cy.fillInput('Consider a recall', detail)
+  cy.clickButton('Continue')
+  cy.getText('recallConsideredDetail').should('equal', detail)
+})
+
 When('Maria starts a new recommendation', () => {
-  cy.clickLink('Recommendations')
-  cy.get('body').then($body => {
-    if ($body.find('[data-qa="delete-recommendation"]').length) {
-      cy.clickButton('Delete')
-    }
-  })
   cy.clickButton('Make a recommendation')
 })
 
