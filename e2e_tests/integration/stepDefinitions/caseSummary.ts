@@ -1,5 +1,7 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor'
-import { crn } from './index'
+import { crns } from './index'
+
+const crn = crns['1']
 
 When('Maria signs in to start page', () => {
   cy.visitPage('/')

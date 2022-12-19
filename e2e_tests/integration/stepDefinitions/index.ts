@@ -4,13 +4,19 @@ import { longDateMatchPattern } from '../../../cypress_shared/utils'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
-export const crn = Cypress.env('CRN') || 'X098092'
-export const crn2 = Cypress.env('CRN2') || 'X514364'
+export const crns = {
+  1: Cypress.env('CRN') || 'X098092',
+  2: Cypress.env('CRN2') || 'X514364',
+  3: Cypress.env('CRN3') || 'X430109',
+  4: Cypress.env('CRN4') || 'X430108',
+  5: Cypress.env('CRN5') || 'X476202',
+  5: Cypress.env('CRN6') || 'X430112',
+}
 
 // ==================================== Recall
 
 const defaultStartPath = (crnNum: string) => {
-  const crnToUse = crnNum === '1' ? crn : crn2
+  const crnToUse = crns[crnNum]
   return `/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`
 }
 
