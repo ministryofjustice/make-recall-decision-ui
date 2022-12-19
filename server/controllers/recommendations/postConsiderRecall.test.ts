@@ -3,13 +3,16 @@ import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { postConsiderRecall } from './postConsiderRecall'
 import RestClient from '../../data/restClient'
 import getRecommendationResponse from '../../../api/responses/get-recommendation.json'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+
+jest.mock('../../monitoring/azureAppInsights')
 
 describe('postConsiderRecall', () => {
   const crn = '123'
   let res: Response
 
   beforeEach(() => {
-    res = mockRes({ locals: {} })
+    res = mockRes({ locals: { user: { username: 'Dave' } } })
   })
 
   it('should create recommendation and redirect to next page if recommendation ID is not in request body', async () => {
@@ -30,6 +33,9 @@ describe('postConsiderRecall', () => {
       path: '/recommendations',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Dave', {
+      crn,
+    })
   })
 
   it('should update recommendation and redirect to next page if recommendation ID is in request body', async () => {
@@ -49,6 +55,10 @@ describe('postConsiderRecall', () => {
       path: '/recommendations/abc',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderationEdited', 'Dave', {
+      crn,
+      recommendationId: 'abc',
+    })
   })
 
   it('should reload the page and save errors if the user input is invalid', async () => {
