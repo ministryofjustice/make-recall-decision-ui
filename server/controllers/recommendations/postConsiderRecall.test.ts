@@ -4,6 +4,7 @@ import { postConsiderRecall } from './postConsiderRecall'
 import RestClient from '../../data/restClient'
 import getRecommendationResponse from '../../../api/responses/get-recommendation.json'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { AuditService } from '../../services/auditService'
 
 jest.mock('../../monitoring/azureAppInsights')
 
@@ -17,6 +18,7 @@ describe('postConsiderRecall', () => {
 
   it('should create recommendation and redirect to next page if recommendation ID is not in request body', async () => {
     jest.spyOn(RestClient.prototype, 'post').mockResolvedValueOnce(getRecommendationResponse)
+    jest.spyOn(AuditService.prototype, 'submitConsiderRecall')
     const req = mockReq({
       method: 'POST',
       body: {
@@ -35,11 +37,19 @@ describe('postConsiderRecall', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
     expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Dave', {
       crn,
+      recommendationId: 1,
+    })
+    expect(AuditService.prototype.submitConsiderRecall).toHaveBeenCalledWith({
+      crn,
+      recommendationId: getRecommendationResponse.id.toString(),
+      username: 'Dave',
+      logErrors: false,
     })
   })
 
   it('should update recommendation and redirect to next page if recommendation ID is in request body', async () => {
     jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(getRecommendationResponse)
+    jest.spyOn(AuditService.prototype, 'submitConsiderRecall')
     const req = mockReq({
       method: 'POST',
       body: {
@@ -58,6 +68,12 @@ describe('postConsiderRecall', () => {
     expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderationEdited', 'Dave', {
       crn,
       recommendationId: 'abc',
+    })
+    expect(AuditService.prototype.submitConsiderRecall).toHaveBeenCalledWith({
+      crn,
+      recommendationId: 'abc',
+      username: 'Dave',
+      logErrors: false,
     })
   })
 
