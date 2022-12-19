@@ -8,7 +8,7 @@ export const featureFlagsDefaults = {
   },
   flagVulnerabilities: {
     label: 'Case overview - vulnerabilities tab',
-    default: false,
+    default: true,
   },
   flagRecommendationsPageProd: {
     label: 'Recommendations list',

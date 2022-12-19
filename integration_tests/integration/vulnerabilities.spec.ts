@@ -15,7 +15,7 @@ context('Vulnerabilities page', () => {
       response: getCaseVulnerabilitiesResponse,
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.pageHeading().should('equal', 'Vulnerabilities for Paula Smith')
     cy.getElement({ qaAttr: 'banner-vulnerabilities' }).should(
       'contain',
@@ -78,7 +78,7 @@ context('Vulnerabilities page', () => {
       },
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
       expect(text).to.contain('Current concerns: No value - check OASys')
       expect(text).to.contain('Previous concerns: No value - check OASys')
@@ -122,7 +122,7 @@ context('Vulnerabilities page', () => {
       },
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
       expect(text).to.contain("Current concerns: Don't know")
       expect(text).to.contain("Previous concerns: Don't know")
@@ -153,7 +153,7 @@ context('Vulnerabilities page', () => {
       },
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-SERVER_ERROR' }).should('exist')
   })
 
@@ -169,7 +169,7 @@ context('Vulnerabilities page', () => {
       },
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities?flagVulnerabilities=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND_LATEST_COMPLETE' }).should('exist')
   })
 })
