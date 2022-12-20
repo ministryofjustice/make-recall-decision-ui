@@ -15,7 +15,7 @@ describe('createAndDownloadDocument', () => {
   beforeEach(() => {
     res = mockRes({
       token,
-      locals: { user: { username: 'Dave', email: 'dave@gov.uk' }, flags: { flagVulnerabilities: true } },
+      locals: { user: { username: 'Dave', email: 'dave@gov.uk' }, flags: { flagExcludeFromAnalytics: true } },
     })
   })
 
@@ -28,7 +28,7 @@ describe('createAndDownloadDocument', () => {
     await createAndDownloadDocument('PART_A')(req, res)
     expect(RestClient.prototype.post as jest.Mock).toHaveBeenCalledWith({
       data: { format: 'download-docx', userEmail: 'dave@gov.uk' },
-      headers: { 'X-Feature-Flags': '{"flagVulnerabilities":true}' },
+      headers: { 'X-Feature-Flags': '{"flagExcludeFromAnalytics":true}' },
       path: '/recommendations/987/part-a',
     })
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
@@ -57,7 +57,7 @@ describe('createAndDownloadDocument', () => {
     await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
     expect(RestClient.prototype.post as jest.Mock).toHaveBeenCalledWith({
       data: { format: 'download-docx' },
-      headers: { 'X-Feature-Flags': '{"flagVulnerabilities":true}' },
+      headers: { 'X-Feature-Flags': '{"flagExcludeFromAnalytics":true}' },
       path: '/recommendations/987/no-recall-letter',
     })
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
