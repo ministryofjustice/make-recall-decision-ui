@@ -4,6 +4,8 @@ import { routeUrls } from '../../routes/routeUrls'
 import { validateCrn } from '../../utils/utils'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { AppError } from '../../AppError'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 const isValidStatus = (status: string) => {
   const validValues = Object.values(RecommendationResponse.status) as string[]
@@ -31,4 +33,10 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
   await updateRecommendation(recommendationId, { status }, user.token)
   const redirectPath = getRedirectPath(status, normalizedCrn, recommendationId)
   res.redirect(303, redirectPath)
+  if (status === 'DRAFT') {
+    appInsightsEvent(EVENTS.MRD_RECOMMENDATION_STARTED, user.username, {
+      crn: normalizedCrn,
+      recommendationId,
+    })
+  }
 }
