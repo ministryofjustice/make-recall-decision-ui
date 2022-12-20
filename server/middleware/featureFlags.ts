@@ -2,10 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlagDefault, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
-  flagConsiderRecall: {
-    label: 'Consider a recall',
-    default: false,
-  },
   flagDomainEventRecommendationStarted: {
     label: "Create Delius contact when user clicks 'Make recommendation' button",
     default: false,

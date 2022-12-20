@@ -4,7 +4,8 @@ Feature: Standard (determinate)
     Given Maria signs in to the case overview for CRN "4"
 
   Scenario: Not extended / fixed term changed to standard recall
-    Given Maria starts a new recommendation
+    And Maria considers a new recall
+    And Maria starts a new recommendation
     And Maria explains how the person has responded to probation so far
     And Maria selects the licence conditions that have been breached
     And Maria selects the alternatives to recall that have been tried

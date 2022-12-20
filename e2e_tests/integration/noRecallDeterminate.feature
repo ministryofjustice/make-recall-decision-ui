@@ -4,7 +4,8 @@ Feature: No Recall (determinate)
     Given Maria signs in to the case overview for CRN "2"
 
   Scenario: No recall
-    Given Maria starts a new recommendation
+    And Maria considers a new recall
+    And Maria starts a new recommendation
     And Maria explains how the person has responded to probation so far
     And Maria selects the licence conditions that have been breached
     And Maria selects the alternatives to recall that have been tried
