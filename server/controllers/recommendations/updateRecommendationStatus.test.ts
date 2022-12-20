@@ -2,8 +2,10 @@ import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendationStatus } from './updateRecommendationStatus'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 describe('updateRecommendationStatus', () => {
   const recommendationId = '123'
@@ -16,7 +18,7 @@ describe('updateRecommendationStatus', () => {
   let res: Response
 
   beforeEach(() => {
-    res = mockRes({ locals: { urlInfo: { basePath } } })
+    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Bill' } } })
   })
 
   it('should update recommendation and redirect to recommendations tab if set to DOCUMENT_CREATED', async () => {
@@ -32,7 +34,7 @@ describe('updateRecommendationStatus', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/recommendations`)
   })
 
-  it('should update recommendation and redirect to recommendations tab if set to DRAFT', async () => {
+  it('should update recommendation, redirect and fire event if set to DRAFT', async () => {
     const req = mockReq({
       method: 'POST',
       params: { recommendationId },
@@ -43,6 +45,10 @@ describe('updateRecommendationStatus', () => {
     })
     await updateRecommendationStatus(req, res)
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/response-to-probation`)
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Bill', {
+      crn,
+      recommendationId,
+    })
   })
 
   it('should throw if the API errors', async () => {
