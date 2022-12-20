@@ -1,5 +1,10 @@
 {% if flags.flagConsiderRecall == true %}
-    {% if not caseSummary.activeRecommendation.recommendationId %}
+    {% if caseSummary.activeRecommendation.recommendationId and not caseSummary.activeRecommendation.recallConsideredList %}
+        <a class='govuk-button'
+           href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/task-list'
+           data-analytics-event='click_cta' data-analytics-event-category='update_recommendation_click'>Update
+            recommendation</a>
+    {% else %}
         <a class='govuk-button'
            href='{{ pageUrlBase }}consider-recall'
            data-analytics-event='click_cta' data-analytics-event-category='consider_recall_click'>Consider a recall</a>
