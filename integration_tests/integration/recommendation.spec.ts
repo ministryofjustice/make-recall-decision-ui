@@ -121,6 +121,21 @@ context('Make a recommendation', () => {
         cy.pageHeading().should('equal', 'Overview for Paula Smith')
       })
 
+      it('update button shown if recommendation exists without consider recall detail', () => {
+        cy.task('getCase', {
+          sectionId: 'overview',
+          statusCode: 200,
+          response: { ...getCaseOverviewResponse, activeRecommendation: { recommendationId: '123' } },
+        })
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
+        })
+        cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+        cy.clickLink('Update recommendation')
+        cy.pageHeading().should('equal', 'Create a Part A form')
+      })
+
       it('shows a "Consider a recall" banner if there\'s an active recommendation', () => {
         const recallConsideredDetail =
           'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
