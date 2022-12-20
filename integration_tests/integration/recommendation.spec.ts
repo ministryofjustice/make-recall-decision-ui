@@ -439,16 +439,10 @@ context('Make a recommendation', () => {
   })
 
   describe('Restricted / excluded CRNs', () => {
-    it('prevents creating a recommendation if CRN is excluded', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-        activeRecommendation: undefined,
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-      cy.task('createRecommendation', { statusCode: 403, response: excludedResponse })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
-      cy.clickButton('Make a recommendation')
-      cy.getElement('There is a problem').should('exist')
+    it('prevents considering a recall if CRN is excluded', () => {
+      cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: excludedResponse })
+      cy.visit(`${routeUrls.cases}/${crn}/consider-recall`)
+      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
     })
 
     it('prevents updating a recommendation if CRN is excluded', () => {
