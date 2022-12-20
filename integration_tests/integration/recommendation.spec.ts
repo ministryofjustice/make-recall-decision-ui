@@ -167,6 +167,7 @@ context('Make a recommendation', () => {
         cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
         cy.clickButton('Make a recommendation')
         cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
+        cy.getElement({ qaAttr: 'consider-recall-button' }).should('not.exist')
       })
     })
   })
