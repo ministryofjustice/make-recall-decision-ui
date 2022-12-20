@@ -6,10 +6,6 @@ export const featureFlagsDefaults = {
     label: 'Consider a recall',
     default: false,
   },
-  flagVulnerabilities: {
-    label: 'Case overview - vulnerabilities tab',
-    default: true,
-  },
   flagRecommendationsPageProd: {
     label: 'Recommendations list',
     default: false,

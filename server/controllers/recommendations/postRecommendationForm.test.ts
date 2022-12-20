@@ -35,7 +35,7 @@ describe('postRecommendationForm', () => {
 
   it('should send feature flags to the API', async () => {
     const recallDetails = { recommendationId }
-    res = mockRes({ locals: { urlInfo: { basePath }, flags: { flagVulnerabilities: true } } })
+    res = mockRes({ locals: { urlInfo: { basePath }, flags: { flagExcludeFromAnalytics: true } } })
     jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
     const req = mockReq({
       method: 'POST',
@@ -44,7 +44,7 @@ describe('postRecommendationForm', () => {
     })
     await postRecommendationForm(req, res)
     const lastCall = (RestClient.prototype.patch as jest.Mock).mock.calls[0]
-    expect(lastCall[0].headers).toEqual({ 'X-Feature-Flags': '{"flagVulnerabilities":true}' })
+    expect(lastCall[0].headers).toEqual({ 'X-Feature-Flags': '{"flagExcludeFromAnalytics":true}' })
   })
 
   it('should reload the page and save errors if the user input is invalid', async () => {
