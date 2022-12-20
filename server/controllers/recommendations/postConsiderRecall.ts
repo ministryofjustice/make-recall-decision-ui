@@ -28,7 +28,7 @@ const sendEvents = ({
   const logErrors = isPreprodOrProd(env) && process.env.NODE_ENV !== 'test'
   const normalizedCrn = normalizeCrn(crn)
   if (recommendationId) {
-    appInsightsEvent(EVENTS.MRD_CONSIDERATION_EDITED, username, {
+    appInsightsEvent(EVENTS.MRD_CONSIDER_RECALL_EDITED, username, {
       crn: normalizedCrn,
       recommendationId,
     })
@@ -39,7 +39,7 @@ const sendEvents = ({
       logErrors,
     })
   } else {
-    appInsightsEvent(EVENTS.MRD_RECOMMENDATION_STARTED, username, {
+    appInsightsEvent(EVENTS.MRD_CONSIDER_RECALL_CREATED, username, {
       crn: normalizedCrn,
       recommendationId: recommendation.id,
     })

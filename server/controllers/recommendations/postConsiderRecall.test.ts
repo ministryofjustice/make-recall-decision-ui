@@ -35,7 +35,7 @@ describe('postConsiderRecall', () => {
       path: '/recommendations',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Dave', {
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderRecallCreated', 'Dave', {
       crn,
       recommendationId: 1,
     })
@@ -65,7 +65,7 @@ describe('postConsiderRecall', () => {
       path: '/recommendations/abc',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderationEdited', 'Dave', {
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderRecallEdited', 'Dave', {
       crn,
       recommendationId: 'abc',
     })
