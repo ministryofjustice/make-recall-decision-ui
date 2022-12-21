@@ -70,7 +70,6 @@ export namespace RecommendationResponse {
 
     export enum status {
         DRAFT = 'DRAFT',
-        DOCUMENT_CREATED = 'DOCUMENT_CREATED',
         DELETED = 'DELETED',
         RECALL_CONSIDERED = 'RECALL_CONSIDERED',
         DOCUMENT_DOWNLOADED = 'DOCUMENT_DOWNLOADED',

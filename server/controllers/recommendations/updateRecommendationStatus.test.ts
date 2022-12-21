@@ -12,7 +12,7 @@ describe('updateRecommendationStatus', () => {
   const crn = 'X12345'
   const basePath = `/recommendations/${recommendationId}/`
   const requestBody = {
-    status: 'DOCUMENT_CREATED',
+    status: 'DELETED',
     crn,
   }
   let res: Response
@@ -21,12 +21,12 @@ describe('updateRecommendationStatus', () => {
     res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Bill' } } })
   })
 
-  it('should update recommendation and redirect to recommendations tab if set to DOCUMENT_CREATED', async () => {
+  it('should update recommendation and redirect to recommendations tab if set to DELETED', async () => {
     const req = mockReq({
       method: 'POST',
       params: { recommendationId },
       body: {
-        status: 'DOCUMENT_CREATED',
+        status: 'DELETED',
         crn,
       },
     })
