@@ -32,9 +32,10 @@ const sendEvents = ({
       crn: normalizedCrn,
       recommendationId,
     })
-    auditService.submitConsiderRecall({
+    auditService.considerRecall({
       crn: normalizedCrn,
       recommendationId,
+      action: 'CONSIDER_RECALL_EDIT',
       username,
       logErrors,
     })
@@ -43,9 +44,10 @@ const sendEvents = ({
       crn: normalizedCrn,
       recommendationId: recommendation.id,
     })
-    auditService.submitConsiderRecall({
+    auditService.considerRecall({
       crn: normalizedCrn,
       recommendationId: recommendation.id.toString(),
+      action: 'CONSIDER_RECALL_CREATE',
       username,
       logErrors,
     })
