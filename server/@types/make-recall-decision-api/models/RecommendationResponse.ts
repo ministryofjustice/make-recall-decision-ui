@@ -11,7 +11,10 @@ import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
 import type { LocalPoliceContact } from './LocalPoliceContact';
 import type { NextAppointment } from './NextAppointment';
 import type { PersonOnProbationDto } from './PersonOnProbationDto';
+import type { PreviousRecalls } from './PreviousRecalls';
+import type { PreviousReleases } from './PreviousReleases';
 import type { ReasonsForNoRecall } from './ReasonsForNoRecall';
+import type { RecallConsidered } from './RecallConsidered';
 import type { RecallType } from './RecallType';
 import type { SelectedWithDetails } from './SelectedWithDetails';
 import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
@@ -19,8 +22,6 @@ import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
-import { PreviousReleases } from './PreviousReleases'
-import { RecallConsidered } from './RecallConsidered'
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -61,16 +62,18 @@ export type RecommendationResponse = {
     reasonsForNoRecall?: ReasonsForNoRecall;
     nextAppointment?: NextAppointment;
     previousReleases?: PreviousReleases;
-    recallConsideredList?: RecallConsidered[]
+    previousRecalls?: PreviousRecalls;
+    recallConsideredList?: Array<RecallConsidered>;
 };
 
 export namespace RecommendationResponse {
 
     export enum status {
-        RECALL_CONSIDERED = 'RECALL_CONSIDERED',
         DRAFT = 'DRAFT',
         DOCUMENT_CREATED = 'DOCUMENT_CREATED',
         DELETED = 'DELETED',
+        RECALL_CONSIDERED = 'RECALL_CONSIDERED',
+        DOCUMENT_DOWNLOADED = 'DOCUMENT_DOWNLOADED',
     }
 
 

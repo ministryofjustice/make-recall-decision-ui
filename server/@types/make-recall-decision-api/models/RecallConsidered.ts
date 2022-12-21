@@ -3,10 +3,10 @@
 /* eslint-disable */
 
 export type RecallConsidered = {
-  userName?: string;
-  createdDate?: string;
-  recallConsideredDetail?: string;
+    id: number;
+    userId?: string;
+    createdDate?: string;
+    userName?: string;
+    recallConsideredDetail?: string;
 };
-
-
 
