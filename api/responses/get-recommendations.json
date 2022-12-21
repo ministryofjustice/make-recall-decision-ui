@@ -11,7 +11,7 @@
   },
   {
     "id": 2,
-    "status": "DOCUMENT_CREATED",
+    "status": "DOCUMENT_DOWNLOADED",
     "crn": "X12345",
     "createdDate": "2021-12-05",
     "lastModifiedDate": "2022-01-12T09:43:50.000Z",
@@ -21,7 +21,7 @@
   },
   {
     "id": 2,
-    "status": "DOCUMENT_CREATED",
+    "status": "DELETED",
     "crn": "X12345",
     "createdDate": "2016-06-08",
     "lastModifiedDate": "2016-06-08T17:12:50.000Z",

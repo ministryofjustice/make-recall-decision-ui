@@ -14,7 +14,7 @@ const isValidStatus = (status: string) => {
 
 const getRedirectPath = (status: string, crn: string, recommendationId: string) => {
   switch (status) {
-    case 'DOCUMENT_CREATED':
+    case 'DELETED':
       return `${routeUrls.cases}/${crn}/recommendations`
     case 'DRAFT':
       return `${routeUrls.recommendations}/${recommendationId}/response-to-probation`

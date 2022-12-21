@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Unit = {
+export type PurgeQueueResult = {
+    messagesFoundCount: number;
 };
 

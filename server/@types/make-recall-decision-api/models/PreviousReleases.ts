@@ -6,6 +6,6 @@ export type PreviousReleases = {
     lastReleaseDate?: string;
     lastReleasingPrisonOrCustodialEstablishment?: string;
     hasBeenReleasedPreviously?: boolean;
-    previousReleaseDates?: string[]
+    previousReleaseDates?: Array<string>;
 };
 
