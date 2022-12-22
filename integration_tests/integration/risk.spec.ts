@@ -287,7 +287,7 @@ context('Risk page', () => {
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
-      const opts = { parent: '[data-qa="timeline-item-1"]' }
+      const opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.clickLink('Open all')
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
       cy.getElement('OSP/C LOW', opts).should('be.visible')
