@@ -10,16 +10,21 @@
         </div>
         <div class="govuk-body predictor-timeline__heading">
             <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Scores history</h2>
-            {% if caseSummary.predictorScores.historical %}
-            <div>
-                <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
-            </div>
+            {% if caseSummary.predictorScores.error and caseSummary.roshHistory.error %}
+                <p class='govuk-body' data-qa='timeline-missing'>RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.</p>
+            {% elseif caseSummary.predictorScores.error %}
+                <p class='govuk-body' data-qa='score-history-missing'>Predictor scores cannot be retrieved from OASys. Double-check OASys.</p>
+            {% elseif caseSummary.roshHistory.error %}
+                <p class='govuk-body' data-qa='rosh-history-missing'>Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.</p>
+            {% endif %}
+            {% if caseSummary.timeline.length %}
+                <div>
+                    <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+                </div>
             {% endif %}
         </div>
-        {% if caseSummary.predictorScores.historical %}
-            {{ predictorTimeline(caseSummary.predictorScores.historical) }}
-        {% elseif caseSummary.predictorScores.error %}
-            <p class='govuk-body' data-qa='score-history-missing'>Predictor scores cannot be retrieved from OASys. Double-check OASys.</p>
+        {% if caseSummary.timeline.length %}
+            {{ predictorTimeline(caseSummary.timeline, pageUrlBase) }}
         {% endif %}
     </div>
     <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">

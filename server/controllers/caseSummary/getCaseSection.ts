@@ -16,6 +16,7 @@ import { transformRiskManagementPlan } from './overview/transformRiskManagementP
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { VulnerabilitiesResponse } from '../../@types/make-recall-decision-api/models/VulnerabilitiesResponse'
 import { transformVulnerabilities } from './vulnerabilities/transformVulnerabilities'
+import { transformRisk } from './risk/transformRisk'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -45,7 +46,10 @@ export const getCaseSection = async (
       break
     case 'risk':
       startTime = performance.now()
-      caseSummary = await getCaseSummary<RiskResponse>(trimmedCrn, sectionId, token)
+      caseSummaryRaw = await getCaseSummary<RiskResponse>(trimmedCrn, sectionId, token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = transformRisk(caseSummaryRaw)
+      }
       appInsightsTimingMetric({ name: 'getCaseRisk', startTime })
       sectionLabel = 'Risk'
       break

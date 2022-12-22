@@ -14,6 +14,7 @@ import {
   riskLevelLabel,
   defaultValue,
   roshYesNoLabel,
+  formatDateFilterQueryString,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
@@ -83,4 +84,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('riskLevelLabel', riskLevelLabel)
   njkEnv.addGlobal('roshYesNoLabel', roshYesNoLabel)
   njkEnv.addGlobal('isDefined', isDefined)
+  njkEnv.addGlobal('formatDateFilterQueryString', formatDateFilterQueryString)
 }
