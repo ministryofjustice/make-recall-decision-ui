@@ -36,6 +36,38 @@
     "lastUpdatedDate": "2022-09-24",
     "category": 2
   },
+  "roshHistory": {
+    "registrations": [
+      {
+        "startDate": "2021-06-23",
+        "notes": "Registering Staff ID re-assigned in TR Migration",
+        "register": {
+          "code": "1",
+          "description": "RoSH"
+        },
+        "type": {
+          "code": "RHRH",
+          "description": "High RoSH"
+        },
+        "registrationId": "123",
+        "active": true
+      },
+      {
+        "startDate": "2022-10-17",
+        "notes": null,
+        "register": {
+          "code": "1",
+          "description": "RoSH"
+        },
+        "type": {
+          "code": "RVRH",
+          "description": "Very High RoSH"
+        },
+        "registrationId": "123",
+        "active": false
+      }
+    ]
+  },
   "predictorScores": {
     "current": {
       "date": "2021-10-24",

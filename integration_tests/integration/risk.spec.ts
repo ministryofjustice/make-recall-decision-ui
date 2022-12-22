@@ -66,33 +66,6 @@ context('Risk page', () => {
     // MAPPA level
     cy.getElement('Cat 2/Level 1 MAPPA').should('exist')
     cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="mappa"]' }).should('exist')
-
-    // score history
-    cy.clickLink('Open all')
-    let opts = { parent: '[data-qa="timeline-item-1"]' }
-    cy.getElement('13 July 2021', opts).should('be.visible')
-    cy.getElement('RSR HIGH 18', opts).should('be.visible')
-    cy.getElement('OSP/C LOW', opts).should('be.visible')
-    cy.getElement('OSP/I MEDIUM', opts).should('be.visible')
-    cy.getElement('OGRS 1YR MEDIUM 10', opts).should('be.visible')
-    cy.getElement('OGRS 2YR MEDIUM 20', opts).should('be.visible')
-    cy.getElement('OGP 1YR HIGH 56', opts).should('be.visible')
-    cy.getElement('OGP 2YR HIGH 63', opts).should('be.visible')
-    cy.getElement('OVP 1YR VERY HIGH 34', opts).should('be.visible')
-    cy.getElement('OVP 2YR VERY HIGH 64', opts).should('be.visible')
-
-    opts = { parent: '[data-qa="timeline-item-2"]' }
-    cy.getElement('4 May 2019', opts).should('be.visible')
-    cy.getElement('RSR MEDIUM 12', opts).should('be.visible')
-    cy.getElement('OSP/C MEDIUM', opts).should('be.visible')
-    cy.getElement('OSP/I LOW', opts).should('be.visible')
-    cy.getElement('OGRS 1YR HIGH 45', opts).should('be.visible')
-    cy.getElement('OGRS 2YR HIGH 55', opts).should('be.visible')
-    cy.getElement('OGP 1YR VERY HIGH 77', opts).should('be.visible')
-    cy.getElement('OGP 2YR VERY HIGH 85', opts).should('be.visible')
-    // scores missing a level
-    cy.getElement('OVP 1YR 82', opts).should('be.visible')
-    cy.getElement('OVP 2YR 91', opts).should('be.visible')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
@@ -185,65 +158,140 @@ context('Risk page', () => {
     }).should('exist')
   })
 
-  it('score timeline - shows message if no predictor data found', () => {
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: getCaseRiskNoDataResponse,
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.getText('score-history-missing').should(
-      'equal',
-      'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
-    )
-  })
+  describe('Timeline', () => {
+    it('Predictor scores and RoSH history available', () => {
+      cy.task('getCase', {
+        sectionId: 'risk',
+        statusCode: 200,
+        response: getCaseRiskResponse,
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
-  it('score timeline - shows message if error occurs fetching predictor data', () => {
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: {
-        ...getCaseRiskNoDataResponse,
-        predictorScores: {
-          error: 'SERVER_ERROR',
+      // RoSH history
+      cy.get('[data-qa="timeline-item-1"]').should('contain', '17 October 2022')
+      cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
+      cy.getLinkHref({ qaAttr: 'view-contacts' }, { parent: '[data-qa="timeline-item-1"]' }).should(
+        'contain',
+        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022'
+      )
+
+      cy.get('[data-qa="timeline-item-3"]').should('contain', '23 June 2021')
+      cy.get('[data-qa="timeline-item-3"]').should('contain', 'RoSH HIGH')
+      cy.viewDetails('View notes on RoSH history on 23 June 2021').should(
+        'contain',
+        'Registering Staff ID re-assigned in TR Migration'
+      )
+
+      // predictor score history
+      cy.clickLink('Open all')
+      let opts = { parent: '[data-qa="timeline-item-2"]' }
+      cy.getElement('13 July 2021', opts).should('be.visible')
+      cy.getElement('RSR HIGH 18', opts).should('be.visible')
+      cy.getElement('OSP/C LOW', opts).should('be.visible')
+      cy.getElement('OSP/I MEDIUM', opts).should('be.visible')
+      cy.getElement('OGRS 1YR MEDIUM 10', opts).should('be.visible')
+      cy.getElement('OGRS 2YR MEDIUM 20', opts).should('be.visible')
+      cy.getElement('OGP 1YR HIGH 56', opts).should('be.visible')
+      cy.getElement('OGP 2YR HIGH 63', opts).should('be.visible')
+      cy.getElement('OVP 1YR VERY HIGH 34', opts).should('be.visible')
+      cy.getElement('OVP 2YR VERY HIGH 64', opts).should('be.visible')
+
+      opts = { parent: '[data-qa="timeline-item-4"]' }
+      cy.getElement('4 May 2019', opts).should('be.visible')
+      cy.getElement('RSR MEDIUM 12', opts).should('be.visible')
+      cy.getElement('OSP/C MEDIUM', opts).should('be.visible')
+      cy.getElement('OSP/I LOW', opts).should('be.visible')
+      cy.getElement('OGRS 1YR HIGH 45', opts).should('be.visible')
+      cy.getElement('OGRS 2YR HIGH 55', opts).should('be.visible')
+      cy.getElement('OGP 1YR VERY HIGH 77', opts).should('be.visible')
+      cy.getElement('OGP 2YR VERY HIGH 85', opts).should('be.visible')
+      // scores missing a level
+      cy.getElement('OVP 1YR 82', opts).should('be.visible')
+      cy.getElement('OVP 2YR 91', opts).should('be.visible')
+    })
+
+    it('errors fetching both predictor and RoSH history', () => {
+      cy.task('getCase', {
+        sectionId: 'risk',
+        statusCode: 200,
+        response: getCaseRiskNoDataResponse,
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.getText('timeline-missing').should(
+        'equal',
+        'RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.'
+      )
+    })
+
+    it('error fetching predictor scores', () => {
+      cy.task('getCase', {
+        sectionId: 'risk',
+        statusCode: 200,
+        response: {
+          ...getCaseRiskResponse,
+          predictorScores: {
+            error: 'SERVER_ERROR',
+          },
         },
-      },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.getText('score-history-missing').should(
+        'equal',
+        'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
+      )
+      cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
+      cy.get('[data-qa="timeline-item-2"]').should('contain', 'RoSH HIGH')
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.getText('score-history-missing').should(
-      'equal',
-      'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
-    )
-  })
 
-  it('score timeline - hide individual scores if missing', () => {
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: {
-        ...getCaseRiskResponse,
-        predictorScores: {
-          historical: [
-            {
-              date: '2021-07-13',
-              scores: {
-                RSR: null,
-                OSPC: {
-                  level: 'LOW',
-                  score: 6.8,
-                  type: 'OSP/C',
+    it('error fetching RoSH history', () => {
+      cy.task('getCase', {
+        sectionId: 'risk',
+        statusCode: 200,
+        response: {
+          ...getCaseRiskResponse,
+          roshHistory: {
+            error: 'SERVER_ERROR',
+          },
+        },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.getText('rosh-history-missing').should(
+        'equal',
+        'Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.'
+      )
+      cy.get('[data-qa="timeline-item-1"]').should('contain', '13 July 2021')
+      cy.get('[data-qa="timeline-item-2"]').should('contain', '4 May 2019')
+    })
+
+    it('score timeline - hide individual scores if missing', () => {
+      cy.task('getCase', {
+        sectionId: 'risk',
+        statusCode: 200,
+        response: {
+          ...getCaseRiskResponse,
+          predictorScores: {
+            historical: [
+              {
+                date: '2021-07-13',
+                scores: {
+                  RSR: null,
+                  OSPC: {
+                    level: 'LOW',
+                    score: 6.8,
+                    type: 'OSP/C',
+                  },
                 },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
+      })
+      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      const opts = { parent: '[data-qa="timeline-item-1"]' }
+      cy.clickLink('Open all')
+      cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
+      cy.getElement('OSP/C LOW', opts).should('be.visible')
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    const opts = { parent: '[data-qa="timeline-item-1"]' }
-    cy.clickLink('Open all')
-    cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
-    cy.getElement('OSP/C LOW', opts).should('be.visible')
   })
 
   it('shows a message if the assessment is incomplete', () => {

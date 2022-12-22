@@ -1,0 +1,47 @@
+{% from "components/predictor-timeline-item/macro.njk" import predictorTimelineItem %}
+
+{% if params.item.type == 'RoSH' %}
+    <div class='flex govuk-!-margin-bottom-2'>
+    {{ predictorTimelineItem({ type: params.item.type, level: params.item.level }) }}
+    <span class='govuk-!-padding-left-2 govuk-!-font-size-16'>from NDelius</span>
+    </div>
+    <div class='govuk-!-font-size-16'>
+        <a href='{{ params.pageUrlBase }}contact-history?{{ formatDateFilterQueryString(params.item.date) }}' data-qa='view-contacts'>View contacts<span class='govuk-visually-hidden'> from {{ formatDateTimeFromIsoString({ isoDate: params.item.date, dateOnly: true }) }}</span></a><span aria-hidden='true'> from this day</span>
+    </div>
+
+    {% if params.item.notes %}
+        <details class="govuk-details govuk-!-margin-top-2 govuk-!-margin-bottom-0" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text govuk-!-font-size-16" data-analytics-event="roshHistory"
+                      data-analytics-event-category="{{ params.item.level }}"
+                      data-analytics-event-label="{{ params.item.date }}">View notes<span
+                            class="govuk-visually-hidden"> on RoSH history on {{ formatDateTimeFromIsoString({ isoDate: params.item.date, dateOnly: true }) }}</span></span>
+            </summary>
+            <div class="govuk-details__text">
+                <pre class='govuk-body govuk-!-font-size-16' data-qa='notes'>{{ params.item.notes }}</pre>
+            </div>
+        </details>
+    {% endif %}
+{% else  %}
+    <div class="predictor-timeline-section">
+        <ul class="govuk-list">
+            {% if params.item.scores.RSR %}<li>{{ predictorTimelineItem({ type: params.item.scores.RSR.type, score: params.item.scores.RSR.score, level: params.item.scores.RSR.level }) }}</li>{% endif %}
+            {% if params.item.scores.OSPC %}<li>{{ predictorTimelineItem({ type: params.item.scores.OSPC.type, score: params.item.scores.OSPC.score, level: params.item.scores.OSPC.level }) }}</li>{% endif %}
+            {% if params.item.scores.OSPI %}<li>{{ predictorTimelineItem({ type: params.item.scores.OSPI.type, score: params.item.scores.OSPI.score, level: params.item.scores.OSPI.level }) }}</li>{% endif %}
+            {% if params.item.scores.OGRS %}
+                <li>{{ predictorTimelineItem({ type: params.item.scores.OGRS.type + ' 1YR', score: params.item.scores.OGRS.oneYear, level: params.item.scores.OGRS.level }) }}</li>
+                <li>{{ predictorTimelineItem({ type: params.item.scores.OGRS.type + ' 2YR', score: params.item.scores.OGRS.twoYears, level: params.item.scores.OGRS.level }) }}</li>
+            {% endif %}
+            {% if params.item.scores.OGP %}
+
+                <li>{{ predictorTimelineItem({ type: params.item.scores.OGP.type + ' 1YR', score: params.item.scores.OGP.oneYear, level: params.item.scores.OGP.level }) }}</li>
+                <li>{{ predictorTimelineItem({ type: params.item.scores.OGP.type + ' 2YR', score: params.item.scores.OGP.twoYears, level: params.item.scores.OGP.level }) }}</li>
+            {% endif %}
+            {% if params.item.scores.OVP %}
+                <li>{{ predictorTimelineItem({ type: params.item.scores.OVP.type + ' 1YR', score: params.item.scores.OVP.oneYear, level: params.item.scores.OVP.level }) }}</li>
+                <li>{{ predictorTimelineItem({ type: params.item.scores.OVP.type + ' 2YR', score: params.item.scores.OVP.twoYears, level: params.item.scores.OVP.level }) }}</li>
+            {% endif %}
+        </ul>
+    </div>
+    <a href="#" class="govuk-link predictor-timeline__toggle-section">Open</a>
+{% endif %}

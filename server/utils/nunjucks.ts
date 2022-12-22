@@ -1,4 +1,5 @@
 import nunjucks from 'nunjucks'
+import { DateTime } from 'luxon'
 import { DatePartsParsed } from '../@types/dates'
 import { FormError, ObjectMap, SelectedFilterItem, UrlInfo } from '../@types'
 
@@ -85,3 +86,8 @@ export const roshYesNoLabel = (level: string | null) => {
 
 export const defaultValue = (val?: string) =>
   val || '-<span class="govuk-visually-hidden">This is information missing from NDelius.</span>'
+
+export const formatDateFilterQueryString = (isoDate: string) => {
+  const dateParts = DateTime.fromISO(isoDate).toObject()
+  return `dateFrom-day=${dateParts.day}&dateFrom-month=${dateParts.month}&dateFrom-year=${dateParts.year}&dateTo-day=${dateParts.day}&dateTo-month=${dateParts.month}&dateTo-year=${dateParts.year}`
+}

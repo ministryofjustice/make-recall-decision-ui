@@ -9,6 +9,9 @@
   "roshSummary": {
     "error": "SERVER_ERROR"
   },
+  "roshHistory": {
+    "error": "SERVER_ERROR"
+  },
   "mappa": {
     "error": "SERVER_ERROR"
   },
