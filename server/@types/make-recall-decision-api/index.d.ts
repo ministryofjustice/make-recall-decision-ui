@@ -66,6 +66,8 @@ export type { RecallConsidered } from './models/RecallConsidered';
 export type { RecallType } from './models/RecallType';
 export { RecallTypeSelectedValue } from './models/RecallTypeSelectedValue';
 export { RecommendationResponse } from './models/RecommendationResponse';
+export { RecommendationsListItem } from './models/RecommendationsListItem';
+export type { RecommendationsResponse } from './models/RecommendationsResponse';
 export type { Registration } from './models/Registration';
 export type { ReleaseSummaryResponse } from './models/ReleaseSummaryResponse';
 export type { RetryDlqResult } from './models/RetryDlqResult';
