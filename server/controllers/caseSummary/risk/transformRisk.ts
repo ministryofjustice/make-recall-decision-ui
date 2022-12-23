@@ -5,7 +5,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
   let timeline: unknown[] = []
   if (!caseSummary.roshHistory.error) {
     timeline = caseSummary.roshHistory.registrations
-      .filter(item => ['RHRH', 'RVRH'].includes(item.type.code))
+      .filter(item => ['RHRH', 'RVHR'].includes(item.type.code))
       .map(({ startDate, notes, type }) => ({
         date: startDate,
         notes,

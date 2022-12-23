@@ -21,7 +21,7 @@ const riskResponse = {
         startDate: '2021-06-05',
         notes: null,
         type: {
-          code: 'RVRH',
+          code: 'RVHR',
         },
       },
     ],
