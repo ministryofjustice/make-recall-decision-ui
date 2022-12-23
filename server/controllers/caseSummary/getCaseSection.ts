@@ -11,7 +11,6 @@ import { transformContactHistory } from './contactHistory/transformContactHistor
 import { isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { AppError } from '../../AppError'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
-import getRecommendationsResponse from '../../../api/responses/get-recommendations.json'
 import { transformRiskManagementPlan } from './overview/transformRiskManagementPlan'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { VulnerabilitiesResponse } from '../../@types/make-recall-decision-api/models/VulnerabilitiesResponse'
@@ -101,14 +100,6 @@ export const getCaseSection = async (
     case 'recommendations':
       sectionLabel = 'Recommendations'
       caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, 'personal-details', token)
-      break
-    case 'recommendations-prototype':
-      sectionLabel = 'Recommendations'
-      caseSummaryRaw = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, 'personal-details', token)
-      caseSummary = {
-        ...caseSummaryRaw,
-        recommendations: getRecommendationsResponse,
-      }
       break
     default:
       throw new AppError(`getCaseSection: invalid sectionId: ${sectionId}`, { status: 404 })

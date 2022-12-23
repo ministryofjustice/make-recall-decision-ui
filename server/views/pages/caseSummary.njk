@@ -9,6 +9,7 @@
     <link rel="prefetch" href="{{ pageUrlBase }}risk" as="document">
     <link rel="prefetch" href="{{ pageUrlBase }}personal-details" as="document">
     <link rel="prefetch" href="{{ pageUrlBase }}licence-conditions" as="document">
+    <link rel="prefetch" href="{{ pageUrlBase }}recommendations" as="document">
     {% endif %}
 {% endblock %}
 
@@ -88,12 +89,7 @@
                         text: 'Recommendations',
                         href: pageUrlBase + 'recommendations',
                         active: section.id == 'recommendations'
-                    } if flags.flagRecommendationsPageProd else undefined,
-                    {
-                        text: 'Recommendations',
-                        href: pageUrlBase + 'recommendations-prototype',
-                        active: section.id == 'recommendations-prototype'
-                    } if flags.flagRecommendationsPagePrototype else undefined
+                    } if flags.flagRecommendationsPageProd else undefined
                 ])
             }) }}
             {% if section.id =='overview' %}
@@ -112,8 +108,6 @@
                 {% include '../partials/caseContactHistory.njk' %}
             {% elseif section.id =='recommendations' %}
                 {% include '../partials/caseRecommendations.njk' %}
-            {% elseif section.id =='recommendations-prototype' %}
-                {% include '../partials/caseRecommendationsPrototype.njk' %}
             {% endif %}
         </div>
     </div>

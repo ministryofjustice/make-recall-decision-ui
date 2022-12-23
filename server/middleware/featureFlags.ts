@@ -26,10 +26,6 @@ export const featureFlagsDefaults = {
     label: "Show tab for 'Create & vary a licence' data",
     default: false,
   },
-  flagRecommendationsPagePrototype: {
-    label: 'Prototype - Recommendations list',
-    default: false,
-  },
   flagRecommendationPrototype: {
     label: 'Prototype - Make a recommendation',
     default: false,
