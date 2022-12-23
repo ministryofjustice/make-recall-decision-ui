@@ -18,7 +18,7 @@ describe('postConsiderRecall', () => {
 
   it('should create recommendation and redirect to next page if recommendation ID is not in request body', async () => {
     jest.spyOn(RestClient.prototype, 'post').mockResolvedValueOnce(getRecommendationResponse)
-    jest.spyOn(AuditService.prototype, 'submitConsiderRecall')
+    jest.spyOn(AuditService.prototype, 'considerRecall')
     const req = mockReq({
       method: 'POST',
       body: {
@@ -39,9 +39,10 @@ describe('postConsiderRecall', () => {
       crn,
       recommendationId: 1,
     })
-    expect(AuditService.prototype.submitConsiderRecall).toHaveBeenCalledWith({
+    expect(AuditService.prototype.considerRecall).toHaveBeenCalledWith({
       crn,
       recommendationId: getRecommendationResponse.id.toString(),
+      action: 'CONSIDER_RECALL_CREATE',
       username: 'Dave',
       logErrors: false,
     })
@@ -49,7 +50,7 @@ describe('postConsiderRecall', () => {
 
   it('should update recommendation and redirect to next page if recommendation ID is in request body', async () => {
     jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(getRecommendationResponse)
-    jest.spyOn(AuditService.prototype, 'submitConsiderRecall')
+    jest.spyOn(AuditService.prototype, 'considerRecall')
     const req = mockReq({
       method: 'POST',
       body: {
@@ -69,9 +70,10 @@ describe('postConsiderRecall', () => {
       crn,
       recommendationId: 'abc',
     })
-    expect(AuditService.prototype.submitConsiderRecall).toHaveBeenCalledWith({
+    expect(AuditService.prototype.considerRecall).toHaveBeenCalledWith({
       crn,
       recommendationId: 'abc',
+      action: 'CONSIDER_RECALL_EDIT',
       username: 'Dave',
       logErrors: false,
     })
