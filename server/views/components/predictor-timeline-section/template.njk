@@ -1,7 +1,7 @@
 {% from "components/predictor-timeline-item/macro.njk" import predictorTimelineItem %}
 
 {% if params.item.type == 'RoSH' %}
-    <div class='flex govuk-!-margin-bottom-2'>
+    <div class='flex flex--align-center govuk-!-margin-bottom-2'>
     {{ predictorTimelineItem({ type: params.item.type, level: params.item.level }) }}
     <span class='govuk-!-padding-left-2 govuk-!-font-size-16'>from NDelius</span>
     </div>
