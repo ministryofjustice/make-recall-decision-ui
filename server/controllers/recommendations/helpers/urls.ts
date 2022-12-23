@@ -1,6 +1,8 @@
 import { UrlInfo } from '../../../@types'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { isNotNullOrUndefined } from '../../../utils/utils'
+import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { routeUrls } from '../../../routes/routeUrls'
 
 export const nextPageLinkUrl = ({
   nextPageId,
@@ -41,12 +43,18 @@ export const changeLinkUrl = ({
   return `${basePath}${pageUrlSlug}${queryParam}`
 }
 
-export const validateUpdateRecommendationPageRequest = ({
+export const checkForRedirectPath = ({
   requestedPageId,
   recallType,
+  basePathRecFlow,
+  recommendationStatus,
+  crn,
 }: {
   requestedPageId: string
   recallType?: RecallTypeSelectedValue.value
+  basePathRecFlow: string
+  recommendationStatus: RecommendationResponse.status
+  crn: string
 }) => {
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
     recallType
@@ -55,7 +63,11 @@ export const validateUpdateRecommendationPageRequest = ({
   const isNotSet = !isNotNullOrUndefined(recallType)
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
+  const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
 
+  if (isCompletedRecommendation) {
+    return `${routeUrls.cases}/${crn}/overview`
+  }
   if (!isRecallTaskListRequested && !isNoRecallTaskListRequested) {
     return null
   }
@@ -63,12 +75,12 @@ export const validateUpdateRecommendationPageRequest = ({
     return null
   }
   if ((isRecallTaskListRequested || isNoRecallTaskListRequested) && isNotSet) {
-    return 'response-to-probation'
+    return `${basePathRecFlow}response-to-probation`
   }
   if (isRecallTaskListRequested && isNoRecall) {
-    return 'task-list-no-recall'
+    return `${basePathRecFlow}task-list-no-recall`
   }
   if (isNoRecallTaskListRequested && isRecall) {
-    return 'task-list'
+    return `${basePathRecFlow}task-list`
   }
 }

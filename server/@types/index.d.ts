@@ -194,3 +194,7 @@ export type PageId =
   | 'nextAppointment'
   | 'previewNoRecallLetter'
   | 'confirmationNoRecallLetter'
+
+export interface RecommendationDecorated extends RecommendationResponse {
+  isInCustody?: boolean
+}

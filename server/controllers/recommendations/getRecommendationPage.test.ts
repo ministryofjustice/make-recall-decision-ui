@@ -83,4 +83,15 @@ describe('getRecommendationPage', () => {
       logErrors: false,
     })
   })
+
+  it('should redirect to case overview if the recommendation status is DOCUMENT_DOWNLOADED', async () => {
+    const crn = 'X12345'
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      crn,
+      status: 'DOCUMENT_DOWNLOADED',
+    })
+    await getRecommendationPage(req, res)
+    expect(res.redirect).toHaveBeenCalledWith(301, `/cases/${crn}/overview`)
+  })
 })
