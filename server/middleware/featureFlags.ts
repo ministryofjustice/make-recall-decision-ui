@@ -10,8 +10,12 @@ export const featureFlagsDefaults = {
     label: "Create Delius contact when user clicks 'Make recommendation' button",
     default: false,
   },
-  flagRecommendationsPageProd: {
+  flagRecommendationsPage: {
     label: 'Recommendations list',
+    default: false,
+  },
+  flagDeleteRecommendation: {
+    label: 'Allow (soft) deletion of a recommendation',
     default: false,
   },
   flagShowSystemGenerated: {

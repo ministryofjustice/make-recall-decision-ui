@@ -16,6 +16,7 @@ import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { VulnerabilitiesResponse } from '../../@types/make-recall-decision-api/models/VulnerabilitiesResponse'
 import { transformVulnerabilities } from './vulnerabilities/transformVulnerabilities'
 import { transformRisk } from './risk/transformRisk'
+import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -99,7 +100,7 @@ export const getCaseSection = async (
       break
     case 'recommendations':
       sectionLabel = 'Recommendations'
-      caseSummary = await getCaseSummary<PersonDetailsResponse>(trimmedCrn, 'personal-details', token)
+      caseSummary = await getCaseSummary<RecommendationsResponse>(trimmedCrn, 'recommendations', token)
       break
     default:
       throw new AppError(`getCaseSection: invalid sectionId: ${sectionId}`, { status: 404 })

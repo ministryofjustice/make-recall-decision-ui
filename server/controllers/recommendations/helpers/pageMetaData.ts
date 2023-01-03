@@ -55,7 +55,7 @@ import { inputDisplayValuesPreviousReleases } from '../previousReleases/inputDis
 import { validateAddPreviousRelease } from '../addPreviousRelease/formValidator'
 import { inputDisplayValuesAddPreviousRelease } from '../addPreviousRelease/inputDisplayValues'
 
-export const pageMetaData = (pageUrlSlug?: unknown): PageMetaData => {
+export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
     case 'response-to-probation':
       return {

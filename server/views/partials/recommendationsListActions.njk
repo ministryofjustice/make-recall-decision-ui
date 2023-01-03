@@ -1,0 +1,35 @@
+{% if recommendation.statusForRecallType == 'CONSIDERING_RECALL' %}
+    <form method='post'
+          action='/recommendations/{{ recommendation.recommendationId }}/status'>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type='hidden' name='crn'
+               value='{{ caseSummary.personalDetailsOverview.crn }}' />
+        <input type="hidden" name="status" value="DRAFT" />
+        <button class='reset-button link-button'
+                data-analytics-event='click_cta'
+                data-analytics-event-category='make_recommendation_click'>Make a
+            recommendation
+        </button>
+    </form>
+{% elseif recommendation.statusForRecallType == 'RECOMMENDATION_STARTED' %}
+    <a
+            href='/recommendations/{{ recommendation.recommendationId }}/task-list'
+            data-analytics-event='click_cta'
+            data-analytics-event-category='update_recommendation_click'>Update
+        recommendation</a>
+{% elseif recommendation.statusForRecallType == 'MAKING_DECISION_TO_RECALL' %}
+    <a href='/recommendations/{{ recommendation.recommendationId }}/task-list'
+       class='govuk-link'>Update recommendation</a>
+{% elseif recommendation.statusForRecallType == 'MAKING_DECISION_NOT_TO_RECALL' %}
+    <a href='/recommendations/{{ recommendation.recommendationId }}/task-list-no-recall'
+       class='govuk-link'>Update recommendation</a>
+{% elseif recommendation.statusForRecallType == 'DECIDED_TO_RECALL' %}
+    <a class='govuk-link' href='/recommendations/{{ recommendation.recommendationId }}/documents/part-a?crn={{ caseSummary.personalDetailsOverview.crn }}'
+       download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>Download Part
+        A</a>
+{% elseif recommendation.statusForRecallType == 'DECIDED_NOT_TO_RECALL' %}
+    <a class='govuk-link'
+       href='/recommendations/{{ recommendation.recommendationId }}/documents/no-recall-letter?crn={{ caseSummary.personalDetailsOverview.crn }}' download
+       data-analytics-event='click_cta' data-analytics-event-category='download_no_recall_letter_click'>
+        Download letter</a>
+{% endif %}
