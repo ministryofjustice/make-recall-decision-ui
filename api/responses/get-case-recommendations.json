@@ -1,0 +1,57 @@
+{
+  "userAccessResponse": null,
+  "personalDetailsOverview": {
+    "fullName": "Paula Smith",
+    "name": "Paula Smith",
+    "firstName": "Paula",
+    "middleNames": "",
+    "surname": "Smith",
+    "dateOfBirth": "1990-06-13",
+    "age": 32,
+    "gender": "Female",
+    "crn": "X514364",
+    "ethnicity": "White",
+    "croNumber": "",
+    "mostRecentPrisonerNumber": "93423A",
+    "pncNumber": "2004/43534534",
+    "nomsNumber": "A3632EC",
+    "primaryLanguage": "English"
+  },
+  "recommendations": [
+    {
+      "statusForRecallType": "CONSIDERING_RECALL",
+      "lastModifiedBy": "Angela Hartnett",
+      "createdDate": "2022-12-03T08:52:43.808Z",
+      "lastModifiedDate": "2022-12-07T13:59:38.733Z",
+      "recommendationId": "123",
+      "crn": "X514364"
+    }
+  ],
+  "activeRecommendation": {
+    "recommendationId": 222819161,
+    "lastModifiedDate": "2022-12-07T13:59:38.733Z",
+    "lastModifiedBy": "JACK.MALONEY",
+    "recallType": {
+      "selected": {
+        "value": "STANDARD",
+        "details": "ferferf"
+      },
+      "allOptions": [
+        {
+          "value": "STANDARD",
+          "text": "Standard recall"
+        },
+        {
+          "value": "FIXED_TERM",
+          "text": "Fixed term recall"
+        },
+        {
+          "value": "NO_RECALL",
+          "text": "No recall"
+        }
+      ]
+    },
+    "recallConsideredList": null,
+    "status": "DRAFT"
+  }
+}

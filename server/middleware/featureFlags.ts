@@ -10,8 +10,12 @@ export const featureFlagsDefaults = {
     label: "Create Delius contact when user clicks 'Make recommendation' button",
     default: false,
   },
-  flagRecommendationsPageProd: {
+  flagRecommendationsPage: {
     label: 'Recommendations list',
+    default: false,
+  },
+  flagDeleteRecommendation: {
+    label: 'Allow (soft) deletion of a recommendation',
     default: false,
   },
   flagShowSystemGenerated: {
@@ -24,10 +28,6 @@ export const featureFlagsDefaults = {
   },
   flagCreateVaryLicenceData: {
     label: "Show tab for 'Create & vary a licence' data",
-    default: false,
-  },
-  flagRecommendationsPagePrototype: {
-    label: 'Prototype - Recommendations list',
     default: false,
   },
   flagRecommendationPrototype: {

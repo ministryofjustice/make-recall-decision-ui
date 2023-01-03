@@ -16,7 +16,7 @@ export const crns = {
 
 const defaultStartPath = (crnNum: string) => {
   const crnToUse = crns[crnNum]
-  return `/cases/${crnToUse}/overview?flagRecommendationsPageProd=1`
+  return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
 
 const deleteOldRecommendation = () => {

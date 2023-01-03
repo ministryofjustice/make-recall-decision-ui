@@ -2,6 +2,7 @@ import nunjucks from 'nunjucks'
 import { DateTime } from 'luxon'
 import { DatePartsParsed } from '../@types/dates'
 import { FormError, ObjectMap, SelectedFilterItem, UrlInfo } from '../@types'
+import { RecommendationsListItem } from '../@types/make-recall-decision-api'
 
 export const dateTimeItems = (fieldName: string, values: DatePartsParsed) => {
   const items = [
@@ -81,6 +82,27 @@ export const roshYesNoLabel = (level: string | null) => {
       return 'No value - check OASys'
     default:
       return level
+  }
+}
+
+export const recommendationsListStatusLabel = (status: RecommendationsListItem.statusForRecallType) => {
+  switch (status) {
+    case 'CONSIDERING_RECALL':
+      return 'Considering recall'
+    case 'RECOMMENDATION_STARTED':
+      return 'Recommendation started'
+    case 'MAKING_DECISION_TO_RECALL':
+      return 'Making decision to recall'
+    case 'MAKING_DECISION_NOT_TO_RECALL':
+      return 'Making decision not to recall'
+    case 'DECIDED_TO_RECALL':
+      return 'Decided to recall'
+    case 'DECIDED_NOT_TO_RECALL':
+      return 'Decided not to recall'
+    case 'UNKNOWN':
+      return 'Unknown'
+    default:
+      return status
   }
 }
 
