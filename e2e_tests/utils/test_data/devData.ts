@@ -14,10 +14,10 @@ export const devData = {
   extendedTerm: /Extended term:\t12 Months/,
   mappaCategory: /MAPPA Category: Category 0/,
   mappaLevel: /MAPPA Level: Level 1/,
-  nameOfPersonCompletingForm: /Name of person completing the form: Jack Maloney/,
+  nameOfPersonCompletingForm: /Name of person completing the form: Jack\s+Maloney/,
   emailAddressOfPersonCompletingForm: /Email Address: .*@digital\.justice\.gov\.uk/,
-  region: /Region: {2}NPS London/,
-  ldu: /LDU: All NPS London/,
+  region: /Region: {2}London/,
+  ldu: /LDU: All London/,
   dateOfDecision: 'Date of decision to request revocation:',
   timeOfDecision: /Time \(24 hour\) of decision to request information: \d{2}:\d{2}/,
 }
