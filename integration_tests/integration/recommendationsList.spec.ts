@@ -16,43 +16,63 @@ context('Recommendations list', () => {
         ...getRecommendationsResponse,
         recommendations: [
           {
-            statusForRecallType: 'CONSIDERING_RECALL',
             lastModifiedByName: 'Angela Hartnett',
             lastModifiedDate: '2022-12-07T13:59:38.733Z',
             recommendationId: '1',
+            status: 'RECALL_CONSIDERED',
           },
           {
-            statusForRecallType: 'RECOMMENDATION_STARTED',
+            status: 'DRAFT',
             lastModifiedByName: 'Angelos Angelou',
             lastModifiedDate: '2022-11-23T13:59:38.733Z',
             recommendationId: '2',
           },
           {
-            statusForRecallType: 'MAKING_DECISION_TO_RECALL',
+            status: 'DRAFT',
             lastModifiedByName: 'Jamie Heifer',
             lastModifiedDate: '2022-06-07T13:59:38.733Z',
             recommendationId: '3',
+            recallType: {
+              selected: {
+                value: 'STANDARD',
+              },
+            },
           },
           {
-            statusForRecallType: 'MAKING_DECISION_NOT_TO_RECALL',
+            status: 'DRAFT',
             lastModifiedByName: 'Gary Lamb',
             lastModifiedDate: '2021-11-17T13:59:38.733Z',
             recommendationId: '4',
+            recallType: {
+              selected: {
+                value: 'NO_RECALL',
+              },
+            },
           },
           {
-            statusForRecallType: 'DECIDED_TO_RECALL',
+            status: 'DOCUMENT_DOWNLOADED',
             lastModifiedByName: 'Barry Smithson',
             lastModifiedDate: '2021-09-23T13:59:38.733Z',
             recommendationId: '5',
+            recallType: {
+              selected: {
+                value: 'FIXED_TERM',
+              },
+            },
           },
           {
-            statusForRecallType: 'DECIDED_NOT_TO_RECALL',
+            status: 'DOCUMENT_DOWNLOADED',
             lastModifiedByName: 'Mary Berry',
             lastModifiedDate: '2019-05-14T13:59:38.733Z',
             recommendationId: '6',
+            recallType: {
+              selected: {
+                value: 'NO_RECALL',
+              },
+            },
           },
           {
-            statusForRecallType: 'UNKNOWN',
+            status: '',
             lastModifiedByName: 'A. Milner',
             lastModifiedDate: '2016-04-18T13:59:38.733Z',
             recommendationId: '7',

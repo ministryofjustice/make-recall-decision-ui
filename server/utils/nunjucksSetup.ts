@@ -15,11 +15,11 @@ import {
   defaultValue,
   roshYesNoLabel,
   formatDateFilterQueryString,
-  recommendationsListStatusLabel,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
+import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 
 const production = process.env.NODE_ENV === 'production'
 

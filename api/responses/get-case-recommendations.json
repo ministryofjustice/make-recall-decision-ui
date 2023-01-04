@@ -19,12 +19,32 @@
   },
   "recommendations": [
     {
-      "statusForRecallType": "CONSIDERING_RECALL",
       "lastModifiedBy": "Angela Hartnett",
       "createdDate": "2022-12-03T08:52:43.808Z",
       "lastModifiedDate": "2022-12-07T13:59:38.733Z",
       "recommendationId": "123",
-      "crn": "X514364"
+      "crn": "X514364",
+      "status": "DRAFT",
+      "recallType": {
+        "selected": {
+          "value": "STANDARD",
+          "details": "Details..."
+        },
+        "allOptions": [
+          {
+            "value": "FIXED_TERM",
+            "text": "Fixed term recall"
+          },
+          {
+            "value": "STANDARD",
+            "text": "Standard recall"
+          },
+          {
+            "value": "NO_RECALL",
+            "text": "No recall"
+          }
+        ]
+      }
     }
   ],
   "activeRecommendation": {

@@ -17,6 +17,7 @@ import { VulnerabilitiesResponse } from '../../@types/make-recall-decision-api/m
 import { transformVulnerabilities } from './vulnerabilities/transformVulnerabilities'
 import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
+import { transformRecommendations } from './recommendations/transformRecommendations'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -100,7 +101,10 @@ export const getCaseSection = async (
       break
     case 'recommendations':
       sectionLabel = 'Recommendations'
-      caseSummary = await getCaseSummary<RecommendationsResponse>(trimmedCrn, 'recommendations', token)
+      caseSummaryRaw = await getCaseSummary<RecommendationsResponse>(trimmedCrn, 'recommendations', token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = transformRecommendations(caseSummaryRaw)
+      }
       break
     default:
       throw new AppError(`getCaseSection: invalid sectionId: ${sectionId}`, { status: 404 })
