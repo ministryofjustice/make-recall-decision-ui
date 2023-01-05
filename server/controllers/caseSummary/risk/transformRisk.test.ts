@@ -70,6 +70,16 @@ describe('transformRisk', () => {
     ])
   })
 
+  it('excludes RoSH history if not present', () => {
+    const transformed = transformRisk({ ...riskResponse, roshHistory: { registrations: null, error: null } })
+    expect(transformed.timeline).toEqual([
+      {
+        date: '2021-06-04',
+        scores: {},
+      },
+    ])
+  })
+
   it('includes predictor score error if present', () => {
     const transformed = transformRisk({ ...riskResponse, predictorScores: { error: 'NOT_FOUND' } })
     expect(transformed.predictorScores).toEqual({ error: 'NOT_FOUND' })
