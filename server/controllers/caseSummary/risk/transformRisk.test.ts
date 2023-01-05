@@ -70,7 +70,7 @@ describe('transformRisk', () => {
     ])
   })
 
-  it('excludes RoSH history error if not present', () => {
+  it('excludes RoSH history if not present', () => {
     const transformed = transformRisk({ ...riskResponse, roshHistory: { registrations: null, error: null } })
     expect(transformed.timeline).toEqual([
       {
