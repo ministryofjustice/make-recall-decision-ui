@@ -20,7 +20,7 @@ declare global {
     }
 
     export interface Chainable {
-      visitPage(url: string): Chainable<void>
+      visitPage(url: string, isSpoUser?: boolean): Chainable<void>
 
       pageHeading(): Chainable<string>
 

@@ -253,7 +253,7 @@ jobs:
             echo $SPECS
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},CRN6=${CRN6_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},CRN6=${CRN6_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
@@ -303,7 +303,7 @@ jobs:
             set +e
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local} \
+              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local} \
               --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \

@@ -3,6 +3,7 @@ import {
   q16IndexOffenceDetails,
   q1EmergencyRecall,
   q22RecallType,
+  q25ProbationDetails,
   q2IndeterminateSentenceType,
   q3ExtendedSentence,
   q6CustodyStatus,
@@ -18,6 +19,8 @@ When('Maria downloads the Part A and confirms the fixed term recall', () => {
     q22RecallType(contents, 'Fixed', 'Fixed term details...')
     cy.log('Q23')
     expect(contents).to.contain('Additional licence condition for fixed term recall...')
+    cy.log('Q25')
+    q25ProbationDetails(contents)
   })
 })
 
@@ -37,4 +40,11 @@ When('Maria adds licence conditions for the fixed term recall', () => {
 defineStep('Maria confirms {string} for emergency recall', (answer: string) => {
   cy.selectRadio('Is this an emergency recall?', answer)
   cy.clickButton('Continue')
+})
+
+When('Henry downloads the latest Part A and confirms the details have not been overwritten', () => {
+  return cy.downloadDocX('Download Part A').then(contents => {
+    cy.log('Q25')
+    q25ProbationDetails(contents)
+  })
 })

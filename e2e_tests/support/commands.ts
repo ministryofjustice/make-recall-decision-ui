@@ -8,10 +8,13 @@ Cypress.Keyboard.defaults({
 const userName = Cypress.env('USERNAME')
 const password = Cypress.env('PASSWORD')
 
-Cypress.Commands.add('visitPage', url => {
+const userNameSpo = Cypress.env('USERNAME_SPO')
+const passwordSpo = Cypress.env('PASSWORD_SPO')
+
+Cypress.Commands.add('visitPage', (url, isSpoUser = false) => {
   cy.visit(url)
   cy.pageHeading().should('equal', 'Sign in')
-  cy.get('#username').type(userName, { log: false })
-  cy.get('#password').type(password, { log: false })
+  cy.get('#username').type(isSpoUser ? userNameSpo : userName, { log: false })
+  cy.get('#password').type(isSpoUser ? passwordSpo : password, { log: false })
   cy.get('#submit').click()
 })

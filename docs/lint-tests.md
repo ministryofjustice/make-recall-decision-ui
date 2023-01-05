@@ -99,12 +99,12 @@ npm run e2e
 
 ### Run E2E tests against dev
 ```
-npx cypress open --env USERNAME=<username>,PASSWORD=<password>,CRN=X098092,CRN2=X514364,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,CRN=X098092,CRN2=X514364,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
 ```
 
 ### Run E2E tests against preprod
 ```
-npx cypress open --env USERNAME=<username>,PASSWORD=<password>,CRN=<crn1>,CRN2=<crn2>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,CRN=<crn1>,CRN2=<crn2>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
 ```
 
 ### E2E Tests on CircleCI
