@@ -3,7 +3,7 @@ import { sortListByDateField } from '../../../utils/dates'
 
 export const transformRisk = (caseSummary: RiskResponse) => {
   let timeline: unknown[] = []
-  if (!caseSummary.roshHistory.error) {
+  if (!caseSummary.roshHistory.error && Array.isArray(caseSummary.roshHistory.registrations)) {
     timeline = caseSummary.roshHistory.registrations
       .filter(item => ['RHRH', 'RVHR'].includes(item.type.code))
       .map(({ startDate, notes, type }) => ({
