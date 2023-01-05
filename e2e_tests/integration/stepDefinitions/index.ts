@@ -320,5 +320,4 @@ When('Maria signs out', () => {
 
 When('Henry signs in to the case overview for CRN {string}', (crnNum: string) => {
   cy.visitPage(defaultStartPath(crnNum), true)
-  cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
 })
