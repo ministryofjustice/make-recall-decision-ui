@@ -313,3 +313,12 @@ When('Maria confirms the person is in police custody', () => {
     cy.getElement(`Is there anything the police should know before they arrest ${offenderName}?`).should('not.exist')
   })
 })
+
+When('Maria signs out', () => {
+  cy.clickLink('Sign out')
+})
+
+When('Henry signs in to the case overview for CRN {string}', (crnNum: string) => {
+  cy.visitPageUser2(defaultStartPath(crnNum))
+  cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
+})

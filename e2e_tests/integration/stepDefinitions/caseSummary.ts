@@ -44,6 +44,11 @@ When('Maria views the Contact history page', () => {
   cy.pageHeading().should('contain', 'Contact history')
 })
 
+When('Henry views the Recommendations page', () => {
+  cy.clickLink('Recommendations')
+  cy.pageHeading().should('contain', 'Recommendations')
+})
+
 When('Maria filters contacts by date range', () => {
   cy.get('.app-summary-card')
     .its('length')
