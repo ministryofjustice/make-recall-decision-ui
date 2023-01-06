@@ -63,7 +63,7 @@ describe('postConsiderRecall', () => {
     expect(RestClient.prototype.patch).toHaveBeenCalledWith({
       data: { recallConsideredList: [{ recallConsideredDetail: 'Details...' }] },
       headers: { 'X-Feature-Flags': '{}' },
-      path: '/recommendations/abc',
+      path: '/recommendations/abc/',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
     expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderRecallEdited', 'Dave', {

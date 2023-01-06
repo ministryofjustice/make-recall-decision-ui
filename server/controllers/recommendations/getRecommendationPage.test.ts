@@ -40,7 +40,7 @@ describe('getRecommendationPage', () => {
       recommendationId: '123',
       token: 'abc',
       propertyToRefresh: 'previousReleases',
-      flags: {},
+      featureFlags: {},
     })
   })
 
