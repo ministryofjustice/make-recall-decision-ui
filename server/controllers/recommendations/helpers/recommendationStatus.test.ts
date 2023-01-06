@@ -10,6 +10,13 @@ describe('recommendationStatus', () => {
     expect(status).toEqual('CONSIDERING_RECALL')
   })
 
+  it('recommendation started', () => {
+    const status = recommendationStatus({
+      status: RecommendationResponse.status.DRAFT,
+    })
+    expect(status).toEqual('RECOMMENDATION_STARTED')
+  })
+
   it('incomplete recall', () => {
     const status = recommendationStatus({
       status: RecommendationResponse.status.DRAFT,
@@ -40,5 +47,10 @@ describe('recommendationStatus', () => {
       recallType: { selected: { value: RecallTypeSelectedValue.value.NO_RECALL } },
     })
     expect(status).toEqual('DECIDED_NOT_TO_RECALL')
+  })
+
+  it('unknown', () => {
+    const status = recommendationStatus({})
+    expect(status).toEqual('UNKNOWN')
   })
 })

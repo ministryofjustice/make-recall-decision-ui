@@ -36,7 +36,12 @@ describe('getRecommendationPage', () => {
     ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
     req = mockReq({ params: { recommendationId, pageUrlSlug: 'previous-releases' } })
     await getRecommendationPage(req, res)
-    expect(updateRecommendation).toHaveBeenCalledWith('123', {}, 'abc', {}, 'previousReleases')
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'abc',
+      propertyToRefresh: 'previousReleases',
+      flags: {},
+    })
   })
 
   it('should fetch licence conditions if on that page', async () => {

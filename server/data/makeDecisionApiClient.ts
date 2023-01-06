@@ -34,17 +34,25 @@ export const createRecommendation = (
 export const getRecommendation = (recommendationId: string, token: string): Promise<RecommendationResponse> =>
   restClient(token).get({ path: `${routes.recommendations}/${recommendationId}` }) as Promise<RecommendationResponse>
 
-export const updateRecommendation = (
-  recommendationId: string,
-  updatedFields: ObjectMap<unknown>,
-  token: string,
-  featureFlags?: FeatureFlags,
+export const updateRecommendation = ({
+  recommendationId,
+  valuesToSave,
+  token,
+  featureFlags,
+  propertyToRefresh,
+  pathSuffix,
+}: {
+  recommendationId: string
+  valuesToSave?: ObjectMap<unknown>
+  token: string
+  featureFlags?: FeatureFlags
   propertyToRefresh?: string
-): Promise<RecommendationResponse> => {
+  pathSuffix?: string
+}): Promise<RecommendationResponse> => {
   const queryString = propertyToRefresh ? `?refreshProperty=${propertyToRefresh}` : ''
   return restClient(token).patch({
-    path: `${routes.recommendations}/${recommendationId}${queryString}`,
-    data: updatedFields,
+    path: `${routes.recommendations}/${recommendationId}/${pathSuffix || ''}${queryString}`,
+    data: valuesToSave,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<RecommendationResponse>
 }

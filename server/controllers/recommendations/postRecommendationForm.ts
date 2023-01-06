@@ -12,24 +12,35 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
   const currentPagePath = `${routeUrls.recommendations}/${recommendationId}/${pageUrlSlug}`
   try {
     const { validator } = pageMetaData(pageUrlSlug)
-    const { user, urlInfo } = res.locals
-    const { errors, valuesToSave, unsavedValues, nextPagePath, monitoringEvent } = await validator({
-      requestBody: req.body,
-      recommendationId,
+    const {
+      flags,
+      user: { token, username },
       urlInfo,
-      token: user.token,
-    })
+    } = res.locals
+    const { errors, valuesToSave, unsavedValues, nextPagePath, monitoringEvent, apiEndpointPathSuffix } =
+      await validator({
+        requestBody: req.body,
+        recommendationId,
+        urlInfo,
+        token,
+      })
     if (errors) {
       req.session.errors = errors
       req.session.unsavedValues = unsavedValues
       return res.redirect(303, currentPagePath)
     }
-    await updateRecommendation(recommendationId, valuesToSave, user.token, res.locals.flags)
+    await updateRecommendation({
+      recommendationId,
+      valuesToSave,
+      token,
+      featureFlags: flags,
+      pathSuffix: apiEndpointPathSuffix,
+    })
     res.redirect(303, nextPagePath)
     if (monitoringEvent) {
       const crn = normalizeCrn(req.body.crn)
       if (!isEmptyStringOrWhitespace(crn)) {
-        appInsightsEvent(monitoringEvent.eventName, user.username, {
+        appInsightsEvent(monitoringEvent.eventName, username, {
           ...monitoringEvent.data,
           crn,
           recommendationId,

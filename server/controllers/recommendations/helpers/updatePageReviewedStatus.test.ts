@@ -5,34 +5,38 @@ jest.mock('../../../data/makeDecisionApiClient')
 
 describe('updatePageReviewedStatus', () => {
   const recommendationId = '123'
-  const userToken = '456abc'
+  const token = '456abc'
 
   it('updates the status if reviewedProperty is supplied', async () => {
     await updatePageReviewedStatus({
       reviewedProperty: 'previousRecalls',
       recommendationId,
-      userToken,
+      token,
     })
-    expect(updateRecommendation).toHaveBeenCalledWith(
+    expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId,
-      { hasBeenReviewed: { previousRecalls: true } },
-      userToken
-    )
+      valuesToSave: { hasBeenReviewed: { previousRecalls: true } },
+      token,
+    })
   })
 
   it('updates the status for MAPPA page', async () => {
     await updatePageReviewedStatus({
       reviewedProperty: 'mappa',
       recommendationId,
-      userToken,
+      token,
     })
-    expect(updateRecommendation).toHaveBeenCalledWith(recommendationId, { hasBeenReviewed: { mappa: true } }, userToken)
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId,
+      valuesToSave: { hasBeenReviewed: { mappa: true } },
+      token,
+    })
   })
 
   it('does not update the status if reviewedProperty is not supplied', async () => {
     await updatePageReviewedStatus({
       recommendationId,
-      userToken,
+      token,
     })
     expect(updateRecommendation).not.toHaveBeenCalled()
   })

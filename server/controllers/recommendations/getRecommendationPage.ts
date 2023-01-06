@@ -20,15 +20,15 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const { recommendationId, pageUrlSlug } = req.params
   const {
     urlInfo,
-    user: { token: userToken },
-    flags,
+    user: { token },
+    flags: featureFlags,
   } = res.locals
   const { id, inputDisplayValues, reviewedProperty, propertyToRefresh } = pageMetaData(pageUrlSlug)
   let recommendation: RecommendationDecorated
   if (propertyToRefresh) {
-    recommendation = await updateRecommendation(recommendationId, {}, userToken, flags, propertyToRefresh)
+    recommendation = await updateRecommendation({ recommendationId, token, featureFlags, propertyToRefresh })
   } else {
-    recommendation = await getRecommendation(recommendationId, userToken)
+    recommendation = await getRecommendation(recommendationId, token)
   }
   if (isCaseRestrictedOrExcluded(recommendation.userAccessResponse)) {
     res.locals.caseSummary = recommendation
@@ -38,7 +38,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   // assess whether to redirect the user
   const redirectedPagePath = checkForRedirectPath({
     requestedPageId: pageUrlSlug,
-    recallType: recommendation?.recallType?.selected?.value,
+    recommendation,
     basePathRecFlow: urlInfo.basePath,
     crn: recommendation.crn,
     recommendationStatus: recommendation.status,
@@ -47,20 +47,15 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     return res.redirect(301, redirectedPagePath)
   }
   recommendation.isInCustody = isInCustody(recommendation.custodyStatus?.selected)
-  res.locals.taskCompleteness = taskCompleteness(recommendation, flags)
+  res.locals.taskCompleteness = taskCompleteness(recommendation, featureFlags)
   if (pageUrlSlug === 'preview-no-recall') {
-    const { letterContent } = await createDocument(
-      recommendationId,
-      'no-recall-letter',
-      { format: 'preview' },
-      userToken
-    )
+    const { letterContent } = await createDocument(recommendationId, 'no-recall-letter', { format: 'preview' }, token)
     res.locals.letterContent = letterContent
   }
   if (['licence-conditions', 'offence-details'].includes(pageUrlSlug)) {
     res.locals.caseSummary = await fetchAndTransformLicenceConditions({
       crn: recommendation.crn,
-      token: userToken,
+      token,
     })
   }
   const stringRenderParams = {
@@ -89,7 +84,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     updatePageReviewedStatus({
       reviewedProperty,
       recommendationId,
-      userToken,
+      token,
     })
   }
   auditService.recommendationView({
