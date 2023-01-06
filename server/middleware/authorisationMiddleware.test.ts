@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { Request, Response } from 'express'
 
-import authorisationMiddleware from './authorisationMiddleware'
+import authorisationMiddleware, { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
 
 function createToken(authorities: string[]) {
   const payload = {
@@ -39,6 +39,22 @@ describe('authorisationMiddleware', () => {
     const authorisationResponse = authorisationMiddleware()(req, res, next)
 
     expect(authorisationResponse).toEqual(next())
+  })
+
+  it('sets hasSpoRole to true if SPO role is present', () => {
+    const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.SPO] })
+
+    authorisationMiddleware()(req, res, next)
+
+    expect(res.locals.user.hasSpoRole).toEqual(true)
+  })
+
+  it('sets hasSpoRole to false if SPO role is not present', () => {
+    const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.PO] })
+
+    authorisationMiddleware()(req, res, next)
+
+    expect(res.locals.user.hasSpoRole).toEqual(false)
   })
 
   it('should redirect when user has no authorised roles', () => {

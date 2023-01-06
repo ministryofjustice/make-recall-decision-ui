@@ -3,6 +3,11 @@ import { RequestHandler } from 'express'
 
 import logger from '../../logger'
 
+export enum HMPPS_AUTH_ROLE {
+  SPO = 'ROLE_MAKE_RECALL_DECISION_SPO',
+  PO = 'ROLE_MAKE_RECALL_DECISION',
+}
+
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
   return (req, res, next) => {
     if (res.locals && res.locals.user && res.locals.user.token) {
@@ -12,7 +17,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
         logger.error('User is not authorised to access this')
         return res.redirect('/authError')
       }
-
+      res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
       return next()
     }
 
