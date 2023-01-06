@@ -1,27 +1,4 @@
-# Linting and tests
-
-## Pre-commit hooks
-After `npm install`, files will be created under both .git/hooks and .husky, that will automatically lint (and fix) any staged files in your commits, plus run a type check.
-
-## Typescript definitions generated from manage-recalls-api Swagger endpoint
-```
-npm run swagger-to-ts
-```
-
-Note - you should be connected to the VPN when running this script, or it won't be authorized to hit the Swagger endpoint.
-
-Types are output to `./server/@types/make-recall-decision-api`.
-The online swagger, for comparison, is [here]
-(https://make-recall-decision-api.hmpps.service.justice.gov.uk/swagger-ui/index.html)
-
-To run a Typescript compilation check:
-```
-npm run typecheck
-```
-
-## Run linter and fix issues
-
-`npm run lint:fix`
+# Tests
 
 ## Run unit tests
 
@@ -80,14 +57,14 @@ To get debug output when running cypress:
 ### Run E2E tests against local containers
 All dependencies will be mocked, including upstream APIs used by make-recall-decision-api, and HMPPS Auth.
 
-Set the CYPRESS_USERNAME, CYPRESS_PASSWORD, CYPRESS_USERNAME_SPO and CYPRESS_PASSWORD_SPO env vars in the [.env.sample](./.env.sample) file when you copy it to .env. You can obtain the username and password from the team.
+Set the CYPRESS_PASSWORDO and CYPRESS_PASSWORD_SPO env vars in the [.env.local.sample](./.env.local.sample) file when you copy it to .env. The passwords can be obtained from the CYPRESS_PASSWORD_local and CYPRESS_PASSWORD_SPO_local env vars in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
 
 Run all services:
 ```
 ./scripts/start-services-for-e2e-tests-local.sh
 ```
 
-Then, run the UI separately:
+Then, run the UI app separately:
 ```
 npm run start:e2e
 ```
@@ -97,15 +74,28 @@ Open Cypress, from there you can run the tests:
 npm run e2e
 ```
 
-### Run E2E tests against dev
+### Running E2E tests against dev or preprod env on CircleCI
+
+If the tests in the CI pipeline fail, you can try to reproduce by running the E2E tests in your local repo against dev or preprod env.
+
+You can run your local tests against dev env using:
+
 ```
-npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,CRN=X098092,CRN2=X514364,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
 ```
 
-### Run E2E tests against preprod
+You can run your local tests against preprod env using:
+
 ```
-npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,CRN=<crn1>,CRN2=<crn2>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,CRN=<crn1>,CRN2=<crn2>,CRN3=<crn3>,CRN4=<crn4>,CRN5=<crn5>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
 ```
+
+With params replaced as follows:
+- USERNAME - your Delius username for dev
+- PASSWORD - your Delius password for dev
+- USERNAME_SPO - the value of the CYPRESS_USERNAME_SPO_dev env var in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
+- PASSWORD_SPO - the value of the CYPRESS_PASSWORD_SPO_dev env var in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
+- (for preprod only) - CRN1, 2 etc - the values of CRN_preprod, CRN2_preprod etc in CircleCI
 
 ### E2E Tests on CircleCI
 

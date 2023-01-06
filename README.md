@@ -15,9 +15,13 @@ If a person on probation breaches their licence conditions, they could be recall
 
 [Doc](./docs/setup-running.md)
 
-## Automated tests, linting and typescript
+## linting and typescript
 
-[Doc](./docs/lint-tests.md)
+[Doc](./docs/lint-typescript.md)
+
+## Tests
+
+[Doc](./docs/tests.md)
 
 ## Feature flags
 
