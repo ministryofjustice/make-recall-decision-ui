@@ -17,6 +17,7 @@ const user = {
   lastName: 'smith',
   username: 'user1',
   displayName: 'John Smith',
+  hasSpoRole: false,
 }
 
 class MockUserService extends UserService {

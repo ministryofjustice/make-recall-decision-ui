@@ -73,7 +73,7 @@ export const postConsiderRecall = async (req: Request, res: Response): Promise<R
       return res.redirect(303, nextPagePath)
     }
     if (recommendationId) {
-      recommendation = await updateRecommendation(recommendationId, valuesToSave, token, flags)
+      recommendation = await updateRecommendation({ recommendationId, valuesToSave, token, featureFlags: flags })
     } else {
       recommendation = await createRecommendation(valuesToSave, token, flags)
     }
