@@ -17,12 +17,13 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
       user: { token, username },
       urlInfo,
     } = res.locals
-    const { errors, valuesToSave, unsavedValues, nextPagePath, monitoringEvent } = await validator({
-      requestBody: req.body,
-      recommendationId,
-      urlInfo,
-      token,
-    })
+    const { errors, valuesToSave, unsavedValues, nextPagePath, monitoringEvent, apiEndpointPathSuffix } =
+      await validator({
+        requestBody: req.body,
+        recommendationId,
+        urlInfo,
+        token,
+      })
     if (errors) {
       req.session.errors = errors
       req.session.unsavedValues = unsavedValues
@@ -33,6 +34,7 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
       valuesToSave,
       token,
       featureFlags: flags,
+      pathSuffix: apiEndpointPathSuffix,
     })
     res.redirect(303, nextPagePath)
     if (monitoringEvent) {

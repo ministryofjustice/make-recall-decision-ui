@@ -1,6 +1,6 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Consider a recall", hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: "What has made you think about recalling the person?", hasErrors: errors }) %}
 
 {% block beforeContent %}
     <nav>
@@ -23,7 +23,7 @@
                     name: "recallConsideredDetail",
                     id: "recallConsideredDetail",
                     label: {
-                        text: "Consider a recall",
+                        text: "What has made you think about recalling " + caseSummary.personalDetailsOverview.name + "?",
                         classes: "govuk-label--l",
                         isPageHeading: true
                     },

@@ -1,0 +1,64 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPagePath: '/cases/' + recommendation.crn + '/overview', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>{{ pageTitles[page.id] }}</h1>
+            <p class='govuk-body'>
+                You must tell the probation practitioner your decision so they can complete the Part A or Decision not to recall letter.
+            </p>
+            <p class='govuk-body'>Before recording your decision, check you have considered:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+                <li>the immediate risk - do any changes in the person’s behaviour reflect their previous offending</li>
+                <li>who is vulnerable - could there be an impact on victims</li>
+                <li>the person on probation’s current circumstances - how long have they been in the community and are they struggling to adapt</li>
+                <li>alternatives to recall</li>
+                <li>protective factors - employment, support from family and friends and programmes (for example, drugs or alcohol rehabilitation)</li>
+            </ul>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
+                {{ govukTextarea({
+                    name: "recallTypeManagerDetail",
+                    id: "recallTypeManagerDetail",
+                    label: {
+                        text: "Enter details about your decision",
+                        classes: "govuk-visually-hidden"
+                    },
+                    value: inputDisplayValues.detail,
+                    errorMessage: errorMessage(errors.recallTypeManagerDetail)
+                }) }}
+                {{ govukRadios({
+                    idPrefix: "recallTypeManager",
+                    name: "recallTypeManager",
+                    fieldset: {
+                        legend: {
+                            text: 'Select a recall decision',
+                            classes: "govuk-visually-hidden"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.recallTypeManager,
+                        currentValues: inputDisplayValues.value
+                    }),
+                    errorMessage: errorMessage(errors.recallTypeManager)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

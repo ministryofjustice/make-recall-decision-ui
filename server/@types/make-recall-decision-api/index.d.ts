@@ -44,6 +44,8 @@ export type { LicenceConditionsResponse } from './models/LicenceConditionsRespon
 export type { LicenceConditionTypeMainCat } from './models/LicenceConditionTypeMainCat';
 export type { LicenceConditionTypeSubCat } from './models/LicenceConditionTypeSubCat';
 export type { LocalPoliceContact } from './models/LocalPoliceContact';
+export type { ManagerRecallDecision } from './models/ManagerRecallDecision';
+export { ManagerRecallDecisionTypeSelectedValue } from './models/ManagerRecallDecisionTypeSelectedValue';
 export type { Mappa } from './models/Mappa';
 export type { Message } from './models/Message';
 export type { MessageAttributeValue } from './models/MessageAttributeValue';

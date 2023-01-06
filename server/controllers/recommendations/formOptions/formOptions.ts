@@ -13,6 +13,7 @@ import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
 import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import { yesNo } from './yesNo'
+import { recallTypeManager } from '../managerRecordDecision/formOptions'
 
 export const formOptions = {
   recallType,
@@ -29,6 +30,7 @@ export const formOptions = {
   yesNo,
   hasVictimsInContactScheme,
   isUnderIntegratedOffenderManagement,
+  recallTypeManager,
 }
 
 export const isValueValid = (val: string, optionId: string) =>

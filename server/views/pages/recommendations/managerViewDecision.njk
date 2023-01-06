@@ -1,0 +1,30 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPagePath: '/cases/' + recommendation.crn + '/overview', urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>{{ pageTitles[page.id] }}</h1>
+            <div class='govuk-!-margin-bottom-6'>
+                <p class='govuk-body'>Manager: {{ recommendation.managerRecallDecision.createdBy }}</p>
+                <p class='govuk-body'>
+                    Date: {{ formatDateTimeFromIsoString({isoDate: recommendation.managerRecallDecision.createdDate, dateOnly: true }) }}</p>
+                <p class='govuk-body'>
+                    Decision: {{ getDisplayValueForOption({ value: recommendation.managerRecallDecision.selected.value, allOptions: formOptions.recallTypeManager }) }}</p>
+            </div>
+            <a href='/cases/{{ recommendation.crn }}/overview' class='govuk-button'>Continue</a>
+        </div>
+    </div>
+{% endblock %}
+

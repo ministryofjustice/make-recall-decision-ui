@@ -54,9 +54,31 @@ import { validatePreviousReleases } from '../previousReleases/formValidator'
 import { inputDisplayValuesPreviousReleases } from '../previousReleases/inputDisplayValues'
 import { validateAddPreviousRelease } from '../addPreviousRelease/formValidator'
 import { inputDisplayValuesAddPreviousRelease } from '../addPreviousRelease/inputDisplayValues'
+import { validateManagerRecordDecision } from '../managerRecordDecision/formValidator'
+import { inputDisplayValuesManagerRecordDecision } from '../managerRecordDecision/inputDisplayValues'
+import { validateManagerRecordDecisionDelius } from '../managerRecordDecisionDelius/formValidator'
 
 export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
+    case 'manager-record-decision':
+      return {
+        id: 'managerRecordDecision',
+        validator: validateManagerRecordDecision,
+        inputDisplayValues: inputDisplayValuesManagerRecordDecision,
+      }
+    case 'manager-view-decision':
+      return {
+        id: 'managerViewDecision',
+      }
+    case 'manager-record-decision-delius':
+      return {
+        id: 'managerRecordDecisionDelius',
+        validator: validateManagerRecordDecisionDelius,
+      }
+    case 'manager-decision-confirmation':
+      return {
+        id: 'managerDecisionConfirmation',
+      }
     case 'response-to-probation':
       return {
         id: 'responseToProbation',

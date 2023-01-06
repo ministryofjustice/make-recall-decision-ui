@@ -9,6 +9,7 @@ export type ActiveRecommendation = {
     recommendationId?: number;
     lastModifiedDate?: string;
     lastModifiedBy?: string;
+    lastModifiedByName?: string;
     recallType?: RecallType;
     recallConsideredList?: Array<RecallConsidered>;
     status?: ActiveRecommendation.status;
@@ -18,7 +19,6 @@ export namespace ActiveRecommendation {
 
     export enum status {
         DRAFT = 'DRAFT',
-        DOCUMENT_CREATED = 'DOCUMENT_CREATED',
         DELETED = 'DELETED',
         RECALL_CONSIDERED = 'RECALL_CONSIDERED',
         DOCUMENT_DOWNLOADED = 'DOCUMENT_DOWNLOADED',

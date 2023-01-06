@@ -2,13 +2,26 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { RecallType } from './RecallType'
-import { RecommendationResponse } from './RecommendationResponse'
+import type { RecallType } from './RecallType';
 
 export type RecommendationsListItem = {
-    lastModifiedBy?: string;
+    recommendationId?: number;
+    lastModifiedByName?: string;
     createdDate?: string;
     lastModifiedDate?: string;
+    status?: RecommendationsListItem.status;
     recallType?: RecallType;
-    status?: RecommendationResponse.status;
 };
+
+export namespace RecommendationsListItem {
+
+    export enum status {
+        DRAFT = 'DRAFT',
+        DELETED = 'DELETED',
+        RECALL_CONSIDERED = 'RECALL_CONSIDERED',
+        DOCUMENT_DOWNLOADED = 'DOCUMENT_DOWNLOADED',
+    }
+
+
+}
+
