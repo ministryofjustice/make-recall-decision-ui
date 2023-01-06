@@ -80,7 +80,7 @@ To get debug output when running cypress:
 ### Run E2E tests against local containers
 All dependencies will be mocked, including upstream APIs used by make-recall-decision-api, and HMPPS Auth.
 
-Set the CYPRESS_USERNAME and CYPRESS_PASSWORD env vars in the [.env.sample](./.env.sample) file when you copy it to .env. You can obtain the username and password from the team.
+Set the CYPRESS_USERNAME, CYPRESS_PASSWORD, CYPRESS_USERNAME_SPO and CYPRESS_PASSWORD_SPO env vars in the [.env.sample](./.env.sample) file when you copy it to .env. You can obtain the username and password from the team.
 
 Run all services:
 ```
@@ -109,4 +109,4 @@ npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<use
 
 ### E2E Tests on CircleCI
 
-The E2E tests are ran against the `dev` and `preprod` environments after deployment. The user credentials they use to log into the service are stored as [environment variables (in CircleCI)](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables) called `CYPRESS_USERNAME_<environment>` and `CYPRESS_PASSWORD_<environment>`.
+The E2E tests are ran against the `dev` and `preprod` environments after deployment. The user credentials they use to log into the service are stored as [environment variables (in CircleCI)](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables) called `CYPRESS_USERNAME_<environment>`, `CYPRESS_PASSWORD_<environment>`, `CYPRESS_USERNAME_SPO_<environment>`, `CYPRESS_PASSWORD_SPO_<environment>`.
