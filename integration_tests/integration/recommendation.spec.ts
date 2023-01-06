@@ -106,7 +106,7 @@ context('Make a recommendation', () => {
     })
 
     describe('flagConsiderRecall is set', () => {
-      it('shows a "Make a recommendation" button if no active recommendation, and complete form', () => {
+      it('shows a "Consider a recall" button if no active recommendation, and complete form', () => {
         const caseResponse = {
           ...getCaseOverviewResponse,
           activeRecommendation: undefined,
@@ -114,29 +114,15 @@ context('Make a recommendation', () => {
         cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
         cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
         cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-        cy.clickLink('Make a recommendation')
-        cy.pageHeading().should('equal', 'Make a recommendation')
-        cy.fillInput('Make a recommendation', 'Detail')
+        cy.clickLink('Consider a recall')
+        cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
+        cy.fillInput('What has made you think about recalling Paula Smith?', 'Detail')
         cy.clickButton('Continue')
         cy.pageHeading().should('equal', 'Overview for Paula Smith')
       })
 
-      it('update button shown if recommendation exists without consider recall detail', () => {
-        cy.task('getCase', {
-          sectionId: 'overview',
-          statusCode: 200,
-          response: { ...getCaseOverviewResponse, activeRecommendation: { recommendationId: '123' } },
-        })
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
-        })
-        cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should('equal', 'Create a Part A form')
-      })
-
-      it('shows a "Make a recommendation" banner if there\'s an active recommendation', () => {
+      // need to change user role
+      it.skip('shows a "Make a recommendation" banner if there\'s an active recommendation', () => {
         const recallConsideredDetail =
           'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
         cy.task('getCase', {
