@@ -2,25 +2,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import { RecallType } from './RecallType'
+import { RecommendationResponse } from './RecommendationResponse'
+
 export type RecommendationsListItem = {
-    statusForRecallType?: RecommendationsListItem.statusForRecallType;
     lastModifiedBy?: string;
     createdDate?: string;
     lastModifiedDate?: string;
+    recallType?: RecallType;
+    status?: RecommendationResponse.status;
 };
-
-export namespace RecommendationsListItem {
-
-    export enum statusForRecallType {
-        CONSIDERING_RECALL = 'CONSIDERING_RECALL',
-        RECOMMENDATION_STARTED = 'RECOMMENDATION_STARTED',
-        MAKING_DECISION_TO_RECALL = 'MAKING_DECISION_TO_RECALL',
-        MAKING_DECISION_NOT_TO_RECALL = 'MAKING_DECISION_NOT_TO_RECALL',
-        DECIDED_TO_RECALL = 'DECIDED_TO_RECALL',
-        DECIDED_NOT_TO_RECALL = 'DECIDED_NOT_TO_RECALL',
-        UNKNOWN = 'UNKNOWN',
-    }
-
-
-}
-
