@@ -1,6 +1,6 @@
 import { UrlInfo } from '../../../@types'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { isDefined, isNotNullOrUndefined } from '../../../utils/utils'
+import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { routeUrls } from '../../../routes/routeUrls'
 
