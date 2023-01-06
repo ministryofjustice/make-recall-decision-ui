@@ -38,7 +38,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   // assess whether to redirect the user
   const redirectedPagePath = checkForRedirectPath({
     requestedPageId: pageUrlSlug,
-    recallType: recommendation.recallType.selected.value,
+    recallType: recommendation.recallType?.selected?.value,
     basePathRecFlow: urlInfo.basePath,
     crn: recommendation.crn,
     recommendationStatus: recommendation.status,
