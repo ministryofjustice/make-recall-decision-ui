@@ -1,6 +1,5 @@
 import { inputDisplayValuesManagerRecordDecision } from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
-import { cleanseUiList } from '../../../utils/lists'
 import { ManagerRecallDecisionTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/ManagerRecallDecisionTypeSelectedValue'
 
 describe('inputDisplayValuesManagerRecordDecision', () => {
@@ -10,7 +9,7 @@ describe('inputDisplayValuesManagerRecordDecision', () => {
         value: ManagerRecallDecisionTypeSelectedValue.value.RECALL,
         details: 'Details...',
       },
-      allOptions: cleanseUiList(formOptions.recallTypeManager),
+      allOptions: formOptions.recallTypeManager,
     },
   }
 

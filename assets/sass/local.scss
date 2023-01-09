@@ -7,7 +7,7 @@
   position: relative;
 }
 
-pre.govuk-body {
+pre {
   white-space: pre-line
 }
 
@@ -128,4 +128,9 @@ pre.govuk-body {
 
 .govuk-notification-banner--full-width .govuk-notification-banner__content > * {
   max-width: none;
+}
+
+.info-panel__body .govuk-link:link,
+.info-panel__body .govuk-link:visited {
+  color: govuk-colour("white");
 }

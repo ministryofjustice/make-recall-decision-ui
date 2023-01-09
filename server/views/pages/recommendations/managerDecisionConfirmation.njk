@@ -1,6 +1,7 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "Decision to recall" if recommendation.managerRecallDecision.selected.value == 'RECALL' else 'Decision not to recall' %}
+{% set heading = "Decision to recall" if recommendation.managerRecallDecision.selected.value == 'RECALL' else 'Decision not to recall' %}
+{% set pageTitle = makePageTitle({ pageHeading: heading, hasErrors: errors }) %}
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -11,13 +12,13 @@
                 <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
-                titleText: pageTitle,
+                titleText: heading,
                 html: html
             }) }}
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
-            <p class='govuk-body'>You must contact the probation practitioner and tell them your decision.</p>
-            <p class='govuk-body'>A 'Management oversight - recall' contact has been added to NDelius.</p>
-            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to case overview</a></p>
+            <p class='govuk-body'>You must tell the probation practitioner your decision.</p>
+            <p class='govuk-body'>Your decision has been recorded as a contact in NDelius called 'Management oversight - recall'.</p>
+            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Return to overview</a></p>
         </div>
     </div>
 {% endblock %}

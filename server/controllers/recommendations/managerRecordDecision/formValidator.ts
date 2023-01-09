@@ -3,7 +3,6 @@ import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { cleanseUiList } from '../../../utils/lists'
 
 export const validateManagerRecordDecision = async ({
   requestBody,
@@ -52,7 +51,7 @@ export const validateManagerRecordDecision = async ({
         value: recallTypeManager,
         details: isString(recallTypeManagerDetail) ? stripHtmlTags(recallTypeManagerDetail as string) : undefined,
       },
-      allOptions: cleanseUiList(formOptions.recallTypeManager),
+      allOptions: formOptions.recallTypeManager,
     },
   }
 

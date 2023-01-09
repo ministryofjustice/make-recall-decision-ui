@@ -122,7 +122,7 @@ context('Make a recommendation', () => {
       })
 
       // need to change user role
-      it.skip('shows a "Make a recommendation" banner if there\'s an active recommendation', () => {
+      it('shows a "Make a recommendation" banner to the PO if there\'s an active recommendation', () => {
         const recallConsideredDetail =
           'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
         cy.task('getCase', {
