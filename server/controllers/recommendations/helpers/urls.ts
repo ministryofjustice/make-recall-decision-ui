@@ -1,6 +1,6 @@
 import { UrlInfo } from '../../../@types'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { isNotNullOrUndefined } from '../../../utils/utils'
+import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { routeUrls } from '../../../routes/routeUrls'
 
@@ -45,28 +45,36 @@ export const changeLinkUrl = ({
 
 export const checkForRedirectPath = ({
   requestedPageId,
-  recallType,
+  recommendation,
   basePathRecFlow,
   recommendationStatus,
   crn,
 }: {
   requestedPageId: string
-  recallType?: RecallTypeSelectedValue.value
+  recommendation: RecommendationResponse
   basePathRecFlow: string
   recommendationStatus: RecommendationResponse.status
   crn: string
 }) => {
+  const recallType = recommendation?.recallType?.selected?.value
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
     recallType
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
-  const isNotSet = !isNotNullOrUndefined(recallType)
+  const isNotSet = !isDefined(recallType)
+
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
   const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
 
   if (isCompletedRecommendation) {
     return `${routeUrls.cases}/${crn}/overview`
+  }
+  if (
+    ['manager-record-decision', 'manager-record-decision-delius'].includes(requestedPageId) &&
+    recommendation.managerRecallDecision?.isSentToDelius === true
+  ) {
+    return `${basePathRecFlow}manager-view-decision`
   }
   if (!isRecallTaskListRequested && !isNoRecallTaskListRequested) {
     return null

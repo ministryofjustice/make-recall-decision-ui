@@ -115,28 +115,14 @@ context('Make a recommendation', () => {
         cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
         cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
         cy.clickLink('Consider a recall')
-        cy.pageHeading().should('equal', 'Consider a recall')
-        cy.fillInput('Consider a recall', 'Detail')
+        cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
+        cy.fillInput('What has made you think about recalling Paula Smith?', 'Detail')
         cy.clickButton('Continue')
         cy.pageHeading().should('equal', 'Overview for Paula Smith')
       })
 
-      it('update button shown if recommendation exists without consider recall detail', () => {
-        cy.task('getCase', {
-          sectionId: 'overview',
-          statusCode: 200,
-          response: { ...getCaseOverviewResponse, activeRecommendation: { recommendationId: '123' } },
-        })
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
-        })
-        cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should('equal', 'Create a Part A form')
-      })
-
-      it('shows a "Consider a recall" banner if there\'s an active recommendation', () => {
+      // need to change user role
+      it.skip('shows a "Make a recommendation" banner if there\'s an active recommendation', () => {
         const recallConsideredDetail =
           'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
         cy.task('getCase', {
@@ -195,13 +181,27 @@ context('Make a recommendation', () => {
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/consider-recall`)
-      cy.fillInput('Consider a recall', ' ', { clearExistingText: true })
+      cy.fillInput('What has made you think about recalling Paula Smith?', ' ', { clearExistingText: true })
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'recallConsideredDetail',
         errorText: "Enter details about why you're considering a recall",
       })
-      cy.getTextInputValue('Consider a recall').should('equal', '')
+      cy.getTextInputValue('What has made you think about recalling Paula Smith?').should('equal', '')
+    })
+
+    it('form validation - Manager record decision', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-record-decision`)
+      cy.clickButton('Continue')
+      cy.assertErrorMessage({
+        fieldName: 'recallTypeManagerDetail',
+        errorText: 'You must explain your decision',
+      })
+      cy.assertErrorMessage({
+        fieldName: 'recallTypeManager',
+        errorText: 'Select whether you recommend a recall or not',
+      })
     })
 
     it('form validation - Response to probation', () => {

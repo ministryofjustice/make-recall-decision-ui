@@ -61,6 +61,7 @@ export type FormValidatorReturn = Promise<{
   valuesToSave?: ObjectMap<unknown>
   unsavedValues?: ObjectMap<unknown>
   nextPagePath?: string
+  apiEndpointPathSuffix?: string
   monitoringEvent?: {
     eventName: EVENTS
     data: ObjectMap<unknown>
@@ -157,6 +158,10 @@ export interface ContactHistoryFilters {
 }
 
 export type PageId =
+  | 'managerRecordDecision'
+  | 'managerViewDecision'
+  | 'managerRecordDecisionDelius'
+  | 'managerDecisionConfirmation'
   | 'responseToProbation'
   | 'licenceConditions'
   | 'alternativesToRecallTried'

@@ -9,6 +9,7 @@ import type { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrEx
 import type { IndeterminateSentenceType } from './IndeterminateSentenceType';
 import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
 import type { LocalPoliceContact } from './LocalPoliceContact';
+import type { ManagerRecallDecision } from './ManagerRecallDecision';
 import type { NextAppointment } from './NextAppointment';
 import type { PersonOnProbationDto } from './PersonOnProbationDto';
 import type { PreviousRecalls } from './PreviousRecalls';
@@ -30,6 +31,7 @@ export type RecommendationResponse = {
     custodyStatus?: CustodyStatus;
     localPoliceContact?: LocalPoliceContact;
     crn?: string;
+    managerRecallDecision?: ManagerRecallDecision;
     recallType?: RecallType;
     responseToProbation?: string;
     whatLedToRecall?: string;
@@ -53,6 +55,8 @@ export type RecommendationResponse = {
     userNamePartACompletedBy?: string;
     userEmailPartACompletedBy?: string;
     lastPartADownloadDateTime?: string;
+    userNameDntrLetterCompletedBy?: string;
+    lastDntrLetterDownloadDateTime?: string;
     indexOffenceDetails?: string;
     offenceAnalysis?: string;
     fixedTermAdditionalLicenceConditions?: SelectedWithDetails;

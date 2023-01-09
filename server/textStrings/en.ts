@@ -54,6 +54,8 @@ export const strings = {
     noAddressConfirmationSelected: 'Select whether this is where the police can find {{ fullName }}',
     missingLocationDetail: 'You must enter the correct location',
     missingRecallConsideredDetail: "Enter details about why you're considering a recall",
+    noManagerRecallTypeSelected: 'Select whether you recommend a recall or not',
+    missingManagerRecallTypeDetail: 'You must explain your decision',
   },
   notifications: {
     oasysNotFoundLatestComplete:
@@ -63,6 +65,9 @@ export const strings = {
     oasysApiError: 'This information cannot be retrieved from OASys.',
   },
   pageHeadings: {
+    managerRecordDecision: 'Record your decision',
+    managerRecordDecisionDelius: 'Record your decision in NDelius',
+    managerViewDecision: 'Your decision',
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',

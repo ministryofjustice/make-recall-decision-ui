@@ -3,7 +3,7 @@ import { FeatureFlagDefault, ObjectMap } from '../@types'
 
 export const featureFlagsDefaults = {
   flagConsiderRecall: {
-    label: 'Consider a recall',
+    label: 'Consider a recall / manager decision',
     default: false,
   },
   flagDomainEventRecommendationStarted: {
