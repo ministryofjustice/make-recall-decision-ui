@@ -1,6 +1,5 @@
 import { validateManagerRecordDecision } from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
-import { cleanseUiList } from '../../../utils/lists'
 
 describe('validateManagerRecordDecision', () => {
   const recommendationId = '456'
@@ -29,7 +28,7 @@ describe('validateManagerRecordDecision', () => {
             value: requestBody.recallTypeManager,
             details: requestBody.recallTypeManagerDetail,
           },
-          allOptions: cleanseUiList(formOptions.recallTypeManager),
+          allOptions: formOptions.recallTypeManager,
         },
       })
       expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/manager-record-decision-delius`)
