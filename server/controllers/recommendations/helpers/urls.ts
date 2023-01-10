@@ -66,8 +66,9 @@ export const checkForRedirectPath = ({
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
   const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
+  const isConfirmationPage = ['confirmation-part-a', 'confirmation-no-recall'].includes(requestedPageId)
 
-  if (isCompletedRecommendation) {
+  if (isCompletedRecommendation && !isConfirmationPage) {
     return `${routeUrls.cases}/${crn}/overview`
   }
   if (

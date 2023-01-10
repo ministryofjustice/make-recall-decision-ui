@@ -168,6 +168,28 @@ describe('checkForRedirectPath', () => {
       })
       expect(pageUrlSlug).toEqual(`/cases/${crn}/overview`)
     })
+
+    it('returns null if recommendation status is DOCUMENT_DOWNLOADED and Part A confirmation is requested', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'confirmation-part-a',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
+      })
+      expect(pageUrlSlug).toBeNull()
+    })
+
+    it('returns null if recommendation status is DOCUMENT_DOWNLOADED and letter confirmation is requested', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'confirmation-no-recall',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
+      })
+      expect(pageUrlSlug).toBeNull()
+    })
   })
 
   describe('Record manager decision', () => {
