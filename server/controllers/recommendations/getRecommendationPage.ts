@@ -13,6 +13,8 @@ import { strings } from '../../textStrings/en'
 import { AuditService } from '../../services/auditService'
 import { updatePageReviewedStatus } from './helpers/updatePageReviewedStatus'
 import { RecommendationDecorated } from '../../@types'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 const auditService = new AuditService()
 
@@ -20,7 +22,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const { recommendationId, pageUrlSlug } = req.params
   const {
     urlInfo,
-    user: { token },
+    user: { token, username },
     flags: featureFlags,
   } = res.locals
   const { id, inputDisplayValues, reviewedProperty, propertyToRefresh } = pageMetaData(pageUrlSlug)
@@ -87,11 +89,16 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
       token,
     })
   }
+  appInsightsEvent(EVENTS.MRD_RECOMMENDATION_PAGE_VIEW, username, {
+    crn: recommendation.crn,
+    recommendationId,
+    pageUrlSlug,
+  })
   auditService.recommendationView({
     crn: res.locals.crn,
     recommendationId,
     pageUrlSlug,
-    username: res.locals.user.username,
+    username,
     logErrors: isPreprodOrProd(res.locals.env) && process.env.NODE_ENV !== 'test',
   })
 }

@@ -1,6 +1,7 @@
 export enum EVENTS {
   PERSON_SEARCH_RESULTS = 'mrdPersonSearchResults',
   MRD_RECOMMENDATION_STARTED = 'mrdRecommendationStarted',
+  MRD_RECOMMENDATION_PAGE_VIEW = 'mrdRecommendationPageView',
   MRD_CONSIDER_RECALL_CREATED = 'mrdConsiderRecallCreated',
   MRD_CONSIDER_RECALL_EDITED = 'mrdConsiderRecallEdited',
   MRD_RECALL_TYPE = 'mrdRecallType',
