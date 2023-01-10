@@ -6,7 +6,7 @@ import tokenVerification from './tokenVerification'
 
 const createToken = opts => {
   const authorities =
-    opts.hasSpoRole === true
+    opts?.hasSpoRole === true
       ? ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO']
       : ['ROLE_MAKE_RECALL_DECISION']
   const payload = {
