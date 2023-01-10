@@ -105,7 +105,7 @@ context('Make a recommendation', () => {
       })
     })
 
-    describe.only('flagConsiderRecall is set', () => {
+    describe('flagConsiderRecall is set', () => {
       const recallConsideredDetail =
         'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
       const activeRecommendation = {
