@@ -23,5 +23,5 @@ If needed, add a new mock function to `./integration_tests/mockApis/makeRecallDe
 Wrap the new feature in a [feature flag](./feature-flags.md).
 
 ### How form render / validation works for Make a recommendation
-- [Flow diagram](./images/manage-recalls-ui-error-flow.png)
+- [Flow diagram](./images/make-recall-decision-ui-flow.png)
 - To render invalid / saved / unsaved values to form inputs, add to `getFormValues.ts`
