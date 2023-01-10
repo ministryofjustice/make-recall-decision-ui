@@ -17,11 +17,12 @@
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageTitles[page.id] }}</h1>
             <div class='govuk-!-margin-bottom-6'>
-                <p class='govuk-body'>Manager: {{ recommendation.managerRecallDecision.createdBy }}</p>
+                <p class='govuk-body'><strong>Manager:</strong> {{ recommendation.managerRecallDecision.createdBy }}</p>
                 <p class='govuk-body'>
-                    Date: {{ formatDateTimeFromIsoString({isoDate: recommendation.managerRecallDecision.createdDate, dateOnly: true }) }}</p>
+                    <strong>Date:</strong> {{ formatDateTimeFromIsoString({isoDate: recommendation.managerRecallDecision.createdDate, dateOnly: true }) }}</p>
                 <p class='govuk-body'>
-                    Decision: {{ getDisplayValueForOption({ value: recommendation.managerRecallDecision.selected.value, allOptions: formOptions.recallTypeManager }) }}</p>
+                    <strong>Decision:</strong> {{ getDisplayValueForOption({ value: recommendation.managerRecallDecision.selected.value, allOptions: formOptions.recallTypeManager }) }}</p>
+                <pre class='govuk-body'><strong>Rationale:</strong> {{ recommendation.managerRecallDecision.selected.details }}</pre>
             </div>
             <a href='/cases/{{ recommendation.crn }}/overview' class='govuk-button'>Continue</a>
         </div>
