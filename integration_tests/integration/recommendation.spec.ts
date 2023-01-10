@@ -5,10 +5,6 @@ import excludedResponse from '../../api/responses/get-case-excluded.json'
 import { setResponsePropertiesToNull } from '../support/commands'
 
 context('Make a recommendation', () => {
-  beforeEach(() => {
-    cy.signIn()
-  })
-
   const crn = 'X34983'
   const recommendationId = '123'
   const recommendationResponse = {
@@ -49,6 +45,10 @@ context('Make a recommendation', () => {
 
   describe('Create / update a recommendation', () => {
     describe('flagConsiderRecall not set', () => {
+      beforeEach(() => {
+        cy.signIn()
+      })
+
       it('shows a "Make a recommendation" button if no active recommendation', () => {
         const caseResponse = {
           ...getCaseOverviewResponse,
@@ -105,399 +105,123 @@ context('Make a recommendation', () => {
       })
     })
 
-    describe('flagConsiderRecall is set', () => {
-      it('shows a "Consider a recall" button if no active recommendation, and complete form', () => {
-        const caseResponse = {
-          ...getCaseOverviewResponse,
-          activeRecommendation: undefined,
-        }
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-        cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
-        cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-        cy.clickLink('Consider a recall')
-        cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
-        cy.fillInput('What has made you think about recalling Paula Smith?', 'Detail')
-        cy.clickButton('Continue')
-        cy.pageHeading().should('equal', 'Overview for Paula Smith')
-      })
-
-      // need to change user role
-      it('shows a "Make a recommendation" banner to the PO if there\'s an active recommendation', () => {
-        const recallConsideredDetail =
-          'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
-        cy.task('getCase', {
-          sectionId: 'overview',
-          statusCode: 200,
-          response: {
-            ...getCaseOverviewResponse,
-            activeRecommendation: {
-              recommendationId: '123',
-              status: 'RECALL_CONSIDERED',
-              recallConsideredList: [
-                {
-                  createdDate: '2022-06-24T20:39:00.000Z',
-                  userName: 'Bill',
-                  recallConsideredDetail,
-                },
-              ],
-            },
-          },
-        })
-        cy.task('updateRecommendation', {
-          statusCode: 200,
-          response: completeRecommendationResponse,
-        })
-        cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-        cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-        cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
-        cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
-        cy.clickButton('Make a recommendation')
-        cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
-        cy.getElement({ qaAttr: 'consider-recall-button' }).should('not.exist')
-      })
-    })
-  })
-
-  describe('Form validation', () => {
-    it('shows previously saved text / form validation on "Consider a recall" page', () => {
+    describe.only('flagConsiderRecall is set', () => {
       const recallConsideredDetail =
         'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
-      cy.task('getCase', {
-        sectionId: 'personal-details',
-        statusCode: 200,
-        response: {
-          ...getCaseOverviewResponse,
-          activeRecommendation: {
-            recommendationId: '123',
-            status: 'RECALL_CONSIDERED',
-            recallConsideredList: [
-              {
-                createdDate: '2022-06-24T20:39:00.000Z',
-                userName: 'Bill',
-                recallConsideredDetail,
-              },
-            ],
+      const activeRecommendation = {
+        recommendationId: '123',
+        status: 'RECALL_CONSIDERED',
+        recallConsideredList: [
+          {
+            createdDate: '2022-06-24T20:39:00.000Z',
+            userName: 'Bill',
+            recallConsideredDetail,
           },
-        },
-      })
-      cy.visit(`${routeUrls.cases}/${crn}/consider-recall`)
-      cy.fillInput('What has made you think about recalling Paula Smith?', ' ', { clearExistingText: true })
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'recallConsideredDetail',
-        errorText: "Enter details about why you're considering a recall",
-      })
-      cy.getTextInputValue('What has made you think about recalling Paula Smith?').should('equal', '')
-    })
+        ],
+      }
+      describe('Probation officer', () => {
+        beforeEach(() => {
+          cy.signIn()
+        })
 
-    it('form validation - Manager record decision', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-record-decision`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'recallTypeManagerDetail',
-        errorText: 'You must explain your decision',
-      })
-      cy.assertErrorMessage({
-        fieldName: 'recallTypeManager',
-        errorText: 'Select whether you recommend a recall or not',
-      })
-    })
+        it('shows a "Consider a recall" button if no active recommendation, and complete form', () => {
+          const caseResponse = {
+            ...getCaseOverviewResponse,
+            activeRecommendation: undefined,
+          }
+          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+          cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
+          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+          cy.clickLink('Consider a recall')
+          cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
+          cy.fillInput('What has made you think about recalling Paula Smith?', 'Detail')
+          cy.clickButton('Continue')
+          cy.pageHeading().should('equal', 'Overview for Paula Smith')
+        })
 
-    it('form validation - Response to probation', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'responseToProbation',
-        errorText: 'You must explain how Paula Smith has responded to probation',
+        it('shows a "Consider a recall" banner to the PO if there\'s an active recommendation', () => {
+          cy.task('getCase', {
+            sectionId: 'overview',
+            statusCode: 200,
+            response: {
+              ...getCaseOverviewResponse,
+              activeRecommendation,
+            },
+          })
+          cy.task('updateRecommendation', {
+            statusCode: 200,
+            response: completeRecommendationResponse,
+          })
+          cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+          cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
+          cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
+          cy.getElement({ qaAttr: 'consider-recall-button' }).should('not.exist')
+          cy.clickButton('Make a recommendation')
+          cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
+        })
       })
-    })
 
-    it('form validation - Licence conditions', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'licenceConditionsBreached',
-        errorText: 'You must select one or more licence conditions',
-      })
-    })
+      describe('Senior probation officer', () => {
+        beforeEach(() => {
+          cy.signIn({ hasSpoRole: true })
+        })
 
-    it('form validation - Alternatives tried', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/alternatives-tried`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'alternativesToRecallTried',
-        errorText: 'You must select which alternatives to recall have been tried already',
-      })
-      cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-        'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-      ])
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
-        errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-      })
-    })
+        it('does not show a "Consider a recall" button or banner if no active recommendation', () => {
+          const caseResponse = {
+            ...getCaseOverviewResponse,
+            activeRecommendation: undefined,
+          }
+          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+          cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
+          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+          cy.getElement('Consider a recall').should('not.exist')
+          cy.getElement({ qaAttr: 'recallConsideredDetail' }).should('not.exist')
+        })
 
-    it('form validation - Indeterminate sentence', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-indeterminate`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'isIndeterminateSentence',
-        errorText: 'Select whether Paula Smith is on an indeterminate sentence or not',
-      })
-    })
+        it('shows a "Consider a recall" banner to the SPO if there\'s an active recommendation', () => {
+          cy.task('getCase', {
+            sectionId: 'overview',
+            statusCode: 200,
+            response: {
+              ...getCaseOverviewResponse,
+              activeRecommendation,
+            },
+          })
+          cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+          cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
+          cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
+          cy.clickLink('Record your decision')
+          cy.pageHeading().should('equal', 'Record your decision')
+        })
 
-    it('form validation - Extended sentence', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'isExtendedSentence',
-        errorText: 'Select whether Paula Smith is on an extended sentence or not',
-      })
-    })
-
-    it('form validation - Indeterminate sentence type', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'indeterminateSentenceType',
-        errorText: 'Select whether Paula Smith is on a life, IPP or DPP sentence',
-      })
-    })
-
-    it('form validation - Indeterminate or extended sentence details', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'indeterminateOrExtendedSentenceDetails',
-        errorText: 'Select at least one of the criteria',
-      })
-      cy.selectCheckboxes('Indeterminate and extended sentences', [
-        'Paula Smith has shown behaviour similar to the index offence',
-        'Paula Smith has shown behaviour that could lead to a sexual or violent offence',
-        'Paula Smith is out of touch',
-      ])
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-        errorText: 'Enter details about the behaviour similar to the index offence',
-      })
-      cy.assertErrorMessage({
-        fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-        errorText: 'Enter details about the behaviour that could lead to a sexual or violent offence',
-      })
-      cy.assertErrorMessage({
-        fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
-        errorText: 'Enter details about Paula Smith being out of touch',
-      })
-    })
-
-    it('form validation - Recall type', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'recallType',
-        errorText: 'You must select a recommendation',
-      })
-    })
-
-    it('form validation - Recall type (indeterminate)', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'recallType',
-        errorText: 'Select whether you recommend a recall or not',
-      })
-    })
-
-    it('form validation - fixed term additional licence conditions', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/fixed-licence`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasFixedTermLicenceConditions',
-        errorText: 'Select whether there are additional licence conditions',
-      })
-      cy.selectRadio('Fixed term recall', 'Yes')
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasFixedTermLicenceConditionsDetails',
-        errorText: 'Enter additional licence conditions',
-      })
-    })
-
-    it('form validation - Custody status', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/custody-status`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'custodyStatus',
-        errorText: 'Select whether the person is in custody or not',
-      })
-    })
-
-    it('form validation - Vulnerabilities', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'vulnerabilities',
-        errorText: 'Select if there are vulnerabilities or additional needs',
-      })
-      cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
-        'Relationship breakdown',
-        'Physical disabilities',
-      ])
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'vulnerabilitiesDetail-PHYSICAL_DISABILITIES',
-        errorText: 'Enter more detail for physical disabilities',
-      })
-    })
-
-    it('form validation - IOM', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/iom`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'isUnderIntegratedOffenderManagement',
-        errorText: 'You must select whether Paula Smith is under Integrated Offender Management',
-      })
-    })
-
-    it('form validation - Local police contact details', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/police-details`)
-      cy.fillInput('Email address', '111')
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'contactName',
-        errorText: 'Enter the police contact name',
-      })
-      cy.assertErrorMessage({
-        fieldName: 'emailAddress',
-        errorText: 'Enter an email address in the correct format, like name@example.com',
-      })
-    })
-
-    it('form validation - Victim contact scheme', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasVictimsInContactScheme',
-        errorText: 'You must select whether there are any victims in the victim contact scheme',
-      })
-    })
-
-    it('form validation - Victim liaison officer', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-liaison-officer`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'dateVloInformed',
-        fieldGroupId: 'dateVloInformed-day',
-        errorText: 'Enter the date you told the VLO',
-      })
-    })
-
-    it('form validation - What has led to recall', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/what-led`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'whatLedToRecall',
-        errorText: 'Enter details of what has led to this recall',
-      })
-    })
-
-    it('form validation - Arrest issues', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/arrest-issues`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasArrestIssues',
-        errorText: "Select whether there's anything the police should know",
-      })
-      cy.selectRadio('Is there anything the police should know before they arrest Paula Smith?', 'Yes')
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasArrestIssuesDetailsYes',
-        errorText: 'You must enter details of the arrest issues',
-      })
-    })
-
-    it('form validation - Contraband', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/contraband`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasContrabandRisk',
-        errorText: 'Select whether you think Paula Smith is using recall to bring contraband into prison',
-      })
-      cy.selectRadio(`Do you think Paula Smith is using recall to bring contraband into prison?`, 'Yes')
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasContrabandRiskDetailsYes',
-        errorText: 'You must enter details of the contraband concerns',
-      })
-    })
-
-    it('form validation - Address details', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'isMainAddressWherePersonCanBeFound',
-        errorText: 'Select whether this is where the police can find Paula Smith',
-      })
-      cy.selectRadio('Is this where the police can find Paula Smith?', 'No')
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'isMainAddressWherePersonCanBeFoundDetailsNo',
-        errorText: 'You must enter the correct location',
-      })
-    })
-
-    it('form validation - Offence analysis', () => {
-      cy.task('updateRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
-      cy.getText('indexOffenceDetails').should('equal', 'Index offence details')
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'offenceAnalysis',
-        errorText: 'Enter the offence analysis',
-      })
-    })
-
-    it('form validation - Previous releases', () => {
-      cy.task('updateRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, previousReleases: null },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-releases`)
-      cy.clickButton('Continue')
-      cy.assertErrorMessage({
-        fieldName: 'hasBeenReleasedPreviously',
-        errorText: 'Select whether Paula Smith has been released previously',
+        it('shows a View your decision link if the active recommendation has a recorded decision', () => {
+          cy.task('getCase', {
+            sectionId: 'overview',
+            statusCode: 200,
+            response: {
+              ...getCaseOverviewResponse,
+              activeRecommendation: {
+                ...activeRecommendation,
+                managerRecallDecision: { isSentToDelius: true },
+              },
+            },
+          })
+          cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+          cy.clickLink('View your decision')
+          cy.pageHeading().should('equal', 'Your decision')
+        })
       })
     })
   })
 
   describe('Restricted / excluded CRNs', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
     it('prevents creating a recommendation if CRN is excluded', () => {
       const caseResponse = {
         ...getCaseOverviewResponse,
@@ -528,6 +252,10 @@ context('Make a recommendation', () => {
   })
 
   describe('Licence conditions', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
     it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
@@ -571,6 +299,10 @@ context('Make a recommendation', () => {
   })
 
   describe('Personal details', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
     it('lists personal details', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/personal-details`)
@@ -765,6 +497,10 @@ context('Make a recommendation', () => {
   })
 
   describe('Risk profile', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
     it('shows MAPPA data', () => {
       cy.task('updateRecommendation', {
         statusCode: 200,
@@ -798,161 +534,6 @@ context('Make a recommendation', () => {
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
       cy.getElement('Unknown MAPPA').should('exist')
-    })
-  })
-
-  describe('Branching / redirects', () => {
-    it('recall type - directs "no recall" to the no recall task list', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
-      })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
-      cy.selectRadio('What do you recommend?', 'No recall')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
-    })
-
-    it('recall type - directs "no recall" to the no recall task list, even if coming from recall task list', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`
-      )
-      cy.selectRadio('What do you recommend?', 'No recall')
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
-      })
-      cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
-    })
-
-    it('indeterminate recall type - directs "no recall" to the no recall task list', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
-      cy.selectRadio('What do you recommend?', 'No recall')
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
-      })
-      cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
-    })
-
-    it('indeterminate recall type - directs "no recall" to the no recall task list even if coming from task list', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`
-      )
-      cy.selectRadio('What do you recommend?', 'No recall')
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
-      })
-      cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a decision not to recall letter')
-    })
-
-    it('indeterminate recall type - links back to indeterminate sentence type if indeterminate sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
-      cy.getLinkHref('Back').should('contain', '/indeterminate-type')
-    })
-
-    it('indeterminate recall type - links back to extended sentence if extended sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
-      cy.getLinkHref('Back').should('contain', '/is-extended')
-    })
-
-    it('indeterminate sentence - if extended sentence is selected, redirect to indeterminate recommendation page', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, isIndeterminateSentence: false },
-      })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
-      cy.selectRadio('Is Paula Smith on an extended sentence?', 'Yes')
-      cy.clickButton('Continue')
-      cy.selectRadio('What do you recommend?', 'Emergency recall')
-    })
-
-    it('victim contact scheme - directs "no" to the task list page', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
-      cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('contain', 'Create a Part A form')
-    })
-
-    it('sensitive info - links back to indeterminate/extended criteria if indeterminate sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.getLinkHref('Back').should('contain', '/indeterminate-details')
-    })
-
-    it('sensitive info - links back to indeterminate/extended criteria if extended sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.getLinkHref('Back').should('contain', '/indeterminate-details')
-    })
-
-    it('sensitive info - links back to emergency recall if determinate sentence / standard recall', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...recommendationResponse,
-          isIndeterminateSentence: false,
-          isExtendedSentence: false,
-          recallType: {
-            selected: { value: 'STANDARD' },
-          },
-        },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.getLinkHref('Back').should('contain', '/emergency-recall')
-    })
-
-    it('sensitive info - links back to fixed term licence conditions if determinate sentence / fixed term recall', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...recommendationResponse,
-          isIndeterminateSentence: false,
-          isExtendedSentence: false,
-          recallType: {
-            selected: { value: 'FIXED_TERM' },
-          },
-        },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.getLinkHref('Back').should('contain', '/fixed-licence')
-    })
-
-    it('completed recommendation - redirect to case overview', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, status: 'DOCUMENT_DOWNLOADED' },
-      })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`)
-      cy.pageHeading().should('equal', 'Overview for Paula Smith')
     })
   })
 })

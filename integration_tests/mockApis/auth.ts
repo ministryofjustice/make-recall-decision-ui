@@ -4,12 +4,16 @@ import { Response } from 'superagent'
 import { stubFor, getRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
 
-const createToken = () => {
+const createToken = opts => {
+  const authorities =
+    opts.hasSpoRole === true
+      ? ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO']
+      : ['ROLE_MAKE_RECALL_DECISION']
   const payload = {
     user_name: 'USER1',
     scope: ['read'],
     auth_source: 'nomis',
-    authorities: [],
+    authorities,
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'clientid',
   }
@@ -99,7 +103,7 @@ const manageDetails = () =>
     },
   })
 
-const token = () =>
+const token = opts =>
   stubFor({
     request: {
       method: 'POST',
@@ -112,7 +116,7 @@ const token = () =>
         Location: 'http://localhost:3007/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(),
+        access_token: createToken(opts),
         token_type: 'bearer',
         user_name: 'USER1',
         expires_in: 599,
@@ -159,25 +163,10 @@ const stubUserEmail = () =>
     },
   })
 
-const stubUserRoles = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: '/auth/api/user/me/roles',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: [{ roleCode: 'SOME_USER_ROLE' }],
-    },
-  })
-
 export default {
   getSignInUrl,
   stubPing: (): Promise<[Response, Response]> => Promise.all([ping(), tokenVerification.stubPing()]),
-  stubSignIn: (): Promise<[Response, Response, Response, Response, Response, Response]> =>
-    Promise.all([favicon(), redirect(), signOut(), manageDetails(), token(), tokenVerification.stubVerifyToken()]),
-  stubUser: (): Promise<[Response, Response, Response]> => Promise.all([stubUser(), stubUserRoles(), stubUserEmail()]),
+  stubSignIn: (opts): Promise<[Response, Response, Response, Response, Response, Response]> =>
+    Promise.all([favicon(), redirect(), signOut(), manageDetails(), token(opts), tokenVerification.stubVerifyToken()]),
+  stubUser: (): Promise<[Response, Response]> => Promise.all([stubUser(), stubUserEmail()]),
 }
