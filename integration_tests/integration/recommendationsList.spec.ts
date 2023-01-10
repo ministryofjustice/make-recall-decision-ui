@@ -3,87 +3,93 @@ import getRecommendationsResponse from '../../api/responses/get-case-recommendat
 
 context('Recommendations list', () => {
   const crn = 'X34983'
+  const recommendations = [
+    {
+      lastModifiedByName: 'Angela Hartnett',
+      lastModifiedDate: '2022-12-07T13:59:38.733Z',
+      recommendationId: '1',
+      status: 'RECALL_CONSIDERED',
+    },
+    {
+      status: 'DRAFT',
+      lastModifiedByName: 'Angelos Angelou',
+      lastModifiedDate: '2022-11-23T13:59:38.733Z',
+      recommendationId: '2',
+    },
+    {
+      status: 'DRAFT',
+      lastModifiedByName: 'Jamie Heifer',
+      lastModifiedDate: '2022-06-07T13:59:38.733Z',
+      recommendationId: '3',
+      recallType: {
+        selected: {
+          value: 'STANDARD',
+        },
+      },
+    },
+    {
+      status: 'DRAFT',
+      lastModifiedByName: 'Gary Lamb',
+      lastModifiedDate: '2021-11-17T13:59:38.733Z',
+      recommendationId: '4',
+      recallType: {
+        selected: {
+          value: 'NO_RECALL',
+        },
+      },
+    },
+    {
+      status: 'DOCUMENT_DOWNLOADED',
+      lastModifiedByName: 'Barry Smithson',
+      lastModifiedDate: '2021-09-23T13:59:38.733Z',
+      recommendationId: '5',
+      recallType: {
+        selected: {
+          value: 'FIXED_TERM',
+        },
+      },
+    },
+    {
+      status: 'DOCUMENT_DOWNLOADED',
+      lastModifiedByName: 'Mary Berry',
+      lastModifiedDate: '2019-05-14T13:59:38.733Z',
+      recommendationId: '6',
+      recallType: {
+        selected: {
+          value: 'NO_RECALL',
+        },
+      },
+    },
+    {
+      status: '',
+      lastModifiedByName: 'A. Milner',
+      lastModifiedDate: '2016-04-18T13:59:38.733Z',
+      recommendationId: '7',
+    },
+  ]
 
-  beforeEach(() => {
+  const checkValuesInTable = expectedTableRows => {
+    for (let i = 0; i < expectedTableRows.length; i += 1) {
+      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: `recommendation-${i + 1}` }).then(row1 => {
+        expect(row1).to.deep.eq(expectedTableRows[i])
+      })
+    }
+  }
+
+  it('if signed in user is a PO - lists all recommendations with actions', () => {
     cy.signIn()
-  })
-
-  it('lists all recommendations', () => {
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
       response: {
         ...getRecommendationsResponse,
-        recommendations: [
-          {
-            lastModifiedByName: 'Angela Hartnett',
-            lastModifiedDate: '2022-12-07T13:59:38.733Z',
-            recommendationId: '1',
-            status: 'RECALL_CONSIDERED',
-          },
-          {
-            status: 'DRAFT',
-            lastModifiedByName: 'Angelos Angelou',
-            lastModifiedDate: '2022-11-23T13:59:38.733Z',
-            recommendationId: '2',
-          },
-          {
-            status: 'DRAFT',
-            lastModifiedByName: 'Jamie Heifer',
-            lastModifiedDate: '2022-06-07T13:59:38.733Z',
-            recommendationId: '3',
-            recallType: {
-              selected: {
-                value: 'STANDARD',
-              },
-            },
-          },
-          {
-            status: 'DRAFT',
-            lastModifiedByName: 'Gary Lamb',
-            lastModifiedDate: '2021-11-17T13:59:38.733Z',
-            recommendationId: '4',
-            recallType: {
-              selected: {
-                value: 'NO_RECALL',
-              },
-            },
-          },
-          {
-            status: 'DOCUMENT_DOWNLOADED',
-            lastModifiedByName: 'Barry Smithson',
-            lastModifiedDate: '2021-09-23T13:59:38.733Z',
-            recommendationId: '5',
-            recallType: {
-              selected: {
-                value: 'FIXED_TERM',
-              },
-            },
-          },
-          {
-            status: 'DOCUMENT_DOWNLOADED',
-            lastModifiedByName: 'Mary Berry',
-            lastModifiedDate: '2019-05-14T13:59:38.733Z',
-            recommendationId: '6',
-            recallType: {
-              selected: {
-                value: 'NO_RECALL',
-              },
-            },
-          },
-          {
-            status: '',
-            lastModifiedByName: 'A. Milner',
-            lastModifiedDate: '2016-04-18T13:59:38.733Z',
-            recommendationId: '7',
-          },
-        ],
+        recommendations,
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
     cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
 
-    const expectedTableRows = [
+    checkValuesInTable([
       ['Considering recall', 'Angela Hartnett', '7 Dec 2022', 'Make a recommendation'],
       ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', 'Update recommendation'],
       ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', 'Update recommendation'],
@@ -91,12 +97,8 @@ context('Recommendations list', () => {
       ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A'],
       ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter'],
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
-    ]
-    for (let i = 0; i < expectedTableRows.length; i += 1) {
-      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: `recommendation-${i + 1}` }).then(row1 => {
-        expect(row1).to.deep.eq(expectedTableRows[i])
-      })
-    }
+    ])
+
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="recommendation-2"]' }).should(
       'contain',
       '/recommendations/2/task-list'
@@ -119,7 +121,32 @@ context('Recommendations list', () => {
     )
   })
 
+  it('if signed in user is a SPO - lists all recommendations with only download actions available', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getCase', {
+      sectionId: 'recommendations',
+      statusCode: 200,
+      response: {
+        ...getRecommendationsResponse,
+        recommendations,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
+
+    checkValuesInTable([
+      ['Considering recall', 'Angela Hartnett', '7 Dec 2022', ''],
+      ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', ''],
+      ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', ''],
+      ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', ''],
+      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A'],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter'],
+      ['Unknown', 'A. Milner', '18 Apr 2016', ''],
+    ])
+  })
+
   it('shows a message if no recommendations', () => {
+    cy.signIn()
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,

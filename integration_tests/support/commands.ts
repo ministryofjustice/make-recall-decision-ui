@@ -11,8 +11,8 @@ import getCaseLicenceConditionsResponse from '../../api/responses/get-case-licen
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import getRecommendationsResponse from '../../api/responses/get-case-recommendations.json'
 
-Cypress.Commands.add('signIn', () => {
-  cy.task('stubSignIn')
+Cypress.Commands.add('signIn', (opts = {}) => {
+  cy.task('stubSignIn', opts)
   cy.task('stubAuthUser')
   cy.mockCaseSummaryData()
   cy.request('/')
