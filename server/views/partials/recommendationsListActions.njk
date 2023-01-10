@@ -1,4 +1,4 @@
-{% if recommendation.statusForRecallType == 'CONSIDERING_RECALL' %}
+{% if recommendation.statusForRecallType == 'CONSIDERING_RECALL' and user.hasSpoRole == false %}
     <form method='post'
           action='/recommendations/{{ recommendation.recommendationId }}/status'>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -11,16 +11,16 @@
             recommendation
         </button>
     </form>
-{% elseif recommendation.statusForRecallType == 'RECOMMENDATION_STARTED' %}
+{% elseif recommendation.statusForRecallType == 'RECOMMENDATION_STARTED' and user.hasSpoRole == false %}
     <a
             href='/recommendations/{{ recommendation.recommendationId }}/task-list'
             data-analytics-event='click_cta'
             data-analytics-event-category='update_recommendation_click'>Update
         recommendation</a>
-{% elseif recommendation.statusForRecallType == 'MAKING_DECISION_TO_RECALL' %}
+{% elseif recommendation.statusForRecallType == 'MAKING_DECISION_TO_RECALL' and user.hasSpoRole == false %}
     <a href='/recommendations/{{ recommendation.recommendationId }}/task-list'
        class='govuk-link'>Update recommendation</a>
-{% elseif recommendation.statusForRecallType == 'MAKING_DECISION_NOT_TO_RECALL' %}
+{% elseif recommendation.statusForRecallType == 'MAKING_DECISION_NOT_TO_RECALL' and user.hasSpoRole == false %}
     <a href='/recommendations/{{ recommendation.recommendationId }}/task-list-no-recall'
        class='govuk-link'>Update recommendation</a>
 {% elseif recommendation.statusForRecallType == 'DECIDED_TO_RECALL' %}
