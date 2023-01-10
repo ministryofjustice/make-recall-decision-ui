@@ -63,18 +63,30 @@ export const checkForRedirectPath = ({
   // SPO / manager decision
   const managerDecisionForms = ['manager-record-decision', 'manager-record-decision-delius']
   const managerDecisionPages = [...managerDecisionForms, 'manager-view-decision', 'manager-decision-confirmation']
+  const isManagerDecisionSaved = recommendation?.managerRecallDecision?.isSentToDelius === true
+
   if (managerDecisionPages.includes(requestedPageId)) {
-    if (hasSpoRole === false) {
+    if (!hasSpoRole) {
       return caseOverviewPath
     }
-  } else if (hasSpoRole === true) {
+  } else if (hasSpoRole) {
     return caseOverviewPath
   }
   if (managerDecisionForms.includes(requestedPageId)) {
-    const isManagerDecisionSaved = recommendation.managerRecallDecision?.isSentToDelius === true
     if (isManagerDecisionSaved) {
       return `${basePathRecFlow}manager-view-decision`
     }
+  }
+
+  // if a PO tries to get to a page beyond 'review with a manager' and the manager has not recorded a decision
+  const isRecommendationPreamblePage = [
+    'response-to-probation',
+    'licence-conditions',
+    'alternatives-tried',
+    'stop-think',
+  ].includes(requestedPageId)
+  if (!isRecommendationPreamblePage && !isManagerDecisionSaved && !hasSpoRole) {
+    return `${basePathRecFlow}stop-think`
   }
 
   // task lists / confirmation pages
