@@ -22,7 +22,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const { recommendationId, pageUrlSlug } = req.params
   const {
     urlInfo,
-    user: { token, username },
+    user: { token, username, hasSpoRole },
     flags: featureFlags,
   } = res.locals
   const { id, inputDisplayValues, reviewedProperty, propertyToRefresh } = pageMetaData(pageUrlSlug)
@@ -44,6 +44,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     basePathRecFlow: urlInfo.basePath,
     crn: recommendation.crn,
     recommendationStatus: recommendation.status,
+    hasSpoRole,
   })
   if (redirectedPagePath) {
     return res.redirect(301, redirectedPagePath)

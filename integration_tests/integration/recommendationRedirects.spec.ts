@@ -170,13 +170,4 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
     cy.getLinkHref('Back').should('contain', '/fixed-licence')
   })
-
-  it('completed recommendation - redirect to case overview', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, status: 'DOCUMENT_DOWNLOADED' },
-    })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`)
-    cy.pageHeading().should('equal', 'Overview for Paula Smith')
-  })
 })

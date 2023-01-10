@@ -49,32 +49,47 @@ export const checkForRedirectPath = ({
   basePathRecFlow,
   recommendationStatus,
   crn,
+  hasSpoRole,
 }: {
   requestedPageId: string
   recommendation: RecommendationResponse
   basePathRecFlow: string
   recommendationStatus: RecommendationResponse.status
   crn: string
+  hasSpoRole: boolean
 }) => {
+  const caseOverviewPath = `${routeUrls.cases}/${crn}/overview`
+
+  // SPO / manager decision
+  const managerDecisionForms = ['manager-record-decision', 'manager-record-decision-delius']
+  const managerDecisionPages = [...managerDecisionForms, 'manager-view-decision', 'manager-decision-confirmation']
+  if (managerDecisionPages.includes(requestedPageId)) {
+    if (hasSpoRole === false) {
+      return caseOverviewPath
+    }
+  } else if (hasSpoRole === true) {
+    return caseOverviewPath
+  }
+  if (managerDecisionForms.includes(requestedPageId)) {
+    const isManagerDecisionSaved = recommendation.managerRecallDecision?.isSentToDelius === true
+    if (isManagerDecisionSaved) {
+      return `${basePathRecFlow}manager-view-decision`
+    }
+  }
+
+  // task lists / confirmation pages
   const recallType = recommendation?.recallType?.selected?.value
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
     recallType
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
   const isNotSet = !isDefined(recallType)
-
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
   const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
-
-  if (isCompletedRecommendation) {
-    return `${routeUrls.cases}/${crn}/overview`
-  }
-  if (
-    ['manager-record-decision', 'manager-record-decision-delius'].includes(requestedPageId) &&
-    recommendation.managerRecallDecision?.isSentToDelius === true
-  ) {
-    return `${basePathRecFlow}manager-view-decision`
+  const isConfirmationPage = ['confirmation-part-a', 'confirmation-no-recall'].includes(requestedPageId)
+  if (isCompletedRecommendation && !isConfirmationPage) {
+    return caseOverviewPath
   }
   if (!isRecallTaskListRequested && !isNoRecallTaskListRequested) {
     return null

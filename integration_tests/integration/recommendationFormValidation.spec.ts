@@ -24,11 +24,8 @@ context('Make a recommendation - form validation', () => {
     recallType: { selected: { value: 'STANDARD' } },
   }
 
-  beforeEach(() => {
+  it('"Consider a recall" page', () => {
     cy.signIn()
-  })
-
-  it('shows previously saved text / form validation on "Consider a recall" page', () => {
     const recallConsideredDetail =
       'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
     cy.task('getCase', {
@@ -59,7 +56,8 @@ context('Make a recommendation - form validation', () => {
     cy.getTextInputValue('What has made you think about recalling Paula Smith?').should('equal', '')
   })
 
-  it('form validation - Manager record decision', () => {
+  it('Manager record decision', () => {
+    cy.signIn({ hasSpoRole: true })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-record-decision`)
     cy.clickButton('Continue')
@@ -73,7 +71,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Response to probation', () => {
+  it('Response to probation', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
     cy.clickButton('Continue')
@@ -83,7 +82,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Licence conditions', () => {
+  it('Licence conditions', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
     cy.clickButton('Continue')
@@ -93,7 +93,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Alternatives tried', () => {
+  it('Alternatives tried', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/alternatives-tried`)
     cy.clickButton('Continue')
@@ -111,7 +112,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Indeterminate sentence', () => {
+  it('Indeterminate sentence', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-indeterminate`)
     cy.clickButton('Continue')
@@ -121,7 +123,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Extended sentence', () => {
+  it('Extended sentence', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
     cy.clickButton('Continue')
@@ -131,7 +134,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Indeterminate sentence type', () => {
+  it('Indeterminate sentence type', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
     cy.clickButton('Continue')
@@ -141,7 +145,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Indeterminate or extended sentence details', () => {
+  it('Indeterminate or extended sentence details', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details`)
     cy.clickButton('Continue')
@@ -169,7 +174,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Recall type', () => {
+  it('Recall type', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
     cy.clickButton('Continue')
@@ -179,7 +185,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Recall type (indeterminate)', () => {
+  it('Recall type (indeterminate)', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
     cy.clickButton('Continue')
@@ -189,7 +196,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - fixed term additional licence conditions', () => {
+  it('fixed term additional licence conditions', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/fixed-licence`)
     cy.clickButton('Continue')
@@ -205,7 +213,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Custody status', () => {
+  it('Custody status', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/custody-status`)
     cy.clickButton('Continue')
@@ -215,7 +224,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Vulnerabilities', () => {
+  it('Vulnerabilities', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
     cy.clickButton('Continue')
@@ -234,7 +244,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - IOM', () => {
+  it('IOM', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/iom`)
     cy.clickButton('Continue')
@@ -244,7 +255,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Local police contact details', () => {
+  it('Local police contact details', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/police-details`)
     cy.fillInput('Email address', '111')
@@ -259,7 +271,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Victim contact scheme', () => {
+  it('Victim contact scheme', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
     cy.clickButton('Continue')
@@ -269,7 +282,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Victim liaison officer', () => {
+  it('Victim liaison officer', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-liaison-officer`)
     cy.clickButton('Continue')
@@ -280,7 +294,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - What has led to recall', () => {
+  it('What has led to recall', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/what-led`)
     cy.clickButton('Continue')
@@ -290,7 +305,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Arrest issues', () => {
+  it('Arrest issues', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/arrest-issues`)
     cy.clickButton('Continue')
@@ -306,7 +322,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Contraband', () => {
+  it('Contraband', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/contraband`)
     cy.clickButton('Continue')
@@ -322,7 +339,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Address details', () => {
+  it('Address details', () => {
+    cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
     cy.clickButton('Continue')
@@ -338,7 +356,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Offence analysis', () => {
+  it('Offence analysis', () => {
+    cy.signIn()
     cy.task('updateRecommendation', {
       statusCode: 200,
       response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
@@ -352,7 +371,8 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('form validation - Previous releases', () => {
+  it('Previous releases', () => {
+    cy.signIn()
     cy.task('updateRecommendation', {
       statusCode: 200,
       response: { ...completeRecommendationResponse, previousReleases: null },

@@ -56,3 +56,7 @@
     width: 33.33%;
   }
 }
+
+.flex__item-no-shrink {
+  flex-shrink: 0;
+}
