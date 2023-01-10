@@ -5,7 +5,9 @@ import recommendationApiResponse from '../../../api/responses/get-recommendation
 import { getRecommendation, updateRecommendation, createDocument } from '../../data/makeDecisionApiClient'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { AuditService } from '../../services/auditService'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
+jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('./licenceConditions/transform')
 
@@ -76,7 +78,7 @@ describe('getRecommendationPage', () => {
     }
   })
 
-  it('should send an audit event', async () => {
+  it('should send appInsights & audit event', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     jest.spyOn(AuditService.prototype, 'recommendationView')
     await getRecommendationPage(req, res)
@@ -86,6 +88,11 @@ describe('getRecommendationPage', () => {
       pageUrlSlug: 'custody-status',
       username: 'Bill',
       logErrors: false,
+    })
+    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationPageView', 'Bill', {
+      crn: 'X12345',
+      pageUrlSlug: 'custody-status',
+      recommendationId,
     })
   })
 
