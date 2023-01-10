@@ -22,6 +22,9 @@ context('Make a recommendation - form validation', () => {
       ],
     },
     recallType: { selected: { value: 'STANDARD' } },
+    managerRecallDecision: {
+      isSentToDelius: true,
+    },
   }
 
   it('"Consider a recall" page', () => {
@@ -58,7 +61,10 @@ context('Make a recommendation - form validation', () => {
 
   it('Manager record decision', () => {
     cy.signIn({ hasSpoRole: true })
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, managerRecallDecision: null },
+    })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-record-decision`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({

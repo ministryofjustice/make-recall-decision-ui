@@ -18,6 +18,7 @@ const urls = [
   { url: `${routeUrls.cases}/123/personal-details` },
   { url: `${routeUrls.cases}/123/licence-conditions` },
   { url: `${routeUrls.cases}/123/contact-history` },
+  { url: `${routeUrls.cases}/123/recommendations` },
   // contact filter with valid dates
   {
     url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
@@ -27,13 +28,13 @@ const urls = [
     url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
   },
   // recommendation flow
-  { url: `${routeUrls.recommendations}/456/recall-type` },
-  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true },
+  { url: `${routeUrls.recommendations}/456/recall-type`, fullRecommendationData: true },
+  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
   { url: `${routeUrls.recommendations}/456/alternatives-tried` },
   { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
   { url: `${routeUrls.recommendations}/456/task-list`, fullRecommendationData: true },
-  { url: `${routeUrls.recommendations}/456/confirmation-part-a` },
-  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true },
+  { url: `${routeUrls.recommendations}/456/confirmation-part-a`, fullRecommendationData: true },
+  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: true },
 ]
 
 context('Accessibility (a11y) Checks', () => {

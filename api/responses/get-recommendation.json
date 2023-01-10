@@ -261,7 +261,9 @@
     "lastReleaseDate": "2022-03-11",
     "lastReleasingPrisonOrCustodialEstablishment": "Holloway",
     "hasBeenReleasedPreviously": true,
-    "previousReleaseDates": ["2022-03-11"]
+    "previousReleaseDates": [
+      "2022-03-11"
+    ]
   },
   "recallType": {
     "selected": {
@@ -309,5 +311,8 @@
       "userName": "Bill",
       "recallConsideredDetail": "There has been a change in behaviour, I'm now considering a recall."
     }
-  ]
+  ],
+  "managerRecallDecision": {
+    "isSentToDelius": true
+  }
 }
