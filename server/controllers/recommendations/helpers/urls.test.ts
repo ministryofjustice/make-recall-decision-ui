@@ -72,6 +72,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -89,6 +90,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -106,6 +108,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -123,6 +126,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -140,6 +144,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -157,6 +162,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -174,6 +180,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -190,6 +197,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -206,6 +214,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -222,6 +231,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
       })
@@ -238,6 +248,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
       })
@@ -254,6 +265,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
       })
@@ -266,6 +278,7 @@ describe('checkForRedirectPath', () => {
         recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } } },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -286,6 +299,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -304,6 +318,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -322,6 +337,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -340,6 +356,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -356,6 +373,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -368,6 +386,7 @@ describe('checkForRedirectPath', () => {
         recommendation: {},
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -380,6 +399,7 @@ describe('checkForRedirectPath', () => {
         recommendation: {},
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -392,6 +412,7 @@ describe('checkForRedirectPath', () => {
         recommendation: {},
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })

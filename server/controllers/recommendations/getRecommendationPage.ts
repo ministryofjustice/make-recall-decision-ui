@@ -45,6 +45,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     crn: recommendation.crn,
     recommendationStatus: recommendation.status,
     hasSpoRole,
+    featureFlags,
   })
   if (redirectedPagePath) {
     return res.redirect(301, redirectedPagePath)
