@@ -22,6 +22,7 @@ export const transformContactHistory = ({
   const allContacts = featureFlags.flagShowSystemGenerated
     ? caseSummary.contactSummary
     : removeSystemGenerated(caseSummary.contactSummary)
+  // TODO - api should not return future contacts
   const pastContacts = removeFutureContacts(allContacts)
   const {
     errors: errorsDateRange,

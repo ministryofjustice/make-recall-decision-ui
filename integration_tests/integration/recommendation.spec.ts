@@ -176,6 +176,15 @@ context('Make a recommendation', () => {
           cy.clickLink('Update recommendation')
           cy.pageHeading().should('equal', 'Create a Part A form')
         })
+
+        it('stop and think page shown if no consider recall text', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...recommendationResponse, recallConsideredList: null },
+          })
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-review?flagConsiderRecall=1`)
+          cy.pageHeading().should('equal', 'Stop and think')
+        })
       })
 
       describe('Senior probation officer', () => {

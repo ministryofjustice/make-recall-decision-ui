@@ -195,6 +195,12 @@ r261,0,"^previousReleaseDate-month$","03","/recommendations/[^\/]+/add-previous-
 r262,0,"^previousReleaseDate-year$","2022","/recommendations/[^\/]+/add-previous-release",0,c2
 r263,3,"^YES$","1","/recommendations/[^\/]+/previous-releases",0,c2
 r267,0,"^offenceAnalysis$","Offence analysis detail","/recommendations/[^\/]+/offence-analysis",0,c2
+r268,0,"^recallConsideredDetail$","Charles has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.
+
+His pattern of behaviour is indicating an increased risk of re-offending. I'd like to assess risk and recent contacts, to see if a recall is justified.","/cases/[^\/]+/consider-recall",0,c2
+r269,3,"^RECALL$","1","/recommendations/[^\/]+/manager-record-decision",0,c2
+r270,0,"^recallTypeManagerDetail$","My decision to recall is based on the risk of re-offending being too high.
+The person has shown behaviour indicating a high likelihood of repeating the index offence.","/recommendations/[^\/]+/manager-record-decision",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,
