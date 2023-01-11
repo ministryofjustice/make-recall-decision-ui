@@ -71,7 +71,7 @@ export const strings = {
     responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
-    stopThink: 'Stop and think',
+    managerReview: 'Stop and think',
     isIndeterminateSentence: 'Is {{ fullName }} on an indeterminate sentence?',
     isExtendedSentence: 'Is {{ fullName }} on an extended sentence?',
     indeterminateSentenceType: 'What type of sentence is {{ fullName }} on?',

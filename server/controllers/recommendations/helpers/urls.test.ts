@@ -11,7 +11,7 @@ describe('nextPageLinkUrl', () => {
       basePath: '/recommendations/123/',
       path: '/recommendations/123/recall-type',
     }
-    expect(nextPageLinkUrl({ nextPageId: 'stop-think', urlInfo })).toEqual(
+    expect(nextPageLinkUrl({ nextPageId: 'manager-review', urlInfo })).toEqual(
       '/recommendations/123/task-list#heading-recommendation'
     )
   })
@@ -22,7 +22,7 @@ describe('nextPageLinkUrl', () => {
       basePath: '/recommendations/123/',
       path: '/recommendations/123/recall-type',
     }
-    expect(nextPageLinkUrl({ nextPageId: 'stop-think', urlInfo })).toEqual('/recommendations/123/task-list')
+    expect(nextPageLinkUrl({ nextPageId: 'manager-review', urlInfo })).toEqual('/recommendations/123/task-list')
   })
 
   it('returns a url using the nextPageId, if a "from" page is not supplied', () => {
@@ -30,7 +30,7 @@ describe('nextPageLinkUrl', () => {
       basePath: '/recommendations/123/',
       path: '/recommendations/123/recall-type',
     }
-    expect(nextPageLinkUrl({ nextPageId: 'stop-think', urlInfo })).toEqual('/recommendations/123/stop-think')
+    expect(nextPageLinkUrl({ nextPageId: 'manager-review', urlInfo })).toEqual('/recommendations/123/manager-review')
   })
 
   it('returns a url using the nextPagePath, if a "from" page is not supplied', () => {
@@ -390,7 +390,7 @@ describe('checkForRedirectPath', () => {
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
-      expect(pageUrlSlug).toEqual(`${basePath}stop-think`)
+      expect(pageUrlSlug).toEqual(`${basePath}manager-review`)
     })
 
     it('returns "Response to probation" if task list is requested by PO and decision has not been sent to Delius / no recall decision', () => {
@@ -421,7 +421,7 @@ describe('checkForRedirectPath', () => {
 
     it('returns null if "Review with a manager" is requested by PO and decision has not been sent to Delius', () => {
       const pageUrlSlug = checkForRedirectPath({
-        requestedPageId: 'stop-think',
+        requestedPageId: 'manager-review',
         recommendation: {},
         basePathRecFlow: basePath,
         crn,

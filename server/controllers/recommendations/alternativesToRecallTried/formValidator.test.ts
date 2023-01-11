@@ -34,7 +34,7 @@ describe('validateAlternativesTried', () => {
         ],
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/stop-think')
+    expect(nextPagePath).toEqual('/recommendations/34/manager-review')
   })
 
   it('strips HTML tags out of details', async () => {
