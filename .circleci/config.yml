@@ -134,9 +134,9 @@ jobs:
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
+      - checkout
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - checkout
       - node/install-packages
       - attach_workspace:
           at: ~/app
@@ -180,9 +180,9 @@ jobs:
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
+      - checkout
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - checkout
       - node/install-packages
       - attach_workspace:
           at: ~/app
