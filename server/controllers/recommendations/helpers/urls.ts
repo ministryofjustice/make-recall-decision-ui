@@ -61,6 +61,9 @@ export const checkForRedirectPath = ({
   featureFlags: FeatureFlags
 }) => {
   const caseOverviewPath = `${routeUrls.cases}/${crn}/overview`
+  const isRecallTaskListRequested = requestedPageId === 'task-list'
+  const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
+  const isTaskList = isRecallTaskListRequested || isNoRecallTaskListRequested
 
   if (featureFlags.flagConsiderRecall) {
     // SPO / manager decision
@@ -82,13 +85,14 @@ export const checkForRedirectPath = ({
     }
 
     // if a PO tries to get to a page beyond 'review with a manager' and the manager has not recorded a decision
+    // if one of the task lists was requested, don't deal with it in this block - allow to fall through to the checks below
     const isRecommendationPreamblePage = [
       'response-to-probation',
       'licence-conditions',
       'alternatives-tried',
       'stop-think',
     ].includes(requestedPageId)
-    if (!isRecommendationPreamblePage && !isManagerDecisionSaved && !hasSpoRole) {
+    if (!isRecommendationPreamblePage && !isTaskList && !isManagerDecisionSaved && !hasSpoRole) {
       return `${basePathRecFlow}stop-think`
     }
   }
@@ -100,8 +104,6 @@ export const checkForRedirectPath = ({
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
   const isNotSet = !isDefined(recallType)
-  const isRecallTaskListRequested = requestedPageId === 'task-list'
-  const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
   const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
   const isConfirmationPage = ['confirmation-part-a', 'confirmation-no-recall'].includes(requestedPageId)
   if (isCompletedRecommendation && !isConfirmationPage) {

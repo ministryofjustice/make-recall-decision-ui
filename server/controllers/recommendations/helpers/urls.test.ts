@@ -393,6 +393,19 @@ describe('checkForRedirectPath', () => {
       expect(pageUrlSlug).toEqual(`${basePath}stop-think`)
     })
 
+    it('returns "Response to probation" if task list is requested by PO and decision has not been sent to Delius / no recall decision', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'task-list',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        featureFlags: { flagConsiderRecall: true },
+        hasSpoRole: false,
+        recommendationStatus: RecommendationResponse.status.DRAFT,
+      })
+      expect(pageUrlSlug).toEqual(`${basePath}response-to-probation`)
+    })
+
     it('returns null if a page before "Review with a manager" is requested by PO and decision has not been sent to Delius', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'alternatives-tried',
