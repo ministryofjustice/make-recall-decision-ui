@@ -23,6 +23,9 @@ context('Make a recommendation', () => {
       ],
     },
     recallType: { selected: { value: 'STANDARD' } },
+    managerRecallDecision: {
+      isSentToDelius: true,
+    },
   }
   const licenceConditionsMultipleActiveCustodial = {
     sectionId: 'licence-conditions',
@@ -188,7 +191,10 @@ context('Make a recommendation', () => {
               activeRecommendation,
             },
           })
-          cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse, managerRecallDecision: null },
+          })
           cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
           cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
           cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')

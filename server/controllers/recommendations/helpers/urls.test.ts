@@ -62,9 +62,17 @@ describe('checkForRedirectPath', () => {
     it('returns null if neither task list was requested', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'emergency-recall',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } } },
+        recommendation: {
+          recallType: {
+            selected: { value: RecallTypeSelectedValue.value.FIXED_TERM },
+          },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -74,9 +82,15 @@ describe('checkForRedirectPath', () => {
     it('returns null if recall task list requested for standard recall', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } } },
+        recommendation: {
+          recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -86,9 +100,15 @@ describe('checkForRedirectPath', () => {
     it('returns null if recall task list requested for fixed term recall', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } } },
+        recommendation: {
+          recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -98,9 +118,15 @@ describe('checkForRedirectPath', () => {
     it('returns null if no recall task list requested for no recall', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list-no-recall',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.NO_RECALL } } },
+        recommendation: {
+          recallType: { selected: { value: RecallTypeSelectedValue.value.NO_RECALL } },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -110,9 +136,15 @@ describe('checkForRedirectPath', () => {
     it('returns no recall task list if recall task list requested for no recall', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.NO_RECALL } } },
+        recommendation: {
+          recallType: { selected: { value: RecallTypeSelectedValue.value.NO_RECALL } },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -122,9 +154,15 @@ describe('checkForRedirectPath', () => {
     it('returns recall task list if no recall task list requested for standard recall', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list-no-recall',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } } },
+        recommendation: {
+          recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -134,9 +172,15 @@ describe('checkForRedirectPath', () => {
     it('returns recall task list if no recall task list requested for fixed term recall', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list-no-recall',
-        recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } } },
+        recommendation: {
+          recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -146,9 +190,14 @@ describe('checkForRedirectPath', () => {
     it('returns response to probation if recall task list requested and recall not set', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list',
-        recommendation: {},
+        recommendation: {
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -158,9 +207,14 @@ describe('checkForRedirectPath', () => {
     it('returns response to probation if no recall task list requested and recall not set', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list-no-recall',
-        recommendation: {},
+        recommendation: {
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -170,9 +224,14 @@ describe('checkForRedirectPath', () => {
     it('returns case summary overview if recommendation status is DOCUMENT_DOWNLOADED', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list-no-recall',
-        recommendation: {},
+        recommendation: {
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
       })
@@ -182,9 +241,14 @@ describe('checkForRedirectPath', () => {
     it('returns null if recommendation status is DOCUMENT_DOWNLOADED and Part A confirmation is requested', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'confirmation-part-a',
-        recommendation: {},
+        recommendation: {
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
       })
@@ -194,9 +258,14 @@ describe('checkForRedirectPath', () => {
     it('returns null if recommendation status is DOCUMENT_DOWNLOADED and letter confirmation is requested', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'confirmation-no-recall',
-        recommendation: {},
+        recommendation: {
+          managerRecallDecision: {
+            isSentToDelius: true,
+          },
+        },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: {},
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DOCUMENT_DOWNLOADED,
       })
@@ -209,6 +278,7 @@ describe('checkForRedirectPath', () => {
         recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } } },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -229,6 +299,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -247,6 +318,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -265,6 +337,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -283,6 +356,7 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -299,10 +373,50 @@ describe('checkForRedirectPath', () => {
         },
         basePathRecFlow: basePath,
         crn,
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
       expect(pageUrlSlug).toEqual(`${basePath}manager-view-decision`)
+    })
+
+    it('returns "Review with a manager" if a page after that is requested by PO and decision has not been sent to Delius', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'recall-type',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        featureFlags: { flagConsiderRecall: true },
+        hasSpoRole: false,
+        recommendationStatus: RecommendationResponse.status.DRAFT,
+      })
+      expect(pageUrlSlug).toEqual(`${basePath}stop-think`)
+    })
+
+    it('returns null if a page before "Review with a manager" is requested by PO and decision has not been sent to Delius', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'alternatives-tried',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        featureFlags: { flagConsiderRecall: true },
+        hasSpoRole: false,
+        recommendationStatus: RecommendationResponse.status.DRAFT,
+      })
+      expect(pageUrlSlug).toBeNull()
+    })
+
+    it('returns null if "Review with a manager" is requested by PO and decision has not been sent to Delius', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'stop-think',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        featureFlags: { flagConsiderRecall: true },
+        hasSpoRole: false,
+        recommendationStatus: RecommendationResponse.status.DRAFT,
+      })
+      expect(pageUrlSlug).toBeNull()
     })
   })
 })

@@ -1,4 +1,4 @@
-import { UrlInfo } from '../../../@types'
+import { FeatureFlags, UrlInfo } from '../../../@types'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
@@ -50,6 +50,7 @@ export const checkForRedirectPath = ({
   recommendationStatus,
   crn,
   hasSpoRole,
+  featureFlags = {},
 }: {
   requestedPageId: string
   recommendation: RecommendationResponse
@@ -57,23 +58,38 @@ export const checkForRedirectPath = ({
   recommendationStatus: RecommendationResponse.status
   crn: string
   hasSpoRole: boolean
+  featureFlags: FeatureFlags
 }) => {
   const caseOverviewPath = `${routeUrls.cases}/${crn}/overview`
 
-  // SPO / manager decision
-  const managerDecisionForms = ['manager-record-decision', 'manager-record-decision-delius']
-  const managerDecisionPages = [...managerDecisionForms, 'manager-view-decision', 'manager-decision-confirmation']
-  if (managerDecisionPages.includes(requestedPageId)) {
-    if (hasSpoRole === false) {
+  if (featureFlags.flagConsiderRecall) {
+    // SPO / manager decision
+    const managerDecisionForms = ['manager-record-decision', 'manager-record-decision-delius']
+    const managerDecisionPages = [...managerDecisionForms, 'manager-view-decision', 'manager-decision-confirmation']
+    const isManagerDecisionSaved = recommendation?.managerRecallDecision?.isSentToDelius === true
+
+    if (managerDecisionPages.includes(requestedPageId)) {
+      if (!hasSpoRole) {
+        return caseOverviewPath
+      }
+    } else if (hasSpoRole) {
       return caseOverviewPath
     }
-  } else if (hasSpoRole === true) {
-    return caseOverviewPath
-  }
-  if (managerDecisionForms.includes(requestedPageId)) {
-    const isManagerDecisionSaved = recommendation.managerRecallDecision?.isSentToDelius === true
-    if (isManagerDecisionSaved) {
-      return `${basePathRecFlow}manager-view-decision`
+    if (managerDecisionForms.includes(requestedPageId)) {
+      if (isManagerDecisionSaved) {
+        return `${basePathRecFlow}manager-view-decision`
+      }
+    }
+
+    // if a PO tries to get to a page beyond 'review with a manager' and the manager has not recorded a decision
+    const isRecommendationPreamblePage = [
+      'response-to-probation',
+      'licence-conditions',
+      'alternatives-tried',
+      'stop-think',
+    ].includes(requestedPageId)
+    if (!isRecommendationPreamblePage && !isManagerDecisionSaved && !hasSpoRole) {
+      return `${basePathRecFlow}stop-think`
     }
   }
 

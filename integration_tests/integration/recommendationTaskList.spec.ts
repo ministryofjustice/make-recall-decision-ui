@@ -18,6 +18,9 @@ context('Recommendation - task list', () => {
     },
     recallType: { selected: { value: 'STANDARD' } },
     activeCustodialConvictionCount: 1,
+    managerRecallDecision: {
+      isSentToDelius: true,
+    },
   }
   const licenceConditionsMultipleActiveCustodial = {
     sectionId: 'licence-conditions',

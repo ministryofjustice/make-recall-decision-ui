@@ -11,16 +11,11 @@ context('Make a recommendation - Branching / redirects', () => {
     crn,
     personOnProbation: {
       name: 'Paula Smith',
-      addresses: [
-        {
-          line1: '41 Newport Pagnell Rd',
-          line2: 'Newtown',
-          town: 'Northampton',
-          postcode: 'NN4 6HP',
-        },
-      ],
     },
     recallType: { selected: { value: 'STANDARD' } },
+    managerRecallDecision: {
+      isSentToDelius: true,
+    },
   }
 
   beforeEach(() => {
