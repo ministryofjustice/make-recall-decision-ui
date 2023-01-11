@@ -47,7 +47,11 @@ When(
 When('Maria considers a new recall', () => {
   const detail = 'Risk has increased. Considering a recall.'
   cy.clickLink('Consider a recall')
-  cy.fillInput('Consider a recall', detail)
+
+  cy.get('@offenderName').then(offenderName => {
+    cy.fillInput(`What has made you think about recalling ${offenderName}?`, detail)
+  })
+
   cy.clickButton('Continue')
   cy.getText('recallConsideredDetail').should('equal', detail)
 })
@@ -94,8 +98,8 @@ When('Maria selects the alternatives to recall that have been tried', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria continues from the Stop and Think page', () => {
-  cy.clickLink('Continue')
+When('Maria cannot continue from the Review with manager page', () => {
+  cy.getElement('Continue').should('not.exist')
 })
 
 When('Maria reads the guidance on sensitive information', () => {
@@ -272,6 +276,10 @@ When('Maria clicks Create Part A', () => {
   cy.pageHeading().should('contain', 'Part A created')
 })
 
+When('Maria returns to the case overview', () => {
+  cy.clickLink('Back to case overview')
+})
+
 When('Maria starts to update the recall', () => {
   cy.log('========== Confirm recommendation saved"')
   cy.clickLink('Back to case overview')
@@ -314,10 +322,78 @@ When('Maria confirms the person is in police custody', () => {
   })
 })
 
-When('Maria signs out', () => {
+When('{string} signs out', () => {
   cy.clickLink('Sign out')
 })
 
-When('Henry signs in to the case overview for CRN {string}', (crnNum: string) => {
-  cy.visitPage(defaultStartPath(crnNum), true)
+When('{string} signs in to the case overview for CRN {string}', (name: string, crnNum: string) => {
+  let isSpo = false
+  if (name === 'Henry') {
+    isSpo = true
+  }
+  cy.visitPage(defaultStartPath(crnNum), isSpo)
 })
+
+When('Henry decides to record a decision', () => {
+  cy.clickLink('Record your decision')
+})
+
+When('Henry chooses a {string} decision', (recallDecision: string) => {
+  cy.fillInput('Explain your decision', `These are my reasons`)
+
+  if (recallDecision === 'recall') {
+    cy.selectRadio('Select a recall decision', `Recall - standard or fixed term`)
+  } else {
+    cy.selectRadio('Select a recall decision', `Do not recall`)
+  }
+  cy.clickButton('Continue')
+})
+
+When('Henry chooses to record the decision in Delius', () => {
+  cy.clickButton('Record your decision')
+})
+
+When('Henry is on {string} decided confirmation page', (recallDecision: string) => {
+  if (recallDecision === 'recall') {
+    cy.getElement('Decision to recall').should('exist')
+  } else {
+    cy.getElement('Decision not to recall').should('exist')
+  }
+  cy.clickLink('Return to overview')
+})
+
+When('Henry can view the {string} decision that they have made', (recallDecision: string) => {
+  cy.clickLink('View your decision')
+
+  cy.getElement('Manager: Making Recall Decisions SPO User').should('exist')
+  cy.getElement('Rationale: These are my reasons').should('exist')
+
+  if (recallDecision === 'recall') {
+    cy.getElement('Decision: Recall - standard or fixed term').should('exist')
+  } else {
+    cy.getElement('Decision: Do not recall').should('exist')
+  }
+  cy.clickLink('Return to overview')
+})
+
+When(
+  'Maria can see the {string} decision has been decided by a manager on the review screen',
+  (recallDecision: string) => {
+    cy.clickLink('Update recommendation')
+
+    // Temporarily click continue button 3 times due to issue with form sending user back to the first page. JW to address and then remove these 3 button clicks
+    cy.clickButton('Continue')
+    cy.clickButton('Continue')
+    cy.clickButton('Continue')
+
+    cy.getElement('Reviewed by manager').should('exist')
+    cy.getElement('Making Recall Decisions SPO User').should('exist')
+
+    if (recallDecision === 'recall') {
+      cy.getElement('Recall - standard or fixed term').should('exist')
+    } else {
+      cy.getElement('Do not recall').should('exist')
+    }
+    cy.clickLink('Continue')
+  }
+)

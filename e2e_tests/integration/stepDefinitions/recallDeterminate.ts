@@ -42,7 +42,7 @@ defineStep('Maria confirms {string} for emergency recall', (answer: string) => {
   cy.clickButton('Continue')
 })
 
-When('Henry downloads the latest Part A and confirms the details have not been overwritten', () => {
+When('Maria downloads the latest Part A and confirms the details have not been overwritten', () => {
   return cy.downloadDocX('Download Part A').then(contents => {
     cy.log('Q25')
     q25ProbationDetails(contents)

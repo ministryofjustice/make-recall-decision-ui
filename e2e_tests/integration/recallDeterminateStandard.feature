@@ -1,14 +1,25 @@
 Feature: Standard (determinate)
 
   Background:
-    Given Maria signs in to the case overview for CRN "4"
+    Given Maria signs in to the case overview for CRN "4" with feature flag "flagConsiderRecall" enabled
 
   Scenario: Not extended / fixed term changed to standard recall
-    Given Maria starts a new recommendation
+    Given Maria considers a new recall
+    And Maria starts a new recommendation
     And Maria explains how the person has responded to probation so far
     And Maria selects the licence conditions that have been breached
     And Maria selects the alternatives to recall that have been tried
-    And Maria continues from the Stop and Think page
+    And Maria cannot continue from the Review with manager page
+    And "Maria" signs out
+    And "Henry" signs in to the case overview for CRN "4"
+    And Henry decides to record a decision
+    And Henry chooses a "recall" decision
+    And Henry chooses to record the decision in Delius
+    And Henry is on "recall" decided confirmation page
+    And Henry can view the "recall" decision that they have made
+    And "Henry" signs out
+    And "Maria" signs in to the case overview for CRN "4"
+    And Maria can see the "recall" decision has been decided by a manager on the review screen
 
     And Maria confirms "No" for indeterminate sentence
     And Maria confirms "No" for extended sentence
