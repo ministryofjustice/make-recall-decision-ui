@@ -90,7 +90,7 @@ export const checkForRedirectPath = ({
       'response-to-probation',
       'licence-conditions',
       'alternatives-tried',
-      'stop-think',
+      'manager-review',
     ].includes(requestedPageId)
     if (!isRecommendationPreamblePage && !isTaskList && !isManagerDecisionSaved && !hasSpoRole) {
       return `${basePathRecFlow}stop-think`

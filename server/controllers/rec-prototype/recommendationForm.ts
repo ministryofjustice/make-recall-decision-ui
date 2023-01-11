@@ -44,11 +44,11 @@ const getPageData = (sectionId: string, recommendation: SavedRecommendation) => 
     case 'alternatives':
       return {
         pageTemplate: 'alternatives',
-        nextPageId: 'stop-think',
+        nextPageId: 'manager-review',
       }
-    case 'stop-think':
+    case 'manager-review':
       return {
-        pageTemplate: 'stopThink',
+        pageTemplate: 'managerReview',
         nextPageId: 'recall-type',
       }
     case 'recall-type':

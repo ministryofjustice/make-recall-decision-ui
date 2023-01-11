@@ -97,9 +97,9 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateAlternativesTried,
         inputDisplayValues: inputDisplayValuesAlternativesToRecallTried,
       }
-    case 'stop-think':
+    case 'manager-review':
       return {
-        id: 'stopThink',
+        id: 'managerReview',
       }
     case 'is-indeterminate':
       return {

@@ -166,7 +166,7 @@ export type PageId =
   | 'licenceConditions'
   | 'alternativesToRecallTried'
   | 'indeterminateOrExtendedSentenceDetails'
-  | 'stopThink'
+  | 'managerReview'
   | 'isIndeterminateSentence'
   | 'isExtendedSentence'
   | 'indeterminateSentenceType'

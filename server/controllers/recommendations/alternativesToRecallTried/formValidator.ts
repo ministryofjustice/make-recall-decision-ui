@@ -82,7 +82,7 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
       allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
     },
   }
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'stop-think', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'manager-review', urlInfo })
   return {
     valuesToSave,
     nextPagePath,
