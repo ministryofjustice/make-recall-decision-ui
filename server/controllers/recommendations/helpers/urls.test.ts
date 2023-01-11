@@ -278,7 +278,7 @@ describe('checkForRedirectPath', () => {
         recommendation: { recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } } },
         basePathRecFlow: basePath,
         crn,
-        featureFlags: {},
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: true,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
@@ -386,7 +386,7 @@ describe('checkForRedirectPath', () => {
         recommendation: {},
         basePathRecFlow: basePath,
         crn,
-        featureFlags: {},
+        featureFlags: { flagConsiderRecall: true },
         hasSpoRole: false,
         recommendationStatus: RecommendationResponse.status.DRAFT,
       })
