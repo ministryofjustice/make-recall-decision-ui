@@ -1,16 +1,24 @@
+{% set updateRecommendationButton %}
+    <a class='govuk-button'
+       href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/task-list'
+       data-analytics-event='click_cta' data-analytics-event-category='update_recommendation_click'>Update
+        recommendation</a>
+{% endset %}
+
 {% if flags.flagConsiderRecall == true %}
-    {% if user.hasSpoRole == false and not caseSummary.activeRecommendation %}
-        <a class='govuk-button'
-           href='{{ pageUrlBase }}consider-recall'
-           data-analytics-event='click_cta' data-analytics-event-category='consider_recall_click' data-qa='consider-recall-button'>Consider a
-            recall</a>
+    {% if user.hasSpoRole == false %}
+        {% if not caseSummary.activeRecommendation %}
+            <a class='govuk-button'
+               href='{{ pageUrlBase }}consider-recall'
+               data-analytics-event='click_cta' data-analytics-event-category='consider_recall_click' data-qa='consider-recall-button'>Consider a
+                recall</a>
+        {% elseif not caseSummary.activeRecommendation.recallConsideredList %}
+            {{ updateRecommendationButton | safe }}
+        {% endif %}
     {% endif %}
 {% else %}
     {% if caseSummary.activeRecommendation.recommendationId %}
-        <a class='govuk-button'
-           href='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/task-list'
-           data-analytics-event='click_cta' data-analytics-event-category='update_recommendation_click'>Update
-            recommendation</a>
+        {{ updateRecommendationButton | safe }}
     {% else %}
         <form method='post' action='/recommendations'>
             <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

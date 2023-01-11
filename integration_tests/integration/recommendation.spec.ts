@@ -163,6 +163,19 @@ context('Make a recommendation', () => {
           cy.clickButton('Make a recommendation')
           cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
         })
+
+        // this scenario could occur if a user starts a recommendation before the consider recall feature is enabled,
+        // and then returns to case summary. There will be an active recommendation, but no 'consider recall' data
+        it('shows a "Update recommendation" button to the PO if an active recommendation with no consider recall data', () => {
+          const caseResponse = {
+            ...getCaseOverviewResponse,
+            activeRecommendation: { recommendationId: 123 },
+          }
+          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
+          cy.clickLink('Update recommendation')
+          cy.pageHeading().should('equal', 'Create a Part A form')
+        })
       })
 
       describe('Senior probation officer', () => {
