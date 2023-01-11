@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% if flags.flagConsiderRecall == true %}
+{% if flags.flagConsiderRecall == true and recommendation.recallConsideredList %}
     {% set heading = "Reviewed by manager" if recommendation.managerRecallDecision.selected.value else "Review with a manager" %}
 {% else %}
     {% set heading = pageTitles[page.id] %}
@@ -19,7 +19,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            {% if flags.flagConsiderRecall == true %}
+            {% if flags.flagConsiderRecall == true and recommendation.recallConsideredList %}
                 {% set infoHtml %}
                     {% if recommendation.managerRecallDecision.selected.value %}
                         <p class='info-panel__body'><strong>Manager:</strong> {{ recommendation.managerRecallDecision.createdBy }}</p>
