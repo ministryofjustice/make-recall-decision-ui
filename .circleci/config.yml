@@ -23,6 +23,9 @@ parameters:
   e2e-check-dev:
     type: boolean
     default: false
+  e2e-check-preprod:
+    type: boolean
+    default: false
   e2e-parallelism:
     type: integer
     default: 6
@@ -340,6 +343,7 @@ workflows:
       not:
         or:
           - << pipeline.parameters.e2e-check-dev >>
+          - << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - e2e_local_test:
           context:
@@ -445,6 +449,15 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          requires:
+            - deploy_preprod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
       - hmpps/deploy_env:
           name: deploy_prod
           env: prod
@@ -454,7 +467,7 @@ workflows:
             - hmpps-common-vars
             - make-recall-decision-ui-prod
           requires:
-            - deploy_preprod
+            - e2e_test_preprod
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_prod
@@ -473,6 +486,16 @@ workflows:
       - e2e_environment_test:
           name: e2e_test_dev
           environment: dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
+  e2e-check-preprod:
+    when: << pipeline.parameters.e2e-check-preprod >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
