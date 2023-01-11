@@ -41,3 +41,6 @@ If these are not desired in the cloned project, remove references to `check_outd
 
 ## Form auto-filler
 [Doc](./docs/autofill-forms.md)
+
+## Guide on developing new features
+[Doc](./docs/developing-new-features.md)
