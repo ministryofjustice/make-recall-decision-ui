@@ -1,7 +1,7 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import getRecommendationsResponse from '../../api/responses/get-case-recommendations.json'
 
-context('Recommendations list', () => {
+context('Recommendations tab in case summary', () => {
   const crn = 'X34983'
   const recommendations = [
     {
