@@ -93,7 +93,7 @@ export const checkForRedirectPath = ({
       'manager-review',
     ].includes(requestedPageId)
     if (!isRecommendationPreamblePage && !isTaskList && !isManagerDecisionSaved && !hasSpoRole) {
-      return `${basePathRecFlow}stop-think`
+      return `${basePathRecFlow}manager-review`
     }
   }
 
