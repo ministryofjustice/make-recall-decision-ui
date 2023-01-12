@@ -245,7 +245,7 @@ context('Make a recommendation', () => {
         it("shows an error if the Delius contact can't be created from the Record your decision in Delius page", () => {
           cy.task('getRecommendation', {
             statusCode: 200,
-            response: { ...completeRecommendationResponse, managerRecallDecision: null },
+            response: { ...completeRecommendationResponse, managerRecallDecision: { selected: { value: 'RECALL' } } },
           })
           cy.task('updateRecommendation', { statusCode: 500, response: { error: 'DELIUS_CONTACT_CREATION_FAILED' } })
           cy.visit(
@@ -258,7 +258,10 @@ context('Make a recommendation', () => {
         it('shows an error if the recommendation save errored from the Record your decision in Delius page', () => {
           cy.task('getRecommendation', {
             statusCode: 200,
-            response: { ...completeRecommendationResponse, managerRecallDecision: null },
+            response: {
+              ...completeRecommendationResponse,
+              managerRecallDecision: { selected: { value: 'NO_RECALL' } },
+            },
           })
           cy.task('updateRecommendation', { statusCode: 500, response: { error: 'RECOMMENDATION_UPDATE_FAILED' } })
           cy.visit(

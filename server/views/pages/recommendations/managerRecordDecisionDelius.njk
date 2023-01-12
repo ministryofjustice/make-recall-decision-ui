@@ -19,6 +19,7 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="managerRecallDecision" value="{{ recommendation.managerRecallDecision.selected.value }}" />
                 <p class='govuk-body govuk-!-margin-bottom-8'>Your decision will be recorded as a contact in NDelius called 'Management oversight - recall'. You cannot undo this.</p>
                 <button class='govuk-button'>Record your decision</button>
             </form>
