@@ -9,7 +9,6 @@ import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import { getFeatureFlags } from '../controllers/featureFlags'
-import { recommendationFormGet, recommendationFormPost } from '../controllers/rec-prototype/recommendationForm'
 import { downloadDocument } from '../controllers/downloadDocument'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 import { getRecommendationPage } from '../controllers/recommendations/getRecommendationPage'
@@ -55,10 +54,6 @@ export default function routes(router: Router): Router {
     asyncMiddleware(parseRecommendationUrl),
     asyncMiddleware(postRecommendationForm)
   )
-
-  // user research prototype
-  get('/rec-prototype/:crn/:sectionId', recommendationFormGet)
-  post('/rec-prototype/:crn/:sectionId', recommendationFormPost)
 
   return router
 }
