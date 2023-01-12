@@ -18,6 +18,9 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
         return res.redirect('/authError')
       }
       res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
+      if (res.locals.env === 'PRE-PRODUCTION') {
+        logger.info(`User roles: ${JSON.stringify(roles)} for path: ${req.path}`)
+      }
       return next()
     }
 
