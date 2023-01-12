@@ -81,18 +81,14 @@ export const invalidDateInputPart = (validationError: ValidationError, fieldLabe
   return `${fieldLabel}-${part}`
 }
 
-export const saveErrorObject = {
-  name: 'saveError',
-  text: strings.errors.saveChanges,
-}
-
 export const saveErrorWithDetails = ({ err, isProduction }: { err: SanitisedError; isProduction: boolean }) => {
-  if (isProduction) {
-    return saveErrorObject
+  let text = isProduction ? strings.errors.saveChanges : err.text || err.stack
+  if (err.data?.error) {
+    text = strings.errorCodesFromApi[err.data?.error] || text
   }
   return {
     name: 'saveError',
-    text: err.text || err.stack,
+    text,
   }
 }
 

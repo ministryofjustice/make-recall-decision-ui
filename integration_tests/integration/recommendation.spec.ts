@@ -241,6 +241,32 @@ context('Make a recommendation', () => {
           cy.clickLink('View your decision')
           cy.pageHeading().should('equal', 'Your decision')
         })
+
+        it("shows an error if the Delius contact can't be created from the Record your decision in Delius page", () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse, managerRecallDecision: null },
+          })
+          cy.task('updateRecommendation', { statusCode: 500, response: { error: 'DELIUS_CONTACT_CREATION_FAILED' } })
+          cy.visit(
+            `${routeUrls.recommendations}/${recommendationId}/manager-record-decision-delius?flagConsiderRecall=1`
+          )
+          cy.clickButton('Record your decision')
+          cy.getElement('An error occurred creating a contact in NDelius').should('exist')
+        })
+
+        it('shows an error if the recommendation save errored from the Record your decision in Delius page', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse, managerRecallDecision: null },
+          })
+          cy.task('updateRecommendation', { statusCode: 500, response: { error: 'RECOMMENDATION_UPDATE_FAILED' } })
+          cy.visit(
+            `${routeUrls.recommendations}/${recommendationId}/manager-record-decision-delius?flagConsiderRecall=1`
+          )
+          cy.clickButton('Record your decision')
+          cy.getElement('An error occurred saving your changes to your recommendation').should('exist')
+        })
       })
     })
   })
