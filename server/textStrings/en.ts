@@ -57,6 +57,10 @@ export const strings = {
     noManagerRecallTypeSelected: 'Select whether you recommend a recall or not',
     missingManagerRecallTypeDetail: 'You must explain your decision',
   },
+  errorCodesFromApi: {
+    DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
+    RECOMMENDATION_UPDATE_FAILED: 'An error occurred saving your changes to your recommendation',
+  },
   notifications: {
     oasysNotFoundLatestComplete:
       'This information cannot be retrieved from OASys. Double-check as it may be out of date.',
