@@ -4,6 +4,7 @@ export enum EVENTS {
   MRD_RECOMMENDATION_PAGE_VIEW = 'mrdRecommendationPageView',
   MRD_CONSIDER_RECALL_CREATED = 'mrdConsiderRecallCreated',
   MRD_CONSIDER_RECALL_EDITED = 'mrdConsiderRecallEdited',
+  MRD_MANAGER_DECISION_RECORDED_IN_DELIUS = 'mrdManagerDecisionRecordedInDelius',
   MRD_RECALL_TYPE = 'mrdRecallType',
   PART_A_DOCUMENT_DOWNLOADED = 'mrdPartADocumentDownloaded',
   DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED = 'mrdDecisionNotToRecallLetterDownloaded',
