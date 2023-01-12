@@ -30,10 +30,6 @@ export const featureFlagsDefaults = {
     label: "Show tab for 'Create & vary a licence' data",
     default: false,
   },
-  flagRecommendationPrototype: {
-    label: 'Prototype - Make a recommendation',
-    default: false,
-  },
 }
 
 export const readFeatureFlags =
