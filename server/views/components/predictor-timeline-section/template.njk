@@ -6,7 +6,7 @@
     <span class='govuk-!-padding-left-2 govuk-!-font-size-16'>from NDelius</span>
     </div>
     <div class='govuk-!-font-size-16'>
-        <a href='{{ params.pageUrlBase }}contact-history?{{ formatDateFilterQueryString(params.item.date) }}' data-qa='view-contacts'>View contacts<span class='govuk-visually-hidden'> from {{ formatDateTimeFromIsoString({ isoDate: params.item.date, dateOnly: true }) }}</span></a><span aria-hidden='true'> from this day</span>
+        <a href='{{ params.pageUrlBase }}contact-history?{{ formatDateFilterQueryString(params.item.date) }}&includeSystemGenerated=YES' data-qa='view-contacts'>View contacts<span class='govuk-visually-hidden'> from {{ formatDateTimeFromIsoString({ isoDate: params.item.date, dateOnly: true }) }}</span></a><span aria-hidden='true'> from this day</span>
     </div>
 
     {% if params.item.notes %}
