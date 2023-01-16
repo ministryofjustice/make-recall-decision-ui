@@ -44,3 +44,6 @@ If these are not desired in the cloned project, remove references to `check_outd
 
 ## Guide on developing new features
 [Doc](./docs/developing-new-features.md)
+
+## User access
+[Doc](./docs/user-access.md)
