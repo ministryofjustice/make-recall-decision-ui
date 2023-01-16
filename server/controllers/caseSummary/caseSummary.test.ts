@@ -124,7 +124,7 @@ describe('caseSummary', () => {
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'contact-history' } })
     await caseSummary(req, res)
-    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'contact-history', token)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'contact-history', token, { flagShowSystemGenerated: true })
     expect(res.locals.caseSummary.contactSummary).toEqual({
       groupedByKey: 'startDate',
       items: [
