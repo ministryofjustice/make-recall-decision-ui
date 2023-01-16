@@ -17,8 +17,16 @@ const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
 
-export const getCaseSummary = <T>(crn: string, sectionId: CaseSectionId, token: string): Promise<T> =>
-  restClient(token).get({ path: `${routes.getCaseSummary}/${crn}/${sectionId}` }) as Promise<T>
+export const getCaseSummary = <T>(
+  crn: string,
+  sectionId: CaseSectionId,
+  token: string,
+  featureFlags?: FeatureFlags
+): Promise<T> =>
+  restClient(token).get({
+    path: `${routes.getCaseSummary}/${crn}/${sectionId}`,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<T>
 
 export const createRecommendation = (
   data: CreateRecommendationRequest,
