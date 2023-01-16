@@ -1,8 +1,9 @@
-import { ContactTypeDecorated, ContactHistoryFilters, ObjectMap } from '../../../../@types'
 import { isDefined, removeParamsFromQueryString } from '../../../../utils/utils'
 import { ContactGroupResponse } from '../../../../@types/make-recall-decision-api/models/ContactGroupResponse'
 import { ContactSummaryResponse } from '../../../../@types/make-recall-decision-api'
 import logger from '../../../../../logger'
+import { ContactHistoryFilters, ContactTypeDecorated } from '../../../../@types/contactTypes'
+import { ObjectMap } from '../../../../@types'
 
 export const parseSelectedFilters = ({ filters }: { filters: ContactHistoryFilters }) => {
   const { contactTypes } = filters

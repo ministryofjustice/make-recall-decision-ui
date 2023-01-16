@@ -1,6 +1,6 @@
 import { ParsedQs } from 'qs'
 import { performance } from 'perf_hooks'
-import { CaseSectionId, ContactHistoryFilters, FeatureFlags } from '../../@types'
+import { CaseSectionId, FeatureFlags } from '../../@types'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/models/ContactHistoryResponse'
@@ -18,6 +18,7 @@ import { transformVulnerabilities } from './vulnerabilities/transformVulnerabili
 import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import { transformRecommendations } from './recommendations/transformRecommendations'
+import { ContactHistoryFilters } from '../../@types/contactTypes'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -83,7 +84,10 @@ export const getCaseSection = async (
     case 'contact-history':
       sectionLabel = 'Contact history'
       caseSummaryRaw = await fetchFromCacheOrApi({
-        fetchDataFn: () => getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token),
+        fetchDataFn: () =>
+          getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token, {
+            flagShowSystemGenerated: true,
+          }),
         checkWhetherToCacheDataFn: apiResponse => !isCaseRestrictedOrExcluded(apiResponse.userAccessResponse),
         userId,
         redisKey: `contactHistory:${trimmedCrn}`,

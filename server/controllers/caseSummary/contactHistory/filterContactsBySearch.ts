@@ -1,7 +1,8 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { isDefined, removeParamsFromQueryString, stripHtmlTags } from '../../../utils/utils'
-import { ContactHistoryFilters, DecoratedContact, NamedFormError, ObjectMap } from '../../../@types'
+import { DecoratedContact, NamedFormError, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/errors'
+import { ContactHistoryFilters } from '../../../@types/contactTypes'
 
 const MINIMUM_SEARCH_TERM_LENGTH = 2
 

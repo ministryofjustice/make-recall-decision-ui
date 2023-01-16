@@ -16,21 +16,23 @@ const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userI
   const apiResponse = await fetchDataFn()
   try {
     const redisClient = createRedisClient()
-    if (checkWhetherToCacheDataFn(apiResponse)) {
-      const newValueToCache = {
-        userIds: [userId],
-        data: apiResponse,
+    if (redisClient) {
+      if (checkWhetherToCacheDataFn(apiResponse)) {
+        const newValueToCache = {
+          userIds: [userId],
+          data: apiResponse,
+        }
+        const existingCachedValue = await getValue(redisKey)
+        if (existingCachedValue) {
+          const updatedUserIds = [...newValueToCache.userIds, ...(existingCachedValue.userIds || [])]
+          const dedupedUserIds = [...new Set(updatedUserIds)]
+          newValueToCache.userIds = dedupedUserIds
+        }
+        redisClient.set(redisKey, JSON.stringify(newValueToCache))
+        redisClient.expire(redisKey, TTL_SECONDS)
+      } else {
+        redisClient.del(redisKey)
       }
-      const existingCachedValue = await getValue(redisKey)
-      if (existingCachedValue) {
-        const updatedUserIds = [...newValueToCache.userIds, ...(existingCachedValue.userIds || [])]
-        const dedupedUserIds = [...new Set(updatedUserIds)]
-        newValueToCache.userIds = dedupedUserIds
-      }
-      redisClient.set(redisKey, JSON.stringify(newValueToCache))
-      redisClient.expire(redisKey, TTL_SECONDS)
-    } else {
-      redisClient.del(redisKey)
     }
   } catch (err) {
     logger.error(err)
