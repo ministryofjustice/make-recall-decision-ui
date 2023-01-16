@@ -1,4 +1,4 @@
-import { ContactHistoryFilters, FeatureFlags } from '../../../@types'
+import { FeatureFlags } from '../../../@types'
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
@@ -6,6 +6,7 @@ import { filterContactsByContactType } from './filterContactsByContactType'
 import { filterContactsBySearch } from './filterContactsBySearch'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { removeFutureContacts } from './removeFutureContacts'
+import { ContactHistoryFilters } from '../../../@types/contactTypes'
 
 export const removeSystemGenerated = (contacts: ContactSummaryResponse[]): ContactSummaryResponse[] =>
   contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)

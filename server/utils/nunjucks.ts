@@ -1,7 +1,8 @@
 import nunjucks from 'nunjucks'
 import { DateTime } from 'luxon'
 import { DatePartsParsed } from '../@types/dates'
-import { FormError, ObjectMap, SelectedFilterItem, UrlInfo } from '../@types'
+import { FormError, ObjectMap, UrlInfo } from '../@types'
+import { SelectedFilterItem } from '../@types/contactTypes'
 
 export const dateTimeItems = (fieldName: string, values: DatePartsParsed) => {
   const items = [

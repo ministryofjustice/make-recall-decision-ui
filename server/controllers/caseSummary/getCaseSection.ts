@@ -18,6 +18,7 @@ import { transformVulnerabilities } from './vulnerabilities/transformVulnerabili
 import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import { transformRecommendations } from './recommendations/transformRecommendations'
+import { ContactHistoryFilters } from '../../@types/contactTypes'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,

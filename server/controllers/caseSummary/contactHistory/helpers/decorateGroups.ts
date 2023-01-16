@@ -1,6 +1,6 @@
-import { ContactTypeDecorated } from '../../../../@types'
 import { ContactGroupResponse } from '../../../../@types/make-recall-decision-api/models/ContactGroupResponse'
 import { sortList } from '../../../../utils/lists'
+import { ContactTypeCode, ContactTypeDecorated } from '../../../../@types/contactTypes'
 
 // add data for each group and its contacts, for display as filter checkboxes
 export const decorateGroups = ({

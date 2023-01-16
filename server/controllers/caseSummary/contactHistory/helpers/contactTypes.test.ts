@@ -1,5 +1,5 @@
 import { decorateContactTypes, parseSelectedFilters } from './contactTypes'
-import { ContactHistoryFilters } from '../../../../@types'
+import { ContactHistoryFilters } from '../../../../@types/contactTypes'
 
 describe('contactTypes helpers', () => {
   describe('parseSelectedFilters', () => {

@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon'
-import { ContactHistoryFilters, NamedFormError, ObjectMap } from '../../../@types'
+import { NamedFormError, ObjectMap } from '../../../@types'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
@@ -7,6 +7,7 @@ import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { formatDateRange } from '../../../utils/dates/format'
 import { removeParamsFromQueryString } from '../../../utils/utils'
+import { ContactHistoryFilters } from '../../../@types/contactTypes'
 
 const parseDateParts = ({
   fieldPrefix,
