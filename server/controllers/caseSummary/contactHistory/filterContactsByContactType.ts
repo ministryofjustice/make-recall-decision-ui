@@ -1,13 +1,11 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { ContactGroupResponse } from '../../../@types/make-recall-decision-api/models/ContactGroupResponse'
-import {
-  decorateContactTypes,
-  decorateSelectedFilters,
-  filterContacts,
-  parseSelectedFilters,
-} from './helpers/contactTypes'
-import { decorateGroups } from './helpers/decorateGroups'
 import { ContactHistoryFilters, ContactTypeGroupDecorated } from '../../../@types/contactTypes'
+import { decorateSelectedFilters } from './helpers/decorateSelectedFilters'
+import { decorateGroups } from './helpers/decorateGroups'
+import { decorateAllContactTypes } from './helpers/decorateAllContactTypes'
+import { listSelectedContactTypeCodes } from './helpers/listSelectedContactTypeCodes'
+import { filterContactsBySelected } from './helpers/filterContactsBySelected'
 
 export const filterContactsByContactType = ({
   filteredContacts,
@@ -23,15 +21,17 @@ export const filterContactsByContactType = ({
   contacts: ContactSummaryResponse[]
   contactTypeGroups: ContactTypeGroupDecorated[]
   selected?: { text: string; href: string }[]
+  selectedIds?: string[]
 } => {
-  const allContactTypes = decorateContactTypes({ contactTypeGroups, allContacts })
-  const selectedContactTypes = parseSelectedFilters({ filters })
-  const filteredByContactType = filterContacts({ allContactTypes, filteredContacts, selectedContactTypes })
+  const allContactTypes = decorateAllContactTypes({ contactTypeGroups, allContacts })
+  const selectedContactTypes = listSelectedContactTypeCodes({ filters })
+  const filteredByContactType = filterContactsBySelected({ allContactTypes, filteredContacts, selectedContactTypes })
   const contactTypeGroupsDecorated = decorateGroups({ allContactTypes, contactTypeGroups, selectedContactTypes })
   const selectedContactTypesRenderData = decorateSelectedFilters({ allContactTypes, selectedContactTypes, filters })
   return {
     contacts: filteredByContactType,
     contactTypeGroups: contactTypeGroupsDecorated,
     selected: selectedContactTypesRenderData,
+    selectedIds: selectedContactTypes,
   }
 }

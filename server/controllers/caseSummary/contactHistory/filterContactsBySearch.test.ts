@@ -11,6 +11,7 @@ describe('filterContactsBySearch', () => {
     'dateTo-year': '',
     contactTypes: '',
     searchFilters: '',
+    includeSystemGenerated: '',
   }
   const contactList = [
     {

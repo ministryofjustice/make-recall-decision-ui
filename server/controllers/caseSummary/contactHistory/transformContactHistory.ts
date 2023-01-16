@@ -4,12 +4,9 @@ import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
 import { filterContactsBySearch } from './filterContactsBySearch'
-import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { removeFutureContacts } from './removeFutureContacts'
 import { ContactHistoryFilters } from '../../../@types/contactTypes'
-
-export const removeSystemGenerated = (contacts: ContactSummaryResponse[]): ContactSummaryResponse[] =>
-  contacts.filter((contact: ContactSummaryResponse) => contact.systemGenerated === false)
+import { filterContactsBySystemGenerated } from './filterContactsBySystemGenerated'
 
 export const transformContactHistory = ({
   caseSummary,
@@ -20,11 +17,14 @@ export const transformContactHistory = ({
   filters: ContactHistoryFilters
   featureFlags: FeatureFlags
 }) => {
-  const allContacts = featureFlags.flagShowSystemGenerated
-    ? caseSummary.contactSummary
-    : removeSystemGenerated(caseSummary.contactSummary)
+  const { contacts: contactsFilteredBySystemGenerated, selected: selectedSystemGenerated } =
+    filterContactsBySystemGenerated({
+      contacts: caseSummary.contactSummary,
+      filters,
+      featureFlags,
+    })
   // TODO - api should not return future contacts
-  const pastContacts = removeFutureContacts(allContacts)
+  const pastContacts = removeFutureContacts(contactsFilteredBySystemGenerated)
   const {
     errors: errorsDateRange,
     contacts: contactsFilteredByDateRange,
@@ -48,13 +48,16 @@ export const transformContactHistory = ({
     contacts: contactsFilteredByContactTypes,
     selected: selectedContactTypes,
     contactTypeGroups,
+    selectedIds,
   } = filterContactsByContactType({
     filteredContacts: contactsFilteredBySearch,
-    allContacts,
+    allContacts: contactsFilteredBySystemGenerated,
     contactTypeGroups: caseSummary.contactTypeGroups,
     filters,
   })
-  const hasActiveFilters = Boolean(selectedDateRange || selectedContactTypes?.length || selectedSearch)
+  const hasActiveFilters = Boolean(
+    selectedDateRange || selectedContactTypes?.length || selectedSearch || selectedSystemGenerated
+  )
   const combinedErrors =
     errorsDateRange || errorsSearchFilter ? [...(errorsDateRange || []), ...(errorsSearchFilter || [])] : undefined
   return {
@@ -65,6 +68,10 @@ export const transformContactHistory = ({
       contactCount: contactsFilteredByContactTypes.length,
       hasActiveFilters,
       filters: {
+        includeSystemGenerated: {
+          selected: selectedSystemGenerated,
+          value: filters.includeSystemGenerated,
+        },
         dateRange: {
           selected: selectedDateRange,
           dateFrom: {
@@ -81,7 +88,7 @@ export const transformContactHistory = ({
         contactTypes: {
           contactTypeGroups,
           selected: selectedContactTypes,
-          selectedIds: filters.contactTypes,
+          selectedIds,
         },
         searchFilters: {
           selected: selectedSearch,

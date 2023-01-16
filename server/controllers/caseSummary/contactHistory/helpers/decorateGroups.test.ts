@@ -6,16 +6,19 @@ describe('decorateGroups', () => {
       code: 'IVSP',
       description: 'Arrest attempt',
       count: 5,
+      systemGenerated: false,
     },
     {
       code: 'C191',
       description: 'Management Oversight - Recall',
       count: 15,
+      systemGenerated: false,
     },
     {
       code: 'C002',
       description: 'Planned Office Visit (NS)',
       count: 0,
+      systemGenerated: false,
     },
   ]
   const contactTypeGroups = [
@@ -57,16 +60,19 @@ describe('decorateGroups', () => {
           code: 'IVSP',
           description: 'Arrest attempt',
           count: 5,
+          systemGenerated: true,
         },
         {
           code: 'C191',
           description: 'Management Oversight - Recall',
           count: 0,
+          systemGenerated: true,
         },
         {
           code: 'C002',
           description: 'Planned Office Visit (NS)',
           count: 0,
+          systemGenerated: true,
         },
       ],
       contactTypeGroups,
@@ -83,6 +89,7 @@ describe('decorateGroups', () => {
           code: 'IVSP',
           description: 'Arrest attempt',
           count: 0,
+          systemGenerated: false,
         },
       ],
       contactTypeGroups: [
@@ -104,6 +111,7 @@ describe('decorateGroups', () => {
         description: 'Arrest attempt',
         html: "Arrest attempt <span class='text-secondary'>(<span data-qa='contact-count'>0</span>)</span>",
         value: 'IVSP',
+        systemGenerated: false,
       },
     ])
   })
@@ -115,16 +123,19 @@ describe('decorateGroups', () => {
           code: 'IVSP',
           description: 'Arrest attempt',
           count: 5,
+          systemGenerated: false,
         },
         {
           code: 'C191',
           description: 'Management Oversight - Recall',
           count: 3,
+          systemGenerated: false,
         },
         {
           code: 'C002',
           description: 'Planned Office Visit (NS)',
           count: 0,
+          systemGenerated: false,
         },
       ],
       contactTypeGroups,
@@ -143,8 +154,10 @@ describe('decorateGroups', () => {
           description: 'Management Oversight - Recall',
           html: "Management Oversight - Recall <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
           value: 'C191',
+          systemGenerated: false,
         },
       ],
+      contactTypeCodesSystemGenerated: [],
       groupId: '2',
       isGroupOpen: true, // open the group because one of its types is selected
       label: 'Appointments',
@@ -158,16 +171,19 @@ describe('decorateGroups', () => {
           code: 'IVSP',
           description: 'Arrest attempt',
           count: 5,
+          systemGenerated: false,
         },
         {
           code: 'C191',
           description: 'Management Oversight - Recall',
           count: 3,
+          systemGenerated: false,
         },
         {
           code: 'C002',
           description: 'Planned Office Visit (NS)',
           count: 0,
+          systemGenerated: false,
         },
       ],
       contactTypeGroups,
@@ -186,11 +202,43 @@ describe('decorateGroups', () => {
           description: 'Management Oversight - Recall',
           html: "Management Oversight - Recall <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
           value: 'C191',
+          systemGenerated: false,
         },
       ],
+      contactTypeCodesSystemGenerated: [],
       groupId: '2',
       isGroupOpen: false, // close the group because none of its types are selected
       label: 'Appointments',
     })
+  })
+
+  it('makes an array of system generated contact types', () => {
+    const groups = decorateGroups({
+      allContactTypes: [
+        {
+          code: 'IVSP',
+          description: 'Arrest attempt',
+          count: 5,
+          systemGenerated: true,
+        },
+      ],
+      contactTypeGroups: [
+        {
+          groupId: '1',
+          label: 'Accredited programme',
+          contactTypeCodes: ['IVSP'],
+        },
+      ],
+      selectedContactTypes: ['IVSP'],
+    })
+    expect(groups[0].contactTypeCodesSystemGenerated).toHaveLength(1)
+    expect(groups[0].contactTypeCodesSystemGenerated[0]).toEqual(
+      expect.objectContaining({
+        count: 5,
+        description: 'Arrest attempt',
+        systemGenerated: true,
+        value: 'IVSP',
+      })
+    )
   })
 })

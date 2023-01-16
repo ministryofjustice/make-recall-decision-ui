@@ -11,6 +11,7 @@ describe('filterContactsByDateRange', () => {
     'dateTo-year': '',
     contactTypes: '',
     searchFilters: '',
+    includeSystemGenerated: '',
   }
 
   it('leaves the list unaltered if no dates supplied', () => {

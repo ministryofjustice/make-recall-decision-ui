@@ -4,6 +4,7 @@ export interface ContactTypeDecorated {
   code: string
   count: number
   description: string
+  systemGenerated: boolean
 }
 
 export interface ContactTypeCode {
@@ -11,6 +12,7 @@ export interface ContactTypeCode {
   description: string
   html: string
   count: number
+  systemGenerated: boolean
   attributes: ObjectMap<string>
 }
 
@@ -18,6 +20,7 @@ export interface ContactTypeGroupDecorated {
   label: string
   isGroupOpen: boolean
   contactTypeCodes: ContactTypeCode[]
+  contactTypeCodesSystemGenerated?: ContactTypeCode[]
 }
 
 export interface ContactHistoryFilters {
@@ -28,7 +31,9 @@ export interface ContactHistoryFilters {
   'dateTo-month': string
   'dateTo-year': string
   contactTypes: string | string[]
+  contactTypesSystemGenerated?: string | string[]
   searchFilters: string | string[]
+  includeSystemGenerated: string
 }
 
 export interface SelectedFilterItem {

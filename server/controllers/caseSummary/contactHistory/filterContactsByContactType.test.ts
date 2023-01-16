@@ -41,6 +41,7 @@ describe('filterContactsByContactType', () => {
     'dateTo-year': '',
     contactTypes: '',
     searchFilters: '',
+    includeSystemGenerated: '',
   }
 
   it('leaves the list unaltered if no contact types filter supplied', () => {
