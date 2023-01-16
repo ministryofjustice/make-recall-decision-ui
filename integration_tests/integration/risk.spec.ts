@@ -172,7 +172,7 @@ context('Risk page', () => {
       cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
       cy.getLinkHref({ qaAttr: 'view-contacts' }, { parent: '[data-qa="timeline-item-1"]' }).should(
         'contain',
-        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022'
+        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022&includeSystemGenerated=YES'
       )
 
       cy.get('[data-qa="timeline-item-3"]').should('contain', '23 June 2021')

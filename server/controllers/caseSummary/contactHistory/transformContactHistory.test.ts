@@ -11,6 +11,7 @@ describe('transformContactHistory', () => {
     'dateTo-year': '',
     contactTypes: '',
     searchFilters: '',
+    includeSystemGenerated: 'YES',
   }
   const contactSummary = [
     {
@@ -80,6 +81,7 @@ describe('transformContactHistory', () => {
         searchFilters: 'Arrest attempt',
         // 1 of thooe 2 contacts has this contact type
         contactTypes: 'IVSP',
+        includeSystemGenerated: 'YES',
       },
       featureFlags: { flagShowSystemGenerated: true },
     })
@@ -118,7 +120,8 @@ describe('transformContactHistory', () => {
         contactTypeGroups: [
           {
             contactCountInGroup: 1,
-            contactTypeCodes: [
+            contactTypeCodes: [],
+            contactTypeCodesSystemGenerated: [
               {
                 attributes: {
                   'data-group': 'Accredited programme',
@@ -128,6 +131,7 @@ describe('transformContactHistory', () => {
                 description: 'Arrest attempt',
                 html: "Arrest attempt <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
                 value: 'IVSP',
+                systemGenerated: true,
               },
             ],
             groupId: '1',
@@ -136,7 +140,8 @@ describe('transformContactHistory', () => {
           },
           {
             contactCountInGroup: 1,
-            contactTypeCodes: [
+            contactTypeCodes: [],
+            contactTypeCodesSystemGenerated: [
               {
                 attributes: {
                   'data-group': 'Appointments',
@@ -146,6 +151,7 @@ describe('transformContactHistory', () => {
                 description: 'Responsible officer change',
                 html: "Responsible officer change <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
                 value: 'ROC',
+                systemGenerated: true,
               },
             ],
             groupId: '2',
@@ -155,11 +161,11 @@ describe('transformContactHistory', () => {
         ],
         selected: [
           {
-            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt',
+            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt&includeSystemGenerated=YES',
             text: 'Arrest attempt',
           },
         ],
-        selectedIds: 'IVSP',
+        selectedIds: ['IVSP'],
       },
       dateRange: {
         dateFrom: {
@@ -174,15 +180,24 @@ describe('transformContactHistory', () => {
         },
         selected: [
           {
-            href: '?searchFilters=Arrest%20attempt&contactTypes=IVSP',
+            href: '?searchFilters=Arrest%20attempt&contactTypes=IVSP&includeSystemGenerated=YES',
             text: '21 Apr 2022 to 21 Apr 2022',
           },
         ],
       },
+      includeSystemGenerated: {
+        selected: [
+          {
+            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt&contactTypes=IVSP',
+            text: 'Included',
+          },
+        ],
+        value: 'YES',
+      },
       searchFilters: {
         selected: [
           {
-            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&contactTypes=IVSP',
+            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&contactTypes=IVSP&includeSystemGenerated=YES',
             text: 'Arrest attempt',
           },
         ],
@@ -191,7 +206,7 @@ describe('transformContactHistory', () => {
     })
   })
 
-  it('returns all contacts if no filters', () => {
+  it('returns all contacts if system generated contacts included and no other filters set', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: defaultFilters,
@@ -199,11 +214,12 @@ describe('transformContactHistory', () => {
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(4)
-    expect(data.hasActiveFilters).toEqual(false)
+    expect(data.hasActiveFilters).toEqual(true)
     expect(data.filters.contactTypes.contactTypeGroups).toEqual([
       {
         contactCountInGroup: 3,
-        contactTypeCodes: [
+        contactTypeCodes: [],
+        contactTypeCodesSystemGenerated: [
           {
             attributes: {
               'data-group': 'Accredited programme',
@@ -213,6 +229,7 @@ describe('transformContactHistory', () => {
             description: 'Planned Office Visit (NS)',
             html: "Planned Office Visit (NS) <span class='text-secondary'>(<span data-qa='contact-count'>3</span>)</span>",
             value: 'IVSP',
+            systemGenerated: true,
           },
         ],
         groupId: '1',
@@ -221,7 +238,8 @@ describe('transformContactHistory', () => {
       },
       {
         contactCountInGroup: 1,
-        contactTypeCodes: [
+        contactTypeCodes: [],
+        contactTypeCodesSystemGenerated: [
           {
             attributes: {
               'data-group': 'Appointments',
@@ -231,6 +249,7 @@ describe('transformContactHistory', () => {
             description: 'Responsible officer change',
             html: "Responsible officer change <span class='text-secondary'>(<span data-qa='contact-count'>1</span>)</span>",
             value: 'ROC',
+            systemGenerated: true,
           },
         ],
         groupId: '2',
@@ -264,7 +283,7 @@ describe('transformContactHistory', () => {
     ])
   })
 
-  it('sets hasActiveFilters flag if search filter is successful', () => {
+  it('sets hasActiveFilters property if search filter is successful', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: {
@@ -278,13 +297,22 @@ describe('transformContactHistory', () => {
     expect(data.hasActiveFilters).toEqual(true)
   })
 
-  it('shows system contacts if flag is on', () => {
+  it('shows system contacts if flag is on and filter set', () => {
     const { data } = transformContactHistory({
       caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
-      filters: defaultFilters,
+      filters: { ...defaultFilters, includeSystemGenerated: 'YES' },
       featureFlags: { flagShowSystemGenerated: true },
     })
     expect(data.contactCount).toEqual(4)
+  })
+
+  it('hides system contacts if flag is on but filter not set', () => {
+    const { data } = transformContactHistory({
+      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
+      filters: { ...defaultFilters, includeSystemGenerated: '' },
+      featureFlags: { flagShowSystemGenerated: true },
+    })
+    expect(data.contactCount).toEqual(1)
   })
 
   it('hides system contacts if flag is off', () => {
@@ -294,5 +322,80 @@ describe('transformContactHistory', () => {
       featureFlags: { flagShowSystemGenerated: false },
     })
     expect(data.contactCount).toEqual(1)
+  })
+
+  it('marks system-generated contact types', () => {
+    const contacts = [
+      {
+        code: 'ABC',
+        contactStartDate: '2022-04-21T10:03:00Z',
+        descriptionType: 'Arrest attempt',
+        systemGenerated: false,
+      },
+      {
+        code: 'DEF',
+        contactStartDate: '2022-04-21T11:30:00Z',
+        descriptionType: 'Planned Office Visit (NS)',
+        systemGenerated: true,
+      },
+      {
+        code: 'ROC',
+        contactStartDate: '2022-04-21T11:30:00Z',
+        descriptionType: 'Responsible officer change',
+        systemGenerated: true,
+      },
+      {
+        code: 'IVSP',
+        contactStartDate: '2022-05-04T13:07:00Z',
+        descriptionType: 'Management Oversight - Recall',
+        systemGenerated: true,
+      },
+    ]
+    const groups = [
+      {
+        groupId: '1',
+        label: 'Accredited programme',
+        contactTypeCodes: ['IVSP', 'ABC', 'DEF', 'ROC'],
+      },
+    ]
+    const { errors, data } = transformContactHistory({
+      caseSummary: { contactSummary: contacts, contactTypeGroups: groups } as ContactHistoryResponse,
+      filters: { ...defaultFilters, includeSystemGenerated: 'YES' },
+      featureFlags: { flagShowSystemGenerated: true },
+    })
+    expect(errors).toBeUndefined()
+    expect(data.contactCount).toEqual(4)
+    expect(data.hasActiveFilters).toEqual(true)
+    expect(data.filters.contactTypes.contactTypeGroups[0].contactTypeCodes).toHaveLength(1)
+    expect(data.filters.contactTypes.contactTypeGroups[0].contactTypeCodes[0]).toEqual(
+      expect.objectContaining({
+        value: 'ABC',
+        description: 'Arrest attempt',
+        systemGenerated: false,
+      })
+    )
+    expect(data.filters.contactTypes.contactTypeGroups[0].contactTypeCodesSystemGenerated).toHaveLength(3)
+    const [first, second, third] = data.filters.contactTypes.contactTypeGroups[0].contactTypeCodesSystemGenerated
+    expect(first).toEqual(
+      expect.objectContaining({
+        value: 'IVSP',
+        description: 'Management Oversight - Recall',
+        systemGenerated: true,
+      })
+    )
+    expect(second).toEqual(
+      expect.objectContaining({
+        value: 'DEF',
+        description: 'Planned Office Visit (NS)',
+        systemGenerated: true,
+      })
+    )
+    expect(third).toEqual(
+      expect.objectContaining({
+        value: 'ROC',
+        description: 'Responsible officer change',
+        systemGenerated: true,
+      })
+    )
   })
 })
