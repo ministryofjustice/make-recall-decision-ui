@@ -40,11 +40,16 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
     if (monitoringEvent) {
       const crn = normalizeCrn(req.body.crn)
       if (!isEmptyStringOrWhitespace(crn)) {
-        appInsightsEvent(monitoringEvent.eventName, username, {
-          ...monitoringEvent.data,
-          crn,
-          recommendationId,
-        })
+        appInsightsEvent(
+          monitoringEvent.eventName,
+          username,
+          {
+            ...monitoringEvent.data,
+            crn,
+            recommendationId,
+          },
+          flags
+        )
       }
     }
   } catch (err) {

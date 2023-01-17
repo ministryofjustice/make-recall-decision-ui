@@ -10,12 +10,13 @@ jest.mock('../../monitoring/azureAppInsights')
 const crn = ' A1234AB '
 let res: Response
 const token = 'token'
+const featureFlags = { flagDomainEventRecommendationStarted: true }
 
 describe('createRecommendationController', () => {
   beforeEach(() => {
     res = mockRes({
       token,
-      locals: { user: { username: 'Dave' }, flags: { flagDomainEventRecommendationStarted: true } },
+      locals: { user: { username: 'Dave' }, flags: featureFlags },
     })
   })
 
@@ -28,10 +29,15 @@ describe('createRecommendationController', () => {
     })
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Dave', {
-      crn: 'A1234AB',
-      recommendationId: '123',
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecommendationStarted',
+      'Dave',
+      {
+        crn: 'A1234AB',
+        recommendationId: '123',
+      },
+      featureFlags
+    )
   })
 
   it('should reload with a stored error, on a failed API call', async () => {

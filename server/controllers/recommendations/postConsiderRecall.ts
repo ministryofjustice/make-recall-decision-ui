@@ -9,6 +9,7 @@ import { EVENTS } from '../../utils/constants'
 import { isPreprodOrProd, normalizeCrn } from '../../utils/utils'
 import { AuditService } from '../../services/auditService'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { FeatureFlags } from '../../@types'
 
 const auditService = new AuditService()
 
@@ -18,20 +19,27 @@ const sendEvents = ({
   recommendation,
   username,
   env,
+  featureFlags,
 }: {
   crn: string
   recommendationId?: string
   recommendation: RecommendationResponse
   username: string
   env: string
+  featureFlags: FeatureFlags
 }) => {
   const logErrors = isPreprodOrProd(env) && process.env.NODE_ENV !== 'test'
   const normalizedCrn = normalizeCrn(crn)
   if (recommendationId) {
-    appInsightsEvent(EVENTS.MRD_CONSIDER_RECALL_EDITED, username, {
-      crn: normalizedCrn,
-      recommendationId,
-    })
+    appInsightsEvent(
+      EVENTS.MRD_CONSIDER_RECALL_EDITED,
+      username,
+      {
+        crn: normalizedCrn,
+        recommendationId,
+      },
+      featureFlags
+    )
     auditService.considerRecall({
       crn: normalizedCrn,
       recommendationId,
@@ -40,10 +48,15 @@ const sendEvents = ({
       logErrors,
     })
   } else {
-    appInsightsEvent(EVENTS.MRD_CONSIDER_RECALL_CREATED, username, {
-      crn: normalizedCrn,
-      recommendationId: recommendation.id,
-    })
+    appInsightsEvent(
+      EVENTS.MRD_CONSIDER_RECALL_CREATED,
+      username,
+      {
+        crn: normalizedCrn,
+        recommendationId: recommendation.id,
+      },
+      featureFlags
+    )
     auditService.considerRecall({
       crn: normalizedCrn,
       recommendationId: recommendation.id.toString(),
@@ -78,7 +91,7 @@ export const postConsiderRecall = async (req: Request, res: Response): Promise<R
       recommendation = await createRecommendation(valuesToSave, token, flags)
     }
     res.redirect(303, nextPagePath)
-    sendEvents({ crn: normalizeCrn(crn), recommendationId, recommendation, username, env })
+    sendEvents({ crn: normalizeCrn(crn), recommendationId, recommendation, username, env, featureFlags: flags })
   } catch (err) {
     if (err.name === 'AppError') {
       throw err

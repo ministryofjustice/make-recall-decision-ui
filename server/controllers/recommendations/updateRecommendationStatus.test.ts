@@ -16,9 +16,10 @@ describe('updateRecommendationStatus', () => {
     crn,
   }
   let res: Response
+  const featureFlags = { flagExcludeFromAnalytics: true }
 
   beforeEach(() => {
-    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Bill' } } })
+    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Bill' }, flags: featureFlags } })
   })
 
   it('should update recommendation and redirect to recommendations tab if set to DELETED', async () => {
@@ -45,10 +46,15 @@ describe('updateRecommendationStatus', () => {
     })
     await updateRecommendationStatus(req, res)
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/response-to-probation`)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationStarted', 'Bill', {
-      crn,
-      recommendationId,
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecommendationStarted',
+      'Bill',
+      {
+        crn,
+        recommendationId,
+      },
+      featureFlags
+    )
   })
 
   it('should throw if the API errors', async () => {

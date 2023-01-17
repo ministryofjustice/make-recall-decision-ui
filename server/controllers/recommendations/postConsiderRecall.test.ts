@@ -11,9 +11,10 @@ jest.mock('../../monitoring/azureAppInsights')
 describe('postConsiderRecall', () => {
   const crn = '123'
   let res: Response
+  const featureFlags = { flagExcludeFromAnalytics: false }
 
   beforeEach(() => {
-    res = mockRes({ locals: { user: { username: 'Dave' } } })
+    res = mockRes({ locals: { user: { username: 'Dave' }, flags: featureFlags } })
   })
 
   it('should create recommendation and redirect to next page if recommendation ID is not in request body', async () => {
@@ -30,15 +31,20 @@ describe('postConsiderRecall', () => {
     expect(RestClient.prototype.post).toHaveBeenCalledWith({
       data: { crn: '123', recallConsideredDetail: 'Details...' },
       headers: {
-        'X-Feature-Flags': '{}',
+        'X-Feature-Flags': '{"flagExcludeFromAnalytics":false}',
       },
       path: '/recommendations',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderRecallCreated', 'Dave', {
-      crn,
-      recommendationId: 1,
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdConsiderRecallCreated',
+      'Dave',
+      {
+        crn,
+        recommendationId: 1,
+      },
+      featureFlags
+    )
     expect(AuditService.prototype.considerRecall).toHaveBeenCalledWith({
       crn,
       recommendationId: getRecommendationResponse.id.toString(),
@@ -62,14 +68,19 @@ describe('postConsiderRecall', () => {
     await postConsiderRecall(req, res)
     expect(RestClient.prototype.patch).toHaveBeenCalledWith({
       data: { recallConsideredList: [{ recallConsideredDetail: 'Details...' }] },
-      headers: { 'X-Feature-Flags': '{}' },
+      headers: { 'X-Feature-Flags': '{"flagExcludeFromAnalytics":false}' },
       path: '/recommendations/abc/',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `/cases/${crn}/overview`)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdConsiderRecallEdited', 'Dave', {
-      crn,
-      recommendationId: 'abc',
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdConsiderRecallEdited',
+      'Dave',
+      {
+        crn,
+        recommendationId: 'abc',
+      },
+      featureFlags
+    )
     expect(AuditService.prototype.considerRecall).toHaveBeenCalledWith({
       crn,
       recommendationId: 'abc',
