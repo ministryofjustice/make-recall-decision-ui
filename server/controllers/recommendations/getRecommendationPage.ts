@@ -91,11 +91,16 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
       token,
     })
   }
-  appInsightsEvent(EVENTS.MRD_RECOMMENDATION_PAGE_VIEW, username, {
-    crn: recommendation.crn,
-    recommendationId,
-    pageUrlSlug,
-  })
+  appInsightsEvent(
+    EVENTS.MRD_RECOMMENDATION_PAGE_VIEW,
+    username,
+    {
+      crn: recommendation.crn,
+      recommendationId,
+      pageUrlSlug,
+    },
+    featureFlags
+  )
   auditService.recommendationView({
     crn: res.locals.crn,
     recommendationId,

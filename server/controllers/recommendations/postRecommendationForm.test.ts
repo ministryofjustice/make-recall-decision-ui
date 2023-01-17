@@ -12,13 +12,15 @@ describe('postRecommendationForm', () => {
   const basePath = `/recommendations/${recommendationId}/`
   const currentPageUrl = `${basePath}recall-type`
   const requestBody = {
+    crn: '123',
     recallType: 'STANDARD',
     recallTypeDetailsStandard: 'Details...',
   }
+  const featureFlags = { flagExcludeFromAnalytics: false }
   let res: Response
 
   beforeEach(() => {
-    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Dave' } } })
+    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Dave' }, flags: featureFlags } })
   })
 
   it('should update recommendation and redirect to next page', async () => {
@@ -112,11 +114,16 @@ describe('postRecommendationForm', () => {
       body: { ...requestBody, crn: 'AB1234C' },
     })
     await postRecommendationForm(req, res)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecallType', 'Dave', {
-      crn: 'AB1234C',
-      recallType: 'STANDARD',
-      recommendationId,
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecallType',
+      'Dave',
+      {
+        crn: 'AB1234C',
+        recallType: 'STANDARD',
+        recommendationId,
+      },
+      featureFlags
+    )
   })
 
   it('should send an appInsightsEvent for recall-type-indeterminate page', async () => {
@@ -128,11 +135,16 @@ describe('postRecommendationForm', () => {
       body: { ...requestBody, recallType: 'NO_RECALL', crn: 'AB1234C' },
     })
     await postRecommendationForm(req, res)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecallType', 'Dave', {
-      crn: 'AB1234C',
-      recallType: 'NO_RECALL',
-      recommendationId,
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecallType',
+      'Dave',
+      {
+        crn: 'AB1234C',
+        recallType: 'NO_RECALL',
+        recommendationId,
+      },
+      featureFlags
+    )
   })
 
   it('should not send an appInsightsEvent if not recall-type page', async () => {

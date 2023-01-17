@@ -11,10 +11,11 @@ jest.mock('../../monitoring/azureAppInsights')
 const crn = ' A1234AB '
 let res: Response
 const token = 'token'
+const featureFlags = { flagExcludeFromAnalytics: false }
 
 describe('personSearchResults', () => {
   beforeEach(() => {
-    res = mockRes({ token, locals: { user: { username: 'Dave' } } })
+    res = mockRes({ token, locals: { user: { username: 'Dave' }, flags: featureFlags } })
   })
 
   it('should return results for a valid CRN', async () => {
@@ -31,9 +32,14 @@ describe('personSearchResults', () => {
     expect(getPersonsByCrn).toHaveBeenCalledWith(crn.trim(), token)
     expect(res.render).toHaveBeenCalledWith('pages/personSearchResults')
     expect(res.locals.persons).toEqual(persons)
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdPersonSearchResults', 'Dave', {
-      crn: 'A1234AB',
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdPersonSearchResults',
+      'Dave',
+      {
+        crn: 'A1234AB',
+      },
+      featureFlags
+    )
   })
 
   it('should return an error if no search query submitted', async () => {

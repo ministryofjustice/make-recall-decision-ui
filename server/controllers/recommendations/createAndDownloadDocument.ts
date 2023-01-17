@@ -15,7 +15,7 @@ export const createAndDownloadDocument =
     const { recommendationId } = req.params
     const { crn } = req.query
     const normalizedCrn = validateCrn(crn)
-    const { user } = res.locals
+    const { user, flags } = res.locals
     let pathSuffix = 'no-recall-letter'
     const requestBody: Record<string, unknown> = {
       format: 'download-docx',
@@ -29,7 +29,7 @@ export const createAndDownloadDocument =
       pathSuffix,
       requestBody,
       user.token,
-      res.locals.flags
+      flags
     )
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     res.header('Content-Disposition', `attachment; filename="${fileName}"`)
@@ -43,12 +43,22 @@ export const createAndDownloadDocument =
     }
     if (documentType === 'PART_A') {
       auditService.createPartA(auditData)
-      appInsightsEvent(EVENTS.PART_A_DOCUMENT_DOWNLOADED, user.username, { crn: normalizedCrn, recommendationId })
+      appInsightsEvent(
+        EVENTS.PART_A_DOCUMENT_DOWNLOADED,
+        user.username,
+        { crn: normalizedCrn, recommendationId },
+        flags
+      )
     } else {
       auditService.createNoRecallLetter(auditData)
-      appInsightsEvent(EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED, user.username, {
-        crn: normalizedCrn,
-        recommendationId,
-      })
+      appInsightsEvent(
+        EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED,
+        user.username,
+        {
+          crn: normalizedCrn,
+          recommendationId,
+        },
+        flags
+      )
     }
   }

@@ -10,12 +10,13 @@ jest.mock('../../monitoring/azureAppInsights')
 const recommendationId = '987'
 let res: Response
 const token = 'token'
+const featureFlags = { flagExcludeFromAnalytics: true }
 
 describe('createAndDownloadDocument', () => {
   beforeEach(() => {
     res = mockRes({
       token,
-      locals: { user: { username: 'Dave', email: 'dave@gov.uk' }, flags: { flagExcludeFromAnalytics: true } },
+      locals: { user: { username: 'Dave', email: 'dave@gov.uk' }, flags: featureFlags },
     })
   })
 
@@ -32,10 +33,15 @@ describe('createAndDownloadDocument', () => {
       path: '/recommendations/987/part-a',
     })
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdPartADocumentDownloaded', 'Dave', {
-      crn: 'AB1234C',
-      recommendationId: '987',
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdPartADocumentDownloaded',
+      'Dave',
+      {
+        crn: 'AB1234C',
+        recommendationId: '987',
+      },
+      featureFlags
+    )
     expect(AuditService.prototype.createPartA).toHaveBeenCalledWith({
       crn: 'AB1234C',
       logErrors: false,
@@ -61,10 +67,15 @@ describe('createAndDownloadDocument', () => {
       path: '/recommendations/987/no-recall-letter',
     })
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdDecisionNotToRecallLetterDownloaded', 'Dave', {
-      crn: 'AB1234C',
-      recommendationId: '987',
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdDecisionNotToRecallLetterDownloaded',
+      'Dave',
+      {
+        crn: 'AB1234C',
+        recommendationId: '987',
+      },
+      featureFlags
+    )
     expect(AuditService.prototype.createNoRecallLetter).toHaveBeenCalledWith({
       crn: 'AB1234C',
       logErrors: false,

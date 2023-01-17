@@ -26,6 +26,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
   const { recommendationId } = req.params
   const { status, crn } = req.body
   const {
+    flags,
     user: { token, username },
   } = res.locals
   if (!isValidStatus(status)) {
@@ -36,9 +37,14 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
   const redirectPath = getRedirectPath(status, normalizedCrn, recommendationId)
   res.redirect(303, redirectPath)
   if (status === 'DRAFT') {
-    appInsightsEvent(EVENTS.MRD_RECOMMENDATION_STARTED, username, {
-      crn: normalizedCrn,
-      recommendationId,
-    })
+    appInsightsEvent(
+      EVENTS.MRD_RECOMMENDATION_STARTED,
+      username,
+      {
+        crn: normalizedCrn,
+        recommendationId,
+      },
+      flags
+    )
   }
 }

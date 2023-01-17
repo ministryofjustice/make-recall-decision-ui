@@ -89,11 +89,16 @@ describe('getRecommendationPage', () => {
       username: 'Bill',
       logErrors: false,
     })
-    expect(appInsightsEvent).toHaveBeenCalledWith('mrdRecommendationPageView', 'Bill', {
-      crn: 'X12345',
-      pageUrlSlug: 'custody-status',
-      recommendationId,
-    })
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecommendationPageView',
+      'Bill',
+      {
+        crn: 'X12345',
+        pageUrlSlug: 'custody-status',
+        recommendationId,
+      },
+      {}
+    )
   })
 
   it('should redirect to case overview if the recommendation status is DOCUMENT_DOWNLOADED', async () => {

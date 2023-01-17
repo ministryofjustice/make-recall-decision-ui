@@ -11,7 +11,7 @@ const auditService = new AuditService()
 
 export const personSearchResults = async (req: Request, res: Response) => {
   const { crn } = req.query
-  const { user } = res.locals
+  const { user, flags } = res.locals
   const { errors, searchValue, unsavedValues } = validatePersonSearch(crn as string)
   if (errors) {
     req.session.errors = errors
@@ -21,7 +21,7 @@ export const personSearchResults = async (req: Request, res: Response) => {
   res.locals.persons = await getPersonsByCrn(searchValue, user.token)
   res.locals.crn = searchValue
   res.render('pages/personSearchResults')
-  appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue })
+  appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue }, flags)
   auditService.personSearch({
     searchTerm: searchValue,
     username: res.locals.user.username,
