@@ -287,7 +287,7 @@ When('Maria confirms a not extended sentence', () => {
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} on an extended sentence?`)
     // this answer will have been reset to null
-    cy.getRadioOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'Yes').should('be.checked')
+    cy.getSelectableOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'Yes').should('be.checked')
     cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No')
   })
   cy.clickButton('Continue')

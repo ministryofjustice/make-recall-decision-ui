@@ -32,7 +32,7 @@ declare global {
 
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
 
-      getRadioOptionByLabel(groupLabel: string, val: string, opts?: CommandOpts): Chainable<JQuery<HTMLElement>>
+      getSelectableOptionByLabel(groupLabel: string, val: string, opts?: CommandOpts): Chainable<JQuery<HTMLElement>>
 
       selectCheckboxes(groupLabel: string, values: string[], opts?: CommandOpts): Chainable<Element>
 
