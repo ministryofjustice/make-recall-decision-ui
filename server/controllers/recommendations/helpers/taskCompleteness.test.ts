@@ -143,6 +143,43 @@ describe('taskCompleteness', () => {
     })
   })
 
+  describe('Licence conditions', () => {
+    it('returns true if a standard licence condition is selected', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+          },
+          additionalLicenceConditions: {
+            selectedOptions: [],
+          },
+        },
+      } as RecommendationResponse)
+      expect(statuses.licenceConditionsBreached).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns true if an additional licence condition is selected', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {},
+          additionalLicenceConditions: {
+            selectedOptions: [
+              {
+                mainCatCode: 'NLC5',
+                subCatCode: 'NST14',
+              },
+            ],
+          },
+        },
+      } as RecommendationResponse)
+      expect(statuses.licenceConditionsBreached).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
+  })
+
   describe('Custody status', () => {
     it('returns false for areAllComplete if not in custody, and related properties are null', () => {
       const { areAllComplete } = taskCompleteness({
