@@ -19,7 +19,7 @@ export const featureFlagsDefaults = {
     default: false,
   },
   flagShowSystemGenerated: {
-    label: 'Show system generated contacts',
+    label: 'Option to include system generated contacts in Contact history',
     default: false,
   },
   flagExcludeFromAnalytics: {
