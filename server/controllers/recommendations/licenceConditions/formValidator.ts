@@ -63,7 +63,7 @@ export const validateLicenceConditionsBreached = async ({
     allSelectedConditions
       .filter(item => item.startsWith('additional|'))
       .map(item => {
-        const [_prefix, mainCatCode, subCatCode] = item.split('|')
+        const [, mainCatCode, subCatCode] = item.split('|')
         return { mainCatCode, subCatCode }
       })
   let allAdditionalLicenceConditions
