@@ -79,8 +79,9 @@ describe('transformContactHistory', () => {
         'dateTo-year': '2022',
         // 2 of those 3 remaining contacts have this search string in their text fields
         searchFilters: 'Arrest attempt',
-        // 1 of thooe 2 contacts has this contact type
-        contactTypes: 'IVSP',
+        // 1 of those 2 contacts has this contact type
+        contactTypes: '',
+        contactTypesSystemGenerated: 'IVSP',
         includeSystemGenerated: 'YES',
       },
       featureFlags: { flagShowSystemGenerated: true },
@@ -180,7 +181,7 @@ describe('transformContactHistory', () => {
         },
         selected: [
           {
-            href: '?searchFilters=Arrest%20attempt&contactTypes=IVSP&includeSystemGenerated=YES',
+            href: '?searchFilters=Arrest%20attempt&contactTypesSystemGenerated=IVSP&includeSystemGenerated=YES',
             text: '21 Apr 2022 to 21 Apr 2022',
           },
         ],
@@ -188,7 +189,7 @@ describe('transformContactHistory', () => {
       includeSystemGenerated: {
         selected: [
           {
-            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt&contactTypes=IVSP',
+            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt&contactTypesSystemGenerated=IVSP',
             text: 'Included',
           },
         ],
@@ -197,7 +198,7 @@ describe('transformContactHistory', () => {
       searchFilters: {
         selected: [
           {
-            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&contactTypes=IVSP&includeSystemGenerated=YES',
+            href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&contactTypesSystemGenerated=IVSP&includeSystemGenerated=YES',
             text: 'Arrest attempt',
           },
         ],
