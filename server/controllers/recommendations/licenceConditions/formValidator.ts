@@ -60,7 +60,12 @@ export const validateLicenceConditionsBreached = async ({
   errorId = null
   const selectedAdditionalLicenceConditions =
     !noneSelected &&
-    allSelectedConditions.filter(item => item.startsWith('additional|')).map(item => item.replace('additional|', ''))
+    allSelectedConditions
+      .filter(item => item.startsWith('additional|'))
+      .map(item => {
+        const [_prefix, mainCatCode, subCatCode] = item.split('|')
+        return { mainCatCode, subCatCode }
+      })
   let allAdditionalLicenceConditions
   if (selectedAdditionalLicenceConditions.length) {
     const caseSummary = await fetchAndTransformLicenceConditions({
@@ -119,7 +124,7 @@ export const validateLicenceConditionsBreached = async ({
   if (selectedAdditionalLicenceConditions) {
     valuesToSave.licenceConditionsBreached = valuesToSave.licenceConditionsBreached || {}
     valuesToSave.licenceConditionsBreached.additionalLicenceConditions = {
-      selected: selectedAdditionalLicenceConditions,
+      selectedOptions: selectedAdditionalLicenceConditions,
       allOptions: allAdditionalLicenceConditions,
     }
   }

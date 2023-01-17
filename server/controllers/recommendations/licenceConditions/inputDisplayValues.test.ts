@@ -9,7 +9,7 @@ describe('inputDisplayValuesLicenceConditions', () => {
         allOptions: formOptions.standardLicenceConditions,
       },
       additionalLicenceConditions: {
-        selected: ['NST14'],
+        selectedOptions: [{ mainCatCode: 'NLC5', subCatCode: 'NST14' }],
         allOptions: [
           {
             mainCatCode: 'NLC5',
@@ -48,12 +48,17 @@ describe('inputDisplayValuesLicenceConditions', () => {
       apiValues,
     })
     expect(inputDisplayValues).toEqual({
-      additionalLicenceConditions: ['NST14'],
+      additionalLicenceConditions: [
+        {
+          mainCatCode: 'NLC5',
+          subCatCode: 'NST14',
+        },
+      ],
       standardLicenceConditions: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
     })
   })
 
-  it('should use apiValues for value, if no error or unsaved values', () => {
+  it('should use only standardLicenceConditions from API for value, if no error or unsaved values', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesLicenceConditions({
       errors: undefined,
@@ -80,7 +85,7 @@ describe('inputDisplayValuesLicenceConditions', () => {
       apiValues: {
         licenceConditionsBreached: {
           additionalLicenceConditions: {
-            selected: ['NST14'],
+            selectedOptions: [{ mainCatCode: 'NLC5', subCatCode: 'NST14' }],
             allOptions: [
               {
                 mainCatCode: 'NLC5',
@@ -95,7 +100,12 @@ describe('inputDisplayValuesLicenceConditions', () => {
       },
     })
     expect(inputDisplayValues).toEqual({
-      additionalLicenceConditions: ['NST14'],
+      additionalLicenceConditions: [
+        {
+          mainCatCode: 'NLC5',
+          subCatCode: 'NST14',
+        },
+      ],
     })
   })
 })

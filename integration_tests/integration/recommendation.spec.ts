@@ -313,6 +313,49 @@ context('Make a recommendation', () => {
       cy.signIn()
     })
 
+    it('licence conditions - select saved conditions', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getCase', {
+        sectionId: 'licence-conditions',
+        statusCode: 200,
+        response: {
+          convictions: [
+            {
+              active: true,
+              isCustodial: true,
+              offences: [],
+              licenceConditions: [
+                {
+                  active: true,
+                  licenceConditionTypeMainCat: {
+                    code: 'NLC5',
+                    description: 'Freedom of movement',
+                  },
+                  licenceConditionTypeSubCat: {
+                    code: 'NST14',
+                    description: 'On release to be escorted by police to Approved Premises',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+      cy.getSelectableOptionByLabel(
+        'What licence conditions has Paula Smith breached?',
+        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period'
+      ).should('be.checked')
+
+      cy.getSelectableOptionByLabel(
+        'What licence conditions has Paula Smith breached?',
+        'Not commit any offence'
+      ).should('be.checked')
+      cy.getSelectableOptionByLabel('What licence conditions has Paula Smith breached?', 'Freedom of movement').should(
+        'be.checked'
+      )
+    })
+
     it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)

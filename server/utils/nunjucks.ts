@@ -92,3 +92,11 @@ export const formatDateFilterQueryString = (isoDate: string) => {
   const dateParts = DateTime.fromISO(isoDate).toObject()
   return `dateFrom-day=${dateParts.day}&dateFrom-month=${dateParts.month}&dateFrom-year=${dateParts.year}&dateTo-day=${dateParts.day}&dateTo-month=${dateParts.month}&dateTo-year=${dateParts.year}`
 }
+
+// does the array contain an object that has all the specified properties
+export const isObjectInArray = ({ properties, arr }: { properties: ObjectMap<unknown>; arr?: ObjectMap<unknown>[] }) =>
+  Array.isArray(arr) && properties
+    ? arr.some(item => {
+        return Object.entries(properties).every(([key, val]) => item[key] === val)
+      })
+    : false

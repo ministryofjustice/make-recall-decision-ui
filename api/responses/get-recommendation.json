@@ -191,9 +191,10 @@
       ]
     },
     "additionalLicenceConditions": {
-      "selected": [
-        "NST14"
-      ],
+      "selectedOptions": [{
+        "mainCatCode": "NLC5",
+        "subCatCode": "NST14"
+      }],
       "allOptions": [
         {
           "mainCatCode": "NLC5",
