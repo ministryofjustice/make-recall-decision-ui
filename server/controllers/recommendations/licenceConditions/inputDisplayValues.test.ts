@@ -71,4 +71,31 @@ describe('inputDisplayValuesLicenceConditions', () => {
       standardLicenceConditions: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
     })
   })
+
+  it('should use additional licence conditions from apiValues for value, if no error or unsaved values', () => {
+    const unsavedValues = {}
+    const inputDisplayValues = inputDisplayValuesLicenceConditions({
+      errors: undefined,
+      unsavedValues,
+      apiValues: {
+        licenceConditionsBreached: {
+          additionalLicenceConditions: {
+            selected: ['NST14'],
+            allOptions: [
+              {
+                mainCatCode: 'NLC5',
+                subCatCode: 'NST14',
+                title: 'Disclosure of information',
+                details: 'Notify your supervising officer of any intimate relationships',
+                note: 'Persons wife is Joan Smyth',
+              },
+            ],
+          },
+        },
+      },
+    })
+    expect(inputDisplayValues).toEqual({
+      additionalLicenceConditions: ['NST14'],
+    })
+  })
 })
