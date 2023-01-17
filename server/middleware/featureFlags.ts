@@ -23,7 +23,7 @@ export const featureFlagsDefaults = {
     default: false,
   },
   flagExcludeFromAnalytics: {
-    label: "Don't send events to Google Analytics or App Insights for my activity (in prod only)",
+    label: "Don't send events to Google Analytics or App Insights for my activity",
     default: false,
   },
   flagCreateVaryLicenceData: {
