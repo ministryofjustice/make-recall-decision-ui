@@ -63,7 +63,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
   if (recommendation.activeCustodialConvictionCount === 1) {
     statuses.licenceConditionsBreached =
       recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected?.length > 0 ||
-      recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selected?.length > 0
+      recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions?.length > 0
   }
 
   if (recommendation.isIndeterminateSentence === true) {

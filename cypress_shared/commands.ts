@@ -165,7 +165,7 @@ Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' 
     })
 })
 
-Cypress.Commands.add('getRadioOptionByLabel', (groupLabel, value, opts = {}) => {
+Cypress.Commands.add('getSelectableOptionByLabel', (groupLabel, value, opts = {}) => {
   return cy
     .get(opts.parent || 'body')
     .contains('legend', groupLabel)

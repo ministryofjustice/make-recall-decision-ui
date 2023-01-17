@@ -18,7 +18,7 @@ describe('validateLicenceConditionsBreached', () => {
     ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
     const requestBody = {
       crn: 'X514364',
-      licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NST30'],
+      licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NLC9|NSTT9'],
       activeCustodialConvictionCount: '1',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
@@ -38,7 +38,7 @@ describe('validateLicenceConditionsBreached', () => {
               title: 'Supervision in the community',
             },
           ],
-          selected: ['NST30'],
+          selectedOptions: [{ mainCatCode: 'NLC9', subCatCode: 'NSTT9' }],
         },
         standardLicenceConditions: {
           allOptions: cleanseUiList(formOptions.standardLicenceConditions),

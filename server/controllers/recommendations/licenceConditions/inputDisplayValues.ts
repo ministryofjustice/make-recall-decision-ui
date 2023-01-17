@@ -6,7 +6,7 @@ export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: Input
     const { standardLicenceConditions, additionalLicenceConditions } = apiValues.licenceConditionsBreached
     return {
       standardLicenceConditions: standardLicenceConditions?.selected,
-      additionalLicenceConditions: additionalLicenceConditions?.selected,
+      additionalLicenceConditions: additionalLicenceConditions?.selectedOptions,
     }
   }
   return {

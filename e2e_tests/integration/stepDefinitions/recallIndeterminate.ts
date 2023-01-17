@@ -153,7 +153,7 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Licence conditions')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`What licence conditions has ${offenderName} breached?`)
-    cy.getRadioOptionByLabel(
+    cy.getSelectableOptionByLabel(
       `What licence conditions has ${offenderName} breached?`,
       'Receive visits from the supervising officer in accordance with instructions given by the supervising officer'
     ).should('be.checked')
@@ -162,11 +162,13 @@ When('Maria confirms answers were saved', () => {
 
   cy.log('========= Alternatives to recall')
   cy.clickLink('What alternatives to recall have been tried already?')
-  cy.getRadioOptionByLabel(
+  cy.getSelectableOptionByLabel(
     'What alternatives to recall have been tried already?',
     'Increased frequency of reporting'
   ).should('be.checked')
-  cy.getRadioOptionByLabel('What alternatives to recall have been tried already?', 'Drug testing').should('be.checked')
+  cy.getSelectableOptionByLabel('What alternatives to recall have been tried already?', 'Drug testing').should(
+    'be.checked'
+  )
   cy.getTextInputValue('Give details', { parent: '#conditional-INCREASED_FREQUENCY' }).should(
     'equal',
     'Details on reporting'
@@ -179,20 +181,20 @@ When('Maria confirms answers were saved', () => {
 
   cy.log('========= Recommendation')
   cy.clickLink('What you recommend')
-  cy.getRadioOptionByLabel('What do you recommend?', 'Emergency recall').should('be.checked')
+  cy.getSelectableOptionByLabel('What do you recommend?', 'Emergency recall').should('be.checked')
   cy.clickLink('Back')
 
   cy.log('========= Custody')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} in custody now?`)
-    cy.getRadioOptionByLabel(`Is ${offenderName} in custody now?`, 'No').should('be.checked')
+    cy.getSelectableOptionByLabel(`Is ${offenderName} in custody now?`, 'No').should('be.checked')
   })
   cy.clickLink('Back')
 
   cy.log('========= IOM')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is ${offenderName} under Integrated Offender Management (IOM)?`)
-    cy.getRadioOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Yes').should(
+    cy.getSelectableOptionByLabel(`Is ${offenderName} under Integrated Offender Management (IOM)?`, 'Yes').should(
       'be.checked'
     )
   })
@@ -208,7 +210,7 @@ When('Maria confirms answers were saved', () => {
 
   cy.log('========= Victim contact scheme')
   cy.clickLink('Are there any victims in the victim contact scheme?')
-  cy.getRadioOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
+  cy.getSelectableOptionByLabel('Are there any victims in the victim contact scheme?', 'Yes').should('be.checked')
   cy.clickButton('Continue')
   cy.getTextInputValue('Day').should('equal', '14')
   cy.getTextInputValue('Month').should('equal', '04')
@@ -218,7 +220,7 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Arrest issues')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
-    cy.getRadioOptionByLabel(
+    cy.getSelectableOptionByLabel(
       `Is there anything the police should know before they arrest ${offenderName}?`,
       'Yes'
     ).should('be.checked')
@@ -232,7 +234,7 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Contraband')
   cy.get('@offenderName').then(offenderName => {
     cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)
-    cy.getRadioOptionByLabel(
+    cy.getSelectableOptionByLabel(
       `Do you think ${offenderName} is using recall to bring contraband into prison?`,
       'Yes'
     ).should('be.checked')
@@ -246,15 +248,15 @@ When('Maria confirms answers were saved', () => {
   cy.log('========= Indeterminate or extended sentence details')
   cy.clickLink('Confirm the recall criteria - indeterminate and extended sentences')
   cy.get('@offenderName').then(offenderName => {
-    cy.getRadioOptionByLabel(
+    cy.getSelectableOptionByLabel(
       'Indeterminate and extended sentences',
       `${offenderName} has shown behaviour similar to the index offence`
     ).should('be.checked')
-    cy.getRadioOptionByLabel(
+    cy.getSelectableOptionByLabel(
       'Indeterminate and extended sentences',
       `${offenderName} has shown behaviour that could lead to a sexual or violent offence`
     ).should('be.checked')
-    cy.getRadioOptionByLabel('Indeterminate and extended sentences', `${offenderName} is out of touch`).should(
+    cy.getSelectableOptionByLabel('Indeterminate and extended sentences', `${offenderName} is out of touch`).should(
       'be.checked'
     )
   })
