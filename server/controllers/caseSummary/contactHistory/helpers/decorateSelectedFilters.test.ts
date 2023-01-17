@@ -1,4 +1,5 @@
 import { decorateSelectedFilters } from './decorateSelectedFilters'
+import { ContactHistoryFilters } from '../../../../@types/contactTypes'
 
 describe('decorateSelectedFilters', () => {
   it('returns filter data for a non-system generated contact', () => {
@@ -14,7 +15,7 @@ describe('decorateSelectedFilters', () => {
     const filters = {
       includeSystemGenerated: 'YES',
       contactTypes: 'CRSAPT',
-    }
+    } as ContactHistoryFilters
     const result = decorateSelectedFilters({ selectedContactTypes, allContactTypes, filters })
     expect(result).toEqual([
       {
@@ -37,7 +38,7 @@ describe('decorateSelectedFilters', () => {
     const filters = {
       includeSystemGenerated: 'YES',
       contactTypesSystemGenerated: 'CRSAPT',
-    }
+    } as ContactHistoryFilters
     const result = decorateSelectedFilters({ selectedContactTypes, allContactTypes, filters })
     expect(result).toEqual([
       {
