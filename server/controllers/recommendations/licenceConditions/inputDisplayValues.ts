@@ -5,7 +5,7 @@ export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: Input
   if (!isDefined(errors) && apiValues.licenceConditionsBreached) {
     const { standardLicenceConditions, additionalLicenceConditions } = apiValues.licenceConditionsBreached
     return {
-      standardLicenceConditions: standardLicenceConditions.selected,
+      standardLicenceConditions: standardLicenceConditions?.selected,
       additionalLicenceConditions: additionalLicenceConditions?.selected,
     }
   }
