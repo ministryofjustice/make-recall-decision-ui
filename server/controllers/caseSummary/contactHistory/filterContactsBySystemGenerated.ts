@@ -24,7 +24,7 @@ export const filterContactsBySystemGenerated = ({
   const selected = includeSystemGeneratedContacts
     ? [
         {
-          text: 'Included',
+          text: 'NDelius automatic contacts',
           href: removeParamsFromQueryString({
             paramsToRemove: [{ key: 'includeSystemGenerated', value: 'YES' }],
             allParams: filters as unknown as ObjectMap<string | string[]>,
