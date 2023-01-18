@@ -1,4 +1,4 @@
-import { FormValidatorArgs, FormValidatorReturn, NamedFormError } from '../../../@types'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
