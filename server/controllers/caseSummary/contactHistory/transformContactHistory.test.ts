@@ -190,7 +190,7 @@ describe('transformContactHistory', () => {
         selected: [
           {
             href: '?dateFrom-day=21&dateFrom-month=04&dateFrom-year=2022&dateTo-day=21&dateTo-month=04&dateTo-year=2022&searchFilters=Arrest%20attempt&contactTypesSystemGenerated=IVSP',
-            text: 'Included',
+            text: 'NDelius automatic contacts',
           },
         ],
         value: 'YES',
