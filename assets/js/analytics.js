@@ -3,7 +3,22 @@ window.dataLayer = window.dataLayer || [];
 // contact history filters
 $('[data-js="contactTypeFiltersForm"]').on('submit', evt => {
   try {
+    window.dataLayer.push({
+      event : 'contact_filter_form_submitted'
+    })
     const $form = $(evt.target)
+    $form.find('[name="includeSystemGenerated"]:checked').each((idx, el) => {
+      window.dataLayer.push({
+        event : 'contact_include_system_generated_submitted'
+      })
+    })
+    $form.find('[name="contactTypesSystemGenerated"]:checked').each((idx, el) => {
+      window.dataLayer.push({
+        event : 'contact_type_system_generated_filter_submitted',
+        type: el.dataset.type,
+        category: el.dataset.group,
+      })
+    })
     $form.find('[name="contactTypes"]:checked').each((idx, el) => {
       window.dataLayer.push({
         event : 'contact_type_filter_submitted',

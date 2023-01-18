@@ -3,6 +3,26 @@
         {% for searchFilters in caseSummary.filters.searchFilters.selected %}
             <input type='hidden' name='searchFilters' value='{{ searchFilters.text }}' />
         {% endfor %}
+        {% if flags.flagShowSystemGenerated %}
+            {{ govukCheckboxes({
+                name: "includeSystemGenerated",
+                classes: "govuk-checkboxes--small",
+                formGroup: {
+                    classes: 'govuk-!-margin-bottom-4'
+                },
+                fieldset: {
+                    legend: {
+                        text: "NDelius automatic contacts",
+                        classes: "govuk-fieldset__legend--s govuk-visually-hidden"
+                    }
+                },
+                items: [{
+                    value: "YES",
+                    text: "Show NDelius automatic contacts",
+                    checked: caseSummary.filters.includeSystemGenerated.value == 'YES'
+                }]
+            }) }}
+        {% endif %}
         {{ govukInput({
             label: {
                 text: "Search term",
@@ -44,26 +64,6 @@
             items: dateTimeItems("dateTo", caseSummary.filters.dateRange.dateTo),
             errorMessage: errorMessage(errors.dateTo)
         }) }}
-        {% if flags.flagShowSystemGenerated %}
-            {{ govukCheckboxes({
-                name: "includeSystemGenerated",
-                classes: "govuk-checkboxes--small",
-                formGroup: {
-                    classes: 'govuk-!-margin-bottom-4'
-                },
-                fieldset: {
-                    legend: {
-                        text: "Contacts created automatically in NDelius",
-                        classes: "govuk-fieldset__legend--s govuk-visually-hidden"
-                    }
-                },
-                items: [{
-                    value: "YES",
-                    text: "Show NDelius automatic contacts",
-                    checked: caseSummary.filters.includeSystemGenerated.value == 'YES'
-                }]
-            }) }}
-        {% endif %}
         {% if caseSummary.filters.contactTypes.contactTypeGroups.length %}
             <fieldset class="govuk-fieldset">
                 <legend class='govuk-fieldset__legend govuk-fieldset__legend--s'>Contact types</legend>
@@ -91,7 +91,7 @@
                                 items: radioCheckboxItems({ items: group.contactTypeCodes, currentValues: caseSummary.filters.contactTypes.selectedIds })
                             }) }}
                             {% if group.contactTypeCodesSystemGenerated.length %}
-                            <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>NDelius created contacts</h3>
+                            <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>NDelius automatic contacts</h3>
                             {{ govukCheckboxes({
                                 idPrefix: "contactTypes-" + group.groupId + "-system",
                                 name: "contactTypesSystemGenerated",
@@ -128,6 +128,12 @@
                     categories: removeUndefinedListItems([
                         {
                             heading: {
+                            text: 'NDelius automatic contacts'
+                        },
+                            items: selectedFilterItems({ items: caseSummary.filters.includeSystemGenerated.selected, urlInfo: urlInfo })
+                        } if caseSummary.filters.includeSystemGenerated.selected.length and flags.flagShowSystemGenerated else undefined,
+                        {
+                            heading: {
                             text: 'Search term'
                         },
                             items: selectedFilterItems({ items: caseSummary.filters.searchFilters.selected, urlInfo: urlInfo })
@@ -137,14 +143,7 @@
                             text: 'Date range'
                         },
                             items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.dateRange.selected.length else undefined,
-                        {
-                            heading: {
-                            text: 'NDelius automatic contacts'
-                        },
-                            items: selectedFilterItems({ items: caseSummary.filters.includeSystemGenerated.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.includeSystemGenerated.selected.length and flags.flagShowSystemGenerated else undefined,
-                        {
+                        } if caseSummary.filters.dateRange.selected.length else undefined,                        {
                             heading: {
                             text: 'Contact type'
                         },

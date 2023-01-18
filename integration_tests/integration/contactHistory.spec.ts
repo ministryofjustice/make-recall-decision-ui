@@ -211,11 +211,11 @@ context('Contact history', () => {
     it('by system generated contacts', () => {
       cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagShowSystemGenerated=1`)
       cy.getElement('12 contacts').should('exist')
-      cy.selectCheckboxes('Contacts created automatically in NDelius', ['Show NDelius automatic contacts'])
+      cy.selectCheckboxes('NDelius automatic contacts', ['Show NDelius automatic contacts'])
       cy.clickButton('Apply filters')
       cy.getElement('14 contacts').should('exist')
       // clear filter
-      cy.clickLink('Included')
+      cy.clickLink('NDelius automatic contacts')
       cy.getElement('12 contacts').should('exist')
     })
 
@@ -224,7 +224,7 @@ context('Contact history', () => {
       cy.getElement('12 contacts').should('exist')
 
       // include system generated contacts
-      cy.selectCheckboxes('Contacts created automatically in NDelius', ['Show NDelius automatic contacts'])
+      cy.selectCheckboxes('NDelius automatic contacts', ['Show NDelius automatic contacts'])
       cy.clickButton('Apply filters')
       cy.getElement('14 contacts').should('exist')
 
