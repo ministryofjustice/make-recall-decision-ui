@@ -3,11 +3,11 @@
 /* eslint-disable */
 
 import type { AdditionalLicenceConditionOption } from './AdditionalLicenceConditionOption';
-import { SelectedLicenceConditionOption } from './SelectedLicenceConditionOption'
+import type { SelectedOption } from './SelectedOption';
 
 export type AdditionalLicenceConditions = {
     selected?: Array<string>;
-    selectedOptions?: Array<SelectedLicenceConditionOption>;
+    selectedOptions?: Array<SelectedOption>;
     allOptions?: Array<AdditionalLicenceConditionOption>;
 };
 

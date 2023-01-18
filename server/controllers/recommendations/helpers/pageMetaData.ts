@@ -57,7 +57,16 @@ import { inputDisplayValuesAddPreviousRelease } from '../addPreviousRelease/inpu
 import { validateManagerRecordDecision } from '../managerRecordDecision/formValidator'
 import { inputDisplayValuesManagerRecordDecision } from '../managerRecordDecision/inputDisplayValues'
 import { validateManagerRecordDecisionDelius } from '../managerRecordDecisionDelius/formValidator'
+import { validateRosh } from '../rosh/formValidator'
+import { inputDisplayValuesRosh } from '../rosh/inputDisplayValues'
 
+/* The PageMetaData properties explained:
+ * id - used as a key to get the page title. Also the name of the nunjucks HTML template
+ * validator - will be called by postRecommendationForm, with the submitted form values
+ * inputDisplayValues - called by getRecommendationPage, used to determine what input values to render, using errors / unsaved values / API values
+ * reviewedProperty - used to mark a property on the recommendation record as 'reviewed'
+ * propertyToRefresh - ask the API to refresh its copy of this data property, from its upstream services
+ *  */
 export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
     case 'manager-record-decision':
@@ -242,6 +251,13 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         id: 'mappa',
         reviewedProperty: 'mappa',
         propertyToRefresh: 'mappa',
+      }
+    case 'rosh':
+      return {
+        id: 'rosh',
+        propertyToRefresh: 'riskOfSeriousHarm',
+        validator: validateRosh,
+        inputDisplayValues: inputDisplayValuesRosh,
       }
     case 'address-details':
       return {

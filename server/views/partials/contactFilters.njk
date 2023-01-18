@@ -65,6 +65,7 @@
             errorMessage: errorMessage(errors.dateTo)
         }) }}
         {% if caseSummary.filters.contactTypes.contactTypeGroups.length %}
+            <div>
             <fieldset class="govuk-fieldset">
                 <legend class='govuk-fieldset__legend govuk-fieldset__legend--s'>Contact types</legend>
                 {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
@@ -109,6 +110,7 @@
                     </details>
                 {% endfor %}
             </fieldset>
+            </div>
         {% endif %}
     {% endset -%}
     <div class='govuk-!-margin-bottom-4'>

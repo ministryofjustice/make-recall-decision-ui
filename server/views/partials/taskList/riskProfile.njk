@@ -3,6 +3,13 @@
         Risk profile
     </h2>
     <ul class="moj-task-list__items">
+        {% if flags.flagRoshPagePartA == true %}
+        <li class="moj-task-list__item">
+            <a class="moj-task-list__task-name"
+               href="{{ changeLinkUrl({ pageUrlSlug: 'rosh', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.rosh }}</a>
+            {{ taskStatus({ hasData: taskCompleteness.statuses.currentRoshForPartA }) }}
+        </li>
+        {% endif %}
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name"
                href="{{ changeLinkUrl({ pageUrlSlug: 'mappa', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.mappa }}</a>

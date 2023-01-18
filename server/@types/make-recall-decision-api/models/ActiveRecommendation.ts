@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { ManagerRecallDecision } from './ManagerRecallDecision';
 import type { RecallConsidered } from './RecallConsidered';
 import type { RecallType } from './RecallType';
 
@@ -13,6 +14,7 @@ export type ActiveRecommendation = {
     recallType?: RecallType;
     recallConsideredList?: Array<RecallConsidered>;
     status?: ActiveRecommendation.status;
+    managerRecallDecision?: ManagerRecallDecision;
 };
 
 export namespace ActiveRecommendation {

@@ -56,6 +56,7 @@ export const strings = {
     missingRecallConsideredDetail: "Enter details about why you're considering a recall",
     noManagerRecallTypeSelected: 'Select whether you recommend a recall or not',
     missingManagerRecallTypeDetail: 'You must explain your decision',
+    missingRosh: 'Select a RoSH level for the risk to',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -97,6 +98,7 @@ export const strings = {
     offenceAnalysis: 'Offence analysis',
     addressDetails: 'Address details',
     mappa: 'MAPPA for {{ fullName }}',
+    rosh: 'Current risk of serious harm',
     previousReleases: 'Previous releases',
     addPreviousRelease: 'Add previous release',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',

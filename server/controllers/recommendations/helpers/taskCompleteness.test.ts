@@ -65,8 +65,20 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(recallProperties, true),
-        isIndeterminateSentence: true,
-        indeterminateSentenceType: true,
+        ...setAllProperties(indeterminateSentenceProperties, true),
+      })
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('all complete (with feature flag flagRoshPagePartA)', () => {
+      const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse, {
+        flagRoshPagePartA: true,
+      })
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, true),
+        ...setAllProperties(recallProperties, true),
+        ...setAllProperties(indeterminateSentenceProperties, true),
+        currentRoshForPartA: true,
       })
       expect(areAllComplete).toEqual(true)
     })
@@ -79,6 +91,22 @@ describe('taskCompleteness', () => {
         ...setAllProperties(indeterminateSentenceProperties, false),
         isIndeterminateSentence: true,
         recallType: true,
+      })
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('incomplete (with feature flag flagRoshPagePartA)', () => {
+      const { statuses, areAllComplete } = taskCompleteness(
+        { ...recommendationResponse, currentRoshForPartA: null } as RecommendationResponse,
+        {
+          flagRoshPagePartA: true,
+        }
+      )
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, true),
+        ...setAllProperties(recallProperties, true),
+        ...setAllProperties(indeterminateSentenceProperties, true),
+        currentRoshForPartA: false,
       })
       expect(areAllComplete).toEqual(false)
     })

@@ -635,5 +635,33 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
       cy.getElement('Unknown MAPPA').should('exist')
     })
+
+    it('Current risk of serious harm', () => {
+      cy.signIn()
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, currentRoshForPartA: null },
+      })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rosh`)
+      // RoSH table
+      cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
+      cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Children' }).then(rowValues => {
+        expect(rowValues).to.deep.eq(['Medium', 'Low'])
+      })
+      cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Public' }).then(rowValues => {
+        expect(rowValues).to.deep.eq(['High', 'Very high'])
+      })
+      cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Known adult' }).then(
+        rowValues => {
+          expect(rowValues).to.deep.eq(['High', 'Medium'])
+        }
+      )
+      cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Staff' }).then(rowValues => {
+        expect(rowValues).to.deep.eq(['Very high', 'High'])
+      })
+      cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Prisoners' }).then(rowValues => {
+        expect(rowValues).to.deep.eq(['N/A', 'Medium'])
+      })
+    })
   })
 })

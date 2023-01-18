@@ -14,6 +14,7 @@ import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import { yesNo } from './yesNo'
 import { recallTypeManager } from '../managerRecordDecision/formOptions'
+import { roshLevels } from '../rosh/formOptions'
 
 export const formOptions = {
   recallType,
@@ -31,6 +32,7 @@ export const formOptions = {
   hasVictimsInContactScheme,
   isUnderIntegratedOffenderManagement,
   recallTypeManager,
+  roshLevels,
 }
 
 export const isValueValid = (val: string, optionId: string) =>
