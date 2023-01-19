@@ -19,7 +19,7 @@
 
                 <input type="hidden" name="isIndeterminateSentence" value="{{ "1" if recommendation.isIndeterminateSentence else "0"}}" />
                 <input type="hidden" name="currentSavedValue" value="{{ inputDisplayValues.value }}" />
-                <div class="govuk-caption-l">Circumstances</div>
+
                 {{ govukRadios({
                     idPrefix: "isExtendedSentence",
                     name: "isExtendedSentence",

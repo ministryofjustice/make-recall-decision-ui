@@ -18,7 +18,7 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                <div class="govuk-caption-l">Decision not to recall</div>
+
                 <h1 class='govuk-heading-l'>Why do you think {{ recommendation.personOnProbation.name }} should not be recalled?</h1>
                 <p class='govuk-body'>These answers will go into the decision not to recall letter. Make sure you use ‘I’ and ‘you’ in your answers.</p>
                 {{ govukTextarea({
