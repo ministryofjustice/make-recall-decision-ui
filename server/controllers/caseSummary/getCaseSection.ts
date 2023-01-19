@@ -84,10 +84,14 @@ export const getCaseSection = async (
     case 'contact-history':
       sectionLabel = 'Contact history'
       caseSummaryRaw = await fetchFromCacheOrApi({
-        fetchDataFn: () =>
-          getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token, {
+        fetchDataFn: async () => {
+          startTime = performance.now()
+          const response = await getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token, {
             flagShowSystemGenerated: true,
-          }),
+          })
+          appInsightsTimingMetric({ name: 'getCaseContactHistory', startTime })
+          return response
+        },
         checkWhetherToCacheDataFn: apiResponse => !isCaseRestrictedOrExcluded(apiResponse.userAccessResponse),
         userId,
         redisKey: `contactHistory:${trimmedCrn}`,
