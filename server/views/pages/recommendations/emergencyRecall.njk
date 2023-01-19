@@ -18,7 +18,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
-                <div class="govuk-caption-l">Circumstances</div>
+
                 {{ govukRadios({
                     idPrefix: "isThisAnEmergencyRecall",
                     name: "isThisAnEmergencyRecall",

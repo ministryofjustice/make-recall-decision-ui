@@ -16,7 +16,7 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <div class="govuk-caption-l">Confirm details for {{ recommendation.personOnProbation.name }}</div>
+
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 {{ govukDateInput({
                     id: "previousReleaseDate",
