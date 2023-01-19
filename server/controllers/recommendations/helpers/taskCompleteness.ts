@@ -23,7 +23,7 @@ const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
   return recommendation.previousReleases?.hasBeenReleasedPreviously === false
 }
 
-export const taskCompleteness = (recommendation: RecommendationResponse, _featureFlags?: FeatureFlags) => {
+export const taskCompleteness = (recommendation: RecommendationResponse, featureFlags?: FeatureFlags) => {
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
     recommendation.recallType?.selected?.value
   )
@@ -52,6 +52,11 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
     mappa: recommendation.personOnProbation?.mappa?.hasBeenReviewed === true,
     previousReleases: isPreviousReleasesComplete(recommendation),
+    ...(featureFlags?.flagRoshPagePartA === true
+      ? {
+          currentRoshForPartA: isNotNullOrUndefined(recommendation.currentRoshForPartA),
+        }
+      : {}),
   }
 
   const noRecallStatuses = {

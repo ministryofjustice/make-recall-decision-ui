@@ -191,10 +191,12 @@
       ]
     },
     "additionalLicenceConditions": {
-      "selectedOptions": [{
-        "mainCatCode": "NLC5",
-        "subCatCode": "NST14"
-      }],
+      "selectedOptions": [
+        {
+          "mainCatCode": "NLC5",
+          "subCatCode": "NST14"
+        }
+      ],
       "allOptions": [
         {
           "mainCatCode": "NLC5",
@@ -310,10 +312,37 @@
     {
       "createdDate": "2022-04-24T20:39:00.000Z",
       "userName": "Bill",
-      "recallConsideredDetail": "There has been a change in behaviour, I'm now considering a recall."
+      "recallConsideredDetail": "There has been a change in behaviour, I'm now considering a recall.",
+      "id": 1
     }
   ],
   "managerRecallDecision": {
     "isSentToDelius": true
+  },
+  "currentRoshForPartA": {
+    "riskToChildren": "LOW",
+    "riskToPublic": "HIGH",
+    "riskToKnownAdult": "MEDIUM",
+    "riskToStaff": "VERY_HIGH",
+    "riskToPrisoners": "NOT_APPLICABLE"
+  },
+  "roshSummary": {
+    "lastUpdatedDate": "2021-10-09T01:02:03.123Z",
+    "riskOfSeriousHarm": {
+      "overallRisk": "VERY_HIGH",
+      "riskInCommunity": {
+        "riskToChildren": "MEDIUM",
+        "riskToPublic": "HIGH",
+        "riskToKnownAdult": "HIGH",
+        "riskToStaff": "VERY_HIGH"
+      },
+      "riskInCustody": {
+        "riskToChildren": "LOW",
+        "riskToPublic": "VERY_HIGH",
+        "riskToKnownAdult": "MEDIUM",
+        "riskToStaff": "HIGH",
+        "riskToPrisoners": "MEDIUM"
+      }
+    }
   }
 }

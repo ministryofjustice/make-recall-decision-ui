@@ -390,4 +390,34 @@ context('Make a recommendation - form validation', () => {
       errorText: 'Select whether Paula Smith has been released previously',
     })
   })
+
+  it('Current risk of serious harm', () => {
+    cy.signIn()
+    cy.task('updateRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, currentRoshForPartA: null },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/rosh`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'riskToChildren',
+      errorText: 'Select a RoSH level for the risk to children',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'riskToPublic',
+      errorText: 'Select a RoSH level for the risk to the public',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'riskToKnownAdult',
+      errorText: 'Select a RoSH level for the risk to a known adult',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'riskToStaff',
+      errorText: 'Select a RoSH level for the risk to staff',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'riskToPrisoners',
+      errorText: 'Select a RoSH level for the risk to prisoners',
+    })
+  })
 })

@@ -36,7 +36,7 @@ $fontSize: 19;
     @include govuk-font($size: $fontSize);
 
     @include govuk-media-query($from: desktop) {
-      max-width: 50%;
+      max-width: 40%;
       text-align: right;
     }
     .moj-badge {

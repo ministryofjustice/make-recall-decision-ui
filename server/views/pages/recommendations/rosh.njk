@@ -1,0 +1,109 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: '/recommendations/' + recommendation.id + '/task-list#heading-risk-profile'
+        }) }}</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <h1 class='govuk-heading-l'>{{ pageTitles[page.id] }}</h1>
+                <p class='govuk-body'>Choose which level of risk should be put in the Part A.</p>
+                <div data-qa='roshTable' class='govuk-!-margin-bottom-8'>
+                {{ roshWidget({ riskOfSeriousHarm: recommendation.roshSummary if recommendation.roshSummary.error else recommendation.roshSummary.riskOfSeriousHarm, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: recommendation.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
+                </div>
+                {{ govukRadios({
+                    classes: "govuk-radios--inline govuk-radios--small",
+                    idPrefix: "riskToChildren",
+                    name: "riskToChildren",
+                    fieldset: {
+                        legend: {
+                            text: "Risk to children",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.roshLevels,
+                        currentValues: inputDisplayValues.riskToChildren
+                    }),
+                    errorMessage: errorMessage(errors.riskToChildren)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline govuk-radios--small",
+                    idPrefix: "riskToPublic",
+                    name: "riskToPublic",
+                    fieldset: {
+                        legend: {
+                            text: "Risk to the public",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.roshLevels,
+                        currentValues: inputDisplayValues.riskToPublic
+                    }),
+                    errorMessage: errorMessage(errors.riskToPublic)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline govuk-radios--small",
+                    idPrefix: "riskToKnownAdult",
+                    name: "riskToKnownAdult",
+                    fieldset: {
+                        legend: {
+                            text: "Risk to a known adult",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.roshLevels,
+                        currentValues: inputDisplayValues.riskToKnownAdult
+                    }),
+                    errorMessage: errorMessage(errors.riskToKnownAdult)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline govuk-radios--small",
+                    idPrefix: "riskToStaff",
+                    name: "riskToStaff",
+                    fieldset: {
+                        legend: {
+                            text: "Risk to staff",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.roshLevels,
+                        currentValues: inputDisplayValues.riskToStaff
+                    }),
+                    errorMessage: errorMessage(errors.riskToStaff)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline govuk-radios--small",
+                    idPrefix: "riskToPrisoners",
+                    name: "riskToPrisoners",
+                    fieldset: {
+                        legend: {
+                            text: "Risk to prisoners",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.roshLevels,
+                        currentValues: inputDisplayValues.riskToPrisoners
+                    }),
+                    errorMessage: errorMessage(errors.riskToPrisoners)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

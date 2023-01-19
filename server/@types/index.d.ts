@@ -152,6 +152,7 @@ export type PageId =
   | 'offenceDetails'
   | 'offenceAnalysis'
   | 'mappa'
+  | 'rosh'
   | 'addressDetails'
   | 'previousReleases'
   | 'addPreviousRelease'
