@@ -1,6 +1,6 @@
-import { InputDisplayValuesArgs } from '../../../@types'
 import { booleanToYesNo, getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
+import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
 export const inputDisplayValuesPreviousReleases = ({ errors = {}, apiValues }: InputDisplayValuesArgs) => {
   const inputDisplayValues = {

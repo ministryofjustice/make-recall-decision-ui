@@ -1,8 +1,9 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { isDefined, removeParamsFromQueryString, stripHtmlTags } from '../../../utils/utils'
-import { DecoratedContact, NamedFormError, ObjectMap } from '../../../@types'
+
 import { formatValidationErrorMessage, makeErrorObject } from '../../../utils/errors'
-import { ContactHistoryFilters } from '../../../@types/contactTypes'
+import { ContactHistoryFilters, DecoratedContact } from '../../../@types/contacts'
+import { NamedFormError } from '../../../@types/pagesForms'
 
 const MINIMUM_SEARCH_TERM_LENGTH = 2
 
@@ -67,7 +68,7 @@ export const filterContactsBySearch = ({
         text: searchTerm,
         href: removeParamsFromQueryString({
           paramsToRemove: [{ key: 'searchFilters', value: searchTerm }],
-          allParams: filters as unknown as ObjectMap<string | string[]>,
+          allParams: filters as unknown as Record<string, string | string[]>,
         }),
       }))
     }

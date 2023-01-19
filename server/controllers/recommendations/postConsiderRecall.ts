@@ -9,7 +9,7 @@ import { EVENTS } from '../../utils/constants'
 import { isPreprodOrProd, normalizeCrn } from '../../utils/utils'
 import { AuditService } from '../../services/auditService'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { FeatureFlags } from '../../@types'
+import { FeatureFlags } from '../../@types/featureFlags'
 
 const auditService = new AuditService()
 

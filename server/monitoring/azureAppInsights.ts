@@ -2,7 +2,8 @@ import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
 import { performance } from 'perf_hooks'
 import applicationVersion from '../applicationVersion'
-import { FeatureFlags, ObjectMap } from '../@types'
+
+import { FeatureFlags } from '../@types/featureFlags'
 
 function defaultName(): string {
   const {
@@ -39,7 +40,7 @@ export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
 export const appInsightsEvent = (
   eventName: string,
   userName: string,
-  eventData: ObjectMap<unknown>,
+  eventData: Record<string, unknown>,
   featureFlags: FeatureFlags
 ) => {
   if (defaultClient && eventName && featureFlags.flagExcludeFromAnalytics !== true) {

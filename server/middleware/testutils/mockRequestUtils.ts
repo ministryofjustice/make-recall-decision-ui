@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { SessionData } from 'express-session'
-import { ObjectMap } from '../../@types'
 
 export const mockReq = ({
   query = {},
@@ -14,11 +13,11 @@ export const mockReq = ({
   baseUrl,
   path = '/',
 }: {
-  body?: ObjectMap<string | boolean>
-  query?: ObjectMap<string | boolean>
-  params?: ObjectMap<string | boolean>
-  headers?: ObjectMap<string | boolean>
-  cookies?: ObjectMap<string>
+  body?: Record<string, string | boolean>
+  query?: Record<string, string | boolean>
+  params?: Record<string, string | boolean>
+  headers?: Record<string, string | boolean>
+  cookies?: Record<string, string>
   method?: string
   session?: SessionData
   originalUrl?: string
@@ -51,7 +50,7 @@ export const mockRes = ({
   send = jest.fn(),
   set = jest.fn(),
 }: {
-  locals?: ObjectMap<unknown>
+  locals?: Record<string, unknown>
   token?: string
   redirect?: jest.Mock
   render?: jest.Mock

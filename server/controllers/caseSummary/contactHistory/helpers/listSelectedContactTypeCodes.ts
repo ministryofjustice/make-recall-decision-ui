@@ -1,4 +1,4 @@
-import { ContactHistoryFilters } from '../../../../@types/contactTypes'
+import { ContactHistoryFilters } from '../../../../@types/contacts'
 import { wrapValueInArray } from '../../../../utils/utils'
 
 // from the contact types that the user selected, make a single array of codes

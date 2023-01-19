@@ -46,7 +46,7 @@ describe('store flash errors on request session (middleware)', () => {
   it('sets res.locals.unsavedValues if there are unsavedValues on the request session', () => {
     const errors = [{ name: 'crn', href: '#crn', text: '999' }]
     const unsavedValues = { crn: 'invalid CRN' }
-    const req = mockReq({ session: { errors, unsavedValues } as SessionData })
+    const req = mockReq({ session: { errors, unsavedValues } as unknown as SessionData })
     const res = mockRes()
     const next = jest.fn()
     getStoredSessionData(req, res, next)

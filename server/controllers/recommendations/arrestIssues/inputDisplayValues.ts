@@ -1,6 +1,6 @@
-import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types'
 import { booleanToYesNo, getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
+import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types/pagesForms'
 
 export const inputDisplayValuesArrestIssues = ({
   errors = {},

@@ -1,6 +1,6 @@
 import { routes } from '../../api/routes'
 import { stubFor } from './wiremock'
-import { CaseSectionId, ObjectMap } from '../../server/@types'
+import { CaseSectionId } from '../../server/@types/pagesForms'
 
 const mockGet = ({
   urlPathPattern,
@@ -9,7 +9,7 @@ const mockGet = ({
   response,
 }: {
   urlPathPattern: string
-  queryParams?: ObjectMap<unknown>
+  queryParams?: Record<string, unknown>
   statusCode: number
   response: unknown
 }) =>
@@ -95,7 +95,13 @@ export const getDownloadDocument = ({ contents, fileName, contentType }) =>
     },
   })
 
-export const createRecommendation = ({ statusCode, response }: { statusCode: number; response?: ObjectMap<unknown> }) =>
+export const createRecommendation = ({
+  statusCode,
+  response,
+}: {
+  statusCode: number
+  response?: Record<string, unknown>
+}) =>
   mockUpdate({
     urlPathPattern: routes.recommendations,
     statusCode,

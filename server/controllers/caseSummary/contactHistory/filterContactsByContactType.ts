@@ -1,6 +1,6 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { ContactGroupResponse } from '../../../@types/make-recall-decision-api/models/ContactGroupResponse'
-import { ContactHistoryFilters, ContactTypeGroupDecorated } from '../../../@types/contactTypes'
+import { ContactHistoryFilters, ContactTypeGroupDecorated } from '../../../@types/contacts'
 import { decorateSelectedFilters } from './helpers/decorateSelectedFilters'
 import { decorateGroups } from './helpers/decorateGroups'
 import { decorateAllContactTypes } from './helpers/decorateAllContactTypes'

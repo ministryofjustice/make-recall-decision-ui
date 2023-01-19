@@ -1,5 +1,5 @@
 import { dedupeList, groupListByValue, radioCheckboxItems, sortList } from './lists'
-import { ObjectMap } from '../@types'
+
 import { formOptions } from '../controllers/recommendations/formOptions/formOptions'
 
 describe('List utilities', () => {
@@ -72,7 +72,7 @@ describe('List utilities', () => {
 
     it('sorting is case insensitive', () => {
       const list = [{ name: 'bdd' }, { name: 'BDE' }]
-      const result = sortList<ObjectMap<string>>(list, 'name', true)
+      const result = sortList<Record<string, string>>(list, 'name', true)
       expect(result).toEqual([{ name: 'bdd' }, { name: 'BDE' }])
     })
 

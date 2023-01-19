@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 import { isCaseRestrictedOrExcluded, isPreprodOrProd, isString, validateCrn } from '../../utils/utils'
-import { CaseSectionId } from '../../@types'
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
 import { AuditService } from '../../services/auditService'
 import { AppError } from '../../AppError'
 import { strings } from '../../textStrings/en'
+import { CaseSectionId } from '../../@types/pagesForms'
 
 const auditService = new AuditService()
 

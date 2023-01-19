@@ -3,9 +3,11 @@ import RestClient from './restClient'
 import config from '../config'
 import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
-import { CaseSectionId, FeatureFlags, ObjectMap } from '../@types'
+
 import { CreateRecommendationRequest, RecommendationResponse } from '../@types/make-recall-decision-api'
 import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
+import { FeatureFlags } from '../@types/featureFlags'
+import { CaseSectionId } from '../@types/pagesForms'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -51,7 +53,7 @@ export const updateRecommendation = ({
   pathSuffix,
 }: {
   recommendationId: string
-  valuesToSave?: ObjectMap<unknown>
+  valuesToSave?: Record<string, unknown>
   token: string
   featureFlags?: FeatureFlags
   propertyToRefresh?: string

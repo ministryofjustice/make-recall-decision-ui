@@ -1,6 +1,5 @@
 import { ParsedQs } from 'qs'
 import { performance } from 'perf_hooks'
-import { CaseSectionId, FeatureFlags } from '../../@types'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/models/ContactHistoryResponse'
@@ -18,7 +17,9 @@ import { transformVulnerabilities } from './vulnerabilities/transformVulnerabili
 import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import { transformRecommendations } from './recommendations/transformRecommendations'
-import { ContactHistoryFilters } from '../../@types/contactTypes'
+import { ContactHistoryFilters } from '../../@types/contacts'
+import { FeatureFlags } from '../../@types/featureFlags'
+import { CaseSectionId } from '../../@types/pagesForms'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,

@@ -1,8 +1,8 @@
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags, validateCrn } from '../../../utils/utils'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateConsiderRecall = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors

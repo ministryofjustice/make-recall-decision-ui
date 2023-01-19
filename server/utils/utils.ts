@@ -2,9 +2,10 @@ import qs from 'qs'
 import { stripHtml } from 'string-strip-html'
 import config from '../config'
 import { Address } from '../@types/make-recall-decision-api/models/Address'
-import { FormError, ObjectMap } from '../@types'
+
 import { UserAccessResponse } from '../@types/make-recall-decision-api/models/UserAccessResponse'
 import { AppError } from '../AppError'
+import { FormError } from '../@types/pagesForms'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -82,7 +83,7 @@ export const removeParamsFromQueryString = ({
   allParams,
 }: {
   paramsToRemove: { key: string; value?: string }[]
-  allParams: ObjectMap<string | string[]>
+  allParams: Record<string, string | string[]>
 }) => {
   const updatedParams = {}
   Object.entries(allParams)

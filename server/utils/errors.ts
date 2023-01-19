@@ -1,10 +1,10 @@
-import { FormError, KeyedFormErrors, NamedFormError, ObjectMap } from '../@types'
 import { ValidationError } from '../@types/dates'
 import { MIN_VALUE_YEAR } from './dates/convert'
 import { listToString } from './utils'
 import { strings } from '../textStrings/en'
 import { SanitisedError } from '../sanitisedError'
 import { renderTemplateString } from './nunjucks'
+import { FormError, KeyedFormErrors, NamedFormError } from '../@types/pagesForms'
 
 export const makeErrorObject = ({
   id,
@@ -17,7 +17,7 @@ export const makeErrorObject = ({
   id: string
   name?: string
   text: string
-  values?: ObjectMap<string> | string
+  values?: Record<string, string> | string
   errorId?: string
   invalidParts?: string[]
 }): NamedFormError => ({
@@ -30,7 +30,7 @@ export const makeErrorObject = ({
 })
 
 export const transformErrorMessages = (errors: NamedFormError[]): KeyedFormErrors => {
-  const errorMap = errors.filter(Boolean).reduce((acc: ObjectMap<FormError>, curr: NamedFormError) => {
+  const errorMap = errors.filter(Boolean).reduce((acc: Record<string, FormError>, curr: NamedFormError) => {
     const { name, ...rest } = curr
     acc[name] = rest
     return acc
@@ -94,7 +94,7 @@ export const saveErrorWithDetails = ({ err, isProduction }: { err: SanitisedErro
 
 export const renderErrorMessages = (
   errors: KeyedFormErrors,
-  locals: ObjectMap<unknown>
+  locals: Record<string, unknown>
 ): KeyedFormErrors | undefined => {
   if (!errors) {
     return undefined

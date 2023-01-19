@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { DatePartNames, DatePartsParsed, DateTimePart, ValidationError } from '../../@types/dates'
-import { ObjectMap } from '../../@types'
+
 import { padWithZeroes } from './format'
 import logger from '../../../logger'
 import { areStringArraysTheSame, isDefined, isEmptyStringOrWhitespace } from '../utils'
@@ -46,7 +46,7 @@ const convertDatePartsToNumbers = (parts: DateTimePart[], options: Options) => {
 export const MIN_VALUE_YEAR = 1900
 
 export const convertGmtDatePartsToUtc = (
-  { year, month, day, hour, minute }: ObjectMap<string | undefined>,
+  { year, month, day, hour, minute }: Record<string, string | undefined>,
   options: Options = {}
 ): string | ValidationError => {
   if ([year, month, day, hour, minute].every(part => !isDefined(part) || part === '')) {

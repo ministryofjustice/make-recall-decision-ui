@@ -1,4 +1,4 @@
-import { NamedFormError } from '../index'
+import { NamedFormError } from '../pagesForms'
 
 export default {}
 
@@ -8,7 +8,7 @@ declare module 'express-session' {
     returnTo: string
     nowInMinutes: number
     errors?: NamedFormError[]
-    unsavedValues?: ObjectMap<unknown>
+    unsavedValues?: Record<string, unknown>
   }
 }
 

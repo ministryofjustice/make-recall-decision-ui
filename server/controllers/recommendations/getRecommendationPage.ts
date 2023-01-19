@@ -12,7 +12,7 @@ import { checkForRedirectPath } from './helpers/urls'
 import { strings } from '../../textStrings/en'
 import { AuditService } from '../../services/auditService'
 import { updatePageReviewedStatus } from './helpers/updatePageReviewedStatus'
-import { RecommendationDecorated } from '../../@types'
+import { RecommendationDecorated } from '../../@types/api'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 

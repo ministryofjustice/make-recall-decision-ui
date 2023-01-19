@@ -1,7 +1,7 @@
-import { InputDisplayValuesArgs } from '../../../@types'
 import { getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { LocalPoliceContact } from '../../../@types/make-recall-decision-api/models/LocalPoliceContact'
+import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
 export const inputDisplayValuesLocalPoliceContactDetails = ({
   errors,

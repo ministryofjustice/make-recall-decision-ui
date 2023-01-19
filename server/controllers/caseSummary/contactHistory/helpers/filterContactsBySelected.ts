@@ -1,4 +1,4 @@
-import { ContactTypeDecorated } from '../../../../@types/contactTypes'
+import { ContactTypeDecorated } from '../../../../@types/contacts'
 import { ContactSummaryResponse } from '../../../../@types/make-recall-decision-api'
 import logger from '../../../../../logger'
 

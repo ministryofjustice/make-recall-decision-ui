@@ -1,5 +1,5 @@
-import { InputDisplayValuesArgs } from '../../../@types'
 import { isDefined } from '../../../utils/utils'
+import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
 export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: InputDisplayValuesArgs) => {
   if (!isDefined(errors) && apiValues.licenceConditionsBreached) {
