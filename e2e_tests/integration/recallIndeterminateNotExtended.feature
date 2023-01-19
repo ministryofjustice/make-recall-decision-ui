@@ -31,5 +31,6 @@ Feature: Recall (indeterminate)
     And Maria enters no previous releases
     And Maria confirms "Yes" to a risk of contraband
     And Maria reviews the MAPPA details
+    And Maria enters current RoSH levels
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the indeterminate recall with police custody

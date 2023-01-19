@@ -28,5 +28,6 @@ Feature: Standard (determinate)
     And Maria enters the offence analysis
     And Maria enters no previous releases
     And Maria reviews the MAPPA details
+    And Maria enters current RoSH levels
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the standard recall

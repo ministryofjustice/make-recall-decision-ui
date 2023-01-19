@@ -5,7 +5,7 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 export const featureFlagsDefaults = {
   flagRoshPagePartA: {
     label: 'Page to enter RoSH levels for Part A Q15',
-    default: false,
+    default: true,
   },
   flagShowSystemGenerated: {
     label: 'Option to include system generated contacts in Contact history',
