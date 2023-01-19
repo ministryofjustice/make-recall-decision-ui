@@ -1,4 +1,3 @@
-import { PageMetaData } from '../../../@types'
 import { AppError } from '../../../AppError'
 import { validateRecallType } from '../recallType/formValidator'
 import { validateCustodyStatus } from '../custodyStatus/formValidator'
@@ -59,6 +58,7 @@ import { inputDisplayValuesManagerRecordDecision } from '../managerRecordDecisio
 import { validateManagerRecordDecisionDelius } from '../managerRecordDecisionDelius/formValidator'
 import { validateRosh } from '../rosh/formValidator'
 import { inputDisplayValuesRosh } from '../rosh/inputDisplayValues'
+import { PageMetaData } from '../../../@types/pagesForms'
 
 /* The PageMetaData properties explained:
  * id - used as a key to get the page title. Also the name of the nunjucks HTML template

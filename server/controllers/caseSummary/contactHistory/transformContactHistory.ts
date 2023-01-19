@@ -1,12 +1,12 @@
-import { FeatureFlags } from '../../../@types'
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { filterContactsByDateRange } from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
 import { filterContactsByContactType } from './filterContactsByContactType'
 import { filterContactsBySearch } from './filterContactsBySearch'
 import { removeFutureContacts } from './removeFutureContacts'
-import { ContactHistoryFilters } from '../../../@types/contactTypes'
+import { ContactHistoryFilters } from '../../../@types/contacts'
 import { filterContactsBySystemGenerated } from './filterContactsBySystemGenerated'
+import { FeatureFlags } from '../../../@types/featureFlags'
 
 export const transformContactHistory = ({
   caseSummary,

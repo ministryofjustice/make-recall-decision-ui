@@ -10,7 +10,7 @@ export type Message = {
     body?: string;
     attributes?: Record<string, string>;
     messageAttributes?: Record<string, MessageAttributeValue>;
-    md5OfBody?: string;
     md5OfMessageAttributes?: string;
+    md5OfBody?: string;
 };
 

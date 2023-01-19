@@ -1,4 +1,3 @@
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
@@ -6,6 +5,7 @@ import { isInCustody } from '../helpers/isInCustody'
 import { CustodyStatus } from '../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors

@@ -1,8 +1,9 @@
 import nunjucks from 'nunjucks'
 import { DateTime } from 'luxon'
 import { DatePartsParsed } from '../@types/dates'
-import { FormError, ObjectMap, UrlInfo } from '../@types'
-import { SelectedFilterItem } from '../@types/contactTypes'
+
+import { SelectedFilterItem } from '../@types/contacts'
+import { FormError, UrlInfo } from '../@types/pagesForms'
 
 export const dateTimeItems = (fieldName: string, values: DatePartsParsed) => {
   const items = [
@@ -43,7 +44,7 @@ export const selectedFilterItems = ({ items, urlInfo }: { items: SelectedFilterI
 
 export const removeUndefinedListItems = (items: unknown[]) => items.filter(Boolean)
 
-export const renderTemplateString = (str: string, data: ObjectMap<unknown>): string => {
+export const renderTemplateString = (str: string, data: Record<string, unknown>): string => {
   const env = nunjucks.configure({ autoescape: false })
   return env.renderString(str, data)
 }
@@ -94,7 +95,13 @@ export const formatDateFilterQueryString = (isoDate: string) => {
 }
 
 // does the array contain an object that has all the specified properties
-export const isObjectInArray = ({ properties, arr }: { properties: ObjectMap<unknown>; arr?: ObjectMap<unknown>[] }) =>
+export const isObjectInArray = ({
+  properties,
+  arr,
+}: {
+  properties: Record<string, unknown>
+  arr?: Record<string, unknown>[]
+}) =>
   Array.isArray(arr) && properties
     ? arr.some(item => {
         return Object.entries(properties).every(([key, val]) => item[key] === val)

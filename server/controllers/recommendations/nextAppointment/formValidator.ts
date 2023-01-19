@@ -1,4 +1,3 @@
-import { FormValidatorArgs, FormValidatorReturn, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
@@ -8,6 +7,7 @@ import { isPhoneValid } from '../../../utils/validate-formats'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { nextPageLinkUrl } from '../helpers/urls'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateNextAppointment = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -22,7 +22,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
     hour: requestBody['dateTimeOfAppointment-hour'],
     minute: requestBody['dateTimeOfAppointment-minute'],
   }
-  const dateTimeOfAppointmentIso = convertGmtDatePartsToUtc(dateTimeOfAppointmentParts as ObjectMap<string>, {
+  const dateTimeOfAppointmentIso = convertGmtDatePartsToUtc(dateTimeOfAppointmentParts as Record<string, string>, {
     includeTime: true,
     dateMustBeInFuture: true,
     validatePartLengths: false,
@@ -60,7 +60,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
           ),
           errorId: (dateTimeOfAppointmentIso as ValidationError).errorId,
           invalidParts: (dateTimeOfAppointmentIso as ValidationError).invalidParts,
-          values: dateTimeOfAppointmentParts as ObjectMap<string>,
+          values: dateTimeOfAppointmentParts as Record<string, string>,
         })
       )
     }

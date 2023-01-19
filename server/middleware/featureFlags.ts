@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { FeatureFlagDefault, ObjectMap } from '../@types'
+
+import { FeatureFlagDefault } from '../@types/featureFlags'
 
 export const featureFlagsDefaults = {
   flagRoshPagePartA: {
@@ -37,7 +38,7 @@ export const featureFlagsDefaults = {
 }
 
 export const readFeatureFlags =
-  (flags: ObjectMap<FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
+  (flags: Record<string, FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
     res.locals.flags = Object.keys(flags).reduce((acc, key) => {
       acc[key] = flags[key].default
       return acc

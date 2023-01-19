@@ -1,7 +1,7 @@
-import { InputDisplayValuesArgs } from '../../../@types'
 import { getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { ManagerRecallDecisionTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/ManagerRecallDecisionTypeSelectedValue'
+import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
 export const inputDisplayValuesManagerRecordDecision = ({
   errors = {},

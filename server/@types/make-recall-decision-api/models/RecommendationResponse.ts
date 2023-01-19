@@ -18,6 +18,7 @@ import type { ReasonsForNoRecall } from './ReasonsForNoRecall';
 import type { RecallConsidered } from './RecallConsidered';
 import type { RecallType } from './RecallType';
 import type { RoshData } from './RoshData';
+import type { RoshSummary } from './RoshSummary';
 import type { SelectedWithDetails } from './SelectedWithDetails';
 import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
 import type { UserAccessResponse } from './UserAccessResponse';
@@ -70,6 +71,7 @@ export type RecommendationResponse = {
     previousRecalls?: PreviousRecalls;
     recallConsideredList?: Array<RecallConsidered>;
     currentRoshForPartA?: RoshData;
+    roshSummary?: RoshSummary;
 };
 
 export namespace RecommendationResponse {

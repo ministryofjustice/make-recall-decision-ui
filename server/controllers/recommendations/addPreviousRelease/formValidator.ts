@@ -1,9 +1,9 @@
-import { FormValidatorArgs, FormValidatorReturn, ObjectMap } from '../../../@types'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateAddPreviousRelease = async ({
   requestBody,
@@ -18,7 +18,7 @@ export const validateAddPreviousRelease = async ({
     month: requestBody['previousReleaseDate-month'],
     year: requestBody['previousReleaseDate-year'],
   }
-  const previousReleaseDateIso = convertGmtDatePartsToUtc(previousReleaseDateParts as ObjectMap<string>, {
+  const previousReleaseDateIso = convertGmtDatePartsToUtc(previousReleaseDateParts as Record<string, string>, {
     includeTime: false,
     dateMustBeInPast: true,
     validatePartLengths: false,
@@ -33,7 +33,7 @@ export const validateAddPreviousRelease = async ({
         id: invalidDateInputPart(previousReleaseDateIso as ValidationError, 'previousReleaseDate'),
         text: formatValidationErrorMessage(previousReleaseDateIso as ValidationError, 'previous release date'),
         errorId: (previousReleaseDateIso as ValidationError).errorId,
-        values: previousReleaseDateParts as ObjectMap<string>,
+        values: previousReleaseDateParts as Record<string, string>,
       })
     )
     const unsavedValues = {

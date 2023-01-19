@@ -1,4 +1,3 @@
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
@@ -8,6 +7,7 @@ import { fetchAndTransformLicenceConditions } from './transform'
 import { TransformedLicenceConditionsResponse } from '../../caseSummary/licenceConditions/transformLicenceConditions'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 

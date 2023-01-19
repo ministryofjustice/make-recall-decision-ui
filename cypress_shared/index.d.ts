@@ -1,5 +1,3 @@
-import { ObjectMap } from '../server/@types'
-
 export {}
 
 declare global {
@@ -61,7 +59,7 @@ declare global {
 
       contactTypeFiltersTotalCount(): Chainable<number>
 
-      interceptGoogleAnalyticsEvent(query: ObjectMap<string>, id: string): Chainable<void>
+      interceptGoogleAnalyticsEvent(query: Record<string, string>, id: string): Chainable<void>
 
       getDateAttribute(propertyName: string): Chainable<string>
 

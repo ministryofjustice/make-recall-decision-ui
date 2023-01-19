@@ -1,5 +1,5 @@
 import { decorateSelectedFilters } from './decorateSelectedFilters'
-import { ContactHistoryFilters } from '../../../../@types/contactTypes'
+import { ContactHistoryFilters } from '../../../../@types/contacts'
 
 describe('decorateSelectedFilters', () => {
   it('returns filter data for a non-system generated contact', () => {

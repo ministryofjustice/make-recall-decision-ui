@@ -1,8 +1,8 @@
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types'
 import { makeErrorObject } from '../../../utils/errors'
 import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateResponseToProbation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors

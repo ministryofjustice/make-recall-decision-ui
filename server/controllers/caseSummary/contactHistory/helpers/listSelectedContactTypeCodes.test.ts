@@ -1,4 +1,4 @@
-import { ContactHistoryFilters } from '../../../../@types/contactTypes'
+import { ContactHistoryFilters } from '../../../../@types/contacts'
 import { listSelectedContactTypeCodes } from './listSelectedContactTypeCodes'
 
 describe('listSelectedContactTypeCodes', () => {

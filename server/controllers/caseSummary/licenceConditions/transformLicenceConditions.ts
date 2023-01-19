@@ -8,7 +8,7 @@ import {
 import { sortListByDateField } from '../../../utils/dates'
 import { formOptions } from '../../recommendations/formOptions/formOptions'
 import { sortList } from '../../../utils/lists'
-import { FormOption } from '../../../@types'
+import { FormOption } from '../../../@types/pagesForms'
 
 const transformConviction = (conviction: ConvictionResponse) => {
   const licenceConditions = conviction.licenceConditions

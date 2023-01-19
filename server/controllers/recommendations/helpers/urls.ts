@@ -1,8 +1,9 @@
-import { FeatureFlags, UrlInfo } from '../../../@types'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { routeUrls } from '../../../routes/routeUrls'
+import { FeatureFlags } from '../../../@types/featureFlags'
+import { UrlInfo } from '../../../@types/pagesForms'
 
 export const nextPageLinkUrl = ({
   nextPageId,

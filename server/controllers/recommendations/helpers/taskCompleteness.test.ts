@@ -5,9 +5,8 @@ import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api/models/VictimsInContactScheme'
-import { ObjectMap } from '../../../@types'
 
-export const setAllProperties = (object: ObjectMap<unknown>, valueToSet: unknown) => {
+export const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) => {
   const copy = { ...object }
   Object.keys(object).forEach(key => {
     copy[key] = valueToSet

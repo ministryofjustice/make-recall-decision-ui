@@ -1,6 +1,6 @@
 import { recallType } from '../recallType/formOptions'
 import { custodyStatus } from '../custodyStatus/formOptions'
-import { ObjectMap, UiListItem } from '../../../@types'
+
 import { standardLicenceConditions } from './licenceConditions'
 import { hasVictimsInContactScheme } from '../victimContactScheme/formOptions'
 import { alternativesToRecallTried } from '../alternativesToRecallTried/formOptions'
@@ -15,6 +15,7 @@ import { renderTemplateString } from '../../../utils/nunjucks'
 import { yesNo } from './yesNo'
 import { recallTypeManager } from '../managerRecordDecision/formOptions'
 import { roshLevels } from '../rosh/formOptions'
+import { UiListItem } from '../../../@types/pagesForms'
 
 export const formOptions = {
   recallType,
@@ -41,7 +42,7 @@ export const isValueValid = (val: string, optionId: string) =>
 export const optionTextFromValue = (val: string, optionId: string) =>
   formOptions[optionId].find((option: UiListItem) => option.value === val)?.text
 
-export const renderFormOptions = (renderParams: ObjectMap<string>): ObjectMap<UiListItem[]> => {
+export const renderFormOptions = (renderParams: Record<string, string>): Record<string, UiListItem[]> => {
   const copy = {}
   Object.keys(formOptions).forEach(key => {
     const options = formOptions[key]

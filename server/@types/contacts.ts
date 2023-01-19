@@ -1,4 +1,4 @@
-import { ObjectMap } from './index'
+import { ContactSummaryResponse } from './make-recall-decision-api'
 
 export interface ContactTypeDecorated {
   code: string
@@ -13,7 +13,7 @@ export interface ContactTypeCode {
   html: string
   count: number
   systemGenerated: boolean
-  attributes: ObjectMap<string>
+  attributes: Record<string, string>
 }
 
 export interface ContactTypeGroupDecorated {
@@ -39,4 +39,14 @@ export interface ContactHistoryFilters {
 export interface SelectedFilterItem {
   text: string
   href: string
+}
+
+export interface DecoratedContact extends ContactSummaryResponse {
+  startDate: string
+  searchTextMatch?: {
+    notes: boolean
+    description: boolean
+    outcome: boolean
+    enforcementAction: boolean
+  }
 }

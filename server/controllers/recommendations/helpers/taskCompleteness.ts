@@ -1,7 +1,7 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { isNotNullOrUndefined } from '../../../utils/utils'
-import { FeatureFlags } from '../../../@types'
+import { FeatureFlags } from '../../../@types/featureFlags'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {

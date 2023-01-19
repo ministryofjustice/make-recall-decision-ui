@@ -1,4 +1,4 @@
-import { UiListItem } from '../../../@types'
+import { UiListItem } from '../../../@types/pagesForms'
 
 export const getDisplayValueForOption = ({
   value,

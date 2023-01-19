@@ -1,7 +1,6 @@
-import { ObjectMap } from '../../../@types'
 import { renderTemplateString } from '../../../utils/nunjucks'
 
-export const renderStrings = (strings: ObjectMap<string>, stringRenderParams: ObjectMap<string>) => {
+export const renderStrings = (strings: Record<string, string>, stringRenderParams: Record<string, string>) => {
   const copy = { ...strings }
   Object.entries(copy).forEach(([key, value]) => {
     copy[key] = renderTemplateString(value, stringRenderParams)
