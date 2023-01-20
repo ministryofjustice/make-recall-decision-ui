@@ -202,8 +202,8 @@ context('Contact history', () => {
 
     it('by contact type group', () => {
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
-      cy.contains('Appointments').click()
-      cy.selectCheckboxes('Appointments', ['Responsible Officer Change'])
+      cy.contains('Appointments (5 contacts)').click()
+      cy.selectCheckboxes('Appointments', ['Responsible Officer Change (1 contact)'])
       cy.clickButton('Apply filters')
       cy.getElement('1 contact').should('exist')
     })

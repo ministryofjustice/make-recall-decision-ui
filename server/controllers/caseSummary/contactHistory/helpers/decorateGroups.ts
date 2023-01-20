@@ -1,6 +1,7 @@
 import { ContactGroupResponse } from '../../../../@types/make-recall-decision-api/models/ContactGroupResponse'
 import { sortList } from '../../../../utils/lists'
 import { ContactTypeCode, ContactTypeDecorated } from '../../../../@types/contacts'
+import { countLabelSuffix } from '../../../../utils/nunjucks'
 
 // add data for each group and its contacts, for display as filter checkboxes
 export const decorateGroups = ({
@@ -23,7 +24,9 @@ export const decorateGroups = ({
           ;(systemGenerated ? contactTypeCodesSystemGenerated : contactTypeCodes).push({
             value: contactTypeCode,
             description,
-            html: `${description} <span class='text-secondary'>(<span data-qa='contact-count'>${count}</span>)</span>`,
+            html: `${description} <span class='text-secondary'>(<span data-qa='contact-count'>${count}<span class='govuk-visually-hidden'> ${countLabelSuffix(
+              { count, label: 'contact' }
+            )}</span></span>)</span>`,
             count,
             systemGenerated,
             attributes: {
