@@ -33,7 +33,7 @@ When('Maria downloads the Part A and confirms the standard recall', () => {
 When('Maria adds licence conditions for the fixed term recall', () => {
   cy.log('========= Fixed term licence conditions')
   cy.selectRadio('Fixed term recall', 'Yes')
-  cy.fillInput('Give details', 'Additional licence condition for fixed term recall...')
+  cy.fillInput('Give details on fixed term recall', 'Additional licence condition for fixed term recall...')
   cy.clickButton('Continue')
 })
 

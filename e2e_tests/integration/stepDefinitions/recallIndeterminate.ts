@@ -169,11 +169,10 @@ When('Maria confirms answers were saved', () => {
   cy.getSelectableOptionByLabel('What alternatives to recall have been tried already?', 'Drug testing').should(
     'be.checked'
   )
-  cy.getTextInputValue('Give details', { parent: '#conditional-INCREASED_FREQUENCY' }).should(
-    'equal',
-    'Details on reporting'
-  )
-  cy.getTextInputValue('Give details', { parent: '#conditional-DRUG_TESTING' }).should(
+  cy.getTextInputValue('Give details on Increased frequency of reporting', {
+    parent: '#conditional-INCREASED_FREQUENCY',
+  }).should('equal', 'Details on reporting')
+  cy.getTextInputValue('Give details on Drug testing', { parent: '#conditional-DRUG_TESTING' }).should(
     'equal',
     'Details on drug testing'
   )
