@@ -5,15 +5,15 @@
     <ul class="moj-task-list__items">
         {% if flags.flagRoshPagePartA == true %}
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name"
+            <a class="moj-task-list__task-name" aria-describedby='task-list-status-currentRoshForPartA'
                href="{{ changeLinkUrl({ pageUrlSlug: 'rosh', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.rosh }}</a>
-            {{ taskStatus({ hasData: taskCompleteness.statuses.currentRoshForPartA }) }}
+            <span id='task-list-status-currentRoshForPartA'>{{ taskStatus({ hasData: taskCompleteness.statuses.currentRoshForPartA }) }}</span>
         </li>
         {% endif %}
         <li class="moj-task-list__item">
-            <a class="moj-task-list__task-name"
+            <a class="moj-task-list__task-name" aria-describedby='task-list-status-mappa'
                href="{{ changeLinkUrl({ pageUrlSlug: 'mappa', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.mappa }}</a>
-            {{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.mappa }) }}
+            <span id='task-list-status-mappa'>{{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.mappa }) }}</span>
         </li>
     </ul>
 </li>
