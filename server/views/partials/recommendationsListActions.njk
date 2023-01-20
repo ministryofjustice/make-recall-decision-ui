@@ -26,10 +26,10 @@
 {% elseif recommendation.statusForRecallType == 'DECIDED_TO_RECALL' %}
     <a class='govuk-link' href='/recommendations/{{ recommendation.recommendationId }}/documents/part-a?crn={{ caseSummary.personalDetailsOverview.crn }}'
        download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>Download Part
-        A</a>
+        A<span class='govuk-visually-hidden'> from {{ formatDateTimeFromIsoString({isoDate: recommendation.lastModifiedDate }) }}</span></a>
 {% elseif recommendation.statusForRecallType == 'DECIDED_NOT_TO_RECALL' %}
     <a class='govuk-link'
        href='/recommendations/{{ recommendation.recommendationId }}/documents/no-recall-letter?crn={{ caseSummary.personalDetailsOverview.crn }}' download
        data-analytics-event='click_cta' data-analytics-event-category='download_no_recall_letter_click'>
-        Download letter</a>
+        Download letter<span class='govuk-visually-hidden'> from {{ formatDateTimeFromIsoString({isoDate: recommendation.lastModifiedDate }) }}</span></a>
 {% endif %}
