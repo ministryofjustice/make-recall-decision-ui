@@ -13,8 +13,8 @@
         {% set addressHtml %}
             {% if caseSummary.addresses.length %}
                 {% for address in caseSummary.addresses %}
-                    <div{% if loop.index > 1 %} class='govuk-!-margin-top-2'{% endif %}>
-                        <h3 class='govuk-visually-hidden'>Address {{ loop.index }}</h3>
+                    <div{% if loop.index > 1 %} class='govuk-!-margin-top-2'{% endif %} data-qa='address-{{ loop.index }}'>
+                        {% if caseSummary.addresses.length > 1 %}<h3 class='govuk-visually-hidden'>Address {{ loop.index }}</h3>{% endif %}
                         {% if address.line1 %}<div>{{ address.line1 }}</div>{% endif %}
                         {% if address.line2 %}<div>{{ address.line2 }}</div>{% endif %}
                         {% if address.town %}<div>{{ address.town }}</div>{% endif %}
@@ -31,7 +31,7 @@
             html: govukSummaryList({
                 rows: [
                     {
-                        key: { html: 'Main address' },
+                        key: { html: 'Main ' + ('addresses' if caseSummary.addresses.length > 1 else 'address') },
                         value: { html: addressHtml }
                     },
                     {
