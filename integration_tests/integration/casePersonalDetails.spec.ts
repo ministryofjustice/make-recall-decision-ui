@@ -24,10 +24,9 @@ context('Personal details', () => {
       formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender })
     )
     // personal details
-    cy.getDefinitionListValue('Main address').should('contain', '5 Anderton Road')
-    cy.getDefinitionListValue('Main address').should('contain', 'Newham')
-    cy.getDefinitionListValue('Main address').should('contain', 'London')
-    cy.getDefinitionListValue('Main address').should('contain', 'E15 1UJ')
+    cy.getDefinitionListValue('Main addresses').should('contain', '5 Anderton Road')
+    cy.contains('Address 1 5 Anderton Road Newham London E15 1UJ').should('be.visible')
+    cy.contains('Address 2 33 Balaam St Plaistow London E15 3NU').should('be.visible')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Name: Jenny Eclair')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Code: N07')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Team: NPS London')

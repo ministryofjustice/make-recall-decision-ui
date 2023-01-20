@@ -73,7 +73,7 @@
                              data-module="govuk-details" {{ "open" if group.isGroupOpen }}>
                         <summary class="govuk-body">
                             {{ group.label }} <span class="text-secondary">(<span
-                                        data-qa='group-contact-count'>{{ group.contactCountInGroup }}</span>)</span>
+                                        data-qa='group-contact-count'>{{ group.contactCountInGroup }}<span class='govuk-visually-hidden'> {{ countLabelSuffix({ count:group.contactCountInGroup, label: 'contact' }) }}</span></span>)</span>
                         </summary>
                         <div>
                             {{ govukCheckboxes({

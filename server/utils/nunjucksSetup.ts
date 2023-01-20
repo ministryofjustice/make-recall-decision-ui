@@ -16,6 +16,7 @@ import {
   roshYesNoLabel,
   formatDateFilterQueryString,
   isObjectInArray,
+  countLabelSuffix,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
@@ -89,4 +90,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('formatDateFilterQueryString', formatDateFilterQueryString)
   njkEnv.addGlobal('recommendationsListStatusLabel', recommendationsListStatusLabel)
   njkEnv.addGlobal('isObjectInArray', isObjectInArray)
+  njkEnv.addGlobal('countLabelSuffix', countLabelSuffix)
 }

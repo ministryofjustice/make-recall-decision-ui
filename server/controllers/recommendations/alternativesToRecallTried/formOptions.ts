@@ -7,7 +7,7 @@ export const alternativesToRecallTried = [
   {
     text: 'Warnings / licence breach letters',
     value: 'WARNINGS_LETTER',
-    detailsLabel: 'Details and dates of warnings/letters',
+    detailsLabel: 'Details and dates',
   },
   {
     text: 'Increased frequency of reporting',

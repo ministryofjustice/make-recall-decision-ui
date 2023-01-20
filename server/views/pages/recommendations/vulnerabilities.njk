@@ -54,7 +54,7 @@
                                     name: "vulnerabilitiesDetail-" + item.value,
                                     id: "vulnerabilitiesDetail-" + item.value,
                                     label: {
-                                        text: item.detailsLabel
+                                        html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + '</span>'
                                     },
                                     value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
                                     errorMessage: errorMessage(errors["vulnerabilitiesDetail-" + item.value])

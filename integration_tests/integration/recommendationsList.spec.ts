@@ -94,8 +94,8 @@ context('Recommendations tab in case summary', () => {
       ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', 'Update recommendation'],
       ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', 'Update recommendation'],
       ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', 'Update recommendation'],
-      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A'],
-      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter'],
+      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\nfrom 23 September 2021 at 14:59'],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59'],
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
     ])
 
@@ -111,11 +111,10 @@ context('Recommendations tab in case summary', () => {
       'contain',
       '/recommendations/4/task-list-no-recall'
     )
-    cy.getLinkHref('Download Part A', { parent: '[data-qa="recommendation-5"]' }).should(
-      'contain',
-      '/recommendations/5/documents/part-a?crn=X514364'
-    )
-    cy.getLinkHref('Download letter', { parent: '[data-qa="recommendation-6"]' }).should(
+    cy.getLinkHref('Download Part A from 23 September 2021 at 14:59', {
+      parent: '[data-qa="recommendation-5"]',
+    }).should('contain', '/recommendations/5/documents/part-a?crn=X514364')
+    cy.getLinkHref('Download letter from 14 May 2019 at 14:59', { parent: '[data-qa="recommendation-6"]' }).should(
       'contain',
       '/recommendations/6/documents/no-recall-letter?crn=X514364'
     )
@@ -139,8 +138,8 @@ context('Recommendations tab in case summary', () => {
       ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', ''],
       ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', ''],
       ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', ''],
-      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A'],
-      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter'],
+      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\nfrom 23 September 2021 at 14:59'],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59'],
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
     ])
   })

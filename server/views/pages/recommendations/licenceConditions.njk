@@ -42,7 +42,7 @@
                                 </p>
                             {% endif %}
                             <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                <h2 class='govuk-heading-m'>Standard licence conditions</h2>
+                                <h2 class='govuk-heading-m' tabindex="0">Standard licence conditions</h2>
                                 {% for standardCondition in formOptions.standardLicenceConditions %}
                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input"
@@ -56,7 +56,7 @@
                                         </label>
                                     </div>
                                 {% endfor %}
-                                <h2 class='govuk-heading-m govuk-!-margin-top-6'>Additional licence conditions</h2>
+                                <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Additional licence conditions</h2>
                                 {% set conditionNumber = 1 %}
                                 {% for conviction in caseSummary.convictions.activeCustodial %}
                                     {% if conviction.licenceConditions.length %}

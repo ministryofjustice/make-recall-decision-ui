@@ -107,3 +107,6 @@ export const isObjectInArray = ({
         return Object.entries(properties).every(([key, val]) => item[key] === val)
       })
     : false
+
+export const countLabelSuffix = ({ count, label }: { count: number; label: string }) =>
+  `${label}${count === 1 ? '' : 's'}`

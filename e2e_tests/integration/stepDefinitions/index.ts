@@ -89,8 +89,10 @@ When('Maria selects the alternatives to recall that have been tried', () => {
     'Increased frequency of reporting',
     'Drug testing',
   ])
-  cy.fillInput('Give details', 'Details on reporting', { parent: '#conditional-INCREASED_FREQUENCY' })
-  cy.fillInput('Give details', 'Details on drug testing', { parent: '#conditional-DRUG_TESTING' })
+  cy.fillInput('Give details on Increased frequency of reporting', 'Details on reporting', {
+    parent: '#conditional-INCREASED_FREQUENCY',
+  })
+  cy.fillInput('Give details on Drug testing', 'Details on drug testing', { parent: '#conditional-DRUG_TESTING' })
   cy.clickButton('Continue')
 })
 
@@ -135,8 +137,12 @@ When('Maria selects the vulnerabilities that recall would affect', () => {
     'Relationship breakdown',
     'Physical disabilities',
   ])
-  cy.fillInput('Give details', 'Details on relationship breakdown', { parent: '#conditional-RELATIONSHIP_BREAKDOWN' })
-  cy.fillInput('Give details', 'Details on physical disabilities', { parent: '#conditional-PHYSICAL_DISABILITIES' })
+  cy.fillInput('Give details on Relationship breakdown', 'Details on relationship breakdown', {
+    parent: '#conditional-RELATIONSHIP_BREAKDOWN',
+  })
+  cy.fillInput('Give details on Physical disabilities', 'Details on physical disabilities', {
+    parent: '#conditional-PHYSICAL_DISABILITIES',
+  })
   cy.clickButton('Continue')
 })
 
