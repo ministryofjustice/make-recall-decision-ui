@@ -10,12 +10,12 @@ function attachListenerForToggleSectionButton(button, section, initiallyHidden) 
     e.preventDefault()
 
     var sectionIsHidden = button.dataset.sectionIsHidden === 'true'
-
+    const label = button.querySelector('[data-js="score-action-label"]')
     if (sectionIsHidden) {
-      button.innerText = closeText
+      label.innerText = closeText
       section.classList.remove('predictor-timeline-section--hidden')
     } else {
-      button.innerText = openText
+      label.innerText = openText
       section.classList.add('predictor-timeline-section--hidden')
     }
 
@@ -36,7 +36,7 @@ function attachListenerForToggleAllButton(button, sections) {
 
       for (var j = 0; j < openSectionButtons.length; j++) {
         openSectionButtons[j].setAttribute('data-section-is-hidden', false)
-        openSectionButtons[j].innerText = closeText
+        openSectionButtons[j].querySelector('[data-js="score-action-label"]').innerText = closeText
       }
     }
   }
