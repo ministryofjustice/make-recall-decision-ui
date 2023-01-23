@@ -41,3 +41,7 @@
 .moj-task-list__item {
   @include govuk-font($size: 19);
 }
+
+.moj-scrollable-pane {
+  position: relative;
+}
