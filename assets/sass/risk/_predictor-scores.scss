@@ -116,8 +116,7 @@ $predictor-score-background-colour: #f3f2f1;
   @include predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
-.predictor-timeline-section--hidden {
-  visibility: hidden;
+.js-enabled .predictor-timeline-section--hidden {
   display: none;
 }
 

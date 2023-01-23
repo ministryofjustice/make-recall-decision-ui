@@ -1,67 +1,51 @@
 /* eslint-disable */
-var allHidden = true
-var openText = 'Open'
-var closeText = 'Close'
+const openText = 'Open'
+const closeText = 'Close'
 
-function attachListenerForToggleSectionButton(button, section, initiallyHidden) {
-  button.setAttribute('data-section-is-hidden', initiallyHidden)
+const openAllButton = document.querySelector('[data-js="predictor-timeline__toggle-all"]')
+const openCloseButtons = document.querySelectorAll('[data-js="predictor-timeline__toggle-section"]')
+const sections = document.querySelectorAll('[data-js="predictor-timeline__section"]')
+const sectionHiddenClass = 'predictor-timeline-section--hidden'
 
-  button.onclick = function (e) {
-    e.preventDefault()
-
-    var sectionIsHidden = button.dataset.sectionIsHidden === 'true'
-    const label = button.querySelector('[data-js="score-action-label"]')
-    if (sectionIsHidden) {
-      label.innerText = closeText
-      section.classList.remove('predictor-timeline-section--hidden')
-    } else {
-      label.innerText = openText
-      section.classList.add('predictor-timeline-section--hidden')
-    }
-
-    button.setAttribute('data-section-is-hidden', !sectionIsHidden)
+function toggleButton(button, newState) {
+  const label = button.querySelector('[data-js="score-action-label"]')
+  if (newState === 'open') {
+    button.setAttribute('aria-expanded', 'true')
+    label.innerText = closeText
+  } else {
+    button.setAttribute('aria-expanded', 'false')
+    label.innerText = openText
   }
 }
 
-function attachListenerForToggleAllButton(button, sections) {
-  button.setAttribute('data-sections-are-hidden', allHidden)
-
-  button.onclick = function (e) {
-    e.preventDefault()
-
-    for (var i = 0; i < sections.length; i++) {
-      sections[i].classList.remove('predictor-timeline-section--hidden')
-
-      var openSectionButtons = sections[i].parentElement.getElementsByClassName('predictor-timeline__toggle-section')
-
-      for (var j = 0; j < openSectionButtons.length; j++) {
-        openSectionButtons[j].setAttribute('data-section-is-hidden', false)
-        openSectionButtons[j].querySelector('[data-js="score-action-label"]').innerText = closeText
-      }
-    }
+function openCloseButtonClick (e) {
+  e.preventDefault()
+  const button = e.currentTarget
+  const isCurrentlyOpen = button.getAttribute('aria-expanded') === 'true'
+  toggleButton(button, isCurrentlyOpen ? 'close' : 'open')
+  const sectionId = button.getAttribute('aria-controls')
+  const section = document.getElementById(sectionId)
+  if (isCurrentlyOpen) {
+    section.classList.add(sectionHiddenClass)
+  } else {
+    section.classList.remove(sectionHiddenClass)
   }
+}
+
+function openAllButtonClicked(e) {
+  e.preventDefault()
+  sections.forEach(section => section.classList.remove(sectionHiddenClass))
+  openCloseButtons.forEach(button => toggleButton(button, 'open'))
+  openAllButton.setAttribute('aria-expanded', 'true')
 }
 
 function addPredictorTimelineListeners() {
-  var openAllButton = document.getElementById('predictor-timeline__toggle-all')
-  var sections = document.getElementsByClassName('predictor-timeline-section')
-
-  for (var i = 0; i < sections.length; i++) {
-    if (allHidden) {
-      sections[i].classList.add('predictor-timeline-section--hidden')
-    }
-
-    var openSectionButtons = sections[i].parentElement.getElementsByClassName('predictor-timeline__toggle-section')
-    for (var j = 0; j < openSectionButtons.length; j++) {
-      attachListenerForToggleSectionButton(openSectionButtons[j], sections[i], allHidden)
-    }
-  }
-
+  openCloseButtons.forEach(button =>
+    button.addEventListener('click', openCloseButtonClick)
+  )
   if (openAllButton) {
-    attachListenerForToggleAllButton(openAllButton, sections)
+    openAllButton.addEventListener('click', openAllButtonClicked)
   }
 }
 
-;(function () {
-  addPredictorTimelineListeners()
-})()
+addPredictorTimelineListeners()
