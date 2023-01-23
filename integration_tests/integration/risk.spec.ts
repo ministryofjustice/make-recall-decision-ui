@@ -183,7 +183,7 @@ context('Risk page', () => {
       )
 
       // predictor score history
-      cy.clickLink('Open all scores in timeline')
+      cy.clickButton('Open all scores in timeline')
       let opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.getElement('13 July 2021', opts).should('be.visible')
       cy.getElement('RSR HIGH 18', opts).should('be.visible')
@@ -290,7 +290,7 @@ context('Risk page', () => {
       })
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       const opts = { parent: '[data-qa="timeline-item-2"]' }
-      cy.clickLink('Open all')
+      cy.clickButton('Open all scores in timeline')
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
       cy.getElement('OSP/C LOW', opts).should('be.visible')
     })
