@@ -44,6 +44,10 @@ When(
   }
 )
 
+When('Henry signs in to the case overview for CRN {string}', (crnNum: string) => {
+  cy.visitPage(defaultStartPath(crnNum), true)
+})
+
 When('Maria considers a new recall', () => {
   const detail = 'Risk has increased. Considering a recall.'
   cy.clickLink('Consider a recall')
@@ -61,10 +65,8 @@ When('Maria recommends an emergency recall', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria explains how the person has responded to probation so far', () => {
-  cy.get('@offenderName').then(offenderName =>
-    cy.fillInput(`How has ${offenderName} responded to probation so far?`, 'Re-offending has occurred')
-  )
+When('Maria explains how the person has responded to probation so far', function () {
+  cy.fillInput(`How has ${this.offenderName} responded to probation so far?`, 'Re-offending has occurred')
   cy.clickButton('Continue')
 })
 
@@ -75,12 +77,10 @@ When('Maria states what has led to the recall', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria selects the licence conditions that have been breached', () => {
-  cy.get('@offenderName').then(offenderName =>
-    cy.selectCheckboxes(`What licence conditions has ${offenderName} breached?`, [
-      'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
-    ])
-  )
+When('Maria selects the licence conditions that have been breached', function () {
+  cy.selectCheckboxes(`What licence conditions has ${this.offenderName} breached?`, [
+    'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+  ])
   cy.clickButton('Continue')
 })
 
@@ -105,15 +105,13 @@ When('Maria reads the guidance on sensitive information', () => {
   cy.clickLink('Continue')
 })
 
-defineStep('Maria confirms {string} for indeterminate sentence', (answer: string) => {
-  cy.get('@offenderName').then(offenderName =>
-    cy.selectRadio(`Is ${offenderName} on an indeterminate sentence?`, answer)
-  )
+defineStep('Maria confirms {string} for indeterminate sentence', function (answer: string) {
+  cy.selectRadio(`Is ${this.offenderName} on an indeterminate sentence?`, answer)
   cy.clickButton('Continue')
 })
 
-defineStep('Maria confirms {string} for extended sentence', (answer: string) => {
-  cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} on an extended sentence?`, answer))
+defineStep('Maria confirms {string} for extended sentence', function (answer: string) {
+  cy.selectRadio(`Is ${this.offenderName} on an extended sentence?`, answer)
   cy.clickButton('Continue')
 })
 
@@ -126,8 +124,8 @@ defineStep('Maria recommends a {string} recall', (recallType: string) => {
   cy.clickButton('Continue')
 })
 
-When('Maria indicates the person is not in custody', () => {
-  cy.get('@offenderName').then(offenderName => cy.selectRadio(`Is ${offenderName} in custody now?`, 'No'))
+When('Maria indicates the person is not in custody', function () {
+  cy.selectRadio(`Is ${this.offenderName} in custody now?`, 'No')
   cy.clickButton('Continue')
 })
 
@@ -150,11 +148,9 @@ When('Maria views the page Create a Part A form', () => {
   cy.pageHeading().should('contain', 'Create a Part A form')
 })
 
-defineStep('Maria confirms {string} to integrated offender management', (answer: string) => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Is ${offenderName} under Integrated Offender Management (IOM)?`)
-    cy.selectRadio(`Is ${offenderName} under Integrated Offender Management (IOM)?`, answer)
-  })
+defineStep('Maria confirms {string} to integrated offender management', function (answer: string) {
+  cy.clickLink(`Is ${this.offenderName} under Integrated Offender Management (IOM)?`)
+  cy.selectRadio(`Is ${this.offenderName} under Integrated Offender Management (IOM)?`, answer)
   cy.clickButton('Continue')
 })
 
@@ -178,11 +174,9 @@ When('Maria enters the date the VLO was informed', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria enters any arrest issues', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Is there anything the police should know before they arrest ${offenderName}?`)
-    cy.selectRadio(`Is there anything the police should know before they arrest ${offenderName}?`, 'Yes')
-  })
+When('Maria enters any arrest issues', function () {
+  cy.clickLink(`Is there anything the police should know before they arrest ${this.offenderName}?`)
+  cy.selectRadio(`Is there anything the police should know before they arrest ${this.offenderName}?`, 'Yes')
   cy.fillInput('Give details. Include information about any vulnerable children and adults', 'Arrest issues details...')
   cy.clickButton('Continue')
 })
@@ -196,11 +190,9 @@ When('Maria enters an address where the person can be found', () => {
   cy.clickButton('Continue')
 })
 
-defineStep('Maria confirms {string} to a risk of contraband', (answer: string) => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Do you think ${offenderName} is using recall to bring contraband into prison?`)
-    cy.selectRadio(`Do you think ${offenderName} is using recall to bring contraband into prison?`, answer)
-  })
+defineStep('Maria confirms {string} to a risk of contraband', function (answer: string) {
+  cy.clickLink(`Do you think ${this.offenderName} is using recall to bring contraband into prison?`)
+  cy.selectRadio(`Do you think ${this.offenderName} is using recall to bring contraband into prison?`, answer)
   if (answer === 'Yes') {
     cy.fillInput('Give details. Also tell your local police contact about your concerns.', 'Contraband details...')
   }
@@ -251,26 +243,22 @@ When('Maria enters the offence analysis', () => {
   cy.getElement('Offence analysis Completed').should('exist')
 })
 
-When('Maria enters the previous releases', () => {
+When('Maria enters the previous releases', function () {
   cy.getElement('Previous releases To do').should('exist')
   cy.clickLink('Previous releases')
   cy.getDateAttribute('lastReleaseDate').as('lastReleaseDate')
-  cy.get('@offenderName').then(offenderName => {
-    cy.selectRadio(`Has ${offenderName} been released previously?`, 'Yes')
-  })
+  cy.selectRadio(`Has ${this.offenderName} been released previously?`, 'Yes')
   cy.clickButton('Continue')
   cy.enterDateTime(apiDataForCrn.previousReleaseDate)
   cy.clickButton('Continue')
   cy.getElement('Previous releases Completed').should('exist')
 })
 
-When('Maria reviews the MAPPA details', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.getElement(`MAPPA for ${offenderName} To review`).should('exist')
-    cy.clickLink(`MAPPA for ${offenderName}`)
-    cy.clickLink('Continue')
-    cy.getElement(`MAPPA for ${offenderName} Reviewed`).should('exist')
-  })
+When('Maria reviews the MAPPA details', function () {
+  cy.getElement(`MAPPA for ${this.offenderName} To review`).should('exist')
+  cy.clickLink(`MAPPA for ${this.offenderName}`)
+  cy.clickLink('Continue')
+  cy.getElement(`MAPPA for ${this.offenderName} Reviewed`).should('exist')
 })
 
 When('Maria clicks Create Part A', () => {
@@ -288,42 +276,30 @@ When('Maria starts to update the recall', () => {
   cy.pageHeading().should('equal', 'Create a Part A form')
 })
 
-When('Maria confirms a not extended sentence', () => {
+When('Maria confirms a not extended sentence', function () {
   cy.log('========= Extended sentence')
-  cy.get('@offenderName').then(offenderName => {
-    cy.clickLink(`Is ${offenderName} on an extended sentence?`)
-    // this answer will have been reset to null
-    cy.getSelectableOptionByLabel(`Is ${offenderName} on an extended sentence?`, 'Yes').should('be.checked')
-    cy.selectRadio(`Is ${offenderName} on an extended sentence?`, 'No')
-  })
+  cy.clickLink(`Is ${this.offenderName} on an extended sentence?`)
+  // this answer will have been reset to null
+  cy.getSelectableOptionByLabel(`Is ${this.offenderName} on an extended sentence?`, 'Yes').should('be.checked')
+  cy.selectRadio(`Is ${this.offenderName} on an extended sentence?`, 'No')
   cy.clickButton('Continue')
 })
 
-When('Maria confirms the person is in prison custody', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, prison custody')
-  })
+When('Maria confirms the person is in prison custody', function () {
+  cy.selectRadio(`Is ${this.offenderName} in custody now?`, 'Yes, prison custody')
   cy.clickButton('Continue')
 })
 
-When('Maria confirms the person is in police custody', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.selectRadio(`Is ${offenderName} in custody now?`, 'Yes, police custody')
-  })
+When('Maria confirms the person is in police custody', function () {
+  cy.selectRadio(`Is ${this.offenderName} in custody now?`, 'Yes, police custody')
   cy.fillInput('Custody address', 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG')
   cy.clickButton('Continue')
 
   // Local police contact / arrest issues links should be hidden, because person is in custody now
   cy.getElement('Local police contact details').should('not.exist')
-  cy.get('@offenderName').then(offenderName => {
-    cy.getElement(`Is there anything the police should know before they arrest ${offenderName}?`).should('not.exist')
-  })
+  cy.getElement(`Is there anything the police should know before they arrest ${this.offenderName}?`).should('not.exist')
 })
 
 When('Maria signs out', () => {
   cy.clickLink('Sign out')
-})
-
-When('Henry signs in to the case overview for CRN {string}', (crnNum: string) => {
-  cy.visitPage(defaultStartPath(crnNum), true)
 })
