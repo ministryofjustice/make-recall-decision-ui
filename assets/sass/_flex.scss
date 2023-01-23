@@ -15,6 +15,12 @@
   }
 }
 
+.flex--col-reverse-mobile {
+  @include govuk-media-query($until: tablet ) {
+    flex-direction: column-reverse;
+  }
+}
+
 .flex--space-between {
   justify-content: space-between;
 }
