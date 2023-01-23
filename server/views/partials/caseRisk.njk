@@ -82,7 +82,10 @@
             <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
                 Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
             </div>
+            <div aria-hidden="true">
             {{ predictorScore(caseSummary.predictorScores.current.scores.RSR) }}
+            </div>
+            <div class='govuk-visually-hidden'>Score: {{ caseSummary.predictorScores.current.scores.RSR.score }}%</div>
         {% else %}
             <p class='govuk-body' data-qa='rsr-missing'>Data not available.</p>
         {% endif %}
@@ -97,7 +100,10 @@
                         <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
                             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
                         </div>
+                    <div aria-hidden="true">
                         {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
+                    </div>
+                    <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPC.level }}</div>
                     {% else %}
                         <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
                     {% endif %}
@@ -112,7 +118,10 @@
                         <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
                             Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
                         </div>
+                    <div aria-hidden="true">
                         {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
+                    </div>
+                        <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPI.level }}</div>
                     {% else %}
                         <p class='govuk-body' data-qa='ospi-missing'>Data not available.</p>
                     {% endif %}</div>
@@ -231,7 +240,7 @@
             {% endif %}
             {% if caseSummary.timeline.length %}
                 <div>
-                    <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all<span class='govuk-visually-hidden'> scores in timeline</span> </a>
+                    <button type='button' data-js="predictor-timeline__toggle-all" class="reset-button link-button govuk-link">Open all<span class='govuk-visually-hidden'> scores in timeline</span> </button>
                 </div>
             {% endif %}
         </div>
