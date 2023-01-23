@@ -7,7 +7,7 @@
             <p class="moj-timeline__byline">{{ formatDateTimeFromIsoString({ isoDate: item.date, dateOnly: true }) }}</p>
         </div>
         <div class="moj-timeline__description">
-            {{ predictorTimelineSection({ item: item, pageUrlBase: pageUrlBase }) }}
+            {{ predictorTimelineSection({ item: item, pageUrlBase: pageUrlBase, index: loop.index0 }) }}
         </div>
     </div>
     {% endfor %}

@@ -23,7 +23,7 @@
         </details>
     {% endif %}
 {% else  %}
-    <div class="predictor-timeline-section">
+    <div class="predictor-timeline-section" id='scores-section-{{ params.index }}'>
         <ul class="govuk-list">
             {% if params.item.scores.RSR %}<li>{{ predictorTimelineItem({ type: params.item.scores.RSR.type, score: params.item.scores.RSR.score, level: params.item.scores.RSR.level }) }}</li>{% endif %}
             {% if params.item.scores.OSPC %}<li>{{ predictorTimelineItem({ type: params.item.scores.OSPC.type, score: params.item.scores.OSPC.score, level: params.item.scores.OSPC.level }) }}</li>{% endif %}
@@ -43,5 +43,5 @@
             {% endif %}
         </ul>
     </div>
-    <a href="#" class="govuk-link predictor-timeline__toggle-section">Open</a>
+    <button type='button' class="reset-button link-button govuk-link predictor-timeline__toggle-section" aria-controls='scores-section-{{ params.index }}'><span data-js='score-action-label'>Open</span><span class='govuk-visually-hidden'> scores for {{ formatDateTimeFromIsoString({ isoDate: params.item.date, dateOnly: true }) }}</span></span> </button>
 {% endif %}

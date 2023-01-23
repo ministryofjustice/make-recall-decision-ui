@@ -183,7 +183,7 @@ context('Risk page', () => {
       )
 
       // predictor score history
-      cy.clickLink('Open all')
+      cy.clickLink('Open all scores in timeline')
       let opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.getElement('13 July 2021', opts).should('be.visible')
       cy.getElement('RSR HIGH 18', opts).should('be.visible')
@@ -208,6 +208,8 @@ context('Risk page', () => {
       // scores missing a level
       cy.getElement('OVP 1YR 82', opts).should('be.visible')
       cy.getElement('OVP 2YR 91', opts).should('be.visible')
+      // close button
+      cy.clickButton('Close scores for 13 July 2021')
     })
 
     it('errors fetching both predictor and RoSH history', () => {

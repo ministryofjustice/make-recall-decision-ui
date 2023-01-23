@@ -3,7 +3,9 @@
 <div class="flex-desktop flex--row-reverse">
     <div class="flex__item-one-third-desktop">
         <div data-qa='roshTable'>
-        {{ roshWidget({ riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm, notifications: notifications, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
+            <div class="moj-scrollable-pane">
+            {{ roshWidget({ riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm, notifications: notifications, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
+            </div>
         </div>
         <div data-qa='mappa'>
             {{ mappaWidget({ mappa: caseSummary.mappa, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true }) }) }}
@@ -19,7 +21,7 @@
             {% endif %}
             {% if caseSummary.timeline.length %}
                 <div>
-                    <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all</a>
+                    <a id="predictor-timeline__toggle-all" href="#" class="govuk-link">Open all<span class='govuk-visually-hidden'> scores in timeline</span> </a>
                 </div>
             {% endif %}
         </div>
