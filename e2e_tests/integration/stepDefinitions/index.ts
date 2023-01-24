@@ -181,11 +181,9 @@ When('Maria enters any arrest issues', function () {
   cy.clickButton('Continue')
 })
 
-When('Maria enters an address where the person can be found', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.clickLink('Address')
-    cy.selectRadio(`Is this where the police can find ${offenderName}?`, 'No')
-  })
+When('Maria enters an address where the person can be found', function () {
+  cy.clickLink('Address')
+  cy.selectRadio(`Is this where the police can find ${this.offenderName}?`, 'No')
   cy.fillInput('Give the correct location', '123 Acacia Avenue, Birmingham B23 1AV')
   cy.clickButton('Continue')
 })
