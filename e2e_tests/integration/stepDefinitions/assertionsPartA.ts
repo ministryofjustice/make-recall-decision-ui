@@ -13,32 +13,26 @@ export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
 export const q3ExtendedSentence = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
 
-export const q4OffenderDetails = (contents: string) => {
-  cy.get<string>('@fullName').then(fullName => expect(contents).to.contain(`Full name: ${fullName}`))
-  cy.get<string>('@gender').then(gender => expect(contents).to.contain(`Gender: ${gender}`))
-  cy.get<string>('@dateOfBirth').then(dateOfBirth =>
-    expect(contents).to.contain(`Date of birth: ${formatIsoDateShort(dateOfBirth)}`)
-  )
+export const q4OffenderDetails = function (contents: string) {
+  expect(contents).to.contain(`Full name: ${this.fullName}`)
+  expect(contents).to.contain(`Gender: ${this.gender}`)
+  expect(contents).to.contain(`Date of birth: ${formatIsoDateShort(this.dateOfBirth)}`)
   expect(contents).to.match(apiDataForCrn.ethnicity as RegExp)
   expect(contents).to.match(apiDataForCrn.cro as RegExp)
   expect(contents).to.match(apiDataForCrn.pnc as RegExp)
   expect(contents).to.match(apiDataForCrn.prisonNo as RegExp)
   expect(contents).to.match(apiDataForCrn.noms as RegExp)
-  cy.get<string>('@lastReleaseDate').then(lastReleaseDate => {
-    const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(lastReleaseDate))
-    const previousReleaseDateFormatted = formatObjectDate(apiDataForCrn.previousReleaseDate)
-    expect(contents).to.contain(
-      `Date of last release and previous release: ${lastReleaseDateFormatted}, ${previousReleaseDateFormatted}`
-    )
-  })
+  const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(this.lastReleaseDate))
+  const previousReleaseDateFormatted = formatObjectDate(apiDataForCrn.previousReleaseDate)
+  expect(contents).to.contain(
+    `Date of last release and previous release: ${lastReleaseDateFormatted}, ${previousReleaseDateFormatted}`
+  )
 }
 
-export const q5SentenceDetails = (contents: string) => {
-  cy.get('@indexOffenceDescription').then(indexOffenceDescription => {
-    expect(contents).to.contain(
-      `Index offence of current sentence which has led to the offender’s recall: ${indexOffenceDescription}`
-    )
-  })
+export const q5SentenceDetails = function (contents: string) {
+  expect(contents).to.contain(
+    `Index offence of current sentence which has led to the offender’s recall: ${this.indexOffenceDescription}`
+  )
   expect(contents).to.match(apiDataForCrn.dateOfOriginalOffence as RegExp)
   expect(contents).to.match(apiDataForCrn.dateOfSentence as RegExp)
   expect(contents).to.match(apiDataForCrn.lengthOfSentence as RegExp)
