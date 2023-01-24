@@ -13,25 +13,25 @@ export const q2IndeterminateSentenceType = (contents: string, answer: string) =>
 export const q3ExtendedSentence = (contents: string, answer: string) =>
   expect(contents).to.contain(`Is the offender serving one of the following:  ${answer}`)
 
-export const q4OffenderDetails = function (contents: string) {
-  expect(contents).to.contain(`Full name: ${this.fullName}`)
-  expect(contents).to.contain(`Gender: ${this.gender}`)
-  expect(contents).to.contain(`Date of birth: ${formatIsoDateShort(this.dateOfBirth)}`)
+export const q4OffenderDetails = function (contents: string, context: Record<string, string>) {
+  expect(contents).to.contain(`Full name: ${context.fullName}`)
+  expect(contents).to.contain(`Gender: ${context.gender}`)
+  expect(contents).to.contain(`Date of birth: ${formatIsoDateShort(context.dateOfBirth)}`)
   expect(contents).to.match(apiDataForCrn.ethnicity as RegExp)
   expect(contents).to.match(apiDataForCrn.cro as RegExp)
   expect(contents).to.match(apiDataForCrn.pnc as RegExp)
   expect(contents).to.match(apiDataForCrn.prisonNo as RegExp)
   expect(contents).to.match(apiDataForCrn.noms as RegExp)
-  const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(this.lastReleaseDate))
+  const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(context.lastReleaseDate))
   const previousReleaseDateFormatted = formatObjectDate(apiDataForCrn.previousReleaseDate)
   expect(contents).to.contain(
     `Date of last release and previous release: ${lastReleaseDateFormatted}, ${previousReleaseDateFormatted}`
   )
 }
 
-export const q5SentenceDetails = function (contents: string) {
+export const q5SentenceDetails = function (contents: string, context: Record<string, string>) {
   expect(contents).to.contain(
-    `Index offence of current sentence which has led to the offender’s recall: ${this.indexOffenceDescription}`
+    `Index offence of current sentence which has led to the offender’s recall: ${context.indexOffenceDescription}`
   )
   expect(contents).to.match(apiDataForCrn.dateOfOriginalOffence as RegExp)
   expect(contents).to.match(apiDataForCrn.dateOfSentence as RegExp)

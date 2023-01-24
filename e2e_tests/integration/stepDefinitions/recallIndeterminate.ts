@@ -47,14 +47,16 @@ When('Maria enters indeterminate and extended sentence criteria', function () {
   cy.clickButton('Continue')
 })
 
-When('Maria downloads the Part A and confirms the indeterminate recall', () => {
+When('Maria downloads the Part A and confirms the indeterminate recall', function () {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const context = this
   cy.downloadDocX('Download the Part A').then(contents => {
     q1EmergencyRecall(contents, 'Yes')
     q2IndeterminateSentenceType(contents, 'Yes - IPP')
     q3ExtendedSentence(contents, 'Yes')
-    q4OffenderDetails(contents)
+    q4OffenderDetails(contents, context)
     cy.log('Q5')
-    q5SentenceDetails(contents)
+    q5SentenceDetails(contents, context)
     q6CustodyStatus(contents, 'No')
     cy.log('Q7')
     expect(contents).to.contain(
@@ -119,10 +121,12 @@ When('Maria downloads the Part A and confirms the indeterminate recall', () => {
   })
 })
 
-When('Maria downloads the Part A and confirms the indeterminate recall with details', () => {
+When('Maria downloads the Part A and confirms the indeterminate recall with details', function () {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const ctx = this
   return cy.downloadDocX('Download the Part A').then(contents => {
-    q4OffenderDetails(contents)
-    q5SentenceDetails(contents)
+    q4OffenderDetails(contents, ctx)
+    q5SentenceDetails(contents, ctx)
     q12MappaDetails(contents)
     q16IndexOffenceDetails(contents)
   })
