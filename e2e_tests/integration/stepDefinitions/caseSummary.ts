@@ -15,8 +15,8 @@ When('Maria searches for a case', () => {
   cy.get(`[data-qa="row-${crn}"] [data-qa="name"]`).first().click().invoke('text').as('offenderName')
 })
 
-When('Maria views the overview page', () => {
-  cy.get('@offenderName').then(offenderName => cy.getText('sectionHeading').should('equal', offenderName))
+When('Maria views the overview page', function () {
+  cy.getText('sectionHeading').should('equal', this.offenderName)
 })
 
 When('Maria views the risk page', () => {

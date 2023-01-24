@@ -11,13 +11,11 @@ When('Maria confirms why recall was considered', () => {
   cy.clickButton('Continue')
 })
 
-When('Maria confirms why the person should not be recalled', () => {
-  cy.get('@offenderName').then(offenderName => {
-    cy.fillInput("Explain the licence breach and why it's a problem", 'Breach details')
-    cy.fillInput(`Explain your rationale for not recalling ${offenderName}`, 'Rationale details')
-    cy.fillInput(`What progress has ${offenderName} made so far?`, 'Progress details')
-    cy.fillInput('What is expected in the future?', 'Future details')
-  })
+When('Maria confirms why the person should not be recalled', function () {
+  cy.fillInput("Explain the licence breach and why it's a problem", 'Breach details')
+  cy.fillInput(`Explain your rationale for not recalling ${this.offenderName}`, 'Rationale details')
+  cy.fillInput(`What progress has ${this.offenderName} made so far?`, 'Progress details')
+  cy.fillInput('What is expected in the future?', 'Future details')
   cy.clickButton('Continue')
 })
 
