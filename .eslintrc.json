@@ -75,6 +75,7 @@
     ],
     "no-use-before-define": 0,
     "semi": 0,
+    "func-names": 0,
     "import/no-unresolved": "error",
     "import/extensions": [
       "error",
