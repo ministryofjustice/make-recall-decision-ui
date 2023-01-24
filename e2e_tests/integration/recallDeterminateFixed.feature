@@ -30,7 +30,9 @@ Feature: Recall (determinate)
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the fixed term recall
     And Maria signs out
-    And Henry signs in to the case overview for CRN "3"
+
+  Scenario: SPO signs in
+    Given Henry signs in to the case overview for CRN "3"
     And Henry views the Recommendations page
     And Henry downloads the latest Part A and confirms the details have not been overwritten
 #
