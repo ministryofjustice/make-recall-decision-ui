@@ -20,9 +20,6 @@ parameters:
   redis-version:
     type: string
     default: "6.2"
-  e2e-check-dev:
-    type: boolean
-    default: false
   e2e-check-preprod:
     type: boolean
     default: false
@@ -342,7 +339,6 @@ workflows:
     when:
       not:
         or:
-          - << pipeline.parameters.e2e-check-dev >>
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - e2e_local_test:
@@ -421,14 +417,6 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
@@ -437,7 +425,7 @@ workflows:
             - hmpps-common-vars
             - make-recall-decision-ui-preprod
           requires:
-            - e2e_test_dev
+            - deploy_dev
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
@@ -476,16 +464,6 @@ workflows:
           sentry_create_release: true
           requires:
             - deploy_prod
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
-
-  e2e-check-dev:
-    when: << pipeline.parameters.e2e-check-dev >>
-    jobs:
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
