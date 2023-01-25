@@ -86,7 +86,7 @@ context('Recommendations tab in case summary', () => {
         recommendations,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
 
     checkValuesInTable([
@@ -130,7 +130,7 @@ context('Recommendations tab in case summary', () => {
         recommendations,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
 
     checkValuesInTable([
@@ -140,6 +140,36 @@ context('Recommendations tab in case summary', () => {
       ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', ''],
       ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\nfrom 23 September 2021 at 14:59'],
       ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59'],
+      ['Unknown', 'A. Milner', '18 Apr 2016', ''],
+    ])
+  })
+
+  it('shows delete links if flag is on', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getCase', {
+      sectionId: 'recommendations',
+      statusCode: 200,
+      response: {
+        ...getRecommendationsResponse,
+        recommendations,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
+
+    checkValuesInTable([
+      ['Considering recall', 'Angela Hartnett', '7 Dec 2022', '', 'Delete'],
+      ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', '', 'Delete'],
+      ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', '', 'Delete'],
+      ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', '', 'Delete'],
+      [
+        'Decided to recall',
+        'Barry Smithson',
+        '23 Sep 2021',
+        'Download Part A\nfrom 23 September 2021 at 14:59',
+        'Delete',
+      ],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59', 'Delete'],
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
     ])
   })
