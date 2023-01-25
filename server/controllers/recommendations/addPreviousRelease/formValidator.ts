@@ -5,6 +5,11 @@ import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
+export const getExistingReleaseDates = (previousReleaseDates?: string) => {
+  if (!previousReleaseDates) return []
+  return previousReleaseDates?.split('|').filter(Boolean)
+}
+
 export const validateAddPreviousRelease = async ({
   requestBody,
   recommendationId,
@@ -46,12 +51,14 @@ export const validateAddPreviousRelease = async ({
   }
 
   if (!errors) {
+    const existingDates = getExistingReleaseDates(requestBody.previousReleaseDates as string)
+    const previousReleaseDates = [...existingDates, previousReleaseDateIso]
     valuesToSave = {
       previousReleases: {
-        previousReleaseDates: [previousReleaseDateIso],
+        previousReleaseDates,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
     return {
       valuesToSave,
       nextPagePath,

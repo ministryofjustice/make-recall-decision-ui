@@ -50,7 +50,6 @@ import { inputDisplayValuesAddress } from '../addressDetails/inputDisplayValues'
 import { validateOffenceAnalysis } from '../offenceAnalysis/formValidator'
 import { inputDisplayValuesOffenceAnalysis } from '../offenceAnalysis/inputDisplayValues'
 import { validatePreviousReleases } from '../previousReleases/formValidator'
-import { inputDisplayValuesPreviousReleases } from '../previousReleases/inputDisplayValues'
 import { validateAddPreviousRelease } from '../addPreviousRelease/formValidator'
 import { inputDisplayValuesAddPreviousRelease } from '../addPreviousRelease/inputDisplayValues'
 import { validateManagerRecordDecision } from '../managerRecordDecision/formValidator'
@@ -231,7 +230,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         id: 'previousReleases',
         propertyToRefresh: 'previousReleases',
         validator: validatePreviousReleases,
-        inputDisplayValues: inputDisplayValuesPreviousReleases,
       }
     case 'add-previous-release':
       return {

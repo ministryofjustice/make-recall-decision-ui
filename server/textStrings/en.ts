@@ -57,6 +57,7 @@ export const strings = {
     noManagerRecallTypeSelected: 'Select whether you recommend a recall or not',
     missingManagerRecallTypeDetail: 'You must explain your decision',
     missingRosh: 'Select a RoSH level for the risk to',
+    noDeletePreviousReleaseIndex: 'Select a previous release to delete',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -68,6 +69,9 @@ export const strings = {
     oasysVulnerabilityError: 'Vulnerability information cannot be retrieved from OASys.',
     oasysMissingRosh: 'The latest complete OASys assessment does not have full RoSH information.',
     oasysApiError: 'This information cannot be retrieved from OASys.',
+  },
+  confirmations: {
+    previousReleaseDeleted: 'The previous release has been deleted',
   },
   pageHeadings: {
     managerRecordDecision: 'Record your decision',

@@ -1,12 +1,6 @@
 import { inputDisplayValuesAddPreviousRelease } from './inputDisplayValues'
 
 describe('inputDisplayValuesAddPreviousRelease', () => {
-  const apiValues = {
-    previousReleases: {
-      previousReleaseDates: ['2022-05-13'],
-    },
-  }
-
   it("should use empty strings for value if there's an error for value", () => {
     const errors = {
       previousReleaseDate: {
@@ -20,7 +14,7 @@ describe('inputDisplayValuesAddPreviousRelease', () => {
       },
     }
     const unsavedValues = {}
-    const inputDisplayValues = inputDisplayValuesAddPreviousRelease({ errors, unsavedValues, apiValues })
+    const inputDisplayValues = inputDisplayValuesAddPreviousRelease({ errors, unsavedValues, apiValues: {} })
     expect(inputDisplayValues).toEqual({
       value: {
         day: '42',
@@ -30,20 +24,7 @@ describe('inputDisplayValuesAddPreviousRelease', () => {
     })
   })
 
-  it('should use apiValues for value, if no error or unsaved values', () => {
-    const errors = {}
-    const unsavedValues = {}
-    const inputDisplayValues = inputDisplayValuesAddPreviousRelease({ errors, unsavedValues, apiValues })
-    expect(inputDisplayValues).toEqual({
-      value: {
-        day: '13',
-        month: '05',
-        year: '2022',
-      },
-    })
-  })
-
-  it('should return undefined if no error or apiValue', () => {
+  it('should return undefined if no error', () => {
     const errors = {}
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesAddPreviousRelease({ errors, unsavedValues, apiValues: {} })

@@ -23,9 +23,9 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
   expect(contents).to.match(apiDataForCrn.prisonNo as RegExp)
   expect(contents).to.match(apiDataForCrn.noms as RegExp)
   const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(context.lastReleaseDate))
-  const previousReleaseDateFormatted = formatObjectDate(apiDataForCrn.previousReleaseDate)
+  expect(contents).to.contain(`Last release: ${lastReleaseDateFormatted}`)
   expect(contents).to.contain(
-    `Date of last release and previous release: ${lastReleaseDateFormatted}, ${previousReleaseDateFormatted}`
+    `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
   )
 }
 

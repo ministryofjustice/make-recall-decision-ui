@@ -26,7 +26,7 @@ Feature: Recall (determinate)
     And Maria confirms the personal details
     And Maria confirms the offence details
     And Maria enters the offence analysis
-    And Maria enters the previous releases
+    And Maria enters no previous releases
     And Maria reviews the MAPPA details
     And Maria clicks Create Part A
     And Maria downloads the Part A and confirms the fixed term recall

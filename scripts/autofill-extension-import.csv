@@ -201,6 +201,14 @@ His pattern of behaviour is indicating an increased risk of re-offending. I'd li
 r269,3,"^RECALL$","1","/recommendations/[^\/]+/manager-record-decision",0,c2
 r270,0,"^recallTypeManagerDetail$","My decision to recall is based on the risk of re-offending being too high.
 The person has shown behaviour indicating a high likelihood of repeating the index offence.","/recommendations/[^\/]+/manager-record-decision",0,c2
+r271,3,"^riskToChildren$","01000","/recommendations/[^\/]+/rosh",0,c2
+r272,3,"^riskToPublic$","00010","/recommendations/[^\/]+/rosh",0,c2
+r273,3,"^riskToKnownAdult$","10000","/recommendations/[^\/]+/rosh",0,c2
+r274,3,"^riskToStaff$","00100","/recommendations/[^\/]+/rosh",0,c2
+r275,3,"^riskToPrisoners$","00001","/recommendations/[^\/]+/rosh",0,c2
+r276,0,"^previousReleaseDate-day$","12","/recommendations/[^\/]+/ad-previous-release",0,c2
+r277,0,"^previousReleaseDate-month$","9","/recommendations/[^\/]+/ad-previous-release",0,c2
+r278,0,"^previousReleaseDate-year$","22","/recommendations/[^\/]+/ad-previous-release",0,c2
 ### AUTOFILL OPTIONS ###,,,,,,
 advanced,"[]",,,,,
 exceptions,"[]",,,,,
