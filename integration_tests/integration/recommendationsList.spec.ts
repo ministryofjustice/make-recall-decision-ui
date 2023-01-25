@@ -170,7 +170,7 @@ context('Recommendations tab in case summary', () => {
         'Delete',
       ],
       ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59', 'Delete'],
-      ['Unknown', 'A. Milner', '18 Apr 2016', ''],
+      ['Unknown', 'A. Milner', '18 Apr 2016', '', 'Delete'],
     ])
   })
 
