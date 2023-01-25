@@ -111,6 +111,28 @@ export class AuditService {
     })
   }
 
+  async recommendationDeleted({
+    recommendationId,
+    crn,
+    username,
+    logErrors,
+  }: {
+    recommendationId: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'DELETED_RECOMMENDATION',
+      who: username,
+      details: {
+        crn,
+        recommendationId,
+      },
+      logErrors,
+    })
+  }
+
   async createPartA({
     recommendationId,
     crn,

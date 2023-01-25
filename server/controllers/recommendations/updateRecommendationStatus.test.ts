@@ -3,6 +3,7 @@ import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendationStatus } from './updateRecommendationStatus'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { AuditService } from '../../services/auditService'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -102,5 +103,24 @@ describe('updateRecommendationStatus', () => {
       expect(err.status).toEqual(400)
       expect(err.data.errorType).toEqual('INVALID_RECOMMENDATION_STATUS')
     }
+  })
+
+  it('should send audit event if recommendation status set to DELETED', async () => {
+    const req = mockReq({
+      method: 'POST',
+      params: { recommendationId },
+      body: {
+        status: 'DELETED',
+        crn,
+      },
+    })
+    jest.spyOn(AuditService.prototype, 'recommendationDeleted')
+    await updateRecommendationStatus(req, res)
+    expect(AuditService.prototype.recommendationDeleted).toHaveBeenCalledWith({
+      crn,
+      recommendationId,
+      username: 'Bill',
+      logErrors: false,
+    })
   })
 })

@@ -1,11 +1,14 @@
 import { Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { routeUrls } from '../../routes/routeUrls'
-import { validateCrn } from '../../utils/utils'
+import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { AppError } from '../../AppError'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
+import { AuditService } from '../../services/auditService'
+
+const auditService = new AuditService()
 
 const isValidStatus = (status: string) => {
   const validValues = Object.values(RecommendationResponse.status) as string[]
@@ -46,5 +49,13 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
       },
       flags
     )
+  }
+  if (status === 'DELETED') {
+    auditService.recommendationDeleted({
+      crn: normalizedCrn,
+      recommendationId,
+      username,
+      logErrors: isPreprodOrProd(res.locals.env) && process.env.NODE_ENV !== 'test',
+    })
   }
 }
