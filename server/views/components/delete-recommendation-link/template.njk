@@ -1,0 +1,8 @@
+
+<form method='post'
+      action='/recommendations/{{ params.recommendationId }}/status'>
+  <input type="hidden" name="_csrf" value="{{ params.csrfToken }}" />
+  <input type='hidden' name='crn' value='{{ params.crn }}' />
+  <input type="hidden" name="status" value="DELETED" />
+  <button class='reset-button link-button' data-qa='delete-recommendation'>Delete</button>
+</form>

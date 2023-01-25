@@ -12,6 +12,7 @@
                         <th scope="col" class="govuk-table__header">Practitioner</th>
                         <th scope="col" class="govuk-table__header">Last updated</th>
                         <th scope="col" class="govuk-table__header">Action</th>
+                        {% if flags.flagDeleteRecommendation == true %}<th scope="col" class="govuk-table__header"></th>{% endif %}
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -21,6 +22,13 @@
                             <td class="govuk-table__cell">{{ recommendation.lastModifiedByName }}</td>
                             <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: recommendation.lastModifiedDate, dateOnly: true, shortDate: true }) }}</td>
                             <td class="govuk-table__cell">{% include './recommendationsListActions.njk' %}</td>
+                            {% if flags.flagDeleteRecommendation == true %}<td class="govuk-table__cell">
+                                {{ deleteRecommendationLink({
+                                    recommendationId: recommendation.recommendationId,
+                                    crn: caseSummary.personalDetailsOverview.crn,
+                                    csrfToken: csrfToken
+                                }) }}
+                            </td>{% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -28,20 +36,6 @@
             </div>
         {% else %}
             <p class='govuk-body'>No recommendations to display.</p>
-        {% endif %}
-
-        {% if flags.flagDeleteRecommendation == true and caseSummary.activeRecommendation.recommendationId %}
-            <div class='govuk-body-s govuk-!-margin-top-8'>
-                <p class='govuk-body-s'>For testing use only:</p>
-                <form method='post'
-                      action='/recommendations/{{ caseSummary.activeRecommendation.recommendationId }}/status'>
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                    <input type='hidden' name='crn' value='{{ caseSummary.personalDetailsOverview.crn }}' />
-                    <input type="hidden" name="status" value="DELETED" />
-                    <button class='reset-button link-button' data-qa='delete-recommendation'>Delete</button>
-                    the current active recommendation (soft delete; no data is lost)
-                </form>
-            </div>
         {% endif %}
     </div>
 </div>
