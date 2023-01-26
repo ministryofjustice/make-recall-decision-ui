@@ -1,4 +1,4 @@
-import { NamedFormError } from '../pagesForms'
+import { ConfirmationMessage, NamedFormError } from '../pagesForms'
 
 export default {}
 
@@ -9,6 +9,7 @@ declare module 'express-session' {
     nowInMinutes: number
     errors?: NamedFormError[]
     unsavedValues?: Record<string, unknown>
+    confirmationMessage?: ConfirmationMessage
   }
 }
 

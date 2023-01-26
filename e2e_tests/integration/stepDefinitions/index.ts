@@ -249,9 +249,40 @@ When('Maria enters the previous releases', function () {
   cy.getElement('Previous releases To do').should('exist')
   cy.clickLink('Previous releases')
   cy.getDateAttribute('lastReleaseDate').as('lastReleaseDate')
-  cy.selectRadio(`Has ${this.offenderName} been released previously?`, 'Yes')
+  cy.clickLink('Add a previous release')
+  const firstReleaseDate = apiDataForCrn.previousReleaseDates[0]
+  cy.enterDateTime(firstReleaseDate.parts)
   cy.clickButton('Continue')
-  cy.enterDateTime(apiDataForCrn.previousReleaseDate)
+  cy.getDefinitionListValue('Previous release').should('equal', firstReleaseDate.longFormat)
+  // delete it
+  cy.clickButton('Delete')
+  cy.getText('confirmation').should('equal', 'The previous release has been deleted')
+  cy.getElement('Previous release', { parent: '[data-qa="release-info-table"]' }).should('not.exist')
+  // re-add it
+  cy.clickLink('Add a previous release')
+  cy.enterDateTime(firstReleaseDate.parts)
+  cy.clickButton('Continue')
+  // add a second date
+  const secondReleaseDate = apiDataForCrn.previousReleaseDates[1]
+  cy.clickLink('Add a previous release')
+  cy.enterDateTime(secondReleaseDate.parts)
+  cy.clickButton('Continue')
+  // confirm the dates are listed
+  cy.getDefinitionListValue('Previous release', { parent: '[data-qa="previous-release-date-1"]' }).should(
+    'equal',
+    firstReleaseDate.longFormat
+  )
+  cy.getDefinitionListValue('Previous release', { parent: '[data-qa="previous-release-date-2"]' }).should(
+    'equal',
+    secondReleaseDate.longFormat
+  )
+  cy.clickButton('Continue')
+  cy.getElement('Previous releases Completed').should('exist')
+})
+
+When('Maria enters no previous releases', function () {
+  cy.getElement('Previous releases To do').should('exist')
+  cy.clickLink('Previous releases')
   cy.clickButton('Continue')
   cy.getElement('Previous releases Completed').should('exist')
 })

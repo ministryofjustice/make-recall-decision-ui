@@ -1,8 +1,8 @@
-import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
-import { isValueValid } from '../formOptions/formOptions'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { getExistingReleaseDates } from '../addPreviousRelease/formValidator'
+import { isDefined, isNumber } from '../../../utils/utils'
 
 export const validatePreviousReleases = async ({
   requestBody,
@@ -11,33 +11,51 @@ export const validatePreviousReleases = async ({
   let errors
   let valuesToSave
   let nextPagePath
+  let confirmationMessage
 
-  const { hasBeenReleasedPreviously } = requestBody
-  if (!hasBeenReleasedPreviously || !isValueValid(hasBeenReleasedPreviously as string, 'yesNo')) {
-    errors = []
-    const errorId = 'noHasBeenReleasedPreviouslySelected'
-    errors.push(
-      makeErrorObject({
-        id: 'hasBeenReleasedPreviously',
+  const { deletePreviousReleaseDateIndex, previousReleaseDates, continueButton } = requestBody
+  const wasDeleteClicked = isDefined(deletePreviousReleaseDateIndex)
+  if (wasDeleteClicked) {
+    const deleteIndex = parseInt(deletePreviousReleaseDateIndex as string, 10)
+    const existingDates = getExistingReleaseDates(previousReleaseDates as string)
+    if (!isNumber(deleteIndex) || !existingDates.length || !existingDates[deleteIndex]) {
+      errors = []
+      const errorId = 'noDeletePreviousReleaseIndex'
+      errors.push({
+        name: errorId,
         text: strings.errors[errorId],
         errorId,
       })
-    )
-  }
-  if (!errors) {
-    const isYes = hasBeenReleasedPreviously === 'YES'
-    const nextPageId = isYes ? 'add-previous-release' : 'task-list#heading-person-details'
+    }
+    if (errors) {
+      return {
+        errors,
+      }
+    }
+    const newDates = existingDates.filter((_, index) => index !== deleteIndex)
+    confirmationMessage = {
+      text: strings.confirmations.previousReleaseDeleted,
+      type: 'success',
+    }
     valuesToSave = {
       previousReleases: {
-        hasBeenReleasedPreviously: isYes,
-        ...(!isYes ? { previousReleaseDates: null } : {}), // if No selected, reset previous release dates to null
+        previousReleaseDates: newDates,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
+    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
+    return {
+      valuesToSave,
+      nextPagePath,
+      confirmationMessage,
+    }
   }
+  // continue button was clicked
   return {
-    errors,
-    valuesToSave,
-    nextPagePath,
+    valuesToSave: {
+      previousReleases: {
+        hasBeenReleasedPreviously: continueButton === '1',
+      },
+    },
+    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }

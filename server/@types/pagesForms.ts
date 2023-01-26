@@ -110,11 +110,17 @@ export type FormValidatorReturn = Promise<{
   unsavedValues?: Record<string, unknown>
   nextPagePath?: string
   apiEndpointPathSuffix?: string
+  confirmationMessage?: ConfirmationMessage
   monitoringEvent?: {
     eventName: EVENTS
     data: Record<string, unknown>
   }
 }>
+
+export interface ConfirmationMessage {
+  type: string
+  text: string
+}
 
 export interface InputDisplayValuesArgs {
   errors: Record<string, FormError>

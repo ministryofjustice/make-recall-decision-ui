@@ -377,17 +377,18 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Previous releases', () => {
+  it('Add a previous release', () => {
     cy.signIn()
     cy.task('updateRecommendation', {
       statusCode: 200,
       response: { ...completeRecommendationResponse, previousReleases: null },
     })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-releases`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/add-previous-release`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'hasBeenReleasedPreviously',
-      errorText: 'Select whether Paula Smith has been released previously',
+      fieldName: 'previousReleaseDate',
+      fieldGroupId: 'previousReleaseDate-day',
+      errorText: 'Enter the previous release date',
     })
   })
 

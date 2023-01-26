@@ -16,7 +16,9 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
+                {% if recommendation.previousReleases.previousReleaseDates.length %}
+                <input type="hidden" name="previousReleaseDates" value="{% for date in recommendation.previousReleases.previousReleaseDates %}{{ date }}|{% endfor %}" />
+                {% endif %}
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 {{ govukDateInput({
                     id: "previousReleaseDate",

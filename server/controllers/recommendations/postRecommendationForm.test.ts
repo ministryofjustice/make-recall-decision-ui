@@ -158,4 +158,19 @@ describe('postRecommendationForm', () => {
     await postRecommendationForm(req, res)
     expect(appInsightsEvent).not.toHaveBeenCalled()
   })
+
+  it('should add any confirmation message to the request session', async () => {
+    const recallDetails = { recommendationId }
+    jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
+    const req = mockReq({
+      method: 'POST',
+      params: { recommendationId, pageUrlSlug: 'previous-releases' },
+      body: {
+        previousReleaseDates: '2020-01-01',
+        deletePreviousReleaseDateIndex: '0',
+      },
+    })
+    await postRecommendationForm(req, res)
+    expect(req.session.confirmationMessage).toEqual({ text: 'The previous release has been deleted', type: 'success' })
+  })
 })

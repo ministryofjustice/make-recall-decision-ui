@@ -16,7 +16,7 @@ describe('validateAddPreviousRelease', () => {
         previousReleaseDates: ['2022-05-12'],
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')
+    expect(nextPagePath).toEqual('/recommendations/34/previous-releases')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {
