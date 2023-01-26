@@ -93,7 +93,7 @@ export class AuditService {
     username,
     logErrors,
   }: {
-    recommendationId: string
+    recommendationId?: string
     pageUrlSlug: string
     crn: string
     username: string

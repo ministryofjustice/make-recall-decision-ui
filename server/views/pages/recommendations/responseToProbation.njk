@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: nextPageLinkUrl({ nextPagePath: '/cases/' + recommendation.crn + '/overview', urlInfo: urlInfo })
+            href: nextPageLinkUrl({ nextPagePath: '/cases/' + crn + '/overview', urlInfo: urlInfo })
         }) }}
     </nav>
 {% endblock %}
@@ -17,8 +17,6 @@
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-
                 {{ govukTextarea({
                     name: "responseToProbation",
                     id: "responseToProbation",
