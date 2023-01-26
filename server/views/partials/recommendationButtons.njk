@@ -20,12 +20,9 @@
     {% if caseSummary.activeRecommendation.recommendationId %}
         {{ updateRecommendationButton | safe }}
     {% else %}
-        <form method='post' action='/recommendations'>
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-            <input type="hidden" name="crn" value="{{ caseSummary.personalDetailsOverview.crn }}" />
-            <button class='govuk-button no-wrap-tablet' data-analytics-event='click_cta'
-                    data-analytics-event-category='make_recommendation_click'>Make a recommendation
-            </button>
-        </form>
+        <a class='govuk-button'
+           href='{{ pageUrlBase }}create-recommendation-warning'
+           data-analytics-event='click_cta' data-analytics-event-category='make_recommendation_click'>Make a
+            recommendation</a>
     {% endif %}
 {% endif %}

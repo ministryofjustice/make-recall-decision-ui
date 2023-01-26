@@ -61,8 +61,8 @@ context('Make a recommendation', () => {
         cy.task('createRecommendation', { statusCode: 201, response: recommendationResponse })
         cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
         cy.visit(`${routeUrls.cases}/${crn}/overview`)
-        cy.clickButton('Make a recommendation')
-        cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
+        cy.clickLink('Make a recommendation')
+        cy.pageHeading().should('equal', 'Important')
       })
 
       it('shows an error if "Make a recommendation" creation fails', () => {
@@ -72,8 +72,8 @@ context('Make a recommendation', () => {
         }
         cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
         cy.task('createRecommendation', { statusCode: 500, response: 'API save error' })
-        cy.visit(`${routeUrls.cases}/${crn}/overview`)
-        cy.clickButton('Make a recommendation')
+        cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
+        cy.clickButton('Continue')
         cy.getElement('An error occurred creating a new recommendation').should('exist')
       })
 
@@ -286,8 +286,8 @@ context('Make a recommendation', () => {
       }
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
       cy.task('createRecommendation', { statusCode: 403, response: excludedResponse })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
-      cy.clickButton('Make a recommendation')
+      cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
+      cy.clickButton('Continue')
       cy.getElement('There is a problem').should('exist')
     })
 

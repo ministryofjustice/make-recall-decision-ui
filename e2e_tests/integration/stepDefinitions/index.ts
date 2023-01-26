@@ -57,7 +57,11 @@ When('Maria considers a new recall', () => {
 })
 
 When('Maria starts a new recommendation', () => {
-  cy.clickButton('Make a recommendation')
+  cy.clickLink('Make a recommendation')
+})
+
+When('Maria continues from the warning page', () => {
+  cy.clickButton('Continue')
 })
 
 When('Maria recommends an emergency recall', () => {

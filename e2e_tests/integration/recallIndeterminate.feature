@@ -5,6 +5,7 @@ Feature: Recall (indeterminate)
 
   Scenario: Extended sentence changed to non-extended
     Given Maria starts a new recommendation
+    And Maria continues from the warning page
     And Maria explains how the person has responded to probation so far
     And Maria selects the licence conditions that have been breached
     And Maria selects the alternatives to recall that have been tried
