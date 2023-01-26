@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { getTestDataPerEnvironment } from '../../utils'
+import { formatObjectDate, getTestDataPerEnvironment, isoDateToObject } from '../../utils'
 import { formatIsoDateShort } from '../../../cypress_shared/utils'
 
 const apiDataForCrn = getTestDataPerEnvironment()
@@ -22,12 +22,11 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
   expect(contents).to.match(apiDataForCrn.pnc as RegExp)
   expect(contents).to.match(apiDataForCrn.prisonNo as RegExp)
   expect(contents).to.match(apiDataForCrn.noms as RegExp)
-  // TODO - restore when API change is merged
-  // const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(context.lastReleaseDate))
-  // expect(contents).to.contain(`Last release: ${lastReleaseDateFormatted}`)
-  // expect(contents).to.contain(
-  //   `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
-  // )
+  const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(context.lastReleaseDate))
+  expect(contents).to.contain(`Last release: ${lastReleaseDateFormatted}`)
+  expect(contents).to.contain(
+    `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
+  )
 }
 
 export const q5SentenceDetails = function (contents: string, context: Record<string, string>) {
