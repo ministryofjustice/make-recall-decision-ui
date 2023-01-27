@@ -294,6 +294,18 @@ When('Maria reviews the MAPPA details', function () {
   cy.getElement(`MAPPA for ${this.offenderName} Reviewed`).should('exist')
 })
 
+When('Maria enters current RoSH levels', () => {
+  cy.getElement('Current risk of serious harm To do').should('exist')
+  cy.clickLink('Current risk of serious harm')
+  cy.selectRadio('Risk to children', apiDataForCrn.currentRoshForPartA.riskToChildren)
+  cy.selectRadio('Risk to the public', apiDataForCrn.currentRoshForPartA.riskToPublic)
+  cy.selectRadio('Risk to a known adult', apiDataForCrn.currentRoshForPartA.riskToKnownAdult)
+  cy.selectRadio('Risk to staff', apiDataForCrn.currentRoshForPartA.riskToStaff)
+  cy.selectRadio('Risk to prisoners', apiDataForCrn.currentRoshForPartA.riskToPrisoners)
+  cy.clickButton('Continue')
+  cy.getElement('Current risk of serious harm Completed').should('exist')
+})
+
 When('Maria clicks Create Part A', () => {
   cy.clickLink('Create Part A')
   cy.pageHeading().should('contain', 'Part A created')

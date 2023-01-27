@@ -64,6 +64,14 @@ export const q16IndexOffenceDetails = (contents: string) => {
   expect(contents).to.contain(apiDataForCrn.offenceAnalysis)
 }
 
+export const q15RoshLevels = (contents: string) => {
+  expect(contents).to.contain(`Public: ${apiDataForCrn.currentRoshForPartA.riskToPublic}`)
+  expect(contents).to.contain(`Known Adult: ${apiDataForCrn.currentRoshForPartA.riskToKnownAdult}`)
+  expect(contents).to.contain(`Children: ${apiDataForCrn.currentRoshForPartA.riskToChildren}`)
+  expect(contents).to.contain('Prisoners: N/A')
+  expect(contents).to.contain('Staff: Very High') // case doesn't match with value in apiDataForCrn.currentRoshForPartA.riskToPublic
+}
+
 export const q22RecallType = (contents: string, answer: string, details: string) => {
   expect(contents).to.contain(`Select the proposed recall type, having considered the information above: ${answer}`)
   expect(contents).to.contain(`Explain your reasons for the above recall type recommendation: ${details}`)

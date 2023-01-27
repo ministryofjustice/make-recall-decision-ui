@@ -1,6 +1,7 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor'
 import {
   q12MappaDetails,
+  q15RoshLevels,
   q16IndexOffenceDetails,
   q1EmergencyRecall,
   q22RecallType,
@@ -91,6 +92,10 @@ When('Maria downloads the Part A and confirms the indeterminate recall', functio
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
     )
     expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
+
+    cy.log('Q15')
+    q15RoshLevels(contents)
+
     cy.log('Q16')
     q16IndexOffenceDetails(contents)
     // TODO - Q18 - additional licence conditions

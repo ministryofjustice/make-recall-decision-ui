@@ -20,4 +20,11 @@ export const sharedInputData = {
       shortFormat: '23/11/2021',
     },
   ],
+  currentRoshForPartA: {
+    riskToChildren: 'High',
+    riskToPublic: 'Medium',
+    riskToKnownAdult: 'Low',
+    riskToStaff: 'Very high',
+    riskToPrisoners: 'Not applicable',
+  },
 }

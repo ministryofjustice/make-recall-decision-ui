@@ -32,6 +32,7 @@ Feature: Recall (indeterminate)
     And Maria enters the offence analysis
     And Maria enters the previous releases
     And Maria reviews the MAPPA details
+    And Maria enters current RoSH levels
     And Maria enters an address where the person can be found
     And Maria confirms "Yes" to a risk of contraband
     And Maria clicks Create Part A
