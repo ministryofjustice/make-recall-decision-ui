@@ -283,6 +283,7 @@ When('Maria enters the previous releases', function () {
 When('Maria enters the previous recalls', function () {
   cy.getElement('Previous recalls To do').should('exist')
   cy.clickLink('Previous recalls')
+  cy.getDateAttribute('lastRecallDate').as('lastRecallDate')
   cy.clickLink('Add a previous recall')
   const firstRecallDate = apiDataForCrn.previousRecallDates[0]
   cy.enterDateTime(firstRecallDate.parts)

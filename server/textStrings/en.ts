@@ -58,6 +58,7 @@ export const strings = {
     missingManagerRecallTypeDetail: 'You must explain your decision',
     missingRosh: 'Select a RoSH level for the risk to',
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
+    noDeletePreviousRecallIndex: 'Select a previous recall to delete',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
