@@ -36,6 +36,7 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   convictionDetail: undefined,
   offenceAnalysis: undefined,
   mappa: undefined,
+  currentRoshForPartA: undefined,
   previousReleases: undefined,
 }
 
@@ -69,19 +70,6 @@ describe('taskCompleteness', () => {
       expect(areAllComplete).toEqual(true)
     })
 
-    it('all complete (with feature flag flagRoshPagePartA)', () => {
-      const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse, {
-        flagRoshPagePartA: true,
-      })
-      expect(statuses).toEqual({
-        ...setAllProperties(sharedProperties, true),
-        ...setAllProperties(recallProperties, true),
-        ...setAllProperties(indeterminateSentenceProperties, true),
-        currentRoshForPartA: true,
-      })
-      expect(areAllComplete).toEqual(true)
-    })
-
     it('indeterminate sentence - partly complete', () => {
       const { statuses, areAllComplete } = taskCompleteness(emptyRecall)
       expect(statuses).toEqual({
@@ -90,22 +78,6 @@ describe('taskCompleteness', () => {
         ...setAllProperties(indeterminateSentenceProperties, false),
         isIndeterminateSentence: true,
         recallType: true,
-      })
-      expect(areAllComplete).toEqual(false)
-    })
-
-    it('incomplete (with feature flag flagRoshPagePartA)', () => {
-      const { statuses, areAllComplete } = taskCompleteness(
-        { ...recommendationResponse, currentRoshForPartA: null } as RecommendationResponse,
-        {
-          flagRoshPagePartA: true,
-        }
-      )
-      expect(statuses).toEqual({
-        ...setAllProperties(sharedProperties, true),
-        ...setAllProperties(recallProperties, true),
-        ...setAllProperties(indeterminateSentenceProperties, true),
-        currentRoshForPartA: false,
       })
       expect(areAllComplete).toEqual(false)
     })
