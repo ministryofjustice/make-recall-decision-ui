@@ -3,14 +3,6 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlagDefault } from '../@types/featureFlags'
 
 export const featureFlagsDefaults = {
-  flagRoshPagePartA: {
-    label: 'Page to enter RoSH levels for Part A Q15',
-    default: true,
-  },
-  flagShowSystemGenerated: {
-    label: 'Option to include system generated contacts in Contact history',
-    default: false,
-  },
   flagConsiderRecall: {
     label: 'Consider a recall / manager decision',
     default: false,
@@ -26,6 +18,14 @@ export const featureFlagsDefaults = {
   flagDeleteRecommendation: {
     label: 'Allow (soft) deletion of a recommendation',
     default: false,
+  },
+  flagRoshPagePartA: {
+    label: 'Page to enter RoSH levels for Part A Q15',
+    default: true,
+  },
+  flagShowSystemGenerated: {
+    label: 'Option to include system generated contacts in Contact history',
+    default: true,
   },
   flagExcludeFromAnalytics: {
     label: "Don't send events to Google Analytics or App Insights for my activity",
