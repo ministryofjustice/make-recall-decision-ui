@@ -84,7 +84,6 @@ describe('transformContactHistory', () => {
         contactTypesSystemGenerated: 'IVSP',
         includeSystemGenerated: 'YES',
       },
-      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(1)
@@ -211,7 +210,6 @@ describe('transformContactHistory', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: defaultFilters,
-      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(4)
@@ -291,7 +289,6 @@ describe('transformContactHistory', () => {
         ...defaultFilters,
         searchFilters: 'Serata Street',
       },
-      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(1)
@@ -302,25 +299,14 @@ describe('transformContactHistory', () => {
     const { data } = transformContactHistory({
       caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: { ...defaultFilters, includeSystemGenerated: 'YES' },
-      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(data.contactCount).toEqual(4)
   })
 
-  it('hides system contacts if flag is on but filter not set', () => {
+  it('hides system contacts if filter not set', () => {
     const { data } = transformContactHistory({
       caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
       filters: { ...defaultFilters, includeSystemGenerated: '' },
-      featureFlags: { flagShowSystemGenerated: true },
-    })
-    expect(data.contactCount).toEqual(1)
-  })
-
-  it('hides system contacts if flag is off', () => {
-    const { data } = transformContactHistory({
-      caseSummary: { contactSummary, contactTypeGroups } as ContactHistoryResponse,
-      filters: defaultFilters,
-      featureFlags: { flagShowSystemGenerated: false },
     })
     expect(data.contactCount).toEqual(1)
   })
@@ -362,7 +348,6 @@ describe('transformContactHistory', () => {
     const { errors, data } = transformContactHistory({
       caseSummary: { contactSummary: contacts, contactTypeGroups: groups } as ContactHistoryResponse,
       filters: { ...defaultFilters, includeSystemGenerated: 'YES' },
-      featureFlags: { flagShowSystemGenerated: true },
     })
     expect(errors).toBeUndefined()
     expect(data.contactCount).toEqual(4)

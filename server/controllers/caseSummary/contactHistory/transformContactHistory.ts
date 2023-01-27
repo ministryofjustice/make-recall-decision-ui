@@ -6,22 +6,18 @@ import { filterContactsBySearch } from './filterContactsBySearch'
 import { removeFutureContacts } from './removeFutureContacts'
 import { ContactHistoryFilters } from '../../../@types/contacts'
 import { filterContactsBySystemGenerated } from './filterContactsBySystemGenerated'
-import { FeatureFlags } from '../../../@types/featureFlags'
 
 export const transformContactHistory = ({
   caseSummary,
   filters,
-  featureFlags,
 }: {
   caseSummary: ContactHistoryResponse
   filters: ContactHistoryFilters
-  featureFlags: FeatureFlags
 }) => {
   const { contacts: contactsFilteredBySystemGenerated, selected: selectedSystemGenerated } =
     filterContactsBySystemGenerated({
       contacts: caseSummary.contactSummary,
       filters,
-      featureFlags,
     })
   // TODO - api should not return future contacts
   const pastContacts = removeFutureContacts(contactsFilteredBySystemGenerated)

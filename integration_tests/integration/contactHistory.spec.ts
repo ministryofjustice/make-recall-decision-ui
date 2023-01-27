@@ -209,7 +209,7 @@ context('Contact history', () => {
     })
 
     it('by system generated contacts', () => {
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagShowSystemGenerated=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
       cy.selectCheckboxes('NDelius automatic contacts', ['Show NDelius automatic contacts'])
       cy.clickButton('Apply filters')
@@ -220,7 +220,7 @@ context('Contact history', () => {
     })
 
     it('by multiple filters combined', () => {
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history?flagShowSystemGenerated=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
 
       // include system generated contacts

@@ -87,9 +87,7 @@ export const getCaseSection = async (
       caseSummaryRaw = await fetchFromCacheOrApi({
         fetchDataFn: async () => {
           startTime = performance.now()
-          const response = await getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token, {
-            flagShowSystemGenerated: true,
-          })
+          const response = await getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token)
           appInsightsTimingMetric({ name: 'getCaseContactHistory', startTime })
           return response
         },
@@ -101,7 +99,6 @@ export const getCaseSection = async (
         transformed = transformContactHistory({
           caseSummary: caseSummaryRaw,
           filters: reqQuery as unknown as ContactHistoryFilters,
-          featureFlags,
         })
         errors = transformed.errors
         caseSummary = transformed.data

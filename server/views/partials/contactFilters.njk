@@ -3,26 +3,24 @@
         {% for searchFilters in caseSummary.filters.searchFilters.selected %}
             <input type='hidden' name='searchFilters' value='{{ searchFilters.text }}' />
         {% endfor %}
-        {% if flags.flagShowSystemGenerated %}
-            {{ govukCheckboxes({
-                name: "includeSystemGenerated",
-                classes: "govuk-checkboxes--small",
-                formGroup: {
-                    classes: 'govuk-!-margin-bottom-4'
-                },
-                fieldset: {
-                    legend: {
-                        text: "NDelius automatic contacts",
-                        classes: "govuk-fieldset__legend--s govuk-visually-hidden"
-                    }
-                },
-                items: [{
-                    value: "YES",
-                    text: "Show NDelius automatic contacts",
-                    checked: caseSummary.filters.includeSystemGenerated.value == 'YES'
-                }]
-            }) }}
-        {% endif %}
+        {{ govukCheckboxes({
+            name: "includeSystemGenerated",
+            classes: "govuk-checkboxes--small",
+            formGroup: {
+                classes: 'govuk-!-margin-bottom-4'
+            },
+            fieldset: {
+                legend: {
+                    text: "NDelius automatic contacts",
+                    classes: "govuk-fieldset__legend--s govuk-visually-hidden"
+                }
+            },
+            items: [{
+                value: "YES",
+                text: "Show NDelius automatic contacts",
+                checked: caseSummary.filters.includeSystemGenerated.value == 'YES'
+            }]
+        }) }}
         {{ govukInput({
             label: {
                 text: "Search term",
@@ -66,50 +64,51 @@
         }) }}
         {% if caseSummary.filters.contactTypes.contactTypeGroups.length %}
             <div>
-            <fieldset class="govuk-fieldset">
-                <legend class='govuk-fieldset__legend govuk-fieldset__legend--s'>Contact types</legend>
-                {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
-                    <details class='collapsible govuk-!-margin-bottom-2'
-                             data-module="govuk-details" {{ "open" if group.isGroupOpen }}>
-                        <summary class="govuk-body">
-                            {{ group.label }} <span class="text-secondary">(<span
-                                        data-qa='group-contact-count'>{{ group.contactCountInGroup }}<span class='govuk-visually-hidden'> {{ countLabelSuffix({ count:group.contactCountInGroup, label: 'contact' }) }}</span></span>)</span>
-                        </summary>
-                        <div>
-                            {{ govukCheckboxes({
-                                idPrefix: "contactTypes-" + group.groupId,
-                                name: "contactTypes",
-                                classes: "govuk-checkboxes--small",
-                                formGroup: {
-                                    classes: 'govuk-!-margin-bottom-2'
-                                },
-                                fieldset: {
-                                    legend: {
-                                        text: group.label,
-                                        classes: "govuk-visually-hidden"
-                                    }
-                                },
-                                items: radioCheckboxItems({ items: group.contactTypeCodes, currentValues: caseSummary.filters.contactTypes.selectedIds })
-                            }) }}
-                            {% if group.contactTypeCodesSystemGenerated.length %}
-                            <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>NDelius automatic contacts</h3>
-                            {{ govukCheckboxes({
-                                idPrefix: "contactTypes-" + group.groupId + "-system",
-                                name: "contactTypesSystemGenerated",
-                                classes: "govuk-checkboxes--small",
-                                fieldset: {
-                                    legend: {
-                                        text: group.label,
-                                        classes: "govuk-visually-hidden"
-                                    }
-                                },
-                                items: radioCheckboxItems({ items: group.contactTypeCodesSystemGenerated, currentValues: caseSummary.filters.contactTypes.selectedIds })
-                            }) }}
-                            {% endif %}
-                        </div>
-                    </details>
-                {% endfor %}
-            </fieldset>
+                <fieldset class="govuk-fieldset">
+                    <legend class='govuk-fieldset__legend govuk-fieldset__legend--s'>Contact types</legend>
+                    {% for group in caseSummary.filters.contactTypes.contactTypeGroups %}
+                        <details class='collapsible govuk-!-margin-bottom-2'
+                                 data-module="govuk-details" {{ "open" if group.isGroupOpen }}>
+                            <summary class="govuk-body">
+                                {{ group.label }} <span class="text-secondary">(<span
+                                            data-qa='group-contact-count'>{{ group.contactCountInGroup }}<span
+                                                class='govuk-visually-hidden'> {{ countLabelSuffix({ count:group.contactCountInGroup, label: 'contact' }) }}</span></span>)</span>
+                            </summary>
+                            <div>
+                                {{ govukCheckboxes({
+                                    idPrefix: "contactTypes-" + group.groupId,
+                                    name: "contactTypes",
+                                    classes: "govuk-checkboxes--small",
+                                    formGroup: {
+                                        classes: 'govuk-!-margin-bottom-2'
+                                    },
+                                    fieldset: {
+                                        legend: {
+                                            text: group.label,
+                                            classes: "govuk-visually-hidden"
+                                        }
+                                    },
+                                    items: radioCheckboxItems({ items: group.contactTypeCodes, currentValues: caseSummary.filters.contactTypes.selectedIds })
+                                }) }}
+                                {% if group.contactTypeCodesSystemGenerated.length %}
+                                    <h3 class='govuk-heading-s govuk-!-margin-bottom-2'>NDelius automatic contacts</h3>
+                                    {{ govukCheckboxes({
+                                        idPrefix: "contactTypes-" + group.groupId + "-system",
+                                        name: "contactTypesSystemGenerated",
+                                        classes: "govuk-checkboxes--small",
+                                        fieldset: {
+                                            legend: {
+                                                text: group.label,
+                                                classes: "govuk-visually-hidden"
+                                            }
+                                        },
+                                        items: radioCheckboxItems({ items: group.contactTypeCodesSystemGenerated, currentValues: caseSummary.filters.contactTypes.selectedIds })
+                                    }) }}
+                                {% endif %}
+                            </div>
+                        </details>
+                    {% endfor %}
+                </fieldset>
             </div>
         {% endif %}
     {% endset -%}
@@ -133,7 +132,7 @@
                             text: 'NDelius automatic contacts'
                         },
                             items: selectedFilterItems({ items: caseSummary.filters.includeSystemGenerated.selected, urlInfo: urlInfo })
-                        } if caseSummary.filters.includeSystemGenerated.selected.length and flags.flagShowSystemGenerated else undefined,
+                        } if caseSummary.filters.includeSystemGenerated.selected.length else undefined,
                         {
                             heading: {
                             text: 'Search term'
@@ -147,8 +146,8 @@
                             items: selectedFilterItems({ items: caseSummary.filters.dateRange.selected, urlInfo: urlInfo })
                         } if caseSummary.filters.dateRange.selected.length else undefined,                        {
                             heading: {
-                            text: 'Contact type'
-                        },
+                                text: 'Contact type'
+                            },
                             items: selectedFilterItems({ items: caseSummary.filters.contactTypes.selected, urlInfo: urlInfo })
                         } if caseSummary.filters.contactTypes.selected.length else undefined
                     ])
