@@ -44,7 +44,7 @@ describe('getCaseSection', () => {
     } as ContactHistoryResponse
     ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
     jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
-    await getCaseSection('contact-history', crn, token, userId, {}, {})
+    await getCaseSection('contact-history', crn, token, userId, {})
     expect(redisSet).toHaveBeenCalledWith(
       'contactHistory:A1234AB',
       JSON.stringify({ userIds: [userId], data: apiResponse })

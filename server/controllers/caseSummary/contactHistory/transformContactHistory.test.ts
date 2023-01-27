@@ -268,7 +268,6 @@ describe('transformContactHistory', () => {
         'dateFrom-year': '2022',
         searchFilters: 'A',
       },
-      featureFlags: {},
     })
     expect(errors).toEqual([
       { href: '#dateTo-day', name: 'dateTo', text: 'Enter the to date', errorId: 'blankDateTime' },
