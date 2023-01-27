@@ -27,6 +27,9 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
   expect(contents).to.contain(
     `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
   )
+  expect(contents).to.contain(
+    `Dates of previous recalls on this sentence: ${apiDataForCrn.previousRecallDates[0].shortFormat}, ${apiDataForCrn.previousRecallDates[1].shortFormat}`
+  )
 }
 
 export const q5SentenceDetails = function (contents: string, context: Record<string, string>) {

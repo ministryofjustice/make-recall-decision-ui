@@ -38,6 +38,7 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   mappa: undefined,
   currentRoshForPartA: undefined,
   previousReleases: undefined,
+  previousRecalls: undefined,
 }
 
 const indeterminateSentenceProperties: RecommendationResponse = {
@@ -330,6 +331,32 @@ describe('taskCompleteness', () => {
         previousReleases: { hasBeenReleasedPreviously: false },
       })
       expect(statuses.previousReleases).toEqual(true)
+    })
+  })
+
+  describe('Previous recalls', () => {
+    it('returns true if hasBeenRecalledPreviously is true and previous release date set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        previousRecalls: { hasBeenRecalledPreviously: true, previousRecallDates: ['2022-09-05'] },
+      })
+      expect(statuses.previousRecalls).toEqual(true)
+    })
+
+    it('returns false if hasBeenRecalledPreviously is true and previous release date not set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        previousRecalls: { hasBeenRecalledPreviously: true },
+      })
+      expect(statuses.previousRecalls).toEqual(false)
+    })
+
+    it('returns true if hasBeenRecalledPreviously is false and previous release date not set', () => {
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        previousRecalls: { hasBeenRecalledPreviously: false },
+      })
+      expect(statuses.previousRecalls).toEqual(true)
     })
   })
 
