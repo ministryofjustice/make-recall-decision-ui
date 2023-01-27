@@ -18,7 +18,6 @@ import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import { transformRecommendations } from './recommendations/transformRecommendations'
 import { ContactHistoryFilters } from '../../@types/contacts'
-import { FeatureFlags } from '../../@types/featureFlags'
 import { CaseSectionId } from '../../@types/pagesForms'
 
 export const getCaseSection = async (
@@ -26,8 +25,7 @@ export const getCaseSection = async (
   crn: string,
   token: string,
   userId: string,
-  reqQuery: ParsedQs,
-  featureFlags: FeatureFlags
+  reqQuery: ParsedQs
 ) => {
   let sectionLabel
   let caseSummary
