@@ -3,13 +3,11 @@
         Risk profile
     </h2>
     <ul class="moj-task-list__items">
-        {% if flags.flagRoshPagePartA == true %}
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-currentRoshForPartA'
                href="{{ changeLinkUrl({ pageUrlSlug: 'rosh', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.rosh }}</a>
             <span id='task-list-status-currentRoshForPartA'>{{ taskStatus({ hasData: taskCompleteness.statuses.currentRoshForPartA }) }}</span>
         </li>
-        {% endif %}
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-mappa'
                href="{{ changeLinkUrl({ pageUrlSlug: 'mappa', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.mappa }}</a>

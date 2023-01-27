@@ -19,10 +19,6 @@ export const featureFlagsDefaults = {
     label: 'Allow (soft) deletion of a recommendation',
     default: false,
   },
-  flagRoshPagePartA: {
-    label: 'Page to enter RoSH levels for Part A Q15',
-    default: true,
-  },
   flagShowSystemGenerated: {
     label: 'Option to include system generated contacts in Contact history',
     default: true,
