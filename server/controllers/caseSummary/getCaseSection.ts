@@ -18,7 +18,6 @@ import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import { transformRecommendations } from './recommendations/transformRecommendations'
 import { ContactHistoryFilters } from '../../@types/contacts'
-import { FeatureFlags } from '../../@types/featureFlags'
 import { CaseSectionId } from '../../@types/pagesForms'
 
 export const getCaseSection = async (
@@ -26,8 +25,7 @@ export const getCaseSection = async (
   crn: string,
   token: string,
   userId: string,
-  reqQuery: ParsedQs,
-  featureFlags: FeatureFlags
+  reqQuery: ParsedQs
 ) => {
   let sectionLabel
   let caseSummary
@@ -87,9 +85,7 @@ export const getCaseSection = async (
       caseSummaryRaw = await fetchFromCacheOrApi({
         fetchDataFn: async () => {
           startTime = performance.now()
-          const response = await getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token, {
-            flagShowSystemGenerated: true,
-          })
+          const response = await getCaseSummary<ContactHistoryResponse>(trimmedCrn, 'contact-history', token)
           appInsightsTimingMetric({ name: 'getCaseContactHistory', startTime })
           return response
         },
@@ -101,7 +97,6 @@ export const getCaseSection = async (
         transformed = transformContactHistory({
           caseSummary: caseSummaryRaw,
           filters: reqQuery as unknown as ContactHistoryFilters,
-          featureFlags,
         })
         errors = transformed.errors
         caseSummary = transformed.data

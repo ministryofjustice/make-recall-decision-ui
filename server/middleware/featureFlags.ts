@@ -19,10 +19,6 @@ export const featureFlagsDefaults = {
     label: 'Allow (soft) deletion of a recommendation',
     default: false,
   },
-  flagShowSystemGenerated: {
-    label: 'Option to include system generated contacts in Contact history',
-    default: true,
-  },
   flagExcludeFromAnalytics: {
     label: "Don't send events to Google Analytics or App Insights for my activity",
     default: false,

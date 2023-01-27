@@ -20,8 +20,7 @@ export const caseSummary = async (req: Request, res: Response): Promise<Response
     normalizedCrn,
     res.locals.user.token,
     res.locals.user.userId,
-    req.query,
-    res.locals.flags
+    req.query
   )
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
