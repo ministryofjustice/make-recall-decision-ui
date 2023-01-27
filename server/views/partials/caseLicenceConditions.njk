@@ -21,12 +21,13 @@
                         {% set descriptionHtml %}
                             <pre class='govuk-body'>{{ condition.description }}</pre>
                         {% endset %}
-                        {{ appSummaryCard({
-                            titleHtml: condition.text,
-                            headingLevel: 4,
-                            classes: 'app-summary-card--white govuk-!-margin-bottom-3' + (' app-summary-card--highlight' if contact.added),
-                            html: descriptionHtml if condition.description else undefined
-                        }) }}
+                    <section class="app-summary-card app-summary-card--white govuk-!-margin-bottom-3">
+                        <div class="app-summary-card__header">
+                            <div class="app-summary-card__title">
+                            {{ condition.text }}
+                            </div>
+                        </div>
+                    </section>
                     {% endfor %}
                 </div>
             </div>
