@@ -9,7 +9,8 @@
         <div class="govuk-grid-column-full">
             <p class='govuk-body'>Each flag turns a feature on or off, <strong>for yourself only, in this browser only (using cookies)</strong>.</p>
             <p class='govuk-body'>All other users will continue to get the default values (unless they've overridden them using this page).</p>
-            <form>
+            <hr />
+            <form class='govuk-!-margin-top-6'>
                 {% for flag in flagsList %}
                     <div>
                         {{ govukRadios({
@@ -23,17 +24,17 @@
                                 }
                             },
                             hint: {
-                                text: "Default: " + ("On" if flag.default == true else "Off")
+                                html: "<div class='govuk-body'>" + flag.description + "</div>"
                             },
                             items: [
                                 {
                                     value: "1",
-                                    text: "On",
+                                    text: "On" + (" (default)" if flag.default == true else ""),
                                     checked: flag.override == true
                                 },
                                 {
                                     value: "0",
-                                    text: "Off",
+                                    text: "Off" + (" (default)" if flag.default == false else ""),
                                     checked: flag.override == false
                                 }
                             ]

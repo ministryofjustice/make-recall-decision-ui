@@ -5,6 +5,7 @@ export const getFeatureFlags = async (req: Request, res: Response): Promise<Resp
   res.locals.flagsList = Object.keys(res.locals.flags).map(key => ({
     id: key,
     label: featureFlagsDefaults[key].label,
+    description: featureFlagsDefaults[key].description,
     default: featureFlagsDefaults[key].default,
     override: res.locals.flags[key],
   }))
