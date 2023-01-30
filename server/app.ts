@@ -21,6 +21,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 import { appInsightsOperationId } from './middleware/appInsightsOperationId'
+import setUpCsrf from './middleware/setUpCsrf'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -46,6 +47,7 @@ export default function createApp(userService: UserService): express.Application
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
+  app.use(setUpCsrf())
 
   app.use('/', indexRoutes(standardRouter(userService)))
 

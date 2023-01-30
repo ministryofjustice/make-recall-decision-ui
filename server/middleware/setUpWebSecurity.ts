@@ -28,6 +28,12 @@ export default function setUpWebSecurity(): Router {
           imgSrc: ["'self'", '*.google-analytics.com', '*.analytics.google.com'],
           styleSrc: ["'self'"],
           fontSrc: ["'self'"],
+          formAction: [
+            "'self'",
+            'sign-in-dev.hmpps.service.justice.gov.uk',
+            'sign-in-preprod.hmpps.service.justice.gov.uk',
+            'sign-in.hmpps.service.justice.gov.uk',
+          ],
         },
       },
     })
