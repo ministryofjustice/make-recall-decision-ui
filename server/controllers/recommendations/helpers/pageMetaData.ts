@@ -58,6 +58,9 @@ import { validateManagerRecordDecisionDelius } from '../managerRecordDecisionDel
 import { validateRosh } from '../rosh/formValidator'
 import { inputDisplayValuesRosh } from '../rosh/inputDisplayValues'
 import { PageMetaData } from '../../../@types/pagesForms'
+import { validatePreviousRecalls } from '../previousRecalls/formValidator'
+import { validateAddPreviousRecall } from '../addPreviousRecall/formValidator'
+import { inputDisplayValuesAddPreviousRecall } from '../addPreviousRecall/inputDisplayValues'
 
 /* The PageMetaData properties explained:
  * id - used as a key to get the page title. Also the name of the nunjucks HTML template
@@ -236,6 +239,18 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         id: 'addPreviousRelease',
         validator: validateAddPreviousRelease,
         inputDisplayValues: inputDisplayValuesAddPreviousRelease,
+      }
+    case 'previous-recalls':
+      return {
+        id: 'previousRecalls',
+        propertyToRefresh: 'previousRecalls',
+        validator: validatePreviousRecalls,
+      }
+    case 'add-previous-recall':
+      return {
+        id: 'addPreviousRecall',
+        validator: validateAddPreviousRecall,
+        inputDisplayValues: inputDisplayValuesAddPreviousRecall,
       }
     case 'offence-analysis':
       return {

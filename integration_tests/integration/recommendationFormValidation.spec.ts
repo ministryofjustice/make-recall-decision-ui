@@ -392,6 +392,21 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
+  it('Add a previous recall', () => {
+    cy.signIn()
+    cy.task('updateRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, previousRecalls: null },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/add-previous-recall`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'previousRecallDate',
+      fieldGroupId: 'previousRecallDate-day',
+      errorText: 'Enter the previous recall date',
+    })
+  })
+
   it('Current risk of serious harm', () => {
     cy.signIn()
     cy.task('updateRecommendation', {

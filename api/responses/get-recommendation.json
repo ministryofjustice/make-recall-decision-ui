@@ -268,6 +268,13 @@
       "2022-03-11"
     ]
   },
+  "previousRecalls": {
+    "lastRecallDate": "2022-03-12",
+    "hasBeenRecalledPreviously": true,
+    "previousRecallDates": [
+      "2022-02-05"
+    ]
+  },
   "recallType": {
     "selected": {
       "value": "STANDARD",

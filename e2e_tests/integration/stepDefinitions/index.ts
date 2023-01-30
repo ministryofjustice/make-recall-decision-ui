@@ -280,11 +280,53 @@ When('Maria enters the previous releases', function () {
   cy.getElement('Previous releases Completed').should('exist')
 })
 
+When('Maria enters the previous recalls', function () {
+  cy.getElement('Previous recalls To do').should('exist')
+  cy.clickLink('Previous recalls')
+  cy.getDateAttribute('lastRecallDate').as('lastRecallDate')
+  cy.clickLink('Add a previous recall')
+  const firstRecallDate = apiDataForCrn.previousRecallDates[0]
+  cy.enterDateTime(firstRecallDate.parts)
+  cy.clickButton('Continue')
+  cy.getDefinitionListValue('Previous recall').should('equal', firstRecallDate.longFormat)
+  // delete it
+  cy.clickButton('Delete')
+  cy.getText('confirmation').should('equal', 'The previous recall has been deleted')
+  cy.getElement('Previous recall', { parent: '[data-qa="recall-info-table"]' }).should('not.exist')
+  // re-add it
+  cy.clickLink('Add a previous recall')
+  cy.enterDateTime(firstRecallDate.parts)
+  cy.clickButton('Continue')
+  // add a second date
+  const secondRecallDate = apiDataForCrn.previousRecallDates[1]
+  cy.clickLink('Add a previous recall')
+  cy.enterDateTime(secondRecallDate.parts)
+  cy.clickButton('Continue')
+  // confirm the dates are listed
+  cy.getDefinitionListValue('Previous recall', { parent: '[data-qa="previous-recall-date-1"]' }).should(
+    'equal',
+    firstRecallDate.longFormat
+  )
+  cy.getDefinitionListValue('Previous recall', { parent: '[data-qa="previous-recall-date-2"]' }).should(
+    'equal',
+    secondRecallDate.longFormat
+  )
+  cy.clickButton('Continue')
+  cy.getElement('Previous recalls Completed').should('exist')
+})
+
 When('Maria enters no previous releases', function () {
   cy.getElement('Previous releases To do').should('exist')
   cy.clickLink('Previous releases')
   cy.clickButton('Continue')
   cy.getElement('Previous releases Completed').should('exist')
+})
+
+When('Maria enters no previous recalls', function () {
+  cy.getElement('Previous recalls To do').should('exist')
+  cy.clickLink('Previous recalls')
+  cy.clickButton('Continue')
+  cy.getElement('Previous recalls Completed').should('exist')
 })
 
 When('Maria reviews the MAPPA details', function () {

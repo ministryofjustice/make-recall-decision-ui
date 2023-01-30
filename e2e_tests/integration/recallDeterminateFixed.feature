@@ -26,6 +26,7 @@ Feature: Recall (determinate)
     And Maria confirms the personal details
     And Maria confirms the offence details
     And Maria enters the offence analysis
+    And Maria enters no previous recalls
     And Maria enters no previous releases
     And Maria reviews the MAPPA details
     And Maria enters current RoSH levels

@@ -89,6 +89,8 @@ export type PageId =
   | 'addressDetails'
   | 'previousReleases'
   | 'addPreviousRelease'
+  | 'previousRecalls'
+  | 'addPreviousRecall'
   | 'confirmationPartA'
   | 'taskListNoRecall'
   | 'whyConsideredRecall'
