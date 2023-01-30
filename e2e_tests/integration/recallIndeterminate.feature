@@ -30,6 +30,7 @@ Feature: Recall (indeterminate)
     And Maria reviews the personal details
     And Maria reviews the offence details
     And Maria enters the offence analysis
+    And Maria enters the previous recalls
     And Maria enters the previous releases
     And Maria reviews the MAPPA details
     And Maria enters current RoSH levels
