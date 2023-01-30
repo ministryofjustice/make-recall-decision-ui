@@ -58,6 +58,7 @@ export const strings = {
     missingManagerRecallTypeDetail: 'You must explain your decision',
     missingRosh: 'Select a RoSH level for the risk to',
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
+    noDeletePreviousRecallIndex: 'Select a previous recall to delete',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -72,6 +73,7 @@ export const strings = {
   },
   confirmations: {
     previousReleaseDeleted: 'The previous release has been deleted',
+    previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
     managerRecordDecision: 'Record your decision',
@@ -104,7 +106,9 @@ export const strings = {
     mappa: 'MAPPA for {{ fullName }}',
     rosh: 'Current risk of serious harm',
     previousReleases: 'Previous releases',
+    previousRecalls: 'Previous recalls',
     addPreviousRelease: 'Add previous release',
+    addPreviousRecall: 'Add previous recall',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',

@@ -28,6 +28,7 @@ Feature: Recall (indeterminate)
     And Maria confirms the personal details
     And Maria confirms the offence details
     And Maria enters the offence analysis
+    And Maria enters no previous recalls
     And Maria enters no previous releases
     And Maria confirms "Yes" to a risk of contraband
     And Maria reviews the MAPPA details
