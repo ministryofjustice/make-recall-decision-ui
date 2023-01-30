@@ -2,8 +2,16 @@ import type { Request, Response, NextFunction } from 'express'
 import type { HTTPError } from 'superagent'
 import logger from '../logger'
 
+interface ErrorWithCode extends HTTPError {
+  code?: string
+}
+
 export default function createErrorHandler() {
-  return (error: HTTPError, req: Request, res: Response, next: NextFunction): void => {
+  return (error: ErrorWithCode, req: Request, res: Response, next: NextFunction): void => {
+    if (error.code === 'EBADCSRFTOKEN') {
+      // invalid CSRF token
+      logger.error(`Invalid CSRF token from URL: ${req.originalUrl}`, error)
+    }
     if (error.status === 401 || error.status === 403) {
       logger.info('Logging user out')
       return res.redirect('/sign-out')
