@@ -148,6 +148,7 @@ describe('caseSummary', () => {
       ],
     })
     ;(createRedisClient as jest.Mock).mockReturnValue({
+      connect: jest.fn().mockResolvedValue(undefined),
       get: (): null => null,
     } as unknown as RedisClient)
     const req = mockReq({ params: { crn, sectionId: 'contact-history' } })

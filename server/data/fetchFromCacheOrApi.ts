@@ -14,14 +14,18 @@ interface Fn {
 
 let apiCache: RedisClient
 
-export const mrdApiCache = () => {
-  apiCache = apiCache ?? createRedisClient({ legacyMode: true })
+export const mrdApiCache = async () => {
+  if (apiCache) {
+    return apiCache
+  }
+  apiCache = createRedisClient({ legacyMode: true })
+  await apiCache.connect().catch((err: Error) => logger.error(`mrdApiCache - Error connecting to Redis`, err))
   return apiCache
 }
 
 const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey }) => {
   const apiResponse = await fetchDataFn()
-  const cache = mrdApiCache()
+  const cache = await mrdApiCache()
   try {
     if (cache) {
       if (checkWhetherToCacheDataFn(apiResponse)) {
@@ -48,7 +52,8 @@ const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userI
 }
 
 export const getValue = async (redisKey: string) => {
-  const value = await mrdApiCache().get(redisKey)
+  const cache = await mrdApiCache()
+  const value = await cache.get(redisKey)
   if (value) {
     return JSON.parse(value)
   }

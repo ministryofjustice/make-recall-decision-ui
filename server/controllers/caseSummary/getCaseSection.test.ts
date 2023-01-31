@@ -21,6 +21,7 @@ describe('getCaseSection', () => {
 
   beforeEach(() => {
     ;(createClient as jest.Mock).mockReturnValue({
+      connect: jest.fn().mockResolvedValue(undefined),
       get: redisGet,
       set: redisSet,
       expire: redisExpire,
