@@ -1,28 +1,23 @@
-import { createClient } from 'redis'
+import { RedisClient } from 'redis'
 import { getCaseSection } from './getCaseSection'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import * as redisExports from '../../data/redisClient'
 import { ContactHistoryResponse } from '../../@types/make-recall-decision-api'
 
 jest.mock('../../data/makeDecisionApiClient')
-jest.mock('redis')
 
 describe('getCaseSection', () => {
   const crn = ' A1234AB '
   const token = 'token'
   const userId = 'a123-b456'
-  const redisGet = jest.fn()
   const redisSet = jest.fn()
   const redisDel = jest.fn()
   const redisExpire = jest.fn()
 
   beforeEach(() => {
-    ;(createClient as jest.Mock).mockReturnValue({
-      get: redisGet,
-      set: redisSet,
-      expire: redisExpire,
-      del: redisDel,
-      on: jest.fn(),
-    })
+    jest
+      .spyOn(redisExports, 'createRedisClient')
+      .mockReturnValue({ set: redisSet, expire: redisExpire, del: redisDel } as unknown as RedisClient)
   })
 
   it('caches the contact history response in redis if CRN is not excluded or restricted', async () => {
@@ -48,7 +43,7 @@ describe('getCaseSection', () => {
       ],
     } as ContactHistoryResponse
     ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
-    redisGet.mockResolvedValue(null)
+    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     await getCaseSection('contact-history', crn, token, userId, {})
     expect(redisSet).toHaveBeenCalledWith(
       'contactHistory:A1234AB',
@@ -68,7 +63,7 @@ describe('getCaseSection', () => {
     })
 
     it('does not cache the contact history response in redis if CRN is excluded', async () => {
-      redisGet.mockResolvedValue(null)
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
       const { section } = await getCaseSection('contact-history', crn, token, userId, {})
       expect(redisSet).not.toHaveBeenCalled()
       expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
@@ -108,7 +103,7 @@ describe('getCaseSection', () => {
     })
 
     it('does not cache the contact history response in redis if CRN is restricted', async () => {
-      redisGet.mockResolvedValue(null)
+      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
       const { section } = await getCaseSection('contact-history', crn, token, userId, {})
       expect(redisSet).not.toHaveBeenCalled()
       expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
