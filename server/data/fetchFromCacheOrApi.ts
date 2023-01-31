@@ -1,4 +1,4 @@
-import { getRedisAsync, createRedisClient } from './redisClient'
+import { createRedisClient, RedisClient } from './redisClient'
 import logger from '../../logger'
 
 const TTL_SECONDS = 60 * 60 * 24
@@ -12,11 +12,18 @@ interface Fn {
   }): Promise<Type>
 }
 
+let apiCache: RedisClient
+
+export const mrdApiCache = () => {
+  apiCache = apiCache ?? createRedisClient({ legacyMode: true })
+  return apiCache
+}
+
 const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey }) => {
   const apiResponse = await fetchDataFn()
+  const cache = mrdApiCache()
   try {
-    const redisClient = createRedisClient()
-    if (redisClient) {
+    if (cache) {
       if (checkWhetherToCacheDataFn(apiResponse)) {
         const newValueToCache = {
           userIds: [userId],
@@ -28,10 +35,10 @@ const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userI
           const dedupedUserIds = [...new Set(updatedUserIds)]
           newValueToCache.userIds = dedupedUserIds
         }
-        redisClient.set(redisKey, JSON.stringify(newValueToCache))
-        redisClient.expire(redisKey, TTL_SECONDS)
+        cache.set(redisKey, JSON.stringify(newValueToCache))
+        cache.expire(redisKey, TTL_SECONDS)
       } else {
-        redisClient.del(redisKey)
+        cache.del(redisKey)
       }
     }
   } catch (err) {
@@ -41,7 +48,7 @@ const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userI
 }
 
 export const getValue = async (redisKey: string) => {
-  const value = await getRedisAsync(redisKey)
+  const value = await mrdApiCache().get(redisKey)
   if (value) {
     return JSON.parse(value)
   }

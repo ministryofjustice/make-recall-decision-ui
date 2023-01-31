@@ -1,12 +1,14 @@
-import { RedisClient } from 'redis'
 import waitForExpect from 'wait-for-expect'
-import * as redisExports from './redisClient'
+import { createRedisClient, RedisClient } from './redisClient'
 import { fetchFromCacheOrApi } from './fetchFromCacheOrApi'
+
+jest.mock('./redisClient')
 
 // see test cases at https://dsdmoj.atlassian.net/browse/MRD-254
 describe('fetchFromCacheOrApi', () => {
   const fetchDataFn = jest.fn()
   const checkWhetherToCacheDataFn = jest.fn()
+  const redisGet = jest.fn()
   const redisSet = jest.fn()
   const redisDel = jest.fn()
   const redisExpire = jest.fn()
@@ -14,9 +16,12 @@ describe('fetchFromCacheOrApi', () => {
   const currentUserId = 'a123-b456'
 
   beforeEach(() => {
-    jest
-      .spyOn(redisExports, 'createRedisClient')
-      .mockReturnValue({ set: redisSet, expire: redisExpire, del: redisDel } as unknown as RedisClient)
+    ;(createRedisClient as jest.Mock).mockReturnValue({
+      get: redisGet,
+      set: redisSet,
+      expire: redisExpire,
+      del: redisDel,
+    } as unknown as RedisClient)
   })
 
   const cachedData = {
@@ -35,7 +40,7 @@ describe('fetchFromCacheOrApi', () => {
     beforeEach(() => checkWhetherToCacheDataFn.mockReturnValue(true))
 
     it('should return the cached data, if it has been previously cached for this user. Then update the cache with the API response', async () => {
-      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+      redisGet.mockResolvedValue(
         JSON.stringify({
           userIds: ['other-user', currentUserId],
           data: cachedData,
@@ -65,7 +70,7 @@ describe('fetchFromCacheOrApi', () => {
     })
 
     it('should return API data and populate the cache with it, if cache is empty', async () => {
-      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
+      redisGet.mockResolvedValue(null)
       fetchDataFn.mockResolvedValue(apiData)
       const data = await fetchFromCacheOrApi({
         fetchDataFn,
@@ -86,7 +91,7 @@ describe('fetchFromCacheOrApi', () => {
     })
 
     it('should return the API data, if user has not previously viewed the cached data', async () => {
-      jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+      redisGet.mockResolvedValue(
         JSON.stringify({
           userIds: ['other-user'],
           data: cachedData,
@@ -125,7 +130,7 @@ describe('fetchFromCacheOrApi', () => {
       }
 
       it('should return the API response, if user has not previously viewed the cached data, and deletes any existing cache', async () => {
-        jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+        redisGet.mockResolvedValue(
           JSON.stringify({
             userIds: ['x987-y654'],
             data: cachedData,
@@ -148,7 +153,7 @@ describe('fetchFromCacheOrApi', () => {
       })
 
       it("should return the cached data if the user has previously viewed it, but then delete the cache and don't update with API response", async () => {
-        jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(
+        redisGet.mockResolvedValue(
           JSON.stringify({
             userIds: [currentUserId],
             data: cachedData,
@@ -174,7 +179,7 @@ describe('fetchFromCacheOrApi', () => {
       })
 
       it('should return the API response, if the cache is empty, and not update the cache with API response', async () => {
-        jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
+        redisGet.mockResolvedValue(null)
         fetchDataFn.mockResolvedValue(apiData)
         const data = await fetchFromCacheOrApi({
           fetchDataFn,
