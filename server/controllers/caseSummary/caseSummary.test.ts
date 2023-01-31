@@ -2,6 +2,7 @@ import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { caseSummary } from './caseSummary'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import * as redisExports from '../../data/redisClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
@@ -10,11 +11,9 @@ import excludedResponse from '../../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 import { AuditService } from '../../services/auditService'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
-import { createRedisClient, RedisClient } from '../../data/redisClient'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
-jest.mock('../../data/redisClient')
 
 const crn = ' A1234AB '
 let res: Response
@@ -121,9 +120,8 @@ describe('caseSummary', () => {
         },
       ],
     })
-    ;(createRedisClient as jest.Mock).mockReturnValue({
-      get: (): null => null,
-    } as unknown as RedisClient)
+    jest.spyOn(redisExports, 'createRedisClient').mockReturnValue(null)
+    jest.spyOn(redisExports, 'getRedisAsync').mockResolvedValue(null)
     const req = mockReq({ params: { crn, sectionId: 'contact-history' } })
     await caseSummary(req, res)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'contact-history', token)
