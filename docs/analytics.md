@@ -1,4 +1,4 @@
-# Google analytics
+# Analytics
 
 See [notes on Confluence](https://dsdmoj.atlassian.net/wiki/spaces/MRD/pages/4219174923/Product+analytics)
 
