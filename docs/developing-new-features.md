@@ -1,13 +1,17 @@
 # Developing a new feature
 
-## Fake responses for E2E tests
-The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required. 
+## Generate Typescript definitions
+You can run `npm run swagger-to-ts` to output new typescript definitions to `./server/@types`, which are drawn from [make-recall-decision-api Swagger](https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk/swagger-ui/index.html).
 
-## Generate Typescript definitions from make-recall-decision-api Swagger
-Check [Swagger](https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk/swagger-ui/index.html) - if the new endpoint is there, you can run `npm run swagger-to-ts` to output new typescript definitions to `./server/@types`.
+## E2E tests
+The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required.
+See also [tests.md](./docs/tests.md)
+
 
 ## Add a Cypress integration test
-If needed, add a new mock function to `./integration_tests/mockApis/makeRecallDecisionApi.js`, to get the data (and register the new function in `./integration_tests/cypress.config.ts`).
+See also [tests.md](./docs/tests.md)
+
+If a new API endpoint has been added, you'll need to mock it. Add a new mock function to `./integration_tests/mockApis/makeRecallDecisionApi.js`, to get the data (and register the new function in `./integration_tests/cypress.config.ts`).
 
 Add / edit test in `./integration_tests/integration`
 - Temporarily change the test description to `it.only` to run the new test on its own while developing it (only works when running a single spec, not all)
@@ -18,7 +22,7 @@ Add / edit test in `./integration_tests/integration`
 - You can stop execution in the app using Chrome devtools Node debugger. To stop execution in the test code itself, open devtools in the cypress browser window, and add a `debugger` command to the test code, where you want it to break.
 
 ## Feature flags
-Wrap the new feature in a [feature flag](./feature-flags.md).
+Wrap the new feature in a [feature flag](./feature-flags.md), defaulted to `false`.
 
-### How form render / validation works for Make a recommendation
+## How form render / validation works for Make a recommendation
 - [Flow diagram](./images/make-recall-decision-ui-flow.png)

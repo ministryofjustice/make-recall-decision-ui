@@ -1,49 +1,35 @@
 # UI for "Decide if someone should be recalled or not" (`make-recall-decision-ui`)
 
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=for-the-badge&logo=github&label=MoJ%20Compliant&query=%24.data%5B%3F%28%40.name%20%3D%3D%20%22make-recall-decision-ui%22%29%5D.status&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fgithub_repositories)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories#make-recall-decision-ui)
-[![CircleCI](https://circleci.com/gh/ministryofjustice/make-recall-decision-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/make-recall-decision-ui)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/make-recall-decision-ui/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/make-recall-decision-ui/tree/main)
 
-If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a probation officer to review case information and make that decision.
+If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a probation officer to review case information and make the decision to recall or not.
+Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD/overview)
 
-## Direct dependencies
+## Running the app locally
+* [Setup and running](./docs/setup-running.md)
+* [User access](./docs/user-access.md)
 
-- hmpps-auth - for authentication
-- redis - session store and token caching
-- make-recall-decision-api - main API for the app
+## Development
+[Guide on developing new features](./docs/developing-new-features.md)
 
-## Running the app locally against dev env services
+* [Service dependencies](./docs/service-dependencies.md)
+* [Linting and typescript](./docs/lint-typescript.md)
+* [Tests](./docs/tests.md)
+* [Feature flags](./docs/feature-flags.md)
+* [Analytics](./docs/analytics.md)
+* [Form auto-filler](./docs/autofill-forms.md)
 
-[Doc](./docs/setup-running.md)
+## Support / deployment / configuration
+* [Environment variables](./docs/env-vars.md) - including notes on changing secrets
+* [NPM dependency Checks](./docs/npm-dependency-checks.md)
+* [Deployment / Helm](./docs/helm-deploy.md) - including how to roll back a deployment
+* [Runbook](./docs/runbook.md)
 
-## linting and typescript
-
-[Doc](./docs/lint-typescript.md)
-
-## Tests
-
-[Doc](./docs/tests.md)
-
-## Feature flags
-
-A simple [feature flags mechanism](./docs/feature-flags.md) is available to show or hide new features.
-
-## Deployment / configuration
-- [Environment variables](./docs/env-vars.md)
-- [Deployment / Helm](./docs/helm-deploy.md)
-
-## Dependency Checks
-
-The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
-If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
-
-## Google analytics
-[Doc](./docs/analytics.md)
-
-## Form auto-filler
-[Doc](./docs/autofill-forms.md)
-
-## Guide on developing new features
-[Doc](./docs/developing-new-features.md)
-
-## User access
-[Doc](./docs/user-access.md)
+### Dashboards
+* MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN
+  * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf6465)
+  * [Preprod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf656d)
+* Developer dashboard (AppInsights)
+  * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/c920c355-b321-4048-8795-230b9c5a2728)
+  * [Preprod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/c920c355-b321-4048-8795-230b9c5a24b2)
+* [Monitoring & operability (Confluence)](https://dsdmoj.atlassian.net/wiki/spaces/MRD/pages/3987210241/Monitoring+Operability)
