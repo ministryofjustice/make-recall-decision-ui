@@ -1,4 +1,4 @@
-## Autofill form filler chrome extension
+# Autofill form filler chrome extension
 
 This makes it quicker to fill out the forms in Make recall decision.
 

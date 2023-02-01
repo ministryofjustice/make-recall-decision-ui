@@ -42,16 +42,6 @@ To get debug output when running cypress:
 
 `DEBUG=cypress:* npm run int-test-ui`
 
-## Debugging the node app when running Cypress
-[Running Chrome debugger](./running-app.md#debugging-in-chrome-developer-tools)
-
-## Debugging the Cypress test code
-1. open dev tools
-2. do not click on the node symbol (green kube), instead go to Sources tab
-3. `cmd + o` in order to open file search
-4. put a break point on the needed line or type the word `debugger` in the cypress code and save if break points are unreliable 
-5. rerun the test 
-
 ## E2E tests
 
 ### Run E2E tests against local containers

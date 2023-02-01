@@ -1,13 +1,12 @@
-## Running the app locally against dev env services
+# Running the app locally
 
-### Setup
+## Setup
 
-Install dependencies using `npm install`, ensuring you are using Node v16.x
+Use the version of Node specified in the package.json 'engines' property.
+Install dependencies using `npm install`.
 
-There are 2 .env sample files depending on what you are trying to do:
-- To run the setup pointing at local services, then use the .env.local.sample file in the root of this repo
-- To run the setup pointing at dev services, then use the .env.dev.sample file in the root of this repo
-
+## Run against dev env services
+Take a copy of the .env.dev.sample file in the root of this repo. 
 Name the copy as .env, then complete with the missing env values (the team will provide them). NOTE - don't wrap client secrets in quotes.
 
 In your shell config eg .zshrc, set:
@@ -16,9 +15,7 @@ export SYSTEM_CLIENT_ID=<YOUR DEV CLIENT ID, USUALLY YOUR NAME>
 export SYSTEM_CLIENT_SECRET='<YOUR DEV CLIENT SECRET, INSIDE SINGLE QUOTES>'
 ```
 
-### Run against dev env
-
-NOTE - you should be connected to the VPN, because you'll be connecting to services in dev env.
+NOTE - you should be connected to the MoJ digital VPN, to authenticate against HMPPS Auth in dev env.
 
 To start the API and local dependencies, excluding the UI:
 
@@ -32,6 +29,7 @@ And then, to start the UI app:
 npm run start:dev
 ```
 
-Then log in with your Delius credentials (for dev environment).
+Then log in with your NDelius credentials (for dev environment). [Notes on obtaining a login](./user-access.md).
 
-This will build the `hmpps-auth` container image locally on your machine before starting things up. This is needed as the currently released container for `hmpps-auth` does not run properly on M1 macs.
+## Run against local containers
+It's also possible to run locally against all services including auth, in containers. See [notes](./tests.md).

@@ -1,6 +1,6 @@
 # Analytics
 
-See [notes on Confluence](https://dsdmoj.atlassian.net/wiki/spaces/MRD/pages/4219174923/Product+analytics)
+AppInsights and GA / GTM are used. See [notes on Confluence](https://dsdmoj.atlassian.net/wiki/spaces/MRD/pages/4293394509/Product+analytics)
 
 ## Metadata for GTM events
 
