@@ -5,4 +5,5 @@ export const routeUrls = {
   cases: '/cases',
   flags: '/flags',
   recommendations: '/recommendations',
+  accessibility: '/accessibility',
 }
