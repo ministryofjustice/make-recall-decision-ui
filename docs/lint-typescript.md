@@ -3,7 +3,9 @@
 ## Pre-commit hooks
 After `npm install`, files will be created under both .git/hooks and .husky, that will automatically lint (and fix) any staged files in your commits, plus run a type check.
 
-## Typescript definitions generated from manage-recalls-api Swagger endpoint
+## Typescript definitions for make-recall-decision-api
+Generated from manage-recalls-api [Swagger](https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk/swagger-ui/index.html).
+
 ```
 npm run swagger-to-ts
 ```
