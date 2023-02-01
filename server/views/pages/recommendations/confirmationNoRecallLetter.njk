@@ -19,7 +19,7 @@
                 <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/no-recall-letter?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_no_recall_letter_click'>
                     Download the decision not to recall letter (DOCX).</a>
             </p>
-            <p class='govuk-body'>Upload the decision not to recall letter to NDelius.</p>
+            <p class='govuk-body'>Upload the decision not to recall letter to NDelius. You must get your manager to sign this letter if it is not the first one {{ recommendation.personOnProbation.name }} has had.</p>
             <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Return to overview of {{ recommendation.personOnProbation.name }}</a></p>
         </div>
     </div>
