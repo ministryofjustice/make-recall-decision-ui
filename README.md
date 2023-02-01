@@ -3,7 +3,7 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/make-recall-decision-ui/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/make-recall-decision-ui/tree/main)
 
 If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a probation officer to review case information and make the decision to recall or not.
-Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD/overview)
+Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD/overview).
 
 ## Running the app locally
 * [Setup and running](./docs/setup-running.md)
@@ -23,7 +23,7 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 * [Environment variables](./docs/env-vars.md) - including notes on changing secrets
 * [NPM dependency Checks](./docs/npm-dependency-checks.md)
 * [Deployment / Helm](./docs/helm-deploy.md) - including how to roll back a deployment
-* [Runbook](./docs/runbook.md)
+* [Runbook](./RUNBOOK.md)
 
 ### Dashboards
 * MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN

@@ -1,14 +1,15 @@
 # Developing a new feature
 
 ## Generate Typescript definitions
-[Output new typescript definitions](./docs/lint-typescript.md), which are drawn from Swagger.
+ Ensure the Typescript definitions for make-recall-decision-api responses are up-to-date.
+[Update typescript definitions](./docs/lint-typescript.md), which are drawn from Swagger.
 
 ## E2E tests
 The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required.
-See also [tests.md](./docs/tests.md)
+See also [tests](./docs/tests.md)
 
 ## Add a Cypress integration test
-See also [tests.md](./docs/tests.md)
+See also [tests](./docs/tests.md)
 
 If a new API endpoint has been added, you'll need to mock it. Add a new mock function to `./integration_tests/mockApis/makeRecallDecisionApi.js`, to get the data (and register the new function in `./integration_tests/cypress.config.ts`).
 
@@ -18,7 +19,7 @@ Add / edit test in `./integration_tests/integration`
 - Find elements using visible text rather than attributes, if possible. It speeds up test development, has the added benefit of testing accessibility in some cases (eg for input labels), and makes the tests more readable. Use cy.* commands (which can be reused later for E2E tests).
 - Run the [integration tests](./tests.md). While developing tests, `npm run int-test-ui` is better as you can see what's going on in the browser.
 - If you make a change to the Cypress tests or supporting test code, it will refresh automatically
-- You can stop execution in the app using Chrome devtools Node debugger. To stop execution in the test code itself, open devtools in the cypress browser window, and add a `debugger` command to the test code, where you want it to break.
+- You can stop execution in the app using Chrome devtools Node debugger. To stop execution in the test code itself, open devtools in the cypress browser window, and add a `debugger` command to the test code in your code editor, where you want it to break.
 
 ## Feature flags
 Wrap the new feature in a [feature flag](./feature-flags.md), defaulted to `false`.

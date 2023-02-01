@@ -13,8 +13,9 @@ npm run swagger-to-ts
 Note - you should be connected to the VPN when running this script, or it won't be authorized to hit the Swagger endpoint.
 
 Types are output to `./server/@types/make-recall-decision-api`.
-The online swagger, for comparison, is [here]
-(https://make-recall-decision-api.hmpps.service.justice.gov.uk/swagger-ui/index.html)
+The online swagger, for comparison, is [here](https://make-recall-decision-api.hmpps.service.justice.gov.uk/swagger-ui/index.html)
+
+## Typescript check
 
 To run a Typescript compilation check:
 ```
@@ -23,4 +24,6 @@ npm run typecheck
 
 ## Run linter and fix issues
 
-`npm run lint:fix`
+```
+npm run lint:fix
+```
