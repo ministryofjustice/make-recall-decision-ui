@@ -7,6 +7,8 @@ import caseOverviewApiResponse from '../../../api/responses/get-case-overview.js
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
 import casePersonalDetailsResponse from '../../../api/responses/get-case-personal-details.json'
+import caseVulnerabilitiesResponse from '../../../api/responses/get-case-vulnerabilities.json'
+import caseRecommendationsResponse from '../../../api/responses/get-case-recommendations.json'
 import excludedResponse from '../../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 import { AuditService } from '../../services/auditService'
@@ -79,6 +81,30 @@ describe('caseSummary', () => {
     expect(res.locals.section).toEqual({
       id: 'personal-details',
       label: 'Personal details',
+    })
+  })
+
+  it('should return case details for recommendations', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRecommendationsResponse)
+    const req = mockReq({ params: { crn, sectionId: 'recommendations' } })
+    await caseSummary(req, res)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'recommendations', token)
+    expect(res.locals.caseSummary.activeRecommendation).toEqual(caseRecommendationsResponse.activeRecommendation)
+    expect(res.locals.section).toEqual({
+      id: 'recommendations',
+      label: 'Recommendations',
+    })
+  })
+
+  it('should return case details for vulnerabilities', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseVulnerabilitiesResponse)
+    const req = mockReq({ params: { crn, sectionId: 'vulnerabilities' } })
+    await caseSummary(req, res)
+    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'vulnerabilities', token)
+    expect(res.locals.caseSummary.activeRecommendation).toEqual(caseVulnerabilitiesResponse.activeRecommendation)
+    expect(res.locals.section).toEqual({
+      id: 'vulnerabilities',
+      label: 'Vulnerabilities',
     })
   })
 

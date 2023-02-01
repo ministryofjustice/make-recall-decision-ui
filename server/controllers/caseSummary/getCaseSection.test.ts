@@ -1,8 +1,12 @@
 import { RedisClient } from 'redis'
 import { getCaseSection } from './getCaseSection'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import {
+  ContactHistoryResponse,
+  RecommendationResponse,
+  VulnerabilitiesResponse,
+} from '../../@types/make-recall-decision-api'
 import * as redisExports from '../../data/redisClient'
-import { ContactHistoryResponse } from '../../@types/make-recall-decision-api'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -85,9 +89,19 @@ describe('getCaseSection', () => {
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
     })
 
+    it('returns excluded data for vulnerabilities', async () => {
+      const { caseSummary } = await getCaseSection('vulnerabilities', crn, token, userId, {})
+      expect((caseSummary as VulnerabilitiesResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
     it('returns excluded data for risk', async () => {
       const { caseSummary } = await getCaseSection('risk', crn, token, userId, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
+    it('returns excluded data for recommendations', async () => {
+      const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {})
+      expect((caseSummary as RecommendationResponse).userAccessResponse.userExcluded).toEqual(true)
     })
   })
 
@@ -125,9 +139,19 @@ describe('getCaseSection', () => {
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
     })
 
+    it('returns restricted data for vulnerabilities', async () => {
+      const { caseSummary } = await getCaseSection('vulnerabilities', crn, token, userId, {})
+      expect((caseSummary as VulnerabilitiesResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
     it('returns restricted data for risk', async () => {
       const { caseSummary } = await getCaseSection('risk', crn, token, userId, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
+    it('returns restricted data for recommendations', async () => {
+      const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {})
+      expect((caseSummary as RecommendationResponse).userAccessResponse.userRestricted).toEqual(true)
     })
   })
 })
