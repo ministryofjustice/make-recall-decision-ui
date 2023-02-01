@@ -13,27 +13,33 @@
 
 {% block content %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
+        <div class="govuk-grid-column-full">
             {% include '../partials/error-summary.njk' %}
             {% set infoHtml %}
-                <div class='govuk-!-margin-bottom-8'>
-                    <p class='info-panel__body govuk-!-margin-bottom-8'>Do not use this service to create a test
-                        recommendation.</p>
-                    <p class='info-panel__body'>When you make a recommendation, a record is stored.</p>
-                    <p class='info-panel__body'>Only use it for real recommendations.</p>
-                </div>
-                <div class='flex-desktop'>
-                    <div class='govuk-!-margin-right-8'>
-                        <form method='post' action='/recommendations'>
-                            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                            <input type="hidden" name="crn" value="{{ crn }}" />
-                            <button class='govuk-button govuk-button--secondary' data-analytics-event='click_cta'
-                                    data-analytics-event-category='make_recommendation_click'>Continue
-                            </button>
-                        </form>
-                    </div>
-                    <div class='info-panel__body'>
-                        <a class='govuk-link govuk-!-font-size-19' href='/cases/{{ crn }}/overview'>Return to overview</a>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds-from-desktop">
+                        <div class='govuk-!-margin-bottom-8'>
+                            <p class='info-panel__body govuk-!-margin-bottom-8'>Do not use this service to create a test
+                                recommendation.</p>
+                            <p class='info-panel__body'>When you make a recommendation, a record is stored.</p>
+                            <p class='info-panel__body'>Only use it for real recommendations.</p>
+                        </div>
+                        <div class='flex-desktop'>
+                            <div class='govuk-!-margin-right-8'>
+                                <form method='post' action='/recommendations'>
+                                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                                    <input type="hidden" name="crn" value="{{ crn }}" />
+                                    <button class='govuk-button govuk-button--secondary'
+                                            data-analytics-event='click_cta'
+                                            data-analytics-event-category='make_recommendation_click'>Continue
+                                    </button>
+                                </form>
+                            </div>
+                            <div class='info-panel__body'>
+                                <a class='govuk-link govuk-!-font-size-19' href='/cases/{{ crn }}/overview'>Return to
+                                    overview</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endset %}
