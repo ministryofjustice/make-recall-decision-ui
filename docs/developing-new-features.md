@@ -1,12 +1,11 @@
 # Developing a new feature
 
 ## Generate Typescript definitions
-You can run `npm run swagger-to-ts` to output new typescript definitions to `./server/@types`, which are drawn from [make-recall-decision-api Swagger](https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk/swagger-ui/index.html).
+[Output new typescript definitions](./docs/lint-typescript.md), which are drawn from Swagger.
 
 ## E2E tests
 The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required.
 See also [tests.md](./docs/tests.md)
-
 
 ## Add a Cypress integration test
 See also [tests.md](./docs/tests.md)
