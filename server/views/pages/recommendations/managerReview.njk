@@ -18,35 +18,49 @@
 
 {% block content %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
+        <div class="govuk-grid-column-full">
             {% if flags.flagConsiderRecall == true and recommendation.recallConsideredList %}
                 {% set infoHtml %}
-                    {% if recommendation.managerRecallDecision.selected.value %}
-                        <p class='info-panel__body'><strong>Manager:</strong> {{ recommendation.managerRecallDecision.createdBy }}</p>
-                        <p class='info-panel__body'><strong>Date:</strong> {{ formatDateTimeFromIsoString({isoDate: recommendation.managerRecallDecision.createdDate, dateOnly: true }) }}</p>
-                        <p class='info-panel__body'><strong>Decision:</strong> {{ getDisplayValueForOption({ value: recommendation.managerRecallDecision.selected.value, allOptions: formOptions.recallTypeManager }) }}</p>
-                        <pre class='info-panel__body'><strong>Rationale:</strong> {{ recommendation.managerRecallDecision.selected.details }}</pre>
-                        <div class='govuk-!-margin-top-8'>
-                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                               href='/recommendations/{{ recommendation.id }}/is-indeterminate'>Continue</a>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            {% if recommendation.managerRecallDecision.selected.value %}
+                                <p class='info-panel__body'>
+                                    <strong>Manager:</strong> {{ recommendation.managerRecallDecision.createdBy }}</p>
+                                <p class='info-panel__body'>
+                                    <strong>Date:</strong> {{ formatDateTimeFromIsoString({isoDate: recommendation.managerRecallDecision.createdDate, dateOnly: true }) }}
+                                </p>
+                                <p class='info-panel__body'>
+                                    <strong>Decision:</strong> {{ getDisplayValueForOption({ value: recommendation.managerRecallDecision.selected.value, allOptions: formOptions.recallTypeManager }) }}
+                                </p>
+                                <pre class='info-panel__body'><strong>Rationale:</strong> {{ recommendation.managerRecallDecision.selected.details }}</pre>
+                                <div class='govuk-!-margin-top-8'>
+                                    <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                       href='/recommendations/{{ recommendation.id }}/is-indeterminate'>Continue</a>
+                                </div>
+                            {% else %}
+                                <p class='info-panel__body govuk-!-margin-bottom-8'>Public safety is vital. But make
+                                    sure recall is the right thing to do.</p>
+                                <p class='info-panel__body'>Discuss and review this case with a manager - think about
+                                    these questions:</p>
+                                <ul class='info-panel__body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
+                                    <li>What does the Risk Management Plan say?</li>
+                                    <li>What does the Contingency Plan say?</li>
+                                    <li>Can the risk be managed in the community?</li>
+                                    <li>What else can you do to manage the risk?</li>
+                                    <li>What type of sentence is the person on?</li>
+                                    <li>Has the recall threshold of the person’s sentence been met?</li>
+                                </ul>
+                                <h2 class='info-panel__body govuk-!-font-weight-bold'>What happens next</h2>
+                                <p class='info-panel__body govuk-!-margin-bottom-8'>Your answers have been saved. The
+                                    manager will review the case and make a decision. Then you can come back and update
+                                    your recommendation.</p>
+                                <p class='info-panel__body'>
+                                    <a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Return to
+                                        overview</a>
+                                </p>
+                            {% endif %}
                         </div>
-                    {% else %}
-                        <p class='info-panel__body govuk-!-margin-bottom-8'>Public safety is vital. But make sure recall is the right thing to do.</p>
-                        <p class='info-panel__body'>Discuss and review this case with a manager - think about these questions:</p>
-                        <ul class='info-panel__body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
-                            <li>What does the Risk Management Plan say?</li>
-                            <li>What does the Contingency Plan say?</li>
-                            <li>Can the risk be managed in the community?</li>
-                            <li>What else can you do to manage the risk?</li>
-                            <li>What type of sentence is the person on?</li>
-                            <li>Has the recall threshold of the person’s sentence been met?</li>
-                        </ul>
-                        <h2 class='info-panel__body govuk-!-font-weight-bold'>What happens next</h2>
-                        <p class='info-panel__body govuk-!-margin-bottom-8'>Your answers have been saved. The manager will review the case and make a decision. Then you can come back and update your recommendation.</p>
-                        <p class='info-panel__body'>
-                            <a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Return to overview</a>
-                        </p>
-                    {% endif %}
+                    </div>
                 {% endset %}
                 {{ infoPanel({
                     titleText: heading,
@@ -54,17 +68,22 @@
                 }) }}
             {% else %}
                 {% set infoHtml %}
-                    <p class='info-panel__body'>Public safety is vital. But make sure recall is the right thing to
-                        do.</p>
-                    <p class='info-panel__body'>Think about these questions:</p>
-                    <ul class='info-panel__body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
-                        <li>What does the Risk Management Plan say?</li>
-                        <li>What does the Contingency Plan say?</li>
-                        <li>Can the risk be managed in the community?</li>
-                        <li>What else can you do to manage the risk?</li>
-                    </ul>
-                    <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                       href='/recommendations/{{ recommendation.id }}/is-indeterminate'>Continue</a>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <p class='info-panel__body'>Public safety is vital. But make sure recall is the right thing
+                                to
+                                do.</p>
+                            <p class='info-panel__body'>Think about these questions:</p>
+                            <ul class='info-panel__body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
+                                <li>What does the Risk Management Plan say?</li>
+                                <li>What does the Contingency Plan say?</li>
+                                <li>Can the risk be managed in the community?</li>
+                                <li>What else can you do to manage the risk?</li>
+                            </ul>
+                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                               href='/recommendations/{{ recommendation.id }}/is-indeterminate'>Continue</a>
+                        </div>
+                    </div>
                 {% endset %}
                 {{ infoPanel({
                     titleText: heading,
