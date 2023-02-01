@@ -17,7 +17,7 @@ export const preprodData = {
   mappaCategory: /MAPPA Category: Category \d/,
   mappaLevel: /MAPPA Level: Level \d/,
   indexOffenceDescription: /.+/,
-  nameOfPersonCompletingForm: /Name of person completing the form: Jon\s+Wyatt/,
+  nameOfPersonCompletingForm: /Name of person completing the form: Bill\s+Sclater/,
   emailAddressOfPersonCompletingForm: /Email Address: .*@digital\.justice\.gov\.uk/,
   region: /Region:.*/,
   ldu: /LDU:.*/,
