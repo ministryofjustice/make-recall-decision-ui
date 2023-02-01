@@ -60,6 +60,19 @@
   {% endif %}
 {% endblock %}
 
+    {% block footer %}
+      {{ govukFooter({
+        meta: {
+          items: [
+            {
+              href: "/accessibility",
+              text: "Accessibility"
+            }
+          ]
+        }
+      }) }}
+    {% endblock %}
+
 {% block bodyEnd %}
   {# Run JavaScript at end of the
   <body>, to avoid blocking the initial render. #}

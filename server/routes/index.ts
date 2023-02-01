@@ -30,6 +30,7 @@ export default function routes(router: Router): Router {
 
   router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults), setAnalyticsId)
   get('/', startPage)
+  get(routeUrls.accessibility, (req, res) => res.render('pages/accessibility'))
   get(routeUrls.flags, getFeatureFlags)
   get(routeUrls.search, personSearch)
   get(routeUrls.searchResults, personSearchResults)

@@ -1,0 +1,86 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Accessibility statement" }) %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class="govuk-heading-xl">Accessibility statement for {{ applicationName }}</h1>
+            <p class='govuk-body'>This accessibility statement applies to the
+                make-recall-decision.hmpps.service.justice.gov.uk domain. </p>
+            <p class='govuk-body'>This website is run by the Ministry of Justice. We want as many people as possible to
+                be able to use this website. You should be able to:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+                <li>change colours, contrast levels and fonts</li>
+                <li>zoom in up to 300% without the text spilling off the screen</li>
+                <li>navigate most of the website using just a keyboard</li>
+                <li>navigate most of the website using speech recognition software</li>
+                <li>listen to most of the website using a screen reader (including the most recent versions of JAWS,
+                    NVDA and VoiceOver)
+                </li>
+            </ul>
+            <p class='govuk-body'>We’ve also made the website text as simple as possible to understand.</p>
+            <p class='govuk-body'><a href='https://mcmw.abilitynet.org.uk/' rel='noopener noreferrer'>AbilityNet</a> has
+                advice on making your device easier to use if you have a disability.</p>
+            <h2 class="govuk-heading-m">How accessible this website is</h2>
+            <p class='govuk-body'>Parts of this website are not fully accessible. For example:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+                <li>the focus indicator does not meet minimum contrast requirements with a contrast ratio of 1.3:1</li>
+                <li>the ‘apply filters’ button is located above the actual filters - this means if you’re navigating
+                    using a keyboard you’ll have to tab back up to the button after making your filters selection
+                </li>
+                <li>the presentation and layout of some of the content might cause you to miss the information</li>
+                <li>there are multiple regions that are referenced by the same label which might cause problems if
+                    you’re using assistive technology users
+                </li>
+            </ul>
+            <h2 class="govuk-heading-m">Feedback and contact information</h2>
+            <p class='govuk-body'>If you need information on this website in a different format like accessible PDF,
+                large print, easy read, audio recording or braille, email <a href='mailto:mrd@digital.justice.gov.uk' rel='noopener noreferrer'>mrd@digital.justice.gov.uk</a></p>
+            <p class='govuk-body'>If you cannot view the map on our 'contact us' page, <a href='https://www.gov.uk/government/organisations/ministry-of-justice' rel='noopener noreferrer'>call or email us for directions</a>.</p>
+            <h2 class="govuk-heading-m">Reporting accessibility problems with this website</h2>
+            <p class='govuk-body'>We’re always looking to improve the accessibility of this website. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, email us at <a href='mailto:mrd@digital.justice.gov.uk' rel='noopener noreferrer'>mrd@digital.justice.gov.uk</a>.</p>
+            <h2 class="govuk-heading-m">Enforcement procedure</h2>
+            <p class='govuk-body'>If you’re not happy with how we respond to your complaint, <a href='https://www.equalityadvisoryservice.com/' rel='noopener noreferrer'>contact the Equality Advisory and Support Service (EASS)</a>.</p>
+            <p class='govuk-body'>The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).</p>
+            <h2 class="govuk-heading-m">Contacting us by phone or visiting us in person</h2>
+            <p class='govuk-body'>We provide a text relay service for people who are D/deaf, hearing impaired or have a speech impediment.</p>
+            <p class='govuk-body'>Our offices have audio induction loops, or if you contact us before your visit we can arrange a British Sign Language (BSL) interpreter.</p>
+            <p class='govuk-body'>Find out how to <a href='https://www.gov.uk/government/organisations/ministry-of-justice' rel='noopener noreferrer'>contact the Ministry of Justice</a>.</p>
+            <h2 class="govuk-heading-m">Technical information about this website’s accessibility</h2>
+            <p class='govuk-body'>The Ministry of Justice is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
+            <h2 class="govuk-heading-m">Compliance status</h2>
+            <p class='govuk-body'>This website is partially compliant with the <a href='https://www.w3.org/TR/WCAG21/'>Web Content Accessibility Guidelines version 2.1</a> AA standard, due to the non-compliances listed below.</p>
+            <h2 class="govuk-heading-l">Non-accessible content</h2>
+            <p class='govuk-body'>The content listed below is non-accessible for the following reasons.</p>
+            <h3 class="govuk-heading-m">Non-compliance with the accessibility regulations</h3>
+            <ol class='govuk-list govuk-list--number'>
+                <li>
+                    <p class='govuk-body'>The focus indicator fails to meet minimum contrast requirements with a contrast ratio of 1.3:1 (with a foreground yellow colour of #FFDD00 and a background white colour of #FFFFFF). This fails WCAG 2.1 success criterion 1.4.11 (Non-text Contrast).</p>
+                    <p class='govuk-body'>We plan to fix this by April 2024.</p>
+                </li>
+                <li>
+                    <p class='govuk-body'>On the Contact History page, users can apply required filters and then complete the function by clicking the ‘Apply Filters’ button. However, this button is located above the actual filters—this means that keyboard users have to tab back up to the button after making their filters selection. This fails WCAG 2.1 success criterion 1.3.2 (Meaningful Sequence).</p>
+                    <p class='govuk-body'>We plan to fix this by April 2024.</p>
+                </li>
+                <li>
+                    <p class='govuk-body'>On the ‘Circumstances - What has led to this recall’ page on the ‘Make a Recall Recommendation’ journey, users are provided with additional content that could help them with their input. However, the presentation and layout of this content on the page might cause users to miss this information. This fails WCAG 2.1 success criterion 1.3.2 (Meaningful Sequence).</p>
+                    <p class='govuk-body'>We plan to fix this by April 2024.</p>
+                </li>
+                <li>
+                    <p class='govuk-body'>On the Case Summary Overview page, there are multiple regions that are referenced by the same label (‘Important’). This can pose problems to assistive technology users. With multiple regions using the same landmark, users won’t be able to identify the purpose of each one. This makes it harder for them to navigate quickly to the information they want to see. This fails WCAG 2.1 success criterion 1.3.1 (Info and Relationships) and 4.1.1 (Parsing).</p>
+                    <p class='govuk-body'>We plan to fix this by April 2024.</p>
+                </li>
+            </ol>
+            <h3 class="govuk-heading-m">Content that’s not within the scope of the accessibility regulations</h3>
+            <h4 class="govuk-heading-s">PDFs and other documents</h4>
+            <p class='govuk-body'>Some of our PDFs and Word documents are essential to providing our services. For example, we have PDFs with information on how users can access our services, and forms published as Word documents. By April 2024, we plan to either fix these or replace them with accessible HTML pages.</p>
+            <p class='govuk-body'>The accessibility regulations <a href='http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made'>do not require us to fix PDFs or other documents published before 23 September 2018</a> if they’re not essential to providing our services.</p>
+            <p class='govuk-body'>Any new PDFs or Word documents we publish will meet accessibility standards.</p>
+            <h2 class="govuk-heading-m">Preparation of this accessibility statement</h2>
+            <p class='govuk-body'>This statement was prepared on 2 February 2023. It was last reviewed on 2 February 2023.</p>
+            <p class='govuk-body'>This website was last tested on 19 January 2023. The test was carried out by Uservision.</p>
+            <p class='govuk-body'>You can <a href='https://uv2854-moj-making-recall-decisions.uservisionaccessibility.co.uk/index.html' rel='noopener noreferrer'>read the full accessibility test report</a>.</p>
+        </div>
+    </div>
+{% endblock %}
