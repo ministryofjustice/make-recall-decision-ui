@@ -5,10 +5,12 @@
 [Update typescript definitions](./docs/lint-typescript.md), which are drawn from Swagger.
 
 ## E2E tests
+These are used for 'happy path' testing only. To test error validation or detailed interactions, use integration tests.
 The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required.
 See also [tests](./docs/tests.md)
 
 ## Add a Cypress integration test
+These tend to be written to test behaviour for single page loads, eg error states. For journeys of multiple pages, use E2E tests.
 See also [tests](./docs/tests.md)
 
 If a new API endpoint has been added, you'll need to mock it. Add a new mock function to `./integration_tests/mockApis/makeRecallDecisionApi.js`, to get the data (and register the new function in `./integration_tests/cypress.config.ts`).
