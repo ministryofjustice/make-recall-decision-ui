@@ -32,4 +32,4 @@ npm run start:dev
 Then log in with your NDelius credentials (for dev environment). [Notes on obtaining a login](./user-access.md).
 
 ## Run against local containers
-It's also possible to run locally against all services including auth, in containers. See [notes](./tests.md).
+It's also possible to run locally against all services including auth, in containers. See [E2E tests](./e2e-tests.md).

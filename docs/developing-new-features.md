@@ -7,7 +7,7 @@
 ## E2E tests
 These are used for 'happy path' testing only. To test error validation or detailed interactions, use integration tests.
 The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required.
-See also [tests](./docs/tests.md)
+See also [E2E tests](./docs/e2e-tests.md)
 
 ## Add a Cypress integration test
 These tend to be written to test behaviour for single page loads, eg error states. For journeys of multiple pages, use E2E tests.
