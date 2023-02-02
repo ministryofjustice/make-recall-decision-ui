@@ -17,7 +17,7 @@ Coverage stats will be output to stdout and /coverage
 For local running, start a test db, redis, and wiremock instance by:
 
 ```
-docker compose -f docker-compose-test.yml up
+docker compose -f docker-compose-test.yml up -d
 ```
 
 Then run the server in test mode by:
@@ -44,3 +44,22 @@ To get debug output when running cypress:
 
 `DEBUG=cypress:* npm run int-test-ui`
 
+## Accessibility tests
+
+These run in Cypress and test a selection of pages against accessibility standards using Axe.
+
+```
+docker compose -f docker-compose-test.yml up -d
+```
+
+then 
+
+```
+npm run start-feature
+```
+
+and to run the a11y tests:
+
+```
+npm run accessibility-test-ui
+```

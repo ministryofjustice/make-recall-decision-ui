@@ -10,7 +10,8 @@ All dependencies will be mocked, including upstream APIs used by make-recall-dec
 
 Set the CYPRESS_PASSWORD and CYPRESS_PASSWORD_SPO env vars in the [.env.local.sample](./.env.local.sample) file when you copy it to .env. The passwords can be obtained from the CYPRESS_PASSWORD_local and CYPRESS_PASSWORD_SPO_local env vars in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
 
-Run all services:
+Run this command in the root of the project. It will start make-recall-decision-api up and other dependencies:
+
 ```
 ./scripts/start-services-for-e2e-tests-local.sh
 ```
