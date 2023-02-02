@@ -14,7 +14,7 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 
 * [Service dependencies](./docs/service-dependencies.md)
 * [Linting and typescript](./docs/lint-typescript.md)
-* [Unit & integration tests](./docs/tests.md)
+* [Unit, integration & accessibility tests](./docs/tests.md)
 * [E2E tests](./docs/e2e-tests.md)
 * [Feature flags](./docs/feature-flags.md)
 * [Analytics](./docs/analytics.md)
