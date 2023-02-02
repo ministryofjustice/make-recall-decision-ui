@@ -5,15 +5,15 @@
 Use the version of Node specified in the package.json 'engines' property.
 Install dependencies using `npm install`.
 
-## Run against dev env services
-Take a copy of the .env.dev.sample file in the root of this repo. 
-Name the copy as .env, then complete with the missing env values (the team will provide them). NOTE - don't wrap client secrets in quotes.
+Take a copy of the .env.dev.sample file in the root of this repo.
+Name the copy as .env, then complete with your client credentials ([note on how to request](https://github.com/ministryofjustice/hmpps-auth#how-do-i-get-client-credentials)). NOTE - don't wrap client secrets in quotes.
 
-In your shell config eg .zshrc, set:
-```
-export SYSTEM_CLIENT_ID=<YOUR DEV CLIENT ID, USUALLY YOUR NAME>
-export SYSTEM_CLIENT_SECRET='<YOUR DEV CLIENT SECRET, INSIDE SINGLE QUOTES>'
-```
+API_CLIENT_ID and SYSTEM_CLIENT_ID should be set to the same value - your client ID.
+API_CLIENT_SECRET and SYSTEM_CLIENT_SECRET should be set to the same value - your client secret.
+
+You will also need a [NDelius user login](./user-access.md) to sign in to the app.
+
+## Run against dev env services
 
 NOTE - you should be connected to the MoJ digital VPN, to authenticate against HMPPS Auth in dev env.
 
