@@ -18,7 +18,7 @@ export const mrdApiCache = async () => {
   if (apiCache) {
     return apiCache
   }
-  apiCache = createRedisClient({ legacyMode: true })
+  apiCache = createRedisClient({ legacyMode: false })
   await apiCache.connect().catch((err: Error) => logger.error(`mrdApiCache - Error connecting to Redis`, err))
   return apiCache
 }
@@ -74,6 +74,8 @@ export const fetchFromCacheOrApi: Fn = async ({ fetchDataFn, checkWhetherToCache
     } catch (err) {
       logger.error(err)
     }
+  } else {
+    logger.info(`Redis cache miss for ${redisKey}`)
   }
   return fetchAndCache({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey })
 }
