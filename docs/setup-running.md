@@ -6,10 +6,14 @@ Use the version of Node specified in the package.json 'engines' property.
 Install dependencies using `npm install`.
 
 Take a copy of the .env.dev.sample file in the root of this repo.
-Name the copy as .env, then complete with your client credentials ([note on how to request](https://github.com/ministryofjustice/hmpps-auth#how-do-i-get-client-credentials)). NOTE - don't wrap client secrets in quotes.
+Name the copy as .env, then set API_CLIENT_ID to your client ID and API_CLIENT_SECRET to your client secret.  NOTE - don't wrap client secrets in quotes.
+[How to request client ID and secret](https://github.com/ministryofjustice/hmpps-auth#how-do-i-get-client-credentials)).
 
-API_CLIENT_ID and SYSTEM_CLIENT_ID should be set to the same value - your client ID.
-API_CLIENT_SECRET and SYSTEM_CLIENT_SECRET should be set to the same value - your client secret.
+Next, in your shell config eg ~/.zshrc, set:
+```
+export SYSTEM_CLIENT_ID=<the value of API_CLIENT_ID>
+export SYSTEM_CLIENT_SECRET='the value of API_CLIENT_SECRET, in single quotes'
+```
 
 You will also need a [NDelius user login](./user-access.md) to sign in to the app.
 
