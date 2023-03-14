@@ -23,7 +23,7 @@ npm run start:e2e
 
 Open Cypress, from there you can run the tests:
 ```
-npm run e2e
+npm run e2e-ui
 ```
 
 ## E2E Tests on CircleCI
