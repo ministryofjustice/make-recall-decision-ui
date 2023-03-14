@@ -20,13 +20,16 @@
 
 
                 <h1 class='govuk-heading-l'>Why do you think {{ recommendation.personOnProbation.name }} should not be recalled?</h1>
-                <p class='govuk-body'>These answers will go into the decision not to recall letter. Make sure you use ‘I’ and ‘you’ in your answers.</p>
+                <p class='govuk-body'>These answers will go into the decision not to recall letter. Make sure you use ‘I’ and ‘you’ in your answers.  Write in plain English.  Use short sentences.</p>
                 {{ govukTextarea({
                     name: "licenceBreach",
                     id: "licenceBreach",
                     label: {
                         text: "Explain the licence breach and why it's a problem",
                         classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: "You must say what behaviour made you consider recall."
                     },
                     value: inputDisplayValues.licenceBreach,
                     errorMessage: errorMessage(errors.licenceBreach)
@@ -35,8 +38,11 @@
                     name: "noRecallRationale",
                     id: "noRecallRationale",
                     label: {
-                        text: "Explain your rationale for not recalling " + recommendation.personOnProbation.name,
+                        text: "Explain why you are not recalling " + recommendation.personOnProbation.name,
                         classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: "You must say why you think the risk can be managed in the community."
                     },
                     value: inputDisplayValues.noRecallRationale,
                     errorMessage: errorMessage(errors.noRecallRationale)
@@ -48,15 +54,34 @@
                         text: "What progress has " + recommendation.personOnProbation.name + " made so far?",
                         classes: "govuk-label--m"
                     },
+                    hint: {
+                        text: "Include good behaviour. Say if the breach is unusual or part of a pattern."
+                    },
                     value: inputDisplayValues.popProgressMade,
                     errorMessage: errorMessage(errors.popProgressMade)
+                }) }}
+                {{ govukTextarea({
+                    name: "popThoughts",
+                    id: "popThoughts",
+                    label: {
+                        text: "Explain what " + recommendation.personOnProbation.name + " thinks about the licence breach (optional)",
+                        classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: "This helps show that " + recommendation.personOnProbation.name + " has been listened to."
+                    },
+                    value: inputDisplayValues.popThoughts,
+                    errorMessage: errorMessage(errors.popThoughts)
                 }) }}
                 {{ govukTextarea({
                     name: "futureExpectations",
                     id: "futureExpectations",
                     label: {
-                        text: "What is expected in the future?",
+                        text: "What actions have you agreed for the future?",
                         classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: "List the actions for " + recommendation.personOnProbation.name + " and the actions for the probation practitioner.  Include any licence variations and say why they are needed."
                     },
                     value: inputDisplayValues.futureExpectations,
                     errorMessage: errorMessage(errors.futureExpectations)
