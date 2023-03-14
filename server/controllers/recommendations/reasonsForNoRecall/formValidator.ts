@@ -7,7 +7,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesFor
 export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
-  const { licenceBreach, noRecallRationale, popProgressMade, popThoughts, futureExpectations } = requestBody
+  const { licenceBreach, noRecallRationale, popProgressMade, futureExpectations } = requestBody
   if (
     isEmptyStringOrWhitespace(licenceBreach) ||
     isEmptyStringOrWhitespace(noRecallRationale) ||
@@ -40,7 +40,6 @@ export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormV
         licenceBreach,
         noRecallRationale,
         popProgressMade,
-        popThoughts,
         futureExpectations,
       },
     }
@@ -51,7 +50,6 @@ export const validateReasonsForNoRecall = async ({ requestBody, urlInfo }: FormV
         licenceBreach: stripHtmlTags(licenceBreach as string),
         noRecallRationale: stripHtmlTags(noRecallRationale as string),
         popProgressMade: stripHtmlTags(popProgressMade as string),
-        popThoughts: stripHtmlTags(popThoughts as string),
         futureExpectations: stripHtmlTags(futureExpectations as string),
       },
     },

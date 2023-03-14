@@ -6,7 +6,6 @@ describe('inputDisplayValuesReasonsForNoRecall', () => {
       licenceBreach: 'details',
       noRecallRationale: 'details',
       popProgressMade: 'details',
-      popThoughts: 'details',
       futureExpectations: 'details',
     },
   }

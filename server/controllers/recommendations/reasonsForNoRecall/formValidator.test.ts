@@ -13,7 +13,6 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: 'details<b>',
       noRecallRationale: '<br />details',
       popProgressMade: '<a>details</a>',
-      popThoughts: '<a>details</a>',
       futureExpectations: 'details<script>test</script>',
     }
     const { errors, valuesToSave, nextPagePath } = await validateReasonsForNoRecall({
@@ -26,7 +25,6 @@ describe('validateReasonsForNoRecall', () => {
         licenceBreach: 'details',
         noRecallRationale: 'details',
         popProgressMade: 'details',
-        popThoughts: 'details',
         futureExpectations: 'details',
       },
     })
@@ -53,7 +51,6 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: ' ', // whitespace
       noRecallRationale: 'details',
       popProgressMade: 'details',
-      popThoughts: 'details',
       futureExpectations: 'details',
     }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
@@ -73,7 +70,6 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: 'details',
       noRecallRationale: ' ', // whitespace
       popProgressMade: 'details',
-      popThoughts: 'details',
       futureExpectations: 'details',
     }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
@@ -93,7 +89,6 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: 'details',
       noRecallRationale: 'details',
       popProgressMade: ' ', // whitespace
-      popThoughts: 'details',
       futureExpectations: 'details',
     }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
@@ -113,7 +108,6 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: 'details',
       noRecallRationale: 'details',
       popProgressMade: 'details',
-      popThoughts: 'details',
       futureExpectations: ' ', // whitespace
     }
     const { errors, valuesToSave } = await validateReasonsForNoRecall({ requestBody, recommendationId })
@@ -133,7 +127,6 @@ describe('validateReasonsForNoRecall', () => {
       licenceBreach: 'details',
       noRecallRationale: 'details',
       popProgressMade: 'details',
-      popThoughts: 'details',
     }
     const { errors, unsavedValues, valuesToSave } = await validateReasonsForNoRecall({
       requestBody,
