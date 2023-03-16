@@ -17,7 +17,7 @@ describe('inputDisplayValuesReasonsForNoRecall', () => {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',
         name: 'futureExpectations',
-        text: 'You must explain what is expected in the future',
+        text: 'You must explain the actions you have agreed for the future',
       },
     }
     const inputDisplayValues = inputDisplayValuesReasonsForNoRecall({
@@ -34,7 +34,7 @@ describe('inputDisplayValuesReasonsForNoRecall', () => {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',
         name: 'futureExpectations',
-        text: 'You must explain what is expected in the future',
+        text: 'You must explain the actions you have agreed for the future',
       },
     }
     const unsavedValues = {
