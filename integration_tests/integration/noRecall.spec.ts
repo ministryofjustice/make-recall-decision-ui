@@ -41,7 +41,7 @@ context('No recall', () => {
       })
       cy.assertErrorMessage({
         fieldName: 'noRecallRationale',
-        errorText: 'You must explain your rationale for not recalling Paula Smith',
+        errorText: 'You must explain why you are not recalling Paula Smith',
       })
       cy.assertErrorMessage({
         fieldName: 'popProgressMade',
@@ -49,7 +49,7 @@ context('No recall', () => {
       })
       cy.assertErrorMessage({
         fieldName: 'futureExpectations',
-        errorText: 'You must explain what is expected in the future',
+        errorText: 'You must explain the actions you have agreed for the future',
       })
     })
 

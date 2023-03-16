@@ -83,7 +83,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallRationale',
         href: '#noRecallRationale',
         name: 'noRecallRationale',
-        text: 'You must explain your rationale for not recalling {{ fullName }}',
+        text: 'You must explain why you are not recalling {{ fullName }}',
       },
     ])
   })
@@ -123,7 +123,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',
         name: 'futureExpectations',
-        text: 'You must explain what is expected in the future',
+        text: 'You must explain the actions you have agreed for the future',
       },
     ])
   })
@@ -145,7 +145,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',
         name: 'futureExpectations',
-        text: 'You must explain what is expected in the future',
+        text: 'You must explain the actions you have agreed for the future',
       },
     ])
     expect(unsavedValues).toEqual(requestBody)
