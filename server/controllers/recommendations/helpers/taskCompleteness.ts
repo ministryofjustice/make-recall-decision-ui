@@ -1,6 +1,6 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { isNotNullOrUndefined } from '../../../utils/utils'
+import { hasData, isNotNullOrUndefined } from '../../../utils/utils'
 import { FeatureFlags } from '../../../@types/featureFlags'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
@@ -40,7 +40,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
   const isNoRecall = recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL
 
   let statuses: { [index: string]: boolean } = {
-    alternativesToRecallTried: recommendation.alternativesToRecallTried?.selected?.length > 0,
+    alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
     recallType: isNotNullOrUndefined(recommendation.recallType?.selected),
     responseToProbation: isNotNullOrUndefined(recommendation.responseToProbation),
     isIndeterminateSentence: isNotNullOrUndefined(recommendation.isIndeterminateSentence),
@@ -74,8 +74,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
   if (recommendation.activeCustodialConvictionCount === 1) {
     statuses.licenceConditionsBreached =
-      recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected?.length > 0 ||
-      recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions?.length > 0
+      hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
+      hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions)
   }
 
   if (recommendation.isIndeterminateSentence === true) {

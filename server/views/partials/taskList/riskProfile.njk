@@ -6,12 +6,12 @@
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-currentRoshForPartA'
                href="{{ changeLinkUrl({ pageUrlSlug: 'rosh', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.rosh }}</a>
-            <span id='task-list-status-currentRoshForPartA'>{{ taskStatus({ hasData: taskCompleteness.statuses.currentRoshForPartA }) }}</span>
+            <span id='task-list-status-currentRoshForPartA'>{{ taskStatus({ hasData: hasData(recommendation.currentRoshForPartA) }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-mappa'
                href="{{ changeLinkUrl({ pageUrlSlug: 'mappa', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.mappa }}</a>
-            <span id='task-list-status-mappa'>{{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.mappa }) }}</span>
+            <span id='task-list-status-mappa'>{{ taskStatus({ hasBeenReviewed: recommendation.personOnProbation.mappa.hasBeenReviewed == true }) }}</span>
         </li>
     </ul>
 </li>

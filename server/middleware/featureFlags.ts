@@ -3,6 +3,11 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlagDefault } from '../@types/featureFlags'
 
 export const featureFlagsDefaults = {
+  flagTriggerWork: {
+    label: 'Trigger Work',
+    description: 'POs enter a new workflow over considering a recall, and then share a link with the SPO.',
+    default: false,
+  },
   flagConsiderRecall: {
     label: 'Consider a recall / manager decision',
     description:

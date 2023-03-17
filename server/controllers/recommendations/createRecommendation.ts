@@ -10,7 +10,12 @@ export const createRecommendationController = async (req: Request, res: Response
   try {
     const { user, flags } = res.locals
     const recommendation = await createRecommendation({ crn: normalizedCrn }, user.token, flags)
-    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
+
+    if (flags.flagTriggerWork) {
+      res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/task-list-consider-recall`)
+    } else {
+      res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/response-to-probation`)
+    }
     appInsightsEvent(
       EVENTS.MRD_RECOMMENDATION_STARTED,
       res.locals.user.username,
