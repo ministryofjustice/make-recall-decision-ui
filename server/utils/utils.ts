@@ -38,12 +38,15 @@ export const isNotNullOrUndefined = (val: unknown) => {
   return isNotNull(val) && isDefined(val)
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export const logMessage = (info: any) => {
+  // eslint-disable-next-line no-console
   console.log(info)
 }
 
 export const hasData = (val: unknown, debug?: string): boolean => {
   if (debug) {
+    // eslint-disable-next-line no-console
     console.log(val)
   }
   const isSomething = isNotNull(val) && isDefined(val)
