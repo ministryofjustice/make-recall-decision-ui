@@ -5,15 +5,15 @@
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-personOnProbation' href="{{ changeLinkUrl({ pageUrlSlug: 'personal-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.personalDetails }}</a>
-            <span id='task-list-status-personOnProbation'>{{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.personOnProbation }) }}</span>
+            <span id='task-list-status-personOnProbation'>{{ taskStatus({ hasBeenReviewed: recommendation.personOnProbation.hasBeenReviewed == true }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-convictionDetail' href="{{ changeLinkUrl({ pageUrlSlug: 'offence-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.offenceDetails }}</a>
-            <span id='task-list-status-convictionDetail'>{{ taskStatus({ hasBeenReviewed: taskCompleteness.statuses.convictionDetail }) }}</span>
+            <span id='task-list-status-convictionDetail'>{{ taskStatus({ hasBeenReviewed: recommendation.convictionDetail.hasBeenReviewed == true }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-offenceAnalysis' href="{{ changeLinkUrl({ pageUrlSlug: 'offence-analysis', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.offenceAnalysis }}</a>
-            <span id='task-list-status-offenceAnalysis'>{{ taskStatus({ hasData: taskCompleteness.statuses.offenceAnalysis }) }}</span>
+            <span id='task-list-status-offenceAnalysis'>{{ taskStatus({ hasData: hasData(recommendation.offenceAnalysis) }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-previousReleases' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-releases', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.previousReleases }}</a>
@@ -26,7 +26,9 @@
         {% if recommendation.isInCustody == false %}
             <li class="moj-task-list__item">
                 <a class="moj-task-list__task-name" aria-describedby='task-list-status-isMainAddressWherePersonCanBeFound' href="{{ changeLinkUrl({ pageUrlSlug: 'address-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">Address</a>
-                <span id='task-list-status-isMainAddressWherePersonCanBeFound'>{{ taskStatus({ hasData: taskCompleteness.statuses.isMainAddressWherePersonCanBeFound }) }}</span>
+                <span id='task-list-status-isMainAddressWherePersonCanBeFound'>
+                {{ taskStatus({ hasData: recommendation.custodyStatus.selected == 'NO' and hasData(recommendation.isMainAddressWherePersonCanBeFound) }) }}
+                </span>
             </li>
         {% endif %}
     </ul>

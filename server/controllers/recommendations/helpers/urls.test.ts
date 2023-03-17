@@ -431,5 +431,18 @@ describe('checkForRedirectPath', () => {
       })
       expect(pageUrlSlug).toBeNull()
     })
+
+    it('Returns first page when trigger work feature flag is enabled.', () => {
+      const pageUrlSlug = checkForRedirectPath({
+        requestedPageId: 'task-list',
+        recommendation: {},
+        basePathRecFlow: basePath,
+        crn,
+        featureFlags: { flagTriggerWork: true },
+        hasSpoRole: false,
+        recommendationStatus: RecommendationResponse.status.DRAFT,
+      })
+      expect(pageUrlSlug).toEqual(`${basePath}task-list-consider-recall`)
+    })
   })
 })

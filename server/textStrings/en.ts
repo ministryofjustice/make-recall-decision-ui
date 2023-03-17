@@ -76,6 +76,7 @@ export const strings = {
     previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
+    taskListConsiderRecall: 'Consider a recall',
     managerRecordDecision: 'Record your decision',
     managerRecordDecisionDelius: 'Record your decision in NDelius',
     managerViewDecision: 'Your decision',

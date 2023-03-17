@@ -1,3 +1,7 @@
+{%
+set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached.standardLicenceConditions.selected) or
+      hasData(recommendation.licenceConditionsBreached.additionalLicenceConditions.selectedOptions)
+%}
 
 <li>
     <h2 class="moj-task-list__section" id='heading-circumstances'>
@@ -6,52 +10,52 @@
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-responseToProbation' href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.responseToProbation }}</a>
-            <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: taskCompleteness.statuses.responseToProbation }) }}</span>
+            <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: hasData(recommendation.responseToProbation) }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-licenceConditions' href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.licenceConditions }}</a>
-            <span id='task-list-status-licenceConditions'>{{ taskStatus({ hasData: taskCompleteness.statuses.licenceConditionsBreached }) }}</span>
+            <span id='task-list-status-licenceConditions'>{{ taskStatus({ hasData: licenceConditionsBreached }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-alternativesToRecallTried' href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-alternatives' }) }}">{{ pageHeadings.alternativesToRecallTried }}</a>
-            <span id='task-list-status-alternativesToRecallTried'>{{ taskStatus({ hasData: taskCompleteness.statuses.alternativesToRecallTried }) }}</span>
+            <span id='task-list-status-alternativesToRecallTried'>{{ taskStatus({ hasData: hasData(recommendation.alternativesToRecallTried.selected) }) }}</span>
         </li>
         {% if recommendation.recallType.selected.value != 'NO_RECALL' %}
             <li class="moj-task-list__item">
                 <a class="moj-task-list__task-name" aria-describedby='task-list-status-whatLedToRecall' href="{{ urlInfo.basePath }}what-led">{{ pageHeadings.whatLedToRecall }}</a>
-                <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: taskCompleteness.statuses.whatLedToRecall }) }}</span>
+                <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: hasData(recommendation.whatLedToRecall) }) }}</span>
             </li>
         {% endif %}
         {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false and recommendation.recallType.selected.value === 'STANDARD' %}
             <li class="moj-task-list__item">
                 <a class="moj-task-list__task-name" aria-describedby='task-list-status-emergencyRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'emergency-recall', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.emergencyRecall }}</a>
-                <span id='task-list-status-emergencyRecall'>{{ taskStatus({ hasData: taskCompleteness.statuses.isThisAnEmergencyRecall }) }}</span>
+                <span id='task-list-status-emergencyRecall'>{{ taskStatus({ hasData: hasData(recommendation.isThisAnEmergencyRecall) }) }}</span>
             </li>
         {% endif %}
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-isIndeterminateSentence' href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.isIndeterminateSentence }}</a>
-            <span id='task-list-status-isIndeterminateSentence'>{{ taskStatus({ hasData: taskCompleteness.statuses.isIndeterminateSentence }) }}</span>
+            <span id='task-list-status-isIndeterminateSentence'>{{ taskStatus({ hasData: hasData(recommendation.isIndeterminateSentence) }) }}</span>
         </li>
         {% if recommendation.isIndeterminateSentence == true %}
             <li class="moj-task-list__item">
                 <a class="moj-task-list__task-name" aria-describedby='task-list-status-indeterminateSentenceType' href="{{ changeLinkUrl({ pageUrlSlug: 'indeterminate-type', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Type of indeterminate sentence</a>
-                <span id='task-list-status-indeterminateSentenceType'>{{ taskStatus({ hasData: taskCompleteness.statuses.indeterminateSentenceType }) }}</span>
+                <span id='task-list-status-indeterminateSentenceType'>{{ taskStatus({ hasData: hasData(recommendation.indeterminateSentenceType) }) }}</span>
             </li>
         {% endif %}
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-isExtendedSentence' href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.isExtendedSentence }}</a>
-            <span id='task-list-status-isExtendedSentence'>{{ taskStatus({ hasData: taskCompleteness.statuses.isExtendedSentence }) }}</span>
+            <span id='task-list-status-isExtendedSentence'>{{ taskStatus({ hasData: hasData(recommendation.isExtendedSentence) }) }}</span>
         </li>
         {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false and recommendation.recallType.selected.value === 'FIXED_TERM' %}
             <li class="moj-task-list__item">
                 <a class="moj-task-list__task-name" aria-describedby='task-list-status-fixedTermAdditionalLicenceConditions' href="{{ changeLinkUrl({ pageUrlSlug: 'fixed-licence', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Add any additional licence conditions - fixed term recall</a>
-                <span id='task-list-status-fixedTermAdditionalLicenceConditions'>{{ taskStatus({ hasData: taskCompleteness.statuses.fixedTermAdditionalLicenceConditions }) }}</span>
+                <span id='task-list-status-fixedTermAdditionalLicenceConditions'>{{ taskStatus({ hasData: hasData(recommendation.fixedTermAdditionalLicenceConditions) }) }}</span>
             </li>
         {% endif %}
         {% if recommendation.isIndeterminateSentence == true and recommendation.recallType.selected.value != 'NO_RECALL' %}
             <li class="moj-task-list__item">
                 <a class="moj-task-list__task-name" aria-describedby='task-list-status-indeterminateOrExtendedSentenceDetails' href="{{ changeLinkUrl({ pageUrlSlug: 'indeterminate-details', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Confirm the recall criteria - indeterminate and extended sentences</a>
-                <span id='task-list-status-indeterminateOrExtendedSentenceDetails'>{{ taskStatus({ hasData: taskCompleteness.statuses.indeterminateOrExtendedSentenceDetails }) }}</span>
+                <span id='task-list-status-indeterminateOrExtendedSentenceDetails'>{{ taskStatus({ hasData: hasData(recommendation.indeterminateOrExtendedSentenceDetails) }) }}</span>
             </li>
         {% endif %}
 

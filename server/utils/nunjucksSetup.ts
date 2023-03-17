@@ -2,7 +2,16 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import { formatSingleLineAddress, makePageTitle, errorMessage, countLabel, isNotNull, isDefined } from './utils'
+import {
+  formatSingleLineAddress,
+  makePageTitle,
+  errorMessage,
+  countLabel,
+  isNotNull,
+  isDefined,
+  hasData,
+  logMessage,
+} from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
 import {
@@ -81,6 +90,8 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('removeUndefinedListItems', removeUndefinedListItems)
   njkEnv.addGlobal('getDisplayValueForOption', getDisplayValueForOption)
   njkEnv.addGlobal('isNotNull', isNotNull)
+  njkEnv.addGlobal('hasData', hasData)
+  njkEnv.addGlobal('logMessage', logMessage)
   njkEnv.addGlobal('changeLinkUrl', changeLinkUrl)
   njkEnv.addGlobal('nextPageLinkUrl', nextPageLinkUrl)
   njkEnv.addGlobal('possessiveSuffix', possessiveSuffix)

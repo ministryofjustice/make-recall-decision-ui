@@ -1,10 +1,12 @@
 import convertToTitleCase, {
-  makePageTitle,
   getProperty,
-  removeParamsFromQueryString,
-  listToString,
-  validateCrn,
+  hasData,
   isPreprodOrProd,
+  listToString,
+  logMessage,
+  makePageTitle,
+  removeParamsFromQueryString,
+  validateCrn,
 } from './utils'
 
 describe('listToString', () => {
@@ -242,5 +244,29 @@ describe('isPreprodOrProd', () => {
 
   it('returns true if given PRODUCTION', () => {
     expect(isPreprodOrProd('PRODUCTION')).toEqual(true)
+  })
+})
+
+describe('hasData', () => {
+  it('returns false if given undefined', () => {
+    expect(hasData(undefined)).toEqual(false)
+  })
+  it('returns false if given null', () => {
+    expect(hasData(null)).toEqual(false)
+  })
+  it('returns false if given empty array', () => {
+    expect(hasData([])).toEqual(false)
+  })
+  it('returns true if given array with content', () => {
+    expect(hasData([1])).toEqual(true)
+  })
+  it('returns true if given a value', () => {
+    expect(hasData(1)).toEqual(true)
+  })
+})
+
+describe('logMessage', () => {
+  it('log something', () => {
+    logMessage('test')
   })
 })

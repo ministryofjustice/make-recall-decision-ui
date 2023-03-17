@@ -10,7 +10,7 @@ jest.mock('../../monitoring/azureAppInsights')
 const crn = ' A1234AB '
 let res: Response
 const token = 'token'
-const featureFlags = { flagDomainEventRecommendationStarted: true }
+const featureFlags = { flagDomainEventRecommendationStarted: true, flagTriggerWork: false }
 
 describe('createRecommendationController', () => {
   beforeEach(() => {
@@ -26,6 +26,7 @@ describe('createRecommendationController', () => {
     await createRecommendationController(req, res)
     expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token, {
       flagDomainEventRecommendationStarted: true,
+      flagTriggerWork: false,
     })
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
     expect(req.session.errors).toBeUndefined()
@@ -51,5 +52,13 @@ describe('createRecommendationController', () => {
         text: 'An error occurred creating a new recommendation',
       },
     ])
+  })
+
+  it('should redirect when trigger work flag is true', async () => {
+    featureFlags.flagTriggerWork = true
+    ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
+    const req = mockReq({ body: { crn } })
+    await createRecommendationController(req, res)
+    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list-consider-recall')
   })
 })

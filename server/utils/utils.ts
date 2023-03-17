@@ -38,6 +38,27 @@ export const isNotNullOrUndefined = (val: unknown) => {
   return isNotNull(val) && isDefined(val)
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export const logMessage = (info: any) => {
+  // eslint-disable-next-line no-console
+  console.log(info)
+}
+
+export const hasData = (val: unknown, debug?: string): boolean => {
+  if (debug) {
+    // eslint-disable-next-line no-console
+    console.log(val)
+  }
+  const isSomething = isNotNull(val) && isDefined(val)
+  if (isSomething) {
+    if (Array.isArray(val)) {
+      return (val as unknown[]).length > 0
+    }
+    return true
+  }
+  return false
+}
+
 export const wrapValueInArray = (val: unknown) => (Array.isArray(val) ? val : [val])
 
 export const isString = (val: unknown) => typeof val === 'string'

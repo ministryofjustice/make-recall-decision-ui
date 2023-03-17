@@ -71,6 +71,10 @@ import { inputDisplayValuesAddPreviousRecall } from '../addPreviousRecall/inputD
  *  */
 export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
+    case 'task-list-consider-recall':
+      return {
+        id: 'taskListConsiderRecall',
+      }
     case 'manager-record-decision':
       return {
         id: 'managerRecordDecision',

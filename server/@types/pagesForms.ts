@@ -98,6 +98,7 @@ export type PageId =
   | 'nextAppointment'
   | 'previewNoRecallLetter'
   | 'confirmationNoRecallLetter'
+  | 'taskListConsiderRecall'
 
 export interface FormValidatorArgs {
   requestBody: Record<string, string | string[]>

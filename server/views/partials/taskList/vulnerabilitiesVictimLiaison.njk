@@ -6,7 +6,7 @@
         <li class="moj-task-list__item">
             <a class="moj-task-list__task-name" aria-describedby='task-list-status-vulnerabilities' href="{{ urlInfo.basePath }}vulnerabilities">Would recall affect vulnerability or additional
                 needs?</a>
-            <span id='task-list-status-vulnerabilities'>{{ taskStatus({ hasData: taskCompleteness.statuses.vulnerabilities }) }}</span>
+            <span id='task-list-status-vulnerabilities'>{{ taskStatus({ hasData: hasData(recommendation.vulnerabilities.selected) }) }}</span>
         </li>
     </ul>
 </li>
