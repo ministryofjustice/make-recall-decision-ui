@@ -458,27 +458,27 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-#      - hmpps/deploy_env:
-#          name: deploy_prod
-#          env: prod
-#          slack_notification: true
-#          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
-#          context:
-#            - hmpps-common-vars
-#            - make-recall-decision-ui-prod
-#          requires:
-#            - e2e_test_preprod
-#          <<: *slack-fail-post-step
-#      - hmpps/sentry_release_and_deploy:
-#          name: notify_sentry_prod
-#          sentry_project: make-recall-decision-ui
-#          sentry_environment: PROD
-#          sentry_create_release: true
-#          requires:
-#            - deploy_prod
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+      - hmpps/deploy_env:
+          name: deploy_prod
+          env: prod
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+          context:
+            - hmpps-common-vars
+            - make-recall-decision-ui-prod
+          requires:
+            - e2e_test_preprod
+          <<: *slack-fail-post-step
+      - hmpps/sentry_release_and_deploy:
+          name: notify_sentry_prod
+          sentry_project: make-recall-decision-ui
+          sentry_environment: PROD
+          sentry_create_release: true
+          requires:
+            - deploy_prod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
   e2e-check-dev:
     when: << pipeline.parameters.e2e-check-dev >>
