@@ -430,34 +430,34 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-#      - hmpps/deploy_env:
-#          name: deploy_preprod
-#          env: preprod
-#          context:
-#            - hmpps-common-vars
-#            - make-recall-decision-ui-preprod
-#          requires:
-#            - e2e_test_dev
-#          <<: *slack-fail-post-step
-#      - hmpps/sentry_release_and_deploy:
-#          name: notify_sentry_preprod
-#          sentry_project: make-recall-decision-ui
-#          sentry_environment: PRE-PROD
-#          sentry_create_release: true
-#          requires:
-#            - deploy_preprod
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
-#      - e2e_environment_test:
-#          name: e2e_test_preprod
-#          environment: preprod
-#          requires:
-#            - deploy_preprod
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
-#
+      - hmpps/deploy_env:
+          name: deploy_preprod
+          env: preprod
+          context:
+            - hmpps-common-vars
+            - make-recall-decision-ui-preprod
+          requires:
+            - e2e_test_dev
+          <<: *slack-fail-post-step
+      - hmpps/sentry_release_and_deploy:
+          name: notify_sentry_preprod
+          sentry_project: make-recall-decision-ui
+          sentry_environment: PRE-PROD
+          sentry_create_release: true
+          requires:
+            - deploy_preprod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          requires:
+            - deploy_preprod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
 #      - hmpps/deploy_env:
 #          name: deploy_prod
 #          env: prod
