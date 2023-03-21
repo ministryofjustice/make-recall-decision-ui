@@ -18,6 +18,9 @@ import { EVENTS } from '../../utils/constants'
 
 const auditService = new AuditService()
 
+/**
+ * @deprecated get rid of these grand controllers - too much logic merged together - no encapsulation.
+ */
 export const getRecommendationPage = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageUrlSlug } = req.params
   const {

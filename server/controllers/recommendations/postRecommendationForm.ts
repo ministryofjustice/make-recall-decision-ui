@@ -7,6 +7,9 @@ import { pageMetaData } from './helpers/pageMetaData'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 
+/**
+ * @deprecated get rid of these grand controllers - too much logic merged together
+ */
 export const postRecommendationForm = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId, pageUrlSlug } = req.params
   const currentPagePath = `${routeUrls.recommendations}/${recommendationId}/${pageUrlSlug}`

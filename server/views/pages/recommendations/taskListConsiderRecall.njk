@@ -2,14 +2,6 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
-{% set allTasksCompleted =  hasData(recommendation.whatLedToRecall)
-    and hasData(recommendation.responseToProbation)
-    and hasData(recommendation.licenceConditionsBreached)
-    and hasData(recommendation.alternativesToRecallTried)
-    and hasData(recommendation.isExtendedSentence)
-    and hasData(recommendation.isIndeterminateSentence)
- %}
-
 {% block beforeContent %}
     <nav>
     {{ govukBackLink({
@@ -39,7 +31,7 @@
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" aria-describedby='task-list-status-responseToProbation'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz1', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                 How has {{ recommendation.personOnProbation.name }} responded to probation so far?
                             </a>
                             <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: hasData(recommendation.responseToProbation) }) }}</span>
