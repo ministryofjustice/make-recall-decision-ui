@@ -12,6 +12,7 @@ import audit from '../controllers/audit'
 import retrieveRecommendation from '../controllers/retrieveRecommendation'
 import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
+import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
 
 const recommendations = Router()
 
@@ -24,6 +25,7 @@ recommendations.get(
   taskListConsiderRecall.get,
   audit
 )
+
 recommendations.get(
   '/:recommendationId/response-to-probation',
   retrieveRecommendation,
@@ -39,6 +41,14 @@ recommendations.get(
   audit
 )
 recommendations.post('/:recommendationId/licence-conditions', licenceConditionsController.post)
+
+recommendations.get(
+  '/:recommendationId/alternatives-tried',
+  retrieveRecommendation,
+  alternativesToRecallTriedController.get,
+  audit
+)
+recommendations.post('/:recommendationId/alternatives-tried', alternativesToRecallTriedController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
