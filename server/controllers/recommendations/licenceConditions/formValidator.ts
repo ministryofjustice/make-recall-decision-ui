@@ -7,7 +7,7 @@ import { fetchAndTransformLicenceConditions } from './transform'
 import { TransformedLicenceConditionsResponse } from '../../caseSummary/licenceConditions/transformLicenceConditions'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { FormValidatorArgs, FormValidatorReturn, NamedFormError } from '../../../@types/pagesForms'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
@@ -17,55 +17,48 @@ export const validateLicenceConditionsBreached = async ({
   token,
 }: FormValidatorArgs): FormValidatorReturn => {
   const { licenceConditionsBreached, crn, activeCustodialConvictionCount } = requestBody
-  const requireSelection = activeCustodialConvictionCount === '1'
-  const noneSelected = !isDefined(licenceConditionsBreached)
-  let invalidStandard
-  let allSelectedConditions
-  let selectedStandardConditions
-  let errors
-  let errorId
-  const activeCustodialConvictionCountAsNumber = parseInt(activeCustodialConvictionCount as string, 10)
-  if (!activeCustodialConvictionCount || Number.isNaN(activeCustodialConvictionCountAsNumber)) {
-    errorId = 'invalidConvictionCount'
-    errors = [
-      makeErrorObject({
-        id: 'licenceConditionsBreached',
-        text: strings.errors[errorId],
-        errorId,
-      }),
-    ]
-  }
 
-  if (!noneSelected) {
-    allSelectedConditions = makeArray(licenceConditionsBreached)
-    selectedStandardConditions = allSelectedConditions
-      .filter(item => item.startsWith('standard|'))
-      .map(item => item.replace('standard|', ''))
-    invalidStandard = selectedStandardConditions.some(id => !isValueValid(id, 'standardLicenceConditions'))
-  }
+  const errors: NamedFormError[] = []
 
-  if (requireSelection && (noneSelected || invalidStandard)) {
-    errorId = 'noLicenceConditionsSelected'
-    errors = errors || []
+  const activeCustodialConvictionCountAsNumber = Number(activeCustodialConvictionCount)
+  if (Number.isNaN(activeCustodialConvictionCountAsNumber)) {
     errors.push(
       makeErrorObject({
         id: 'licenceConditionsBreached',
-        text: strings.errors[errorId],
-        errorId,
+        text: strings.errors.invalidConvictionCount,
+        errorId: 'invalidConvictionCount',
       })
     )
   }
 
-  // additional
-  errorId = null
-  const selectedAdditionalLicenceConditions =
-    !noneSelected &&
-    allSelectedConditions
-      .filter(item => item.startsWith('additional|'))
-      .map(item => {
-        const [, mainCatCode, subCatCode] = item.split('|')
-        return { mainCatCode, subCatCode }
+  const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
+
+  const selectedStandardConditions = allSelectedConditions
+    .filter(item => item.startsWith('standard|'))
+    .map(item => item.replace('standard|', ''))
+
+  const selectedAdditionalLicenceConditions = allSelectedConditions
+    .filter(item => item.startsWith('additional|'))
+    .map(item => {
+      const [, mainCatCode, subCatCode] = item.split('|')
+      return { mainCatCode, subCatCode }
+    })
+
+  const invalidStandardCondition = selectedStandardConditions.some(id => !isValueValid(id, 'standardLicenceConditions'))
+
+  if (
+    activeCustodialConvictionCountAsNumber === 1 &&
+    (allSelectedConditions.length === 0 || invalidStandardCondition)
+  ) {
+    errors.push(
+      makeErrorObject({
+        id: 'licenceConditionsBreached',
+        text: strings.errors.noLicenceConditionsSelected,
+        errorId: 'noLicenceConditionsSelected',
       })
+    )
+  }
+
   let allAdditionalLicenceConditions
   if (selectedAdditionalLicenceConditions.length) {
     const caseSummary = await fetchAndTransformLicenceConditions({
@@ -73,6 +66,7 @@ export const validateLicenceConditionsBreached = async ({
       token,
     })
     const { convictions } = caseSummary as TransformedLicenceConditionsResponse
+    let errorId
     if (isCaseRestrictedOrExcluded(caseSummary.userAccessResponse)) {
       errorId = 'excludedRestrictedCrn'
     } else if (convictions.hasMultipleActiveCustodial) {
@@ -82,7 +76,6 @@ export const validateLicenceConditionsBreached = async ({
     }
 
     if (errorId) {
-      errors = errors || []
       errors.push(
         makeErrorObject({
           id: 'licenceConditionsBreached',
@@ -104,7 +97,7 @@ export const validateLicenceConditionsBreached = async ({
     }
   }
 
-  if (errors) {
+  if (errors.length > 0) {
     return {
       errors,
     }
@@ -121,7 +114,7 @@ export const validateLicenceConditionsBreached = async ({
       },
     }
   }
-  if (selectedAdditionalLicenceConditions) {
+  if (selectedAdditionalLicenceConditions.length > 0) {
     valuesToSave.licenceConditionsBreached = valuesToSave.licenceConditionsBreached || {}
     valuesToSave.licenceConditionsBreached.additionalLicenceConditions = {
       selectedOptions: selectedAdditionalLicenceConditions,

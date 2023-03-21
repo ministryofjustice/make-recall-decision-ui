@@ -1,4 +1,4 @@
-import responseToProbation from './responseToProbation'
+import responseToProbationController from './responseToProbationController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
@@ -13,7 +13,7 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    responseToProbation.get(mockReq(), res, next)
+    responseToProbationController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'responseToProbation' })
     expect(res.locals.pageHeadings.responseToProbation).toEqual('How has Harry Smith responded to probation so far?')
@@ -31,7 +31,7 @@ describe('get', () => {
       },
     })
 
-    responseToProbation.get(mockReq(), res, mockNext())
+    responseToProbationController.get(mockReq(), res, mockNext())
     expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum')
   })
 
@@ -43,7 +43,7 @@ describe('get', () => {
       },
     })
 
-    responseToProbation.get(mockReq(), res, mockNext())
+    responseToProbationController.get(mockReq(), res, mockNext())
     expect(res.locals.inputDisplayValues.value).toEqual('')
     expect(res.locals.inputDisplayValues.errors).toEqual({ responseToProbation: { text: 'val' } })
   })
@@ -69,7 +69,7 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await responseToProbation.post(req, res, next)
+    await responseToProbationController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '123',
@@ -100,7 +100,7 @@ describe('post', () => {
       },
     })
 
-    await responseToProbation.post(req, res, mockNext())
+    await responseToProbationController.post(req, res, mockNext())
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
   })
@@ -121,7 +121,7 @@ describe('post', () => {
       },
     })
 
-    await responseToProbation.post(req, res, mockNext())
+    await responseToProbationController.post(req, res, mockNext())
 
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
