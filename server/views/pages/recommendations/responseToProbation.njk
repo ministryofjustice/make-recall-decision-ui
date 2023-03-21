@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: nextPageLinkUrl({ nextPagePath: '/cases/' + crn + '/overview', urlInfo: urlInfo })
+            href: nextPageLinkUrl({ nextPagePath: backLink, urlInfo: urlInfo })
         }) }}
     </nav>
 {% endblock %}

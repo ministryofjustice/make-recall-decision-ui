@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { RequestHandler, Router } from 'express'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
-import taskListConsiderRecall from '../controllers/recommendation/taskListConsiderRecall'
+import taskListConsiderRecall from '../controllers/recommendation/taskListConsiderRecallController'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
@@ -10,7 +10,8 @@ import { getRecommendationPage } from '../controllers/recommendations/getRecomme
 import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
 import audit from '../controllers/audit'
 import retrieveRecommendation from '../controllers/retrieveRecommendation'
-import responseToProbation from '../controllers/recommendation/responseToProbation'
+import responseToProbationController from '../controllers/recommendation/responseToProbationController'
+import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 
 const recommendations = Router()
 
@@ -23,8 +24,21 @@ recommendations.get(
   taskListConsiderRecall.get,
   audit
 )
-recommendations.get('/:recommendationId/response-to-probation', retrieveRecommendation, responseToProbation.get, audit)
-recommendations.post('/:recommendationId/response-to-probation', responseToProbation.post)
+recommendations.get(
+  '/:recommendationId/response-to-probation',
+  retrieveRecommendation,
+  responseToProbationController.get,
+  audit
+)
+recommendations.post('/:recommendationId/response-to-probation', responseToProbationController.post)
+
+recommendations.get(
+  '/:recommendationId/licence-conditions',
+  retrieveRecommendation,
+  licenceConditionsController.get,
+  audit
+)
+recommendations.post('/:recommendationId/licence-conditions', licenceConditionsController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
