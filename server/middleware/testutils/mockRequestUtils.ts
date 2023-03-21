@@ -63,6 +63,7 @@ export const mockRes = ({
 } = {}): Response => {
   return {
     locals: {
+      ...locals,
       user: {
         ...((locals.user as object) || {}),
         token,
