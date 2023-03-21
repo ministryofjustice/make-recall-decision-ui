@@ -35,18 +35,34 @@ describe('get', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         token: 'token1',
+        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
     await licenceConditionsController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'licenceConditions' })
+    expect(res.locals.backLink).toEqual('response-to-probation')
     expect(res.locals.pageHeadings.licenceConditions).toEqual('What licence conditions has Harry Smith breached?')
     expect(res.locals.pageTitles.licenceConditions).toEqual('What licence conditions has the person breached?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 
     expect(next).toHaveBeenCalled()
+  })
+
+  it('test back button with feature flag', async () => {
+    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
+
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        flags: { flagTriggerWork: true },
+      },
+    })
+    await licenceConditionsController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.backLink).toEqual('task-list-consider-recall')
   })
 
   it('load with existing data', async () => {

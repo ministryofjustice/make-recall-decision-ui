@@ -9,7 +9,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { flags, recommendation } = res.locals
 
   const stringRenderParams = {
     fullName: recommendation.personOnProbation.name,
@@ -19,6 +19,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
+    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : `/cases/${recommendation.crn}/overview`,
     page: {
       id: 'responseToProbation',
     },

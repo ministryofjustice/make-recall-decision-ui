@@ -13,6 +13,7 @@ import { validateLicenceConditionsBreached } from '../recommendations/licenceCon
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
+    flags,
     recommendation,
     user: { token },
   } = res.locals
@@ -25,6 +26,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
+    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'response-to-probation',
     page: {
       id: 'licenceConditions',
     },

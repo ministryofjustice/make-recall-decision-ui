@@ -9,19 +9,33 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
     responseToProbationController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'responseToProbation' })
+    expect(res.locals.backLink).toEqual('/cases/X123/overview')
     expect(res.locals.pageHeadings.responseToProbation).toEqual('How has Harry Smith responded to probation so far?')
     expect(res.locals.pageTitles.responseToProbation).toEqual('How has the person responded to probation so far?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/responseToProbation')
 
     expect(next).toHaveBeenCalled()
+  })
+
+  it('test back button with feature flag', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        flags: { flagTriggerWork: true },
+      },
+    })
+    await responseToProbationController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.backLink).toEqual('task-list-consider-recall')
   })
 
   it('load with existing data', async () => {
