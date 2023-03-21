@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { RequestHandler, Router } from 'express'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import taskListConsiderRecall from '../controllers/recommendation/taskListConsiderRecallController'
@@ -9,7 +8,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import { getRecommendationPage } from '../controllers/recommendations/getRecommendationPage'
 import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
 import audit from '../controllers/audit'
-import retrieveRecommendation from '../controllers/retrieveRecommendation'
+import retrieve from '../controllers/retrieveRecommendation'
 import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
@@ -19,35 +18,15 @@ const recommendations = Router()
 recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
 recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
 
-recommendations.get(
-  '/:recommendationId/task-list-consider-recall',
-  retrieveRecommendation,
-  taskListConsiderRecall.get,
-  audit
-)
+recommendations.get('/:recommendationId/task-list-consider-recall', retrieve, taskListConsiderRecall.get, audit)
 
-recommendations.get(
-  '/:recommendationId/response-to-probation',
-  retrieveRecommendation,
-  responseToProbationController.get,
-  audit
-)
+recommendations.get('/:recommendationId/response-to-probation', retrieve, responseToProbationController.get, audit)
 recommendations.post('/:recommendationId/response-to-probation', responseToProbationController.post)
 
-recommendations.get(
-  '/:recommendationId/licence-conditions',
-  retrieveRecommendation,
-  licenceConditionsController.get,
-  audit
-)
+recommendations.get('/:recommendationId/licence-conditions', retrieve, licenceConditionsController.get, audit)
 recommendations.post('/:recommendationId/licence-conditions', licenceConditionsController.post)
 
-recommendations.get(
-  '/:recommendationId/alternatives-tried',
-  retrieveRecommendation,
-  alternativesToRecallTriedController.get,
-  audit
-)
+recommendations.get('/:recommendationId/alternatives-tried', retrieve, alternativesToRecallTriedController.get, audit)
 recommendations.post('/:recommendationId/alternatives-tried', alternativesToRecallTriedController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
