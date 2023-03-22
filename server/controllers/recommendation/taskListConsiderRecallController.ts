@@ -6,13 +6,20 @@ import { strings } from '../../textStrings/en'
 const get = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { recommendation } = res.locals
 
+  const triggerLeadingToRecallCompleted = hasData(recommendation.triggerLeadingToRecall)
+  const responseToProbationCompleted = hasData(recommendation.responseToProbation)
+  const licenceConditionsBreachedCompleted = hasData(recommendation.licenceConditionsBreached)
+  const alternativesToRecallTriedCompleted = hasData(recommendation.alternativesToRecallTried)
+  const isExtendedSentenceCompleted = hasData(recommendation.isExtendedSentence)
+  const isIndeterminateSentenceCompleted = hasData(recommendation.isIndeterminateSentence)
+
   const allTasksCompleted =
-    hasData(recommendation.whatLedToRecall) &&
-    hasData(recommendation.responseToProbation) &&
-    hasData(recommendation.licenceConditionsBreached) &&
-    hasData(recommendation.alternativesToRecallTried) &&
-    hasData(recommendation.isExtendedSentence) &&
-    hasData(recommendation.isIndeterminateSentence)
+    triggerLeadingToRecallCompleted &&
+    responseToProbationCompleted &&
+    licenceConditionsBreachedCompleted &&
+    alternativesToRecallTriedCompleted &&
+    isExtendedSentenceCompleted &&
+    isIndeterminateSentenceCompleted
 
   const stringRenderParams = {
     fullName: recommendation.personOnProbation.name,
@@ -22,6 +29,12 @@ const get = async (req: Request, res: Response, next: NextFunction): Promise<voi
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
+    triggerLeadingToRecallCompleted,
+    responseToProbationCompleted,
+    licenceConditionsBreachedCompleted,
+    alternativesToRecallTriedCompleted,
+    isExtendedSentenceCompleted,
+    isIndeterminateSentenceCompleted,
     allTasksCompleted,
     page: {
       id: 'taskListConsiderRecall',

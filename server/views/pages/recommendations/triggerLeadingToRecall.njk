@@ -1,0 +1,39 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPagePath: backLink, urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ govukTextarea({
+                    name: "triggerLeadingToRecall",
+                    id: "triggerLeadingToRecall",
+                    label: {
+                        text: pageHeadings[page.id],
+                        classes: "govuk-label--l",
+                        isPageHeading: true
+                    },
+                    hint: {
+                        html: "<p class='govuk-body'>Explain what has made you consider whether " + recommendation.personOnProbation.name + " should be recalled or not.</p>"
+                    },
+                    value: inputDisplayValues.value,
+                    errorMessage: errorMessage(errors.triggerLeadingToRecall)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

@@ -12,6 +12,7 @@ import retrieve from '../controllers/retrieveRecommendation'
 import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
+import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
 
 const recommendations = Router()
 
@@ -19,6 +20,14 @@ recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
 recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
 
 recommendations.get('/:recommendationId/task-list-consider-recall', retrieve, taskListConsiderRecall.get, audit)
+
+recommendations.get(
+  '/:recommendationId/trigger-leading-to-recall',
+  retrieve,
+  triggerLeadingToRecallController.get,
+  audit
+)
+recommendations.post('/:recommendationId/trigger-leading-to-recall', triggerLeadingToRecallController.post)
 
 recommendations.get('/:recommendationId/response-to-probation', retrieve, responseToProbationController.get, audit)
 recommendations.post('/:recommendationId/response-to-probation', responseToProbationController.post)
