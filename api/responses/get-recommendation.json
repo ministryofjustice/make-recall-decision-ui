@@ -175,10 +175,7 @@
   },
   "licenceConditionsBreached": {
     "standardLicenceConditions": {
-      "selected": [
-        "GOOD_BEHAVIOUR",
-        "NO_OFFENCE"
-      ],
+      "selected": ["GOOD_BEHAVIOUR", "NO_OFFENCE"],
       "allOptions": [
         {
           "value": "GOOD_BEHAVIOUR",
@@ -264,16 +261,12 @@
     "lastReleaseDate": "2022-03-11",
     "lastReleasingPrisonOrCustodialEstablishment": "Holloway",
     "hasBeenReleasedPreviously": true,
-    "previousReleaseDates": [
-      "2022-03-11"
-    ]
+    "previousReleaseDates": ["2022-03-11"]
   },
   "previousRecalls": {
     "lastRecallDate": "2022-03-12",
     "hasBeenRecalledPreviously": true,
-    "previousRecallDates": [
-      "2022-02-05"
-    ]
+    "previousRecallDates": ["2022-02-05"]
   },
   "recallType": {
     "selected": {
@@ -314,6 +307,7 @@
       }
     ]
   },
+  "triggerLeadingToRecall": "Arrest",
   "whatLedToRecall": "Increasingly violent behaviour",
   "recallConsideredList": [
     {
