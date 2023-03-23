@@ -13,6 +13,8 @@ import responseToProbationController from '../controllers/recommendation/respons
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
+import isIndeterminateController from '../controllers/recommendation/isIndeterminateController'
+import isExtendedController from '../controllers/recommendation/isExtendedController'
 
 const recommendations = Router()
 
@@ -37,6 +39,12 @@ recommendations.post('/:recommendationId/licence-conditions', licenceConditionsC
 
 recommendations.get('/:recommendationId/alternatives-tried', retrieve, alternativesToRecallTriedController.get, audit)
 recommendations.post('/:recommendationId/alternatives-tried', alternativesToRecallTriedController.post)
+
+recommendations.get('/:recommendationId/is-indeterminate', retrieve, isIndeterminateController.get, audit)
+recommendations.post('/:recommendationId/is-indeterminate', isIndeterminateController.post)
+
+recommendations.get('/:recommendationId/is-extended', retrieve, isExtendedController.get, audit)
+recommendations.post('/:recommendationId/is-extended', isExtendedController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
