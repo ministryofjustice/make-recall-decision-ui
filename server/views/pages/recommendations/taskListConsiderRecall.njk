@@ -52,14 +52,14 @@
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" aria-describedby='task-list-status-indeterminateSentence'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz1', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                 Is {{ recommendation.personOnProbation.name }} on an indeterminate sentence?
                             </a>
                             <span id='task-list-status-indeterminateSentence'>{{ taskStatus({ hasData: isIndeterminateSentenceCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" aria-describedby='task-list-status-extendedSentence'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz1', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                 Is {{ recommendation.personOnProbation.name }} on an extended sentence?
                             </a>
                             <span id='task-list-status-extendedSentence'>{{ taskStatus({ hasData: hasData(recommendation.isExtendedSentence) }) }}</span>
