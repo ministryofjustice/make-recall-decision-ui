@@ -15,44 +15,34 @@ import alternativesToRecallTriedController from '../controllers/recommendation/a
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
 import isIndeterminateController from '../controllers/recommendation/isIndeterminateController'
 import isExtendedController from '../controllers/recommendation/isExtendedController'
+
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
+import customizeMessages from '../controllers/customizeMessages'
 
 const recommendations = Router()
 
-const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction): void => {
-  next(error) // forward errors to root router
-}
+routeRecommendationGet('task-list-consider-recall', taskListConsiderRecall.get)
 
-recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
-recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
+routeRecommendationGet('trigger-leading-to-recall', triggerLeadingToRecallController.get)
+routeRecommendationPost('trigger-leading-to-recall', triggerLeadingToRecallController.post)
 
-recommendations.get('/:recommendationId/task-list-consider-recall', retrieve, taskListConsiderRecall.get, audit)
+routeRecommendationGet('response-to-probation', responseToProbationController.get)
+routeRecommendationPost('response-to-probation', responseToProbationController.post)
 
-recommendations.get(
-  '/:recommendationId/trigger-leading-to-recall',
-  retrieve,
-  triggerLeadingToRecallController.get,
-  audit
-)
-recommendations.post('/:recommendationId/trigger-leading-to-recall', triggerLeadingToRecallController.post)
+routeRecommendationGet('licence-conditions', licenceConditionsController.get)
+routeRecommendationPost('licence-conditions', licenceConditionsController.post)
 
-recommendations.get('/:recommendationId/response-to-probation', retrieve, responseToProbationController.get, audit)
-recommendations.post('/:recommendationId/response-to-probation', responseToProbationController.post, errorHandler)
+routeRecommendationGet('alternatives-tried', alternativesToRecallTriedController.get)
+routeRecommendationPost('alternatives-tried', alternativesToRecallTriedController.post)
 
-recommendations.get('/:recommendationId/licence-conditions', retrieve, licenceConditionsController.get, audit)
-recommendations.post('/:recommendationId/licence-conditions', licenceConditionsController.post)
+routeRecommendationGet('indeterminate-type', indeterminateTypeController.get)
+routeRecommendationPost('indeterminate-type', indeterminateTypeController.post)
 
-recommendations.get('/:recommendationId/alternatives-tried', retrieve, alternativesToRecallTriedController.get, audit)
-recommendations.post('/:recommendationId/alternatives-tried', alternativesToRecallTriedController.post)
+routeRecommendationGet('is-indeterminate', isIndeterminateController.get)
+routeRecommendationPost('is-indeterminate', isIndeterminateController.post)
 
-recommendations.get('/:recommendationId/is-indeterminate', retrieve, isIndeterminateController.get, audit)
-recommendations.post('/:recommendationId/is-indeterminate', isIndeterminateController.post)
-
-recommendations.get('/:recommendationId/is-extended', retrieve, isExtendedController.get, audit)
-recommendations.post('/:recommendationId/is-extended', isExtendedController.post)
-
-recommendations.get('/:recommendationId/indeterminate-type', retrieve, indeterminateTypeController.get, audit)
-recommendations.post('/:recommendationId/indeterminate-type', indeterminateTypeController.post)
+routeRecommendationGet('is-extended', isExtendedController.get)
+routeRecommendationPost('is-extended', isExtendedController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
@@ -61,7 +51,31 @@ get(`/:recommendationId/documents/part-a`, createAndDownloadDocument('PART_A'))
 get(`/:recommendationId/documents/no-recall-letter`, createAndDownloadDocument('NO_RECALL_LETTER'))
 post(`/:recommendationId/status`, updateRecommendationStatus)
 
-recommendations.get(`/:recommendationId/:pageUrlSlug`, asyncMiddleware(getRecommendationPage))
-recommendations.post(`/:recommendationId/:pageUrlSlug`, asyncMiddleware(postRecommendationForm))
+recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl, asyncMiddleware(getRecommendationPage))
+recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl, asyncMiddleware(postRecommendationForm))
 
 export default recommendations
+
+type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
+
+function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback) {
+  recommendations.get(
+    `/:recommendationId/${endpoint}`,
+    parseRecommendationUrl,
+    retrieve,
+    customizeMessages,
+    routerCallback,
+    audit
+  )
+}
+
+function routeRecommendationPost(endpoint: string, routerCallback: RouterCallback) {
+  recommendations.get(
+    `/:recommendationId/${endpoint}`,
+    parseRecommendationUrl,
+    routerCallback,
+    (error: Error, req: Request, res: Response, next: NextFunction): void => {
+      next(error) // forward errors to root router
+    }
+  )
+}

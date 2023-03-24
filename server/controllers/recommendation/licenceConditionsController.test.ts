@@ -43,8 +43,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'licenceConditions' })
     expect(res.locals.backLink).toEqual('response-to-probation')
-    expect(res.locals.pageHeadings.licenceConditions).toEqual('What licence conditions has Harry Smith breached?')
-    expect(res.locals.pageTitles.licenceConditions).toEqual('What licence conditions has the person breached?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 
@@ -71,7 +69,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           licenceConditionsBreached,
         },
         token: 'token1',
@@ -110,7 +107,6 @@ describe('get', () => {
           },
         },
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           licenceConditionsBreached,
         },
         token: 'token1',
@@ -129,7 +125,7 @@ describe('get', () => {
         {
           href: '#licenceConditionsBreached',
           errorId: 'noLicenceConditionsSelected',
-          html: 'You must select one or more licence conditions',
+          text: 'You must select one or more licence conditions',
           name: 'licenceConditionsBreached',
         },
       ],

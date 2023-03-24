@@ -24,7 +24,7 @@ export const strings = {
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     missingDetail: 'Enter more detail',
-    missingTriggerLeadingToRecall: 'You must explain what has made you think about recalling {{ fullName }}.',
+    missingTriggerLeadingToRecall: 'You must explain what has made you think about recalling {{ fullName }}',
     missingResponseToProbation: 'You must explain how {{ fullName }} has responded to probation',
     missingWhatLedToRecall: 'Enter details of what has led to this recall',
     noArrestIssuesSelected: "Select whether there's anything the police should know",

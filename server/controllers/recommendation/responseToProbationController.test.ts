@@ -9,7 +9,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        recommendation: { crn: 'X123' },
         flags: { flagTriggerWork: false },
       },
     })
@@ -18,8 +18,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'responseToProbation' })
     expect(res.locals.backLink).toEqual('/cases/X123/overview')
-    expect(res.locals.pageHeadings.responseToProbation).toEqual('How has Harry Smith responded to probation so far?')
-    expect(res.locals.pageTitles.responseToProbation).toEqual('How has the person responded to probation so far?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/responseToProbation')
 
@@ -41,7 +39,7 @@ describe('get', () => {
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, responseToProbation: 'lorem ipsum' },
+        recommendation: { responseToProbation: 'lorem ipsum' },
       },
     })
 
@@ -53,7 +51,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         errors: { responseToProbation: { text: 'val' } },
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, responseToProbation: 'lorem ipsum' },
+        recommendation: { responseToProbation: 'lorem ipsum' },
       },
     })
 

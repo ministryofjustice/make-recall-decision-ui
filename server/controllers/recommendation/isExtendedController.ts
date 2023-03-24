@@ -1,25 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from '../recommendations/helpers/renderStrings'
-import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
-import { renderFormOptions } from '../recommendations/formOptions/formOptions'
 import { validateIsExtendedSentence } from '../recommendations/isExtendedSentence/formValidator'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const stringRenderParams = {
-    fullName: recommendation.personOnProbation.name,
-  }
-
   res.locals = {
     ...res.locals,
-    pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
-    pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
     backLink: 'is-indeterminate',
     page: {
       id: 'isExtendedSentence',
@@ -28,8 +18,6 @@ function get(req: Request, res: Response, next: NextFunction) {
       errors: res.locals.errors,
       value: res.locals.errors?.isExtendedSentence ? '' : booleanToYesNo(recommendation.isExtendedSentence),
     },
-    errors: renderErrorMessages(res.locals.errors, stringRenderParams),
-    formOptions: renderFormOptions(stringRenderParams),
   }
 
   res.render(`pages/recommendations/isExtendedSentence`)

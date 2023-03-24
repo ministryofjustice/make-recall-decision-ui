@@ -15,8 +15,6 @@ describe('get', () => {
     await taskListConsiderRecallController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskListConsiderRecall' })
-    expect(res.locals.pageHeadings.taskListConsiderRecall).toEqual('Consider a recall')
-    expect(res.locals.pageTitles.taskListConsiderRecall).toEqual('Consider a recall')
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskListConsiderRecall')
 
     expect(res.locals.triggerLeadingToRecallCompleted).toBeFalsy()
@@ -34,7 +32,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           triggerLeadingToRecall: 'text',
           responseToProbation: 'text',
           licenceConditionsBreached: {},

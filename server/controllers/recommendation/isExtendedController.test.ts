@@ -9,7 +9,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: {},
         token: 'token1',
         flags: { flagTriggerWork: false },
       },
@@ -19,8 +19,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'isExtendedSentence' })
     expect(res.locals.backLink).toEqual('is-indeterminate')
-    expect(res.locals.pageHeadings.isExtendedSentence).toEqual('Is Harry Smith on an extended sentence?')
-    expect(res.locals.pageTitles.isExtendedSentence).toEqual('Is the person on an extended sentence?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/isExtendedSentence')
 
@@ -31,7 +29,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           isExtendedSentence: true,
         },
         token: 'token1',
@@ -62,7 +59,6 @@ describe('get', () => {
           },
         },
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           isExtendedSentence: '',
         },
         token: 'token1',
@@ -75,13 +71,13 @@ describe('get', () => {
       isExtendedSentence: {
         errorId: 'noIsExtendedSelected',
         href: '#isExtendedSentence',
-        text: 'Select whether Harry Smith is on an extended sentence or not',
+        text: 'Select whether {{ fullName }} is on an extended sentence or not',
       },
       list: [
         {
           href: '#isExtendedSentence',
           errorId: 'noIsExtendedSelected',
-          html: 'Select whether Harry Smith is on an extended sentence or not',
+          text: 'Select whether {{ fullName }} is on an extended sentence or not',
           name: 'isExtendedSentence',
         },
       ],
