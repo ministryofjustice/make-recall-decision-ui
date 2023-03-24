@@ -3,8 +3,7 @@ import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import logger from '../../../logger'
-import { renderErrorMessages, saveErrorWithDetails } from '../../utils/errors'
+import { renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
 import { validateIsIndeterminateSentence } from '../recommendations/isIndeterminateSentence/formValidator'
@@ -39,42 +38,33 @@ function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  try {
-    const {
-      flags,
-      user: { token },
-      urlInfo,
-    } = res.locals
+  const {
+    flags,
+    user: { token },
+    urlInfo,
+  } = res.locals
 
-    const { errors, valuesToSave, unsavedValues } = await validateIsIndeterminateSentence({
-      requestBody: req.body,
-      recommendationId,
-      urlInfo,
-      token,
-    })
+  const { errors, valuesToSave, unsavedValues } = await validateIsIndeterminateSentence({
+    requestBody: req.body,
+    recommendationId,
+    urlInfo,
+    token,
+  })
 
-    if (errors) {
-      req.session.errors = errors
-      req.session.unsavedValues = unsavedValues
-      return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-indeterminate`)
-    }
-
-    await updateRecommendation({
-      recommendationId,
-      valuesToSave,
-      token,
-      featureFlags: flags,
-    })
-
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo }))
-  } catch (err) {
-    if (err.name === 'AppError') {
-      throw err
-    }
-    logger.error(err)
-    req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
-    res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-indeterminant`)
+  if (errors) {
+    req.session.errors = errors
+    req.session.unsavedValues = unsavedValues
+    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-indeterminate`)
   }
+
+  await updateRecommendation({
+    recommendationId,
+    valuesToSave,
+    token,
+    featureFlags: flags,
+  })
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo }))
 }
 
 export default { get, post }

@@ -3,8 +3,7 @@ import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import logger from '../../../logger'
-import { makeErrorObject, renderErrorMessages, saveErrorWithDetails } from '../../utils/errors'
+import { makeErrorObject, renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
 
@@ -34,53 +33,45 @@ function get(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-async function post(req: Request, res: Response, _: NextFunction) {
+async function post(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const { responseToProbation } = req.body
-  try {
-    const {
-      flags,
-      user: { token },
-      urlInfo,
-    } = res.locals
 
-    const errors = []
+  const {
+    flags,
+    user: { token },
+    urlInfo,
+  } = res.locals
 
-    const sanitized = isString(responseToProbation) ? stripHtmlTags(responseToProbation as string) : ''
-    if (isEmptyStringOrWhitespace(sanitized)) {
-      const errorId = 'missingResponseToProbation'
-      errors.push(
-        makeErrorObject({
-          id: 'responseToProbation',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
+  const errors = []
 
-    if (errors.length > 0) {
-      req.session.errors = errors
-      return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
-    }
-    await updateRecommendation({
-      recommendationId,
-      valuesToSave: {
-        responseToProbation: sanitized,
-      },
-      token,
-      featureFlags: flags,
-    })
-
-    const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'licence-conditions'
-    res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-  } catch (err) {
-    if (err.name === 'AppError') {
-      throw err
-    }
-    logger.error(err)
-    req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
-    res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
+  const sanitized = isString(responseToProbation) ? stripHtmlTags(responseToProbation as string) : ''
+  if (isEmptyStringOrWhitespace(sanitized)) {
+    const errorId = 'missingResponseToProbation'
+    errors.push(
+      makeErrorObject({
+        id: 'responseToProbation',
+        text: strings.errors[errorId],
+        errorId,
+      })
+    )
   }
+
+  if (errors.length > 0) {
+    req.session.errors = errors
+    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
+  }
+  await updateRecommendation({
+    recommendationId,
+    valuesToSave: {
+      responseToProbation: sanitized,
+    },
+    token,
+    featureFlags: flags,
+  })
+
+  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'licence-conditions'
+  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

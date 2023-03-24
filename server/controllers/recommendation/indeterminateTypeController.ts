@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
 import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
-import { renderErrorMessages } from '../../utils/errors'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { renderFormOptions } from '../recommendations/formOptions/formOptions'
-import { inputDisplayValuesAlternativesToRecallTried } from '../recommendations/alternativesToRecallTried/inputDisplayValues'
-import { validateAlternativesTried } from '../recommendations/alternativesToRecallTried/formValidator'
+import { inputDisplayValuesIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/inputDisplayValues'
+import { validateIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/formValidator'
 
-async function get(req: Request, res: Response, next: NextFunction) {
-  const { flags, recommendation } = res.locals
+function get(req: Request, res: Response, next: NextFunction) {
+  const { recommendation } = res.locals
 
   const stringRenderParams = {
     fullName: recommendation.personOnProbation.name,
@@ -20,21 +20,21 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
-    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'licence-conditions',
+    backLink: 'is-extended',
     page: {
-      id: 'alternativesToRecallTried',
+      id: 'indeterminateSentenceType',
     },
     errors: renderErrorMessages(res.locals.errors, stringRenderParams),
     formOptions: renderFormOptions(stringRenderParams),
   }
 
-  res.locals.inputDisplayValues = inputDisplayValuesAlternativesToRecallTried({
+  res.locals.inputDisplayValues = inputDisplayValuesIndeterminateSentenceType({
     errors: res.locals.errors,
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
 
-  res.render(`pages/recommendations/alternativesToRecallTried`)
+  res.render(`pages/recommendations/indeterminateSentenceType`)
   next()
 }
 
@@ -47,7 +47,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { errors, valuesToSave, unsavedValues } = await validateAlternativesTried({
+  const { errors, valuesToSave, unsavedValues } = await validateIndeterminateSentenceType({
     requestBody: req.body,
     recommendationId,
     urlInfo,
@@ -57,7 +57,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/alternatives-tried`)
+    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
   }
 
   await updateRecommendation({
@@ -67,7 +67,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'manager-review'
+  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'recall-type-indeterminate'
   res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
