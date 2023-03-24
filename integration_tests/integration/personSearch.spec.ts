@@ -33,7 +33,7 @@ context('Search for a person', () => {
     cy.fillInput('Search', crnQuery)
     cy.clickButton('Search')
     cy.pageHeading().should('equal', 'Search results')
-    cy.getElement(`CRN: ${crnQuery}`).should('exist')
+    cy.getElement(`Search Term: ${crnQuery}`).should('exist')
     cy.getElement('No results').should('exist')
 
     // one search result
