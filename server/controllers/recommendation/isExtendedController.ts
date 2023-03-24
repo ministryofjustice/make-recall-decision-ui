@@ -3,11 +3,9 @@ import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import logger from '../../../logger'
-import { renderErrorMessages, saveErrorWithDetails } from '../../utils/errors'
+import { renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
-
 import { renderFormOptions } from '../recommendations/formOptions/formOptions'
 import { validateIsExtendedSentence } from '../recommendations/isExtendedSentence/formValidator'
 
@@ -40,52 +38,44 @@ function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  try {
-    const {
-      flags,
-      user: { token },
-      urlInfo,
-    } = res.locals
 
-    const { errors, valuesToSave, unsavedValues } = await validateIsExtendedSentence({
-      requestBody: req.body,
-      recommendationId,
-      urlInfo,
-      token,
-    })
+  const {
+    flags,
+    user: { token },
+    urlInfo,
+  } = res.locals
 
-    if (errors) {
-      req.session.errors = errors
-      req.session.unsavedValues = unsavedValues
-      return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-extended`)
-    }
-    await updateRecommendation({
-      recommendationId,
-      valuesToSave,
-      token,
-      featureFlags: flags,
-    })
+  const { errors, valuesToSave, unsavedValues } = await validateIsExtendedSentence({
+    requestBody: req.body,
+    recommendationId,
+    urlInfo,
+    token,
+  })
 
-    const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
-
-    let nextPageId
-    if (isIndeterminateSentence) {
-      nextPageId = 'indeterminate-type'
-    } else if (flags.flagTriggerWork) {
-      nextPageId = 'task-list-consider-recall'
-    } else {
-      nextPageId = valuesToSave.isExtendedSentence ? 'recall-type-indeterminate' : 'recall-type'
-    }
-
-    res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-  } catch (err) {
-    if (err.name === 'AppError') {
-      throw err
-    }
-    logger.error(err)
-    req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
-    res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-indeterminant`)
+  if (errors) {
+    req.session.errors = errors
+    req.session.unsavedValues = unsavedValues
+    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-extended`)
   }
+  await updateRecommendation({
+    recommendationId,
+    valuesToSave,
+    token,
+    featureFlags: flags,
+  })
+
+  const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
+
+  let nextPageId
+  if (isIndeterminateSentence) {
+    nextPageId = 'indeterminate-type'
+  } else if (flags.flagTriggerWork) {
+    nextPageId = 'task-list-consider-recall'
+  } else {
+    nextPageId = valuesToSave.isExtendedSentence ? 'recall-type-indeterminate' : 'recall-type'
+  }
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

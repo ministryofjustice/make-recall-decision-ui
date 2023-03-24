@@ -1,4 +1,4 @@
-import { RequestHandler, Router } from 'express'
+import { NextFunction, Request, RequestHandler, Response, Router } from 'express'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import taskListConsiderRecall from '../controllers/recommendation/taskListConsiderRecallController'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
@@ -15,8 +15,13 @@ import alternativesToRecallTriedController from '../controllers/recommendation/a
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
 import isIndeterminateController from '../controllers/recommendation/isIndeterminateController'
 import isExtendedController from '../controllers/recommendation/isExtendedController'
+import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
 
 const recommendations = Router()
+
+const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction): void => {
+  next(error) // forward errors to root router
+}
 
 recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
 recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl)
@@ -32,7 +37,7 @@ recommendations.get(
 recommendations.post('/:recommendationId/trigger-leading-to-recall', triggerLeadingToRecallController.post)
 
 recommendations.get('/:recommendationId/response-to-probation', retrieve, responseToProbationController.get, audit)
-recommendations.post('/:recommendationId/response-to-probation', responseToProbationController.post)
+recommendations.post('/:recommendationId/response-to-probation', responseToProbationController.post, errorHandler)
 
 recommendations.get('/:recommendationId/licence-conditions', retrieve, licenceConditionsController.get, audit)
 recommendations.post('/:recommendationId/licence-conditions', licenceConditionsController.post)
@@ -45,6 +50,9 @@ recommendations.post('/:recommendationId/is-indeterminate', isIndeterminateContr
 
 recommendations.get('/:recommendationId/is-extended', retrieve, isExtendedController.get, audit)
 recommendations.post('/:recommendationId/is-extended', isExtendedController.post)
+
+recommendations.get('/:recommendationId/indeterminate-type', retrieve, indeterminateTypeController.get, audit)
+recommendations.post('/:recommendationId/indeterminate-type', indeterminateTypeController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

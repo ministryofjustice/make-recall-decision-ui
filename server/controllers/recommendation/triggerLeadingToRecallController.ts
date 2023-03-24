@@ -3,8 +3,7 @@ import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import logger from '../../../logger'
-import { makeErrorObject, renderErrorMessages, saveErrorWithDetails } from '../../utils/errors'
+import { makeErrorObject, renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
 
@@ -37,49 +36,41 @@ function get(req: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const { triggerLeadingToRecall } = req.body
-  try {
-    const {
-      flags,
-      user: { token },
-      urlInfo,
-    } = res.locals
 
-    const errors = []
+  const {
+    flags,
+    user: { token },
+    urlInfo,
+  } = res.locals
 
-    const sanitized = isString(triggerLeadingToRecall) ? stripHtmlTags(triggerLeadingToRecall as string) : ''
-    if (isEmptyStringOrWhitespace(sanitized)) {
-      const errorId = 'missingTriggerLeadingToRecall'
-      errors.push(
-        makeErrorObject({
-          id: 'triggerLeadingToRecall',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
+  const errors = []
 
-    if (errors.length > 0) {
-      req.session.errors = errors
-      return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
-    }
-    await updateRecommendation({
-      recommendationId,
-      valuesToSave: {
-        triggerLeadingToRecall: sanitized,
-      },
-      token,
-      featureFlags: flags,
-    })
-
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
-  } catch (err) {
-    if (err.name === 'AppError') {
-      throw err
-    }
-    logger.error(err)
-    req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
-    res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
+  const sanitized = isString(triggerLeadingToRecall) ? stripHtmlTags(triggerLeadingToRecall as string) : ''
+  if (isEmptyStringOrWhitespace(sanitized)) {
+    const errorId = 'missingTriggerLeadingToRecall'
+    errors.push(
+      makeErrorObject({
+        id: 'triggerLeadingToRecall',
+        text: strings.errors[errorId],
+        errorId,
+      })
+    )
   }
+
+  if (errors.length > 0) {
+    req.session.errors = errors
+    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
+  }
+  await updateRecommendation({
+    recommendationId,
+    valuesToSave: {
+      triggerLeadingToRecall: sanitized,
+    },
+    token,
+    featureFlags: flags,
+  })
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }
