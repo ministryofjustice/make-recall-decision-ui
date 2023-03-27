@@ -65,7 +65,10 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
     retrieve,
     customizeMessages,
     routerCallback,
-    audit
+    audit,
+    (error: Error, req: Request, res: Response, next: NextFunction): void => {
+      next(error) // forward errors to root router
+    }
   )
 }
 

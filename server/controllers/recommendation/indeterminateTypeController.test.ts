@@ -91,7 +91,7 @@ describe('get', () => {
         {
           href: '#indeterminateSentenceType',
           errorId: 'noIndeterminateSentenceTypeSelected',
-          html: 'Select whether Harry Smith is on a life, IPP or DPP sentence',
+          text: 'Select whether Harry Smith is on a life, IPP or DPP sentence',
           name: 'indeterminateSentenceType',
         },
       ],
