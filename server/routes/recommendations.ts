@@ -73,7 +73,7 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
 }
 
 function routeRecommendationPost(endpoint: string, routerCallback: RouterCallback) {
-  recommendations.get(
+  recommendations.post(
     `/:recommendationId/${endpoint}`,
     parseRecommendationUrl,
     routerCallback,
