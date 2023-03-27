@@ -1,23 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { makeErrorObject, renderErrorMessages } from '../../utils/errors'
+import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const stringRenderParams = {
-    fullName: recommendation.personOnProbation.name,
-  }
-
   res.locals = {
     ...res.locals,
-    pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
-    pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
     backLink: 'task-list-consider-recall',
     page: {
       id: 'triggerLeadingToRecall',
@@ -26,7 +19,6 @@ function get(req: Request, res: Response, next: NextFunction) {
       errors: res.locals.errors,
       value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
     },
-    errors: renderErrorMessages(res.locals.errors, stringRenderParams),
   }
 
   res.render(`pages/recommendations/triggerLeadingToRecall`)

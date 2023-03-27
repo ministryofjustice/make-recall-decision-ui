@@ -1,38 +1,25 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from '../recommendations/helpers/renderStrings'
-import { strings } from '../../textStrings/en'
-import { renderErrorMessages } from '../../utils/errors'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { renderFormOptions } from '../recommendations/formOptions/formOptions'
 import { inputDisplayValuesAlternativesToRecallTried } from '../recommendations/alternativesToRecallTried/inputDisplayValues'
 import { validateAlternativesTried } from '../recommendations/alternativesToRecallTried/formValidator'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { flags, recommendation } = res.locals
 
-  const stringRenderParams = {
-    fullName: recommendation.personOnProbation.name,
-  }
-
   res.locals = {
     ...res.locals,
-    pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
-    pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
     backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'licence-conditions',
     page: {
       id: 'alternativesToRecallTried',
     },
-    errors: renderErrorMessages(res.locals.errors, stringRenderParams),
-    formOptions: renderFormOptions(stringRenderParams),
+    inputDisplayValues: inputDisplayValuesAlternativesToRecallTried({
+      errors: res.locals.errors,
+      unsavedValues: res.locals.unsavedValues,
+      apiValues: recommendation,
+    }),
   }
-
-  res.locals.inputDisplayValues = inputDisplayValuesAlternativesToRecallTried({
-    errors: res.locals.errors,
-    unsavedValues: res.locals.unsavedValues,
-    apiValues: recommendation,
-  })
 
   res.render(`pages/recommendations/alternativesToRecallTried`)
   next()

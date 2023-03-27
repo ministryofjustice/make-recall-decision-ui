@@ -9,7 +9,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        recommendation: { crn: 'X123' },
         flags: { flagTriggerWork: false },
       },
     })
@@ -18,10 +18,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'triggerLeadingToRecall' })
     expect(res.locals.backLink).toEqual('task-list-consider-recall')
-    expect(res.locals.pageHeadings.triggerLeadingToRecall).toEqual(
-      'What has made you think about recalling Harry Smith?'
-    )
-    expect(res.locals.pageTitles.triggerLeadingToRecall).toEqual('What has made you think about recalling the person?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/triggerLeadingToRecall')
 
@@ -31,7 +27,7 @@ describe('get', () => {
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, triggerLeadingToRecall: 'lorem ipsum' },
+        recommendation: { triggerLeadingToRecall: 'lorem ipsum' },
       },
     })
 
@@ -43,7 +39,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         errors: { triggerLeadingToRecall: { text: 'val' } },
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, triggerLeadingToRecall: 'lorem ipsum' },
+        recommendation: { triggerLeadingToRecall: 'lorem ipsum' },
       },
     })
 
@@ -114,7 +110,7 @@ describe('post', () => {
         href: '#triggerLeadingToRecall',
         invalidParts: undefined,
         name: 'triggerLeadingToRecall',
-        text: 'You must explain what has made you think about recalling {{ fullName }}.',
+        text: 'You must explain what has made you think about recalling {{ fullName }}',
         values: undefined,
       },
     ])

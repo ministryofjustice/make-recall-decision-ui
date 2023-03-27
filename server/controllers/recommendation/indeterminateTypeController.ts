@@ -3,9 +3,7 @@ import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { renderFormOptions } from '../recommendations/formOptions/formOptions'
 import { inputDisplayValuesIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/inputDisplayValues'
 import { validateIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/formValidator'
 
@@ -24,8 +22,6 @@ function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'indeterminateSentenceType',
     },
-    errors: renderErrorMessages(res.locals.errors, stringRenderParams),
-    formOptions: renderFormOptions(stringRenderParams),
   }
 
   res.locals.inputDisplayValues = inputDisplayValuesIndeterminateSentenceType({

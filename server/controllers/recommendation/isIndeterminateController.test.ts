@@ -19,8 +19,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'isIndeterminateSentence' })
     expect(res.locals.backLink).toEqual('manager-review')
-    expect(res.locals.pageHeadings.isIndeterminateSentence).toEqual('Is Harry Smith on an indeterminate sentence?')
-    expect(res.locals.pageTitles.isIndeterminateSentence).toEqual('Is the person on an indeterminate sentence?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/isIndeterminateSentence')
 
@@ -43,7 +41,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           isIndeterminateSentence: true,
         },
         token: 'token1',
@@ -74,7 +71,6 @@ describe('get', () => {
           },
         },
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           isIndeterminateSentence: '',
         },
         token: 'token1',
@@ -87,13 +83,13 @@ describe('get', () => {
       isIndeterminateSentence: {
         errorId: 'noIsIndeterminateSelected',
         href: '#isIndeterminateSentence',
-        text: 'Select whether Harry Smith is on an indeterminate sentence or not',
+        text: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
       },
       list: [
         {
           href: '#isIndeterminateSentence',
           errorId: 'noIsIndeterminateSelected',
-          html: 'Select whether Harry Smith is on an indeterminate sentence or not',
+          text: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
           name: 'isIndeterminateSentence',
         },
       ],

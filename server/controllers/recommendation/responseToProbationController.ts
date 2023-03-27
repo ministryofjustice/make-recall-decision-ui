@@ -1,23 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { makeErrorObject, renderErrorMessages } from '../../utils/errors'
+import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { flags, recommendation } = res.locals
 
-  const stringRenderParams = {
-    fullName: recommendation.personOnProbation.name,
-  }
-
   res.locals = {
     ...res.locals,
-    pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
-    pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
     backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : `/cases/${recommendation.crn}/overview`,
     page: {
       id: 'responseToProbation',
@@ -26,7 +19,6 @@ function get(req: Request, res: Response, next: NextFunction) {
       errors: res.locals.errors,
       value: res.locals.errors?.responseToProbation ? '' : recommendation.responseToProbation,
     },
-    errors: renderErrorMessages(res.locals.errors, stringRenderParams),
   }
 
   res.render(`pages/recommendations/responseToProbation`)

@@ -1,25 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from '../recommendations/helpers/renderStrings'
-import { strings } from '../../textStrings/en'
 import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { renderErrorMessages } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
 import { validateIsIndeterminateSentence } from '../recommendations/isIndeterminateSentence/formValidator'
-import { renderFormOptions } from '../recommendations/formOptions/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { flags, recommendation } = res.locals
 
-  const stringRenderParams = {
-    fullName: recommendation.personOnProbation.name,
-  }
-
   res.locals = {
     ...res.locals,
-    pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
-    pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
     backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'manager-review',
     page: {
       id: 'isIndeterminateSentence',
@@ -28,8 +18,6 @@ function get(req: Request, res: Response, next: NextFunction) {
       errors: res.locals.errors,
       value: res.locals.errors?.isIndeterminateSentence ? '' : booleanToYesNo(recommendation.isIndeterminateSentence),
     },
-    errors: renderErrorMessages(res.locals.errors, stringRenderParams),
-    formOptions: renderFormOptions(stringRenderParams),
   }
 
   res.render(`pages/recommendations/isIndeterminateSentence`)

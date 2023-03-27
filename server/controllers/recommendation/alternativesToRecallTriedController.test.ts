@@ -42,8 +42,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'alternativesToRecallTried' })
     expect(res.locals.backLink).toEqual('licence-conditions')
-    expect(res.locals.pageHeadings.licenceConditions).toEqual('What licence conditions has Harry Smith breached?')
-    expect(res.locals.pageTitles.licenceConditions).toEqual('What licence conditions has the person breached?')
     expect(res.locals.inputDisplayValues).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/alternativesToRecallTried')
 
@@ -66,7 +64,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           alternativesToRecallTried,
         },
         token: 'token1',
@@ -100,7 +97,6 @@ describe('get', () => {
           },
         },
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
           alternativesToRecallTried,
         },
         token: 'token1',
@@ -119,7 +115,7 @@ describe('get', () => {
         {
           href: '#licenceConditionsBreached',
           errorId: 'noLicenceConditionsSelected',
-          html: 'You must select one or more licence conditions',
+          text: 'You must select one or more licence conditions',
           name: 'licenceConditionsBreached',
         },
       ],
