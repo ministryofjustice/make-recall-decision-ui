@@ -3,7 +3,6 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
 import { setResponsePropertiesToNull } from '../support/commands'
-import noRecallResponse from '../../api/responses/get-recommendation-no-recall.json'
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
