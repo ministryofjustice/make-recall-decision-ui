@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
-import taskListConsiderRecall from '../controllers/recommendation/taskListConsiderRecallController'
+import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
@@ -18,10 +18,11 @@ import isExtendedController from '../controllers/recommendation/isExtendedContro
 
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
 import customizeMessages from '../controllers/customizeMessages'
+import shareManagerController from '../controllers/recommendation/shareManagerController'
 
 const recommendations = Router()
 
-routeRecommendationGet('task-list-consider-recall', taskListConsiderRecall.get)
+routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get)
 
 routeRecommendationGet('trigger-leading-to-recall', triggerLeadingToRecallController.get)
 routeRecommendationPost('trigger-leading-to-recall', triggerLeadingToRecallController.post)
@@ -43,6 +44,8 @@ routeRecommendationPost('is-indeterminate', isIndeterminateController.post)
 
 routeRecommendationGet('is-extended', isExtendedController.get)
 routeRecommendationPost('is-extended', isExtendedController.post)
+
+routeRecommendationGet('share-case-with-manager', shareManagerController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

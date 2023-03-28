@@ -78,6 +78,7 @@ export const strings = {
   },
   pageHeadings: {
     taskListConsiderRecall: 'Consider a recall',
+    shareCaseWithManager: 'Share this case with your manager',
     triggerLeadingToRecall: 'What has made you think about recalling {{ fullName }}?',
     managerRecordDecision: 'Record your decision',
     managerRecordDecisionDelius: 'Record your decision in NDelius',

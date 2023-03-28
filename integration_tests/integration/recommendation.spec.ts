@@ -108,6 +108,63 @@ context('Make a recommendation', () => {
       })
     })
 
+    describe('flagTriggerWork is set', () => {
+      beforeEach(() => {
+        cy.signIn()
+      })
+
+      it('display consider recall task list if "update recommendation"', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...recommendationResponse, recallConsideredList: null },
+        })
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.pageHeading().should('equal', 'Consider a recall')
+
+        cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
+        cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
+        cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
+        cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
+        cy.getElement('Is Paula Smith on an indeterminate sentence? To do').should('exist')
+        cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
+      })
+
+      it('present trigger-leading-to-recall', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...recommendationResponse, recallConsideredList: null },
+        })
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
+        cy.clickLink('What has made you think about recalling Paula Smith?')
+
+        cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
+
+        cy.get('textarea').type('Some details')
+        cy.get('button').click()
+
+        cy.pageHeading().should('equal', 'Consider a recall')
+      })
+
+      it('present share-case-with-manager', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, recallConsideredList: null },
+        })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
+
+        cy.clickLink('Continue')
+
+        cy.pageHeading().should('equal', 'Share this case with your manager')
+
+        cy.clickLink('Continue')
+
+        cy.pageHeading().should('equal', 'Stop and think')
+      })
+    })
+
     describe('flagConsiderRecall is set', () => {
       const recallConsideredDetail =
         'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
