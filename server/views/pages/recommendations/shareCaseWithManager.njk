@@ -1,0 +1,56 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{{  logMessage(pageTitle) }}
+
+{% block beforeContent %}
+    <nav>
+    {{ govukBackLink({
+        text: "Back",
+        href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
+    }) }}</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+
+            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+
+            <p class='govuk-body'>Now you can share this case with your manager.</p>
+
+            <ol class='govuk-list govuk-list--number'>
+                <li>
+                    <p class='govuk-body'>Copy this link.</p>
+
+                     <h2 class='govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-1'>Concerns about {{ recommendation.personOnProbation.name }}</h2>
+                    <div class='mid-grey-panel'>
+                        <pre class='govuk-body govuk-!-margin-0' data-js='copy-to-clipboard-text' data-qa='case-link'>{{ link }}</pre>
+                    </div>
+                    <p class='govuk-body govuk-!-margin-top-6'>
+                    <button class='govuk-button govuk-button--secondary' data-js='copy-to-clipboard-btn'>Copy</button>
+                    </p>
+
+                </li>
+                <li>
+                    <p class='govuk-body'>Paste it into an email or Teams message.</p>
+                </li>
+                <li>
+                    <p class='govuk-body'>Send it to your manager.</p>
+                </li>
+                <li>
+                    <p class='govuk-body'>Discuss the case together before making a decision.</p>
+                </li>
+            </ol>
+             <div>
+                <a href='{{urlInfo.pageBase}}manager-review' class='govuk-button govuk-button--primary'>Continue</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    {{ super() }}
+    <script src="/assets/copyToClipboard.js" defer></script>
+{% endblock %}
