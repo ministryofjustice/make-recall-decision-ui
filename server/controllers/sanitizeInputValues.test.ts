@@ -8,9 +8,11 @@ describe('sanitize input values', () => {
         one: '<b>this is in bold</b>',
       },
       someArray: ['<span>some text</span>'],
-    } as Record<string, unknown>
+    }
 
-    sanitizeInputValues(mockReq({ body: body as any }), mockRes(), mockNext)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    sanitizeInputValues(mockReq({ body }), mockRes(), mockNext)
 
     expect(body.someStructure.one).toEqual('this is in bold')
     expect(body.someArray[0]).toEqual('some text')
