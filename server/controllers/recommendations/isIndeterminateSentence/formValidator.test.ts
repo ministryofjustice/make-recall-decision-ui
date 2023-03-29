@@ -13,7 +13,7 @@ describe('validateIsIndeterminateSentence', () => {
       isIndeterminateSentence: 'NO',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateIsIndeterminateSentence({
+    const { errors, valuesToSave } = await validateIsIndeterminateSentence({
       requestBody,
       urlInfo,
     })
@@ -24,7 +24,6 @@ describe('validateIsIndeterminateSentence', () => {
         selected: 'NO',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
 
   it('if Yes selected, saves value and redirects', async () => {
@@ -32,7 +31,7 @@ describe('validateIsIndeterminateSentence', () => {
       isIndeterminateSentence: 'YES',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateIsIndeterminateSentence({
+    const { errors, valuesToSave } = await validateIsIndeterminateSentence({
       requestBody,
       urlInfo,
     })
@@ -40,7 +39,6 @@ describe('validateIsIndeterminateSentence', () => {
     expect(valuesToSave).toEqual({
       isIndeterminateSentence: true,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
 
   it('if answer changes from Yes to No, resets isExtendedSentence / indeterminateSentenceType / recallType / indeterminateOrExtendedSentenceDetails / fixedTermAdditionalLicenceConditions', async () => {
@@ -119,19 +117,5 @@ describe('validateIsIndeterminateSentence', () => {
         errorId: 'noIsIndeterminateSelected',
       },
     ])
-  })
-
-  it('if "from page" is set, ignore it', async () => {
-    const requestBody = {
-      isIndeterminateSentence: 'NO',
-      crn: 'X34534',
-    }
-    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
-    const { nextPagePath } = await validateIsIndeterminateSentence({
-      requestBody,
-      recommendationId,
-      urlInfo: urlInfoWithFromPage,
-    })
-    expect(nextPagePath).toEqual('/recommendations/34/is-extended')
   })
 })

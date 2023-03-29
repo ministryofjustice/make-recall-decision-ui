@@ -14,7 +14,7 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: 'LIFE',
       crn: 'X34534',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateIndeterminateSentenceType({
+    const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
       urlInfo,
     })
@@ -25,20 +25,6 @@ describe('validateIndeterminateSentenceType', () => {
         selected: 'LIFE',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
-  })
-
-  it('if "from page" is set, ignore it', async () => {
-    const requestBody = {
-      indeterminateSentenceType: 'LIFE',
-      crn: 'X34534',
-    }
-    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-custody' }
-    const { nextPagePath } = await validateIndeterminateSentenceType({
-      requestBody,
-      urlInfo: urlInfoWithFromPage,
-    })
-    expect(nextPagePath).toEqual('/recommendations/34/recall-type-indeterminate')
   })
 
   it('returns an error, if not set, and no valuesToSave', async () => {

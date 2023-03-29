@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { strings } from '../../textStrings/en'
-import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
+import { isMandatoryTextValue } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { flags, recommendation } = res.locals
@@ -25,7 +24,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-async function post(req: Request, res: Response, next: NextFunction) {
+async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const { responseToProbation } = req.body
 
@@ -37,8 +36,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   const errors = []
 
-  const sanitized = isString(responseToProbation) ? stripHtmlTags(responseToProbation as string) : ''
-  if (isEmptyStringOrWhitespace(sanitized)) {
+  if (!isMandatoryTextValue(responseToProbation)) {
     const errorId = 'missingResponseToProbation'
     errors.push(
       makeErrorObject({
@@ -51,12 +49,12 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   if (errors.length > 0) {
     req.session.errors = errors
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
+    return res.redirect(303, req.originalUrl)
   }
   await updateRecommendation({
     recommendationId,
     valuesToSave: {
-      responseToProbation: sanitized,
+      responseToProbation,
     },
     token,
     featureFlags: flags,

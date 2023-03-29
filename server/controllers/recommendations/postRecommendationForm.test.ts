@@ -147,18 +147,6 @@ describe('postRecommendationForm', () => {
     )
   })
 
-  it('should not send an appInsightsEvent if not recall-type page', async () => {
-    const recallDetails = { recommendationId }
-    jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)
-    const req = mockReq({
-      method: 'POST',
-      params: { recommendationId, pageUrlSlug: 'response-to-probation' },
-      body: requestBody,
-    })
-    await postRecommendationForm(req, res)
-    expect(appInsightsEvent).not.toHaveBeenCalled()
-  })
-
   it('should add any confirmation message to the request session', async () => {
     const recallDetails = { recommendationId }
     jest.spyOn(RestClient.prototype, 'patch').mockResolvedValueOnce(recallDetails)

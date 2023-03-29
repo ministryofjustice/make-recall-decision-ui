@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesLicenceConditions } from '../recommendations/licenceConditions/inputDisplayValues'
@@ -53,7 +52,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+    return res.redirect(303, req.originalUrl)
   }
 
   await updateRecommendation({

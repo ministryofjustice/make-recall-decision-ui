@@ -139,6 +139,7 @@ describe('post', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const req = mockReq({
+      originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
@@ -168,6 +169,6 @@ describe('post', () => {
         values: undefined,
       },
     ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/is-indeterminate`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 })

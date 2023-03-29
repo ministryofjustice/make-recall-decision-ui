@@ -5,7 +5,6 @@ import { cleanseUiList } from '../../../utils/lists'
 import { isCaseRestrictedOrExcluded, isDefined } from '../../../utils/utils'
 import { fetchAndTransformLicenceConditions } from './transform'
 import { TransformedLicenceConditionsResponse } from '../../caseSummary/licenceConditions/transformLicenceConditions'
-import { nextPageLinkUrl } from '../helpers/urls'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { FormValidatorArgs, FormValidatorReturn, NamedFormError } from '../../../@types/pagesForms'
 
@@ -13,7 +12,6 @@ const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
 export const validateLicenceConditionsBreached = async ({
   requestBody,
-  urlInfo,
   token,
 }: FormValidatorArgs): FormValidatorReturn => {
   const { licenceConditionsBreached, crn, activeCustodialConvictionCount } = requestBody
@@ -121,9 +119,5 @@ export const validateLicenceConditionsBreached = async ({
       allOptions: allAdditionalLicenceConditions,
     }
   }
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'alternatives-tried', urlInfo })
-  return {
-    valuesToSave,
-    nextPagePath,
-  }
+  return { valuesToSave }
 }

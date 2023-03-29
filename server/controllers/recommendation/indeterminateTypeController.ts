@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { renderStrings } from '../recommendations/helpers/renderStrings'
 import { strings } from '../../textStrings/en'
-import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/inputDisplayValues'
@@ -53,7 +52,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
+    return res.redirect(303, req.originalUrl)
   }
 
   await updateRecommendation({

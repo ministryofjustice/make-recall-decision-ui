@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
@@ -43,7 +42,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/is-extended`)
+    return res.redirect(303, req.originalUrl)
   }
   await updateRecommendation({
     recommendationId,

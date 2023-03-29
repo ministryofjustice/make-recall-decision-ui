@@ -2,11 +2,10 @@ import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
-import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+export const validateAlternativesTried = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   const { alternativesToRecallTried } = requestBody
   const alternativesList = Array.isArray(alternativesToRecallTried)
     ? alternativesToRecallTried
@@ -82,9 +81,6 @@ export const validateAlternativesTried = async ({ requestBody, urlInfo }: FormVa
       allOptions: cleanseUiList(formOptions.alternativesToRecallTried),
     },
   }
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'manager-review', urlInfo })
-  return {
-    valuesToSave,
-    nextPagePath,
-  }
+
+  return { valuesToSave }
 }

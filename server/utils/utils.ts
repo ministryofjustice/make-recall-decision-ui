@@ -1,9 +1,8 @@
 import qs from 'qs'
 import { stripHtml } from 'string-strip-html'
 import config from '../config'
-import { Address } from '../@types/make-recall-decision-api/models/Address'
+import { Address, UserAccessResponse } from '../@types/make-recall-decision-api'
 
-import { UserAccessResponse } from '../@types/make-recall-decision-api/models/UserAccessResponse'
 import { AppError } from '../AppError'
 import { FormError } from '../@types/pagesForms'
 
@@ -129,18 +128,14 @@ export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessRespons
 }
 
 export const validateCrn = (crn: unknown) => {
-  try {
-    if (!isString(crn)) {
-      throw new Error()
-    }
-    const normalized = normalizeCrn(crn as string)
-    if (isEmptyStringOrWhitespace(normalized)) {
-      throw new Error()
-    }
-    return normalized
-  } catch (err) {
+  if (!isString(crn)) {
     throw new AppError('Invalid CRN', { status: 400, errorType: 'INVALID_CRN' })
   }
+  const normalized = normalizeCrn(crn as string)
+  if (isEmptyStringOrWhitespace(normalized)) {
+    throw new AppError('Invalid CRN', { status: 400, errorType: 'INVALID_CRN' })
+  }
+  return normalized
 }
 
 export const normalizeCrn = (crn: string) => {
@@ -155,6 +150,13 @@ export const booleanToYesNo = (val: boolean) => {
   if (val === true) return 'YES'
   if (val === false) return 'NO'
   return undefined
+}
+
+export function isMandatoryTextValue(val: unknown): boolean {
+  if (typeof val === 'string') {
+    return (val as string).trim().length > 0
+  }
+  return false
 }
 
 export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()
