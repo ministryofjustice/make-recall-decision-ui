@@ -46,14 +46,6 @@ describe('getRecommendationPage', () => {
     })
   })
 
-  it('should fetch licence conditions if on that page', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
-    req = mockReq({ params: { recommendationId, pageUrlSlug: 'licence-conditions' } })
-    await getRecommendationPage(req, res)
-    expect(fetchAndTransformLicenceConditions).toHaveBeenCalledWith({ crn: 'X12345', token: 'abc' })
-  })
-
   it('should fetch no recall preview letter if on that page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(createDocument as jest.Mock).mockResolvedValue({})

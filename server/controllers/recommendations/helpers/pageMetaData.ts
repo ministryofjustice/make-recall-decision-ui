@@ -3,20 +3,14 @@ import { validateRecallType } from '../recallType/formValidator'
 import { validateCustodyStatus } from '../custodyStatus/formValidator'
 import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
 import { inputDisplayValuesCustodyStatus } from '../custodyStatus/inputDisplayValues'
-import { validateResponseToProbation } from '../responseToProbation/formValidator'
-import { inputDisplayValuesResponseToProbation } from '../responseToProbation/inputDisplayValues'
 import { validateEmergencyRecall } from '../emergencyRecall/formValidator'
 import { inputDisplayValuesEmergencyRecall } from '../emergencyRecall/inputDisplayValues'
 import { validateVictimContactScheme } from '../victimContactScheme/formValidator'
 import { inputDisplayValuesVictimContactScheme } from '../victimContactScheme/inputDisplayValues'
 import { validateVictimLiaisonOfficer } from '../victimLiaisonOfficer/formValidator'
 import { inputDisplayValuesVictimLiaisonOfficer } from '../victimLiaisonOfficer/inputDisplayValues'
-import { validateAlternativesTried } from '../alternativesToRecallTried/formValidator'
-import { inputDisplayValuesAlternativesToRecallTried } from '../alternativesToRecallTried/inputDisplayValues'
 import { validateArrestIssues } from '../arrestIssues/formValidator'
 import { inputDisplayValuesArrestIssues } from '../arrestIssues/inputDisplayValues'
-import { validateLicenceConditionsBreached } from '../licenceConditions/formValidator'
-import { inputDisplayValuesLicenceConditions } from '../licenceConditions/inputDisplayValues'
 import { validateIntegratedOffenderManagement } from '../integratedOffenderManagement/formValidator'
 import { inputDisplayValuesIntegratedOffenderManagement } from '../integratedOffenderManagement/inputDisplayValues'
 import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/formValidator'
@@ -27,12 +21,6 @@ import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
 import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 import { validateContraband } from '../contraband/formValidator'
 import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
-import { validateIsIndeterminateSentence } from '../isIndeterminateSentence/formValidator'
-import { inputDisplayValuesIsIndeterminateSentence } from '../isIndeterminateSentence/inputDisplayValues'
-import { validateIndeterminateSentenceType } from '../indeterminateSentenceType/formValidator'
-import { inputDisplayValuesIndeterminateSentenceType } from '../indeterminateSentenceType/inputDisplayValues'
-import { validateIsExtendedSentence } from '../isExtendedSentence/formValidator'
-import { inputDisplayValuesIsExtendedSentence } from '../isExtendedSentence/inputDisplayValues'
 import { validateRecallTypeIndeterminate } from '../recallTypeIndeterminate/formValidator'
 import { inputDisplayValuesRecallTypeIndeterminate } from '../recallTypeIndeterminate/inputDisplayValues'
 import { validateFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/formValidator'
@@ -71,10 +59,6 @@ import { inputDisplayValuesAddPreviousRecall } from '../addPreviousRecall/inputD
  *  */
 export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
-    case 'task-list-consider-recall':
-      return {
-        id: 'taskListConsiderRecall',
-      }
     case 'manager-record-decision':
       return {
         id: 'managerRecordDecision',
@@ -94,45 +78,9 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
       return {
         id: 'managerDecisionConfirmation',
       }
-    case 'response-to-probation':
-      return {
-        id: 'responseToProbation',
-        validator: validateResponseToProbation,
-        inputDisplayValues: inputDisplayValuesResponseToProbation,
-      }
-    case 'licence-conditions':
-      return {
-        id: 'licenceConditions',
-        validator: validateLicenceConditionsBreached,
-        inputDisplayValues: inputDisplayValuesLicenceConditions,
-      }
-    case 'alternatives-tried':
-      return {
-        id: 'alternativesToRecallTried',
-        validator: validateAlternativesTried,
-        inputDisplayValues: inputDisplayValuesAlternativesToRecallTried,
-      }
     case 'manager-review':
       return {
         id: 'managerReview',
-      }
-    case 'is-indeterminate':
-      return {
-        id: 'isIndeterminateSentence',
-        validator: validateIsIndeterminateSentence,
-        inputDisplayValues: inputDisplayValuesIsIndeterminateSentence,
-      }
-    case 'is-extended':
-      return {
-        id: 'isExtendedSentence',
-        validator: validateIsExtendedSentence,
-        inputDisplayValues: inputDisplayValuesIsExtendedSentence,
-      }
-    case 'indeterminate-type':
-      return {
-        id: 'indeterminateSentenceType',
-        validator: validateIndeterminateSentenceType,
-        inputDisplayValues: inputDisplayValuesIndeterminateSentenceType,
       }
     case 'recall-type-indeterminate':
       return {

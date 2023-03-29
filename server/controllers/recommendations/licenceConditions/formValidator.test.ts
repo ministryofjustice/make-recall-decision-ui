@@ -21,7 +21,7 @@ describe('validateLicenceConditionsBreached', () => {
       licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NLC9|NSTT9'],
       activeCustodialConvictionCount: '1',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
+    const { errors, valuesToSave } = await validateLicenceConditionsBreached({
       requestBody,
       urlInfo,
     })
@@ -47,7 +47,6 @@ describe('validateLicenceConditionsBreached', () => {
       },
       activeCustodialConvictionCount: 1,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
   })
 
   it('returns valuesToSave and no errors if nothing selected but PoP has multiple convictions', async () => {
@@ -56,7 +55,7 @@ describe('validateLicenceConditionsBreached', () => {
       crn: 'X514364',
       activeCustodialConvictionCount: '2',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
+    const { errors, valuesToSave } = await validateLicenceConditionsBreached({
       requestBody,
       urlInfo,
     })
@@ -64,7 +63,6 @@ describe('validateLicenceConditionsBreached', () => {
     expect(valuesToSave).toEqual({
       activeCustodialConvictionCount: 2,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
   })
 
   it('returns valuesToSave and no errors if nothing selected but PoP has no convictions', async () => {
@@ -73,7 +71,7 @@ describe('validateLicenceConditionsBreached', () => {
       crn: 'X514364',
       activeCustodialConvictionCount: '0',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateLicenceConditionsBreached({
+    const { errors, valuesToSave } = await validateLicenceConditionsBreached({
       requestBody,
       urlInfo,
     })
@@ -81,7 +79,6 @@ describe('validateLicenceConditionsBreached', () => {
     expect(valuesToSave).toEqual({
       activeCustodialConvictionCount: 0,
     })
-    expect(nextPagePath).toEqual('/recommendations/34/alternatives-tried')
   })
 
   it('returns an error if nothing selected, and PoP has 1 conviction', async () => {
@@ -224,21 +221,5 @@ describe('validateLicenceConditionsBreached', () => {
     ])
     expect(valuesToSave).toBeUndefined()
     expect(nextPagePath).toBeUndefined()
-  })
-
-  it('if "from page" is set to recall task list, redirect to it', async () => {
-    const requestBody = {
-      licenceConditionsBreached: ['standard|ADDRESS_APPROVED', 'additional|NST30'],
-      crn: 'X34534',
-      activeCustodialConvictionCount: '1',
-    }
-    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
-    ;(getCaseSummary as jest.Mock).mockResolvedValue(caseApiResponse)
-    const { nextPagePath } = await validateLicenceConditionsBreached({
-      requestBody,
-      recommendationId,
-      urlInfo: urlInfoWithFromPage,
-    })
-    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-circumstances`)
   })
 })

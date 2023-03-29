@@ -17,7 +17,7 @@ describe('validateAlternativesTried', () => {
       'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': 'Info..',
       'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details for..',
     }
-    const { errors, valuesToSave, nextPagePath } = await validateAlternativesTried({ requestBody, urlInfo })
+    const { errors, valuesToSave } = await validateAlternativesTried({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       alternativesToRecallTried: {
@@ -34,7 +34,6 @@ describe('validateAlternativesTried', () => {
         ],
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/manager-review')
   })
 
   it('strips HTML tags out of details', async () => {
@@ -119,19 +118,5 @@ describe('validateAlternativesTried', () => {
         ],
       },
     })
-  })
-
-  it('if "from page" is set to recall task list, redirect to it', async () => {
-    const requestBody = {
-      alternativesToRecallTried: ['REFERRAL_TO_PARTNERSHIP_AGENCIES'],
-      'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': 'Details',
-      crn: 'X34534',
-    }
-    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
-    const { nextPagePath } = await validateAlternativesTried({
-      requestBody,
-      urlInfo: urlInfoWithFromPage,
-    })
-    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-recommendation`)
   })
 })

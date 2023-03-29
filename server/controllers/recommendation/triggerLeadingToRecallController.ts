@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { strings } from '../../textStrings/en'
-import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../utils/utils'
+import { isMandatoryTextValue } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -37,8 +36,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const errors = []
 
-  const sanitized = isString(triggerLeadingToRecall) ? stripHtmlTags(triggerLeadingToRecall as string) : ''
-  if (isEmptyStringOrWhitespace(sanitized)) {
+  if (!isMandatoryTextValue(triggerLeadingToRecall)) {
     const errorId = 'missingTriggerLeadingToRecall'
     errors.push(
       makeErrorObject({
@@ -51,12 +49,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (errors.length > 0) {
     req.session.errors = errors
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
+    return res.redirect(303, req.originalUrl)
   }
   await updateRecommendation({
     recommendationId,
     valuesToSave: {
-      triggerLeadingToRecall: sanitized,
+      triggerLeadingToRecall,
     },
     token,
     featureFlags: flags,

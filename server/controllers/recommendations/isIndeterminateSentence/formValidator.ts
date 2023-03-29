@@ -3,13 +3,9 @@ import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateIsIndeterminateSentence = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+export const validateIsIndeterminateSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
-  let nextPagePath
 
   const { isIndeterminateSentence, currentSavedValue } = requestBody
   if (!isIndeterminateSentence || !isValueValid(isIndeterminateSentence as string, 'yesNo')) {
@@ -48,13 +44,9 @@ export const validateIsIndeterminateSentence = async ({
         valuesToSave.indeterminateSentenceType = null
       }
     }
-
-    // ignore any 'fromPage' parameter, user should proceed through entire flow back to task list
-    nextPagePath = `${urlInfo.basePath}is-extended`
   }
   return {
     errors,
     valuesToSave,
-    nextPagePath,
   }
 }

@@ -19,6 +19,7 @@ import isExtendedController from '../controllers/recommendation/isExtendedContro
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
 import customizeMessages from '../controllers/customizeMessages'
 import shareManagerController from '../controllers/recommendation/shareManagerController'
+import sanitizeInputValues from '../controllers/sanitizeInputValues'
 
 const recommendations = Router()
 
@@ -64,6 +65,7 @@ type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback) {
   recommendations.get(
     `/:recommendationId/${endpoint}`,
+    sanitizeInputValues,
     parseRecommendationUrl,
     retrieve,
     customizeMessages,
@@ -78,6 +80,7 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
 function routeRecommendationPost(endpoint: string, routerCallback: RouterCallback) {
   recommendations.post(
     `/:recommendationId/${endpoint}`,
+    sanitizeInputValues,
     parseRecommendationUrl,
     routerCallback,
     (error: Error, req: Request, res: Response, next: NextFunction): void => {

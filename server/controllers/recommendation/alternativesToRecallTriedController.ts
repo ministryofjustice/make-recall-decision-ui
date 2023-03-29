@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { routeUrls } from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesAlternativesToRecallTried } from '../recommendations/alternativesToRecallTried/inputDisplayValues'
@@ -44,7 +43,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
-    return res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/alternatives-tried`)
+    return res.redirect(303, req.originalUrl)
   }
 
   await updateRecommendation({

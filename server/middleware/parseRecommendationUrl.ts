@@ -12,13 +12,14 @@ const isValidFromPage = (pageUrlSlug: unknown) => {
 }
 
 export const parseRecommendationUrl = (req: Request, res: Response, next: NextFunction) => {
-  const { recommendationId, pageUrlSlug } = req.params
+  const { recommendationId } = req.params
   const { fromPageId, fromAnchor } = req.query
+  const currentPageId = req.path.substring(req.path.lastIndexOf('/') + 1)
   res.locals.urlInfo = {
     ...res.locals.urlInfo,
     fromPageId: fromPageId && isValidFromPage(fromPageId) ? fromPageId : undefined,
     fromAnchor,
-    currentPageId: pageUrlSlug,
+    currentPageId,
     basePath: `${routeUrls.recommendations}/${recommendationId}/`,
   }
   next()
