@@ -78,9 +78,9 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
     `/:recommendationId/${endpoint}`,
     sanitizeInputValues,
     parseRecommendationUrl,
-    retrieve,
+    feedErrorsToExpress(retrieve), // necessary for async functions
     customizeMessages,
-    routerCallback,
+    feedErrorsToExpress(routerCallback), // necessary for async functions
     audit,
     (error: Error, req: Request, res: Response, next: NextFunction): void => {
       next(error) // forward errors to root router
@@ -93,9 +93,19 @@ function routeRecommendationPost(endpoint: string, routerCallback: RouterCallbac
     `/:recommendationId/${endpoint}`,
     sanitizeInputValues,
     parseRecommendationUrl,
-    routerCallback,
+    feedErrorsToExpress(routerCallback), // necessary for async functions
     (error: Error, req: Request, res: Response, next: NextFunction): void => {
       next(error) // forward errors to root router
     }
   )
+}
+
+function feedErrorsToExpress(routerCallback: RouterCallback) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await routerCallback(req, res, next)
+    } catch (err) {
+      next(err)
+    }
+  }
 }
