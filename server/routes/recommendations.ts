@@ -21,6 +21,8 @@ import customizeMessages from '../controllers/customizeMessages'
 import shareManagerController from '../controllers/recommendation/shareManagerController'
 import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import discussWithManagerController from '../controllers/recommendation/discussWithManagerController'
+import recallTypeController from '../controllers/recommendation/recallTypeController'
+import recallTypeIndeterminateController from '../controllers/recommendation/recallTypeIndeterminateController'
 
 const recommendations = Router()
 
@@ -50,6 +52,12 @@ routeRecommendationPost('is-extended', isExtendedController.post)
 routeRecommendationGet('share-case-with-manager', shareManagerController.get)
 
 routeRecommendationGet('discuss-with-manager', discussWithManagerController.get)
+
+routeRecommendationGet('recall-type', recallTypeController.get)
+routeRecommendationPost('recall-type', recallTypeController.post)
+
+routeRecommendationGet('recall-type-indeterminate', recallTypeIndeterminateController.get)
+routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
