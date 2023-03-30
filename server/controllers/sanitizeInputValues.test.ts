@@ -20,7 +20,7 @@ describe('sanitize input values', () => {
   it('sanitize query', async () => {
     const query = {
       arg: '<b>this is in bold</b>',
-    } as Record<string, string | boolean>
+    }
 
     sanitizeInputValues(mockReq({ query }), mockRes(), mockNext)
 
@@ -29,7 +29,7 @@ describe('sanitize input values', () => {
   it('sanitize params', async () => {
     const params = {
       arg: '<b>this is in bold</b>',
-    } as Record<string, string | boolean>
+    }
 
     sanitizeInputValues(mockReq({ params }), mockRes(), mockNext)
 

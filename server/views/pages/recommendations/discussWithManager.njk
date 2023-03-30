@@ -1,0 +1,38 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({ text: "Back", href: backLink }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            {% set infoHtml %}
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds-from-desktop">
+                        <p class='info-panel__body'>Public safety is vital.  But make sure recall is the right thing to do.</p>
+                        <p class='info-panel__body'>Talk to your manager.  Think about these questions:</p>
+                        <ul class='info-panel__body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
+                            <li>What does the Risk Management Plan say?</li>
+                            <li>What does the Contingency Plan say?</li>
+                            <li>Can the risk be managed in the community?</li>
+                            <li>What else can you do to manage the risk?</li>
+                        </ul>
+                        <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                           href='/recommendations/{{ recommendation.id }}/{{ nextPageId }}'>Continue</a>
+                    </div>
+                </div>
+            {% endset %}
+            {{ infoPanel({
+                titleText: pageTitles[page.id],
+                html: infoHtml
+            }) }}
+        </div>
+    </div>
+{% endblock %}
+
