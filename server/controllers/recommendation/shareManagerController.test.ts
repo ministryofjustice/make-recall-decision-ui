@@ -1,8 +1,6 @@
 import shareManagerController from './shareManagerController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 
-jest.mock('../../data/makeDecisionApiClient')
-
 describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({

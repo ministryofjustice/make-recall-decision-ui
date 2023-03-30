@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
 import { SessionData } from 'express-session'
+import { ParsedQs } from 'qs'
+import { ParamsDictionary } from 'express-serve-static-core'
 
 export const mockReq = ({
   query = {},
@@ -14,8 +16,8 @@ export const mockReq = ({
   path = '/',
 }: {
   body?: Record<string, string | boolean>
-  query?: Record<string, string | boolean>
-  params?: Record<string, string | boolean>
+  query?: ParsedQs
+  params?: ParamsDictionary
   headers?: Record<string, string | boolean>
   cookies?: Record<string, string>
   method?: string

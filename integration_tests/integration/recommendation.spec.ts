@@ -161,7 +161,24 @@ context('Make a recommendation', () => {
 
         cy.clickLink('Continue')
 
-        cy.pageHeading().should('equal', 'Stop and think')
+        cy.pageHeading().should('equal', 'Discuss with your manager')
+      })
+
+      it('present discuss-with-manager', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, recallConsideredList: null },
+        })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager?flagTriggerWork=1`)
+
+        cy.clickLink('Continue')
+
+        cy.pageHeading().should('equal', 'Discuss with your manager')
+
+        cy.clickLink('Continue')
+
+        cy.pageHeading().should('equal', 'What do you recommend?')
       })
     })
 
