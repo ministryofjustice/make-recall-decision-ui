@@ -116,9 +116,13 @@ context('Make a recommendation', () => {
       it('display consider recall task list if "update recommendation"', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
-          response: { ...recommendationResponse, recallConsideredList: null },
+          response: {
+            ...recommendationResponse,
+            recallConsideredList: null,
+            recallType: { selected: { value: undefined } },
+          },
         })
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/?flagTriggerWork=1`)
         cy.pageHeading().should('equal', 'Consider a recall')
 
         cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
