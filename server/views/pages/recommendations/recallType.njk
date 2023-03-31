@@ -6,7 +6,7 @@
     <nav>
         {{ govukBackLink({
             text: "Back",
-            href: nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo: urlInfo })
+            href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
         }) }}
     </nav>
 {% endblock %}

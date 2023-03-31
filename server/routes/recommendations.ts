@@ -21,6 +21,8 @@ import customizeMessages from '../controllers/customizeMessages'
 import shareManagerController from '../controllers/recommendation/shareManagerController'
 import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import discussWithManagerController from '../controllers/recommendation/discussWithManagerController'
+import recallTypeController from '../controllers/recommendation/recallTypeController'
+import recallTypeIndeterminateController from '../controllers/recommendation/recallTypeIndeterminateController'
 
 const recommendations = Router()
 
@@ -51,6 +53,12 @@ routeRecommendationGet('share-case-with-manager', shareManagerController.get)
 
 routeRecommendationGet('discuss-with-manager', discussWithManagerController.get)
 
+routeRecommendationGet('recall-type', recallTypeController.get)
+routeRecommendationPost('recall-type', recallTypeController.post)
+
+routeRecommendationGet('recall-type-indeterminate', recallTypeIndeterminateController.get)
+routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateController.post)
+
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
 post('', createRecommendationController)
@@ -70,9 +78,9 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
     `/:recommendationId/${endpoint}`,
     sanitizeInputValues,
     parseRecommendationUrl,
-    retrieve,
+    feedErrorsToExpress(retrieve), // necessary for async functions
     customizeMessages,
-    routerCallback,
+    feedErrorsToExpress(routerCallback), // necessary for async functions
     audit,
     (error: Error, req: Request, res: Response, next: NextFunction): void => {
       next(error) // forward errors to root router
@@ -85,9 +93,19 @@ function routeRecommendationPost(endpoint: string, routerCallback: RouterCallbac
     `/:recommendationId/${endpoint}`,
     sanitizeInputValues,
     parseRecommendationUrl,
-    routerCallback,
+    feedErrorsToExpress(routerCallback), // necessary for async functions
     (error: Error, req: Request, res: Response, next: NextFunction): void => {
       next(error) // forward errors to root router
     }
   )
+}
+
+function feedErrorsToExpress(routerCallback: RouterCallback) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await routerCallback(req, res, next)
+    } catch (err) {
+      next(err)
+    }
+  }
 }
