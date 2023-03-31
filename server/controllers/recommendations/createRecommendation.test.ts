@@ -28,7 +28,7 @@ describe('createRecommendationController', () => {
       flagDomainEventRecommendationStarted: true,
       flagTriggerWork: false,
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
+    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/')
     expect(req.session.errors).toBeUndefined()
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdRecommendationStarted',
@@ -52,13 +52,5 @@ describe('createRecommendationController', () => {
         text: 'An error occurred creating a new recommendation',
       },
     ])
-  })
-
-  it('should redirect when trigger work flag is true', async () => {
-    featureFlags.flagTriggerWork = true
-    ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
-    const req = mockReq({ body: { crn } })
-    await createRecommendationController(req, res)
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list-consider-recall')
   })
 })
