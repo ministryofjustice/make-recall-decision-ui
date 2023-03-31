@@ -23,8 +23,12 @@ import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import discussWithManagerController from '../controllers/recommendation/discussWithManagerController'
 import recallTypeController from '../controllers/recommendation/recallTypeController'
 import recallTypeIndeterminateController from '../controllers/recommendation/recallTypeIndeterminateController'
+import redirectController from '../controllers/recommendation/redirectController'
+import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 
 const recommendations = Router()
+
+routeRecommendationGet('', redirectController.get)
 
 routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get)
 
@@ -79,6 +83,7 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
     sanitizeInputValues,
     parseRecommendationUrl,
     feedErrorsToExpress(retrieve), // necessary for async functions
+    guardAgainstModifyingClosedRecommendation,
     customizeMessages,
     feedErrorsToExpress(routerCallback), // necessary for async functions
     audit,

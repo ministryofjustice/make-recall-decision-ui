@@ -66,12 +66,6 @@ export const checkForRedirectPath = ({
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
   const isTaskList = isRecallTaskListRequested || isNoRecallTaskListRequested
 
-  if (featureFlags.flagTriggerWork) {
-    if (isRecallTaskListRequested) {
-      return `${basePathRecFlow}task-list-consider-recall`
-    }
-  }
-
   if (featureFlags.flagConsiderRecall) {
     // SPO / manager decision
     const managerDecisionForms = ['manager-record-decision', 'manager-record-decision-delius']
