@@ -49,6 +49,14 @@ describe('authorisationMiddleware', () => {
     expect(res.locals.user.hasSpoRole).toEqual(true)
   })
 
+  it('should set roles', () => {
+    const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO] })
+
+    authorisationMiddleware()(req, res, next)
+
+    expect(res.locals.user.roles).toEqual([HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO])
+  })
+
   it('sets hasSpoRole to false if SPO role is not present', () => {
     const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.PO] })
 
