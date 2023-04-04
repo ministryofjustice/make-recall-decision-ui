@@ -25,43 +25,47 @@ import recallTypeController from '../controllers/recommendation/recallTypeContro
 import recallTypeIndeterminateController from '../controllers/recommendation/recallTypeIndeterminateController'
 import redirectController from '../controllers/recommendation/redirectController'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
+import spoTaskListConsiderRecallController from '../controllers/recommendation/spoTaskListConsiderRecallController'
+import authorisationMiddleware, { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 
 const recommendations = Router()
 
-routeRecommendationGet('', redirectController.get)
+routeRecommendationGet('', redirectController.get, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get)
+routeRecommendationGet('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.SPO])
 
-routeRecommendationGet('trigger-leading-to-recall', triggerLeadingToRecallController.get)
-routeRecommendationPost('trigger-leading-to-recall', triggerLeadingToRecallController.post)
+routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('response-to-probation', responseToProbationController.get)
-routeRecommendationPost('response-to-probation', responseToProbationController.post)
+routeRecommendationGet('trigger-leading-to-recall', triggerLeadingToRecallController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('trigger-leading-to-recall', triggerLeadingToRecallController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('licence-conditions', licenceConditionsController.get)
-routeRecommendationPost('licence-conditions', licenceConditionsController.post)
+routeRecommendationGet('response-to-probation', responseToProbationController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('response-to-probation', responseToProbationController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('alternatives-tried', alternativesToRecallTriedController.get)
-routeRecommendationPost('alternatives-tried', alternativesToRecallTriedController.post)
+routeRecommendationGet('licence-conditions', licenceConditionsController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('licence-conditions', licenceConditionsController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('indeterminate-type', indeterminateTypeController.get)
-routeRecommendationPost('indeterminate-type', indeterminateTypeController.post)
+routeRecommendationGet('alternatives-tried', alternativesToRecallTriedController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('alternatives-tried', alternativesToRecallTriedController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('is-indeterminate', isIndeterminateController.get)
-routeRecommendationPost('is-indeterminate', isIndeterminateController.post)
+routeRecommendationGet('indeterminate-type', indeterminateTypeController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('indeterminate-type', indeterminateTypeController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('is-extended', isExtendedController.get)
-routeRecommendationPost('is-extended', isExtendedController.post)
+routeRecommendationGet('is-indeterminate', isIndeterminateController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('is-indeterminate', isIndeterminateController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('share-case-with-manager', shareManagerController.get)
+routeRecommendationGet('is-extended', isExtendedController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('is-extended', isExtendedController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('discuss-with-manager', discussWithManagerController.get)
+routeRecommendationGet('share-case-with-manager', shareManagerController.get, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('recall-type', recallTypeController.get)
-routeRecommendationPost('recall-type', recallTypeController.post)
+routeRecommendationGet('discuss-with-manager', discussWithManagerController.get, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('recall-type-indeterminate', recallTypeIndeterminateController.get)
-routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateController.post)
+routeRecommendationGet('recall-type', recallTypeController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('recall-type', recallTypeController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('recall-type-indeterminate', recallTypeIndeterminateController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateController.post, [HMPPS_AUTH_ROLE.PO])
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
@@ -77,9 +81,10 @@ export default recommendations
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
-function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback) {
+function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback, roles: string[]) {
   recommendations.get(
     `/:recommendationId/${endpoint}`,
+    feedErrorsToExpress(authorisationMiddleware(roles)),
     sanitizeInputValues,
     parseRecommendationUrl,
     feedErrorsToExpress(retrieve), // necessary for async functions
@@ -93,9 +98,10 @@ function routeRecommendationGet(endpoint: string, routerCallback: RouterCallback
   )
 }
 
-function routeRecommendationPost(endpoint: string, routerCallback: RouterCallback) {
+function routeRecommendationPost(endpoint: string, routerCallback: RouterCallback, roles: string[]) {
   recommendations.post(
     `/:recommendationId/${endpoint}`,
+    authorisationMiddleware(roles),
     sanitizeInputValues,
     parseRecommendationUrl,
     feedErrorsToExpress(routerCallback), // necessary for async functions
