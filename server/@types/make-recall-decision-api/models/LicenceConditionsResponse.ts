@@ -2,15 +2,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ActiveRecommendation } from './ActiveRecommendation';
-import type { ConvictionResponse } from './ConvictionResponse';
-import type { PersonDetails } from './PersonDetails';
-import type { UserAccessResponse } from './UserAccessResponse';
+import type {ActiveRecommendation} from './ActiveRecommendation';
+import type {PersonDetails} from './PersonDetails';
+import type {UserAccessResponse} from './UserAccessResponse';
+import type {Conviction} from "./Conviction";
 
 export type LicenceConditionsResponse = {
     userAccessResponse?: UserAccessResponse;
     personalDetailsOverview?: PersonDetails;
-    convictions?: Array<ConvictionResponse>;
+    activeConvictions?: Array<Conviction>;
     activeRecommendation?: ActiveRecommendation;
 };
 

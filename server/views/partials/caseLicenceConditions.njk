@@ -41,9 +41,7 @@
                     <div class="govuk-accordion__section-summary govuk-body"
                          id="accordion-with-summary-sections-summary-2">
                         {% for conviction in caseSummary.convictions.activeCustodial %}
-                            {% for mainOffence in conviction.offences.main %}
-                                <div class='govuk-caption-m'>{{ mainOffence }}</div>
-                            {% endfor %}
+                            <div class='govuk-caption-m'>{{ conviction.mainOffence.description }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -52,18 +50,18 @@
                      aria-labelledby="accordion-with-summary-sections-heading-2">
                     {% set conditionNumber = 1 %}
                     {% for conviction in caseSummary.convictions.activeCustodial %}
-                        {% if caseSummary.convictions.hasMultipleActiveCustodial %}<h3 class='govuk-heading-s' data-qa='offence-heading'>{% for mainOffence in conviction.offences.main %}{{ mainOffence }}{% endfor %}</h3>{% endif %}
+                        {% if caseSummary.convictions.hasMultipleActiveCustodial %}<h3 class='govuk-heading-s' data-qa='offence-heading'>{{ conviction.mainOffence.description }}</h3>{% endif %}
                         {% if conviction.licenceConditions.length %}
                             {% for licenceCondition in conviction.licenceConditions %}
                                 {% set conditionHtml %}
-                                    <p class='govuk-body' data-qa='condition-description'>{{ licenceCondition.licenceConditionTypeSubCat.description }}</p>
-                                    {% if licenceCondition.licenceConditionNotes %}
+                                    <p class='govuk-body' data-qa='condition-description'>{{ licenceCondition.subCategory.description }}</p>
+                                    {% if licenceCondition.notes %}
                                     <h4 class='govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-1'>Notes</h4>
-                                    <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.licenceConditionNotes }}</p>
+                                    <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.notes }}</p>
                                     {% endif %}
                                 {% endset %}
                                 {{ appSummaryCard({
-                                    titleText: licenceCondition.licenceConditionTypeMainCat.description,
+                                    titleText: licenceCondition.mainCategory.description,
                                     headingLevel: 3,
                                     classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
                                     html: conditionHtml,

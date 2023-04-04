@@ -9,3 +9,9 @@ export type Offence = {
     offenceDate?: string;
 };
 
+export type DeliusOffence = {
+    description?: string;
+    code?: string;
+    date?: string;
+};
+

@@ -31,18 +31,7 @@ context('Make a recommendation', () => {
     sectionId: 'licence-conditions',
     statusCode: 200,
     response: {
-      convictions: [
-        {
-          active: true,
-          isCustodial: true,
-          offences: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          offences: [],
-        },
-      ],
+      activeConvictions: [{ sentence: { isCustodial: true } }, { sentence: { isCustodial: true } }],
     },
   }
 
@@ -397,19 +386,16 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
-          convictions: [
+          activeConvictions: [
             {
-              active: true,
-              isCustodial: true,
-              offences: [],
+              sentence: { isCustodial: true },
               licenceConditions: [
                 {
-                  active: true,
-                  licenceConditionTypeMainCat: {
+                  mainCategory: {
                     code: 'NLC5',
                     description: 'Freedom of movement',
                   },
-                  licenceConditionTypeSubCat: {
+                  subCategory: {
                     code: 'NST14',
                     description: 'On release to be escorted by police to Approved Premises',
                   },
@@ -453,18 +439,7 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
-          convictions: [
-            {
-              active: false,
-              isCustodial: true,
-              offences: [],
-            },
-            {
-              active: true,
-              isCustodial: false,
-              offences: [],
-            },
-          ],
+          activeConvictions: [{ sentence: { isCustodial: false } }],
         },
       })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
@@ -518,12 +493,9 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
-          convictions: [
+          activeConvictions: [
             {
-              active: true,
-              isCustodial: true,
-              statusCode: 'D',
-              offences: [],
+              sentence: { isCustodial: true, custodialStatusCode: 'D' },
               licenceConditions: [],
             },
           ],
@@ -543,19 +515,13 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
-          convictions: [
+          activeConvictions: [
             {
-              active: true,
-              isCustodial: true,
-              statusCode: 'B',
-              offences: [],
+              sentence: { isCustodial: true, custodialStatusCode: 'B' },
               licenceConditions: [],
             },
             {
-              active: true,
-              isCustodial: true,
-              statusCode: 'D',
-              offences: [],
+              sentence: { isCustodial: true, custodialStatusCode: 'D' },
               licenceConditions: [],
             },
           ],

@@ -153,19 +153,19 @@ describe('validateLicenceConditionsBreached', () => {
 
   it('returns an error if the case has multiple active custodial convictions', async () => {
     ;(getCaseSummary as jest.Mock).mockResolvedValue({
-      convictions: [
+      activeConvictions: [
         {
-          active: true,
-          isCustodial: true,
-          licenceExpiryDate: '2023-06-16',
-          sentenceExpiryDate: '2021-11-23',
-          offences: [],
+          sentence: {
+            isCustodial: true,
+            licenceExpiryDate: '2023-06-16',
+            sentenceExpiryDate: '2021-11-23',
+          },
         },
         {
-          active: true,
-          isCustodial: true,
-          licenceExpiryDate: '2021-03-24',
-          offences: [],
+          sentence: {
+            isCustodial: true,
+            licenceExpiryDate: '2021-03-24',
+          },
         },
       ],
     })
@@ -192,15 +192,7 @@ describe('validateLicenceConditionsBreached', () => {
 
   it('returns an error if the case has no active custodial convictions', async () => {
     ;(getCaseSummary as jest.Mock).mockResolvedValue({
-      convictions: [
-        {
-          active: false,
-          isCustodial: true,
-          licenceExpiryDate: '2023-06-16',
-          sentenceExpiryDate: '2021-11-23',
-          offences: [],
-        },
-      ],
+      activeConvictions: [],
     })
     const requestBody = {
       crn: 'X514364',

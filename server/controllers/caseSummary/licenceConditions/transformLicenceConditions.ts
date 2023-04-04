@@ -1,6 +1,6 @@
 import {
   CaseSummaryOverviewResponse,
-  ConvictionResponse,
+  Conviction,
   LicenceCondition,
   LicenceConditionsResponse,
   UserAccessResponse,
@@ -10,32 +10,18 @@ import { formOptions } from '../../recommendations/formOptions/formOptions'
 import { sortList } from '../../../utils/lists'
 import { FormOption } from '../../../@types/pagesForms'
 
-const transformConviction = (conviction: ConvictionResponse) => {
-  const licenceConditions = conviction.licenceConditions
-    ? conviction.licenceConditions.filter(condition => condition.active === true)
-    : []
+const transformConviction = (conviction: Conviction) => {
   return {
     ...conviction,
-    offences: {
-      main: conviction.offences.filter(offence => offence.mainOffence).map(offence => offence.description),
-      additional: conviction.offences.filter(offence => !offence.mainOffence).map(offence => offence.description),
-    },
-    licenceConditions: sortList(licenceConditions, 'licenceConditionTypeMainCat.description', true),
+    isCustodial: conviction.sentence && conviction.sentence.isCustodial,
+    licenceConditions: conviction.licenceConditions
+      ? sortList(conviction.licenceConditions, 'mainCategory.description', true)
+      : [],
   }
 }
 
-export interface DecoratedConviction {
-  convictionId?: number
-  active?: boolean
+export interface DecoratedConviction extends Conviction {
   isCustodial?: boolean
-  statusDescription?: string
-  statusCode?: string
-  licenceExpiryDate?: string
-  sentenceExpiryDate?: string
-  offences: {
-    main: string[]
-    additional: string[]
-  }
   licenceConditions?: LicenceCondition[]
 }
 
@@ -56,15 +42,15 @@ export const transformLicenceConditions = (
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
   let hasAllConvictionsReleasedOnLicence = false
-  if (caseSummary.convictions) {
-    activeConvictions = caseSummary.convictions
-      .filter(conviction => conviction.active)
-      .map(conviction => transformConviction(conviction))
+  if (caseSummary.activeConvictions) {
+    activeConvictions = caseSummary.activeConvictions.map(conviction => transformConviction(conviction))
     activeCustodialConvictions = activeConvictions.filter(conviction => conviction.isCustodial)
-    hasAllConvictionsReleasedOnLicence = activeCustodialConvictions.every(conviction => conviction.statusCode === 'B')
+    hasAllConvictionsReleasedOnLicence = activeCustodialConvictions.every(
+      conviction => conviction.sentence?.custodialStatusCode === 'B'
+    )
     activeConvictions = sortListByDateField({
       list: activeConvictions,
-      dateKey: 'sentenceExpiryDate',
+      dateKey: 'sentence.sentenceExpiryDate',
       newestFirst: true,
       undefinedValuesLast: true,
     })

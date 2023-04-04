@@ -66,20 +66,20 @@
                                                        id="additional-{{ loop.index }}"
                                                        name="licenceConditionsBreached"
                                                        type="checkbox"
-                                                       value="additional|{{ licenceCondition.licenceConditionTypeMainCat.code }}|{{ licenceCondition.licenceConditionTypeSubCat.code }}"
+                                                       value="additional|{{ licenceCondition.mainCategory.code }}|{{ licenceCondition.subCategory.code }}"
                                                        aria-describedby="additional-hint-{{ loop.index }}"
-                                                        {% if isObjectInArray({ properties: { mainCatCode: licenceCondition.licenceConditionTypeMainCat.code, subCatCode: licenceCondition.licenceConditionTypeSubCat.code}, arr: inputDisplayValues.additionalLicenceConditions }) %} checked{% endif %}>
+                                                        {% if isObjectInArray({ properties: { mainCatCode: licenceCondition.mainCategory.code, subCatCode: licenceCondition.subCategory.code}, arr: inputDisplayValues.additionalLicenceConditions }) %} checked{% endif %}>
                                                 <label class="govuk-label govuk-checkboxes__label govuk-!-font-weight-bold"
                                                        for="additional-{{ loop.index }}">
-                                                    {{ licenceCondition.licenceConditionTypeMainCat.description }}
+                                                    {{ licenceCondition.mainCategory.description }}
                                                 </label>
                                                 <div id="additional-hint-{{ loop.index }}"
                                                      class="govuk-hint govuk-checkboxes__hint">
-                                                    <p class='govuk-body govuk-!-margin-bottom-0'>{{ licenceCondition.licenceConditionTypeSubCat.description }}</p>
-                                                    {% if licenceCondition.licenceConditionNotes %}
+                                                    <p class='govuk-body govuk-!-margin-bottom-0'>{{ licenceCondition.subCategory.description }}</p>
+                                                    {% if licenceCondition.notes %}
                                                         <h4 class='govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-0'>
                                                             Notes</h4>
-                                                        <p class='govuk-body'>{{ licenceCondition.licenceConditionNotes }}</p>
+                                                        <p class='govuk-body'>{{ licenceCondition.notes }}</p>
                                                     {% endif %}
                                                 </div>
                                             </div>

@@ -14,14 +14,11 @@ context('Overview', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
     // licence info
-    const { releaseSummary, convictions, risk } = getCaseOverviewResponse
-    cy.getText('lastReleaseDate').should(
-      'equal',
-      formatDateTimeFromIsoString({ isoDate: releaseSummary.lastRelease.date })
-    )
+    const { lastRelease, activeConvictions, risk } = getCaseOverviewResponse
+    cy.getText('lastReleaseDate').should('equal', formatDateTimeFromIsoString({ isoDate: lastRelease.releaseDate }))
     cy.getText('licenceExpiryDate').should(
       'equal',
-      formatDateTimeFromIsoString({ isoDate: convictions[1].licenceExpiryDate })
+      formatDateTimeFromIsoString({ isoDate: activeConvictions[1].sentence.licenceExpiryDate })
     )
     // offence and sentence
     let opts = { parent: '[data-qa="conviction-1"]' }
@@ -136,33 +133,19 @@ context('Overview', () => {
 
   describe('Licence / Offence and sentence', () => {
     it('sort by sentence expiry date; missing data', () => {
-      const convictions = [
+      const activeConvictions = [
+        { mainOffence: { description: 'Non-custodial' } },
         {
-          active: true,
-          isCustodial: false,
-          offences: [{ mainOffence: true, description: 'Non-custodial' }],
-          licenceConditions: [],
+          mainOffence: { description: 'Custodial' },
+          sentence: { isCustodial: true, sentenceExpiryDate: '2020-06-16' },
         },
         {
-          active: true,
-          isCustodial: true,
-          sentenceExpiryDate: '2020-06-16',
-          offences: [{ mainOffence: true, description: 'Custodial' }],
-          licenceConditions: [],
+          mainOffence: { description: 'Custodial' },
+          sentence: { isCustodial: true, sentenceExpiryDate: null },
         },
         {
-          active: true,
-          isCustodial: true,
-          sentenceExpiryDate: null,
-          offences: [{ mainOffence: true, description: 'Custodial' }],
-          licenceConditions: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          sentenceExpiryDate: '2023-06-17',
-          offences: [{ mainOffence: true, description: 'Custodial' }],
-          licenceConditions: [],
+          mainOffence: { description: 'Custodial' },
+          sentence: { isCustodial: true, sentenceExpiryDate: '2023-06-17' },
         },
       ]
       cy.task('getCase', {
@@ -170,7 +153,7 @@ context('Overview', () => {
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          convictions,
+          activeConvictions,
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
@@ -189,32 +172,14 @@ context('Overview', () => {
     })
 
     it('shows "Not available" for last release and licence expiry date if dates are missing', () => {
-      const convictions = [
-        {
-          active: false,
-          isCustodial: false,
-          offences: [],
-          licenceConditions: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          statusCode: 'B',
-          offences: [],
-          licenceConditions: [],
-        },
-      ]
+      const activeConvictions = [{ sentence: { isCustodial: true, custodialStatusCode: 'B' } }]
       cy.task('getCase', {
         sectionId: 'overview',
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          convictions,
-          releaseSummary: {
-            lastRelease: {
-              date: null,
-            },
-          },
+          activeConvictions,
+          lastRelease: null,
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
@@ -228,18 +193,10 @@ context('Overview', () => {
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          convictions: [
+          activeConvictions: [
             {
-              active: true,
-              isCustodial: true,
-              statusCode: 'A',
-              offences: [
-                {
-                  mainOffence: true,
-                  description: 'Robbery',
-                },
-              ],
-              licenceConditions: [],
+              mainOffence: { description: 'Robbery' },
+              sentence: { isCustodial: true, custodialStatusCode: 'A' },
             },
           ],
         },
@@ -253,37 +210,16 @@ context('Overview', () => {
     })
 
     it('shows banner and "Not available" for last release and licence expiry date if there are multiple active custodial convictions', () => {
-      const convictions = [
-        {
-          active: false,
-          licenceExpiryDate: '2020-07-16',
-          statusCode: 'B',
-          offences: [],
-          licenceConditions: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          licenceExpiryDate: '2020-06-16',
-          statusCode: 'B',
-          offences: [],
-          licenceConditions: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          licenceExpiryDate: '2023-06-17',
-          statusCode: 'B',
-          offences: [],
-          licenceConditions: [],
-        },
+      const activeConvictions = [
+        { sentence: { isCustodial: true, custodialStatusCode: 'B', licenceExpiryDate: '2020-06-16' } },
+        { sentence: { isCustodial: true, custodialStatusCode: 'B', licenceExpiryDate: '2023-06-17' } },
       ]
       cy.task('getCase', {
         sectionId: 'overview',
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          convictions,
+          activeConvictions,
         },
       })
 
@@ -297,30 +233,16 @@ context('Overview', () => {
     })
 
     it('shows "not on licence" banner and no licence box if there are multiple active custodial convictions and not all are released on licence', () => {
-      const convictions = [
-        {
-          active: true,
-          isCustodial: true,
-          licenceExpiryDate: '2020-07-16',
-          statusCode: 'B',
-          offences: [],
-          licenceConditions: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          licenceExpiryDate: '2020-06-16',
-          statusCode: 'A',
-          offences: [],
-          licenceConditions: [],
-        },
+      const activeConvictions = [
+        { sentence: { isCustodial: true, custodialStatusCode: 'B', licenceExpiryDate: '2020-07-16' } },
+        { sentence: { isCustodial: true, custodialStatusCode: 'A', licenceExpiryDate: '2020-06-16' } },
       ]
       cy.task('getCase', {
         sectionId: 'overview',
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          convictions,
+          activeConvictions,
         },
       })
 
@@ -336,28 +258,13 @@ context('Overview', () => {
     })
 
     it('message in offence panel, and not available for licence dates, if no active custodial convictions', () => {
-      const convictions = [
-        {
-          active: false,
-          isCustodial: false,
-          licenceExpiryDate: '2020-07-16',
-          offences: [],
-          licenceConditions: [],
-        },
-        {
-          active: false,
-          isCustodial: true,
-          licenceExpiryDate: '2020-06-16',
-          offences: [],
-          licenceConditions: [],
-        },
-      ]
+      const activeConvictions = []
       cy.task('getCase', {
         sectionId: 'overview',
         statusCode: 200,
         response: {
           ...getCaseOverviewResponse,
-          convictions,
+          activeConvictions,
         },
       })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)

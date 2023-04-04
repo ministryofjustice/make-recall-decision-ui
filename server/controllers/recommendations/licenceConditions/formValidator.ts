@@ -85,11 +85,11 @@ export const validateLicenceConditionsBreached = async ({
       const conviction = convictions.activeCustodial[0]
       allAdditionalLicenceConditions = conviction.licenceConditions.map(condition => {
         return {
-          mainCatCode: condition.licenceConditionTypeMainCat.code,
-          subCatCode: condition.licenceConditionTypeSubCat.code,
-          title: condition.licenceConditionTypeMainCat.description,
-          details: condition.licenceConditionTypeSubCat.description,
-          note: condition.licenceConditionNotes,
+          mainCatCode: condition.mainCategory.code,
+          subCatCode: condition.subCategory.code,
+          title: condition.mainCategory.description,
+          details: condition.subCategory.description,
+          note: condition.notes,
         }
       })
     }
