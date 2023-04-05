@@ -1,0 +1,55 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+    {{ govukBackLink({
+        text: "Back to overview for " + recommendation.personOnProbation.name,
+        href:  '/cases/' + recommendation.crn + '/overview'
+    }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class='govuk-body'>You need to consider whether or not to recall this person.</p>
+            <ol class="moj-task-list govuk-!-margin-top-8">
+                <li>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-reviewPractitionersConcerns'
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz1', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                Review practitioners' concerns
+                            </a>
+                            <span id='task-list-status-reviewPractitionersConcerns'>{{ taskStatus({ hasData: reviewPractitionersConcernsCompleted }) }}</span>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-reviewOffenderProfile'
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                Review profile of {{ recommendation.personOnProbation.name }}
+                            </a>
+                            <span id='task-list-status-reviewOffenderProfile'>{{ taskStatus({ hasData: reviewOffenderProfileCompleted }) }}</span>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-explainTheDecision'
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'xy3', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                Explain the decision
+                            </a>
+                            <span id='task-list-status-explainTheDecision'>{{ taskStatus({ hasData: explainTheDecisionCompleted }) }}</span>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            {% if allTasksCompleted == true %}
+                <div>
+                    <a href='{{urlInfo.pageBase}}next-xyz' class='govuk-button govuk-button--primary'>Continue</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
