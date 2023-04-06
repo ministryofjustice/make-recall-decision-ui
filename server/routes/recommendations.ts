@@ -27,12 +27,19 @@ import redirectController from '../controllers/recommendation/redirectController
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import spoTaskListConsiderRecallController from '../controllers/recommendation/spoTaskListConsiderRecallController'
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
+import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 
 const recommendations = Router()
 
 routeRecommendationGet('', redirectController.get, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.SPO])
+routeRecommendationGet('review-practitioners-concerns', reviewPractitionersConcernsController.get, [
+  HMPPS_AUTH_ROLE.SPO,
+])
+routeRecommendationPost('review-practitioners-concerns', reviewPractitionersConcernsController.post, [
+  HMPPS_AUTH_ROLE.SPO,
+])
 
 routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.PO])
 

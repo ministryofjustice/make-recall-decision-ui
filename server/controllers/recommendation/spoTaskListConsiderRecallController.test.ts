@@ -8,7 +8,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
