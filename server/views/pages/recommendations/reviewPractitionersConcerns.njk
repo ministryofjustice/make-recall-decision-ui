@@ -1,0 +1,107 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+    {{ govukBackLink({
+        text: "Back to overview for " + offenderName,
+        href:  backLink
+    }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class='govuk-body'>Review these details and discuss the case with the practitioner.</p>
+            <ol class="moj-task-list govuk-!-margin-top-8">
+                <li>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <p>What has made you consider recalling {{ offenderName }}?</p>
+                            <details class="govuk-details" data-module="govuk-details">
+                              <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text"> View Answer </span>
+                              </summary>
+                              <div class="govuk-details__text">
+                                {{ triggerLeadingToRecall }}
+                              </div>
+                            </details>
+
+                        </li>
+                        <li class="moj-task-list__item">
+
+                            <p>How has {{ offenderName }} responded to probation so far?</p>
+                            <details class="govuk-details" data-module="govuk-details">
+                              <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text"> View Answer </span>
+                              </summary>
+                              <div class="govuk-details__text">
+                                {{ responseToProbation }}
+                              </div>
+                            </details>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <p>What licence conditions has {{ offenderName }} breached?</p>
+                            <details class="govuk-details" data-module="govuk-details">
+                              <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text"> View Answer </span>
+                              </summary>
+                              <div class="govuk-details__text">
+
+                                {% for standardCondition in standardLicenceConditions %}
+                                    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{standardCondition}}</p>
+                                {% endfor %}
+
+                                <div class="govuk-!-margin-top-6">
+                                    {% for additionalCondition in additionalLicenceConditions %}
+                                        <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{additionalCondition.title}}</p>
+                                        <p class="govuk-body">{{additionalCondition.details}}</p>
+                                        {% if additionalCondition.note %}
+                                            <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">Notes</p>
+                                            <p class="govuk-body">{{additionalCondition.note}}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                              </div>
+                            </details>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <p>What alternatives have been tried already?</p>
+                            <details class="govuk-details" data-module="govuk-details">
+                              <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text"> View Answer </span>
+                              </summary>
+                              <div class="govuk-details__text">
+                               {% for alternative in alternativesToRecallTried %}
+                                  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{alternative.text}}</p>
+                                  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">More details</p>
+                                  <p class="govuk-body">{{alternative.details}}</p>
+                              {% endfor %}
+                              </div>
+                            </details>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <p>Is {{ offenderName }} on an indeterminate sentence?</p>
+                            {{ isIndeterminateSentence }}
+                        </li>
+                        <li class="moj-task-list__item">
+                            <p>Is {{ offenderName }} on an extended sentence?</p>
+                            {{ isExtendedSentence }}
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            <div>
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    {{ formSubmitButton() }}
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -77,6 +77,8 @@ export const strings = {
     previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
+    reviewPractitionersConcerns: "Review practitioner's concerns",
+    spoTaskListConsiderRecall: 'Consider a recall',
     taskListConsiderRecall: 'Consider a recall',
     shareCaseWithManager: 'Share this case with your manager',
     discussWithManager: 'Discuss with your manager',

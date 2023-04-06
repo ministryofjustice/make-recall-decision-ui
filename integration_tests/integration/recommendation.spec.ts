@@ -742,4 +742,27 @@ context('Make a recommendation', () => {
       })
     })
   })
+
+  describe('SPO Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ hasSpoRole: true })
+    })
+
+    it("present Review Practitioner's concerns and return to task list", () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink("Review practitioner's concerns")
+
+      cy.pageHeading().should('equal', "Review practitioner's concerns")
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+  })
 })
