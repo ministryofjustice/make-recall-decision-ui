@@ -1,5 +1,7 @@
 import reviewPractitionersConcernsController from './reviewPractitionersConcernsController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -164,5 +166,38 @@ describe('get', () => {
     expect(res.locals.isExtendedSentence).toEqual('Yes')
 
     expect(next).toHaveBeenCalled()
+  })
+})
+
+describe('post', () => {
+  it('post with valid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        flags: { flagTriggerWork: false },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await reviewPractitionersConcernsController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        reviewPractitionersConcerns: true,
+      },
+      featureFlags: { flagTriggerWork: false },
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

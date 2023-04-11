@@ -1,17 +1,17 @@
-{% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}
+{% if caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence %}
     {% set licenceHtml %}
         <div class='flex flex--space-between'>
             <div class='flex__item-half-width'>
                 <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Last release date</h3>
                 <div class='govuk-heading-m govuk-!-margin-top-0' data-qa='lastReleaseDate'>
-                    {{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if (not caseSummary.convictions.hasMultipleActiveCustodial) and caseSummary.convictions.activeCustodial.length and caseSummary.releaseSummary.lastRelease.date else 'Not available' }}
+                    {{ formatDateTimeFromIsoString({isoDate: caseSummary.releaseSummary.lastRelease.date}) if (not caseSummary.licenceConvictions.hasMultipleActiveCustodial) and caseSummary.licenceConvictions.activeCustodial.length and caseSummary.releaseSummary.lastRelease.date else 'Not available' }}
                 </div>
             </div>
             <div class='flex__item-half-width'>
                 <h3 class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Licence expiry
                     date</h3>
                 <div class='govuk-heading-m govuk-!-margin-top-0' data-qa='licenceExpiryDate'>
-                    {{ formatDateTimeFromIsoString({isoDate: caseSummary.convictions.activeCustodial[0].licenceExpiryDate }) if (not caseSummary.convictions.hasMultipleActiveCustodial) and caseSummary.convictions.activeCustodial[0].licenceExpiryDate else 'Not available' }}</li>
+                    {{ formatDateTimeFromIsoString({isoDate: caseSummary.licenceConvictions.activeCustodial[0].licenceExpiryDate }) if (not caseSummary.licenceConvictions.hasMultipleActiveCustodial) and caseSummary.licenceConvictions.activeCustodial[0].licenceExpiryDate else 'Not available' }}</li>
                 </div>
             </div>
         </div>
