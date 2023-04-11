@@ -29,7 +29,7 @@ describe('transformLicenceConditions', () => {
     } as LicenceConditionsResponse
 
     const transformed = transformLicenceConditions(response)
-    expect(transformed.convictions.active).toEqual([
+    expect(transformed.licenceConvictions.active).toEqual([
       {
         active: true,
         isCustodial: false,
@@ -53,12 +53,12 @@ describe('transformLicenceConditions', () => {
         sentenceExpiryDate: '2021-11-23',
       },
     ])
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it("if convictions doesn't exist, return empty array for active", () => {
     const transformed = transformLicenceConditions({ convictions: undefined })
-    expect(transformed.convictions.active).toEqual([])
+    expect(transformed.licenceConvictions.active).toEqual([])
   })
 
   it('sets hasAllConvictionsReleasedOnLicence property to false if there are active custodial convictions with statusCode not set to "Released - on licence"', () => {
@@ -84,7 +84,7 @@ describe('transformLicenceConditions', () => {
         },
       ],
     })
-    expect(transformed.convictions.hasAllConvictionsReleasedOnLicence).toEqual(false)
+    expect(transformed.licenceConvictions.hasAllConvictionsReleasedOnLicence).toEqual(false)
   })
 
   it('sets hasAllConvictionsReleasedOnLicence property to true if all active custodial convictions have statusCode set to "Released - on licence"', () => {
@@ -110,7 +110,7 @@ describe('transformLicenceConditions', () => {
         },
       ],
     })
-    expect(transformed.convictions.hasAllConvictionsReleasedOnLicence).toEqual(true)
+    expect(transformed.licenceConvictions.hasAllConvictionsReleasedOnLicence).toEqual(true)
   })
 
   it('sets activeCustodial property to an empty array there are no active custodial convictions', () => {
@@ -121,8 +121,8 @@ describe('transformLicenceConditions', () => {
         { convictionId: 3, active: false, isCustodial: true, offences: [], licenceConditions: [] },
       ],
     })
-    expect(transformed.convictions.activeCustodial).toEqual([])
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.activeCustodial).toEqual([])
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sets hasMultipleActiveCustodial to false if one active custodial conviction', () => {
@@ -137,7 +137,7 @@ describe('transformLicenceConditions', () => {
         },
       ],
     })
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sets hasMultipleActiveCustodial to false if no active convictions', () => {
@@ -147,7 +147,7 @@ describe('transformLicenceConditions', () => {
         { convictionId: 3, active: false, offences: [], licenceConditions: [] },
       ],
     })
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sorts active convictions by sentence expiry date', () => {
@@ -158,7 +158,7 @@ describe('transformLicenceConditions', () => {
         { active: true, sentenceExpiryDate: '2022-05-23', offences: [], licenceConditions: [] },
       ],
     })
-    expect(transformed.convictions.active.map(conviction => conviction.sentenceExpiryDate)).toEqual([
+    expect(transformed.licenceConvictions.active.map(conviction => conviction.sentenceExpiryDate)).toEqual([
       '2022-05-23',
       '2021-01-28',
       null,
@@ -203,7 +203,7 @@ describe('transformLicenceConditions', () => {
         },
       ],
     })
-    expect(transformed.convictions.active.map(conviction => conviction.licenceConditions)).toEqual([
+    expect(transformed.licenceConvictions.active.map(conviction => conviction.licenceConditions)).toEqual([
       [
         {
           active: true,

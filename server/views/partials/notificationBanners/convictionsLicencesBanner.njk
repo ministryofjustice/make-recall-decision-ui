@@ -1,7 +1,7 @@
-{% if caseSummary.convictions.hasMultipleActiveCustodial %}
+{% if caseSummary.licenceConvictions.hasMultipleActiveCustodial %}
     {% set html %}
         <p class="govuk-notification-banner__heading">
-            {% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}
+            {% if caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence %}
              This person has 2 or more active convictions in NDelius. Double-check that the information in NDelius is correct.
             {% else %}
                 This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.
@@ -14,12 +14,12 @@
         attributes: {
             'data-qa': 'banner-multiple-active-custodial',
             'data-analytics-event': 'notification_banner',
-            'data-analytics-event-category': 'multipleCustodialConvictions' if caseSummary.convictions.hasAllConvictionsReleasedOnLicence else 'multipleCustodialConvictionsNotAllReleasedOnLicence',
-            'data-analytics-event-label': caseSummary.convictions.activeCustodial.length
+            'data-analytics-event-category': 'multipleCustodialConvictions' if caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence else 'multipleCustodialConvictionsNotAllReleasedOnLicence',
+            'data-analytics-event-label': caseSummary.licenceConvictions.activeCustodial.length
         },
         classes: "govuk-notification-banner--error"
     }) }}
-{% elseif (not caseSummary.convictions.hasAllConvictionsReleasedOnLicence) and (caseSummary.convictions.activeCustodial.length === 1) %}
+{% elseif (not caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence) and (caseSummary.licenceConvictions.activeCustodial.length === 1) %}
     {% set html %}
         <p class="govuk-notification-banner__heading">
             This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.

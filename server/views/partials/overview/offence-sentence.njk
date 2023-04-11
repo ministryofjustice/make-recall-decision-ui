@@ -1,8 +1,8 @@
 {% set offenceSentenceHtml %}
-    {% if not caseSummary.convictions.active.length %}
+    {% if not caseSummary.licenceConvictions.active.length %}
         <p class='govuk-body'>This person has no active offences or convictions.</p>
     {%  else %}
-        {% for conviction in caseSummary.convictions.active %}
+        {% for conviction in caseSummary.licenceConvictions.active %}
             {% set mainOffencesHtml %}
                 {% if conviction.offences.main.length %}
                     <ul class='govuk-list'>

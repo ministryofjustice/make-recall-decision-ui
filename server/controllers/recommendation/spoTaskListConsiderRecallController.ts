@@ -13,6 +13,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
+    crn: recommendation.crn,
     reviewPractitionersConcernsCompleted,
     reviewOffenderProfileCompleted,
     explainTheDecisionCompleted,

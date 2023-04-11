@@ -1,7 +1,7 @@
 import { Response } from 'express'
-import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { caseSummary } from './caseSummary'
-import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import caseSummaryController from './caseSummaryController'
+import { getCaseSummary, updateRecommendation } from '../../data/makeDecisionApiClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
@@ -13,24 +13,25 @@ import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 import { AuditService } from '../../services/auditService'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
+import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/redisClient')
 
-const crn = ' A1234AB '
-let res: Response
-const token = 'token'
-
-describe('caseSummary', () => {
+describe('get', () => {
   beforeEach(() => {
     res = mockRes({ token, locals: { user: { username: 'Dave' } } })
   })
+  let res: Response
+  const crn = ' A1234AB '
+  const token = 'token'
+  const next = mockNext()
 
   it('should return case details for risk', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'risk', token)
     const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
     expect(metricsArg.name).toEqual('getCaseRisk')
@@ -46,7 +47,7 @@ describe('caseSummary', () => {
   it('should return case details for overview', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'overview', token)
     const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
     expect(metricsArg.name).toEqual('getCaseOverview')
@@ -61,7 +62,7 @@ describe('caseSummary', () => {
   it('should return case details for licence conditions', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseLicenceConditionsResponse)
     const req = mockReq({ params: { crn, sectionId: 'licence-conditions' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
     const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
     expect(metricsArg.name).toEqual('getCaseLicenceConditions')
@@ -76,7 +77,7 @@ describe('caseSummary', () => {
   it('should return case details for personal details', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(casePersonalDetailsResponse)
     const req = mockReq({ params: { crn, sectionId: 'personal-details' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'personal-details', token)
     expect(res.locals.caseSummary).toEqual(casePersonalDetailsResponse)
     expect(res.locals.section).toEqual({
@@ -88,7 +89,7 @@ describe('caseSummary', () => {
   it('should return case details for recommendations', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRecommendationsResponse)
     const req = mockReq({ params: { crn, sectionId: 'recommendations' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'recommendations', token)
     expect(res.locals.caseSummary.activeRecommendation).toEqual(caseRecommendationsResponse.activeRecommendation)
     expect(res.locals.section).toEqual({
@@ -100,7 +101,7 @@ describe('caseSummary', () => {
   it('should return case details for vulnerabilities', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseVulnerabilitiesResponse)
     const req = mockReq({ params: { crn, sectionId: 'vulnerabilities' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'vulnerabilities', token)
     expect(res.locals.caseSummary.activeRecommendation).toEqual(caseVulnerabilitiesResponse.activeRecommendation)
     expect(res.locals.section).toEqual({
@@ -112,7 +113,7 @@ describe('caseSummary', () => {
   it('should convert the CRN to uppercase', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     const req = mockReq({ params: { crn: 'abc', sectionId: 'overview' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
   })
 
@@ -152,7 +153,7 @@ describe('caseSummary', () => {
       get: (): null => null,
     } as unknown as RedisClient)
     const req = mockReq({ params: { crn, sectionId: 'contact-history' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'contact-history', token)
     expect(res.locals.caseSummary.contactSummary).toEqual({
       groupedByKey: 'startDate',
@@ -200,7 +201,7 @@ describe('caseSummary', () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ params: { crn: invalidCrn, sectionId: 'contact-log' } })
     try {
-      await caseSummary(req, res)
+      await caseSummaryController.get(req, res, next)
     } catch (err) {
       expect(err.status).toEqual(400)
     }
@@ -211,7 +212,7 @@ describe('caseSummary', () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     const req = mockReq({ params: { crn, sectionId: invalidSection } })
     try {
-      await caseSummary(req, res)
+      await caseSummaryController.get(req, res, next)
     } catch (err) {
       expect(err.message).toEqual('getCaseSection: invalid sectionId: recalls')
       expect(err.status).toEqual(404)
@@ -223,7 +224,7 @@ describe('caseSummary', () => {
     ;(getCaseSummary as jest.Mock).mockRejectedValue(apiError)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     try {
-      await caseSummary(req, res)
+      await caseSummaryController.get(req, res, next)
     } catch (err) {
       expect(err).toEqual(apiError)
     }
@@ -232,7 +233,7 @@ describe('caseSummary', () => {
   it('should render an excluded CRN', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(excludedResponse)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(res.render).toHaveBeenCalledWith('pages/excludedRestrictedCrn')
     expect(res.locals.caseSummary).toEqual(excludedResponse)
     expect(res.locals.section).toEqual({
@@ -244,7 +245,7 @@ describe('caseSummary', () => {
   it('should render a restricted CRN', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(restrictedResponse)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(res.render).toHaveBeenCalledWith('pages/excludedRestrictedCrn')
     expect(res.locals.caseSummary).toEqual(restrictedResponse)
     expect(res.locals.section).toEqual({
@@ -257,12 +258,94 @@ describe('caseSummary', () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     jest.spyOn(AuditService.prototype, 'caseSummaryView')
-    await caseSummary(req, res)
+    await caseSummaryController.get(req, res, next)
     expect(AuditService.prototype.caseSummaryView).toHaveBeenCalledWith({
       crn: 'A1234AB',
       sectionId: 'risk',
       username: 'Dave',
       logErrors: false,
     })
+  })
+
+  it('show reccomendation button for existing recommendation', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      post: false,
+      title: 'Update recommendation',
+      dataAnalyticsEventCategory: 'update_recommendation_click',
+      link: '/recommendations/1/',
+    })
+    expect(res.locals.backLink)
+  })
+
+  it('show reccomendation button for no recommendation', async () => {
+    caseOverviewApiResponse.activeRecommendation = null
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      post: false,
+      title: 'Make a recommendation',
+      dataAnalyticsEventCategory: 'make_recommendation_click',
+      link: '/cases/A1234AB/create-recommendation-warning',
+    })
+    expect(res.locals.backLink)
+  })
+
+  it('show reccomendation button for case review', async () => {
+    caseOverviewApiResponse.activeRecommendation = null
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    const req = mockReq({ params: { crn, sectionId: 'overview', recommendationId: '123' } })
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/recommendations/123/spo-task-list-consider-recall')
+    expect(res.locals.pageUrlBase).toEqual('/recommendations/123/review-case/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      post: true,
+      title: 'Continue',
+      link: '/recommendations/123/spo-task-list-consider-recall',
+    })
+    expect(res.locals.backLink)
+  })
+})
+
+describe('post', () => {
+  it('post with valid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        flags: { flagTriggerWork: false },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await caseSummaryController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        reviewOffenderProfile: true,
+      },
+      featureFlags: { flagTriggerWork: false },
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

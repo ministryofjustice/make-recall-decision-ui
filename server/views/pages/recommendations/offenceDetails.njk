@@ -18,7 +18,7 @@
 
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
-                {% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}
+                {% if caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence %}
                 {{ deliusDetailsMessage() }}
                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">

@@ -28,7 +28,7 @@
                         </li>
                         <li class="moj-task-list__item">
                             <a class="moj-task-list__task-name" aria-describedby='task-list-status-reviewOffenderProfile'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'review-case/' + crn + '/overview', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                 Review profile of {{ recommendation.personOnProbation.name }}
                             </a>
                             <span id='task-list-status-reviewOffenderProfile'>{{ taskStatus({ hasData: reviewOffenderProfileCompleted }) }}</span>

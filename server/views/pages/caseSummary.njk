@@ -17,7 +17,7 @@
     <nav aria-label='Back to person search'>
         {{ govukBackLink({
             html: "Back<span class='govuk-visually-hidden'> to person search</span>",
-            href: '/search'
+            href:  backLink
         }) }}
     </nav>
 {% endblock %}
@@ -46,7 +46,21 @@
                          data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
                 </div>
                 <div class='flex__item-no-shrink'>
-                {% include '../partials/recommendationButtons.njk' %}
+
+                    {% if recommendationButton.post %}
+                    <form novalidate method="post">
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                        <button class="govuk-button">
+                            {{recommendationButton.title}}
+                          </button>
+                    </form>
+                    {% else %}
+                    <a class='govuk-button'
+                       href='{{recommendationButton.link}}'
+                       data-analytics-event='click_cta' data-analytics-event-category='{{recommendationButton.dataAnalyticsEventCategory}}'>
+                       {{recommendationButton.title}}
+                    </a>
+                    {% endif %}
                 </div>
             </div>
             {{ mojSubNavigation({

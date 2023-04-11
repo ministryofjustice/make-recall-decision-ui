@@ -205,21 +205,6 @@ context('Make a recommendation', () => {
           cy.signIn()
         })
 
-        it('shows a "Consider a recall" button if no active recommendation, and complete form', () => {
-          const caseResponse = {
-            ...getCaseOverviewResponse,
-            activeRecommendation: undefined,
-          }
-          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-          cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.clickLink('Consider a recall')
-          cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
-          cy.fillInput('What has made you think about recalling Paula Smith?', 'Detail')
-          cy.clickButton('Continue')
-          cy.pageHeading().should('equal', 'Overview for Paula Smith')
-        })
-
         it('shows a "Consider a recall" banner to the PO if there\'s an active recommendation', () => {
           cy.task('getCase', {
             sectionId: 'overview',
