@@ -16,9 +16,11 @@ import { yesNo } from './yesNo'
 import { recallTypeManager } from '../managerRecordDecision/formOptions'
 import { roshLevels } from '../rosh/formOptions'
 import { UiListItem } from '../../../@types/pagesForms'
+import { spoRecallTypeEnum } from './spoRecallTypeEnum'
 
 export const formOptions = {
   recallType,
+  spoRecallTypeEnum,
   recallTypeIndeterminate,
   recallTypeIndeterminateApi,
   standardLicenceConditions,

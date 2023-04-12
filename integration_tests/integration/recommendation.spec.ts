@@ -749,5 +749,26 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Consider a recall')
     })
+
+    it('present SPO Rationale and return to task list', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink('Explain the decision')
+
+      cy.pageHeading().should('equal', 'Explain the decision')
+
+      cy.selectRadio('Explain the decision', 'Recall - standard or fixed term')
+
+      cy.fillInput('Explain your decision', 'some text')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
   })
 })
