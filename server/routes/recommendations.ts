@@ -29,21 +29,26 @@ import spoTaskListConsiderRecallController from '../controllers/recommendation/s
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
+import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
 
 const recommendations = Router()
 
 routeRecommendationGet('', redirectController.get, [HMPPS_AUTH_ROLE.PO])
 
+routeRecommendationGet('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.SPO])
+
 routeRecommendationGet(`review-case/:crn/:sectionId`, caseSummaryController.get, [HMPPS_AUTH_ROLE.SPO])
 routeRecommendationPost(`review-case/:crn/:sectionId`, caseSummaryController.post, [HMPPS_AUTH_ROLE.SPO])
 
-routeRecommendationGet('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.SPO])
 routeRecommendationGet('review-practitioners-concerns', reviewPractitionersConcernsController.get, [
   HMPPS_AUTH_ROLE.SPO,
 ])
 routeRecommendationPost('review-practitioners-concerns', reviewPractitionersConcernsController.post, [
   HMPPS_AUTH_ROLE.SPO,
 ])
+
+routeRecommendationGet('spo-rationale', spoRecallRationaleController.get, [HMPPS_AUTH_ROLE.SPO])
+routeRecommendationPost('spo-rationale', spoRecallRationaleController.post, [HMPPS_AUTH_ROLE.SPO])
 
 routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.PO])
 
