@@ -8,6 +8,7 @@ import { CreateRecommendationRequest, RecommendationResponse } from '../@types/m
 import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
 import { FeatureFlags } from '../@types/featureFlags'
 import { CaseSectionId } from '../@types/pagesForms'
+import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -65,6 +66,35 @@ export const updateRecommendation = ({
     data: valuesToSave,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<RecommendationResponse>
+}
+
+export const getStatuses = ({
+  recommendationId,
+  token,
+}: {
+  recommendationId: string
+  token: string
+}): Promise<RecommendationStatusResponse[]> => {
+  return restClient(token).get({
+    path: `${routes.recommendations}/${recommendationId}/statuses`,
+  }) as Promise<RecommendationStatusResponse[]>
+}
+
+export const updateStatuses = ({
+  recommendationId,
+  token,
+  activate,
+  deActivate,
+}: {
+  recommendationId: string
+  token: string
+  activate: string[]
+  deActivate: string[]
+}): Promise<RecommendationStatusResponse[]> => {
+  return restClient(token).patch({
+    path: `${routes.recommendations}/${recommendationId}/status`,
+    data: { activate, deActivate },
+  }) as Promise<RecommendationStatusResponse[]>
 }
 
 export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<Response> => {
