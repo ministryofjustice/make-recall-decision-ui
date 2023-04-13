@@ -1,5 +1,9 @@
 export const strings = {
   errors: {
+    noSpoRecallTypeSelected:
+      'There is a problem. Select whether you have decided to recall or made a decision not to recall',
+    missingSpoRecallRationale: 'There is a problem. You must explain your decision',
+    missingSpoNoRecallRationale: 'There is a problem. You must explain your decision',
     missingCrn: 'Enter a Case Reference Number (CRN)',
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
     saveChanges: 'An error occurred saving your changes',
@@ -77,6 +81,9 @@ export const strings = {
     previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
+    spoRecallRationale: 'Explain the decision',
+    reviewPractitionersConcerns: "Review practitioner's concerns",
+    spoTaskListConsiderRecall: 'Consider a recall',
     taskListConsiderRecall: 'Consider a recall',
     shareCaseWithManager: 'Share this case with your manager',
     discussWithManager: 'Discuss with your manager',

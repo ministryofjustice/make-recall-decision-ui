@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import { personSearch } from '../controllers/personSearch/personSearch'
 import { personSearchResults } from '../controllers/personSearch/personSearchResults'
-import { caseSummary } from '../controllers/caseSummary/caseSummary'
+import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
 import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
@@ -34,7 +34,7 @@ export default function routes(router: Router): Router {
   get(`${routeUrls.cases}/:crn/consider-recall`, getConsiderRecall)
   post(`${routeUrls.cases}/:crn/consider-recall`, postConsiderRecall)
   get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
-  get(`${routeUrls.cases}/:crn/:sectionId`, caseSummary)
+  get(`${routeUrls.cases}/:crn/:sectionId`, caseSummaryController.get)
 
   return router
 }

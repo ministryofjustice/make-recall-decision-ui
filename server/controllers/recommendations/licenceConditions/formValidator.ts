@@ -63,13 +63,13 @@ export const validateLicenceConditionsBreached = async ({
       crn: crn as string,
       token,
     })
-    const { convictions } = caseSummary as TransformedLicenceConditionsResponse
+    const { licenceConvictions } = caseSummary as TransformedLicenceConditionsResponse
     let errorId
     if (isCaseRestrictedOrExcluded(caseSummary.userAccessResponse)) {
       errorId = 'excludedRestrictedCrn'
-    } else if (convictions.hasMultipleActiveCustodial) {
+    } else if (licenceConvictions.hasMultipleActiveCustodial) {
       errorId = 'hasMultipleActiveCustodial'
-    } else if (!convictions.activeCustodial[0]) {
+    } else if (!licenceConvictions.activeCustodial[0]) {
       errorId = 'noActiveCustodial'
     }
 
@@ -82,7 +82,7 @@ export const validateLicenceConditionsBreached = async ({
         })
       )
     } else {
-      const conviction = convictions.activeCustodial[0]
+      const conviction = licenceConvictions.activeCustodial[0]
       allAdditionalLicenceConditions = conviction.licenceConditions.map(condition => {
         return {
           mainCatCode: condition.mainCategory.code,

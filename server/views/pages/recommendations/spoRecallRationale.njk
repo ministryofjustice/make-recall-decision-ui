@@ -1,0 +1,86 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set rationaleRecallHtml %}
+                {{ govukTextarea({
+                    name: "spoRecallRationale",
+                    id: "spoRecallRationale",
+                    label: {
+                        text: "Explain your decision",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.spoRecallRationale if inputDisplayValues.spoRecallType === 'RECALL',
+                    errorMessage: errorMessage(errors.spoRecallRationale)
+                }) }}
+            {% endset %}
+            {% set rationaleNoRecallHtml %}
+                {{ govukTextarea({
+                    name: "spoNoRecallRationale",
+                    id: "spoNoRecallRationale",
+                    label: {
+                        text: "Explain your decision",
+                        classes: "govuk-label--s"
+                    },
+                    value: inputDisplayValues.spoNoRecallRationale if inputDisplayValues.spoRecallType === 'NO_RECALL',
+                    errorMessage: errorMessage(errors.spoNoRecallRationale)
+                }) }}
+            {% endset %}
+            {% set radioHintHtml %}
+            <p class="govuk-body">Write down the decision you made with the PO.  This explanation will be recorded in NDelius.</p>
+            <p class="govuk-body">Check you have considered:
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>the immediate risk</li>
+                    <li>who is vulnerable</li>
+                    <li>the current circumstances of Duncann Cardours</li>
+                    <li>alternatives to recall</li>
+                    <li>protective factors</li>
+                </ul>
+            </p>
+            {% endset %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
+                {{ govukRadios({
+                    idPrefix: "spoRecallType",
+                    name: "spoRecallType",
+                    fieldset: {
+                        legend: {
+                            text: pageHeadings[page.id],
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    hint: {
+                        html: radioHintHtml
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.spoRecallTypeEnum,
+                        currentValues: inputDisplayValues.spoRecallType,
+                        conditionalContent: {
+                            RECALL: rationaleRecallHtml,
+                            NO_RECALL: rationaleNoRecallHtml
+                        }
+                    }),
+                    errorMessage: errorMessage(errors.spoRecallType)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

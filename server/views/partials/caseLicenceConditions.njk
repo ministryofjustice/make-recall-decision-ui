@@ -3,8 +3,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         {% include './notificationBanners/convictionsLicencesBanner.njk' %}
-        {% if caseSummary.convictions.hasAllConvictionsReleasedOnLicence %}
-            {% if caseSummary.convictions.activeCustodial.length %}
+        {% if caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence %}
+            {% if caseSummary.licenceConvictions.activeCustodial.length %}
             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-with-summary-sections">
             <div class="govuk-accordion__section" data-qa='standard'>
                 <div class="govuk-accordion__section-header">
@@ -40,7 +40,7 @@
                     </h2>
                     <div class="govuk-accordion__section-summary govuk-body"
                          id="accordion-with-summary-sections-summary-2">
-                        {% for conviction in caseSummary.convictions.activeCustodial %}
+                        {% for conviction in caseSummary.licenceConvictions.activeCustodial %}
                             <div class='govuk-caption-m'>{{ conviction.mainOffence.description }}</div>
                         {% endfor %}
                     </div>
@@ -49,8 +49,8 @@
                      class="govuk-accordion__section-content"
                      aria-labelledby="accordion-with-summary-sections-heading-2">
                     {% set conditionNumber = 1 %}
-                    {% for conviction in caseSummary.convictions.activeCustodial %}
-                        {% if caseSummary.convictions.hasMultipleActiveCustodial %}<h3 class='govuk-heading-s' data-qa='offence-heading'>{{ conviction.mainOffence.description }}</h3>{% endif %}
+                    {% for conviction in caseSummary.licenceConvictions.activeCustodial %}
+                        {% if caseSummary.licenceConvictions.hasMultipleActiveCustodial %}<h3 class='govuk-heading-s' data-qa='offence-heading'>{{ conviction.mainOffence.description }}</h3>{% endif %}
                         {% if conviction.licenceConditions.length %}
                             {% for licenceCondition in conviction.licenceConditions %}
                                 {% set conditionHtml %}

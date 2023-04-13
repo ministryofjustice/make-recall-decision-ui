@@ -23,7 +23,7 @@ describe('transformLicenceConditions', () => {
     } as LicenceConditionsResponse
 
     const transformed = transformLicenceConditions(response)
-    expect(transformed.convictions.active).toEqual([
+    expect(transformed.licenceConvictions.active).toEqual([
       {
         isCustodial: false,
         sentence: {
@@ -43,12 +43,12 @@ describe('transformLicenceConditions', () => {
         licenceConditions: [],
       },
     ])
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it("if convictions doesn't exist, return empty array for active", () => {
     const transformed = transformLicenceConditions({ activeConvictions: undefined })
-    expect(transformed.convictions.active).toEqual([])
+    expect(transformed.licenceConvictions.active).toEqual([])
   })
 
   it('sets hasAllConvictionsReleasedOnLicence property to false if there are active custodial convictions with statusCode not set to "Released - on licence"', () => {
@@ -59,7 +59,7 @@ describe('transformLicenceConditions', () => {
         { sentence: { isCustodial: true, custodialStatusCode: 'A' } },
       ],
     })
-    expect(transformed.convictions.hasAllConvictionsReleasedOnLicence).toEqual(false)
+    expect(transformed.licenceConvictions.hasAllConvictionsReleasedOnLicence).toEqual(false)
   })
 
   it('sets hasAllConvictionsReleasedOnLicence property to true if all active custodial convictions have statusCode set to "Released - on licence"', () => {
@@ -70,29 +70,29 @@ describe('transformLicenceConditions', () => {
         { sentence: { isCustodial: true, custodialStatusCode: 'B' } },
       ],
     })
-    expect(transformed.convictions.hasAllConvictionsReleasedOnLicence).toEqual(true)
+    expect(transformed.licenceConvictions.hasAllConvictionsReleasedOnLicence).toEqual(true)
   })
 
   it('sets activeCustodial property to an empty array there are no active custodial convictions', () => {
     const transformed = transformLicenceConditions({
       activeConvictions: [{ sentence: { isCustodial: false } }, { sentence: { isCustodial: false } }],
     })
-    expect(transformed.convictions.activeCustodial).toEqual([])
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.activeCustodial).toEqual([])
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sets hasMultipleActiveCustodial to false if one active custodial conviction', () => {
     const transformed = transformLicenceConditions({
       activeConvictions: [{ sentence: { isCustodial: true } }],
     })
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sets hasMultipleActiveCustodial to false if no active convictions', () => {
     const transformed = transformLicenceConditions({
       activeConvictions: [],
     })
-    expect(transformed.convictions.hasMultipleActiveCustodial).toEqual(false)
+    expect(transformed.licenceConvictions.hasMultipleActiveCustodial).toEqual(false)
   })
 
   it('sorts active convictions by sentence expiry date', () => {
@@ -103,7 +103,7 @@ describe('transformLicenceConditions', () => {
         { sentence: { sentenceExpiryDate: '2022-05-23' } },
       ],
     })
-    expect(transformed.convictions.active.map(conviction => conviction.sentence.sentenceExpiryDate)).toEqual([
+    expect(transformed.licenceConvictions.active.map(conviction => conviction.sentence.sentenceExpiryDate)).toEqual([
       '2022-05-23',
       '2021-01-28',
       null,
@@ -134,7 +134,7 @@ describe('transformLicenceConditions', () => {
         },
       ],
     })
-    expect(transformed.convictions.active.map(conviction => conviction.licenceConditions)).toEqual([
+    expect(transformed.licenceConvictions.active.map(conviction => conviction.licenceConditions)).toEqual([
       [
         {
           mainCategory: {

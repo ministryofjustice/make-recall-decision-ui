@@ -194,21 +194,6 @@ context('Make a recommendation', () => {
           cy.signIn()
         })
 
-        it('shows a "Consider a recall" button if no active recommendation, and complete form', () => {
-          const caseResponse = {
-            ...getCaseOverviewResponse,
-            activeRecommendation: undefined,
-          }
-          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-          cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.clickLink('Consider a recall')
-          cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
-          cy.fillInput('What has made you think about recalling Paula Smith?', 'Detail')
-          cy.clickButton('Continue')
-          cy.pageHeading().should('equal', 'Overview for Paula Smith')
-        })
-
         it('shows a "Consider a recall" banner to the PO if there\'s an active recommendation', () => {
           cy.task('getCase', {
             sectionId: 'overview',
@@ -706,6 +691,50 @@ context('Make a recommendation', () => {
       cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Prisoners' }).then(rowValues => {
         expect(rowValues).to.deep.eq(['N/A', 'Medium'])
       })
+    })
+  })
+
+  describe('SPO Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ hasSpoRole: true })
+    })
+
+    it("present Review Practitioner's concerns and return to task list", () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink("Review practitioner's concerns")
+
+      cy.pageHeading().should('equal', "Review practitioner's concerns")
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
+    it('present SPO Rationale and return to task list', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink('Explain the decision')
+
+      cy.pageHeading().should('equal', 'Explain the decision')
+
+      cy.selectRadio('Explain the decision', 'Recall - standard or fixed term')
+
+      cy.fillInput('Explain your decision', 'some text')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
     })
   })
 })

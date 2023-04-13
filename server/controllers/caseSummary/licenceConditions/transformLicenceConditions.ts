@@ -27,7 +27,7 @@ export interface DecoratedConviction extends Conviction {
 
 export interface TransformedLicenceConditionsResponse {
   userAccessResponse?: UserAccessResponse
-  convictions?: {
+  licenceConvictions?: {
     active: DecoratedConviction[]
     activeCustodial: DecoratedConviction[]
     hasMultipleActiveCustodial: boolean
@@ -57,7 +57,7 @@ export const transformLicenceConditions = (
   }
   return {
     ...caseSummary,
-    convictions: {
+    licenceConvictions: {
       active: activeConvictions,
       activeCustodial: activeCustodialConvictions,
       hasMultipleActiveCustodial: activeCustodialConvictions.length > 1,

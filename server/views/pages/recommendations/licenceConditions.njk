@@ -19,16 +19,16 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <input type="hidden" name="activeCustodialConvictionCount"
-                       value="{{ caseSummary.convictions.activeCustodial.length }}" />
-                {% if caseSummary.convictions.hasMultipleActiveCustodial or caseSummary.convictions.activeCustodial.length == 0 %}
+                       value="{{ caseSummary.licenceConvictions.activeCustodial.length }}" />
+                {% if caseSummary.licenceConvictions.hasMultipleActiveCustodial or caseSummary.licenceConvictions.activeCustodial.length == 0 %}
 
                     <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
                     {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
-                    {% if caseSummary.convictions.activeCustodial.length == 0 %}
+                    {% if caseSummary.licenceConvictions.activeCustodial.length == 0 %}
                         <p class='govuk-body'>There are no licence conditions. This person is not currently on licence.
                             Double-check that the information in NDelius is correct.</p>
                     {% endif %}
-                {% elseif caseSummary.convictions.activeCustodial.length %}
+                {% elseif caseSummary.licenceConvictions.activeCustodial.length %}
                     <div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error{% endif %}">
                         <fieldset
                                 class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
@@ -58,7 +58,7 @@
                                 {% endfor %}
                                 <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Additional licence conditions</h2>
                                 {% set conditionNumber = 1 %}
-                                {% for conviction in caseSummary.convictions.activeCustodial %}
+                                {% for conviction in caseSummary.licenceConvictions.activeCustodial %}
                                     {% if conviction.licenceConditions.length %}
                                         {% for licenceCondition in conviction.licenceConditions %}
                                             <div class="govuk-checkboxes__item">

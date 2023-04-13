@@ -73,7 +73,7 @@ export const getCaseSection = async (
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       appInsightsTimingMetric({ name: 'getCaseLicenceConditions', startTime })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        caseSummary = transformLicenceConditions(caseSummaryRaw)
+        caseSummary = transformLicenceConditions(caseSummaryRaw) as CaseSummaryOverviewResponse
       }
       break
     case 'licence-conditions-cvl':
