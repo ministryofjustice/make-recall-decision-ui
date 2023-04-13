@@ -26,18 +26,7 @@ context('Recommendation - task list', () => {
     sectionId: 'licence-conditions',
     statusCode: 200,
     response: {
-      convictions: [
-        {
-          active: true,
-          isCustodial: true,
-          offences: [],
-        },
-        {
-          active: true,
-          isCustodial: true,
-          offences: [],
-        },
-      ],
+      activeConvictions: [{ sentence: { isCustodial: true } }, { sentence: { isCustodial: true } }],
     },
   }
 

@@ -27,18 +27,11 @@ context('Licence conditions', () => {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
-        convictions: [
+        activeConvictions: [
           {
-            active: true,
-            isCustodial: true,
-            statusCode: 'B',
-            offences: [
-              {
-                mainOffence: true,
-                description: 'Burglary - 05714',
-              },
-            ],
-            licenceConditions: [{ active: false }],
+            mainOffence: { description: 'Burglary - 05714' },
+            sentence: { isCustodial: true, custodialStatusCode: 'B' },
+            licenceConditions: [],
           },
         ],
       },
@@ -54,14 +47,7 @@ context('Licence conditions', () => {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
-        convictions: [
-          {
-            active: true,
-            isCustodial: false,
-            offences: [],
-            licenceConditions: [{ active: false }],
-          },
-        ],
+        activeConvictions: [{ sentence: { isCustodial: false } }],
       },
     })
     const crn = 'X34983'
@@ -75,57 +61,28 @@ context('Licence conditions', () => {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
-        convictions: [
+        activeConvictions: [
           {
-            active: true,
-            isCustodial: true,
-            statusCode: 'B',
-            offences: [
-              {
-                mainOffence: true,
-                description: 'Burglary - 05714',
-              },
-            ],
+            mainOffence: { description: 'Burglary - 05714' },
+            sentence: { isCustodial: true, custodialStatusCode: 'B' },
             licenceConditions: [
               {
-                active: true,
-                licenceConditionTypeMainCat: {
-                  description: 'Supervision in the community',
-                },
-                licenceConditionTypeSubCat: {
-                  description: 'On release to be escorted by police to Approved Premises',
-                },
+                mainCategory: { description: 'Supervision in the community' },
+                subCategory: { description: 'On release to be escorted by police to Approved Premises' },
               },
               {
-                active: true,
-                licenceConditionTypeMainCat: {
-                  description: 'Poss, own, control, inspect specified items /docs',
-                },
-                licenceConditionTypeSubCat: {
-                  description: 'tbc',
-                },
+                mainCategory: { description: 'Poss, own, control, inspect specified items /docs' },
+                subCategory: { description: 'tbc' },
               },
             ],
           },
           {
-            active: true,
-            isCustodial: true,
-            statusCode: 'B',
-            offences: [
-              {
-                mainOffence: true,
-                description: 'Robbery',
-              },
-            ],
+            mainOffence: { description: 'Robbery' },
+            sentence: { isCustodial: true, custodialStatusCode: 'B' },
             licenceConditions: [
               {
-                active: true,
-                licenceConditionTypeMainCat: {
-                  description: 'Participate or co-op with Programme or Activities',
-                },
-                licenceConditionTypeSubCat: {
-                  description: 'Bespoke',
-                },
+                mainCategory: { description: 'Participate or co-op with Programme or Activities' },
+                subCategory: { description: 'Bespoke' },
               },
             ],
           },
@@ -162,29 +119,15 @@ context('Licence conditions', () => {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
-        convictions: [
+        activeConvictions: [
           {
-            active: true,
-            isCustodial: true,
-            statusCode: 'B',
-            offences: [
-              {
-                mainOffence: true,
-                description: 'Burglary - 05714',
-              },
-            ],
+            mainOffence: { description: 'Burglary - 05714' },
+            sentence: { isCustodial: true, custodialStatusCode: 'B' },
             licenceConditions: [],
           },
           {
-            active: true,
-            isCustodial: true,
-            statusCode: 'A',
-            offences: [
-              {
-                mainOffence: true,
-                description: 'Robbery',
-              },
-            ],
+            mainOffence: { description: 'Robbery' },
+            sentence: { isCustodial: true, custodialStatusCode: 'A' },
             licenceConditions: [],
           },
         ],
@@ -204,17 +147,10 @@ context('Licence conditions', () => {
       sectionId: 'licence-conditions',
       statusCode: 200,
       response: {
-        convictions: [
+        activeConvictions: [
           {
-            active: true,
-            isCustodial: true,
-            statusCode: 'A',
-            offences: [
-              {
-                mainOffence: true,
-                description: 'Robbery',
-              },
-            ],
+            mainOffence: { description: 'Robbery' },
+            sentence: { isCustodial: true, custodialStatusCode: 'A' },
             licenceConditions: [],
           },
         ],

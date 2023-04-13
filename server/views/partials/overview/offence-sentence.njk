@@ -4,20 +4,14 @@
     {%  else %}
         {% for conviction in caseSummary.licenceConvictions.active %}
             {% set mainOffencesHtml %}
-                {% if conviction.offences.main.length %}
-                    <ul class='govuk-list'>
-                        {% for offence in conviction.offences.main %}
-                            <li>{{ offence }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    Not available
-                {% endif %}
+                <ul class='govuk-list'>
+                    <li>{{ conviction.mainOffence.description }}</li>
+                </ul>
             {% endset %}
             {% set additonalOffencesHtml %}
                 <ul class='govuk-list'>
-                    {% for offence in conviction.offences.additional %}
-                        <li>{{ offence }}</li>
+                    {% for offence in conviction.additionalOffences %}
+                        <li>{{ offence.description }}</li>
                     {% endfor %}
                 </ul>
             {% endset %}
@@ -35,14 +29,14 @@
                         {
                             key: { html: 'Additional offence(s)' },
                             value: { html: additonalOffencesHtml }
-                        } if conviction.offences.additional.length else undefined,
+                        } if conviction.additionalOffences.length else undefined,
                         {
                             key: { html: 'Sentence type' },
-                            value: { text: conviction.sentenceDescription + " (" + conviction.sentenceOriginalLength + " " + conviction.sentenceOriginalLengthUnits + ")" if conviction.sentenceDescription else 'Not available' }
+                            value: { text: conviction.sentence.description + " (" + conviction.sentence.length + " " + conviction.sentence.lengthUnits + ")" if conviction.sentence.description else 'Not available' }
                         },
                         {
                             key: { html: 'Sentence expiry date' },
-                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentenceExpiryDate if conviction.sentenceExpiryDate else 'Not available' }) }
+                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentence.sentenceExpiryDate if conviction.sentence.sentenceExpiryDate else 'Not available' }) }
                         } if conviction.isCustodial else undefined
                     ]
                 }) }}

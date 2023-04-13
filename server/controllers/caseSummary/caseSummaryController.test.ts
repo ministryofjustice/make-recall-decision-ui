@@ -67,7 +67,7 @@ describe('get', () => {
     const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
     expect(metricsArg.name).toEqual('getCaseLicenceConditions')
     expect(typeof metricsArg.startTime).toEqual('number')
-    expect(res.locals.caseSummary.convictions).toBeDefined()
+    expect(res.locals.caseSummary.licenceConvictions).toBeDefined()
     expect(res.locals.section).toEqual({
       id: 'licence-conditions',
       label: 'Licence conditions',

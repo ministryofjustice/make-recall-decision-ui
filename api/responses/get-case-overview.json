@@ -6,80 +6,45 @@
     "gender": "Male",
     "crn": "A12345"
   },
-  "convictions": [
+  "activeConvictions": [
     {
-      "active": true,
-      "isCustodial": false,
-      "licenceExpiryDate": "2021-11-24",
-      "sentenceDescription": "ORA Suspended Sentence Order",
-      "sentenceOriginalLength": 2,
-      "sentenceOriginalLengthUnits": "months",
-      "statusCode": "B",
-      "offences": [
-        {
-          "mainOffence": true,
-          "description": "Shoplifting"
-        }
-      ],
-      "licenceConditions": [
-        {
-          "startDate": "2022-05-12",
-          "terminationDate": "2022-05-18",
-          "createdDateTime": "2022-05-12T17:22:13",
-          "active": false,
-          "licenceConditionNotes": "Notes",
-          "licenceConditionTypeMainCat": {
-            "code": "NLC8",
-            "description": "Freedom of movement"
-          },
-          "licenceConditionTypeSubCat": {
-            "code": "NST30",
-            "description": "On release to be escorted by police to Approved Premises"
-          }
-        }
-      ]
+      "mainOffence": {
+        "code": "001",
+        "description": "Shoplifting"
+      },
+      "additionalOffences": [],
+      "sentence": {
+        "description": "ORA Suspended Sentence Order",
+        "isCustodial": false,
+        "length": 2,
+        "lengthUnits": "months",
+        "licenceExpiryDate": "2021-11-24"
+      }
     },
     {
-      "active": true,
-      "isCustodial": true,
-      "licenceExpiryDate": "2023-06-16",
-      "sentenceExpiryDate": "2021-11-23",
-      "sentenceDescription": "ORA Adult Custody (inc PSS)",
-      "sentenceOriginalLength": 16,
-      "sentenceOriginalLengthUnits": "weeks",
-      "statusCode": "B",
-      "offences": [
+      "mainOffence": {
+        "code": "002",
+        "description": "Robbery (other than armed robbery)"
+      },
+      "additionalOffences": [
         {
-          "mainOffence": true,
-          "description": "Robbery (other than armed robbery)"
-        },
-        {
-          "mainOffence": false,
+          "code": "001",
           "description": "Shoplifting"
         },
         {
-          "mainOffence": false,
+          "code": "003",
           "description": "Burglary"
         }
       ],
-      "licenceConditions": []
-    },
-    {
-      "active": false,
-      "isCustodial": true,
-      "licenceExpiryDate": "2021-03-24",
-      "statusCode": "B",
-      "offences": [
-        {
-          "mainOffence": true,
-          "description": "Fraud"
-        },
-        {
-          "mainOffence": false,
-          "description": "Assault"
-        }
-      ],
-      "licenceConditions": []
+      "sentence": {
+        "description": "ORA Adult Custody (inc PSS)",
+        "isCustodial": true,
+        "custodialStatusCode": "B",
+        "length": 16,
+        "lengthUnits": "weeks",
+        "licenceExpiryDate": "2023-06-16",
+        "sentenceExpiryDate": "2021-11-23"
+      }
     }
   ],
   "risk": {
@@ -98,23 +63,9 @@
       "initiationDate": "2022-09-01T01:02:03.123Z"
     }
   },
-  "releaseSummary": {
-    "lastRelease": {
-      "date": "2022-05-23",
-      "notes": null,
-      "reason": {
-        "code": "ADL",
-        "description": "Adult Licence"
-      }
-    },
-    "lastRecall": {
-      "date": "2022-05-20",
-      "notes": "I am a note",
-      "reason": {
-        "code": "ADL",
-        "description": "Adult Licence"
-      }
-    }
+  "lastRelease": {
+    "releaseDate": "2022-05-23",
+    "recallDate": "2022-05-20"
   },
   "activeRecommendation": {
     "recommendationId": 1,
