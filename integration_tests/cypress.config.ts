@@ -8,7 +8,9 @@ import {
   getHealthCheck,
   getPersonsByCrn,
   getRecommendation,
+  getStatuses,
   updateRecommendation,
+  updateStatuses,
 } from './mockApis/makeRecallDecisionApi'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import { readDocX } from '../cypress_shared/plugins'
@@ -46,6 +48,8 @@ export default defineConfig({
         createRecommendation,
         getRecommendation,
         updateRecommendation,
+        getStatuses,
+        updateStatuses,
         readPdf,
         readBase64File,
         readDocX,
