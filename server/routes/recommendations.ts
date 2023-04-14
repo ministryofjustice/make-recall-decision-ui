@@ -33,12 +33,16 @@ import spoRecallRationaleController from '../controllers/recommendation/spoRecal
 
 const recommendations = Router()
 
-routeRecommendationGet('', redirectController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('', feedErrorsToExpress(redirectController.get), [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.SPO])
 
-routeRecommendationGet(`review-case/:crn/:sectionId`, caseSummaryController.get, [HMPPS_AUTH_ROLE.SPO])
-routeRecommendationPost(`review-case/:crn/:sectionId`, caseSummaryController.post, [HMPPS_AUTH_ROLE.SPO])
+routeRecommendationGet(`review-case/:crn/:sectionId`, feedErrorsToExpress(caseSummaryController.get), [
+  HMPPS_AUTH_ROLE.SPO,
+])
+routeRecommendationPost(`review-case/:crn/:sectionId`, feedErrorsToExpress(caseSummaryController.post), [
+  HMPPS_AUTH_ROLE.SPO,
+])
 
 routeRecommendationGet('review-practitioners-concerns', reviewPractitionersConcernsController.get, [
   HMPPS_AUTH_ROLE.SPO,
@@ -51,6 +55,7 @@ routeRecommendationGet('spo-rationale', spoRecallRationaleController.get, [HMPPS
 routeRecommendationPost('spo-rationale', spoRecallRationaleController.post, [HMPPS_AUTH_ROLE.SPO])
 
 routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('task-list-consider-recall', taskListConsiderRecallController.post, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('trigger-leading-to-recall', triggerLeadingToRecallController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('trigger-leading-to-recall', triggerLeadingToRecallController.post, [HMPPS_AUTH_ROLE.PO])

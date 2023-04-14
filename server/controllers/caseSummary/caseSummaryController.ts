@@ -6,13 +6,22 @@ import { AuditService } from '../../services/auditService'
 import { AppError } from '../../AppError'
 import { strings } from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+
+interface RecommendationButton {
+  display: boolean
+  post?: boolean
+  title?: string
+  dataAnalyticsEventCategory?: string
+  link?: string
+}
 
 const auditService = new AuditService()
 
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
+  const { user } = res.locals
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
@@ -30,26 +39,72 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   let pageUrlBase = `/cases/${normalizedCrn}/`
   let backLink = '/search'
-  const recommendationButton = {
-    post: false,
-    title: 'Make a recommendation',
-    dataAnalyticsEventCategory: 'make_recommendation_click',
-    link: `${pageUrlBase}create-recommendation-warning`,
-  }
 
-  if (caseSection.caseSummary.activeRecommendation?.recommendationId) {
-    recommendationButton.title = 'Update recommendation'
-    recommendationButton.dataAnalyticsEventCategory = 'update_recommendation_click'
-    recommendationButton.link = `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`
-  }
+  let recommendationButton: RecommendationButton = { display: false }
 
   if (recommendationId) {
+    // this will be true when the SPO is reviewing the case during the SPO consider recall flow.
     pageUrlBase = `/recommendations/${recommendationId}/review-case/${normalizedCrn}/`
     backLink = `/recommendations/${recommendationId}/spo-task-list-consider-recall`
-    recommendationButton.post = true
-    recommendationButton.title = 'Continue'
-    delete recommendationButton.dataAnalyticsEventCategory
-    recommendationButton.link = `/recommendations/${recommendationId}/spo-task-list-consider-recall`
+
+    recommendationButton = {
+      display: true,
+      post: true,
+      title: 'Continue',
+    }
+  } else {
+    const isSpo = user.roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
+    const isRecommendationActive = !!caseSection.caseSummary.activeRecommendation?.recommendationId
+    if (!isRecommendationActive) {
+      if (!isSpo) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Make a recommendation',
+          dataAnalyticsEventCategory: 'make_recommendation_click',
+          link: `${pageUrlBase}create-recommendation-warning`,
+        }
+      }
+    } else if (isSpo) {
+      const statuses = await getStatuses({
+        recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
+        token: user.token,
+      })
+
+      const isSpoConsiderRecall = statuses
+        .filter(status => status.active)
+        .find(status => status.name === 'SPO_CONSIDER_RECALL')
+
+      const isSpoConsideringRecall = statuses
+        .filter(status => status.active)
+        .find(status => status.name === 'SPO_CONSIDERING_RECALL')
+
+      if (isSpoConsiderRecall) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Consider a recall',
+          dataAnalyticsEventCategory: 'spo_consider_recall_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
+      } else if (isSpoConsideringRecall) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Update recommendation',
+          dataAnalyticsEventCategory: 'spo_consider_recall_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
+      }
+    } else {
+      recommendationButton = {
+        display: true,
+        post: false,
+        title: 'Update recommendation',
+        dataAnalyticsEventCategory: 'update_recommendation_click',
+        link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+      }
+    }
   }
 
   res.locals = {

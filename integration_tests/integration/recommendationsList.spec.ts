@@ -130,6 +130,7 @@ context('Recommendations tab in case summary', () => {
         recommendations,
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
 

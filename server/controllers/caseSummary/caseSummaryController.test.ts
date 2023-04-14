@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import caseSummaryController from './caseSummaryController'
-import { getCaseSummary, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getCaseSummary, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
@@ -21,7 +21,7 @@ jest.mock('../../data/redisClient')
 
 describe('get', () => {
   beforeEach(() => {
-    res = mockRes({ token, locals: { user: { username: 'Dave' } } })
+    res = mockRes({ token, locals: { user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'] } } })
   })
   let res: Response
   const crn = ' A1234AB '
@@ -275,6 +275,7 @@ describe('get', () => {
     expect(res.locals.backLink).toEqual('/search')
     expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
     expect(res.locals.recommendationButton).toEqual({
+      display: true,
       post: false,
       title: 'Update recommendation',
       dataAnalyticsEventCategory: 'update_recommendation_click',
@@ -284,14 +285,14 @@ describe('get', () => {
   })
 
   it('show reccomendation button for no recommendation', async () => {
-    caseOverviewApiResponse.activeRecommendation = null
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummaryController.get(req, res, next)
 
     expect(res.locals.backLink).toEqual('/search')
     expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
     expect(res.locals.recommendationButton).toEqual({
+      display: true,
       post: false,
       title: 'Make a recommendation',
       dataAnalyticsEventCategory: 'make_recommendation_click',
@@ -301,17 +302,127 @@ describe('get', () => {
   })
 
   it('show reccomendation button for case review', async () => {
-    caseOverviewApiResponse.activeRecommendation = null
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
     const req = mockReq({ params: { crn, sectionId: 'overview', recommendationId: '123' } })
     await caseSummaryController.get(req, res, next)
 
     expect(res.locals.backLink).toEqual('/recommendations/123/spo-task-list-consider-recall')
     expect(res.locals.pageUrlBase).toEqual('/recommendations/123/review-case/A1234AB/')
     expect(res.locals.recommendationButton).toEqual({
+      display: true,
       post: true,
       title: 'Continue',
-      link: '/recommendations/123/spo-task-list-consider-recall',
+    })
+    expect(res.locals.backLink)
+  })
+
+  it('do show recommendation button for spo when no recommendation doc', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      display: false,
+    })
+    expect(res.locals.backLink)
+  })
+
+  it('do not show recommendation button for spo when recommendation doc and no appropriate spo state', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      display: false,
+    })
+    expect(res.locals.backLink)
+  })
+
+  it('do not show recommendation button for spo when recommendation doc and SPO_CONSIDER_RECALL state', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'SPO_CONSIDER_RECALL', active: true }])
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    const response = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, response, next)
+
+    expect(response.locals.backLink).toEqual('/search')
+    expect(response.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(response.locals.recommendationButton).toEqual({
+      display: true,
+      dataAnalyticsEventCategory: 'spo_consider_recall_click',
+      link: '/recommendations/1/',
+      post: false,
+      title: 'Consider a recall',
+    })
+    expect(response.locals.backLink)
+  })
+
+  it('do not show recommendation button for spo when recommendation doc and SPO_CONSIDERING_RECALL state', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      display: true,
+      dataAnalyticsEventCategory: 'spo_consider_recall_click',
+      link: '/recommendations/1/',
+      post: false,
+      title: 'Update recommendation',
     })
     expect(res.locals.backLink)
   })

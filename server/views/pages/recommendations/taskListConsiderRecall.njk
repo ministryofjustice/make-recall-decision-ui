@@ -69,7 +69,10 @@
             </ol>
             {% if allTasksCompleted == true %}
                 <div>
-                    <a href='{{urlInfo.pageBase}}share-case-with-manager' class='govuk-button govuk-button--primary'>Continue</a>
+                    <form novalidate method="post">
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                        {{ formSubmitButton() }}
+                    </form>
                 </div>
             {% endif %}
         </div>

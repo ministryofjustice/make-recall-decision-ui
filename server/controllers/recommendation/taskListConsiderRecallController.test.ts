@@ -1,5 +1,6 @@
 import taskListConsiderRecallController from './taskListConsiderRecallController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -51,5 +52,94 @@ describe('get', () => {
     expect(res.locals.isExtendedSentenceCompleted).toBeTruthy()
     expect(res.locals.isIndeterminateSentenceCompleted).toBeTruthy()
     expect(res.locals.allTasksCompleted).toBeTruthy()
+  })
+})
+
+describe('post', () => {
+  it('post with statuses', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: 'SPO_CONSIDER_RECALL',
+        active: true,
+        recommendationId: 123,
+        createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
+        created: '2023-04-13T10:52:11.624Z',
+        modifiedBy: null,
+        modified: null,
+        createdByUserFullName: 'Making Recall Decisions SPO User',
+        modifiedByUserFullName: null,
+      },
+      {
+        name: 'PO_RECALL_CONSULT_SPO',
+        active: true,
+        recommendationId: 123,
+        createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
+        created: '2023-04-13T10:52:11.624Z',
+        modifiedBy: null,
+        modified: null,
+        createdByUserFullName: 'Making Recall Decisions SPO User',
+        modifiedByUserFullName: null,
+      },
+    ])
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        flags: { flagTriggerWork: false },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await taskListConsiderRecallController.post(req, res, next)
+
+    expect(getStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+    })
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with no statuses', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    ;(updateStatuses as jest.Mock).mockResolvedValue([])
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        flags: { flagTriggerWork: false },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await taskListConsiderRecallController.post(req, res, next)
+
+    expect(getStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+    })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: ['SPO_CONSIDER_RECALL', 'PO_RECALL_CONSULT_SPO'],
+      deActivate: [],
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

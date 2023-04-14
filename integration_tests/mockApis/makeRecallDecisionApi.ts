@@ -123,6 +123,21 @@ export const updateRecommendation = ({ statusCode = 200, response }: { statusCod
     response,
   })
 
+export const getStatuses = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.recommendations}/(.*)/statuses`,
+    statusCode,
+    response,
+  })
+
+export const updateStatuses = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)/status`,
+    method: 'PATCH',
+    statusCode,
+    response,
+  })
+
 export const createPartA = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockUpdate({
     urlPathPattern: `${routes.recommendations}/(.*)/part-a`,

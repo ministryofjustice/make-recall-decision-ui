@@ -4,7 +4,7 @@ import { strings } from '../textStrings/en'
 import { renderErrorMessages } from '../utils/errors'
 import { renderFormOptions } from './recommendations/formOptions/formOptions'
 
-export default async function customizeMessages(req: Request, res: Response, next: NextFunction) {
+export default function customizeMessages(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const stringRenderParams = {

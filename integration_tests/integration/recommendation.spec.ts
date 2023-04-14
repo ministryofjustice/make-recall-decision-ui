@@ -72,6 +72,7 @@ context('Make a recommendation', () => {
           statusCode: 200,
           response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
         })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.visit(`${routeUrls.cases}/${crn}/overview`)
         cy.clickLink('Update recommendation')
         cy.pageHeading().should('equal', 'Create a Part A form')
@@ -83,6 +84,7 @@ context('Make a recommendation', () => {
           statusCode: 200,
           response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
         })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.visit(`${routeUrls.cases}/${crn}/overview`)
         cy.clickLink('Update recommendation')
         cy.pageHeading().should('equal', 'Create a decision not to recall letter')
@@ -91,6 +93,7 @@ context('Make a recommendation', () => {
       it('update button links to response to probation if recall decision has not been made yet', () => {
         cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
         cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: null } })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.visit(`${routeUrls.cases}/${crn}/overview`)
         cy.clickLink('Update recommendation')
         cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
@@ -111,6 +114,7 @@ context('Make a recommendation', () => {
             recallType: { selected: { value: undefined } },
           },
         })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.visit(`${routeUrls.recommendations}/${recommendationId}/?flagTriggerWork=1`)
         cy.pageHeading().should('equal', 'Consider a recall')
 
@@ -145,10 +149,11 @@ context('Make a recommendation', () => {
           statusCode: 200,
           response: { ...completeRecommendationResponse, recallConsideredList: null },
         })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
 
         cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
 
-        cy.clickLink('Continue')
+        cy.clickButton('Continue')
 
         cy.pageHeading().should('equal', 'Share this case with your manager')
 
@@ -208,6 +213,7 @@ context('Make a recommendation', () => {
             response: completeRecommendationResponse,
           })
           cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
           cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
           cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
@@ -269,6 +275,7 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: { ...completeRecommendationResponse, managerRecallDecision: null },
           })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
           cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
           cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
@@ -289,6 +296,7 @@ context('Make a recommendation', () => {
             },
           })
           cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
           cy.clickLink('View your decision')
           cy.pageHeading().should('equal', 'Your decision')
