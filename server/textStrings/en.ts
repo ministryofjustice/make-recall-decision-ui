@@ -82,6 +82,7 @@ export const strings = {
   },
   pageHeadings: {
     spoRecallRationale: 'Explain the decision',
+    spoRecordDecision: 'Record the decision in NDelius',
     reviewPractitionersConcerns: "Review practitioner's concerns",
     spoTaskListConsiderRecall: 'Consider a recall',
     taskListConsiderRecall: 'Consider a recall',

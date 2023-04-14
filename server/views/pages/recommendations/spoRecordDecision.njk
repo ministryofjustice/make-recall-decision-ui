@@ -1,0 +1,86 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    <nav>
+        {{ govukBackLink({
+            text: "Back",
+            href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
+        }) }}
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            {% if recallType === 'NO_RECALL' %}
+            {% if editable %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
+                {% set hintHtml %}
+                <p class="govuk-body">
+                The decision will be recorded as a contact in NDelius called 'Management oversight - recall' with the
+                outcome 'decision not to recall'. You cannot undo this.
+                </p>
+                <div class="govuk-inset-text">
+                  Decision is not to recall {{ recommendation.personOnProbation.name }}.
+                  We’ve decided to send him a letter and remind him of his obligation to keep coming to appointments
+                  and cooperation with his officer.
+                </div>
+                {% endset %}
+                {{ govukCheckboxes({
+                    name: "sensitive",
+                    fieldset: {
+                      legend: {
+                        text: "Record the decision in NDelius",
+                        isPageHeading: true,
+                        classes: "govuk-fieldset__legend--l"
+                      }
+                    },
+                    hint: {
+                      html: hintHtml
+                    },
+                    items: [
+                      {
+                        value: "sensitive",
+                        text: "Contains sensitive information - do not show to the person on probation"
+                      }
+                    ]
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+            {% else %}
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                          Decision recorded in NDelius
+                        </h1>
+                    </legend>
+                    <div id="sensitive-hint" class="govuk-hint">
+                        <p class="govuk-body">
+                              The decision has been recorded as a contact in NDelius called 'Management oversight -
+                              recall'. You cannot undo this.
+                        </p>
+                        <div class="govuk-inset-text">
+                            It can take up to 8 weeks to register a lasting power of attorney if there are no mistakes
+                            in the application. It can take up to 8 weeks to register a lasting power of attorney if
+                            there are no mistakes in the application. It can take up to 8 weeks to register a lasting
+                            power of attorney if there are no mistakes in the application. It can take up to 8 weeks to
+                            register a lasting power of attorney if there are no mistakes in the application.
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

@@ -30,6 +30,7 @@ import authorisationMiddleware, { HMPPS_AUTH_ROLE } from '../middleware/authoris
 import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
+import spoRecordDecisionController from '../controllers/recommendation/spoRecordDecisionController'
 
 const recommendations = Router()
 
@@ -53,6 +54,9 @@ routeRecommendationPost('review-practitioners-concerns', reviewPractitionersConc
 
 routeRecommendationGet('spo-rationale', spoRecallRationaleController.get, [HMPPS_AUTH_ROLE.SPO])
 routeRecommendationPost('spo-rationale', spoRecallRationaleController.post, [HMPPS_AUTH_ROLE.SPO])
+
+routeRecommendationGet('spo-record-decision', spoRecordDecisionController.get, [HMPPS_AUTH_ROLE.SPO])
+routeRecommendationPost('spo-record-decision', spoRecordDecisionController.post, [HMPPS_AUTH_ROLE.SPO])
 
 routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('task-list-consider-recall', taskListConsiderRecallController.post, [HMPPS_AUTH_ROLE.PO])
