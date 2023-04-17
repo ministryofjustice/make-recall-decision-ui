@@ -34,16 +34,12 @@ import spoRecordDecisionController from '../controllers/recommendation/spoRecord
 
 const recommendations = Router()
 
-routeRecommendationGet('', feedErrorsToExpress(redirectController.get), [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('', redirectController.get, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.SPO])
 
-routeRecommendationGet(`review-case/:crn/:sectionId`, feedErrorsToExpress(caseSummaryController.get), [
-  HMPPS_AUTH_ROLE.SPO,
-])
-routeRecommendationPost(`review-case/:crn/:sectionId`, feedErrorsToExpress(caseSummaryController.post), [
-  HMPPS_AUTH_ROLE.SPO,
-])
+routeRecommendationGet(`review-case/:crn/:sectionId`, caseSummaryController.get, [HMPPS_AUTH_ROLE.SPO])
+routeRecommendationPost(`review-case/:crn/:sectionId`, caseSummaryController.post, [HMPPS_AUTH_ROLE.SPO])
 
 routeRecommendationGet('review-practitioners-concerns', reviewPractitionersConcernsController.get, [
   HMPPS_AUTH_ROLE.SPO,
