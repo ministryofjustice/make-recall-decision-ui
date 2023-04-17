@@ -713,6 +713,8 @@ context('Make a recommendation', () => {
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
 
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
 
       cy.clickLink("Review practitioner's concerns")
@@ -729,6 +731,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
 
@@ -743,6 +746,36 @@ context('Make a recommendation', () => {
       cy.clickButton('Continue')
 
       cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
+    it('present record decision and confirm', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          reviewPractitionersConcerns: true,
+          reviewOffenderProfile: true,
+          explainTheDecision: true,
+          spoRecallType: 'RECALL',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'Record the decision in NDelius')
+
+      cy.selectCheckboxes('Record the decision in NDelius', [
+        'Contains sensitive information - do not show to the person on probation',
+      ])
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Page not found')
     })
   })
 })
