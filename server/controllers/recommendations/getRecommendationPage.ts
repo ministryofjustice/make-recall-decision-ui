@@ -6,7 +6,6 @@ import { renderErrorMessages } from '../../utils/errors'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { taskCompleteness } from './helpers/taskCompleteness'
 import { isCaseRestrictedOrExcluded, isPreprodOrProd } from '../../utils/utils'
-import { isInCustody } from './helpers/isInCustody'
 import { renderStrings } from './helpers/renderStrings'
 import { checkForRedirectPath } from './helpers/urls'
 import { strings } from '../../textStrings/en'
@@ -53,7 +52,6 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   if (redirectedPagePath) {
     return res.redirect(301, redirectedPagePath)
   }
-  recommendation.isInCustody = isInCustody(recommendation.custodyStatus?.selected)
   res.locals.taskCompleteness = taskCompleteness(recommendation, featureFlags)
   if (pageUrlSlug === 'preview-no-recall') {
     const { letterContent } = await createDocument(recommendationId, 'no-recall-letter', { format: 'preview' }, token)

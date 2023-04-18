@@ -114,7 +114,7 @@ describe('post', () => {
       deActivate: ['SPO_CONSIDERING_RECALL'],
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-confirmation`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-rationale-confirmation`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 

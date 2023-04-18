@@ -702,7 +702,7 @@ context('Make a recommendation', () => {
     })
   })
 
-  describe('SPO Journey', () => {
+  describe('SPO Rationale Journey', () => {
     beforeEach(() => {
       cy.signIn({ hasSpoRole: true })
     })
@@ -775,7 +775,10 @@ context('Make a recommendation', () => {
 
       cy.clickButton('Continue')
 
-      cy.pageHeading().should('equal', 'Page not found')
+      cy.pageHeading().should('contains', 'Decision to recall')
+
+      cy.getText('fullName').should('contain', 'Paula Smith')
+      cy.getText('crn').should('contain', 'X12345')
     })
   })
 })

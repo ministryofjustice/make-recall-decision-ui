@@ -56,7 +56,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     deActivate: ['SPO_CONSIDERING_RECALL'],
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-confirmation', urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-rationale-confirmation', urlInfo }))
 }
 
 export default { get, post }

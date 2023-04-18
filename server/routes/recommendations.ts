@@ -31,6 +31,11 @@ import reviewPractitionersConcernsController from '../controllers/recommendation
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
 import spoRecordDecisionController from '../controllers/recommendation/spoRecordDecisionController'
+import spoRationaleConfirmationController from '../controllers/recommendation/spoRationaleConfirmationController'
+import taskListNoRecallController from '../controllers/recommendation/taskListNoRecallController'
+import taskListController from '../controllers/recommendation/taskListController'
+import previewNoRecallLetterController from '../controllers/recommendation/previewNoRecallLetterController'
+import confirmationNoRecallController from '../controllers/recommendation/confirmationNoRecallController'
 
 const recommendations = Router()
 
@@ -50,6 +55,8 @@ routeRecommendationPost('review-practitioners-concerns', reviewPractitionersConc
 
 routeRecommendationGet('spo-rationale', spoRecallRationaleController.get, [HMPPS_AUTH_ROLE.SPO])
 routeRecommendationPost('spo-rationale', spoRecallRationaleController.post, [HMPPS_AUTH_ROLE.SPO])
+
+routeRecommendationGet('spo-rationale-confirmation', spoRationaleConfirmationController.get, [HMPPS_AUTH_ROLE.SPO])
 
 routeRecommendationGet('spo-record-decision', spoRecordDecisionController.get, [HMPPS_AUTH_ROLE.SPO])
 routeRecommendationPost('spo-record-decision', spoRecordDecisionController.post, [HMPPS_AUTH_ROLE.SPO])
@@ -87,6 +94,14 @@ routeRecommendationPost('recall-type', recallTypeController.post, [HMPPS_AUTH_RO
 
 routeRecommendationGet('recall-type-indeterminate', recallTypeIndeterminateController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('task-list-no-recall', taskListNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('task-list', taskListController.get, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('preview-no-recall', previewNoRecallLetterController.get, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('confirmation-no-recall', confirmationNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
