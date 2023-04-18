@@ -20,7 +20,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
     .filter(status => status.active)
     .find(status => status.name === 'SPO_CONSIDER_RECALL')
 
-  if (isSpoConsiderRecall) {
+  const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
+
+  if (isSpoConsiderRecall && isSpo) {
     await updateStatuses({
       recommendationId,
       token,
@@ -29,7 +31,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     })
   }
 
-  const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   let nextPageId
   const recallType = recommendation?.recallType?.selected?.value
   if (isSpo) {

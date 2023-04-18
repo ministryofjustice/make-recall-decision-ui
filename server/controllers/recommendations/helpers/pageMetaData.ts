@@ -134,10 +134,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateWhatLedToRecall,
         inputDisplayValues: inputDisplayValuesWhatLedToRecall,
       }
-    case 'task-list':
-      return {
-        id: 'taskList',
-      }
     case 'iom':
       return {
         id: 'integratedOffenderManagement',
@@ -240,10 +236,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
       return {
         id: 'confirmationPartA',
       }
-    case 'task-list-no-recall':
-      return {
-        id: 'taskListNoRecall',
-      }
     case 'why-considered-recall':
       return {
         id: 'whyConsideredRecall',
@@ -261,14 +253,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         id: 'nextAppointment',
         validator: validateNextAppointment,
         inputDisplayValues: inputDisplayValuesNextAppointment,
-      }
-    case 'preview-no-recall':
-      return {
-        id: 'previewNoRecallLetter',
-      }
-    case 'confirmation-no-recall':
-      return {
-        id: 'confirmationNoRecallLetter',
       }
     default:
       throw new AppError(`getPageMetaData - invalid pageUrlSlug: ${pageUrlSlug}`, { status: 404 })

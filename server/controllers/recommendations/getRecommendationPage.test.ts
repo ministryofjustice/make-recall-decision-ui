@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendationPage } from './getRecommendationPage'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { getRecommendation, updateRecommendation, createDocument } from '../../data/makeDecisionApiClient'
+import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { AuditService } from '../../services/auditService'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
@@ -25,7 +25,7 @@ describe('getRecommendationPage', () => {
   it('should fetch data and render a recommendation page', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     await getRecommendationPage(req, res)
-    expect(res.locals.recommendation).toEqual({ ...recommendationApiResponse, isInCustody: true })
+    expect(res.locals.recommendation).toEqual(recommendationApiResponse)
     expect(res.locals.page).toEqual({ id: 'custodyStatus' })
     expect(res.locals.pageHeadings.custodyStatus).toEqual('Is Paula Smith in custody now?')
     expect(res.locals.pageTitles.custodyStatus).toEqual('Is the person in custody now?')
@@ -44,14 +44,6 @@ describe('getRecommendationPage', () => {
       propertyToRefresh: 'previousReleases',
       featureFlags: {},
     })
-  })
-
-  it('should fetch no recall preview letter if on that page', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(createDocument as jest.Mock).mockResolvedValue({})
-    req = mockReq({ params: { recommendationId, pageUrlSlug: 'preview-no-recall' } })
-    await getRecommendationPage(req, res)
-    expect(createDocument).toHaveBeenCalledWith('123', 'no-recall-letter', { format: 'preview' }, 'abc')
   })
 
   it('should prevent page caching', async () => {
