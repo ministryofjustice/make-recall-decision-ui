@@ -765,7 +765,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
 
-      cy.clickLink('Continue')
+      cy.clickLink('Record the decision')
 
       cy.pageHeading().should('equal', 'Record the decision in NDelius')
 
@@ -773,7 +773,7 @@ context('Make a recommendation', () => {
         'Contains sensitive information - do not show to the person on probation',
       ])
 
-      cy.clickButton('Continue')
+      cy.clickButton('Send to NDelius')
 
       cy.pageHeading().should('contains', 'Decision to recall')
 
