@@ -36,6 +36,10 @@ import taskListNoRecallController from '../controllers/recommendation/taskListNo
 import taskListController from '../controllers/recommendation/taskListController'
 import previewNoRecallLetterController from '../controllers/recommendation/previewNoRecallLetterController'
 import confirmationNoRecallController from '../controllers/recommendation/confirmationNoRecallController'
+import whyConsideredRecallController from '../controllers/recommendation/whyConsideredRecallController'
+import reasonsNoRecallController from '../controllers/recommendation/reasonsNoRecallController'
+import appointmentNoRecallController from '../controllers/recommendation/appointmentNoRecallController'
+import managerReviewController from '../controllers/recommendation/managerReviewController'
 
 const recommendations = Router()
 
@@ -97,11 +101,22 @@ routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateCont
 
 routeRecommendationGet('task-list-no-recall', taskListNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
 
+routeRecommendationGet('why-considered-recall', whyConsideredRecallController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('why-considered-recall', whyConsideredRecallController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('reasons-no-recall', reasonsNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('reasons-no-recall', reasonsNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('appointment-no-recall', appointmentNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('appointment-no-recall', appointmentNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
+
 routeRecommendationGet('task-list', taskListController.get, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('preview-no-recall', previewNoRecallLetterController.get, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('confirmation-no-recall', confirmationNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('manager-review', managerReviewController.get, [HMPPS_AUTH_ROLE.PO])
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
