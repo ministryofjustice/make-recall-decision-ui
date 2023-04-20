@@ -103,6 +103,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         sensitive: true,
+        sendSpoRationaleToDelius: true,
       },
       featureFlags: { flagTriggerWork: false },
     })
@@ -143,6 +144,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         sensitive: false,
+        sendSpoRationaleToDelius: true,
       },
       featureFlags: { flagTriggerWork: false },
     })
