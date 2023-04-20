@@ -13,6 +13,7 @@ describe('get', () => {
         recommendation: {
           id: '1234',
           spoRecallType: 'RECALL',
+          spoRecallRationale: 'some reason',
         },
       },
     })
@@ -24,6 +25,7 @@ describe('get', () => {
 
     expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.recallType).toEqual('RECALL')
+    expect(res.locals.spoRecallRationale).toEqual('some reason')
     expect(res.locals.editable).toEqual(true)
     expect(next).toHaveBeenCalled()
   })
