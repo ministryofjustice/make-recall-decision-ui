@@ -27,10 +27,6 @@ import { validateFixedTermLicenceConditions } from '../fixedTermAdditionalLicenc
 import { inputDisplayValuesFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/inputDisplayValues'
 import { validateIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/formValidator'
 import { inputDisplayValuesIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/inputDisplayValues'
-import { validateWhyConsideredRecall } from '../whyConsideredRecall/formValidator'
-import { inputDisplayValuesWhyConsideredRecall } from '../whyConsideredRecall/inputDisplayValues'
-import { validateReasonsForNoRecall } from '../reasonsForNoRecall/formValidator'
-import { inputDisplayValuesReasonsForNoRecall } from '../reasonsForNoRecall/inputDisplayValues'
 import { validateNextAppointment } from '../nextAppointment/formValidator'
 import { inputDisplayValuesNextAppointment } from '../nextAppointment/inputDisplayValues'
 import { validateAddress } from '../addressDetails/formValidator'
@@ -70,6 +66,7 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         id: 'managerViewDecision',
       }
     case 'manager-record-decision-delius':
+      // This one raises an ap insight event
       return {
         id: 'managerRecordDecisionDelius',
         validator: validateManagerRecordDecisionDelius,
@@ -77,10 +74,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
     case 'manager-decision-confirmation':
       return {
         id: 'managerDecisionConfirmation',
-      }
-    case 'manager-review':
-      return {
-        id: 'managerReview',
       }
     case 'recall-type-indeterminate':
       return {
@@ -235,18 +228,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
     case 'confirmation-part-a':
       return {
         id: 'confirmationPartA',
-      }
-    case 'why-considered-recall':
-      return {
-        id: 'whyConsideredRecall',
-        validator: validateWhyConsideredRecall,
-        inputDisplayValues: inputDisplayValuesWhyConsideredRecall,
-      }
-    case 'reasons-no-recall':
-      return {
-        id: 'reasonsForNoRecall',
-        validator: validateReasonsForNoRecall,
-        inputDisplayValues: inputDisplayValuesReasonsForNoRecall,
       }
     case 'appointment-no-recall':
       return {

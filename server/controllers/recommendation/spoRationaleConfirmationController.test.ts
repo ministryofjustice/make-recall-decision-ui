@@ -6,6 +6,7 @@ describe('get', () => {
     const recommendation = {
       crn: 'X1213',
       personOnProbation: { name: 'Harry Smith' },
+      spoRecallType: 'XYZ',
     }
 
     const res = mockRes({
@@ -19,6 +20,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'spoRationaleConfirmation' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoRationaleConfirmation')
     expect(res.locals.recommendation).toEqual(recommendation)
+    expect(res.locals.recallType).toEqual('XYZ')
     expect(next).toHaveBeenCalled()
   })
 })

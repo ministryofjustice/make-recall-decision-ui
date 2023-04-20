@@ -11,6 +11,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     inputDisplayValues: {
       errors: res.locals.errors,
     },
+    recallType: recommendation.spoRecallType,
     crn: recommendation.crn,
     personOnProbation: recommendation.personOnProbation.name,
   }

@@ -2,6 +2,7 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 {% block content %}
     <div class="govuk-grid-row">
+        {% if recallType === 'RECALL' %}
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <div class="govuk-panel govuk-panel--confirmation">
               <h1 class="govuk-panel__title">
@@ -19,7 +20,29 @@
                 Your decision has been recorded as a contact in NDelius called 'Management oversight - recall' with the
                 outcome 'decision to recall'.
             </p>
-            <a href="/cases/{{crn}}/overview" class="govuk-back-link">Return to overview</a>
+            <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
         </div>
+        {% endif %}
+        {% if recallType === 'NO_RECALL' %}
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-panel govuk-panel--confirmation">
+              <h1 class="govuk-panel__title">
+                Decision not to recall
+              </h1>
+              <div class="govuk-panel__body" data-qa="fullName">
+              {{ personOnProbation }}
+              </div>
+              <div class="govuk-panel__body" data-qa="crn">
+                CRN {{ crn }}
+              </div>
+            </div>
+            <h1 class="govuk-heading-m">What happens next</h1>
+            <p class="govuk-body">
+                Your decision has been recorded as a contact in NDelius called 'Management oversight - recall' with the
+                outcome 'decision not to recall'.
+            </p>
+            <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
+        </div>
+        {% endif %}
     </div>
 {% endblock %}

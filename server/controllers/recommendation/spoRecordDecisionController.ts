@@ -22,6 +22,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     editable: !!isSpoConsideringRecall,
     recallType: recommendation.spoRecallType,
+    spoRecallRationale: recommendation.spoRecallRationale,
     inputDisplayValues: {
       errors: res.locals.errors,
     },
