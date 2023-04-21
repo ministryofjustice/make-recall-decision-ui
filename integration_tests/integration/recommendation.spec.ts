@@ -757,6 +757,7 @@ context('Make a recommendation', () => {
           reviewOffenderProfile: true,
           explainTheDecision: true,
           spoRecallType: 'RECALL',
+          spoRecallRationale: 'while I nodded, nearly napping',
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
@@ -769,6 +770,8 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Record the decision in NDelius')
 
+      cy.getText('reason').should('contain', 'while I nodded, nearly napping')
+
       cy.selectCheckboxes('Record the decision in NDelius', [
         'Contains sensitive information - do not show to the person on probation',
       ])
@@ -776,6 +779,42 @@ context('Make a recommendation', () => {
       cy.clickButton('Send to NDelius')
 
       cy.pageHeading().should('contains', 'Decision to recall')
+
+      cy.getText('fullName').should('contain', 'Paula Smith')
+      cy.getText('crn').should('contain', 'X12345')
+    })
+
+    it('present record decision (no recall) and confirm', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          reviewPractitionersConcerns: true,
+          reviewOffenderProfile: true,
+          explainTheDecision: true,
+          spoRecallType: 'NO_RECALL',
+          spoRecallRationale: 'while I nodded, nearly napping',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink('Record the decision')
+
+      cy.pageHeading().should('equal', 'Record the decision in NDelius')
+
+      cy.getText('reason').should('contain', 'while I nodded, nearly napping')
+
+      cy.selectCheckboxes('Record the decision in NDelius', [
+        'Contains sensitive information - do not show to the person on probation',
+      ])
+
+      cy.clickButton('Send to NDelius')
+
+      cy.pageHeading().should('contains', 'Decision not to recall')
 
       cy.getText('fullName').should('contain', 'Paula Smith')
       cy.getText('crn').should('contain', 'X12345')
