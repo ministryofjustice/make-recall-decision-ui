@@ -28,8 +28,7 @@
                     the outcome 'decision not to recall'. You cannot undo this.
                 </p>
                 <div class="govuk-inset-text">
-                  Decision is not to recall {{ recommendation.personOnProbation.name }}. We’ve decided to send him a
-                  letter and remind him of his obligation to keep coming to appointments and cooperation with his officer.
+                {{ spoRecallRationale }}
                 </div>
                 {% endset %}
                 {{ govukCheckboxes({
@@ -70,9 +69,7 @@
                             recall' with the outcome 'Decision not to recall'. You cannot undo this.
                         </p>
                         <div class="govuk-inset-text">
-                            Decision is not to recall {{ recommendation.personOnProbation.name }}. We’ve decided to send
-                            him a letter and remind him of his obligation to keep coming to appointments and cooperation
-                            with his officer.
+                        {{ spoRecallRationale }}
                         </div>
                     </div>
                 </fieldset>
@@ -131,11 +128,7 @@
                               recall'. You cannot undo this.
                         </p>
                         <div class="govuk-inset-text">
-                            It can take up to 8 weeks to register a lasting power of attorney if there are no mistakes
-                            in the application. It can take up to 8 weeks to register a lasting power of attorney if
-                            there are no mistakes in the application. It can take up to 8 weeks to register a lasting
-                            power of attorney if there are no mistakes in the application. It can take up to 8 weeks to
-                            register a lasting power of attorney if there are no mistakes in the application.
+                        {{ spoRecallRationale }}
                         </div>
                     </div>
                 </fieldset>

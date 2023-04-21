@@ -20,7 +20,9 @@
                 Your decision has been recorded as a contact in NDelius called 'Management oversight - recall' with the
                 outcome 'decision to recall'.
             </p>
-            <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
+            <p class="govuk-body">
+                <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
+            </p>
         </div>
         {% endif %}
         {% if recallType === 'NO_RECALL' %}
@@ -41,7 +43,9 @@
                 Your decision has been recorded as a contact in NDelius called 'Management oversight - recall' with the
                 outcome 'decision not to recall'.
             </p>
-            <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
+            <p class="govuk-body">
+                <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
+            </p>
         </div>
         {% endif %}
     </div>
