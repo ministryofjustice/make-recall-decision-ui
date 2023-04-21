@@ -1,4 +1,4 @@
-import { defineStep, When } from '@badeball/cypress-cucumber-preprocessor'
+import { defineStep, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { getTestDataPerEnvironment } from '../../utils'
 import { longDateMatchPattern } from '../../../cypress_shared/utils'
 
@@ -48,6 +48,14 @@ When('Henry signs in to the case overview for CRN {string}', (crnNum: string) =>
   cy.visitPage(defaultStartPath(crnNum), true)
 })
 
+When(
+  'Henry signs in to the case overview for CRN {string} with feature flag {string} enabled',
+  (crnNum: string, featureFlag: string) => {
+    const flags = featureFlag ? `&${featureFlag}=1` : ''
+    cy.visitPage(`${defaultStartPath(crnNum)}${flags}`, true)
+  }
+)
+
 When('Maria considers a new recall', () => {
   const detail = 'Risk has increased. Considering a recall.'
   cy.clickLink('Consider a recall')
@@ -67,6 +75,22 @@ When('Maria continues from the warning page', () => {
 When('Maria recommends an emergency recall', () => {
   cy.selectRadio('What do you recommend?', 'Emergency recall')
   cy.clickButton('Continue')
+})
+
+When('the practitioner clicks on {string}', (label: string) => {
+  cy.clickLink(label)
+})
+
+When('the practitioner clicks on button {string}', (label: string) => {
+  cy.clickButton(label)
+})
+
+When('the practitioner enters {string} for {string}', function (text: string, field: string) {
+  cy.fillInput(field, text)
+})
+
+When('the practitioner selects the {string} radio for {string}', function (answer: string, field: string) {
+  cy.selectRadio(field, answer)
 })
 
 When('Maria explains how the person has responded to probation so far', function () {
@@ -389,4 +413,12 @@ When('Maria confirms the person is in police custody', function () {
 
 When('Maria signs out', () => {
   cy.clickLink('Sign out')
+})
+
+Then('the page heading contains {string}', heading => {
+  cy.pageHeading().should('contains', heading)
+})
+
+Then('the practitioner sees {string}', (text: string) => {
+  cy.getElement(text).should('exist')
 })
