@@ -45,6 +45,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     valuesToSave: {
       sensitive: !!sensitive,
+      sendSpoRationaleToDelius: true,
     },
     token,
     featureFlags: flags,
