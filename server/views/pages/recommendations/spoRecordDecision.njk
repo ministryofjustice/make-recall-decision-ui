@@ -17,7 +17,6 @@
             {% include '../../partials/error-summary.njk' %}
 
             {% if recallType === 'NO_RECALL' %}
-            {% if editable %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
@@ -54,29 +53,8 @@
                         label: 'Send to NDelius'
                     }) }}
             </form>
-            {% else %}
-
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
-                          Decision recorded in NDelius
-                        </h1>
-                    </legend>
-                    <div id="sensitive-hint" class="govuk-hint">
-                        <p class="govuk-body">
-                            The decision has been recorded as a contact in NDelius called 'Management oversight - no
-                            recall' with the outcome 'Decision not to recall'. You cannot undo this.
-                        </p>
-                        <div class="govuk-inset-text" data-qa="reason">
-                        {{ spoRecallRationale }}
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            {% endif %}
             {% elseif recallType === 'RECALL' %}
-            {% if editable %}
+
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
@@ -113,27 +91,6 @@
                         label: 'Send to NDelius'
                     }) }}
             </form>
-            {% else %}
-
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
-                          Decision recorded in NDelius
-                        </h1>
-                    </legend>
-                    <div id="sensitive-hint" class="govuk-hint">
-                        <p class="govuk-body">
-                              The decision has been recorded as a contact in NDelius called 'Management oversight -
-                              recall'. You cannot undo this.
-                        </p>
-                        <div class="govuk-inset-text" data-qa="reason">
-                        {{ spoRecallRationale }}
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            {% endif %}
             {% endif %}
         </div>
     </div>

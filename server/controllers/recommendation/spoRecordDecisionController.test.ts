@@ -1,13 +1,12 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import spoRecordDecisionController from './spoRecordDecisionController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load record decision with RECALL type and editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+  it('load record decision with RECALL type', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -26,27 +25,10 @@ describe('get', () => {
     expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.recallType).toEqual('RECALL')
     expect(res.locals.spoRecallRationale).toEqual('some reason')
-    expect(res.locals.editable).toEqual(true)
     expect(next).toHaveBeenCalled()
   })
 
-  it('load record decision with RECALL type and not editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: false }])
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          id: '1234',
-          spoRecallType: 'RECALL',
-        },
-      },
-    })
-    await spoRecordDecisionController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.recallType).toEqual('RECALL')
-    expect(res.locals.editable).toEqual(false)
-  })
-  it('load record decision with NO_RECALL type and editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+  it('load record decision with NO_RECALL type', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -58,22 +40,6 @@ describe('get', () => {
     await spoRecordDecisionController.get(mockReq(), res, mockNext())
 
     expect(res.locals.recallType).toEqual('NO_RECALL')
-    expect(res.locals.editable).toEqual(true)
-  })
-  it('load record decision with NO_RECALL type and not editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: false }])
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          id: '1234',
-          spoRecallType: 'NO_RECALL',
-        },
-      },
-    })
-    await spoRecordDecisionController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.recallType).toEqual('NO_RECALL')
-    expect(res.locals.editable).toEqual(false)
   })
 })
 

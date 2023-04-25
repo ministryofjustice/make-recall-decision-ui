@@ -1,18 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation, user } = res.locals
-
-  const statuses = await getStatuses({
-    recommendationId: String(recommendation.id),
-    token: user.token,
-  })
-
-  const isSpoConsideringRecall = statuses
-    .filter(status => status.active)
-    .find(status => status.name === 'SPO_CONSIDERING_RECALL')
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
@@ -20,7 +11,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'spoRecordDecision',
     },
-    editable: !!isSpoConsideringRecall,
     recallType: recommendation.spoRecallType,
     spoRecallRationale: recommendation.spoRecallRationale,
     inputDisplayValues: {
