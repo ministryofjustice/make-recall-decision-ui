@@ -115,13 +115,22 @@ export const getRecommendation = ({ statusCode = 200, response }: { statusCode?;
     response,
   })
 
-export const updateRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
-  mockUpdate({
-    urlPathPattern: `${routes.recommendations}/(.*)`,
+export const updateRecommendation = ({
+  statusCode = 200,
+  response,
+  suffix = '',
+}: {
+  statusCode?
+  response
+  suffix?
+}) => {
+  return mockUpdate({
+    urlPathPattern: `${routes.recommendations}/([0-9]*)/${suffix}`,
     method: 'PATCH',
     statusCode,
     response,
   })
+}
 
 export const getStatuses = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockGet({
