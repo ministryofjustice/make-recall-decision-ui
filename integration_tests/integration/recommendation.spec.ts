@@ -151,6 +151,11 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
 
+        cy.task('updateStatuses', {
+          statusCode: 200,
+          response: completeRecommendationResponse,
+        })
+
         cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
 
         cy.clickButton('Continue')
@@ -307,7 +312,11 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: { ...completeRecommendationResponse, managerRecallDecision: { selected: { value: 'RECALL' } } },
           })
-          cy.task('updateRecommendation', { statusCode: 500, response: { error: 'DELIUS_CONTACT_CREATION_FAILED' } })
+          cy.task('updateRecommendation', {
+            statusCode: 500,
+            response: { error: 'DELIUS_CONTACT_CREATION_FAILED' },
+            suffix: 'manager-recall-decision',
+          })
           cy.visit(
             `${routeUrls.recommendations}/${recommendationId}/manager-record-decision-delius?flagConsiderRecall=1`
           )
@@ -323,7 +332,11 @@ context('Make a recommendation', () => {
               managerRecallDecision: { selected: { value: 'NO_RECALL' } },
             },
           })
-          cy.task('updateRecommendation', { statusCode: 500, response: { error: 'RECOMMENDATION_UPDATE_FAILED' } })
+          cy.task('updateRecommendation', {
+            statusCode: 500,
+            response: { error: 'RECOMMENDATION_UPDATE_FAILED' },
+            suffix: 'manager-recall-decision',
+          })
           cy.visit(
             `${routeUrls.recommendations}/${recommendationId}/manager-record-decision-delius?flagConsiderRecall=1`
           )
@@ -713,6 +726,8 @@ context('Make a recommendation', () => {
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
 
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
@@ -731,6 +746,8 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
