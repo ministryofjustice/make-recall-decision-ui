@@ -20,24 +20,30 @@
                 <li>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-reviewPractitionersConcerns'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'review-practitioners-concerns', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                Review practitioner's concerns
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-reviewPractitionersConcerns'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'review-practitioners-concerns', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    Review practitioner's concerns
+                                </a>
+                            </span>
                             <span id='task-list-status-reviewPractitionersConcerns'>{{ taskStatus({ hasData: reviewPractitionersConcernsCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-reviewOffenderProfile'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'review-case/' + crn + '/overview', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                Review profile of {{ recommendation.personOnProbation.name }}
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-reviewOffenderProfile'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'review-case/' + crn + '/overview', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    Review profile of {{ recommendation.personOnProbation.name }}
+                                </a>
+                            </span>
                             <span id='task-list-status-reviewOffenderProfile'>{{ taskStatus({ hasData: reviewOffenderProfileCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-explainTheDecision'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'spo-rationale', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                Explain the decision
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-explainTheDecision'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'spo-rationale', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    Explain the decision
+                                </a>
+                            </span>
                             <span id='task-list-status-explainTheDecision'>{{ taskStatus({ hasData: explainTheDecisionCompleted }) }}</span>
                         </li>
                     </ul>

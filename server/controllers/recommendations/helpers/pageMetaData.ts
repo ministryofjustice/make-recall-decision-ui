@@ -1,8 +1,6 @@
 import { AppError } from '../../../AppError'
 import { validateRecallType } from '../recallType/formValidator'
-import { validateCustodyStatus } from '../custodyStatus/formValidator'
 import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
-import { inputDisplayValuesCustodyStatus } from '../custodyStatus/inputDisplayValues'
 import { validateEmergencyRecall } from '../emergencyRecall/formValidator'
 import { inputDisplayValuesEmergencyRecall } from '../emergencyRecall/inputDisplayValues'
 import { validateVictimContactScheme } from '../victimContactScheme/formValidator'
@@ -17,8 +15,6 @@ import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/
 import { inputDisplayValuesLocalPoliceContactDetails } from '../localPoliceContactDetails/inputDisplayValues'
 import { inputDisplayValuesVulnerabilities } from '../vulnerabilities/inputDisplayValues'
 import { validateVulnerabilities } from '../vulnerabilities/formValidator'
-import { validateWhatLedToRecall } from '../whatLedToRecall/formValidator'
-import { inputDisplayValuesWhatLedToRecall } from '../whatLedToRecall/inputDisplayValues'
 import { validateContraband } from '../contraband/formValidator'
 import { inputDisplayValuesContraband } from '../contraband/inputDisplayValues'
 import { validateRecallTypeIndeterminate } from '../recallTypeIndeterminate/formValidator'
@@ -45,6 +41,8 @@ import { PageMetaData } from '../../../@types/pagesForms'
 import { validatePreviousRecalls } from '../previousRecalls/formValidator'
 import { validateAddPreviousRecall } from '../addPreviousRecall/formValidator'
 import { inputDisplayValuesAddPreviousRecall } from '../addPreviousRecall/inputDisplayValues'
+import { inputDisplayValuesCustodyStatus } from '../custodyStatus/inputDisplayValues'
+import { validateCustodyStatus } from '../custodyStatus/formValidator'
 
 /* The PageMetaData properties explained:
  * id - used as a key to get the page title. Also the name of the nunjucks HTML template
@@ -99,10 +97,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateFixedTermLicenceConditions,
         inputDisplayValues: inputDisplayValuesFixedTermLicenceConditions,
       }
-    case 'sensitive-info':
-      return {
-        id: 'sensitiveInformation',
-      }
     case 'emergency-recall':
       return {
         id: 'emergencyRecall',
@@ -110,6 +104,7 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         inputDisplayValues: inputDisplayValuesEmergencyRecall,
       }
     case 'custody-status':
+      // THIS HAS ALREADY BEEN MIGRATED TO NEW FORMAT - left here because of unit tests on getRecommendationPage
       return {
         id: 'custodyStatus',
         validator: validateCustodyStatus,
@@ -120,12 +115,6 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         id: 'vulnerabilities',
         validator: validateVulnerabilities,
         inputDisplayValues: inputDisplayValuesVulnerabilities,
-      }
-    case 'what-led':
-      return {
-        id: 'whatLedToRecall',
-        validator: validateWhatLedToRecall,
-        inputDisplayValues: inputDisplayValuesWhatLedToRecall,
       }
     case 'iom':
       return {
