@@ -41,6 +41,9 @@ import reasonsNoRecallController from '../controllers/recommendation/reasonsNoRe
 import appointmentNoRecallController from '../controllers/recommendation/appointmentNoRecallController'
 import managerReviewController from '../controllers/recommendation/managerReviewController'
 import recommendationStatusCheck, { STATUSES } from '../middleware/recommendationStatusCheck'
+import sensitiveInfoController from '../controllers/recommendation/sensitiveInfoController'
+import custodyStatusController from '../controllers/recommendation/custodyStatusController'
+import whatLedController from '../controllers/recommendation/whatLedController'
 
 const recommendations = Router()
 
@@ -114,6 +117,14 @@ routeRecommendationGet('is-extended', isExtendedController.get, [HMPPS_AUTH_ROLE
 routeRecommendationPost('is-extended', isExtendedController.post, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('share-case-with-manager', shareManagerController.get, [HMPPS_AUTH_ROLE.PO], [])
+
+routeRecommendationGet('sensitive-info', sensitiveInfoController.get, [HMPPS_AUTH_ROLE.PO], [])
+
+routeRecommendationGet('custody-status', custodyStatusController.get, [HMPPS_AUTH_ROLE.PO], [])
+routeRecommendationPost('custody-status', custodyStatusController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('what-led', whatLedController.get, [HMPPS_AUTH_ROLE.PO], [])
+routeRecommendationPost('what-led', whatLedController.post, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('discuss-with-manager', discussWithManagerController.get, [HMPPS_AUTH_ROLE.PO], [])
 

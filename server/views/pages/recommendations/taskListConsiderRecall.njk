@@ -23,45 +23,57 @@
                 <li>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-whatLedToRecall'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'trigger-leading-to-recall', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                What has made you think about recalling {{ recommendation.personOnProbation.name }}?
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-whatLedToRecall'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'trigger-leading-to-recall', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    What has made you think about recalling {{ recommendation.personOnProbation.name }}?
+                                </a>
+                            </span>
                             <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: triggerLeadingToRecallCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-responseToProbation'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                How has {{ recommendation.personOnProbation.name }} responded to probation so far?
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-responseToProbation'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    How has {{ recommendation.personOnProbation.name }} responded to probation so far?
+                                </a>
+                            </span>
                             <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: responseToProbationCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-licenceConditionsBreached'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                What licence conditions has {{ recommendation.personOnProbation.name }} breached?
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-licenceConditionsBreached'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    What licence conditions has {{ recommendation.personOnProbation.name }} breached?
+                                </a>
+                            </span>
                             <span id='task-list-status-licenceConditionsBreached'>{{ taskStatus({ hasData: licenceConditionsBreachedCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-alternativesToRecallTried'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                What alternatives to recall have been tried already?
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-alternativesToRecallTried'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    What alternatives to recall have been tried already?
+                                </a>
+                            </span>
                             <span id='task-list-status-alternativesToRecallTried'>{{ taskStatus({ hasData: alternativesToRecallTriedCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-indeterminateSentence'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                Is {{ recommendation.personOnProbation.name }} on an indeterminate sentence?
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-indeterminateSentence'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    Is {{ recommendation.personOnProbation.name }} on an indeterminate sentence?
+                                </a>
+                            </span>
                             <span id='task-list-status-indeterminateSentence'>{{ taskStatus({ hasData: isIndeterminateSentenceCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
-                            <a class="moj-task-list__task-name" aria-describedby='task-list-status-extendedSentence'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                Is {{ recommendation.personOnProbation.name }} on an extended sentence?
-                            </a>
+                            <span class="moj-task-list__task-name">
+                                <a aria-describedby='task-list-status-extendedSentence'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    Is {{ recommendation.personOnProbation.name }} on an extended sentence?
+                                </a>
+                            </span>
                             <span id='task-list-status-extendedSentence'>{{ taskStatus({ hasData: hasData(recommendation.isExtendedSentence) }) }}</span>
                         </li>
                     </ul>
