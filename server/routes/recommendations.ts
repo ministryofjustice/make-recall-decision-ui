@@ -44,6 +44,8 @@ import recommendationStatusCheck, { STATUSES } from '../middleware/recommendatio
 import sensitiveInfoController from '../controllers/recommendation/sensitiveInfoController'
 import custodyStatusController from '../controllers/recommendation/custodyStatusController'
 import whatLedController from '../controllers/recommendation/whatLedController'
+import { saveErrorWithDetails } from '../utils/errors'
+import logger from '../../logger'
 
 const recommendations = Router()
 
@@ -203,7 +205,12 @@ function feedErrorsToExpress(routerCallback: RouterCallback) {
     try {
       await routerCallback(req, res, next)
     } catch (err) {
-      next(err)
+      if (err.name === 'AppError') {
+        next(err)
+      }
+      logger.error(err)
+      req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
+      return res.redirect(303, req.originalUrl)
     }
   }
 }
