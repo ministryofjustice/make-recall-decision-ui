@@ -8,6 +8,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        statuses: [],
       },
     })
     const next = mockNext()
@@ -32,6 +33,7 @@ describe('get', () => {
           reviewOffenderProfile: true,
           explainTheDecision: true,
         },
+        statuses: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
       },
     })
 
@@ -41,5 +43,6 @@ describe('get', () => {
     expect(res.locals.reviewOffenderProfileCompleted).toBeTruthy()
     expect(res.locals.explainTheDecisionCompleted).toBeTruthy()
     expect(res.locals.allTasksCompleted).toBeTruthy()
+    expect(res.locals.isSpoSignatureRequested).toBeTruthy()
   })
 })

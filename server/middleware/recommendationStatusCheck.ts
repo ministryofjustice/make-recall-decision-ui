@@ -5,6 +5,7 @@ export enum STATUSES {
   SPO_CONSIDER_RECALL = 'SPO_CONSIDER_RECALL',
   SPO_CONSIDERING_RECALL = 'SPO_CONSIDERING_RECALL',
   PO_RECALL_CONSULT_SPO = 'PO_RECALL_CONSULT_SPO',
+  SPO_SIGNATURE_REQUESTED = 'SPO_SIGNATURE_REQUESTED',
 }
 const router = Router()
 
@@ -28,6 +29,7 @@ export default function recommendationStatusCheck(required: string[] = []): Requ
         recommendationId,
         token,
       })
+      res.locals.statuses = statuses
 
       let haveStatus = false
 
