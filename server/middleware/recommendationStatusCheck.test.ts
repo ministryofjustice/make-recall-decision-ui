@@ -26,6 +26,12 @@ describe('recommendationStatusCheck', () => {
 
     expect(res.redirect).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
+    expect(res.locals.statuses).toEqual([
+      {
+        name: 'XYZ',
+        active: true,
+      },
+    ])
   })
 
   it('should redirect as status is missing', async () => {

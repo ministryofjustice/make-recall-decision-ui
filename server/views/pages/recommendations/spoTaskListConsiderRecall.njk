@@ -14,6 +14,29 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
+
+            {% if isSpoSignatureRequested %}
+            <div class="govuk-notification-banner" role="region"
+                aria-labelledby="govuk-notification-banner-title"
+                data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Action required
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content" data-qa="warning-text">
+                    <p class="govuk-body">
+                        You’ve been asked to countersign the Part A for {{ recommendation.personOnProbation.name }}.
+                        Before doing this, you must explain the rationale for the decision. The rationale will go into
+                        NDelius.
+                    </p>
+                    <p class="govuk-body">
+                        You’ll be able to countersign the Part A when you’ve done this.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>You need to consider whether or not to recall this person.</p>
             <ol class="moj-task-list govuk-!-margin-top-8">
@@ -49,7 +72,7 @@
                     </ul>
                 </li>
             </ol>
-            {% if allTasksCompleted == true %}
+            {% if allTasksCompleted %}
                 <div>
                     <a href='{{urlInfo.pageBase}}spo-record-decision' class='govuk-button govuk-button--primary'>Record the decision</a>
                 </div>

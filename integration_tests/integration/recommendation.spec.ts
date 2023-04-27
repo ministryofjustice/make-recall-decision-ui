@@ -726,11 +726,19 @@ context('Make a recommendation', () => {
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
 
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+        ],
+      })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.getText('warning-text').should('contain', 'You’ve been asked to countersign the Part A for Paula Smith')
 
       cy.clickLink("Review practitioner's concerns")
 
