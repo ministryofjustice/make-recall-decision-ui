@@ -1,4 +1,4 @@
-import recommendationStatusCheck from './recommendationStatusCheck'
+import recommendationStatusCheck, { statusIsActive } from './recommendationStatusCheck'
 import { mockNext, mockReq, mockRes } from './testutils/mockRequestUtils'
 import { getStatuses } from '../data/makeDecisionApiClient'
 
@@ -16,7 +16,7 @@ describe('recommendationStatusCheck', () => {
       },
     ])
 
-    await recommendationStatusCheck(['XYZ'])(
+    await recommendationStatusCheck(statusIsActive('XYZ'))(
       mockReq({
         params: { recommendationId: '123' },
       }),
@@ -40,7 +40,7 @@ describe('recommendationStatusCheck', () => {
 
     ;(getStatuses as jest.Mock).mockResolvedValue([])
 
-    await recommendationStatusCheck(['XYZ'])(
+    await recommendationStatusCheck(statusIsActive('XYZ'))(
       mockReq({
         params: { recommendationId: '123' },
       }),
@@ -63,7 +63,7 @@ describe('recommendationStatusCheck', () => {
       },
     ])
 
-    await recommendationStatusCheck(['XYZ'])(
+    await recommendationStatusCheck(statusIsActive('XYZ'))(
       mockReq({
         params: { recommendationId: '123' },
       }),
@@ -79,7 +79,7 @@ describe('recommendationStatusCheck', () => {
     const res = mockRes({})
     const next = mockNext()
 
-    await recommendationStatusCheck([])(
+    await recommendationStatusCheck()(
       mockReq({
         params: { recommendationId: '123' },
       }),
