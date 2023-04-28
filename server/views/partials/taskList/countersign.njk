@@ -1,5 +1,5 @@
 <li>
-    <h2 class="moj-task-list__section" id='heading-risk-profile'>
+    <h2 class="moj-task-list__section" id='countersign'>
         Get the Part A countersigned
     </h2>
     <ul class="moj-task-list__items">
@@ -7,7 +7,7 @@
             <span class="moj-task-list__task-name">
                 {% if lineManagerCountersignLink %}
                 <a aria-describedby='task-list-status-lineManagerSignature'
-                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz1', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.lineManagerCounterSignature }}</a>
+                href="{{ changeLinkUrl({ pageUrlSlug: 'request-spo-countersign', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.lineManagerCounterSignature }}</a>
                 {% else %}
                 {{ pageHeadings.lineManagerCounterSignature }}
                 {% endif %}
@@ -16,9 +16,9 @@
         </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
-                {% if lineManagerCountersignLink %}
+                {% if seniorManagerCounterSignature %}
                 <a aria-describedby='task-list-status-seniorManagerSignature'
-                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'heading-risk-profile' }) }}">{{ pageHeadings.seniorManagerCounterSignature }}</a>
+                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.seniorManagerCounterSignature }}</a>
                 {% else %}
                 {{ pageHeadings.seniorManagerCounterSignature }}
                 {% endif %}

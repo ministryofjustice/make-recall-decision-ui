@@ -88,6 +88,7 @@ export const strings = {
     spoTaskListConsiderRecall: 'Consider a recall',
     taskListConsiderRecall: 'Consider a recall',
     shareCaseWithManager: 'Share this case with your manager',
+    requestSpoCountersign: 'Request countersignature',
     discussWithManager: 'Discuss with your manager',
     triggerLeadingToRecall: 'What has made you think about recalling {{ fullName }}?',
     managerRecordDecision: 'Record your decision',

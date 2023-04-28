@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { isDefined } from '../../utils/utils'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -18,7 +19,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const isSpoConsiderRecall = statuses
     .filter(status => status.active)
-    .find(status => status.name === 'SPO_CONSIDER_RECALL')
+    .find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
 
@@ -26,8 +27,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     await updateStatuses({
       recommendationId,
       token,
-      activate: ['SPO_CONSIDERING_RECALL'],
-      deActivate: ['SPO_CONSIDER_RECALL'],
+      activate: [STATUSES.SPO_CONSIDERING_RECALL],
+      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
     })
   }
 

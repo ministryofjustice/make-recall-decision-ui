@@ -1,0 +1,48 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{{  logMessage(pageTitle) }}
+
+{% block beforeContent %}
+    <nav>
+    {{ govukBackLink({
+        text: "Back",
+        href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
+    }) }}</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+
+            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+
+            <p class='govuk-body'>To request your line manager's countersignature:</p>
+
+            <ol class='govuk-list govuk-list--number'>
+                <li>
+                    <p class='govuk-body'>Copy this link:</p>
+                    <div class='mid-grey-panel'>
+                        <pre class='govuk-body govuk-!-margin-0 govuk-!-padding-1' data-js='copy-to-clipboard-text' data-qa='case-link'>{{ link }}</pre>
+                    </div>
+                    <button class='govuk-button govuk-button--secondary govuk-!-margin-top-2' data-js='copy-to-clipboard-btn'>Copy</button>
+                </li>
+                <li>
+                    <p class='govuk-body'>Paste it into an email or Teams message.</p>
+                </li>
+                <li>
+                    <p class='govuk-body'>Send it to your manager.</p>
+                </li>
+            </ol>
+             <div>
+                <a href='{{urlInfo.pageBase}}task-list#countersign' class='govuk-button govuk-button--primary'>Continue</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    {{ super() }}
+    <script src="/assets/copyToClipboard.js" defer></script>
+{% endblock %}

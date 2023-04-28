@@ -8,6 +8,7 @@ import { strings } from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
 import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 interface RecommendationButton {
   display: boolean
@@ -73,11 +74,11 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       const isSpoConsiderRecall = statuses
         .filter(status => status.active)
-        .find(status => status.name === 'SPO_CONSIDER_RECALL')
+        .find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
       const isSpoConsideringRecall = statuses
         .filter(status => status.active)
-        .find(status => status.name === 'SPO_CONSIDERING_RECALL')
+        .find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
 
       if (isSpoConsiderRecall) {
         recommendationButton = {
