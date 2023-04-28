@@ -119,6 +119,8 @@ export const strings = {
     addressDetails: 'Address details',
     mappa: 'MAPPA for {{ fullName }}',
     rosh: 'Current risk of serious harm',
+    lineManagerCounterSignature: "Request line manager's countersignature",
+    seniorManagerCounterSignature: "Request senior manager's countersignature",
     previousReleases: 'Previous releases',
     previousRecalls: 'Previous recalls',
     addPreviousRelease: 'Add previous release',

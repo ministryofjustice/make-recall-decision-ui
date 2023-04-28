@@ -25,6 +25,9 @@
                 {% include '../../partials/taskList/vulnerabilitiesVictimLiaison.njk' %}
                 {% include '../../partials/taskList/custody.njk' %}
                 {% include '../../partials/taskList/riskProfile.njk' %}
+                {% if flagTriggerWork %}
+                {% include '../../partials/taskList/countersign.njk' %}
+                {% endif %}
             </ol>
             {% if taskCompleteness.areAllComplete == true %}
             <div>
