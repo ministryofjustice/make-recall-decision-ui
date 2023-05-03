@@ -80,6 +80,18 @@ async function get(req: Request, res: Response, _: NextFunction) {
         .filter(status => status.active)
         .find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
 
+      const isSpoSignatureRequested = statuses
+        .filter(status => status.active)
+        .find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+
+      const isSpoSigned = statuses.filter(status => status.active).find(status => status.name === STATUSES.SPO_SIGNED)
+
+      const isAcoSignatureRequested = statuses
+        .filter(status => status.active)
+        .find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
+
+      const isAcoSigned = statuses.filter(status => status.active).find(status => status.name === STATUSES.ACO_SIGNED)
+
       if (isSpoConsiderRecall) {
         recommendationButton = {
           display: true,
@@ -95,6 +107,14 @@ async function get(req: Request, res: Response, _: NextFunction) {
           title: 'Update recommendation',
           dataAnalyticsEventCategory: 'spo_consider_recall_click',
           link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
+      } else if (isSpoSignatureRequested || isSpoSigned || isAcoSignatureRequested || isAcoSigned) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Countersign',
+          dataAnalyticsEventCategory: 'spo_countersign_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/xyz`,
         }
       }
     } else {

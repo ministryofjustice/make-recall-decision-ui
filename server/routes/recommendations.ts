@@ -53,6 +53,12 @@ import whatLedController from '../controllers/recommendation/whatLedController'
 import { saveErrorWithDetails } from '../utils/errors'
 import logger from '../../logger'
 import requestSpoCountersignController from '../controllers/recommendation/requestSpoCountersignController'
+import emergencyRecallController from '../controllers/recommendation/emergencyRecallController'
+import personalDetailsController from '../controllers/recommendation/personalDetailsController'
+import offenceDetailsController from '../controllers/recommendation/offenceDetailsController'
+import mappaController from '../controllers/recommendation/mappaController'
+import managerViewDecisionController from '../controllers/recommendation/managerViewDecisionController'
+import managerDecisionConfirmationController from '../controllers/recommendation/managerDecisionConfirmationController'
 
 const recommendations = Router()
 
@@ -168,6 +174,15 @@ routeRecommendationGet(
   [HMPPS_AUTH_ROLE.PO],
   not(statusIsActive(STATUSES.SPO_SIGNED))
 )
+
+routeRecommendationGet('emergency-recall', emergencyRecallController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationPost('emergency-recall', emergencyRecallController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet('personal-details', personalDetailsController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('offence-details', offenceDetailsController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('mappa', mappaController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('manager-view-decision', managerViewDecisionController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('manager-decision-confirmation', managerDecisionConfirmationController.get, [HMPPS_AUTH_ROLE.PO])
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

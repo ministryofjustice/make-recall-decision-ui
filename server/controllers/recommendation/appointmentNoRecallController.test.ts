@@ -124,7 +124,7 @@ describe('post', () => {
         howWillAppointmentHappen: 'TELEPHONE',
         'dateTimeOfAppointment-day': '01',
         'dateTimeOfAppointment-month': '05',
-        'dateTimeOfAppointment-year': '2023',
+        'dateTimeOfAppointment-year': '2025',
         'dateTimeOfAppointment-hour': '12',
         'dateTimeOfAppointment-minute': '59',
         probationPhoneNumber: '01277 960 001',
@@ -147,7 +147,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         nextAppointment: {
-          dateTimeOfAppointment: '2023-05-01T11:59:00.000Z',
+          dateTimeOfAppointment: '2025-05-01T11:59:00.000Z',
           howWillAppointmentHappen: {
             allOptions: [
               {
@@ -190,7 +190,7 @@ describe('post', () => {
         howWillAppointmentHappen: 'TELEPHONE',
         'dateTimeOfAppointment-day': '01',
         'dateTimeOfAppointment-month': '05',
-        'dateTimeOfAppointment-year': '2023',
+        'dateTimeOfAppointment-year': '2025',
         'dateTimeOfAppointment-hour': '12',
         'dateTimeOfAppointment-minute': '59',
         probationPhoneNumber: '',

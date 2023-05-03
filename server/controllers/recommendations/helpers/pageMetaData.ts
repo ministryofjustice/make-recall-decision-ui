@@ -1,8 +1,6 @@
 import { AppError } from '../../../AppError'
 import { validateRecallType } from '../recallType/formValidator'
 import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
-import { validateEmergencyRecall } from '../emergencyRecall/formValidator'
-import { inputDisplayValuesEmergencyRecall } from '../emergencyRecall/inputDisplayValues'
 import { validateVictimContactScheme } from '../victimContactScheme/formValidator'
 import { inputDisplayValuesVictimContactScheme } from '../victimContactScheme/inputDisplayValues'
 import { validateVictimLiaisonOfficer } from '../victimLiaisonOfficer/formValidator'
@@ -59,21 +57,22 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateManagerRecordDecision,
         inputDisplayValues: inputDisplayValuesManagerRecordDecision,
       }
-    case 'manager-view-decision':
-      return {
-        id: 'managerViewDecision',
-      }
+    // case 'manager-view-decision':
+    //   return {
+    //     id: 'managerViewDecision',
+    //   }
     case 'manager-record-decision-delius':
       // This one raises an ap insight event
       return {
         id: 'managerRecordDecisionDelius',
         validator: validateManagerRecordDecisionDelius,
       }
-    case 'manager-decision-confirmation':
-      return {
-        id: 'managerDecisionConfirmation',
-      }
+    // case 'manager-decision-confirmation':
+    //   return {
+    //     id: 'managerDecisionConfirmation',
+    //   }
     case 'recall-type-indeterminate':
+      // ALREADY MIGRATED
       return {
         id: 'recallTypeIndeterminate',
         validator: validateRecallTypeIndeterminate,
@@ -86,6 +85,7 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         inputDisplayValues: inputDisplayValuesIndeterminateDetails,
       }
     case 'recall-type':
+      // ALREADY MIGRATED
       return {
         id: 'recallType',
         validator: validateRecallType,
@@ -97,14 +97,14 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateFixedTermLicenceConditions,
         inputDisplayValues: inputDisplayValuesFixedTermLicenceConditions,
       }
-    case 'emergency-recall':
-      return {
-        id: 'emergencyRecall',
-        validator: validateEmergencyRecall,
-        inputDisplayValues: inputDisplayValuesEmergencyRecall,
-      }
+    // case 'emergency-recall':
+    //   return {
+    //     id: 'emergencyRecall',
+    //     validator: validateEmergencyRecall,
+    //     inputDisplayValues: inputDisplayValuesEmergencyRecall,
+    //   }
     case 'custody-status':
-      // THIS HAS ALREADY BEEN MIGRATED TO NEW FORMAT - left here because of unit tests on getRecommendationPage
+      // ALREADY MIGRATED
       return {
         id: 'custodyStatus',
         validator: validateCustodyStatus,
@@ -146,18 +146,18 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateArrestIssues,
         inputDisplayValues: inputDisplayValuesArrestIssues,
       }
-    case 'personal-details':
-      return {
-        id: 'personalDetails',
-        reviewedProperty: 'personOnProbation',
-        propertyToRefresh: 'personOnProbation',
-      }
-    case 'offence-details':
-      return {
-        id: 'offenceDetails',
-        reviewedProperty: 'convictionDetail',
-        propertyToRefresh: 'convictionDetail',
-      }
+    // case 'personal-details':
+    //   return {
+    //     id: 'personalDetails',
+    //     reviewedProperty: 'personOnProbation',
+    //     propertyToRefresh: 'personOnProbation',
+    //   }
+    // case 'offence-details':
+    //   return {
+    //     id: 'offenceDetails',
+    //     reviewedProperty: 'convictionDetail',
+    //     propertyToRefresh: 'convictionDetail',
+    //   }
     case 'previous-releases':
       return {
         id: 'previousReleases',
@@ -189,12 +189,12 @@ export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
         validator: validateOffenceAnalysis,
         inputDisplayValues: inputDisplayValuesOffenceAnalysis,
       }
-    case 'mappa':
-      return {
-        id: 'mappa',
-        reviewedProperty: 'mappa',
-        propertyToRefresh: 'mappa',
-      }
+    // case 'mappa':
+    //   return {
+    //     id: 'mappa',
+    //     reviewedProperty: 'mappa',
+    //     propertyToRefresh: 'mappa',
+    //   }
     case 'rosh':
       return {
         id: 'rosh',
