@@ -24,14 +24,16 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
   expectSoftly(contents, 'Offender: Full Name\n-->').to.contain(`Full name: ${context.fullName}`)
   expectSoftly(contents, 'Offender: Gender\n-->').to.contain(`Gender: ${context.gender}`)
   expectSoftly(contents, 'Offender: Date of birth\n-->').to.contain(
-    `Offender: Date of birth: ${formatIsoDateShort(context.dateOfBirth)}`
+    `Date of birth: ${formatIsoDateShort(context.dateOfBirth)}`
   )
   expectSoftly(contents, 'Offender: Ethnicity\n-->').to.match(apiDataForCrn.ethnicity as RegExp)
   expectSoftly(contents, 'Offender: CRO\n-->').to.match(apiDataForCrn.cro as RegExp)
   expectSoftly(contents, 'Offender: PNC\n-->').to.match(apiDataForCrn.pnc as RegExp)
   expectSoftly(contents, 'Offender: Prison Number\n-->').to.match(apiDataForCrn.prisonNo as RegExp)
   expectSoftly(contents, 'Offender: Noms\n-->').to.match(apiDataForCrn.noms as RegExp)
-  const lastReleaseDateFormatted = formatObjectDate(isoDateToObject(context.lastReleaseDate))
+  const lastReleaseDateFormatted = context.lastReleaseDate
+    ? formatObjectDate(isoDateToObject(context.lastReleaseDate))
+    : ''
   expectSoftly(contents, 'Offender: Last Release Details\n-->').to.contain(`Last release: ${lastReleaseDateFormatted}`)
   expectSoftly(contents, 'Offender: Previous Release\n-->').to.contain(
     `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
