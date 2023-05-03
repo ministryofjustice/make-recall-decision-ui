@@ -1,4 +1,4 @@
-import { defineStep, Then, When } from '@badeball/cypress-cucumber-preprocessor'
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { getTestDataPerEnvironment } from '../../utils'
 import { longDateMatchPattern } from '../../../cypress_shared/utils'
 
@@ -133,17 +133,17 @@ When('Maria reads the guidance on sensitive information', () => {
   cy.clickLink('Continue')
 })
 
-defineStep('Maria confirms {string} for indeterminate sentence', function (answer: string) {
+When('Maria confirms {string} for indeterminate sentence', function (answer: string) {
   cy.selectRadio(`Is ${this.offenderName} on an indeterminate sentence?`, answer)
   cy.clickButton('Continue')
 })
 
-defineStep('Maria confirms {string} for extended sentence', function (answer: string) {
+When('Maria confirms {string} for extended sentence', function (answer: string) {
   cy.selectRadio(`Is ${this.offenderName} on an extended sentence?`, answer)
   cy.clickButton('Continue')
 })
 
-defineStep('Maria recommends a {string} recall', (recallType: string) => {
+When('Maria recommends a {string} recall', (recallType: string) => {
   cy.selectRadio('What do you recommend?', `${recallType} recall`)
   if (recallType !== 'No') {
     const parent = recallType === 'Standard' ? '#conditional-recallType' : '#conditional-recallType-2'
@@ -176,7 +176,7 @@ When('Maria views the page Create a Part A form', () => {
   cy.pageHeading().should('contain', 'Create a Part A form')
 })
 
-defineStep('Maria confirms {string} to integrated offender management', function (answer: string) {
+When('Maria confirms {string} to integrated offender management', function (answer: string) {
   cy.clickLink(`Is ${this.offenderName} under Integrated Offender Management (IOM)?`)
   cy.selectRadio(`Is ${this.offenderName} under Integrated Offender Management (IOM)?`, answer)
   cy.clickButton('Continue')
@@ -191,7 +191,7 @@ When('Maria completes local police contact details', () => {
   cy.clickButton('Continue')
 })
 
-defineStep('Maria confirms {string} to victim contact scheme', (answer: string) => {
+When('Maria confirms {string} to victim contact scheme', (answer: string) => {
   cy.clickLink('Are there any victims in the victim contact scheme?')
   cy.selectRadio('Are there any victims in the victim contact scheme?', answer)
   cy.clickButton('Continue')
@@ -216,7 +216,7 @@ When('Maria enters an address where the person can be found', function () {
   cy.clickButton('Continue')
 })
 
-defineStep('Maria confirms {string} to a risk of contraband', function (answer: string) {
+When('Maria confirms {string} to a risk of contraband', function (answer: string) {
   cy.clickLink(`Do you think ${this.offenderName} is using recall to bring contraband into prison?`)
   cy.selectRadio(`Do you think ${this.offenderName} is using recall to bring contraband into prison?`, answer)
   if (answer === 'Yes') {
