@@ -19,7 +19,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
     .filter(status => status.active)
     .find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
-  if (!isSpoSignatureRequested) {
+  const isSpoSigned = statuses.filter(status => status.active).find(status => status.name === STATUSES.SPO_SIGNED)
+
+  if (!isSpoSignatureRequested && !isSpoSigned) {
     await updateStatuses({
       recommendationId,
       token,
