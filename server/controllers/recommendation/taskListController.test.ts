@@ -88,6 +88,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
     const next = mockNext()
@@ -108,6 +109,7 @@ describe('get', () => {
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.isSpo).toEqual(false)
   })
 
   it('present - task-list-no-recall if recall type set to NO_RECALL', async () => {
@@ -152,6 +154,7 @@ describe('get', () => {
       locals: {
         recommendation,
         flags: { flagTriggerWork: true },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
     const next = mockNext()
@@ -177,6 +180,7 @@ describe('get', () => {
       locals: {
         recommendation,
         flags: { flagTriggerWork: true },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
     const next = mockNext()
@@ -204,6 +208,7 @@ describe('get', () => {
       locals: {
         recommendation,
         flags: { flagTriggerWork: true },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
     const next = mockNext()
@@ -234,6 +239,7 @@ describe('get', () => {
       locals: {
         recommendation,
         flags: { flagTriggerWork: true },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
     const next = mockNext()
@@ -264,6 +270,7 @@ describe('get', () => {
       locals: {
         recommendation,
         flags: { flagTriggerWork: true },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
     const next = mockNext()
@@ -281,5 +288,20 @@ describe('get', () => {
     expect(res.locals.seniorManagerCountersignLink).toEqual(true)
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Completed')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('blue')
+  })
+  it('present - with spo role', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const recommendation = { ...recommendationTemplate }
+    const res = mockRes({
+      locals: {
+        recommendation,
+        flags: { flagTriggerWork: true },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
+      },
+    })
+    const next = mockNext()
+    await taskListController.get(mockReq(), res, next)
+
+    expect(res.locals.isSpo).toEqual(true)
   })
 })

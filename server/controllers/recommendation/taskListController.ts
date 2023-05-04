@@ -11,7 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
     urlInfo,
     flags: featureFlags,
-    user: { token },
+    user: { token, roles },
   } = res.locals
 
   const recallType = recommendation?.recallType?.selected?.value
@@ -23,7 +23,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   if (recallType === undefined) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
   }
-
+  const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   const completeness = taskCompleteness(recommendation, featureFlags)
 
   let lineManagerCountersignLink = false
@@ -86,6 +86,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'taskList',
     },
     recommendation,
+    isSpo,
     lineManagerCountersignLink,
     seniorManagerCountersignLink,
     lineManagerCountersignLabel,

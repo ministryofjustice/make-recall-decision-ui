@@ -7,7 +7,7 @@
             <span class="moj-task-list__task-name">
                 {% if lineManagerCountersignLink %}
                 <a aria-describedby='task-list-status-lineManagerSignature'
-                href="{{ changeLinkUrl({ pageUrlSlug: 'request-spo-countersign', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.lineManagerCounterSignature }}</a>
+                href="{{ changeLinkUrl({ pageUrlSlug: 'request-spo-countersign', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.requestLineManagerCounterSignature }}</a>
                 {% else %}
                 {{ pageHeadings.lineManagerCounterSignature }}
                 {% endif %}
@@ -18,7 +18,7 @@
             <span class="moj-task-list__task-name">
                 {% if seniorManagerCounterSignature %}
                 <a aria-describedby='task-list-status-seniorManagerSignature'
-                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.seniorManagerCounterSignature }}</a>
+                href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.requestSeniorManagerCounterSignature }}</a>
                 {% else %}
                 {{ pageHeadings.seniorManagerCounterSignature }}
                 {% endif %}

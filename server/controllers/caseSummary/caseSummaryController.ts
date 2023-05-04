@@ -114,7 +114,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           post: false,
           title: 'Countersign',
           dataAnalyticsEventCategory: 'spo_countersign_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/xyz`,
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/task-list`,
         }
       }
     } else {

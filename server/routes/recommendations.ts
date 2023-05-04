@@ -41,8 +41,10 @@ import reasonsNoRecallController from '../controllers/recommendation/reasonsNoRe
 import appointmentNoRecallController from '../controllers/recommendation/appointmentNoRecallController'
 import managerReviewController from '../controllers/recommendation/managerReviewController'
 import recommendationStatusCheck, {
+  and,
   not,
   or,
+  roleIsActive,
   StatusCheck,
   STATUSES,
   statusIsActive,
@@ -160,7 +162,23 @@ routeRecommendationPost('reasons-no-recall', reasonsNoRecallController.post, [HM
 routeRecommendationGet('appointment-no-recall', appointmentNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('appointment-no-recall', appointmentNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('task-list', taskListController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet(
+  'task-list',
+  taskListController.get,
+  [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
+  or(
+    not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
+    and(
+      roleIsActive(HMPPS_AUTH_ROLE.SPO),
+      or(
+        statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
+        statusIsActive(STATUSES.SPO_SIGNED),
+        statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
+        statusIsActive(STATUSES.ACO_SIGNED)
+      )
+    )
+  )
+)
 
 routeRecommendationGet('preview-no-recall', previewNoRecallLetterController.get, [HMPPS_AUTH_ROLE.PO])
 
