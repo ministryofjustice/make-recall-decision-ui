@@ -715,6 +715,111 @@ context('Make a recommendation', () => {
     })
   })
 
+  describe('SPO Countersignature Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ hasSpoRole: true })
+    })
+
+    it('present Countersigning section on task list for SPO - line manager signature requested', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: 'SPO_SIGNED', active: false },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+
+      cy.pageHeading().should('equal', 'Paula Smith Part A')
+
+      cy.getElement('Line manager countersignature Requested').should('exist')
+      cy.getElement('Senior manager countersignature Cannot start yet').should('exist')
+    })
+
+    it('present Countersigning section on task list for SPO - line manager signed', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: false },
+          { name: 'SPO_SIGNED', active: true },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+
+      cy.pageHeading().should('equal', 'Paula Smith Part A')
+
+      cy.getElement('Line manager countersignature Completed').should('exist')
+      cy.getElement('Senior manager countersignature To do').should('exist')
+    })
+
+    it('present Countersigning section on task list for SPO - senior manager requested', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: false },
+          { name: 'SPO_SIGNED', active: true },
+          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+
+      cy.pageHeading().should('equal', 'Paula Smith Part A')
+
+      cy.getElement('Line manager countersignature Completed').should('exist')
+      cy.getElement('Senior manager countersignature Requested').should('exist')
+    })
+
+    it('present Countersigning section on task list for SPO - senior manager signed', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: false },
+          { name: 'SPO_SIGNED', active: true },
+          { name: 'ACO_SIGNATURE_REQUESTED', active: false },
+          { name: 'ACO_SIGNED', active: true },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+
+      cy.pageHeading().should('equal', 'Paula Smith Part A')
+
+      cy.getElement('Line manager countersignature Completed').should('exist')
+      cy.getElement('Senior manager countersignature Completed').should('exist')
+    })
+  })
+
   describe('SPO Rationale Journey', () => {
     beforeEach(() => {
       cy.signIn({ hasSpoRole: true })

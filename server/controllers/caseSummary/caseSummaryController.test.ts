@@ -448,7 +448,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/xyz',
+      link: '/recommendations/1/task-list',
       post: false,
       title: 'Countersign',
     })
@@ -474,7 +474,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/xyz',
+      link: '/recommendations/1/task-list',
       post: false,
       title: 'Countersign',
     })
@@ -500,7 +500,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/xyz',
+      link: '/recommendations/1/task-list',
       post: false,
       title: 'Countersign',
     })
@@ -526,7 +526,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/xyz',
+      link: '/recommendations/1/task-list',
       post: false,
       title: 'Countersign',
     })
