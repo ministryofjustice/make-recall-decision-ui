@@ -50,23 +50,23 @@ async function get(req: Request, res: Response, next: NextFunction) {
     if (isAcoSigned) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
-      lineManagerCountersignLink = true
+      lineManagerCountersignLink = false
 
       seniorManagerCountersignStyle = 'blue'
       seniorManagerCountersignLabel = 'Completed'
-      seniorManagerCountersignLink = true
+      seniorManagerCountersignLink = false
       completeness.areAllComplete = true
     } else if (isAcoSignatureRequested) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
-      lineManagerCountersignLink = true
+      lineManagerCountersignLink = false
 
       seniorManagerCountersignLabel = 'Requested'
       seniorManagerCountersignLink = true
     } else if (isSpoSigned) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
-      lineManagerCountersignLink = true
+      lineManagerCountersignLink = false
 
       seniorManagerCountersignLabel = 'To do'
       seniorManagerCountersignLink = true

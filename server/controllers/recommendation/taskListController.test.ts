@@ -219,7 +219,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({ ...taskCompleteness, areAllComplete: false })
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
     expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
 
@@ -250,7 +250,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({ ...taskCompleteness, areAllComplete: false })
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
     expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
 
@@ -281,11 +281,11 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual(taskCompleteness)
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
     expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
 
-    expect(res.locals.seniorManagerCountersignLink).toEqual(true)
+    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Completed')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('blue')
   })
