@@ -12,18 +12,18 @@
                 {{ pageHeadings.lineManagerCounterSignature }}
                 {% endif %}
             </span>
-            <span id='task-list-status-lineManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
+            <span id='task-list-status-lineManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: requestLineManagerCounterSignature }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
-                {% if seniorManagerCounterSignature %}
+                {% if seniorManagerCountersignLink %}
                 <a aria-describedby='task-list-status-seniorManagerSignature'
                 href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.requestSeniorManagerCounterSignature }}</a>
                 {% else %}
                 {{ pageHeadings.seniorManagerCounterSignature }}
                 {% endif %}
             </span>
-            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: seniorManagerCountersignLabel }) }}</span>
+            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: requestSeniorManagerCounterSignature }) }}</span>
         </li>
     </ul>
 </li>
