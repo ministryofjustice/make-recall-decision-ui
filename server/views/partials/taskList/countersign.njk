@@ -12,7 +12,7 @@
                 {{ pageHeadings.requestLineManagerCounterSignature }}
                 {% endif %}
             </span>
-            <span id='task-list-status-lineManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: requestLineManagerCounterSignature }) }}</span>
+            <span id='task-list-status-lineManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
@@ -23,7 +23,7 @@
                 {{ pageHeadings.requestSeniorManagerCounterSignature }}
                 {% endif %}
             </span>
-            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: requestSeniorManagerCounterSignature }) }}</span>
+            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: seniorManagerCountersignLabel }) }}</span>
         </li>
     </ul>
 </li>
