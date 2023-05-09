@@ -9,7 +9,7 @@
                 <a aria-describedby='task-list-status-lineManagerSignature'
                 href="{{ changeLinkUrl({ pageUrlSlug: 'request-spo-countersign', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.requestLineManagerCounterSignature }}</a>
                 {% else %}
-                {{ pageHeadings.lineManagerCounterSignature }}
+                {{ pageHeadings.requestLineManagerCounterSignature }}
                 {% endif %}
             </span>
             <span id='task-list-status-lineManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: requestLineManagerCounterSignature }) }}</span>
@@ -20,7 +20,7 @@
                 <a aria-describedby='task-list-status-seniorManagerSignature'
                 href="{{ changeLinkUrl({ pageUrlSlug: 'xyz2', urlInfo: urlInfo, fromAnchor: 'countersign' }) }}">{{ pageHeadings.requestSeniorManagerCounterSignature }}</a>
                 {% else %}
-                {{ pageHeadings.seniorManagerCounterSignature }}
+                {{ pageHeadings.requestSeniorManagerCounterSignature }}
                 {% endif %}
             </span>
             <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: requestSeniorManagerCounterSignature }) }}</span>
