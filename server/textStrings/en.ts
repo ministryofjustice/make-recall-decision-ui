@@ -64,6 +64,7 @@ export const strings = {
     missingRosh: 'Select a RoSH level for the risk to',
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
     noDeletePreviousRecallIndex: 'Select a previous recall to delete',
+    missingManagerCountersignatureExposition: 'You must add a comment to confirm your countersignature',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -81,6 +82,8 @@ export const strings = {
     previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
+    managerCountersignature: 'Line manager countersignature',
+    countersigningTelephone: 'Enter your telephone number',
     spoRecallRationale: 'Explain the decision',
     spoRationaleConfirmation: 'Rationale Confirmation',
     spoRecordDecision: 'Record the decision in NDelius',
