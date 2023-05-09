@@ -61,6 +61,8 @@ import offenceDetailsController from '../controllers/recommendation/offenceDetai
 import mappaController from '../controllers/recommendation/mappaController'
 import managerViewDecisionController from '../controllers/recommendation/managerViewDecisionController'
 import managerDecisionConfirmationController from '../controllers/recommendation/managerDecisionConfirmationController'
+import countersigningTelephoneController from '../controllers/recommendation/countersigningTelephoneController'
+import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
 
 const recommendations = Router()
 
@@ -201,6 +203,22 @@ routeRecommendationGet('offence-details', offenceDetailsController.get, [HMPPS_A
 routeRecommendationGet('mappa', mappaController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationGet('manager-view-decision', managerViewDecisionController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationGet('manager-decision-confirmation', managerDecisionConfirmationController.get, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet(
+  'countersigning-telephone',
+  countersigningTelephoneController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
+)
+routeRecommendationPost('countersigning-telephone', countersigningTelephoneController.post, [HMPPS_AUTH_ROLE.SPO])
+
+routeRecommendationGet(
+  'manager-countersignature',
+  managerCountersignatureController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
+)
+routeRecommendationPost('manager-countersignature', managerCountersignatureController.post, [HMPPS_AUTH_ROLE.SPO])
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
+import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
@@ -11,30 +11,32 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token: user.token,
   })
 
-  const isSpoConsideringRecall = statuses
+  const isSpoSignatureRequested = statuses
     .filter(status => status.active)
-    .find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
+    .find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+
+  const mode = isSpoSignatureRequested ? 'SPO' : 'ACO'
 
   res.locals = {
     ...res.locals,
-    backLink: 'spo-task-list-consider-recall',
+    backLink: 'task-list',
     page: {
-      id: 'spoRecordDecision',
+      id: 'countersigningTelephone',
     },
-    editable: !!isSpoConsideringRecall,
-    recallType: recommendation.spoRecallType,
-    spoRecallRationale: recommendation.spoRecallRationale,
+    mode,
     inputDisplayValues: {
       errors: res.locals.errors,
+      value: mode === 'SPO' ? recommendation.countersignSpoTelephone : recommendation.countersignAcoTelephone,
     },
   }
-  res.render(`pages/recommendations/spoRecordDecision`)
+
+  res.render(`pages/recommendations/countersigningTelephone`)
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { sensitive } = req.body
+  const { telephone, mode } = req.body
 
   const {
     flags,
@@ -44,22 +46,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   await updateRecommendation({
     recommendationId,
-    valuesToSave: {
-      sensitive: !!sensitive,
-      sendSpoRationaleToDelius: true,
-    },
+    valuesToSave: mode === 'SPO' ? { countersignSpoTelephone: telephone } : { countersignAcoTelephone: telephone },
     token,
     featureFlags: flags,
   })
-
-  await updateStatuses({
-    recommendationId,
-    token,
-    activate: [],
-    deActivate: ['SPO_CONSIDERING_RECALL'],
-  })
-
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-rationale-confirmation', urlInfo }))
+  res.redirect(
+    303,
+    nextPageLinkUrl({ nextPageId: 'manager-countersignature', urlInfo: { ...urlInfo, fromPageId: undefined } })
+  )
 }
 
 export default { get, post }
