@@ -33,9 +33,13 @@
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
+                            {% if lineManagerCountersignLink %}
                                 <a aria-describedby='task-list-status-lineManagerCounterSignature'
                                 href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
                                 {{ pageHeadings.lineManagerCounterSignature }}</a>
+                            {% else %}
+                                {{ pageHeadings.lineManagerCounterSignature }}
+                            {% endif %}
                             </span>
                             <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
                         </li>

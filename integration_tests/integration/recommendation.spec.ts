@@ -1027,4 +1027,47 @@ context('Make a recommendation', () => {
       cy.getText('crn').should('contain', 'X12345')
     })
   })
+  describe('SPO Countersigning Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ hasSpoRole: true })
+    })
+
+    it('present telephone entry while contersigning', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+      cy.clickLink('Line manager countersignature')
+
+      cy.pageHeading().should('equal', 'Enter your telephone number')
+    })
+
+    it('present countersign exposition while contersigning', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
+      })
+
+      cy.visit(
+        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a&flagTriggerWork=1`
+      )
+
+      cy.pageHeading().should('equal', 'Enter your telephone number')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Line manager countersignature')
+    })
+  })
 })
