@@ -183,6 +183,83 @@ context('Make a recommendation', () => {
 
         cy.pageHeading().should('equal', 'What do you recommend?')
       })
+
+      it('present task-list for all items completed', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+        cy.getElement("Request line manager's countersignature To do").should('exist')
+        cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+      })
+
+      it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+        cy.getElement("Request line manager's countersignature Requested").should('exist')
+        cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+      })
+
+      it('present task-list for SPO_SIGNED', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+        cy.getElement("Request line manager's countersignature Completed").should('exist')
+        cy.getElement("Request senior manager's countersignature To do").should('exist')
+      })
+
+      it('present task-list for SPO_SIGNED and ACO_SIGNATURE_REQUESTED', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse },
+        })
+        cy.task('getStatuses', {
+          statusCode: 200,
+          response: [
+            { name: 'SPO_SIGNED', active: true },
+            { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+          ],
+        })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+        cy.getElement("Request line manager's countersignature Completed").should('exist')
+        cy.getElement("Request senior manager's countersignature Requested").should('exist')
+      })
+
+      it('present task-list for SPO_SIGNED and ACO_SIGNED', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse },
+        })
+        cy.task('getStatuses', {
+          statusCode: 200,
+          response: [
+            { name: 'SPO_SIGNED', active: true },
+            { name: 'ACO_SIGNED', active: true },
+          ],
+        })
+
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+        cy.getElement("Request line manager's countersignature Completed").should('exist')
+        cy.getElement("Request senior manager's countersignature Completed").should('exist')
+      })
     })
 
     describe('flagConsiderRecall is set', () => {
