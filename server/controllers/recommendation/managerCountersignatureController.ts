@@ -92,8 +92,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     })
   }
 
-  // TODO - AC3 - close SPO_SIGNATURE_REQUESTED and open SPO_SIGNED
-
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'xyz', urlInfo }))
 }
 
