@@ -19,12 +19,13 @@ async function get(req: Request, res: Response, next: NextFunction) {
     .find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
   const mode = isSpoSignatureRequested ? 'SPO' : 'ACO'
+  const pageId = isSpoSignatureRequested ? 'lineManagerCountersignature' : 'seniorManagerCountersignature'
 
   res.locals = {
     ...res.locals,
     backLink: 'countersigning-telephone',
     page: {
-      id: 'managerCountersignature',
+      id: pageId,
     },
     mode,
     inputDisplayValues: {

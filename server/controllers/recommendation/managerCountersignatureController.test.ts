@@ -16,7 +16,25 @@ describe('get', () => {
     const next = mockNext()
     await managerCountersignatureController.get(mockReq(), res, next)
 
-    expect(res.locals.page).toEqual({ id: 'managerCountersignature' })
+    expect(res.locals.page).toEqual({ id: 'lineManagerCountersignature' })
+    expect(res.locals.backLink).toEqual('countersigning-telephone')
+    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
+
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('load with no data for ACO', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: { crn: 'X123' },
+      },
+    })
+    const next = mockNext()
+    await managerCountersignatureController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'seniorManagerCountersignature' })
     expect(res.locals.backLink).toEqual('countersigning-telephone')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')

@@ -82,7 +82,8 @@ export const strings = {
     previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
-    managerCountersignature: 'Line manager countersignature',
+    lineManagerCountersignature: 'Line manager countersignature',
+    seniorManagerCountersignature: 'Senior manager countersignature',
     countersigningTelephone: 'Enter your telephone number',
     spoRecallRationale: 'Explain the decision',
     spoRationaleConfirmation: 'Rationale Confirmation',
