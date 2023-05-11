@@ -63,6 +63,7 @@ import managerViewDecisionController from '../controllers/recommendation/manager
 import managerDecisionConfirmationController from '../controllers/recommendation/managerDecisionConfirmationController'
 import countersigningTelephoneController from '../controllers/recommendation/countersigningTelephoneController'
 import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
+import requestAcoCountersignController from '../controllers/recommendation/requestAcoCountersignController'
 
 const recommendations = Router()
 
@@ -193,6 +194,13 @@ routeRecommendationGet(
   requestSpoCountersignController.get,
   [HMPPS_AUTH_ROLE.PO],
   not(statusIsActive(STATUSES.SPO_SIGNED))
+)
+
+routeRecommendationGet(
+  'request-aco-countersign',
+  requestAcoCountersignController.get,
+  [HMPPS_AUTH_ROLE.PO],
+  and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED)))
 )
 
 routeRecommendationGet('emergency-recall', emergencyRecallController.get, [HMPPS_AUTH_ROLE.PO])
