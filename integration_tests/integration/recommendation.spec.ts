@@ -195,6 +195,9 @@ context('Make a recommendation', () => {
 
         cy.getElement("Request line manager's countersignature To do").should('exist')
         cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+
+        cy.clickLink("Request line manager's countersignature")
+        cy.pageHeading().should('equal', 'Request countersignature')
       })
 
       it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
@@ -221,6 +224,9 @@ context('Make a recommendation', () => {
 
         cy.getElement("Request line manager's countersignature Completed").should('exist')
         cy.getElement("Request senior manager's countersignature To do").should('exist')
+
+        cy.clickLink("Request senior manager's countersignature")
+        cy.pageHeading().should('equal', 'Request countersignature')
       })
 
       it('present task-list for SPO_SIGNED and ACO_SIGNATURE_REQUESTED', () => {
