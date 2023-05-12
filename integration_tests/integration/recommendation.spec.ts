@@ -1038,7 +1038,7 @@ context('Make a recommendation', () => {
       cy.signIn({ hasSpoRole: true })
     })
 
-    it('present telephone entry while contersigning', () => {
+    it('present telephone entry while countersigning', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse },
@@ -1074,6 +1074,51 @@ context('Make a recommendation', () => {
       cy.clickButton('Continue')
 
       cy.pageHeading().should('equal', 'Line manager countersignature')
+    })
+  })
+  describe('ACO Countersigning Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ hasSpoRole: true })
+    })
+
+    it('present telephone entry while countersigning', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+      cy.clickLink('Senior manager countersignature')
+
+      cy.pageHeading().should('equal', 'Enter your telephone number')
+    })
+
+    it('present countersign exposition while countersigning', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(
+        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a&flagTriggerWork=1`
+      )
+
+      cy.pageHeading().should('equal', 'Enter your telephone number')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Senior manager countersignature')
     })
   })
 })
