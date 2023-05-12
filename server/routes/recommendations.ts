@@ -64,6 +64,7 @@ import managerDecisionConfirmationController from '../controllers/recommendation
 import countersigningTelephoneController from '../controllers/recommendation/countersigningTelephoneController'
 import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
 import requestAcoCountersignController from '../controllers/recommendation/requestAcoCountersignController'
+import countersignConfirmationController from '../controllers/recommendation/countersignConfirmationController'
 
 const recommendations = Router()
 
@@ -227,6 +228,13 @@ routeRecommendationGet(
   or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
 )
 routeRecommendationPost('manager-countersignature', managerCountersignatureController.post, [HMPPS_AUTH_ROLE.SPO])
+
+routeRecommendationGet(
+  'countersign-confirmation',
+  countersignConfirmationController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED))
+)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

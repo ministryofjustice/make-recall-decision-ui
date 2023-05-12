@@ -93,7 +93,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     })
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'xyz', urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'countersign-confirmation', urlInfo }))
 }
 
 export default { get, post }
