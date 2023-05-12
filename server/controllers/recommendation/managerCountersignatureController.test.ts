@@ -134,7 +134,7 @@ describe('post', () => {
       activate: ['SPO_SIGNED'],
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/xyz`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -175,7 +175,7 @@ describe('post', () => {
       activate: ['ACO_SIGNED'],
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/xyz`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 

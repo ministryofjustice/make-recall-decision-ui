@@ -142,5 +142,6 @@ export const strings = {
     reasonsForNoRecall: 'Why do you think {{ fullName }} should not be recalled?',
     nextAppointment: 'Next appointment for {{ fullName }}',
     previewNoRecallLetter: 'Preview the decision not to recall letter',
+    countersignConfirmation: 'Part A countersigned',
   },
 }
