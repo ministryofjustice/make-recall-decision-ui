@@ -12,14 +12,18 @@ async function get(req: Request, res: Response, next: NextFunction) {
     user: { token, roles },
   } = res.locals
 
-  const statuses = await getStatuses({
-    recommendationId,
-    token,
-  })
+  const statuses = (
+    await getStatuses({
+      recommendationId,
+      token,
+    })
+  ).filter(status => status.active)
 
-  const isSpoConsiderRecall = statuses
-    .filter(status => status.active)
-    .find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
+  const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
+  const isSpoConsideringRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
+
+  const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+  const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
 
@@ -34,8 +38,15 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   let nextPageId
   const recallType = recommendation?.recallType?.selected?.value
+
   if (isSpo) {
-    nextPageId = 'spo-task-list-consider-recall'
+    if (isSpoConsiderRecall || isSpoConsideringRecall) {
+      nextPageId = 'spo-task-list-consider-recall'
+    } else if (isSpoSignatureRequested || isAcoSignatureRequested) {
+      nextPageId = 'task-list'
+    } else {
+      nextPageId = 'spo-task-list-consider-recall'
+    }
   } else if (!isDefined(recallType)) {
     if (flagTriggerWork) {
       nextPageId = 'task-list-consider-recall'
