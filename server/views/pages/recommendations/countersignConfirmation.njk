@@ -28,7 +28,9 @@
             </div>
 
             <h1 class="govuk-heading-m">What happens next</h1>
-            <p class='govuk-body'>Ask your senior manager to countersign this Part A:</p>
+
+            {% if not isAcoSignatureRequested %}
+            <p data-qa="exposition" class='govuk-body'>Ask your senior manager to countersign this Part A:</p>
             <ol class='govuk-list govuk-list--number'>
                 <li>
                     <p class='govuk-body'>Copy this link:</p>
@@ -47,7 +49,12 @@
                     <p class='govuk-body'>Send it to your senior manager.</p>
                 </li>
             </ol>
-             <p class="govuk-body">
+
+            {% else %}
+                <p data-qa="exposition" class='govuk-body'>Tell the probation officer that you've countersigned the Part A.  They can then
+                create the Part A.</p>
+            {% endif %}
+            <p class="govuk-body">
                 <a href="{{urlInfo.pageBase}}task-list" class="govuk-link">Return to Part A</a>
             </p>
         </div>
