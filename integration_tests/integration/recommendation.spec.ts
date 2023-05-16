@@ -1075,6 +1075,25 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Line manager countersignature')
     })
+    it('present countersign confirmation', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNED', active: true },
+          { name: 'ACO_SIGNATURE_REQUESTED', active: false },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/countersign-confirmation?flagTriggerWork=1`)
+
+      cy.pageHeading().should('contains', 'Part A countersigned')
+
+      cy.getText('exposition').should('contain', 'Ask your senior manager to countersign this Part A:')
+    })
   })
   describe('ACO Countersigning Journey', () => {
     beforeEach(() => {
@@ -1119,6 +1138,25 @@ context('Make a recommendation', () => {
       cy.clickButton('Continue')
 
       cy.pageHeading().should('equal', 'Senior manager countersignature')
+    })
+    it('present countersign confirmation', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'ACO_SIGNED', active: true },
+          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/countersign-confirmation?flagTriggerWork=1`)
+
+      cy.pageHeading().should('contains', 'Part A countersigned')
+
+      cy.getText('exposition').should('contain', "Tell the probation officer that you've countersigned the Part A.")
     })
   })
 })

@@ -77,6 +77,7 @@ describe('get', () => {
 
     expect(updateStatuses).not.toHaveBeenCalled()
 
+    expect(res.locals.isAcoSignatureRequested).toEqual(true)
     expect(res.locals.page).toEqual({ id: 'countersignConfirmation' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/countersignConfirmation')
     expect(res.locals.recommendation).toEqual(recommendation)
