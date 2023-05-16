@@ -18,6 +18,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   ).filter(status => status.active)
 
   const isSpoSigned = !!statuses.find(status => status.name === STATUSES.SPO_SIGNED)
+  const isAcoSigned = !!statuses.find(status => status.name === STATUSES.ACO_SIGNED)
   const isAcoSignatureRequested = !!statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
   if (isSpoSigned && !isAcoSignatureRequested) {
@@ -30,7 +31,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.locals = {
-    isAcoSignatureRequested,
+    isAcoSigned,
     ...res.locals,
     backLink: 'manager-countersignature',
     page: {
