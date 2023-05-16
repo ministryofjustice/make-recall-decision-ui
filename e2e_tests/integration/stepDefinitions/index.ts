@@ -11,21 +11,19 @@ export const crns = {
   4: Cypress.env('CRN4') || 'X487027',
   5: Cypress.env('CRN5') || 'X476202',
 }
-
-// ==================================== Recall
-
-const defaultStartPath = (crnNum: string) => {
-  const crnToUse = crns[crnNum]
-  return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
-}
-
-const deleteOldRecommendation = () => {
+export const deleteOldRecommendation = () => {
   cy.clickLink('Recommendations')
   cy.get('body').then($body => {
     if ($body.find('[data-qa="delete-recommendation"]').length) {
       cy.clickButton('Delete')
     }
   })
+}
+// ==================================== Recall
+
+const defaultStartPath = (crnNum: string) => {
+  const crnToUse = crns[crnNum]
+  return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {

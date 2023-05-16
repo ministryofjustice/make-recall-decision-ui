@@ -164,6 +164,14 @@ Cypress.Commands.add('selectRadio', (groupLabel, value, opts = { parent: 'body' 
       cy.wrap($fieldset).contains('label', value).click()
     })
 })
+Cypress.Commands.add('selectRadioByValue', (groupLabel, value, opts = { parent: 'body' }) => {
+  cy.get(opts.parent)
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      cy.wrap($fieldset).get(`input[value='${value}']`).click()
+    })
+})
 
 Cypress.Commands.add('getSelectableOptionByLabel', (groupLabel, value, opts = {}) => {
   return cy
@@ -227,3 +235,13 @@ Cypress.Commands.add('interceptGoogleAnalyticsEvent', (query, id) => {
 Cypress.Commands.add('getDateAttribute', propertyName =>
   cy.getElement({ qaAttr: propertyName }).invoke('attr', 'data-date')
 )
+
+Cypress.Commands.add('getTextFromClipboard', () =>
+  cy
+    .window()
+    .its('navigator.clipboard')
+    .invoke('readText')
+    .then(text => text)
+)
+
+Cypress.Commands.add('logPageTitle', pageTitle => cy.log(`On page "${pageTitle}"`))

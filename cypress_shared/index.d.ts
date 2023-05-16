@@ -24,11 +24,15 @@ declare global {
 
       getText(qaAttr: string, opts?: CommandOpts): Chainable<string>
 
+      getTextFromClipboard(): Chainable<string>
+
       getListLabels(labelQaAttr: string, opts?: CommandOpts): Chainable<string[]>
 
       fillInput(label: string, val: string, opts?: CommandOpts): Chainable<Element>
 
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
+
+      selectRadioByValue(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
 
       getSelectableOptionByLabel(groupLabel: string, val: string, opts?: CommandOpts): Chainable<JQuery<HTMLElement>>
 
@@ -72,6 +76,8 @@ declare global {
       downloadDocX(linkText: string): Chainable<string>
 
       readBase64File(fileName: string): Chainable<string>
+
+      logPageTitle(pageTitle: string): Chainable<void>
     }
   }
 }
