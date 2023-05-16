@@ -48,6 +48,7 @@ describe('get', () => {
   it('present for SPO_SIGNED with ACO_SIGNATURE_REQUESTED set', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
       { name: STATUSES.SPO_SIGNED, active: true },
+      { name: STATUSES.ACO_SIGNED, active: true },
       { name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true },
     ])
     const recommendation = {
@@ -77,7 +78,7 @@ describe('get', () => {
 
     expect(updateStatuses).not.toHaveBeenCalled()
 
-    expect(res.locals.isAcoSignatureRequested).toEqual(true)
+    expect(res.locals.isAcoSigned).toEqual(true)
     expect(res.locals.page).toEqual({ id: 'countersignConfirmation' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/countersignConfirmation')
     expect(res.locals.recommendation).toEqual(recommendation)
