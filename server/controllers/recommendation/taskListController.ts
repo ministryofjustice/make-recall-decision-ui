@@ -33,6 +33,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let lineManagerCountersignStyle = 'grey'
   let seniorManagerCountersignStyle = 'grey'
 
+  let isAcoSigned = false
   if (completeness.areAllComplete && featureFlags.flagTriggerWork) {
     completeness.areAllComplete = false
     const statuses = (
@@ -42,10 +43,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
       })
     ).filter(status => status.active)
 
-    const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
-    const isSpoSigned = statuses.find(status => status.name === STATUSES.SPO_SIGNED)
-    const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
-    const isAcoSigned = statuses.find(status => status.name === STATUSES.ACO_SIGNED)
+    const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+    const isSpoSigned = !!statuses.find(status => status.name === STATUSES.SPO_SIGNED)
+    const isAcoSignatureRequested = !!statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
+    isAcoSigned = !!statuses.find(status => status.name === STATUSES.ACO_SIGNED)
 
     if (isAcoSigned) {
       lineManagerCountersignStyle = 'blue'
@@ -87,6 +88,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     recommendation,
     isSpo,
+    isAcoSigned,
     lineManagerCountersignLink,
     seniorManagerCountersignLink,
     lineManagerCountersignLabel,
