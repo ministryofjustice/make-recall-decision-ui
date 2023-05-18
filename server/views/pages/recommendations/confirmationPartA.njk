@@ -29,24 +29,13 @@
 
                 <ol class='govuk-list govuk-list--number'>
                     <li>
-                        <p class='govuk-body'>
-                            <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>
-                                Download the Part A.</a>
-                        </p>
-
+                        <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>
+                            Download the Part A.</a>
                     </li>
-                    <li>
-                        <p class='govuk-body'>Double-check that everything is correct.</p>
-                    </li>
-                    <li>
-                        <p class='govuk-body'>Fill in any missing details from question 25 onwards.</p>
-                    </li>
-                    <li>
-                        <p class='govuk-body'>Upload the Part A to NDelius.</p>
-                    </li>
-                    <li>
-                        <p class='govuk-body'>Update OASys with any new risk information.</p>
-                    </li>
+                    <li>Double-check that everything is correct.</li>
+                    <li>Fill in any missing details from question 25 onwards.</li>
+                    <li>Upload the Part A to NDelius.</li>
+                    <li>Update OASys with any new risk information.</li>
                 </ol>
                 <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a></p>
 
