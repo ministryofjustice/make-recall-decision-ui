@@ -274,8 +274,8 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
 }
 
 Given('a PO has created a recommendation to recall with:', (dataTable: DataTable) => {
-  const crn = crns[faker.helpers.arrayElement(Object.keys(crns))]
-  // const crn = crns[1]
+  // const crn = crns[faker.helpers.arrayElement(Object.keys(crns))]
+  const crn = crns[1]
   makeRecommendation(crn, dataTable.rowsHash())
 })
 
