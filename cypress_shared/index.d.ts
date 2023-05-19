@@ -38,6 +38,8 @@ declare global {
 
       selectCheckboxes(groupLabel: string, values: string[], opts?: CommandOpts): Chainable<Element>
 
+      selectCheckboxesByValue(groupLabel: string, values: string[], opts?: CommandOpts): Chainable<Element>
+
       getTextInputValue(label: string, opts?: CommandOpts): Chainable<string>
 
       enterDateTime(

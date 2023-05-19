@@ -19,6 +19,15 @@ export const deleteOldRecommendation = () => {
     }
   })
 }
+
+export const openApp = (queryParams: object, isSpoUser?: boolean, newUrl?: string) => {
+  let queryParameters = ''
+  Object.keys(queryParams).forEach(keyName => {
+    queryParameters = `${queryParameters + keyName}=${queryParams[keyName]}&`
+  })
+  cy.log(`queryParameters--> ${queryParameters}`)
+  cy.visitPage(`${newUrl || ''}?${queryParameters}`, isSpoUser || false)
+}
 // ==================================== Recall
 
 const defaultStartPath = (crnNum: string) => {

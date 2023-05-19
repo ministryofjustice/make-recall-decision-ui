@@ -144,6 +144,15 @@ Cypress.Commands.add('selectCheckboxes', (groupLabel, values, opts = {}) => {
     })
 })
 
+Cypress.Commands.add('selectCheckboxesByValue', (groupLabel, values, opts = {}) => {
+  cy.get(opts.parent || 'body')
+    .contains('legend', groupLabel)
+    .parent('fieldset')
+    .then($fieldset => {
+      values.forEach(value => cy.wrap($fieldset).get(`input[value='${value}']`).click())
+    })
+})
+
 Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
   return cy.getElement({ qaAttr: 'contact-count' }).then($els =>
     Cypress.$.makeArray($els)
