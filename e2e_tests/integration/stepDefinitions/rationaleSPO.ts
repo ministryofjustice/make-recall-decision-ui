@@ -108,5 +108,32 @@ Then('user is unable to access the page after decision is recorded', function ()
   cy.visit(this.spoCounterSignatureLink)
 })
 When('SPO records a {string} decision', function (decision: string) {
+  cy.wrap(decision).as('spoDecision')
   recordSpoDecision.call(this, false, decision.trim().replace(/\s/g, '_').toUpperCase())
+})
+Then('a confirmation of the {word} is shown to SPO', function (confirmationPage: string) {
+  cy.get('#main-content')
+    .invoke('text')
+    .then(innerText => {
+      expectSoftly(innerText).to.contain(
+        // eslint-disable-next-line no-nested-ternary
+        confirmationPage === 'countersigning'
+          ? 'Part A countersigned'
+          : this.spoDecision === 'RECALL'
+          ? 'Decision to recall'
+          : 'Decision not to recall'
+      )
+      expectSoftly(innerText).to.contain(this.offenderName)
+      expectSoftly(innerText).to.contain(this.crn)
+    })
+})
+
+Then('SPO countersigns', function () {
+  cy.clickLink('Return to overview')
+  cy.clickLink('Countersign')
+  cy.clickLink('Line manager countersignature')
+  cy.clickButton('Continue')
+  this.spoCounterSignatureReason = faker.hacker.phrase()
+  cy.get('#value').type(this.spoCounterSignatureReason)
+  cy.clickButton('Countersign')
 })
