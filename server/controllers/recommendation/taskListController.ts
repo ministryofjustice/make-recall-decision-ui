@@ -11,7 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
     urlInfo,
     flags: featureFlags,
-    user: { token },
+    user: { token, roles },
   } = res.locals
 
   const recallType = recommendation?.recallType?.selected?.value
@@ -23,7 +23,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   if (recallType === undefined) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
   }
-
+  const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   const completeness = taskCompleteness(recommendation, featureFlags)
 
   let lineManagerCountersignLink = false
@@ -33,6 +33,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let lineManagerCountersignStyle = 'grey'
   let seniorManagerCountersignStyle = 'grey'
 
+  let isAcoSigned = false
   if (completeness.areAllComplete && featureFlags.flagTriggerWork) {
     completeness.areAllComplete = false
     const statuses = (
@@ -42,31 +43,31 @@ async function get(req: Request, res: Response, next: NextFunction) {
       })
     ).filter(status => status.active)
 
-    const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
-    const isSpoSigned = statuses.find(status => status.name === STATUSES.SPO_SIGNED)
-    const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
-    const isAcoSigned = statuses.find(status => status.name === STATUSES.ACO_SIGNED)
+    const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+    const isSpoSigned = !!statuses.find(status => status.name === STATUSES.SPO_SIGNED)
+    const isAcoSignatureRequested = !!statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
+    isAcoSigned = !!statuses.find(status => status.name === STATUSES.ACO_SIGNED)
 
     if (isAcoSigned) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
-      lineManagerCountersignLink = true
+      lineManagerCountersignLink = false
 
       seniorManagerCountersignStyle = 'blue'
       seniorManagerCountersignLabel = 'Completed'
-      seniorManagerCountersignLink = true
+      seniorManagerCountersignLink = false
       completeness.areAllComplete = true
     } else if (isAcoSignatureRequested) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
-      lineManagerCountersignLink = true
+      lineManagerCountersignLink = false
 
       seniorManagerCountersignLabel = 'Requested'
       seniorManagerCountersignLink = true
     } else if (isSpoSigned) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
-      lineManagerCountersignLink = true
+      lineManagerCountersignLink = false
 
       seniorManagerCountersignLabel = 'To do'
       seniorManagerCountersignLink = true
@@ -86,6 +87,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'taskList',
     },
     recommendation,
+    isSpo,
+    isAcoSigned,
     lineManagerCountersignLink,
     seniorManagerCountersignLink,
     lineManagerCountersignLabel,

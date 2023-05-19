@@ -41,8 +41,10 @@ import reasonsNoRecallController from '../controllers/recommendation/reasonsNoRe
 import appointmentNoRecallController from '../controllers/recommendation/appointmentNoRecallController'
 import managerReviewController from '../controllers/recommendation/managerReviewController'
 import recommendationStatusCheck, {
+  and,
   not,
   or,
+  roleIsActive,
   StatusCheck,
   STATUSES,
   statusIsActive,
@@ -59,6 +61,10 @@ import offenceDetailsController from '../controllers/recommendation/offenceDetai
 import mappaController from '../controllers/recommendation/mappaController'
 import managerViewDecisionController from '../controllers/recommendation/managerViewDecisionController'
 import managerDecisionConfirmationController from '../controllers/recommendation/managerDecisionConfirmationController'
+import countersigningTelephoneController from '../controllers/recommendation/countersigningTelephoneController'
+import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
+import requestAcoCountersignController from '../controllers/recommendation/requestAcoCountersignController'
+import countersignConfirmationController from '../controllers/recommendation/countersignConfirmationController'
 
 const recommendations = Router()
 
@@ -160,7 +166,23 @@ routeRecommendationPost('reasons-no-recall', reasonsNoRecallController.post, [HM
 routeRecommendationGet('appointment-no-recall', appointmentNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('appointment-no-recall', appointmentNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('task-list', taskListController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet(
+  'task-list',
+  taskListController.get,
+  [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
+  or(
+    not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
+    and(
+      roleIsActive(HMPPS_AUTH_ROLE.SPO),
+      or(
+        statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
+        statusIsActive(STATUSES.SPO_SIGNED),
+        statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
+        statusIsActive(STATUSES.ACO_SIGNED)
+      )
+    )
+  )
+)
 
 routeRecommendationGet('preview-no-recall', previewNoRecallLetterController.get, [HMPPS_AUTH_ROLE.PO])
 
@@ -175,6 +197,13 @@ routeRecommendationGet(
   not(statusIsActive(STATUSES.SPO_SIGNED))
 )
 
+routeRecommendationGet(
+  'request-aco-countersign',
+  requestAcoCountersignController.get,
+  [HMPPS_AUTH_ROLE.PO],
+  and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED)))
+)
+
 routeRecommendationGet('emergency-recall', emergencyRecallController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('emergency-recall', emergencyRecallController.post, [HMPPS_AUTH_ROLE.PO])
 
@@ -183,6 +212,29 @@ routeRecommendationGet('offence-details', offenceDetailsController.get, [HMPPS_A
 routeRecommendationGet('mappa', mappaController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationGet('manager-view-decision', managerViewDecisionController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationGet('manager-decision-confirmation', managerDecisionConfirmationController.get, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet(
+  'countersigning-telephone',
+  countersigningTelephoneController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
+)
+routeRecommendationPost('countersigning-telephone', countersigningTelephoneController.post, [HMPPS_AUTH_ROLE.SPO])
+
+routeRecommendationGet(
+  'manager-countersignature',
+  managerCountersignatureController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
+)
+routeRecommendationPost('manager-countersignature', managerCountersignatureController.post, [HMPPS_AUTH_ROLE.SPO])
+
+routeRecommendationGet(
+  'countersign-confirmation',
+  countersignConfirmationController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED))
+)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

@@ -72,14 +72,24 @@ context('Recommendation - task list', () => {
     cy.clickLink('Create Part A')
   })
 
-  it('task list - Completed - determinate sentence', () => {
+  it('task list - Completed - determinate sentence not extended', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...completeRecommendationResponse, isIndeterminateSentence: false },
+      response: { ...completeRecommendationResponse, isIndeterminateSentence: false, isExtendedSentence: false },
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
+  })
+
+  it('task list - Completed - determinate sentence is extended', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
+    })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getElement('Type of indeterminate sentence').should('not.exist')
+    cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('exist')
   })
 
   it('task list - To do - not in custody', () => {

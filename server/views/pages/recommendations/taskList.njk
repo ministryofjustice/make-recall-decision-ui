@@ -14,22 +14,79 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-            <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
-                    Complete the following sections of the Part A form. You can do this in any order.
-            </p>
+
+            {% if flagTriggerWork %}
+                {% if isSpo %}
+                    <p class='govuk-body'>CRN: {{ recommendation.crn }}</p>
+                    <h1 class='govuk-heading-l'>Part A for {{ recommendation.personOnProbation.name }}</h1>
+                {% else %}
+                    <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                    <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
+                            Complete the following sections of the Part A form. You can do this in any order.
+                    </p>
+                    {% if taskCompleteness.areAllComplete %}
+                        <p class='govuk-body'>
+                            {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
+                            sensitive language in the form.
+                        </p>
+                        <div>
+                            <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
+                        </div>
+
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
+                        Complete the following sections of the Part A form. You can do this in any order.
+                </p>
+            {% endif %}
             <ol class="moj-task-list govuk-!-margin-top-8">
+                {% if flagTriggerWork and isSpo %}
+                <li>
+                    <h2 class="moj-task-list__section" id='countersign-part-a'>
+                        Countersign the Part A
+                    </h2>
+                    <ul class="moj-task-list__items">
+                        <li class="moj-task-list__item">
+                            <span class="moj-task-list__task-name">
+                            {% if lineManagerCountersignLink %}
+                                <a aria-describedby='task-list-status-lineManagerCounterSignature'
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
+                                {{ pageHeadings.lineManagerCounterSignature }}</a>
+                            {% else %}
+                                {{ pageHeadings.lineManagerCounterSignature }}
+                            {% endif %}
+                            </span>
+                            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
+                        </li>
+                        <li class="moj-task-list__item">
+                            <span class="moj-task-list__task-name">
+                            {% if seniorManagerCountersignLink %}
+                                <a aria-describedby='task-list-status-seniorManagerCounterSignature'
+                                href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
+                                {{ pageHeadings.seniorManagerCounterSignature }}</a>
+                            {% else %}
+                                {{ pageHeadings.seniorManagerCounterSignature }}
+                            {% endif %}
+                            </span>
+                            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: seniorManagerCountersignLabel }) }}</span>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+
                 {% include '../../partials/taskList/recommendation.njk' %}
                 {% include '../../partials/taskList/circumstances.njk' %}
                 {% include '../../partials/taskList/personalDetails.njk' %}
                 {% include '../../partials/taskList/vulnerabilitiesVictimLiaison.njk' %}
                 {% include '../../partials/taskList/custody.njk' %}
                 {% include '../../partials/taskList/riskProfile.njk' %}
-                {% if flagTriggerWork %}
+                {% if flagTriggerWork and not isSpo %}
                 {% include '../../partials/taskList/countersign.njk' %}
                 {% endif %}
             </ol>
-            {% if taskCompleteness.areAllComplete == true %}
+            {% if not flagTriggerWork and taskCompleteness.areAllComplete == true %}
             <div>
                 <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
             </div>
