@@ -27,7 +27,7 @@ describe('validateReasonsForNoRecall', () => {
         noRecallRationale: 'details',
         popProgressMade: 'details',
         popThoughts: 'details',
-        futureExpectations: 'details',
+        futureExpectations: 'detailstest',
       },
     })
     expect(nextPagePath).toEqual('/recommendations/34/appointment-no-recall')

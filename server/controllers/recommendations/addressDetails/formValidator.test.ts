@@ -30,7 +30,7 @@ describe('validateAddress', () => {
         crn: 'X34534',
       }
       const { valuesToSave } = await validateAddress({ requestBody, recommendationId })
-      expect(valuesToSave).toHaveProperty('isMainAddressWherePersonCanBeFound.details', '')
+      expect(valuesToSave).toHaveProperty('isMainAddressWherePersonCanBeFound.details', 'Details...')
     })
 
     it('returns valuesToSave and no errors if Yes selected, and resets details', async () => {
