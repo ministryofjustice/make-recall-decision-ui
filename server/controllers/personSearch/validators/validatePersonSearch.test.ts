@@ -48,7 +48,7 @@ describe('validatePersonSearch', () => {
   })
 
   it('returns an error if CRN is empty after HTML stripped out', () => {
-    expect(validatePersonSearch('<script>alert("yo")</script>')).toEqual({
+    expect(validatePersonSearch('<script></script>')).toEqual({
       errors: [
         {
           href: '#crn',

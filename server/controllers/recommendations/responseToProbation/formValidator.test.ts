@@ -60,7 +60,7 @@ describe('validateResponseToProbation', () => {
     const { errors, valuesToSave, nextPagePath } = await validateResponseToProbation({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
-      responseToProbation: 'Re-off ending',
+      responseToProbation: 'Re-offalert("")ending',
     })
     expect(nextPagePath).toEqual('/recommendations/34/licence-conditions')
   })

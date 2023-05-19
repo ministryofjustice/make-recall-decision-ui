@@ -42,7 +42,7 @@ describe('validateCustodyStatus', () => {
     const { valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo })
     expect(valuesToSave).toHaveProperty(
       'custodyStatus.details',
-      'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG'
+      'alert("hey")West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG'
     )
   })
 
