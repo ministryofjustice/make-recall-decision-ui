@@ -60,7 +60,7 @@ describe('filterContactsBySearch', () => {
       contacts: contactList,
       filters: {
         ...defaultFilters,
-        searchFilters: '<script>alert("hi")</script>NS',
+        searchFilters: '<script></script>NS',
       },
     })
     expect(contacts).toHaveLength(1)

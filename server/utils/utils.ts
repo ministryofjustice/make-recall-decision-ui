@@ -1,5 +1,6 @@
 import qs from 'qs'
-import { stripHtml } from 'string-strip-html'
+
+import striptags from 'striptags'
 import config from '../config'
 import { Address, UserAccessResponse } from '../@types/make-recall-decision-api'
 
@@ -162,9 +163,5 @@ export function isMandatoryTextValue(val: unknown): boolean {
 export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()
 
 export const stripHtmlTags = (str: string): string => {
-  return isString(str)
-    ? stripHtml(str, {
-        stripTogetherWithTheirContents: ['script', 'style', 'xml'],
-      }).result
-    : str
+  return isString(str) ? striptags(str) : str
 }
