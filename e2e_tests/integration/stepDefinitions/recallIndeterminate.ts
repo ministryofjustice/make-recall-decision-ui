@@ -1,4 +1,5 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor'
+import { proxy } from '@alfonso-presa/soft-assert'
 import {
   q12MappaDetails,
   q15RoshLevels,
@@ -13,7 +14,10 @@ import {
   q6CustodyStatus,
   q7Addresses,
   q8ArrestIssues,
+  assertAllPartA,
 } from './assertionsPartA'
+
+const expectSoftly = proxy(expect)
 
 When('Maria confirms the person is on a IPP sentence', function () {
   cy.selectRadio(
@@ -60,38 +64,38 @@ When('Maria downloads the Part A and confirms the indeterminate recall', functio
     q5SentenceDetails(contents, context)
     q6CustodyStatus(contents, 'No')
     cy.log('Q7')
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain(
       'Provide any other possible addresses: Police can find this person at: 123 Acacia Avenue, Birmingham B23 1AV'
     )
     q8ArrestIssues(contents, 'Yes', 'Arrest issues details...')
     cy.log('Q9')
-    expect(contents).to.contain('Police single point of contact name: Bob Wiggins')
-    expect(contents).to.contain('Current contact telephone number: 07936 737 387')
-    expect(contents).to.contain('Fax number:  0208 737 3838')
-    expect(contents).to.contain('Email address: bob.wiggins@met.gov.uk')
+    expectSoftly(contents).to.contain('Police single point of contact name: Bob Wiggins')
+    expectSoftly(contents).to.contain('Current contact telephone number: 07936 737 387')
+    expectSoftly(contents).to.contain('Fax number:  0208 737 3838')
+    expectSoftly(contents).to.contain('Email address: bob.wiggins@met.gov.uk')
 
     cy.log('Q10')
-    expect(contents).to.contain('Relationship breakdown')
-    expect(contents).to.contain('Details on relationship breakdown')
-    expect(contents).to.contain('Physical disabilities')
-    expect(contents).to.contain('Details on physical disabilities')
+    expectSoftly(contents).to.contain('Relationship breakdown')
+    expectSoftly(contents).to.contain('Details on relationship breakdown')
+    expectSoftly(contents).to.contain('Physical disabilities')
+    expectSoftly(contents).to.contain('Details on physical disabilities')
 
     cy.log('Q11')
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain(
       'Do you have any suspicions that the offender is using recall to bring contraband into the prison estate? Yes'
     )
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain(
       'If yes, provide details and contact your local police SPOC to share information or concerns: Contraband details...'
     )
     cy.log('Q12')
     q12MappaDetails(contents)
     cy.log('Q13')
-    expect(contents).to.contain('Registered PPO/IOM: Yes')
+    expectSoftly(contents).to.contain('Registered PPO/IOM: Yes')
     cy.log('Q14')
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain(
       'Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? Yes'
     )
-    expect(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
+    expectSoftly(contents).to.contain('Confirm the date the VLO was informed of the above: 14 April 2022')
 
     cy.log('Q15')
     q15RoshLevels(contents)
@@ -100,29 +104,32 @@ When('Maria downloads the Part A and confirms the indeterminate recall', functio
     q16IndexOffenceDetails(contents)
     // TODO - Q18 - additional licence conditions
     cy.log('Q19')
-    expect(contents).to.contain('Increasingly violent behaviour')
+    expectSoftly(contents).to.contain('Increasingly violent behaviour')
     cy.log('Q20')
-    expect(contents).to.contain('Re-offending has occurred')
+    expectSoftly(contents).to.contain('Re-offending has occurred')
     cy.log('Q21')
-    expect(contents).to.contain('Details on reporting')
-    expect(contents).to.contain('Details on drug testing')
+    expectSoftly(contents).to.contain('Details on reporting')
+    expectSoftly(contents).to.contain('Details on drug testing')
 
     q22RecallType(contents, 'N/A', 'N/A')
     cy.log('Q23')
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain(
       'Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes'
     )
-    expect(contents).to.contain('Please Comment: Details on behaviour similar to index offence')
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain('Please Comment: Details on behaviour similar to index offence')
+    expectSoftly(contents).to.contain(
       'Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence? Yes'
     )
-    expect(contents).to.contain('Please Comment: Details on behaviour that could lead to a sexual or violent offence')
-    expect(contents).to.contain(
+    expectSoftly(contents).to.contain(
+      'Please Comment: Details on behaviour that could lead to a sexual or violent offence'
+    )
+    expectSoftly(contents).to.contain(
       'Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise? Yes'
     )
-    expect(contents).to.contain('Please Comment: Details on out of touch')
+    expectSoftly(contents).to.contain('Please Comment: Details on out of touch')
     cy.log('Q25')
     q25ProbationDetails(contents)
+    assertAllPartA()
   })
 })
 
@@ -134,6 +141,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall with deta
     q5SentenceDetails(contents, ctx)
     q12MappaDetails(contents)
     q16IndexOffenceDetails(contents)
+    assertAllPartA()
   })
 })
 
@@ -142,6 +150,7 @@ When('Maria downloads the Part A and confirms the indeterminate recall with poli
     q3ExtendedSentence(contents, 'No')
     q6CustodyStatus(contents, 'Police Custody')
     q7Addresses(contents, 'West Ham Lane Police Station, 18 West Ham Lane, Stratford, E15 4SG')
+    assertAllPartA()
   })
 })
 
