@@ -21,6 +21,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
   const isSpoConsideringRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
+  const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
 
   const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
   const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
@@ -49,7 +50,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   } else if (!isDefined(recallType)) {
     if (flagTriggerWork) {
-      nextPageId = 'task-list-consider-recall'
+      if (isSpoRecordedRationale) {
+        nextPageId = 'recall-type'
+      } else {
+        nextPageId = 'task-list-consider-recall'
+      }
     } else {
       nextPageId = 'response-to-probation'
     }
