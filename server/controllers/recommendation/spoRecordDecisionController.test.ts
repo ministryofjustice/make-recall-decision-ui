@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import spoRecordDecisionController from './spoRecordDecisionController'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -113,8 +114,8 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      activate: [],
-      deActivate: ['SPO_CONSIDERING_RECALL'],
+      activate: [STATUSES.SPO_RECORDED_RATIONALE],
+      deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-rationale-confirmation`)
