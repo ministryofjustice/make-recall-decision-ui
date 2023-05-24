@@ -55,8 +55,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
   await updateStatuses({
     recommendationId,
     token,
-    activate: [],
-    deActivate: ['SPO_CONSIDERING_RECALL'],
+    activate: [STATUSES.SPO_RECORDED_RATIONALE],
+    deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
   })
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-rationale-confirmation', urlInfo }))
