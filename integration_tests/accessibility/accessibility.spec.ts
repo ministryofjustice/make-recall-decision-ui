@@ -54,6 +54,7 @@ context('Accessibility (a11y) Checks', () => {
         cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
         cy.createNoRecallLetter()
       }
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(item.url)
       if (item.validationError) {
         cy.clickButton('Continue')

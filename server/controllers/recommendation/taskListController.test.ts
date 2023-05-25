@@ -84,6 +84,7 @@ describe('get', () => {
   }
 
   it('present', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     const recommendation = { ...recommendationTemplate, offenceAnalysis: null as string }
     const res = mockRes({
       locals: {
@@ -114,6 +115,7 @@ describe('get', () => {
   })
 
   it('present - task-list-no-recall if recall type set to NO_RECALL', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.NO_RECALL_DECIDED, active: true }])
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -129,23 +131,6 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list-no-recall')
-  })
-
-  it('present - response to probation if no recall type set', async () => {
-    const recommendation = {
-      crn: 'X1213',
-    }
-
-    const res = mockRes({
-      locals: {
-        recommendation,
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-    const next = mockNext()
-    await taskListController.get(mockReq(), res, next)
-
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
   })
 
   it('present - tasks complete', async () => {

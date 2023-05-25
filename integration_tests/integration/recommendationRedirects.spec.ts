@@ -27,6 +27,7 @@ context('Make a recommendation - Branching / redirects', () => {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
     })
+    cy.task('updateStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
     cy.selectRadio('What do you recommend?', 'No recall')
@@ -45,6 +46,7 @@ context('Make a recommendation - Branching / redirects', () => {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
@@ -58,6 +60,7 @@ context('Make a recommendation - Branching / redirects', () => {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
@@ -73,6 +76,7 @@ context('Make a recommendation - Branching / redirects', () => {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
@@ -112,6 +116,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a Part A form')
   })

@@ -55,6 +55,8 @@ describe('validateIsExtendedSentence', () => {
     expect(valuesToSave).toEqual({
       isExtendedSentence: false,
       recallType: null,
+      indeterminateSentenceType: null,
+      indeterminateOrExtendedSentenceDetails: null,
     })
   })
 
@@ -73,6 +75,8 @@ describe('validateIsExtendedSentence', () => {
     expect(valuesToSave).toEqual({
       isExtendedSentence: true,
       recallType: null,
+      indeterminateSentenceType: null,
+      indeterminateOrExtendedSentenceDetails: null,
     })
   })
 

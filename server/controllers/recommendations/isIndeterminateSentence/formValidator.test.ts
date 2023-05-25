@@ -57,7 +57,6 @@ describe('validateIsIndeterminateSentence', () => {
       indeterminateSentenceType: {
         selected: 'NO',
       },
-      isExtendedSentence: null,
       recallType: null,
       indeterminateOrExtendedSentenceDetails: null,
       fixedTermAdditionalLicenceConditions: null,
@@ -78,7 +77,6 @@ describe('validateIsIndeterminateSentence', () => {
     expect(valuesToSave).toEqual({
       isIndeterminateSentence: true,
       indeterminateSentenceType: null,
-      isExtendedSentence: null,
       recallType: null,
       indeterminateOrExtendedSentenceDetails: null,
       fixedTermAdditionalLicenceConditions: null,
