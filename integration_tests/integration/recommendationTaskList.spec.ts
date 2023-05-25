@@ -32,6 +32,7 @@ context('Recommendation - task list', () => {
 
   it('task list - Completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
@@ -64,6 +65,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Is Paula Smith in custody now? Completed').should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
@@ -77,6 +79,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...completeRecommendationResponse, isIndeterminateSentence: false, isExtendedSentence: false },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
@@ -87,6 +90,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...completeRecommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('exist')
@@ -97,6 +101,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: recommendationResponse,
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
@@ -122,6 +127,7 @@ context('Recommendation - task list', () => {
 
   it('from task list, link to form then return to task list', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.clickLink('How has Paula Smith responded to probation so far?')
@@ -140,6 +146,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('What alternatives to recall have been tried already?').should(
       'contain',
@@ -223,6 +230,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.task('getCase', {
       sectionId: 'licence-conditions',
       statusCode: 200,
@@ -241,6 +249,7 @@ context('Recommendation - task list', () => {
         recallType: { selected: { value: 'STANDARD' } },
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('Is this an emergency recall?').should(
       'contain',
@@ -259,6 +268,7 @@ context('Recommendation - task list', () => {
         recallType: { selected: { value: 'FIXED_TERM' } },
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('Add any additional licence conditions - fixed term recall').should(
       'contain',
@@ -275,6 +285,7 @@ context('Recommendation - task list', () => {
         isIndeterminateSentence: true,
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('Type of indeterminate sentence').should(
       'contain',
@@ -292,6 +303,7 @@ context('Recommendation - task list', () => {
         statusCode: 200,
         response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
       cy.visit(`${routeUrls.recommendations}/1/task-list`)
       cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
@@ -301,6 +313,7 @@ context('Recommendation - task list', () => {
         statusCode: 200,
         response: { ...recommendationResponse, recallType: { selected: { value: 'FIXED_TERM' } } },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/1/task-list-no-recall`)
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
