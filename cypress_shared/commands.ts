@@ -20,6 +20,14 @@ Cypress.Commands.add('fillInput', (label, text, opts = {}) => {
     )
 })
 
+Cypress.Commands.add('getTaskStatus', (taskName, opts = {}) => {
+  cy.get(opts.parent || 'body')
+    .contains('li', taskName)
+    .find('span>strong')
+    .invoke('text')
+    .then(text => text.trim())
+})
+
 const clickElement = (label, tagName, opts) => {
   const parent = opts?.parent || 'body'
   if (label.qaAttr) {

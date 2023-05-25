@@ -1,16 +1,16 @@
-import { Given, Before, DataTable } from '@badeball/cypress-cucumber-preprocessor'
+import { Given, Then, DataTable } from '@badeball/cypress-cucumber-preprocessor'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { proxy } from '@alfonso-presa/soft-assert'
 
-import { crns, deleteOldRecommendation, openApp } from './index'
+import { crns, deleteOldRecommendation } from './index'
+
+const expectSoftly = proxy(expect)
+
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const testData: Record<string, any> = { licenceConditions: [], alternativesTried: [], vulnerabilities: [] }
 const yesNo = ['YES', 'NO']
 const yesNoCustody = ['YES_POLICE', 'YES_PRISON', 'NO']
 let currentPage
-
-Before({ tags: '@Rationale' }, () => {
-  openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 })
-})
 
 const makeRecommendation = function (crn, recommendationDetails?: Record<string, string>) {
   cy.clickLink('Start now')
@@ -328,8 +328,10 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
 }
 
 Given('a PO has created a recommendation to recall with:', (dataTable: DataTable) => {
-  // const crn = crns[faker.helpers.arrayElement(Object.keys(crns))]
-  const crn = crns[1]
+  const crn =
+    Cypress.env('ENV')?.toString().toUpperCase() === 'DEV'
+      ? crns[faker.helpers.arrayElement(Object.keys(crns))]
+      : crns[1]
   cy.wrap(crn).as('crn')
   makeRecommendation(crn, dataTable.rowsHash())
 })
@@ -348,21 +350,30 @@ Given('creates a Part A form with:', function (dataTable: DataTable) {
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
 
-Given('requests an SPO to countersign', () => {
+Given('requests/requested an SPO to countersign', () => {
   currentPage = `Request line manager's countersignature`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
-  // cy.clickButton('Copy')
   cy.getText('case-link').as('spoCounterSignatureLink')
   cy.clickLink('Continue')
-  cy.log('Logging out as PO!')
-  cy.clickLink('Sign out')
-  cy.clearAllCookies()
-  cy.wait(1000)
-  cy.reload(true)
-  cy.pageHeading().should('equal', 'Sign in')
 })
 
 Given('creates a Part A form', function () {
   createPartAOrNoRecallLetter.call(this)
+})
+
+Then('the PO task-list has the following status:', function (dataTable: DataTable) {
+  const statuses = dataTable.rowsHash()
+  if (statuses.LineManagerSignature)
+    cy.get('#task-list-status-lineManagerSignature')
+      .invoke('text')
+      .then(status => {
+        expectSoftly(status).to.contain(statuses.LineManagerSignature)
+      })
+  if (statuses.SeniorManagerSignature)
+    cy.get('#task-list-status-seniorManagerSignature')
+      .invoke('text')
+      .then(status => {
+        expectSoftly(status).to.contain(statuses.SeniorManagerSignature)
+      })
 })
