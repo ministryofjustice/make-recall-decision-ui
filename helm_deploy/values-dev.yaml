@@ -16,6 +16,10 @@ generic-service:
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "DEVELOPMENT"
 
+  scheduledDowntime:
+    enabled: true
+
 generic-prometheus-alerts:
+  businessHoursOnly: true
   alertSeverity: make-recall-decision-nonprod
 

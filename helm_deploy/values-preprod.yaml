@@ -171,6 +171,10 @@ generic-service:
     pingdom-115: "212.78.83.12"
     pingdom-116: "212.78.83.16"
 
+  scheduledDowntime:
+    enabled: true
+
 generic-prometheus-alerts:
+  businessHoursOnly: true
   alertSeverity: make-recall-decision-nonprod
 
