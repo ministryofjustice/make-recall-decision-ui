@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { validateRecallTypeIndeterminate } from '../recommendations/recallTypeIndeterminate/formValidator'
 import { inputDisplayValuesRecallTypeIndeterminate } from '../recommendations/recallTypeIndeterminate/inputDisplayValues'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -59,6 +60,22 @@ async function post(req: Request, res: Response, _: NextFunction) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
     return res.redirect(303, req.originalUrl)
+  }
+
+  if (recallType === 'NO_RECALL') {
+    await updateStatuses({
+      recommendationId,
+      token,
+      activate: [STATUSES.NO_RECALL_DECIDED],
+      deActivate: [STATUSES.RECALL_DECIDED],
+    })
+  } else {
+    await updateStatuses({
+      recommendationId,
+      token,
+      activate: [STATUSES.RECALL_DECIDED],
+      deActivate: [STATUSES.NO_RECALL_DECIDED],
+    })
   }
 
   await updateRecommendation({
