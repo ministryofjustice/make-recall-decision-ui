@@ -4,13 +4,12 @@ import { strings } from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateIsExtendedSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
-  const { isExtendedSentence, isIndeterminateSentence, currentSavedValue } = requestBody
+  const { isExtendedSentence, currentSavedValue } = requestBody
 
   const isNo = isExtendedSentence === 'NO'
   const isYes = isExtendedSentence === 'YES'
   const changedToNo = isNo && currentSavedValue === 'YES'
   const changedToYes = isYes && currentSavedValue === 'NO'
-  const isDeterminateSentence = isIndeterminateSentence === '0'
 
   if (!isExtendedSentence || !isValueValid(isExtendedSentence as string, 'yesNo')) {
     const errorId = 'noIsExtendedSelected'
@@ -27,9 +26,11 @@ export const validateIsExtendedSentence = async ({ requestBody }: FormValidatorA
   }
   let valuesToSave
 
-  if (isDeterminateSentence && (changedToNo || changedToYes)) {
+  if (changedToNo || changedToYes) {
     valuesToSave = {
       isExtendedSentence: isYes,
+      indeterminateSentenceType: null,
+      indeterminateOrExtendedSentenceDetails: null,
       recallType: null,
     }
   } else {

@@ -151,10 +151,7 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
 
-        cy.task('updateStatuses', {
-          statusCode: 200,
-          response: completeRecommendationResponse,
-        })
+        cy.task('updateStatuses', { statusCode: 200, response: [] })
 
         cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
 
@@ -714,6 +711,7 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.fillInput('Where can the police find Paula Smith?', '35 Hayward Rise, Carshalton, Surrey S1 8SH')
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })

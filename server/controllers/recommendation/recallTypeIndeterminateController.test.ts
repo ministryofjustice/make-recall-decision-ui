@@ -1,8 +1,9 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import recallTypeIndeterminateController from './recallTypeIndeterminateController'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -146,6 +147,13 @@ describe('post', () => {
 
     await recallTypeIndeterminateController.post(req, res, next)
 
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.RECALL_DECIDED],
+      deActivate: [STATUSES.NO_RECALL_DECIDED],
+    })
+
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
@@ -200,6 +208,13 @@ describe('post', () => {
     const next = mockNext()
 
     await recallTypeIndeterminateController.post(req, res, next)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.NO_RECALL_DECIDED],
+      deActivate: [STATUSES.RECALL_DECIDED],
+    })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '123',

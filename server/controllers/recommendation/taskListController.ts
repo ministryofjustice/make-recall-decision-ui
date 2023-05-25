@@ -14,14 +14,24 @@ async function get(req: Request, res: Response, next: NextFunction) {
     user: { token, roles },
   } = res.locals
 
-  const recallType = recommendation?.recallType?.selected?.value
+  const statuses = (
+    await getStatuses({
+      recommendationId,
+      token,
+    })
+  ).filter(status => status.active)
 
-  if (recallType === 'NO_RECALL') {
+  const isNoRecallDecided = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED)
+
+  if (isNoRecallDecided) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-no-recall', urlInfo }))
   }
 
-  if (recallType === undefined) {
-    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
+  if (!featureFlags.flagTriggerWork) {
+    const recallType = recommendation?.recallType?.selected?.value
+    if (recallType === undefined) {
+      return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
+    }
   }
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   const completeness = taskCompleteness(recommendation, featureFlags)
@@ -36,12 +46,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let isAcoSigned = false
   if (completeness.areAllComplete && featureFlags.flagTriggerWork) {
     completeness.areAllComplete = false
-    const statuses = (
-      await getStatuses({
-        recommendationId,
-        token,
-      })
-    ).filter(status => status.active)
 
     const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
     const isSpoSigned = !!statuses.find(status => status.name === STATUSES.SPO_SIGNED)
