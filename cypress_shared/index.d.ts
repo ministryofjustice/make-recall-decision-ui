@@ -1,3 +1,5 @@
+import { UserType } from '../e2e_tests/support/commands'
+
 export {}
 
 declare global {
@@ -20,9 +22,13 @@ declare global {
     export interface Chainable {
       visitPage(url: string, isSpoUser?: boolean): Chainable<void>
 
+      visitPageAndLogin(url: string, userType?: UserType): Chainable<void>
+
       pageHeading(): Chainable<string>
 
       getText(qaAttr: string, opts?: CommandOpts): Chainable<string>
+
+      getTaskStatus(taskName: string, opts?: CommandOpts): Chainable<string>
 
       getTextFromClipboard(): Chainable<string>
 

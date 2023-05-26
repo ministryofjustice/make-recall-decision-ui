@@ -1,8 +1,20 @@
-import { Then, When } from '@badeball/cypress-cucumber-preprocessor'
+import { Then, When, defineParameterType, After, Before } from '@badeball/cypress-cucumber-preprocessor'
+import { flush } from '@alfonso-presa/soft-assert'
 import { getTestDataPerEnvironment } from '../../utils'
 import { longDateMatchPattern } from '../../../cypress_shared/utils'
+import { UserType } from '../../support/commands'
 
 const apiDataForCrn = getTestDataPerEnvironment()
+
+defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
+
+Before({ tags: '@Rationale' }, () => {
+  openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 })
+})
+
+After(() => {
+  flush()
+})
 
 export const crns = {
   1: Cypress.env('CRN') || 'X098092',
@@ -20,13 +32,13 @@ export const deleteOldRecommendation = () => {
   })
 }
 
-export const openApp = (queryParams: object, isSpoUser?: boolean, newUrl?: string) => {
+export const openApp = (queryParams: object, userType?: UserType, newUrl?: string) => {
   let queryParameters = ''
   Object.keys(queryParams).forEach(keyName => {
     queryParameters = `${queryParameters + keyName}=${queryParams[keyName]}&`
   })
   cy.log(`queryParameters--> ${queryParameters}`)
-  cy.visitPage(`${newUrl || ''}?${queryParameters}`, isSpoUser || false)
+  cy.visitPageAndLogin(`${newUrl || ''}?${queryParameters}`, userType || UserType.PO)
 }
 // ==================================== Recall
 
