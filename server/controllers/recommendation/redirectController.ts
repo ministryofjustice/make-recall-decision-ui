@@ -51,7 +51,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } else if (!isDefined(recallType)) {
     if (flagTriggerWork) {
       if (isSpoRecordedRationale) {
-        nextPageId = 'recall-type'
+        if (recommendation?.isExtendedSentence || recommendation?.isIndeterminateSentence) {
+          nextPageId = 'recall-type-indeterminate'
+        } else {
+          nextPageId = 'recall-type'
+        }
       } else {
         nextPageId = 'task-list-consider-recall'
       }
