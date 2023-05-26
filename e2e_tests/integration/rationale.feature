@@ -12,7 +12,7 @@ Feature: Rationale for a Recall decision
     Given a PO has created a recommendation to recall with:
       | Indeterminate | No |
       | Extended      | No |
-    And creates a Part A form with:
+    And creates a Part A form without requesting SPO review with:
       | RecallType       | STANDARD   |
       | EmergencyRecall  | No         |
       | InCustody        | No         |
@@ -28,7 +28,7 @@ Feature: Rationale for a Recall decision
     Given a PO has created a recommendation to recall with:
       | Indeterminate | No |
       | Extended      | No |
-    And creates a Part A form with:
+    And creates a Part A form without requesting SPO review with:
       | RecallType          | STANDARD   |
       | InCustody           | Yes Police |
       | VictimContactScheme | No         |
@@ -45,7 +45,7 @@ Feature: Rationale for a Recall decision
     Given a PO has created a recommendation to recall with:
       | Indeterminate | No |
       | Extended      | No |
-    And creates a Part A form with:
+    And creates a Part A form without requesting SPO review with:
       | RecallType          | STANDARD   |
       | InCustody           | Yes Police |
       | VictimContactScheme | No         |
@@ -59,7 +59,7 @@ Feature: Rationale for a Recall decision
     Given a PO has created a recommendation to recall with:
       | Indeterminate | No |
       | Extended      | No |
-    And creates a Part A form with:
+    And creates a Part A form without requesting SPO review with:
       | RecallType          | STANDARD   |
       | InCustody           | Yes Police |
       | VictimContactScheme | No         |
@@ -76,7 +76,7 @@ Feature: Rationale for a Recall decision
     Given a PO has created a recommendation to recall with:
       | Indeterminate | No |
       | Extended      | No |
-    And creates a Part A form with:
+    And creates a Part A form without requesting SPO review with:
       | RecallType          | STANDARD   |
       | InCustody           | Yes Police |
       | VictimContactScheme | No         |
@@ -98,7 +98,7 @@ Feature: Rationale for a Recall decision
       | Indeterminate  | <Indeterminate>  |
       | Extended       | <Extended>       |
       | TypeOfSentence | <TypeOfSentence> |
-    And creates a Part A form with:
+    And creates a Part A form without requesting SPO review with:
       | RecallType          | <RecallType> |
       | InCustody           | <InCustody>  |
       | VictimContactScheme | No           |
@@ -118,7 +118,6 @@ Feature: Rationale for a Recall decision
       | No            | No       |                | STANDARD   | Yes Police | RECALL      |
       | No            | No       |                | FIXED_TERM | Yes Prison | RECALL      |
       | Yes           | No       | LIFE           | EMERGENCY  | Yes Police | RECALL      |
-      | Yes           | Yes      | LIFE           | EMERGENCY  | Yes Police | RECALL      |
       | Yes           | Yes      | IPP            | EMERGENCY  | Yes Police | RECALL      |
-      | Yes           | Yes      | DPP            | EMERGENCY  | Yes Police | RECALL      |
-      | No            | Yes      |                | EMERGENCY  | Yes Prison | NO RECALL   |
+      | Yes           | Yes      | DPP            | EMERGENCY  | No         | NO RECALL   |
+      | No            | Yes      |                | EMERGENCY  | Yes Prison | RECALL      |

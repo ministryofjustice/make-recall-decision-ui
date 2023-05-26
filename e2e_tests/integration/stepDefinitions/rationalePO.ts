@@ -91,8 +91,6 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
     cy.clickButton('Continue')
   })
   cy.clickButton('Continue')
-  cy.clickLink('Continue')
-  cy.clickLink('Continue')
 }
 
 const createPartAOrNoRecallLetter = function (partADetails?: Record<string, string>) {
@@ -338,15 +336,24 @@ Given('a PO has created a recommendation to recall with:', (dataTable: DataTable
 
 Given('a PO has created a recommendation', () => {
   const crn = crns[faker.helpers.arrayElement(Object.keys(crns))]
+  cy.wrap(crn).as('crn')
   makeRecommendation(crn)
 })
 
 Given('a PO has created a recommendation to recall CRN: {word} with:', (crn, dataTable: DataTable) => {
+  cy.wrap(crn).as('crn')
   makeRecommendation(crn, dataTable.rowsHash())
 })
 
 Given('creates a Part A form with:', function (dataTable: DataTable) {
   const partADetails = dataTable.rowsHash()
+  createPartAOrNoRecallLetter.call(this, partADetails)
+})
+
+Given('creates a Part A form without requesting SPO review with:', function (dataTable: DataTable) {
+  const partADetails = dataTable.rowsHash()
+  cy.clickLink('Continue')
+  cy.clickLink('Continue')
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
 
@@ -376,4 +383,12 @@ Then('the PO task-list has the following status:', function (dataTable: DataTabl
       .then(status => {
         expectSoftly(status).to.contain(statuses.SeniorManagerSignature)
       })
+})
+
+Given('requests/requested an SPO to review recommendation', function () {
+  cy.getText('case-link').as('spoCounterSignatureLink')
+  cy.clickLink('Continue')
+  cy.clickLink('Continue')
+  cy.log('Logging out as PO!')
+  cy.clickLink('Sign out')
 })
