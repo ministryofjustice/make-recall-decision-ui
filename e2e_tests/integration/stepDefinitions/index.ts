@@ -8,7 +8,7 @@ const apiDataForCrn = getTestDataPerEnvironment()
 
 defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
 
-Before({ tags: '@Rationale' }, () => {
+Before({ tags: '@Rationale or @Trigger' }, () => {
   openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 })
 })
 
@@ -46,6 +46,19 @@ const defaultStartPath = (crnNum: string) => {
   const crnToUse = crns[crnNum]
   return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
+
+When('{userType} logs back in to update Recommendation', function (userType: UserType) {
+  cy.clearAllCookies()
+  cy.wait(1000)
+  cy.reload(true)
+  cy.pageHeading().should('equal', 'Sign in')
+  openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 }, userType)
+  cy.clickLink('Start now')
+  cy.fillInput('Search by Case Reference Number', this.crn)
+  cy.clickButton('Search')
+  cy.clickLink(this.offenderName)
+  cy.clickLink('Update recommendation')
+})
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   cy.visitPage(defaultStartPath(crnNum))
