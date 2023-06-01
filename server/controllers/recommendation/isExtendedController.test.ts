@@ -120,6 +120,7 @@ describe('post', () => {
         indeterminateSentenceType: null,
         isExtendedSentence: true,
         recallType: null,
+        isThisAnEmergencyRecall: null,
       },
       featureFlags: { flagTriggerWork: false },
     })
@@ -201,6 +202,7 @@ describe('post', () => {
         indeterminateSentenceType: null,
         isExtendedSentence: true,
         recallType: null,
+        isThisAnEmergencyRecall: null,
       },
       featureFlags: { flagTriggerWork: false },
     })

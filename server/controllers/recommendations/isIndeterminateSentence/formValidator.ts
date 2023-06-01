@@ -38,6 +38,7 @@ export const validateIsIndeterminateSentence = async ({ requestBody }: FormValid
         recallType: null,
         indeterminateOrExtendedSentenceDetails: null,
         fixedTermAdditionalLicenceConditions: null,
+        isThisAnEmergencyRecall: null,
       }
       if (changedToYes) {
         valuesToSave.indeterminateSentenceType = null

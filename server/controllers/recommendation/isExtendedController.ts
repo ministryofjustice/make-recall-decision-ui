@@ -62,6 +62,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       indeterminateSentenceType: null,
       indeterminateOrExtendedSentenceDetails: null,
       recallType: null,
+      isThisAnEmergencyRecall: null,
     }
   } else {
     valuesToSave = {

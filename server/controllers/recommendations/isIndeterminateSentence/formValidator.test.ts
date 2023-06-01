@@ -60,6 +60,7 @@ describe('validateIsIndeterminateSentence', () => {
       recallType: null,
       indeterminateOrExtendedSentenceDetails: null,
       fixedTermAdditionalLicenceConditions: null,
+      isThisAnEmergencyRecall: null,
     })
   })
 
@@ -80,6 +81,7 @@ describe('validateIsIndeterminateSentence', () => {
       recallType: null,
       indeterminateOrExtendedSentenceDetails: null,
       fixedTermAdditionalLicenceConditions: null,
+      isThisAnEmergencyRecall: null,
     })
   })
 
