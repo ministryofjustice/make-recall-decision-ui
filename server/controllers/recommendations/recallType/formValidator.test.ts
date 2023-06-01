@@ -31,6 +31,27 @@ describe('validateRecallType', () => {
       })
     })
 
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid fixed term recall selected and fromPageId is task list', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+      }
+      const urlInfoCopy = { ...urlInfo, fromPageId: 'task-list' }
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo: urlInfoCopy })
+      expect(errors).toBeUndefined()
+      expect(valuesToSave).toEqual({
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+            details: requestBody.recallTypeDetailsFixedTerm,
+          },
+          allOptions: formOptions.recallType,
+        },
+        isThisAnEmergencyRecall: null,
+      })
+    })
+
     it('returns monitoring event data', async () => {
       const requestBody = {
         recallType: 'FIXED_TERM',
