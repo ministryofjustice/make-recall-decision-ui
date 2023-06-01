@@ -274,7 +274,7 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
-    cy.getElement('Is this an emergency recall?').should('not.exist')
+    cy.getElement('Is this an emergency recall?').should('exist')
   })
 
   it('task list - indeterminate type and details links visible if indeterminate sentence', () => {
