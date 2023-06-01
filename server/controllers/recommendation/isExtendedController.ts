@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
-import { validateIsExtendedSentence } from '../recommendations/isExtendedSentence/formValidator'
+import { isValueValid } from '../recommendations/formOptions/formOptions'
+import { makeErrorObject } from '../../utils/errors'
+import { strings } from '../../textStrings/en'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -32,26 +34,47 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { errors, valuesToSave, unsavedValues } = await validateIsExtendedSentence({
-    requestBody: req.body,
-    recommendationId,
-    urlInfo,
-    token,
-  })
+  const { isExtendedSentence, currentSavedValue } = req.body
 
-  if (errors) {
-    req.session.errors = errors
-    req.session.unsavedValues = unsavedValues
+  if (!isExtendedSentence || !isValueValid(isExtendedSentence as string, 'yesNo')) {
+    const errorId = 'noIsExtendedSelected'
+    req.session.errors = [
+      makeErrorObject({
+        id: 'isExtendedSentence',
+        text: strings.errors[errorId],
+        errorId,
+      }),
+    ]
     return res.redirect(303, req.originalUrl)
   }
+
+  const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
+  const isNo = isExtendedSentence === 'NO'
+  const isYes = isExtendedSentence === 'YES'
+  const changedToNo = isNo && currentSavedValue === 'YES'
+  const changedToYes = isYes && currentSavedValue === 'NO'
+
+  let valuesToSave
+
+  if (!isIndeterminateSentence && (changedToNo || changedToYes)) {
+    valuesToSave = {
+      isExtendedSentence: isYes,
+      indeterminateSentenceType: null,
+      indeterminateOrExtendedSentenceDetails: null,
+      recallType: null,
+    }
+  } else {
+    valuesToSave = {
+      isExtendedSentence: isYes,
+    }
+  }
+
   await updateRecommendation({
     recommendationId,
     valuesToSave,
     token,
     featureFlags: flags,
   })
-
-  const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
 
   let nextPageId
   if (isIndeterminateSentence) {
