@@ -5,11 +5,11 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: make-recall-decision-dev.hmpps.service.justice.gov.uk
+    host: consider-a-recall-dev.hmpps.service.justice.gov.uk
     contextColour: green
 
   env:
-    INGRESS_URL: "https://make-recall-decision-dev.hmpps.service.justice.gov.uk"
+    INGRESS_URL: "https://consider-a-recall-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk"
