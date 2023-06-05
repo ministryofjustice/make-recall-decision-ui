@@ -262,3 +262,33 @@ Cypress.Commands.add('getTextFromClipboard', () =>
 )
 
 Cypress.Commands.add('logPageTitle', pageTitle => cy.log(`On page "${pageTitle}"`))
+
+Cypress.Commands.add('getOffenceDetails', () => {
+  const offenceDetails: Record<string, string> = {}
+  cy.getDefinitionListValue('Main offence').then(text => {
+    offenceDetails.indexOffenceDescription = text
+  })
+  cy.getDefinitionListValue('Date of offence').then(text => {
+    offenceDetails.dateOfOriginalOffence = text
+  })
+  cy.getDefinitionListValue('Date of sentence').then(text => {
+    cy.log(`offenceDetails.dateOfSentence--> ${text}`)
+    offenceDetails.dateOfSentence = text
+  })
+  cy.getDefinitionListValue('Length of sentence').then(text => {
+    offenceDetails.lengthOfSentence = text
+  })
+  cy.getDefinitionListValue('Licence expiry date').then(text => {
+    offenceDetails.licenceExpiryDate = text
+  })
+  cy.getDefinitionListValue('Sentence expiry date').then(text => {
+    offenceDetails.sentenceExpiryDate = text
+  })
+  cy.getDefinitionListValue('Custodial term').then(text => {
+    offenceDetails.custodialTerm = text
+  })
+  cy.getDefinitionListValue('Extended term').then(text => {
+    offenceDetails.extendedTerm = text
+  })
+  return cy.wrap(offenceDetails)
+})

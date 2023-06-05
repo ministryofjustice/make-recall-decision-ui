@@ -6,6 +6,39 @@ import { UserType } from '../../support/commands'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
+export enum YesNoType {
+  'YES' = 'Yes',
+  'NO' = 'No',
+}
+
+export enum YesNoNAType {
+  'YES' = 'Yes',
+  'NO' = 'No',
+  'NOT_APPLICABLE' = 'Not applicable',
+}
+
+export enum CustodyType {
+  'YES_POLICE' = 'Police Custody',
+  'YES_PRISON' = 'Prison Custody',
+  'NO' = 'No',
+}
+
+export enum NonIndeterminateRecallType {
+  'STANDARD' = 'Standard',
+  'FIXED_TERM' = 'Fixed',
+  'NO_RECALL' = 'No recall',
+}
+export enum IndeterminateRecallType {
+  'EMERGENCY' = 'Emergency recall',
+  'NO_RECALL' = 'No recall',
+}
+
+export enum IndeterminateOrExtendedSentenceDetailType {
+  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = '{{offenderName}} has shown behaviour similar to the index offence',
+  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = '{{offenderName}} has shown behaviour that could lead to a sexual or violent offence',
+  'OUT_OF_TOUCH' = '{{offenderName}} is out of touch',
+}
+
 defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
 
 Before({ tags: '@Rationale or @Trigger' }, () => {
@@ -47,7 +80,7 @@ const defaultStartPath = (crnNum: string) => {
   return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
 
-When('{userType} logs back in to update Recommendation', function (userType: UserType) {
+function loginAndSearchCrn(userType: UserType) {
   cy.clearAllCookies()
   cy.wait(1000)
   cy.reload(true)
@@ -57,7 +90,21 @@ When('{userType} logs back in to update Recommendation', function (userType: Use
   cy.fillInput('Search by Case Reference Number', this.crn)
   cy.clickButton('Search')
   cy.clickLink(this.offenderName)
+}
+
+When('{userType} logs( back) in to update/view Recommendation', function (userType: UserType) {
+  loginAndSearchCrn.call(this, userType)
   cy.clickLink('Update recommendation')
+})
+
+When('{userType} logs( back) in to Countersign', function (userType: UserType) {
+  expect(userType, 'Checking only SPO/ACO user is passed!!').to.not.equal(UserType.PO)
+  loginAndSearchCrn.call(this, userType)
+  cy.clickLink('Countersign')
+})
+
+When('{userType} logs( back) in to view the above CRN', function (userType: UserType) {
+  loginAndSearchCrn.call(this, userType)
 })
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
@@ -453,4 +500,12 @@ Then('the page heading contains {string}', heading => {
 
 Then('the practitioner sees {string}', (text: string) => {
   cy.getElement(text).should('exist')
+})
+
+Then('PO/SPO/ACO can create Part A', function () {
+  cy.clickLink('Create Part A')
+})
+
+Then('PO/SPO/ACO can download Part A', function () {
+  cy.downloadDocX('Download the Part A').as('partAContent')
 })
