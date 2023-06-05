@@ -3,7 +3,7 @@ export const routeUrls = {
   search: '/search',
   searchResults: '/search-results',
   cases: '/cases',
-  flags: '/flags',
+  flags: ['test', 'development'].some(() => process.env.NODE_ENV) ? '/flags' : '/',
   recommendations: '/recommendations',
   accessibility: '/accessibility',
 }
