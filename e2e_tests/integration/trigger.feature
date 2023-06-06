@@ -7,11 +7,11 @@ Feature: Recommendation Review - SPO
       | Indeterminate  | <Indeterminate>  |
       | Extended       | <Extended>       |
       | TypeOfSentence | <TypeOfSentence> |
-    And requested an SPO to review recommendation
+    And PO has requested an SPO to review recommendation
     And SPO has visited the review link
     And SPO has recorded a "<SPODecision>" decision
     When PO logs back in to update Recommendation
-    And creates a Part A form with:
+    And PO creates a Part A form with:
       | RecallType          | <RecallType> |
       | InCustody           | <InCustody>  |
       | VictimContactScheme | No           |
