@@ -137,6 +137,7 @@ Feature: Rationale for a Recall decision
       | No            | No       |                | STANDARD   | No         | RECALL      |
       | No            | No       |                | FIXED_TERM | Yes Prison | RECALL      |
       | No            | Yes      |                | EMERGENCY  | Yes Police | RECALL      |
+      | Yes           | No       |                | EMERGENCY  | Yes Prison | RECALL      |
 
   @E2E @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1267
   Scenario Outline: PO records a recall and SPO & ACO countersigns - login & search

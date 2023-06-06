@@ -56,12 +56,12 @@ export const crns = {
   4: Cypress.env('CRN4') || 'X487027',
   5: Cypress.env('CRN5') || 'X476202',
 }
-export const deleteOldRecommendation = () => {
+export const deleteOpenRecommendation = () => {
   cy.clickLink('Recommendations')
-  cy.get('body').then($body => {
-    if ($body.find('[data-qa="delete-recommendation"]').length) {
-      cy.clickButton('Delete')
-    }
+  // If the first Recommendation is Open then delete it so that a new recommendation can be created
+  cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: 'recommendation-1' }).then(rowValues => {
+    if (rowValues.includes('Update recommendation'))
+      cy.get('[data-qa="recommendation-1"] [data-qa="delete-recommendation"]').click()
   })
 }
 
@@ -110,7 +110,7 @@ When('{userType} logs( back) in to view the above CRN', function (userType: User
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   cy.visitPage(defaultStartPath(crnNum))
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
-  deleteOldRecommendation()
+  deleteOpenRecommendation()
 })
 
 When(
@@ -119,7 +119,7 @@ When(
     const flags = featureFlag ? `&${featureFlag}=1` : ''
     cy.visitPage(`${defaultStartPath(crnNum)}${flags}`)
     cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
-    deleteOldRecommendation()
+    deleteOpenRecommendation()
   }
 )
 

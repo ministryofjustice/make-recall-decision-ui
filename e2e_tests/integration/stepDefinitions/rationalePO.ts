@@ -4,7 +4,7 @@ import { proxy } from '@alfonso-presa/soft-assert'
 
 import {
   crns,
-  deleteOldRecommendation,
+  deleteOpenRecommendation,
   IndeterminateOrExtendedSentenceDetailType,
   IndeterminateRecallType,
   NonIndeterminateRecallType,
@@ -30,7 +30,7 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
     .invoke('text')
     .as('offenderName')
     .then(offenderName => {
-      deleteOldRecommendation()
+      deleteOpenRecommendation()
       // Create a new recommendation - START
       cy.clickLink('Make a recommendation')
       cy.clickButton('Continue')
