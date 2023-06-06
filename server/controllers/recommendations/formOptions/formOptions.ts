@@ -17,9 +17,11 @@ import { recallTypeManager } from '../managerRecordDecision/formOptions'
 import { roshLevels } from '../rosh/formOptions'
 import { UiListItem } from '../../../@types/pagesForms'
 import { spoRecallTypeEnum } from './spoRecallTypeEnum'
+import { rationaleCheck } from '../rationaleCheck/formOptions'
 
 export const formOptions = {
   recallType,
+  rationaleCheck,
   spoRecallTypeEnum,
   recallTypeIndeterminate,
   recallTypeIndeterminateApi,
