@@ -86,6 +86,8 @@ declare global {
       readBase64File(fileName: string): Chainable<string>
 
       logPageTitle(pageTitle: string): Chainable<void>
+
+      getOffenceDetails(): Chainable<Record<string, string>>
     }
   }
 }

@@ -51,9 +51,15 @@
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
                             {% if lineManagerCountersignLink %}
-                                <a aria-describedby='task-list-status-lineManagerCounterSignature'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
-                                {{ pageHeadings.lineManagerCounterSignature }}</a>
+                                {% if isSpoRationaleRecorded %}
+                                    <a aria-describedby='task-list-status-lineManagerCounterSignature'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
+                                    {{ pageHeadings.lineManagerCounterSignature }}</a>
+                                {% else %}
+                                    <a aria-describedby='task-list-status-lineManagerCounterSignature'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'rationale-check', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
+                                    {{ pageHeadings.lineManagerCounterSignature }}</a>
+                                {% endif %}
                             {% else %}
                                 {{ pageHeadings.lineManagerCounterSignature }}
                             {% endif %}
