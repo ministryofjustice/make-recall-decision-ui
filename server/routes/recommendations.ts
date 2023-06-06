@@ -65,6 +65,7 @@ import countersigningTelephoneController from '../controllers/recommendation/cou
 import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
 import requestAcoCountersignController from '../controllers/recommendation/requestAcoCountersignController'
 import countersignConfirmationController from '../controllers/recommendation/countersignConfirmationController'
+import rationaleCheckController from '../controllers/recommendation/rationaleCheckController'
 
 const recommendations = Router()
 
@@ -165,6 +166,14 @@ routeRecommendationPost('reasons-no-recall', reasonsNoRecallController.post, [HM
 
 routeRecommendationGet('appointment-no-recall', appointmentNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('appointment-no-recall', appointmentNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
+
+routeRecommendationGet(
+  'rationale-check',
+  rationaleCheckController.get,
+  [HMPPS_AUTH_ROLE.SPO],
+  statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)
+)
+routeRecommendationPost('rationale-check', rationaleCheckController.post, [HMPPS_AUTH_ROLE.SPO])
 
 routeRecommendationGet(
   'task-list',
