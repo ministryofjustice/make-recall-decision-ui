@@ -6,6 +6,39 @@ import { UserType } from '../../support/commands'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
+export enum YesNoType {
+  'YES' = 'Yes',
+  'NO' = 'No',
+}
+
+export enum YesNoNAType {
+  'YES' = 'Yes',
+  'NO' = 'No',
+  'NOT_APPLICABLE' = 'Not applicable',
+}
+
+export enum CustodyType {
+  'YES_POLICE' = 'Police Custody',
+  'YES_PRISON' = 'Prison Custody',
+  'NO' = 'No',
+}
+
+export enum NonIndeterminateRecallType {
+  'STANDARD' = 'Standard',
+  'FIXED_TERM' = 'Fixed',
+  'NO_RECALL' = 'No recall',
+}
+export enum IndeterminateRecallType {
+  'EMERGENCY' = 'Emergency recall',
+  'NO_RECALL' = 'No recall',
+}
+
+export enum IndeterminateOrExtendedSentenceDetailType {
+  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = '{{offenderName}} has shown behaviour similar to the index offence',
+  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = '{{offenderName}} has shown behaviour that could lead to a sexual or violent offence',
+  'OUT_OF_TOUCH' = '{{offenderName}} is out of touch',
+}
+
 defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
 
 Before({ tags: '@Rationale or @Trigger' }, () => {
@@ -23,11 +56,16 @@ export const crns = {
   4: Cypress.env('CRN4') || 'X487027',
   5: Cypress.env('CRN5') || 'X476202',
 }
-export const deleteOldRecommendation = () => {
+export const deleteOpenRecommendation = () => {
   cy.clickLink('Recommendations')
+  // check if Delete button is available (the flag is enabled)
   cy.get('body').then($body => {
     if ($body.find('[data-qa="delete-recommendation"]').length) {
-      cy.clickButton('Delete')
+      // If the first Recommendation is Open then delete it so that a new recommendation can be created
+      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: 'recommendation-1' }).then(rowValues => {
+        if (rowValues.includes('Update recommendation'))
+          cy.get('[data-qa="recommendation-1"] [data-qa="delete-recommendation"]').click()
+      })
     }
   })
 }
@@ -47,7 +85,7 @@ const defaultStartPath = (crnNum: string) => {
   return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
 
-When('{userType} logs back in to update Recommendation', function (userType: UserType) {
+function loginAndSearchCrn(userType: UserType) {
   cy.clearAllCookies()
   cy.wait(1000)
   cy.reload(true)
@@ -57,13 +95,27 @@ When('{userType} logs back in to update Recommendation', function (userType: Use
   cy.fillInput('Search by Case Reference Number', this.crn)
   cy.clickButton('Search')
   cy.clickLink(this.offenderName)
+}
+
+When('{userType} logs( back) in to update/view Recommendation', function (userType: UserType) {
+  loginAndSearchCrn.call(this, userType)
   cy.clickLink('Update recommendation')
+})
+
+When('{userType} logs( back) in to Countersign', function (userType: UserType) {
+  expect(userType, 'Checking only SPO/ACO user is passed!!').to.not.equal(UserType.PO)
+  loginAndSearchCrn.call(this, userType)
+  cy.clickLink('Countersign')
+})
+
+When('{userType} logs( back) in to view the above CRN', function (userType: UserType) {
+  loginAndSearchCrn.call(this, userType)
 })
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
   cy.visitPage(defaultStartPath(crnNum))
   cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
-  deleteOldRecommendation()
+  deleteOpenRecommendation()
 })
 
 When(
@@ -72,7 +124,7 @@ When(
     const flags = featureFlag ? `&${featureFlag}=1` : ''
     cy.visitPage(`${defaultStartPath(crnNum)}${flags}`)
     cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
-    deleteOldRecommendation()
+    deleteOpenRecommendation()
   }
 )
 
@@ -453,4 +505,12 @@ Then('the page heading contains {string}', heading => {
 
 Then('the practitioner sees {string}', (text: string) => {
   cy.getElement(text).should('exist')
+})
+
+Then('PO/SPO/ACO can create Part A', function () {
+  cy.clickLink('Create Part A')
+})
+
+Then('PO/SPO/ACO can download Part A', function () {
+  cy.downloadDocX('Download the Part A').as('partAContent')
 })

@@ -2,14 +2,21 @@ import { Given, Then, DataTable } from '@badeball/cypress-cucumber-preprocessor'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { proxy } from '@alfonso-presa/soft-assert'
 
-import { crns, deleteOldRecommendation } from './index'
+import {
+  crns,
+  deleteOpenRecommendation,
+  IndeterminateOrExtendedSentenceDetailType,
+  IndeterminateRecallType,
+  NonIndeterminateRecallType,
+  YesNoType,
+  CustodyType,
+  YesNoNAType,
+} from './index'
 
 const expectSoftly = proxy(expect)
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const testData: Record<string, any> = { licenceConditions: [], alternativesTried: [], vulnerabilities: [] }
-const yesNo = ['YES', 'NO']
-const yesNoCustody = ['YES_POLICE', 'YES_PRISON', 'NO']
 let currentPage
 
 const makeRecommendation = function (crn, recommendationDetails?: Record<string, string>) {
@@ -23,7 +30,7 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
     .invoke('text')
     .as('offenderName')
     .then(offenderName => {
-      deleteOldRecommendation()
+      deleteOpenRecommendation()
       // Create a new recommendation - START
       cy.clickLink('Make a recommendation')
       cy.clickButton('Continue')
@@ -49,12 +56,12 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       cy.clickLink(`Is ${offenderName} on an indeterminate sentence`)
       testData.indeterminate = recommendationDetails?.Indeterminate
         ? recommendationDetails.Indeterminate.toString().toUpperCase()
-        : faker.helpers.arrayElement(yesNo)
+        : faker.helpers.arrayElement(Object.keys(YesNoType))
       cy.selectRadioByValue(`Is ${offenderName} on an indeterminate sentence`, testData.indeterminate)
       cy.clickButton('Continue')
       testData.extended = recommendationDetails?.Extended
         ? recommendationDetails.Extended.toString().toUpperCase()
-        : faker.helpers.arrayElement(yesNo)
+        : faker.helpers.arrayElement(Object.keys(YesNoType))
       cy.selectRadioByValue(`Is ${offenderName} on an extended sentence`, testData.extended)
       cy.clickButton('Continue')
       if (recommendationDetails?.Indeterminate.toString().toUpperCase() === 'YES') {
@@ -95,17 +102,10 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
 
 const createPartAOrNoRecallLetter = function (partADetails?: Record<string, string>) {
   cy.log(`testData before Part A creation--> ${JSON.stringify(testData)}`)
-  const nonIndeterminateRecallTypes = ['STANDARD', 'FIXED_TERM', 'NO_RECALL']
-  const indeterminateRecallTypes = ['EMERGENCY', 'NO_RECALL']
-  const indeterminateOrExtendedSentenceDetails = [
-    'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-    'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-    'OUT_OF_TOUCH',
-  ]
   if (testData.indeterminate === 'NO' && testData.extended === 'NO') {
     testData.recallType = partADetails?.RecallType
       ? partADetails.RecallType.toString().toUpperCase()
-      : faker.helpers.arrayElement(nonIndeterminateRecallTypes)
+      : faker.helpers.arrayElement(Object.keys(NonIndeterminateRecallType))
     cy.logPageTitle('What do you recommend?')
     cy.selectRadioByValue('What do you recommend', testData.recallType)
     if (testData.recallType !== 'NO_RECALL') {
@@ -121,12 +121,12 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     cy.clickButton('Continue')
     testData.emergencyRecall = partADetails?.EmergencyRecall
       ? partADetails.EmergencyRecall.toString().toUpperCase()
-      : faker.helpers.arrayElement(yesNo)
+      : faker.helpers.arrayElement(Object.keys(YesNoType))
     cy.logPageTitle('Is this an emergency recall?')
     cy.selectRadioByValue('Is this an emergency recall', testData.emergencyRecall)
     cy.clickButton('Continue')
     if (testData.recallType === 'FIXED_TERM') {
-      testData.fixedTermRecall = faker.helpers.arrayElement(yesNo)
+      testData.fixedTermRecall = faker.helpers.arrayElement(Object.keys(YesNoType))
       cy.logPageTitle('Fixed term call')
       cy.selectRadioByValue('Fixed term recall', testData.fixedTermRecall)
       if (testData.fixedTermRecall === 'YES') {
@@ -139,7 +139,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   } else {
     testData.recallType = partADetails?.RecallType
       ? partADetails.RecallType.toString().toUpperCase()
-      : faker.helpers.arrayElement(indeterminateRecallTypes)
+      : faker.helpers.arrayElement(Object.keys(IndeterminateRecallType))
     cy.logPageTitle('What do you recommend?')
     cy.selectRadioByValue('What do you recommend', testData.recallType)
     cy.clickButton('Continue')
@@ -154,7 +154,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
         : Object.assign(
             {},
             ...faker.helpers
-              .arrayElements(indeterminateOrExtendedSentenceDetails)
+              .arrayElements(Object.keys(IndeterminateOrExtendedSentenceDetailType))
               .map(k => ({ [k]: faker.hacker.phrase() }))
           )
       Object.keys(testData.indeterminateOrExtendedSentenceDetails).forEach(k => {
@@ -169,7 +169,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   }
   testData.inCustody = partADetails?.InCustody
     ? partADetails.InCustody.toString().trim().replace(/\s/g, '_').toUpperCase()
-    : faker.helpers.arrayElement(yesNoCustody)
+    : faker.helpers.arrayElement(Object.keys(CustodyType))
   currentPage = `Is ${this.offenderName} in custody now`
   cy.logPageTitle(`${currentPage}?`)
   cy.selectRadioByValue(currentPage, testData.inCustody)
@@ -187,10 +187,14 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickLink('Continue')
   cy.clickLink(`Offence details`)
   cy.logPageTitle('Offence details')
+  cy.getOffenceDetails().then(det => {
+    testData.offenceDetails = det
+  })
   cy.clickLink('Continue')
   cy.clickLink(`Offence analysis`)
   cy.logPageTitle('Offence analysis')
-  cy.get(`#offenceAnalysis`).type(faker.hacker.phrase())
+  testData.offenceAnalysis = faker.hacker.phrase()
+  cy.get(`#offenceAnalysis`).type(testData.offenceAnalysis)
   cy.clickButton('Continue')
   cy.clickLink(`Previous releases`)
   cy.logPageTitle('Previous releases')
@@ -223,7 +227,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     cy.logPageTitle('Address')
     testData.lastKnownAddressCorrect = partADetails?.LastKnownAddressCorrect
       ? partADetails.LastKnownAddressCorrect.toString().toUpperCase()
-      : faker.helpers.arrayElement(yesNo)
+      : faker.helpers.arrayElement(Object.keys(YesNoType))
     cy.selectRadioByValue(`Is this where the police can find ${this.offenderName}`, testData.lastKnownAddressCorrect)
     if (testData.lastKnownAddressCorrect === 'NO') {
       cy.get(`#isMainAddressWherePersonCanBeFoundDetailsNo`).type(faker.address.streetAddress(true))
@@ -241,7 +245,6 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     if (vulnerabilities.length === 2) {
       const htmlElement = faker.helpers.arrayElement(vulnerabilities.toArray())
       htmlElement.click()
-      // cy.wrap(additionalNeeds).click()
       testData.vulnerabilities.length = 0
       testData.vulnerabilities.push(htmlElement.getAttribute('value'))
     } else {
@@ -262,7 +265,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.logPageTitle(`${currentPage}?`)
   testData.victimContactScheme = partADetails?.VictimContactScheme
     ? partADetails.VictimContactScheme.toString().replace(' ', '_').toUpperCase()
-    : faker.helpers.arrayElement(yesNo.concat('NOT_APPLICABLE'))
+    : faker.helpers.arrayElement(Object.keys(YesNoNAType))
   cy.selectRadioByValue(currentPage, testData.victimContactScheme)
   cy.clickButton('Continue')
   if (testData.victimContactScheme === 'YES') {
@@ -277,18 +280,20 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   if (!['YES_POLICE', 'YES_PRISON'].includes(testData.inCustody)) {
     cy.clickLink(`Local police contact details`)
     cy.logPageTitle('Local police contact details')
-    cy.fillInput('Police contact name', faker.name.fullName())
-    cy.fillInput('Telephone number', '01277 960 001')
-    cy.fillInput('Email address', faker.internet.email())
+    testData.localpoliceDetails = {}
+    cy.fillInput('Police contact name', (testData.localpoliceDetails.contact = faker.name.fullName()))
+    cy.fillInput('Telephone number', (testData.localpoliceDetails.phoneNumber = '01277 960 001'))
+    cy.fillInput('Email address', (testData.localpoliceDetails.email = faker.internet.email()))
     cy.clickButton('Continue')
     currentPage = `Is there anything the police should know before they arrest ${this.offenderName}`
     cy.clickLink(currentPage)
     cy.logPageTitle(`${currentPage}?`)
     testData.hasArrestIssues = partADetails?.HasArrestIssues
       ? partADetails.HasArrestIssues.toString().toUpperCase()
-      : faker.helpers.arrayElement(yesNo)
+      : faker.helpers.arrayElement(Object.keys(YesNoType))
     cy.selectRadioByValue(currentPage, testData.hasArrestIssues)
-    if (testData.hasArrestIssues === 'YES') cy.get('#hasArrestIssuesDetailsYes').type(faker.hacker.phrase())
+    if (testData.hasArrestIssues === 'YES')
+      cy.get('#hasArrestIssuesDetailsYes').type((testData.arrestIssueDetails = faker.hacker.phrase()))
     cy.clickButton('Continue')
   }
   currentPage = `Is ${this.offenderName} under Integrated Offender Management (IOM)`
@@ -296,7 +301,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.logPageTitle(`${currentPage}?`)
   testData.iom = partADetails?.IOM
     ? partADetails.IOM.toString().replace(' ', '_').toUpperCase()
-    : faker.helpers.arrayElement(yesNo.concat('NOT_APPLICABLE'))
+    : faker.helpers.arrayElement(Object.keys(YesNoNAType))
   cy.selectRadioByValue(currentPage, testData.iom)
   cy.clickButton('Continue')
   currentPage = `Do you think ${this.offenderName} is using recall to bring contraband into prison`
@@ -304,7 +309,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.logPageTitle(`${currentPage}?`)
   testData.hasContrabandRisk = partADetails?.HasContrabandRisk
     ? partADetails.HasContrabandRisk.toString().toUpperCase()
-    : faker.helpers.arrayElement(yesNo)
+    : faker.helpers.arrayElement(Object.keys(YesNoType))
   cy.selectRadioByValue(currentPage, testData.hasContrabandRisk)
   if (testData.hasContrabandRisk === 'YES') cy.get('#hasContrabandRiskDetailsYes').type(faker.hacker.phrase())
   cy.clickButton('Continue')
@@ -345,19 +350,20 @@ Given('a PO has created a recommendation to recall CRN: {word} with:', (crn, dat
   makeRecommendation(crn, dataTable.rowsHash())
 })
 
-Given('creates a Part A form with:', function (dataTable: DataTable) {
+Given('PO( has) creates/created a Part A form with:', function (dataTable: DataTable) {
   const partADetails = dataTable.rowsHash()
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
 
-Given('creates a Part A form without requesting SPO review with:', function (dataTable: DataTable) {
+Given('PO( has) creates/created a Part A form without requesting SPO review with:', function (dataTable: DataTable) {
   const partADetails = dataTable.rowsHash()
   cy.clickLink('Continue')
   cy.clickLink('Continue')
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
 
-Given('requests/requested an SPO to countersign', () => {
+Given('PO( has) requests/requested an SPO to countersign', () => {
+  cy.log(`testData after Part A creation 2--> ${JSON.stringify(testData)}`)
   currentPage = `Request line manager's countersignature`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
@@ -385,7 +391,7 @@ Then('the PO task-list has the following status:', function (dataTable: DataTabl
       })
 })
 
-Given('requests/requested an SPO to review recommendation', function () {
+Given('PO( has) requests/requested an SPO to review recommendation', function () {
   cy.getText('case-link').as('spoCounterSignatureLink')
   cy.clickLink('Continue')
   cy.clickLink('Continue')
