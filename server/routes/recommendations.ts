@@ -18,7 +18,7 @@ import isExtendedController from '../controllers/recommendation/isExtendedContro
 
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
 import customizeMessages from '../controllers/customizeMessages'
-import shareManagerController from '../controllers/recommendation/shareManagerController'
+import shareCaseWithManagerController from '../controllers/recommendation/shareCaseWithManagerController'
 import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import discussWithManagerController from '../controllers/recommendation/discussWithManagerController'
 import recallTypeController from '../controllers/recommendation/recallTypeController'
@@ -138,7 +138,7 @@ routeRecommendationPost('is-indeterminate', isIndeterminateController.post, [HMP
 routeRecommendationGet('is-extended', isExtendedController.get, [HMPPS_AUTH_ROLE.PO])
 routeRecommendationPost('is-extended', isExtendedController.post, [HMPPS_AUTH_ROLE.PO])
 
-routeRecommendationGet('share-case-with-manager', shareManagerController.get, [HMPPS_AUTH_ROLE.PO])
+routeRecommendationGet('share-case-with-manager', shareCaseWithManagerController.get, [HMPPS_AUTH_ROLE.PO])
 
 routeRecommendationGet('sensitive-info', sensitiveInfoController.get, [HMPPS_AUTH_ROLE.PO])
 

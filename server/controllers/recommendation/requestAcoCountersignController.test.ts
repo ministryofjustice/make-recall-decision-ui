@@ -33,7 +33,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'requestAcoCountersign' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/requestAcoCountersign')
-    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/')
+    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/task-list')
     expect(res.locals.backLink).toEqual('task-list#countersign')
 
     expect(next).toHaveBeenCalled()
@@ -60,7 +60,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'requestAcoCountersign' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/requestAcoCountersign')
-    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/')
+    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/task-list')
     expect(res.locals.backLink).toEqual('task-list#countersign')
 
     expect(next).toHaveBeenCalled()
