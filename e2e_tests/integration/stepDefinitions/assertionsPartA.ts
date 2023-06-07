@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import { proxy, flush } from '@alfonso-presa/soft-assert'
-import { formatObjectDate, getTestDataPerEnvironment, isoDateToObject } from '../../utils'
-import { formatIsoDateShort } from '../../../cypress_shared/utils'
+import { changeDateFromLongFormatToShort, getTestDataPerEnvironment } from '../../utils'
 
 const expectSoftly = proxy(expect)
 
@@ -67,25 +66,50 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
   expectSoftly(contents, 'Offender: Full Name\n-->').to.contain(`Full name: ${context.fullName}`)
   expectSoftly(contents, 'Offender: Gender\n-->').to.contain(`Gender: ${context.gender}`)
   expectSoftly(contents, 'Offender: Date of birth\n-->').to.contain(
-    `Date of birth: ${formatIsoDateShort(context.dateOfBirth)}`
+    `Date of birth: ${changeDateFromLongFormatToShort(context.dateOfBirth)}`
   )
-  expectSoftly(contents, 'Offender: Ethnicity\n-->').to.match(apiDataForCrn.ethnicity as RegExp)
-  expectSoftly(contents, 'Offender: CRO\n-->').to.match(apiDataForCrn.cro as RegExp)
-  expectSoftly(contents, 'Offender: PNC\n-->').to.match(apiDataForCrn.pnc as RegExp)
-  expectSoftly(contents, 'Offender: Prison Number\n-->').to.match(apiDataForCrn.prisonNo as RegExp)
-  expectSoftly(contents, 'Offender: Noms\n-->').to.match(apiDataForCrn.noms as RegExp)
-  const lastReleaseDateFormatted = context.lastReleaseDate
-    ? formatObjectDate(isoDateToObject(context.lastReleaseDate))
-    : ''
-  expectSoftly(contents, 'Offender: Last Release Details\n-->').to.contain(`Last release: ${lastReleaseDateFormatted}`)
-  expectSoftly(contents, 'Offender: Previous Release\n-->').to.contain(
-    `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
+  expectSoftly(contents, 'Offender: Ethnicity\n-->').to.match(
+    context.ethnicity ? (new RegExp(context.ethnicity) as RegExp) : (apiDataForCrn.ethnicity as RegExp)
+  )
+  expectSoftly(contents, 'Offender: CRO\n-->').to.match(
+    context.cro ? (new RegExp(context.cro) as RegExp) : (apiDataForCrn.cro as RegExp)
+  )
+  expectSoftly(contents, 'Offender: PNC\n-->').to.match(
+    context.pnc ? (new RegExp(context.pnc) as RegExp) : (apiDataForCrn.pnc as RegExp)
+  )
+  expectSoftly(contents, 'Offender: Prison Number\n-->').to.match(
+    context.prisonNo ? (new RegExp(context.prisonNo) as RegExp) : (apiDataForCrn.prisonNo as RegExp)
+  )
+  expectSoftly(contents, 'Offender: Noms\n-->').to.match(
+    context.noms ? new RegExp(`PNOMIS No: ${context.noms}`) : (apiDataForCrn.noms as RegExp)
+  )
+  expectSoftly(contents, 'Offender: Last Release Details\n-->').to.contain(
+    `Last release: ${context.lastReleaseDate ? changeDateFromLongFormatToShort(context.lastReleaseDate) : ''}`
+  )
+  expectSoftly(contents, 'Offender: Previous Releases\n-->').to.contain(
+    // eslint-disable-next-line no-nested-ternary
+    context.previousReleaseDates === ''
+      ? 'Previous releases:'
+      : context.previousReleaseDates.length > 0
+      ? `Previous releases: ${context.previousReleaseDates
+          .split(',')
+          .map(previousReleaseDate => changeDateFromLongFormatToShort(previousReleaseDate.trim()))
+          .join(', ')}`
+      : `Previous releases: ${apiDataForCrn.previousReleaseDates[0].shortFormat}, ${apiDataForCrn.previousReleaseDates[1].shortFormat}`
   )
   const lastRecallDateFormatted = context.lastRecallDate
-    ? `${formatObjectDate(isoDateToObject(context.lastRecallDate))}, `
+    ? `${changeDateFromLongFormatToShort(context.lastRecallDate)}, `
     : ''
   expectSoftly(contents, 'Offender: Dates of previous recalls\n-->').to.contain(
-    `Dates of previous recalls on this sentence: ${lastRecallDateFormatted}${apiDataForCrn.previousRecallDates[0].shortFormat}, ${apiDataForCrn.previousRecallDates[1].shortFormat}`
+    context.previousRecallDates
+      ? `Dates of previous recalls on this sentence: ${context.previousRecallDates
+          .split(',')
+          .map(previousRecallDate => changeDateFromLongFormatToShort(previousRecallDate.trim()))
+          .join(', ')}`
+      : `Dates of previous recalls on this sentence: ${lastRecallDateFormatted}${apiDataForCrn.previousRecallDates[0].shortFormat}, ${apiDataForCrn.previousRecallDates[1].shortFormat}`
+  )
+  expectSoftly(contents, '').to.contain(
+    `Releasing prison/Custodial establishment: ${context.releasingPrison ? context.releasingPrison : ''}`
   )
 }
 
@@ -243,17 +267,23 @@ export const q25ProbationDetails = (contents: string, details: Record<string, an
   expectSoftly(contents, 'Time of Decision\n-->').to.match(details.timeOfDecision as RegExp)
 }
 
-export const q27SPOEndorsement = (contents: string, details: Record<string, string>) => {
+export const q27SPOEndorsement = function (contents: string, details: Record<string, string>) {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[27]), contents.indexOf(partASections[28]))
+  expectSoftly(contents, 'Q27 - SPO Name').to.contain(
+    `Name of person completing this form: ${this.SPO ? this.SPO.name : ''}`
+  )
   expectSoftly(contents, 'Q27 - SPO Telephone').to.contain(
     `Telephone Number: ${details.telephone ? details.telephone : ''}`
   )
   expectSoftly(contents, 'Q27 - SPO Reason').to.contain(`Please provide additional information:${details.reason}`)
 }
-export const q28ACOAuthorisation = (contents: string, details: Record<string, string>) => {
+export const q28ACOAuthorisation = function (contents: string, details: Record<string, string>) {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[28]), contents.indexOf(partASections[29]))
+  expectSoftly(contents, 'Q28 - ACO Name').to.contain(
+    `Name of person completing this form: ${this.ACO ? this.ACO.name : ''}`
+  )
   expectSoftly(contents, 'Q28 - ACO Telephone').to.contain(
     `Telephone Number: ${details.telephone ? details.telephone : ''}`
   )

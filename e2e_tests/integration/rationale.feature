@@ -110,6 +110,8 @@ Feature: Rationale for a Recall decision
       | RecallType          | <RecallType> |
       | InCustody           | <InCustody>  |
       | VictimContactScheme | No           |
+      | PreviousReleases    | 10-10-2018   |
+      | PreviousRecalls     | 10-12-2019   |
     # MRD-1262: AC0/AC1
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link

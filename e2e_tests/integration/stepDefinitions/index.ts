@@ -45,7 +45,8 @@ Before({ tags: '@Rationale or @Trigger' }, () => {
   openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 })
 })
 
-After(() => {
+After(function () {
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   flush()
 })
 
@@ -70,12 +71,11 @@ export const deleteOpenRecommendation = () => {
   })
 }
 
-export const openApp = (queryParams: object, userType?: UserType, newUrl?: string) => {
+export const openApp = function (queryParams: object, userType?: UserType, newUrl?: string) {
   let queryParameters = ''
   Object.keys(queryParams).forEach(keyName => {
     queryParameters = `${queryParameters + keyName}=${queryParams[keyName]}&`
   })
-  cy.log(`queryParameters--> ${queryParameters}`)
   cy.visitPageAndLogin(`${newUrl || ''}?${queryParameters}`, userType || UserType.PO)
 }
 // ==================================== Recall

@@ -88,6 +88,12 @@ declare global {
       logPageTitle(pageTitle: string): Chainable<void>
 
       getOffenceDetails(): Chainable<Record<string, string>>
+
+      getOffenderDetails(): Chainable<Record<string, string>>
+
+      getPreviousReleases(): Chainable<Record<string, string>>
+
+      getPreviousRecalls(): Chainable<string[]>
     }
   }
 }

@@ -4,7 +4,6 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { CustodyType, IndeterminateRecallType, NonIndeterminateRecallType, openApp, YesNoType } from './index'
 import { UserType } from '../../support/commands'
 import {
-  assertAllPartA,
   q16IndexOffenceDetails,
   q1EmergencyRecall,
   q22RecallType,
@@ -18,6 +17,7 @@ import {
   q8ArrestIssues,
   q9LocalPoliceDetails,
   q28ACOAuthorisation,
+  q4OffenderDetails,
 } from './assertionsPartA'
 
 const expectSoftly = proxy(expect)
@@ -76,7 +76,6 @@ const recordSpoDecision = function (assertBanner?: boolean, spoDecision?: string
             .trim()
         ).to.contain(this.bannerTitle)
       })
-  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   cy.clickLink('Record the decision')
   cy.clickButton('Send to NDelius')
 }
@@ -161,7 +160,6 @@ When('SPO( has) records/recorded a {string} decision', function (decision: strin
 })
 
 Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationPage: string) {
-  cy.log(`testData after SPO Decision/SPO/ACO Countersigning--> ${JSON.stringify(this.testData)}`)
   cy.get('#main-content')
     .invoke('text')
     .then(innerText => {
@@ -212,7 +210,6 @@ When('SPO/ACO task-list is updated with the following status:', function (dataTa
 
 Then('confirmation page contains a link for ACO to countersign', function () {
   cy.getText('case-link').then(text => {
-    cy.log(`ACO sign link--> ${text}`)
     cy.url().then(url => {
       expect(text, 'Recommendation Number match').to.contain(url.match(/\/(\d+)\//)[1])
     })
@@ -227,16 +224,17 @@ Then('Countersign button is visible on the Overview page', function () {
 })
 
 Then('Part A details are correct', function () {
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   const contents = this.partAContent.toString()
   q1EmergencyRecall(contents, YesNoType[this.testData.emergencyRecall])
   q2IndeterminateSentenceType(contents, YesNoType[this.testData.indeterminate])
   q3ExtendedSentence(contents, YesNoType[this.testData.extended])
-  // TODO: q4 - Offender details - Needs to retrieved from https://probation-offender-search-dev.hmpps.service.justice.gov.uk/phrase
+  q4OffenderDetails(contents, this.testData.offenderDetails)
   q5SentenceDetails(contents, this.testData.offenceDetails)
   q6CustodyStatus(contents, CustodyType[this.testData.inCustody])
   q7Addresses(contents, this.testData.custodyAddress)
   q8ArrestIssues(contents, YesNoType[this.testData.hasArrestIssues], this.testData.arrestIssueDetails)
-  q9LocalPoliceDetails(contents, this.testData.localpoliceDetails)
+  q9LocalPoliceDetails(contents, this.testData.localPoliceDetails)
   q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
   q22RecallType(
     contents,
@@ -246,7 +244,6 @@ Then('Part A details are correct', function () {
     this.testData.partARecallReason
   )
   q25ProbationDetails(contents)
-  q27SPOEndorsement(contents, this.testData.spoCounterSignature)
-  q28ACOAuthorisation(contents, this.testData.acoCounterSignature)
-  assertAllPartA()
+  q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)
+  q28ACOAuthorisation.call(this, contents, this.testData.acoCounterSignature)
 })

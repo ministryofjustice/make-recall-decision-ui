@@ -94,7 +94,6 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       })
     }
     cy.wrap(testData).as('testData')
-    cy.log(`testData after PO Making a recommendation--> ${JSON.stringify(testData)}`)
     cy.clickButton('Continue')
   })
   cy.clickButton('Continue')
@@ -184,6 +183,9 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickButton('Continue')
   cy.clickLink(`Personal details`)
   cy.logPageTitle('Personal details')
+  cy.getOffenderDetails().then(offenderDetails => {
+    testData.offenderDetails = offenderDetails
+  })
   cy.clickLink('Continue')
   cy.clickLink(`Offence details`)
   cy.logPageTitle('Offence details')
@@ -208,6 +210,9 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
       cy.clickButton('Continue')
     })
   }
+  cy.getPreviousReleases().then(previousReleases => {
+    Object.assign(testData.offenderDetails, previousReleases)
+  })
   cy.clickButton('Continue')
   cy.clickLink(`Previous recalls`)
   cy.logPageTitle('Previous releases')
@@ -221,6 +226,9 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
       cy.clickButton('Continue')
     })
   }
+  cy.getPreviousRecalls().then(previousRecallDates => {
+    testData.offenderDetails.previousRecallDates = previousRecallDates.join()
+  })
   cy.clickButton('Continue')
   if (!['YES_POLICE', 'YES_PRISON'].includes(testData.inCustody)) {
     cy.clickLink(`Address`)
@@ -257,7 +265,6 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
         testData.vulnerabilities.push({ vulnerabilityName, vulnerabilityNotes })
       })
     }
-    cy.log(`testData--> ${JSON.stringify(testData)}`)
     cy.clickButton('Continue')
   })
   currentPage = 'Are there any victims in the victim contact scheme'
@@ -269,21 +276,21 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.selectRadioByValue(currentPage, testData.victimContactScheme)
   cy.clickButton('Continue')
   if (testData.victimContactScheme === 'YES') {
-    const vloDate = faker.date.past(1)
+    testData.vloDate = faker.date.past(1)
     cy.enterDateTime({
-      day: vloDate.getDate().toString(),
-      month: vloDate.getMonth().toString(),
-      year: vloDate.getFullYear().toString(),
+      day: testData.vloDate.getDate().toString(),
+      month: testData.vloDate.getMonth().toString(),
+      year: testData.vloDate.getFullYear().toString(),
     })
     cy.clickButton('Continue')
   }
   if (!['YES_POLICE', 'YES_PRISON'].includes(testData.inCustody)) {
     cy.clickLink(`Local police contact details`)
     cy.logPageTitle('Local police contact details')
-    testData.localpoliceDetails = {}
-    cy.fillInput('Police contact name', (testData.localpoliceDetails.contact = faker.name.fullName()))
-    cy.fillInput('Telephone number', (testData.localpoliceDetails.phoneNumber = '01277 960 001'))
-    cy.fillInput('Email address', (testData.localpoliceDetails.email = faker.internet.email()))
+    testData.localPoliceDetails = {}
+    cy.fillInput('Police contact name', (testData.localPoliceDetails.contact = faker.name.fullName()))
+    cy.fillInput('Telephone number', (testData.localPoliceDetails.phoneNumber = '01277 960 001'))
+    cy.fillInput('Email address', (testData.localPoliceDetails.email = faker.internet.email()))
     cy.clickButton('Continue')
     currentPage = `Is there anything the police should know before they arrest ${this.offenderName}`
     cy.clickLink(currentPage)
@@ -316,18 +323,21 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   currentPage = `Current risk of serious harm`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
+  testData.currentRoshForPartA = {}
   const risk = ['Low', 'Medium', 'High', 'Very high', 'Not applicable']
-  cy.selectRadio('Risk to children', faker.helpers.arrayElement(risk))
-  cy.selectRadio('Risk to the public', faker.helpers.arrayElement(risk))
-  cy.selectRadio('Risk to a known adult', faker.helpers.arrayElement(risk))
-  cy.selectRadio('Risk to staff', faker.helpers.arrayElement(risk))
-  cy.selectRadio('Risk to prisoners', faker.helpers.arrayElement(risk))
+  cy.selectRadio('Risk to children', (testData.currentRoshForPartA.riskToChildren = faker.helpers.arrayElement(risk)))
+  cy.selectRadio('Risk to the public', (testData.currentRoshForPartA.riskToPublic = faker.helpers.arrayElement(risk)))
+  cy.selectRadio(
+    'Risk to a known adult',
+    (testData.currentRoshForPartA.riskToKnownAdult = faker.helpers.arrayElement(risk))
+  )
+  cy.selectRadio('Risk to staff', (testData.currentRoshForPartA.riskToStaff = faker.helpers.arrayElement(risk)))
+  cy.selectRadio('Risk to prisoners', (testData.currentRoshForPartA.riskToPrisoner = faker.helpers.arrayElement(risk)))
   cy.clickButton('Continue')
   currentPage = `MAPPA for ${this.offenderName}`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
   cy.clickLink('Continue')
-  cy.log(`testData after Part A creation--> ${JSON.stringify(testData)}`)
 }
 
 Given('a PO has created a recommendation to recall with:', (dataTable: DataTable) => {
@@ -363,7 +373,6 @@ Given('PO( has) creates/created a Part A form without requesting SPO review with
 })
 
 Given('PO( has) requests/requested an SPO to countersign', () => {
-  cy.log(`testData after Part A creation 2--> ${JSON.stringify(testData)}`)
   currentPage = `Request line manager's countersignature`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
