@@ -90,7 +90,7 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
     // eslint-disable-next-line no-nested-ternary
     context.previousReleaseDates === ''
       ? 'Previous releases:'
-      : context.previousReleaseDates.length > 0
+      : context.previousReleaseDates && context.previousReleaseDates.length > 0
       ? `Previous releases: ${context.previousReleaseDates
           .split(',')
           .map(previousReleaseDate => changeDateFromLongFormatToShort(previousReleaseDate.trim()))

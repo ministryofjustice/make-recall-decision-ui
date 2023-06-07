@@ -323,7 +323,7 @@ When('Maria reviews the personal details', () => {
   cy.getDefinitionListValue('Name').should('match', apiDataForCrn.fullName)
   cy.getText('gender').as('gender')
   cy.getDefinitionListValue('Gender').should('match', apiDataForCrn.gender)
-  cy.getDateAttribute('dateOfBirth').as('dateOfBirth')
+  cy.getText('dateOfBirth').as('dateOfBirth')
   cy.getDefinitionListValue('Date of birth').should('match', longDateMatchPattern(apiDataForCrn.dateOfBirth))
   cy.clickLink('Continue')
   cy.getElement('Personal details Reviewed').should('exist')
@@ -356,7 +356,7 @@ When('Maria enters the offence analysis', () => {
 When('Maria enters the previous releases', function () {
   cy.getElement('Previous releases To do').should('exist')
   cy.clickLink('Previous releases')
-  cy.getDateAttribute('lastReleaseDate').as('lastReleaseDate')
+  cy.getText('lastReleaseDate').as('lastReleaseDate')
   cy.clickLink('Add a previous release')
   const firstReleaseDate = apiDataForCrn.previousReleaseDates[0]
   cy.enterDateTime(firstReleaseDate.parts)
@@ -391,7 +391,7 @@ When('Maria enters the previous releases', function () {
 When('Maria enters the previous recalls', function () {
   cy.getElement('Previous recalls To do').should('exist')
   cy.clickLink('Previous recalls')
-  cy.getDateAttribute('lastRecallDate').as('lastRecallDate')
+  cy.getText('lastRecallDate').as('lastRecallDate')
   cy.clickLink('Add a previous recall')
   const firstRecallDate = apiDataForCrn.previousRecallDates[0]
   cy.enterDateTime(firstRecallDate.parts)
