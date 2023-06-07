@@ -28,7 +28,7 @@ export default function routes(router: Router): Router {
   router.use(`${routeUrls.recommendations}`, recommendations)
   get('/', startPage)
   get(routeUrls.accessibility, (req, res) => res.render('pages/accessibility'))
-  if (!isPreprodOrProd(process.env.NODE_ENV)) {
+  if (!isPreprodOrProd(process.env.ENVIRONMENT)) {
     get(routeUrls.flags, getFeatureFlags)
   }
   get(routeUrls.search, personSearch)
