@@ -453,61 +453,9 @@ describe('get', () => {
       title: 'Countersign',
     })
   })
-  it('do show recommendation button for spo when SPO_SIGNED state', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'SPO_SIGNED', active: true }])
-    const req = mockReq({
-      params: { crn, sectionId: 'overview' },
-    })
-    res = mockRes({
-      token,
-      locals: {
-        user: {
-          username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
-        },
-      },
-    })
-
-    await caseSummaryController.get(req, res, next)
-
-    expect(res.locals.recommendationButton).toEqual({
-      display: true,
-      dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/task-list',
-      post: false,
-      title: 'Countersign',
-    })
-  })
   it('do show recommendation button for spo when ACO_SIGNATURE_REQUESTED state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
-    const req = mockReq({
-      params: { crn, sectionId: 'overview' },
-    })
-    res = mockRes({
-      token,
-      locals: {
-        user: {
-          username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
-        },
-      },
-    })
-
-    await caseSummaryController.get(req, res, next)
-
-    expect(res.locals.recommendationButton).toEqual({
-      display: true,
-      dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/task-list',
-      post: false,
-      title: 'Countersign',
-    })
-  })
-  it('do show recommendation button for spo when ACO_SIGNED state', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'ACO_SIGNED', active: true }])
     const req = mockReq({
       params: { crn, sectionId: 'overview' },
     })

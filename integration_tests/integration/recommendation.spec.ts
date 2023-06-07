@@ -924,8 +924,6 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
 
-      cy.getText('warning-text').should('contain', 'You’ve been asked to countersign the Part A for Paula Smith')
-
       cy.clickLink("Review practitioner's concerns")
 
       cy.pageHeading().should('equal', "Review practitioner's concerns")

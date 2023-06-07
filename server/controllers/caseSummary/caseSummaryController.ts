@@ -80,13 +80,17 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
-      const isSpoSigned = statuses.find(status => status.name === STATUSES.SPO_SIGNED)
-
       const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
-      const isAcoSigned = statuses.find(status => status.name === STATUSES.ACO_SIGNED)
-
-      if (isSpoConsiderRecall) {
+      if (isSpoSignatureRequested || isAcoSignatureRequested) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Countersign',
+          dataAnalyticsEventCategory: 'spo_countersign_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/task-list`,
+        }
+      } else if (isSpoConsiderRecall) {
         recommendationButton = {
           display: true,
           post: false,
@@ -101,14 +105,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
           title: 'Update recommendation',
           dataAnalyticsEventCategory: 'spo_consider_recall_click',
           link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
-        }
-      } else if (isSpoSignatureRequested || isSpoSigned || isAcoSignatureRequested || isAcoSigned) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Countersign',
-          dataAnalyticsEventCategory: 'spo_countersign_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/task-list`,
         }
       }
     } else {

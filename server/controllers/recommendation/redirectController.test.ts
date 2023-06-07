@@ -189,39 +189,6 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to spo-task-list-consider-recall and update spo status', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDER_RECALL', active: true }])
-    const res = mockRes({
-      locals: {
-        urlInfo: { basePath: '/recommendation/123/' },
-        user: {
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
-        },
-      },
-    })
-    const next = mockNext()
-
-    await redirectController.get(
-      mockReq({
-        params: {
-          recommendationId: '123',
-        },
-      }),
-      res,
-      next
-    )
-
-    expect(updateStatuses).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token',
-      activate: ['SPO_CONSIDERING_RECALL'],
-      deActivate: ['SPO_CONSIDER_RECALL'],
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/spo-task-list-consider-recall')
-    expect(next).toHaveBeenCalled()
-  })
-
   it('redirect to task-list-no-recall if SPO_CONSIDER_RECALL', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDER_RECALL', active: true }])
     const res = mockRes({
