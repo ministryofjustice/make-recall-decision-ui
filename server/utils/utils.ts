@@ -145,7 +145,7 @@ export const normalizeCrn = (crn: string) => {
   return invalidCharsRemoved.toUpperCase()
 }
 
-export const isPreprodOrProd = (env?: string) => ['PREPRODUCTION', 'PRODUCTION'].includes(env)
+export const isPreprodOrProd = (env?: string) => ['PREPRODUCTION', 'PRODUCTION'].includes(env?.toUpperCase())
 
 export const booleanToYesNo = (val: boolean) => {
   if (val === true) return 'YES'
