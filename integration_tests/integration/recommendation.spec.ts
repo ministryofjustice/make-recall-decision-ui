@@ -343,7 +343,7 @@ context('Make a recommendation', () => {
           cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
           cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
           cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.getElement('Consider a recall').should('not.exist')
+          cy.getElement('Consider a recall').should('have.length', 1)
           cy.getElement({ qaAttr: 'recallConsideredDetail' }).should('not.exist')
         })
 

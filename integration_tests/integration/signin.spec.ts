@@ -21,7 +21,7 @@ context('SignIn', () => {
 
   it('User can log out', () => {
     cy.signIn()
-    cy.pageHeading().should('equal', 'Decide if someone should be recalled or not')
+    cy.pageHeading().should('equal', 'Consider a recall')
     cy.clickLink('Sign out')
     Page.verifyOnPage(AuthSignInPage)
   })

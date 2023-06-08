@@ -9,7 +9,7 @@ Feature: Recommendation Review - SPO
       | TypeOfSentence | <TypeOfSentence> |
     And PO has requested an SPO to review recommendation
     And SPO has visited the review link
-    And SPO has recorded a "<SPODecision>" decision
+    And SPO has recorded a review decision of <SPODecision>
     When PO logs back in to update Recommendation
     And PO creates a Part A form with:
       | RecallType          | <RecallType> |

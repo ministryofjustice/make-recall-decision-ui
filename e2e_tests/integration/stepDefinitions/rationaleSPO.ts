@@ -1,4 +1,4 @@
-import { DataTable, Then, When } from '@badeball/cypress-cucumber-preprocessor'
+import { DataTable, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { proxy } from '@alfonso-presa/soft-assert'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { CustodyType, IndeterminateRecallType, NonIndeterminateRecallType, openApp, YesNoType } from './index'
@@ -22,60 +22,18 @@ import {
 
 const expectSoftly = proxy(expect)
 
-const getBannerDetails = (bannerTitle, optionalArgs: Record<string, string> = {}) => {
-  const bannerDetails = {
-    'Action required': [
-      `You’ve been asked to countersign the Part A for ${optionalArgs.offenderName}. Before doing this, you must explain the rationale for the decision. The rationale will go into NDelius.`,
-      `You’ll be able to countersign the Part A when you’ve done this.`,
-    ],
-  }
-  return bannerDetails[bannerTitle]
-}
-
-const recordSpoDecision = function (assertBanner?: boolean, spoDecision?: string) {
+const recordSpoDecision = function (spoDecision?: string) {
   cy.clickLink(`Review practitioner's concerns`)
   cy.clickButton('Continue')
-  if (assertBanner)
-    cy.get('#main-content h2')
-      .invoke('text')
-      .then(txt => {
-        expectSoftly(
-          txt
-            .replace(/\n/g, ' ')
-            .replace(/\s{2,}/g, ' ')
-            .trim()
-        ).to.contain(this.bannerTitle)
-      })
   cy.clickLink(`Review profile of ${this.offenderName}`)
   cy.clickButton('Continue')
-  if (assertBanner)
-    cy.get('#main-content h2')
-      .invoke('text')
-      .then(txt => {
-        expectSoftly(
-          txt
-            .replace(/\n/g, ' ')
-            .replace(/\s{2,}/g, ' ')
-            .trim()
-        ).to.contain(this.bannerTitle)
-      })
   cy.clickLink(`Explain the decision`)
   this.testData.spoDecision = spoDecision || faker.helpers.arrayElement(['RECALL', 'NO_RECALL'])
   cy.selectRadioByValue('Explain the decision', this.testData.spoDecision)
   this.testData.spoDecisionExplanation = faker.hacker.phrase()
   cy.get('div:not(.govuk-radios__conditional--hidden)>div>textarea').type(this.testData.spoDecisionExplanation)
   cy.clickButton('Continue')
-  if (assertBanner)
-    cy.get('#main-content h2')
-      .invoke('text')
-      .then(txt => {
-        expectSoftly(
-          txt
-            .replace(/\n/g, ' ')
-            .replace(/\s{2,}/g, ' ')
-            .trim()
-        ).to.contain(this.bannerTitle)
-      })
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   cy.clickLink('Record the decision')
   cy.clickButton('Send to NDelius')
 }
@@ -83,7 +41,6 @@ const recordSpoDecision = function (assertBanner?: boolean, spoDecision?: string
 const doManagerCountersign = function (userType: UserType, data?: Record<string, string>) {
   if (userType === UserType.SPO) {
     this.testData.spoCounterSignature = {}
-    cy.clickLink('Line manager countersignature')
     if (faker.datatype.boolean() || (data?.Telephone && data.Telephone.toString().toUpperCase().includes('VALID'))) {
       this.testData.spoCounterSignature.telephone = faker.phone.number()
       cy.fillInput('Telephone number', this.testData.spoCounterSignature.telephone)
@@ -94,10 +51,6 @@ const doManagerCountersign = function (userType: UserType, data?: Record<string,
     cy.clickButton('Countersign')
   } else {
     this.testData.acoCounterSignature = {}
-    cy.getTaskStatus('Senior manager countersignature').then(innerText =>
-      expectSoftly(innerText, 'Senior manager countersignature Status-ACO Login').to.contain('Requested')
-    )
-    cy.clickLink('Senior manager countersignature')
     if (faker.datatype.boolean() || (data?.Telephone && data.Telephone.toString().toUpperCase().includes('VALID'))) {
       this.testData.acoCounterSignature.telephone = faker.phone.number()
       cy.fillInput('Telephone number', this.testData.acoCounterSignature.telephone)
@@ -120,43 +73,17 @@ When('{userType}( has) visits/visited the countersigning/review link', function 
     userType === UserType.SPO ? this.spoCounterSignatureLink : this.acoCounterSignatureLink
   )
 })
-Then('SPO is presented with the {string} banner', function (bannerTitle: string) {
-  cy.wrap(bannerTitle).as('bannerTitle')
-  cy.get('#main-content h2')
-    .invoke('text')
-    .then(txt => {
-      expectSoftly(
-        txt
-          .replace(/\n/g, ' ')
-          .replace(/\s{2,}/g, ' ')
-          .trim()
-      ).to.contain(bannerTitle)
-    })
-  getBannerDetails(bannerTitle, { offenderName: this.offenderName }).forEach(bannerDetail => {
-    cy.get('#main-content [data-qa="warning-text"]')
-      .invoke('text')
-      .then(txt => {
-        expectSoftly(
-          txt
-            .replace(/\n/g, ' ')
-            .replace(/\s{2,}/g, ' ')
-            .trim()
-        ).to.contain(bannerDetail)
-      })
-  })
-})
-
-Then('the banner is visible until SPO records a decision', function () {
-  recordSpoDecision.call(this, true)
-})
 
 Then('user is unable to access the page after decision is recorded', function () {
   cy.visit(this.spoCounterSignatureLink)
 })
 
-When('SPO( has) records/recorded a {string} decision', function (decision: string) {
-  cy.wrap(decision).as('spoDecision')
-  recordSpoDecision.call(this, false, decision.trim().replace(/\s/g, '_').toUpperCase())
+When('SPO( has) records/recorded rationale with {managersDecision} decision', function (decision: string) {
+  cy.log('Logging rationale')
+  cy.clickLink('Line manager countersignature')
+  cy.selectRadioByValue('You must record your rationale', YesNoType.YES.toUpperCase())
+  cy.clickButton('Continue')
+  recordSpoDecision.call(this, decision)
 })
 
 Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationPage: string) {
@@ -167,7 +94,7 @@ Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationP
         // eslint-disable-next-line no-nested-ternary
         confirmationPage === 'countersigning'
           ? 'Part A countersigned'
-          : this.spoDecision === 'RECALL'
+          : this.testData.spoDecision === 'RECALL'
           ? 'Decision to recall'
           : 'Decision not to recall'
       )
@@ -176,24 +103,34 @@ Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationP
     })
 })
 
-Then('{userType}( has) countersigns/countersigned', function (userType: UserType) {
-  doManagerCountersign.call(this, userType)
-})
-
-Then('{userType}( has) continues/continued to countersign', function (userType: UserType) {
+Then('SPO( has) countersigns/countersigned after recording rationale', function () {
   cy.clickLink('Return to overview')
   cy.clickLink('Countersign')
-  doManagerCountersign.call(this, userType)
+  cy.clickLink('Line manager countersignature')
+  doManagerCountersign.call(this, UserType.SPO, true)
 })
 
-Then('{userType}( has) continues/continued to countersign with:', function (userType: UserType, dataTable: DataTable) {
+Then('SPO( has) countersigns/countersigned after recording rationale with:', function (dataTable: DataTable) {
   cy.clickLink('Return to overview')
   cy.clickLink('Countersign')
-  doManagerCountersign.call(this, userType, dataTable.rowsHash())
+  cy.clickLink('Line manager countersignature')
+  doManagerCountersign.call(this, UserType.SPO, dataTable.rowsHash())
 })
 
-Then('{userType}( has) countersigns/countersigned with:', function (userType: UserType, dataTable: DataTable) {
-  doManagerCountersign.call(this, userType, dataTable.rowsHash())
+Then('SPO( has) countersigns/countersigned without recording rationale', function () {
+  cy.log('Not logging rationale')
+  cy.clickLink('Line manager countersignature')
+  cy.selectRadioByValue('You must record your rationale', YesNoType.NO.toUpperCase())
+  cy.clickButton('Continue')
+  doManagerCountersign.call(this, UserType.SPO)
+})
+
+Then('SPO( has) countersigns/countersigned without recording rationale with:', function (dataTable: DataTable) {
+  cy.log('Not logging rationale')
+  cy.clickLink('Line manager countersignature')
+  cy.selectRadioByValue('You must record your rationale', YesNoType.NO.toUpperCase())
+  cy.clickButton('Continue')
+  doManagerCountersign.call(this, UserType.SPO, dataTable.rowsHash())
 })
 
 When('SPO requests ACO to countersign', function () {
@@ -246,4 +183,19 @@ Then('Part A details are correct', function () {
   q25ProbationDetails(contents)
   q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)
   q28ACOAuthorisation.call(this, contents, this.testData.acoCounterSignature)
+})
+
+When('{userType}( has) countersigns/countersigned', function (userType: UserType) {
+  expect(userType, 'Checking only SPO/ACO user is passed!!').to.not.equal(UserType.PO)
+  if (userType === UserType.ACO) cy.clickLink('Senior manager countersignature')
+  doManagerCountersign.call(this, userType, false)
+})
+
+Given('SPO( has) records/recorded a review decision of {managersDecision}', function (decision: string) {
+  recordSpoDecision.call(this, decision)
+})
+
+Then('SPO is able to record rationale with {managersDecision} decision', function (decision: string) {
+  cy.clickLink('Consider a recall', { parent: '#main-content' })
+  recordSpoDecision.call(this, decision)
 })
