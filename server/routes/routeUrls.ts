@@ -1,6 +1,6 @@
 import { isPreprodOrProd } from '../utils/utils'
 
-export const routeUrls = isPreprodOrProd(process.env.NODE_ENV)
+export const routeUrls = isPreprodOrProd(process.env.ENVIRONMENT)
   ? {
       start: '/',
       search: '/search',

@@ -36,7 +36,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'requestSpoCountersign',
     },
-    link: `${config.domain}/recommendations/${recommendation.id}/`,
+    link: `${config.domain}/recommendations/${recommendation.id}/task-list`,
   }
 
   res.render(`pages/recommendations/requestSpoCountersign`)

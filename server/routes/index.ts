@@ -16,6 +16,7 @@ import { getConsiderRecall } from '../controllers/recommendations/getConsiderRec
 import { postConsiderRecall } from '../controllers/recommendations/postConsiderRecall'
 import { getCreateRecommendationWarning } from '../controllers/recommendations/getCreateRecommendationWarning'
 import recommendations from './recommendations'
+import { isPreprodOrProd } from '../utils/utils'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -27,7 +28,9 @@ export default function routes(router: Router): Router {
   router.use(`${routeUrls.recommendations}`, recommendations)
   get('/', startPage)
   get(routeUrls.accessibility, (req, res) => res.render('pages/accessibility'))
-  get(routeUrls.flags, getFeatureFlags)
+  if (!isPreprodOrProd(process.env.ENVIRONMENT)) {
+    get(routeUrls.flags, getFeatureFlags)
+  }
   get(routeUrls.search, personSearch)
   get(routeUrls.searchResults, personSearchResults)
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)

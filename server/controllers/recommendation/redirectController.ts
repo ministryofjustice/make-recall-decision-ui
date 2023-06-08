@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { isDefined } from '../../utils/utils'
-import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -27,15 +27,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
-
-  if (isSpoConsiderRecall && isSpo) {
-    await updateStatuses({
-      recommendationId,
-      token,
-      activate: [STATUSES.SPO_CONSIDERING_RECALL],
-      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
-    })
-  }
 
   let nextPageId
   const recallType = recommendation?.recallType?.selected?.value

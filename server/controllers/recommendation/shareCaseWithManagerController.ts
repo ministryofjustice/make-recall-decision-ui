@@ -10,7 +10,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'shareCaseWithManager',
     },
-    link: `${config.domain}/recommendations/${recommendation.id}/`,
+    link: `${config.domain}/recommendations/${recommendation.id}/spo-task-list-consider-recall`,
   }
 
   res.render(`pages/recommendations/shareCaseWithManager`)
