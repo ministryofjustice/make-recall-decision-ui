@@ -1,4 +1,4 @@
-import { Then, When, defineParameterType, After, Before } from '@badeball/cypress-cucumber-preprocessor'
+import { After, Before, defineParameterType, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { flush } from '@alfonso-presa/soft-assert'
 import { getTestDataPerEnvironment } from '../../utils'
 import { longDateMatchPattern } from '../../../cypress_shared/utils'
@@ -40,6 +40,12 @@ export enum IndeterminateOrExtendedSentenceDetailType {
 }
 
 defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
+
+defineParameterType({
+  name: 'managersDecision',
+  regexp: /RECALL|NO_RECALL/,
+  transformer: s => s,
+})
 
 Before({ tags: '@Rationale or @Trigger' }, () => {
   openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 })
@@ -102,10 +108,11 @@ When('{userType} logs( back) in to update/view Recommendation', function (userTy
   cy.clickLink('Update recommendation')
 })
 
-When('{userType} logs( back) in to Countersign', function (userType: UserType) {
+When('{userType}( has) logged/logs (back )in to Countersign', function (userType: UserType) {
   expect(userType, 'Checking only SPO/ACO user is passed!!').to.not.equal(UserType.PO)
   loginAndSearchCrn.call(this, userType)
   cy.clickLink('Countersign')
+  if (userType === UserType.SPO) cy.clickLink('Line manager countersignature')
 })
 
 When('{userType} logs( back) in to view the above CRN', function (userType: UserType) {
