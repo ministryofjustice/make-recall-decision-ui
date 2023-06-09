@@ -22,7 +22,7 @@ const auditService = new AuditService()
 
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
-  const { user } = res.locals
+  const { user, flags } = res.locals
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
@@ -108,12 +108,39 @@ async function get(req: Request, res: Response, _: NextFunction) {
         }
       }
     } else {
-      recommendationButton = {
-        display: true,
-        post: false,
-        title: 'Update recommendation',
-        dataAnalyticsEventCategory: 'update_recommendation_click',
-        link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+      const statuses = (
+        await getStatuses({
+          recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
+          token: user.token,
+        })
+      ).filter(status => status.active)
+
+      const isClosed = statuses.find(status => status.name === STATUSES.CLOSED)
+      const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+      if (flags.flagTriggerWork && isClosed) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Make a recommendation',
+          dataAnalyticsEventCategory: 'make_recommendation_click',
+          link: `${pageUrlBase}create-recommendation-warning`,
+        }
+      } else if (isPPDocumentCreated) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Consider a recall',
+          dataAnalyticsEventCategory: 'make_recommendation_click',
+          link: `${pageUrlBase}replace-recommendation/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
+      } else {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Update recommendation',
+          dataAnalyticsEventCategory: 'update_recommendation_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
       }
     }
   }

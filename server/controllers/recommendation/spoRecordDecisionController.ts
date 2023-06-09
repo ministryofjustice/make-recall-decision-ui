@@ -52,10 +52,25 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  const statuses = (
+    await getStatuses({
+      recommendationId,
+      token,
+    })
+  ).filter(status => status.active)
+
+  const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+
+  const activate = [STATUSES.SPO_RECORDED_RATIONALE]
+
+  if (isPPDocumentCreated) {
+    activate.push(STATUSES.CLOSED)
+  }
+
   await updateStatuses({
     recommendationId,
     token,
-    activate: [STATUSES.SPO_RECORDED_RATIONALE],
+    activate,
     deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
   })
 
