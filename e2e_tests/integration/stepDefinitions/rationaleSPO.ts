@@ -1,24 +1,9 @@
 import { DataTable, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { proxy } from '@alfonso-presa/soft-assert'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import { CustodyType, IndeterminateRecallType, NonIndeterminateRecallType, openApp, YesNoType } from './index'
+import { openApp } from './index'
+import { YesNoType } from '../../support/enums'
 import { UserType } from '../../support/commands'
-import {
-  q16IndexOffenceDetails,
-  q1EmergencyRecall,
-  q22RecallType,
-  q25ProbationDetails,
-  q27SPOEndorsement,
-  q2IndeterminateSentenceType,
-  q3ExtendedSentence,
-  q5SentenceDetails,
-  q6CustodyStatus,
-  q7Addresses,
-  q8ArrestIssues,
-  q9LocalPoliceDetails,
-  q28ACOAuthorisation,
-  q4OffenderDetails,
-} from './assertionsPartA'
 
 const expectSoftly = proxy(expect)
 
@@ -158,31 +143,6 @@ Then('Countersign button is visible on the Overview page', function () {
     .find('a.govuk-button')
     .invoke('text')
     .then(text => expectSoftly(text).to.contain('Countersign'))
-})
-
-Then('Part A details are correct', function () {
-  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
-  const contents = this.partAContent.toString()
-  q1EmergencyRecall(contents, YesNoType[this.testData.emergencyRecall])
-  q2IndeterminateSentenceType(contents, YesNoType[this.testData.indeterminate])
-  q3ExtendedSentence(contents, YesNoType[this.testData.extended])
-  q4OffenderDetails(contents, this.testData.offenderDetails)
-  q5SentenceDetails(contents, this.testData.offenceDetails)
-  q6CustodyStatus(contents, CustodyType[this.testData.inCustody])
-  q7Addresses(contents, this.testData.custodyAddress)
-  q8ArrestIssues(contents, YesNoType[this.testData.hasArrestIssues], this.testData.arrestIssueDetails)
-  q9LocalPoliceDetails(contents, this.testData.localPoliceDetails)
-  q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
-  q22RecallType(
-    contents,
-    this.testData.indeterminate === 'NO' && this.testData.extended === 'NO'
-      ? NonIndeterminateRecallType[this.testData.recallType]
-      : IndeterminateRecallType[this.testData.recallType],
-    this.testData.partARecallReason
-  )
-  q25ProbationDetails(contents)
-  q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)
-  q28ACOAuthorisation.call(this, contents, this.testData.acoCounterSignature)
 })
 
 When('{userType}( has) countersigns/countersigned', function (userType: UserType) {

@@ -2,21 +2,26 @@ import { Given, Then, DataTable } from '@badeball/cypress-cucumber-preprocessor'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { proxy } from '@alfonso-presa/soft-assert'
 
+import { crns, deleteOpenRecommendation } from './index'
+
 import {
-  crns,
-  deleteOpenRecommendation,
   IndeterminateOrExtendedSentenceDetailType,
   IndeterminateRecallType,
   NonIndeterminateRecallType,
   YesNoType,
   CustodyType,
   YesNoNAType,
-} from './index'
+  Vulnerabilities,
+} from '../../support/enums'
 
 const expectSoftly = proxy(expect)
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const testData: Record<string, any> = { licenceConditions: [], alternativesTried: [], vulnerabilities: [] }
+const testData: Record<string, any> = {
+  licenceConditions: { standard: [] },
+  alternativesTried: [],
+  vulnerabilities: [],
+}
 let currentPage
 
 const makeRecommendation = function (crn, recommendationDetails?: Record<string, string>) {
@@ -44,13 +49,32 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       cy.clickButton('Continue')
       cy.clickLink(`What licence conditions has ${offenderName} breached`)
       // get all licence conditions from the page and choose a few randomly
-      cy.get('.govuk-checkboxes__item').then(licenceConditionsEl => {
-        faker.helpers.arrayElements(licenceConditionsEl.toArray()).forEach(htmlElement => {
-          htmlElement.getElementsByTagName('input').item(0).click()
-          const licenceCondition = htmlElement.getElementsByTagName('label').item(0).innerText.trim()
-          testData.licenceConditions.push(licenceCondition)
+      cy.get('input[id^=standard-]').then(standardLicenceConditions => {
+        faker.helpers.arrayElements(standardLicenceConditions.toArray()).forEach(htmlElement => {
+          htmlElement.click()
+          cy.wrap(htmlElement)
+            .next('label')
+            .invoke('text')
+            .then(text => {
+              const licenceCondition = text.trim()
+              testData.licenceConditions.standard.push(licenceCondition.toLowerCase())
+            })
         })
       })
+      if (faker.datatype.boolean()) {
+        cy.get('input[id^=additional-]').then(advancedLicenceConditions => {
+          faker.helpers.arrayElements(advancedLicenceConditions.toArray()).forEach(htmlElement => {
+            htmlElement.click()
+            cy.wrap(htmlElement)
+              .next('label')
+              .invoke('text')
+              .then(text => {
+                const licenceCondition = text.trim()
+                testData.licenceConditions.advanced = licenceCondition.toLowerCase()
+              })
+          })
+        })
+      }
       cy.clickButton('Continue')
       // Select if offender is on indeterminate sentence
       cy.clickLink(`Is ${offenderName} on an indeterminate sentence`)
@@ -97,6 +121,21 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
     cy.clickButton('Continue')
   })
   cy.clickButton('Continue')
+}
+
+function selectVulnerabilities(htmlElements: HTMLElement[]) {
+  htmlElements.forEach(htmlElement => {
+    htmlElement.click()
+    const vulnerabilityName = htmlElement.getAttribute('value')
+    const vulnerabilityNotes = faker.hacker.phrase()
+    cy.get(`textarea#vulnerabilitiesDetail-${vulnerabilityName}`).type(vulnerabilityNotes)
+    cy.wrap(htmlElement)
+      .next('label')
+      .invoke('text')
+      .then(text => {
+        testData.vulnerabilities.push({ vulnerabilityName: text.trim(), vulnerabilityNotes })
+      })
+  })
 }
 
 const createPartAOrNoRecallLetter = function (partADetails?: Record<string, string>) {
@@ -244,29 +283,43 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   }
   cy.clickLink(`Would recall affect vulnerability or additional needs`)
   cy.logPageTitle('Would recall affect vulnerability or additional needs?')
-  cy.get(
-    `.govuk-checkboxes ${faker.helpers.arrayElement([
-      'input:not([data-behaviour="exclusive"])',
-      'input[data-behaviour="exclusive"]',
-    ])}`
-  ).then(vulnerabilities => {
-    if (vulnerabilities.length === 2) {
-      const htmlElement = faker.helpers.arrayElement(vulnerabilities.toArray())
-      htmlElement.click()
-      testData.vulnerabilities.length = 0
-      testData.vulnerabilities.push(htmlElement.getAttribute('value'))
-    } else {
-      const htmlElements = faker.helpers.arrayElements(vulnerabilities.toArray())
-      htmlElements.forEach(htmlElement => {
+  const vulnerability = partADetails?.Vulnerabilities
+  if (['All', 'Some'].includes(vulnerability)) {
+    cy.get('.govuk-checkboxes input:not([data-behaviour="exclusive"])').then(vulnerabilities => {
+      const htmlElements =
+        vulnerability === 'All' ? vulnerabilities.toArray() : faker.helpers.arrayElements(vulnerabilities.toArray())
+      selectVulnerabilities(htmlElements)
+    })
+  } else if (['None', 'Not known'].includes(vulnerability)) {
+    const vulnerabilityName = Object.entries(Vulnerabilities).find(vu => vu.includes(vulnerability))[0]
+    cy.get(`.govuk-checkboxes input[value="${vulnerabilityName}"]`).then(vulnerabilities => {
+      cy.wrap(vulnerabilities).click()
+      testData.vulnerabilities.push(Vulnerabilities[vulnerabilityName])
+    })
+  } else {
+    cy.get(
+      `.govuk-checkboxes ${faker.helpers.arrayElement([
+        'input:not([data-behaviour="exclusive"])',
+        'input[data-behaviour="exclusive"]',
+      ])}`
+    ).then(vulnerabilities => {
+      if (vulnerabilities.length === 2) {
+        const htmlElement = faker.helpers.arrayElement(vulnerabilities.toArray())
         htmlElement.click()
-        const vulnerabilityName = htmlElement.getAttribute('value')
-        const vulnerabilityNotes = faker.hacker.phrase()
-        cy.get(`textarea#vulnerabilitiesDetail-${vulnerabilityName}`).type(vulnerabilityNotes)
-        testData.vulnerabilities.push({ vulnerabilityName, vulnerabilityNotes })
-      })
-    }
-    cy.clickButton('Continue')
-  })
+        testData.vulnerabilities.length = 0
+        cy.wrap(htmlElement)
+          .next('label')
+          .invoke('text')
+          .then(text => {
+            testData.vulnerabilities.push(text.trim())
+          })
+      } else {
+        const htmlElements = faker.helpers.arrayElements(vulnerabilities.toArray())
+        selectVulnerabilities(htmlElements)
+      }
+    })
+  }
+  cy.clickButton('Continue')
   currentPage = 'Are there any victims in the victim contact scheme'
   cy.clickLink(currentPage)
   cy.logPageTitle(`${currentPage}?`)
@@ -314,11 +367,13 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   currentPage = `Do you think ${this.offenderName} is using recall to bring contraband into prison`
   cy.clickLink(currentPage)
   cy.logPageTitle(`${currentPage}?`)
-  testData.hasContrabandRisk = partADetails?.HasContrabandRisk
+  testData.contraband = {}
+  testData.contraband.hasRisk = partADetails?.HasContrabandRisk
     ? partADetails.HasContrabandRisk.toString().toUpperCase()
     : faker.helpers.arrayElement(Object.keys(YesNoType))
-  cy.selectRadioByValue(currentPage, testData.hasContrabandRisk)
-  if (testData.hasContrabandRisk === 'YES') cy.get('#hasContrabandRiskDetailsYes').type(faker.hacker.phrase())
+  cy.selectRadioByValue(currentPage, testData.contraband.hasRisk)
+  if (testData.contraband.hasRisk === 'YES')
+    cy.get('#hasContrabandRiskDetailsYes').type((testData.contraband.riskDetails = faker.hacker.phrase()))
   cy.clickButton('Continue')
   currentPage = `Current risk of serious harm`
   cy.clickLink(currentPage)
@@ -337,6 +392,14 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   currentPage = `MAPPA for ${this.offenderName}`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
+  testData.mappa = {}
+  cy.get('[data-qa="mappa-heading"] strong')
+    .invoke('text')
+    .then(text => {
+      testData.mappa.mappaCategory = text.split('/')[0].replace('Cat', 'Category')
+      // eslint-disable-next-line prefer-destructuring
+      testData.mappa.mappaLevel = text.split('/')[1]
+    })
   cy.clickLink('Continue')
 }
 

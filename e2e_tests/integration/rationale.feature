@@ -102,17 +102,20 @@ Feature: Rationale for a Recall decision
     Then SPO is able to record rationale with RECALL decision
     And a confirmation of the decision is shown to SPO
 
-  @E2E @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1262 @MRD-1311
-  @MRD-1276 @MRD-1391 @MRD-1391 @MRD-1327 @MRD-1449 @MRD-1465
+  @E2E
+    @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1262 @MRD-1311
+    @MRD-1276 @MRD-1391 @MRD-1391 @MRD-1327 @MRD-1449 @MRD-1465
   Scenario Outline: PO records a recall and SPO & ACO countersigns - deeplink
     Given a PO has created a recommendation to recall with:
       | Indeterminate  | <Indeterminate>  |
       | Extended       | <Extended>       |
       | TypeOfSentence | <TypeOfSentence> |
     And PO has created a Part A form without requesting SPO review with:
-      | RecallType          | <RecallType> |
-      | InCustody           | <InCustody>  |
-      | VictimContactScheme | No           |
+      | RecallType          | <RecallType>      |
+      | InCustody           | <InCustody>       |
+      | VictimContactScheme | No                |
+      | Vulnerabilities     | <Vulnerabilities> |
+      | HasContrabandRisk   | No                |
     # MRD-1262: AC0/AC1
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
@@ -136,11 +139,11 @@ Feature: Rationale for a Recall decision
     And Part A details are correct
 
     Examples:
-      | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  | SPODecision |
-      | No            | No       |                | STANDARD   | No         | RECALL      |
-      | No            | No       |                | FIXED_TERM | Yes Prison | RECALL      |
-      | No            | Yes      |                | EMERGENCY  | Yes Police | RECALL      |
-      | Yes           | No       |                | EMERGENCY  | Yes Prison | RECALL      |
+      | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  | Vulnerabilities | SPODecision |
+      | No            | No       |                | STANDARD   | No         | None            | RECALL      |
+      | No            | No       |                | FIXED_TERM | Yes Prison | Some            | RECALL      |
+      | No            | Yes      |                | EMERGENCY  | Yes Police | All             | RECALL      |
+      | Yes           | No       |                | EMERGENCY  | Yes Prison | Not known       | RECALL      |
 
   @E2E @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1267 @MRD-1449 @MRD-1465
   Scenario Outline: PO records a recall and SPO & ACO countersigns - login & search

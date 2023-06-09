@@ -3,41 +3,38 @@ import { flush } from '@alfonso-presa/soft-assert'
 import { getTestDataPerEnvironment } from '../../utils'
 import { longDateMatchPattern } from '../../../cypress_shared/utils'
 import { UserType } from '../../support/commands'
+import {
+  q10Vulnerabilities,
+  q11Contraband,
+  q12MappaDetails,
+  q13RegisteredPPOIOM,
+  q16IndexOffenceDetails,
+  q17LicenceConditions,
+  q18AdditionalConditions,
+  q19CircumstancesLeadingToRecall,
+  q1EmergencyRecall,
+  q20ResponseToSupervision,
+  q21Alternatives,
+  q22RecallType,
+  q23LicenceConditionsToAdd,
+  q24ISPESP,
+  q25ProbationDetails,
+  q26OffenderManager,
+  q27SPOEndorsement,
+  q28ACOAuthorisation,
+  q29Attachments,
+  q2IndeterminateSentenceType,
+  q3ExtendedSentence,
+  q4OffenderDetails,
+  q5SentenceDetails,
+  q6CustodyStatus,
+  q7Addresses,
+  q8ArrestIssues,
+  q9LocalPoliceDetails,
+} from './assertionsPartA'
+import { CustodyType, IndeterminateRecallType, NonIndeterminateRecallType, YesNoType } from '../../support/enums'
 
 const apiDataForCrn = getTestDataPerEnvironment()
-
-export enum YesNoType {
-  'YES' = 'Yes',
-  'NO' = 'No',
-}
-
-export enum YesNoNAType {
-  'YES' = 'Yes',
-  'NO' = 'No',
-  'NOT_APPLICABLE' = 'Not applicable',
-}
-
-export enum CustodyType {
-  'YES_POLICE' = 'Police Custody',
-  'YES_PRISON' = 'Prison Custody',
-  'NO' = 'No',
-}
-
-export enum NonIndeterminateRecallType {
-  'STANDARD' = 'Standard',
-  'FIXED_TERM' = 'Fixed',
-  'NO_RECALL' = 'No recall',
-}
-export enum IndeterminateRecallType {
-  'EMERGENCY' = 'Emergency recall',
-  'NO_RECALL' = 'No recall',
-}
-
-export enum IndeterminateOrExtendedSentenceDetailType {
-  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = '{{offenderName}} has shown behaviour similar to the index offence',
-  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = '{{offenderName}} has shown behaviour that could lead to a sexual or violent offence',
-  'OUT_OF_TOUCH' = '{{offenderName}} is out of touch',
-}
 
 defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
 
@@ -520,4 +517,43 @@ Then('PO/SPO/ACO can create Part A', function () {
 
 Then('PO/SPO/ACO can download Part A', function () {
   cy.downloadDocX('Download the Part A').as('partAContent')
+})
+
+Then('Part A details are correct', function () {
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
+  const contents = this.partAContent.toString()
+  q1EmergencyRecall(contents, YesNoType[this.testData.emergencyRecall])
+  q2IndeterminateSentenceType(contents, YesNoType[this.testData.indeterminate])
+  q3ExtendedSentence(contents, YesNoType[this.testData.extended])
+  q4OffenderDetails(contents, this.testData.offenderDetails)
+  q5SentenceDetails(contents, this.testData.offenceDetails)
+  q6CustodyStatus(contents, CustodyType[this.testData.inCustody])
+  q7Addresses(contents, this.testData.custodyAddress)
+  q8ArrestIssues(contents, YesNoType[this.testData.hasArrestIssues], this.testData.arrestIssueDetails)
+  q9LocalPoliceDetails(contents, this.testData.localPoliceDetails)
+  q10Vulnerabilities(contents, this.testData.vulnerabilities)
+  q11Contraband(contents, this.testData.contraband)
+  q12MappaDetails(contents, this.testData.mappa)
+  q13RegisteredPPOIOM(contents, this.testData.iom)
+  // q15RoshLevels()
+  q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
+  q17LicenceConditions(contents, this.testData.localPoliceDetails)
+  q18AdditionalConditions(contents, this.testData.localPoliceDetails)
+  q19CircumstancesLeadingToRecall(contents, this.testData.localPoliceDetails)
+  q20ResponseToSupervision(contents, this.testData.localPoliceDetails)
+  q21Alternatives(contents, this.testData.localPoliceDetails)
+  q22RecallType(
+    contents,
+    this.testData.indeterminate === 'NO' && this.testData.extended === 'NO'
+      ? NonIndeterminateRecallType[this.testData.recallType]
+      : IndeterminateRecallType[this.testData.recallType],
+    this.testData.partARecallReason
+  )
+  q23LicenceConditionsToAdd(contents, this.testData.localPoliceDetails)
+  q24ISPESP(contents, this.testData.localPoliceDetails)
+  q25ProbationDetails(contents)
+  q26OffenderManager(contents, this.testData.localPoliceDetails)
+  q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)
+  q28ACOAuthorisation.call(this, contents, this.testData.acoCounterSignature)
+  q29Attachments(contents, this.testData.localPoliceDetails)
 })

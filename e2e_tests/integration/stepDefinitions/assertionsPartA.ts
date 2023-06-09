@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { proxy, flush } from '@alfonso-presa/soft-assert'
 import { changeDateFromLongFormatToShort, getTestDataPerEnvironment } from '../../utils'
+import { YesNoNAType, YesNoType } from '../../support/enums'
 
 const expectSoftly = proxy(expect)
 
@@ -211,11 +212,54 @@ export const q9LocalPoliceDetails = (contents: string, details: Record<string, s
   }
 }
 
-export const q12MappaDetails = (contents: string) => {
+export const q10Vulnerabilities = (contents: string, details: Record<string, string>[] | string[]) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[10]), contents.indexOf(partASections[11]))
+  if (details && typeof details[0] === 'string') {
+    expectSoftly(contents, '').to.contain(
+      `Are there any vulnerability issues and/or diversity needs in view of arrest and subsequent location at prison or police custody? No`
+    )
+    expectSoftly(contents).to.contain(`If yes, provide details: ${details[0]}`)
+  } else if (details && typeof details[0] === 'object') {
+    details.forEach(detail => {
+      expectSoftly(contents, '').to.contain(
+        `Are there any vulnerability issues and/or diversity needs in view of arrest and subsequent location at prison or police custody? Yes`
+      )
+      expectSoftly(contents).to.contain(`${detail.vulnerabilityName}:${detail.vulnerabilityNotes}`)
+    })
+  }
+}
+export const q11Contraband = (contents: string, details: Record<string, string>) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[11]), contents.indexOf(partASections[12]))
+  cy.log(`Q11: ${contents}`)
+  expectSoftly(contents).to.contain(
+    `Do you have any suspicions that the offender is using recall to bring contraband into the prison estate? ${
+      YesNoType[details.hasRisk]
+    }`
+  )
+  expectSoftly(contents).to.contain(
+    `If yes, provide details and contact your local police SPOC to share information or concerns: ${
+      details.riskDetails ? details.riskDetails : ' '
+    }`
+  )
+}
+
+export const q12MappaDetails = (contents: string, details?: Record<string, string>) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[12]), contents.indexOf(partASections[13]))
-  expectSoftly(contents, 'MAPPA Category\n-->').to.match(apiDataForCrn.mappaCategory as RegExp)
-  expectSoftly(contents, 'MAPPA Level\n-->').to.match(apiDataForCrn.mappaLevel as RegExp)
+  expectSoftly(contents, 'MAPPA Category\n-->').to.match(
+    details ? new RegExp(`MAPPA Category: ${details.mappaCategory}`) : (apiDataForCrn.mappaCategory as RegExp)
+  )
+  expectSoftly(contents, 'MAPPA Level\n-->').to.match(
+    details ? new RegExp(`MAPPA Level: ${details.mappaLevel}`) : (apiDataForCrn.mappaLevel as RegExp)
+  )
+}
+
+export const q13RegisteredPPOIOM = (contents: string, details: string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[13]), contents.indexOf(partASections[14]))
+  expectSoftly(contents).to.contain(`Registered PPO/IOM: ${YesNoNAType[details]}`)
 }
 
 export const q15RoshLevels = (contents: string) => {
@@ -240,6 +284,36 @@ export const q16IndexOffenceDetails = (contents: string, answer: string = apiDat
   expectSoftly(contents, 'Offence Analysis\n-->').to.contain(answer)
 }
 
+export const q17LicenceConditions = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[17]), contents.indexOf(partASections[18]))
+  cy.log(`Q17: ${contents} ${details}`)
+}
+
+export const q18AdditionalConditions = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[18]), contents.indexOf(partASections[19]))
+  cy.log(`Q18: ${contents} ${details}`)
+}
+
+export const q19CircumstancesLeadingToRecall = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[19]), contents.indexOf(partASections[20]))
+  cy.log(`Q19: ${contents} ${details}`)
+}
+
+export const q20ResponseToSupervision = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[20]), contents.indexOf(partASections[21]))
+  cy.log(`Q20: ${contents} ${details}`)
+}
+
+export const q21Alternatives = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[21]), contents.indexOf(partASections[22]))
+  cy.log(`Q21: ${contents} ${details}`)
+}
+
 export const q22RecallType = (contents: string, answer: string, details: string) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[22]), contents.indexOf(partASections[23]))
@@ -249,6 +323,18 @@ export const q22RecallType = (contents: string, answer: string, details: string)
   expectSoftly(contents, 'Recall Type Reason\n-->').to.contain(
     `Explain your reasons for the above recall type recommendation: ${details}`
   )
+}
+
+export const q23LicenceConditionsToAdd = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[23]), contents.indexOf(partASections[24]))
+  cy.log(`Q23: ${contents} ${details}`)
+}
+
+export const q24ISPESP = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[24]), contents.indexOf(partASections[25]))
+  cy.log(`Q24: ${contents} ${details}`)
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -265,6 +351,12 @@ export const q25ProbationDetails = (contents: string, details: Record<string, an
     `${details.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`
   )
   expectSoftly(contents, 'Time of Decision\n-->').to.match(details.timeOfDecision as RegExp)
+}
+
+export const q26OffenderManager = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[26]), contents.indexOf(partASections[27]))
+  cy.log(`Q26: ${contents} ${details}`)
 }
 
 export const q27SPOEndorsement = function (contents: string, details: Record<string, string>) {
@@ -290,6 +382,12 @@ export const q28ACOAuthorisation = function (contents: string, details: Record<s
   expectSoftly(contents, 'Q28 - ACO Reason').to.contain(
     `This means you are endorsing both the recall and the quality and content of the recall report.${details.reason}`
   )
+}
+
+export const q29Attachments = (contents: string, details: Record<string, string>[] | string) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[29]))
+  cy.log(`Q29: ${contents} ${details}`)
 }
 
 export const assertAllPartA = () => flush()
