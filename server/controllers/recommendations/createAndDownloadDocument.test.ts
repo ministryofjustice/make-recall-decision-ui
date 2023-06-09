@@ -1,37 +1,52 @@
-import { Response } from 'express'
 import { createAndDownloadDocument } from './createAndDownloadDocument'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { AuditService } from '../../services/auditService'
-import RestClient from '../../data/restClient'
+import { createDocument, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../monitoring/azureAppInsights')
+jest.mock('../../data/makeDecisionApiClient')
 
 const recommendationId = '987'
-let res: Response
 const token = 'token'
 const featureFlags = { flagExcludeFromAnalytics: true }
 
 describe('createAndDownloadDocument', () => {
-  beforeEach(() => {
-    res = mockRes({
-      token,
-      locals: { user: { username: 'Dave', email: 'dave@gov.uk' }, flags: featureFlags },
-    })
-  })
-
   it('requests a Part A', async () => {
     const fileContents = '123'
     const fileName = 'Part-A.docx'
-    jest.spyOn(RestClient.prototype, 'post').mockResolvedValueOnce({ fileContents, fileName })
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName })
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     jest.spyOn(AuditService.prototype, 'createPartA')
+
     const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
-    await createAndDownloadDocument('PART_A')(req, res)
-    expect(RestClient.prototype.post as jest.Mock).toHaveBeenCalledWith({
-      data: { format: 'download-docx', userEmail: 'dave@gov.uk' },
-      headers: { 'X-Feature-Flags': '{"flagExcludeFromAnalytics":true}' },
-      path: '/recommendations/987/part-a',
+
+    const res = mockRes({
+      token,
+      locals: { user: { username: 'Dave', email: 'dave@gov.uk', roles: [HMPPS_AUTH_ROLE.PO] }, flags: featureFlags },
     })
+
+    await createAndDownloadDocument('PART_A')(req, res)
+
+    expect(createDocument).toHaveBeenCalledWith(
+      '987',
+      'part-a',
+      { format: 'download-docx', userEmail: 'dave@gov.uk' },
+      'token',
+      {
+        flagExcludeFromAnalytics: true,
+      }
+    )
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '987',
+      token: 'token',
+      activate: [STATUSES.PP_DOCUMENT_CREATED],
+      deActivate: [],
+    })
+
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdPartADocumentDownloaded',
@@ -54,18 +69,87 @@ describe('createAndDownloadDocument', () => {
     expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
   })
 
+  it('close document', async () => {
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents: '123', fileName: 'Part-A.docx' })
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+    // jest.spyOn(AuditService.prototype, 'createPartA')
+
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
+
+    const res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          email: 'dave@gov.uk',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+        flags: featureFlags,
+      },
+    })
+
+    await createAndDownloadDocument('PART_A')(req, res)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '987',
+      token: 'token',
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.CLOSED],
+      deActivate: [],
+    })
+  })
+
+  it('do not close document if SPO', async () => {
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents: '123', fileName: 'Part-A.docx' })
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+    // jest.spyOn(AuditService.prototype, 'createPartA')
+
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
+
+    const res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          email: 'dave@gov.uk',
+          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
+        },
+        flags: featureFlags,
+      },
+    })
+
+    await createAndDownloadDocument('PART_A')(req, res)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+  })
+
   it('requests a no recall letter', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     const fileContents = '123'
     const fileName = 'Letter.docx'
-    jest.spyOn(RestClient.prototype, 'post').mockResolvedValueOnce({ fileContents, fileName })
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName })
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     jest.spyOn(AuditService.prototype, 'createNoRecallLetter')
+
     const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
-    await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
-    expect(RestClient.prototype.post as jest.Mock).toHaveBeenCalledWith({
-      data: { format: 'download-docx' },
-      headers: { 'X-Feature-Flags': '{"flagExcludeFromAnalytics":true}' },
-      path: '/recommendations/987/no-recall-letter',
+
+    const res = mockRes({
+      token,
+      locals: { user: { username: 'Dave', email: 'dave@gov.uk', roles: [HMPPS_AUTH_ROLE.PO] }, flags: featureFlags },
     })
+
+    await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
+
+    expect(createDocument).toHaveBeenCalledWith('987', 'no-recall-letter', { format: 'download-docx' }, 'token', {
+      flagExcludeFromAnalytics: true,
+    })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '987',
+      token: 'token',
+      activate: ['PP_DOCUMENT_CREATED'],
+      deActivate: [],
+    })
+
     expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdDecisionNotToRecallLetterDownloaded',

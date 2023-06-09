@@ -17,6 +17,7 @@ import { postConsiderRecall } from '../controllers/recommendations/postConsiderR
 import { getCreateRecommendationWarning } from '../controllers/recommendations/getCreateRecommendationWarning'
 import recommendations from './recommendations'
 import { isPreprodOrProd } from '../utils/utils'
+import replaceCurrentRecommendationController from '../controllers/recommendations/replaceCurrentRecommendationController'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -38,6 +39,6 @@ export default function routes(router: Router): Router {
   post(`${routeUrls.cases}/:crn/consider-recall`, postConsiderRecall)
   get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummaryController.get)
-
+  get(`${routeUrls.cases}/:crn/replace-recommendation/:recommendationId`, replaceCurrentRecommendationController.get)
   return router
 }

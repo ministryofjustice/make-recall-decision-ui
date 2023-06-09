@@ -9,6 +9,7 @@ context('Licence conditions', () => {
 
   it('shows conditions for a single active custodial conviction', () => {
     const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     // Standard licence conditions
@@ -37,6 +38,7 @@ context('Licence conditions', () => {
       },
     })
     const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement('Burglary - 05714').should('exist')
     cy.getElement('There are no additional licence conditions in NDelius. Check the licence document.').should('exist')
@@ -51,6 +53,7 @@ context('Licence conditions', () => {
       },
     })
     const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement('This person has no active convictions.').should('exist')
   })
@@ -89,6 +92,7 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     // Additional licence conditions
     cy.getElement('Burglary - 05714').should('exist')
@@ -133,6 +137,7 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
@@ -156,6 +161,7 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')

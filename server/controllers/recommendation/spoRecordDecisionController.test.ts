@@ -80,6 +80,7 @@ describe('get', () => {
 
 describe('post', () => {
   it('post with valid data', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(updateStatuses as jest.Mock).mockResolvedValue([])
 
@@ -123,6 +124,7 @@ describe('post', () => {
   })
 
   it('post with checkbox unchecked', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(updateStatuses as jest.Mock).mockResolvedValue([])
 
@@ -150,6 +152,36 @@ describe('post', () => {
         sendSpoRationaleToDelius: true,
       },
       featureFlags: { flagTriggerWork: false },
+    })
+  })
+  it('close document', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.PP_DOCUMENT_CREATED, active: true }])
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(updateStatuses as jest.Mock).mockResolvedValue([])
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        sensitive: 'sensitive',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        flags: { flagTriggerWork: false },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await spoRecordDecisionController.post(req, res, next)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.SPO_RECORDED_RATIONALE, STATUSES.CLOSED],
+      deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
     })
   })
 })
