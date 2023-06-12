@@ -15,6 +15,7 @@ context('Contact history', () => {
 
   describe('List of contacts', () => {
     it('shows all contacts, sorted by date', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
       // contacts
@@ -59,11 +60,13 @@ context('Contact history', () => {
         ],
       }
       cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: responseWithFutureContact })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
     })
 
     it('can view collapsible notes on the contact history page', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
       // contacts
@@ -124,6 +127,7 @@ context('Contact history', () => {
 
   describe('Filter contacts', () => {
     it('by date range', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
       // apply filters without entering dates
@@ -181,6 +185,7 @@ context('Contact history', () => {
     })
 
     it('by free text search', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.fillInput('Search term', 'letter')
       cy.clickButton('Apply filters')
@@ -201,6 +206,7 @@ context('Contact history', () => {
     })
 
     it('by contact type group', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.contains('Appointments (5 contacts)').click()
       cy.selectCheckboxes('Appointments', ['Responsible Officer Change (1 contact)'])
@@ -209,6 +215,7 @@ context('Contact history', () => {
     })
 
     it('by system generated contacts', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
       cy.selectCheckboxes('NDelius automatic contacts', ['Show NDelius automatic contacts'])
@@ -220,6 +227,7 @@ context('Contact history', () => {
     })
 
     it('by multiple filters combined', () => {
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
 

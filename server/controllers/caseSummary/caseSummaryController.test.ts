@@ -14,6 +14,7 @@ import { AuditService } from '../../services/auditService'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -30,6 +31,7 @@ describe('get', () => {
 
   it('should return case details for risk', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'risk', token)
@@ -46,6 +48,7 @@ describe('get', () => {
 
   it('should return case details for overview', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'overview', token)
@@ -61,6 +64,7 @@ describe('get', () => {
 
   it('should return case details for licence conditions', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseLicenceConditionsResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'licence-conditions' } })
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
@@ -76,6 +80,7 @@ describe('get', () => {
 
   it('should return case details for personal details', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(casePersonalDetailsResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'personal-details' } })
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'personal-details', token)
@@ -88,6 +93,7 @@ describe('get', () => {
 
   it('should return case details for recommendations', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRecommendationsResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'recommendations' } })
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'recommendations', token)
@@ -112,6 +118,7 @@ describe('get', () => {
 
   it('should convert the CRN to uppercase', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn: 'abc', sectionId: 'overview' } })
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
@@ -256,6 +263,7 @@ describe('get', () => {
 
   it('should send an audit event', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseRiskApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'risk' } })
     jest.spyOn(AuditService.prototype, 'caseSummaryView')
     await caseSummaryController.get(req, res, next)
@@ -267,8 +275,9 @@ describe('get', () => {
     })
   })
 
-  it('show reccomendation button for existing recommendation', async () => {
+  it('show recommendation button for existing recommendation', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummaryController.get(req, res, next)
 
@@ -284,7 +293,27 @@ describe('get', () => {
     expect(res.locals.backLink)
   })
 
-  it('show reccomendation button for no recommendation', async () => {
+  it('show recommendation button for existing recommendation that is not closed and flagTriggerWork set', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.CLOSED, active: true }])
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+
+    res.locals.flags.flagTriggerWork = true
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      display: true,
+      post: false,
+      title: 'Make a recommendation',
+      dataAnalyticsEventCategory: 'make_recommendation_click',
+      link: '/cases/A1234AB/create-recommendation-warning',
+    })
+    expect(res.locals.backLink)
+  })
+
+  it('show recommendation button for no recommendation', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
     await caseSummaryController.get(req, res, next)
@@ -301,7 +330,7 @@ describe('get', () => {
     expect(res.locals.backLink)
   })
 
-  it('show reccomendation button for case review', async () => {
+  it('show recommendation button for case review', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
     const req = mockReq({ params: { crn, sectionId: 'overview', recommendationId: '123' } })
     await caseSummaryController.get(req, res, next)
@@ -492,7 +521,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -506,7 +534,7 @@ describe('post', () => {
       valuesToSave: {
         reviewOffenderProfile: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-task-list-consider-recall`)
