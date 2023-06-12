@@ -11,7 +11,7 @@ jest.mock('../../data/makeDecisionApiClient')
 
 const recommendationId = '987'
 const token = 'token'
-const featureFlags = { flagExcludeFromAnalytics: true }
+const featureFlags = { flagTriggerWork: true }
 
 describe('createAndDownloadDocument', () => {
   it('requests a Part A', async () => {
@@ -36,7 +36,7 @@ describe('createAndDownloadDocument', () => {
       { format: 'download-docx', userEmail: 'dave@gov.uk' },
       'token',
       {
-        flagExcludeFromAnalytics: true,
+        flagTriggerWork: true,
       }
     )
 
@@ -72,7 +72,6 @@ describe('createAndDownloadDocument', () => {
   it('close document', async () => {
     ;(createDocument as jest.Mock).mockResolvedValue({ fileContents: '123', fileName: 'Part-A.docx' })
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
-    // jest.spyOn(AuditService.prototype, 'createPartA')
 
     const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
 
@@ -85,6 +84,34 @@ describe('createAndDownloadDocument', () => {
           roles: [HMPPS_AUTH_ROLE.PO],
         },
         flags: featureFlags,
+      },
+    })
+
+    await createAndDownloadDocument('PART_A')(req, res)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '987',
+      token: 'token',
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.CLOSED],
+      deActivate: [],
+    })
+  })
+
+  it('close document for legacy (not trigger work) as an SPO', async () => {
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents: '123', fileName: 'Part-A.docx' })
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
+
+    const res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          email: 'dave@gov.uk',
+          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
+        },
+        flags: { flagTriggerWork: false },
       },
     })
 
@@ -140,7 +167,7 @@ describe('createAndDownloadDocument', () => {
     await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
 
     expect(createDocument).toHaveBeenCalledWith('987', 'no-recall-letter', { format: 'download-docx' }, 'token', {
-      flagExcludeFromAnalytics: true,
+      flagTriggerWork: true,
     })
 
     expect(updateStatuses).toHaveBeenCalledWith({

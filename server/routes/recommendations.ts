@@ -1,32 +1,28 @@
-import { NextFunction, Request, RequestHandler, Response, Router } from 'express'
+import { RequestHandler, Router } from 'express'
+import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
-import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
+import asyncMiddleware from '../middleware/asyncMiddleware'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import { getRecommendationPage } from '../controllers/recommendations/getRecommendationPage'
 import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
-import audit from '../controllers/audit'
-import retrieve from '../controllers/retrieveRecommendation'
+import { RouteBuilder } from './RouteBuilder'
+import { and, not, or, roleIsActive, STATUSES, statusIsActive } from '../middleware/recommendationStatusCheck'
+import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
 import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
 import isIndeterminateController from '../controllers/recommendation/isIndeterminateController'
 import isExtendedController from '../controllers/recommendation/isExtendedController'
-
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
-import customizeMessages from '../controllers/customizeMessages'
 import shareCaseWithManagerController from '../controllers/recommendation/shareCaseWithManagerController'
-import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import discussWithManagerController from '../controllers/recommendation/discussWithManagerController'
 import recallTypeController from '../controllers/recommendation/recallTypeController'
 import recallTypeIndeterminateController from '../controllers/recommendation/recallTypeIndeterminateController'
 import redirectController from '../controllers/recommendation/redirectController'
-import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import spoTaskListConsiderRecallController from '../controllers/recommendation/spoTaskListConsiderRecallController'
-import authorisationMiddleware, { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
@@ -40,20 +36,9 @@ import whyConsideredRecallController from '../controllers/recommendation/whyCons
 import reasonsNoRecallController from '../controllers/recommendation/reasonsNoRecallController'
 import appointmentNoRecallController from '../controllers/recommendation/appointmentNoRecallController'
 import managerReviewController from '../controllers/recommendation/managerReviewController'
-import recommendationStatusCheck, {
-  and,
-  not,
-  or,
-  roleIsActive,
-  StatusCheck,
-  STATUSES,
-  statusIsActive,
-} from '../middleware/recommendationStatusCheck'
 import sensitiveInfoController from '../controllers/recommendation/sensitiveInfoController'
 import custodyStatusController from '../controllers/recommendation/custodyStatusController'
 import whatLedController from '../controllers/recommendation/whatLedController'
-import { saveErrorWithDetails } from '../utils/errors'
-import logger from '../../logger'
 import requestSpoCountersignController from '../controllers/recommendation/requestSpoCountersignController'
 import emergencyRecallController from '../controllers/recommendation/emergencyRecallController'
 import personalDetailsController from '../controllers/recommendation/personalDetailsController'
@@ -69,181 +54,170 @@ import rationaleCheckController from '../controllers/recommendation/rationaleChe
 
 const recommendations = Router()
 
-routeRecommendationGet('', redirectController.get, [HMPPS_AUTH_ROLE.PO])
+/*
+ * This section contains the route for the Probation Practitioner (PP)
+ */
+const ppRouteBuilder = RouteBuilder.build(recommendations)
+  .withRoles([HMPPS_AUTH_ROLE.PO])
+  .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
 
-routeRecommendationGet(
-  'spo-task-list-consider-recall',
-  spoTaskListConsiderRecallController.get,
-  [HMPPS_AUTH_ROLE.SPO],
+ppRouteBuilder.get('', redirectController.get)
+
+ppRouteBuilder.get('task-list-consider-recall', taskListConsiderRecallController.get)
+ppRouteBuilder.post('task-list-consider-recall', taskListConsiderRecallController.post)
+
+ppRouteBuilder.get('trigger-leading-to-recall', triggerLeadingToRecallController.get)
+ppRouteBuilder.post('trigger-leading-to-recall', triggerLeadingToRecallController.post)
+
+ppRouteBuilder.get('response-to-probation', responseToProbationController.get)
+ppRouteBuilder.post('response-to-probation', responseToProbationController.post)
+
+ppRouteBuilder.get('licence-conditions', licenceConditionsController.get)
+ppRouteBuilder.post('licence-conditions', licenceConditionsController.post)
+
+ppRouteBuilder.get('alternatives-tried', alternativesToRecallTriedController.get)
+ppRouteBuilder.post('alternatives-tried', alternativesToRecallTriedController.post)
+
+ppRouteBuilder.get('indeterminate-type', indeterminateTypeController.get)
+ppRouteBuilder.post('indeterminate-type', indeterminateTypeController.post)
+
+ppRouteBuilder.get('is-indeterminate', isIndeterminateController.get)
+ppRouteBuilder.post('is-indeterminate', isIndeterminateController.post)
+
+ppRouteBuilder.get('is-extended', isExtendedController.get)
+ppRouteBuilder.post('is-extended', isExtendedController.post)
+
+ppRouteBuilder.get('share-case-with-manager', shareCaseWithManagerController.get)
+
+ppRouteBuilder.get('discuss-with-manager', discussWithManagerController.get)
+
+ppRouteBuilder.get('recall-type', recallTypeController.get)
+ppRouteBuilder.post('recall-type', recallTypeController.post)
+
+ppRouteBuilder.get('emergency-recall', emergencyRecallController.get)
+ppRouteBuilder.post('emergency-recall', emergencyRecallController.post)
+
+ppRouteBuilder.get('sensitive-info', sensitiveInfoController.get)
+
+ppRouteBuilder.get('custody-status', custodyStatusController.get)
+ppRouteBuilder.post('custody-status', custodyStatusController.post)
+
+ppRouteBuilder.get('what-led', whatLedController.get)
+ppRouteBuilder.post('what-led', whatLedController.post)
+
+ppRouteBuilder.get('recall-type-indeterminate', recallTypeIndeterminateController.get)
+ppRouteBuilder.post('recall-type-indeterminate', recallTypeIndeterminateController.post)
+
+ppRouteBuilder.get('task-list-no-recall', taskListNoRecallController.get)
+
+ppRouteBuilder.get('why-considered-recall', whyConsideredRecallController.get)
+ppRouteBuilder.post('why-considered-recall', whyConsideredRecallController.post)
+
+ppRouteBuilder.get('reasons-no-recall', reasonsNoRecallController.get)
+ppRouteBuilder.post('reasons-no-recall', reasonsNoRecallController.post)
+
+ppRouteBuilder.get('appointment-no-recall', appointmentNoRecallController.get)
+ppRouteBuilder.post('appointment-no-recall', appointmentNoRecallController.post)
+
+ppRouteBuilder.get('preview-no-recall', previewNoRecallLetterController.get)
+
+ppRouteBuilder.get('confirmation-no-recall', confirmationNoRecallController.get)
+
+ppRouteBuilder.get('manager-review', managerReviewController.get)
+
+ppRouteBuilder.get('personal-details', personalDetailsController.get)
+
+ppRouteBuilder.get('offence-details', offenceDetailsController.get)
+
+ppRouteBuilder.get('mappa', mappaController.get)
+
+ppRouteBuilder.get('manager-view-decision', managerViewDecisionController.get)
+
+ppRouteBuilder.get('manager-decision-confirmation', managerDecisionConfirmationController.get)
+
+ppRouteBuilder
+  .withCheck(not(statusIsActive(STATUSES.SPO_SIGNED)))
+  .get('request-spo-countersign', requestSpoCountersignController.get)
+
+ppRouteBuilder
+  .withCheck(and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED))))
+  .get('request-aco-countersign', requestAcoCountersignController.get)
+
+const spoRouteBuilder = ppRouteBuilder.withRoles([HMPPS_AUTH_ROLE.SPO])
+
+/*
+ * This section contains the route for the Senior Probation Officer during the SPO Rationale journey.
+ */
+const spoRationaleRouteBuilder = spoRouteBuilder.withCheck(
   or(statusIsActive(STATUSES.SPO_CONSIDER_RECALL), statusIsActive(STATUSES.SPO_CONSIDERING_RECALL))
 )
 
-routeRecommendationGet(
-  `review-case/:crn/:sectionId`,
-  caseSummaryController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  statusIsActive(STATUSES.SPO_CONSIDERING_RECALL)
+spoRationaleRouteBuilder.get('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get)
+
+spoRationaleRouteBuilder.get(`review-case/:crn/:sectionId`, caseSummaryController.get)
+spoRationaleRouteBuilder.post(`review-case/:crn/:sectionId`, caseSummaryController.post)
+
+spoRationaleRouteBuilder.get('review-practitioners-concerns', reviewPractitionersConcernsController.get)
+spoRationaleRouteBuilder.post('review-practitioners-concerns', reviewPractitionersConcernsController.post)
+
+spoRationaleRouteBuilder.get('spo-rationale', spoRecallRationaleController.get)
+spoRationaleRouteBuilder.post('spo-rationale', spoRecallRationaleController.post)
+
+spoRationaleRouteBuilder.get('spo-record-decision', spoRecordDecisionController.get)
+spoRationaleRouteBuilder.post('spo-record-decision', spoRecordDecisionController.post)
+
+spoRationaleRouteBuilder
+  .withCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))
+  .get('spo-rationale-confirmation', spoRationaleConfirmationController.get)
+
+/*
+ * This section contains the route for the Senior Probation Officer during the SPO Countersigning journey.
+ * This journey includes the ACO as the ACOs do not currently have a distinct role assigned to them.
+ */
+const spoCounterSigningCheckRouteBuilder = spoRationaleRouteBuilder.withCheck(
+  and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
 )
-routeRecommendationPost(`review-case/:crn/:sectionId`, caseSummaryController.post, [HMPPS_AUTH_ROLE.SPO])
 
-routeRecommendationGet(
-  'review-practitioners-concerns',
-  reviewPractitionersConcernsController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  statusIsActive(STATUSES.SPO_CONSIDERING_RECALL)
-)
-routeRecommendationPost('review-practitioners-concerns', reviewPractitionersConcernsController.post, [
-  HMPPS_AUTH_ROLE.SPO,
-])
+spoCounterSigningCheckRouteBuilder.get('rationale-check', rationaleCheckController.get)
+spoCounterSigningCheckRouteBuilder.post('rationale-check', rationaleCheckController.post)
 
-routeRecommendationGet(
-  'spo-rationale',
-  spoRecallRationaleController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  statusIsActive(STATUSES.SPO_CONSIDERING_RECALL)
-)
-routeRecommendationPost('spo-rationale', spoRecallRationaleController.post, [HMPPS_AUTH_ROLE.SPO])
-
-routeRecommendationGet('spo-rationale-confirmation', spoRationaleConfirmationController.get, [HMPPS_AUTH_ROLE.SPO])
-
-routeRecommendationGet(
-  'spo-record-decision',
-  spoRecordDecisionController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  statusIsActive(STATUSES.SPO_CONSIDERING_RECALL)
-)
-routeRecommendationPost('spo-record-decision', spoRecordDecisionController.post, [HMPPS_AUTH_ROLE.SPO])
-
-routeRecommendationGet('task-list-consider-recall', taskListConsiderRecallController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('task-list-consider-recall', taskListConsiderRecallController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('trigger-leading-to-recall', triggerLeadingToRecallController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('trigger-leading-to-recall', triggerLeadingToRecallController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('response-to-probation', responseToProbationController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('response-to-probation', responseToProbationController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('licence-conditions', licenceConditionsController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('licence-conditions', licenceConditionsController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('alternatives-tried', alternativesToRecallTriedController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('alternatives-tried', alternativesToRecallTriedController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('indeterminate-type', indeterminateTypeController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('indeterminate-type', indeterminateTypeController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('is-indeterminate', isIndeterminateController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('is-indeterminate', isIndeterminateController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('is-extended', isExtendedController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('is-extended', isExtendedController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('share-case-with-manager', shareCaseWithManagerController.get, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('sensitive-info', sensitiveInfoController.get, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('custody-status', custodyStatusController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('custody-status', custodyStatusController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('what-led', whatLedController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('what-led', whatLedController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('discuss-with-manager', discussWithManagerController.get, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('recall-type', recallTypeController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('recall-type', recallTypeController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('recall-type-indeterminate', recallTypeIndeterminateController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('recall-type-indeterminate', recallTypeIndeterminateController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('task-list-no-recall', taskListNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('why-considered-recall', whyConsideredRecallController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('why-considered-recall', whyConsideredRecallController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('reasons-no-recall', reasonsNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('reasons-no-recall', reasonsNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('appointment-no-recall', appointmentNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('appointment-no-recall', appointmentNoRecallController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet(
-  'rationale-check',
-  rationaleCheckController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)
-)
-routeRecommendationPost('rationale-check', rationaleCheckController.post, [HMPPS_AUTH_ROLE.SPO])
-
-routeRecommendationGet(
-  'task-list',
-  taskListController.get,
-  [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-  or(
-    not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
-    and(
-      roleIsActive(HMPPS_AUTH_ROLE.SPO),
-      or(
-        statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
-        statusIsActive(STATUSES.SPO_SIGNED),
-        statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
-        statusIsActive(STATUSES.ACO_SIGNED)
-      )
-    )
+const spoCounterSigningRouteBuilder = spoRationaleRouteBuilder.withCheck(
+  and(
+    not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
+    or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
   )
 )
 
-routeRecommendationGet('preview-no-recall', previewNoRecallLetterController.get, [HMPPS_AUTH_ROLE.PO])
+spoCounterSigningRouteBuilder.get('countersigning-telephone', countersigningTelephoneController.get)
+spoCounterSigningRouteBuilder.post('countersigning-telephone', countersigningTelephoneController.post)
 
-routeRecommendationGet('confirmation-no-recall', confirmationNoRecallController.get, [HMPPS_AUTH_ROLE.PO])
+spoCounterSigningRouteBuilder.get('manager-countersignature', managerCountersignatureController.get)
+spoCounterSigningRouteBuilder.post('manager-countersignature', managerCountersignatureController.post)
 
-routeRecommendationGet('manager-review', managerReviewController.get, [HMPPS_AUTH_ROLE.PO])
+spoCounterSigningRouteBuilder
+  .withCheck(or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED)))
+  .get('countersign-confirmation', countersignConfirmationController.get)
 
-routeRecommendationGet(
-  'request-spo-countersign',
-  requestSpoCountersignController.get,
-  [HMPPS_AUTH_ROLE.PO],
-  not(statusIsActive(STATUSES.SPO_SIGNED))
-)
-
-routeRecommendationGet(
-  'request-aco-countersign',
-  requestAcoCountersignController.get,
-  [HMPPS_AUTH_ROLE.PO],
-  and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED)))
-)
-
-routeRecommendationGet('emergency-recall', emergencyRecallController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationPost('emergency-recall', emergencyRecallController.post, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet('personal-details', personalDetailsController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationGet('offence-details', offenceDetailsController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationGet('mappa', mappaController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationGet('manager-view-decision', managerViewDecisionController.get, [HMPPS_AUTH_ROLE.PO])
-routeRecommendationGet('manager-decision-confirmation', managerDecisionConfirmationController.get, [HMPPS_AUTH_ROLE.PO])
-
-routeRecommendationGet(
-  'countersigning-telephone',
-  countersigningTelephoneController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
-)
-routeRecommendationPost('countersigning-telephone', countersigningTelephoneController.post, [HMPPS_AUTH_ROLE.SPO])
-
-routeRecommendationGet(
-  'manager-countersignature',
-  managerCountersignatureController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
-)
-routeRecommendationPost('manager-countersignature', managerCountersignatureController.post, [HMPPS_AUTH_ROLE.SPO])
-
-routeRecommendationGet(
-  'countersign-confirmation',
-  countersignConfirmationController.get,
-  [HMPPS_AUTH_ROLE.SPO],
-  or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED))
-)
+/*
+ * The task-list page is accessed by many different roles under different circumstances.
+ */
+RouteBuilder.build(recommendations)
+  .withRoles([HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO])
+  .withCheck(
+    or(
+      not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
+      and(
+        roleIsActive(HMPPS_AUTH_ROLE.SPO),
+        or(
+          statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
+          statusIsActive(STATUSES.SPO_SIGNED),
+          statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
+          statusIsActive(STATUSES.ACO_SIGNED)
+        )
+      )
+    )
+  )
+  .get('task-list', taskListController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
@@ -256,56 +230,3 @@ recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl, a
 recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl, asyncMiddleware(postRecommendationForm))
 
 export default recommendations
-
-type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
-
-function routeRecommendationGet(
-  endpoint: string,
-  routerCallback: RouterCallback,
-  roles: string[],
-  statusCheck?: StatusCheck
-) {
-  recommendations.get(
-    `/:recommendationId/${endpoint}`,
-    feedErrorsToExpress(authorisationMiddleware(roles)),
-    feedErrorsToExpress(recommendationStatusCheck(statusCheck)),
-    sanitizeInputValues,
-    parseRecommendationUrl,
-    feedErrorsToExpress(retrieve), // necessary for async functions
-    guardAgainstModifyingClosedRecommendation,
-    customizeMessages,
-    feedErrorsToExpress(routerCallback), // necessary for async functions
-    audit,
-    (error: Error, req: Request, res: Response, next: NextFunction): void => {
-      next(error) // forward errors to root router
-    }
-  )
-}
-
-function routeRecommendationPost(endpoint: string, routerCallback: RouterCallback, roles: string[]) {
-  recommendations.post(
-    `/:recommendationId/${endpoint}`,
-    authorisationMiddleware(roles),
-    sanitizeInputValues,
-    parseRecommendationUrl,
-    feedErrorsToExpress(routerCallback), // necessary for async functions
-    (error: Error, req: Request, res: Response, next: NextFunction): void => {
-      next(error) // forward errors to root router
-    }
-  )
-}
-
-function feedErrorsToExpress(routerCallback: RouterCallback) {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await routerCallback(req, res, next)
-    } catch (err) {
-      if (err.name === 'AppError') {
-        next(err)
-      }
-      logger.error(err)
-      req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
-      return res.redirect(303, req.originalUrl)
-    }
-  }
-}
