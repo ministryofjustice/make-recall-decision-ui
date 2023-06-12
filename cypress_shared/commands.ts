@@ -186,7 +186,7 @@ Cypress.Commands.add('selectRadioByValue', (groupLabel, value, opts = { parent: 
     .contains('legend', groupLabel)
     .parent('fieldset')
     .then($fieldset => {
-      cy.wrap($fieldset).get(`input[value='${value}']`).click()
+      cy.wrap($fieldset).find(`input[value='${value}']`).click()
     })
 })
 

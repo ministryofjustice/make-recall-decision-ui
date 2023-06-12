@@ -50,3 +50,24 @@ export enum Vulnerabilities {
   'PHYSICAL_DISABILITIES' = 'Physical disabilities',
   'CULTURAL_OR_LANGUAGE_DIFFERENCES' = 'Cultural or language differences',
 }
+
+export enum ROSHLevels {
+  'LOW' = 'Low',
+  'MEDIUM' = 'Medium',
+  'HIGH' = 'High',
+  'VERY_HIGH' = 'Very High',
+  'NOT_APPLICABLE' = 'N/A',
+}
+
+export enum LicenceConditions {
+  GOOD_BEHAVIOUR = 'be of good behaviour and not behave in a way which undermines the purpose of the licence period;',
+  NO_OFFENCE = 'not to commit any offence;',
+  KEEP_IN_TOUCH = 'keep in touch with the supervising officer in accordance with instructions given by the supervising officer;',
+  SUPERVISING_OFFICER_VISIT = 'receive visits from the supervising officer in accordance with instructions given by the supervising officer;',
+  ADDRESS_APPROVED = 'reside permanently at an address approved by the supervising officer and obtain prior permission of the supervising officer for any stay of one or more nights at a different address;',
+  NO_WORK_UNDERTAKEN = 'not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work;',
+  NO_TRAVEL_OUTSIDE_UK = 'not to travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purpose of immigration deportation or removal.',
+  NAME_CHANGE = 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence.',
+  CONTACT_DETAILS = 'Tell your supervising officer if you change or add any contact details, including phone number or email.',
+  'NLC8|NSTT8' = 'To only attend places of worship which have been previously agreed with your supervising officer.',
+}

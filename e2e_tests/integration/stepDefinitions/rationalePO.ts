@@ -12,13 +12,14 @@ import {
   CustodyType,
   YesNoNAType,
   Vulnerabilities,
+  ROSHLevels,
 } from '../../support/enums'
 
 const expectSoftly = proxy(expect)
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const testData: Record<string, any> = {
-  licenceConditions: { standard: [] },
+  licenceConditions: { standard: [], advanced: [] },
   alternativesTried: [],
   vulnerabilities: [],
 }
@@ -48,30 +49,30 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       cy.fillInput(`How has ${offenderName} responded to probation so far`, testData.probationResponse)
       cy.clickButton('Continue')
       cy.clickLink(`What licence conditions has ${offenderName} breached`)
-      // get all licence conditions from the page and choose a few randomly
+      // select all standard recommendation if recommendationDetails.LicenceConditions === 'all' passed else choose a few randomly
       cy.get('input[id^=standard-]').then(standardLicenceConditions => {
-        faker.helpers.arrayElements(standardLicenceConditions.toArray()).forEach(htmlElement => {
+        const stdConditions =
+          recommendationDetails.LicenceConditions && recommendationDetails.LicenceConditions.toLowerCase() === 'all'
+            ? standardLicenceConditions.toArray()
+            : faker.helpers.arrayElements(standardLicenceConditions.toArray())
+        stdConditions.forEach(htmlElement => {
           htmlElement.click()
-          cy.wrap(htmlElement)
-            .next('label')
-            .invoke('text')
-            .then(text => {
-              const licenceCondition = text.trim()
-              testData.licenceConditions.standard.push(licenceCondition.toLowerCase())
-            })
+          testData.licenceConditions.standard.push(htmlElement.getAttribute('value').replace('standard|', ''))
         })
       })
-      if (faker.datatype.boolean()) {
+      // select additional licence randomly or if recommendationDetails.LicenceConditions === 'all' is passed
+      if (
+        faker.datatype.boolean() ||
+        (recommendationDetails.LicenceConditions && recommendationDetails.LicenceConditions.toLowerCase() === 'all')
+      ) {
         cy.get('input[id^=additional-]').then(advancedLicenceConditions => {
-          faker.helpers.arrayElements(advancedLicenceConditions.toArray()).forEach(htmlElement => {
+          const addConditions =
+            recommendationDetails.LicenceConditions.toLowerCase() === 'all'
+              ? advancedLicenceConditions.toArray()
+              : faker.helpers.arrayElements(advancedLicenceConditions.toArray())
+          addConditions.forEach(htmlElement => {
             htmlElement.click()
-            cy.wrap(htmlElement)
-              .next('label')
-              .invoke('text')
-              .then(text => {
-                const licenceCondition = text.trim()
-                testData.licenceConditions.advanced = licenceCondition.toLowerCase()
-              })
+            testData.licenceConditions.advanced.push(htmlElement.getAttribute('value').replace('additional|', ''))
           })
         })
       }
@@ -323,17 +324,18 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   currentPage = 'Are there any victims in the victim contact scheme'
   cy.clickLink(currentPage)
   cy.logPageTitle(`${currentPage}?`)
-  testData.victimContactScheme = partADetails?.VictimContactScheme
+  testData.vlo = {}
+  testData.vlo.inVLOScheme = partADetails?.VictimContactScheme
     ? partADetails.VictimContactScheme.toString().replace(' ', '_').toUpperCase()
     : faker.helpers.arrayElement(Object.keys(YesNoNAType))
-  cy.selectRadioByValue(currentPage, testData.victimContactScheme)
+  cy.selectRadioByValue(currentPage, testData.vlo.inVLOScheme)
   cy.clickButton('Continue')
-  if (testData.victimContactScheme === 'YES') {
-    testData.vloDate = faker.date.past(1)
+  if (testData.vlo.inVLOScheme === 'YES') {
+    testData.vlo.vloDate = faker.date.past(1)
     cy.enterDateTime({
-      day: testData.vloDate.getDate().toString(),
-      month: testData.vloDate.getMonth().toString(),
-      year: testData.vloDate.getFullYear().toString(),
+      day: testData.vlo.vloDate.getDate().toString(),
+      month: testData.vlo.vloDate.getMonth().toString(),
+      year: testData.vlo.vloDate.getFullYear().toString(),
     })
     cy.clickButton('Continue')
   }
@@ -379,15 +381,26 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
   testData.currentRoshForPartA = {}
-  const risk = ['Low', 'Medium', 'High', 'Very high', 'Not applicable']
-  cy.selectRadio('Risk to children', (testData.currentRoshForPartA.riskToChildren = faker.helpers.arrayElement(risk)))
-  cy.selectRadio('Risk to the public', (testData.currentRoshForPartA.riskToPublic = faker.helpers.arrayElement(risk)))
-  cy.selectRadio(
-    'Risk to a known adult',
-    (testData.currentRoshForPartA.riskToKnownAdult = faker.helpers.arrayElement(risk))
+  cy.selectRadioByValue(
+    'Risk to children',
+    (testData.currentRoshForPartA.riskToChildren = faker.helpers.arrayElement(Object.keys(ROSHLevels)))
   )
-  cy.selectRadio('Risk to staff', (testData.currentRoshForPartA.riskToStaff = faker.helpers.arrayElement(risk)))
-  cy.selectRadio('Risk to prisoners', (testData.currentRoshForPartA.riskToPrisoner = faker.helpers.arrayElement(risk)))
+  cy.selectRadioByValue(
+    'Risk to the public',
+    (testData.currentRoshForPartA.riskToPublic = faker.helpers.arrayElement(Object.keys(ROSHLevels)))
+  )
+  cy.selectRadioByValue(
+    'Risk to a known adult',
+    (testData.currentRoshForPartA.riskToKnownAdult = faker.helpers.arrayElement(Object.keys(ROSHLevels)))
+  )
+  cy.selectRadioByValue(
+    'Risk to staff',
+    (testData.currentRoshForPartA.riskToStaff = faker.helpers.arrayElement(Object.keys(ROSHLevels)))
+  )
+  cy.selectRadioByValue(
+    'Risk to prisoners',
+    (testData.currentRoshForPartA.riskToPrisoner = faker.helpers.arrayElement(Object.keys(ROSHLevels)))
+  )
   cy.clickButton('Continue')
   currentPage = `MAPPA for ${this.offenderName}`
   cy.clickLink(currentPage)

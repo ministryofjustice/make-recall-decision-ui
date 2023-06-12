@@ -107,13 +107,14 @@ Feature: Rationale for a Recall decision
     @MRD-1276 @MRD-1391 @MRD-1391 @MRD-1327 @MRD-1449 @MRD-1465
   Scenario Outline: PO records a recall and SPO & ACO countersigns - deeplink
     Given a PO has created a recommendation to recall with:
-      | Indeterminate  | <Indeterminate>  |
-      | Extended       | <Extended>       |
-      | TypeOfSentence | <TypeOfSentence> |
+      | Indeterminate     | <Indeterminate>  |
+      | Extended          | <Extended>       |
+      | TypeOfSentence    | <TypeOfSentence> |
+      | LicenceConditions | All              |
     And PO has created a Part A form without requesting SPO review with:
       | RecallType          | <RecallType>      |
       | InCustody           | <InCustody>       |
-      | VictimContactScheme | No                |
+      | VictimContactScheme | Yes               |
       | Vulnerabilities     | <Vulnerabilities> |
       | HasContrabandRisk   | No                |
     # MRD-1262: AC0/AC1

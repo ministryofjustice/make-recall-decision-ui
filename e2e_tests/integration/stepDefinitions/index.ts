@@ -8,6 +8,8 @@ import {
   q11Contraband,
   q12MappaDetails,
   q13RegisteredPPOIOM,
+  q14VLOContact,
+  q15RoshLevels,
   q16IndexOffenceDetails,
   q17LicenceConditions,
   q18AdditionalConditions,
@@ -535,10 +537,11 @@ Then('Part A details are correct', function () {
   q11Contraband(contents, this.testData.contraband)
   q12MappaDetails(contents, this.testData.mappa)
   q13RegisteredPPOIOM(contents, this.testData.iom)
-  // q15RoshLevels()
+  q14VLOContact(contents, this.testData.vlo)
+  q15RoshLevels(contents, this.testData.currentRoshForPartA)
   q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
-  q17LicenceConditions(contents, this.testData.localPoliceDetails)
-  q18AdditionalConditions(contents, this.testData.localPoliceDetails)
+  q17LicenceConditions(contents, this.testData.licenceConditions.standard)
+  q18AdditionalConditions(contents, this.testData.licenceConditions.advanced)
   q19CircumstancesLeadingToRecall(contents, this.testData.localPoliceDetails)
   q20ResponseToSupervision(contents, this.testData.localPoliceDetails)
   q21Alternatives(contents, this.testData.localPoliceDetails)

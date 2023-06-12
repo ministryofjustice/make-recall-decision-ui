@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { proxy, flush } from '@alfonso-presa/soft-assert'
-import { changeDateFromLongFormatToShort, getTestDataPerEnvironment } from '../../utils'
-import { YesNoNAType, YesNoType } from '../../support/enums'
+import { changeDateFromLongFormatToShort, formatObjectDateToLongFormat, getTestDataPerEnvironment } from '../../utils'
+import { LicenceConditions, ROSHLevels, YesNoNAType, YesNoType } from '../../support/enums'
 
 const expectSoftly = proxy(expect)
 
@@ -262,20 +262,54 @@ export const q13RegisteredPPOIOM = (contents: string, details: string) => {
   expectSoftly(contents).to.contain(`Registered PPO/IOM: ${YesNoNAType[details]}`)
 }
 
-export const q15RoshLevels = (contents: string) => {
+export const q14VLOContact = (contents: string, details) => {
+  // eslint-disable-next-line no-param-reassign
+  contents = contents.substring(contents.indexOf(partASections[14]), contents.indexOf(partASections[15]))
+  cy.log(`Q14: ${contents}`)
+  expectSoftly(contents).to.contain(
+    `Is there a victim(s) involved in the victim contact scheme (contact must be made with the VLO if there is victim involvement)? ${
+      YesNoNAType[details.inVLOScheme]
+    }`
+  )
+  expectSoftly(contents).to.contain(
+    `Confirm the date the VLO was informed of the above: ${
+      details.vloDate
+        ? formatObjectDateToLongFormat({
+            day: details.vloDate.getDate().toString(),
+            month: details.vloDate.getMonth().toString(),
+            year: details.vloDate.getFullYear().toString(),
+          })
+        : ''
+    }`
+  )
+}
+
+export const q15RoshLevels = (contents: string, details?: Record<string, string>) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[15]), contents.indexOf(partASections[16]))
   expectSoftly(contents, 'ROSH Level: Risk to public\n-->').to.contain(
-    `Public: ${apiDataForCrn.currentRoshForPartA.riskToPublic}`
+    `Public: ${
+      details.riskToPublic ? ROSHLevels[details.riskToPublic] : apiDataForCrn.currentRoshForPartA.riskToPublic
+    }`
   )
   expectSoftly(contents, 'ROSH Level: Risk to Known Adult\n-->').to.contain(
-    `Known Adult: ${apiDataForCrn.currentRoshForPartA.riskToKnownAdult}`
+    `Known Adult: ${
+      details.riskToKnownAdult
+        ? ROSHLevels[details.riskToKnownAdult]
+        : apiDataForCrn.currentRoshForPartA.riskToKnownAdult
+    }`
   )
   expectSoftly(contents, 'ROSH Level:Risk to Known Children\n-->').to.contain(
-    `Children: ${apiDataForCrn.currentRoshForPartA.riskToChildren}`
+    `Children: ${
+      details.riskToChildren ? ROSHLevels[details.riskToChildren] : apiDataForCrn.currentRoshForPartA.riskToChildren
+    }`
   )
-  expectSoftly(contents, 'ROSH Level: Prisoners value\n-->').to.contain('Prisoners: N/A')
-  expectSoftly(contents, 'ROSH Level: Risk to Staff\n-->').to.contain('Staff: Very High') // case doesn't match with value in apiDataForCrn.currentRoshForPartA.riskToPublic
+  expectSoftly(contents, 'ROSH Level: Prisoners value\n-->').to.contain(
+    `Prisoners: ${details.riskToPrisoner ? ROSHLevels[details.riskToPrisoner] : 'N/A'}`
+  )
+  expectSoftly(contents, 'ROSH Level: Risk to Staff\n-->').to.contain(
+    `Staff: ${details.riskToStaff ? ROSHLevels[details.riskToStaff] : 'Very High'}`
+  ) // case doesn't match with value in apiDataForCrn.currentRoshForPartA.riskToPublic
 }
 
 export const q16IndexOffenceDetails = (contents: string, answer: string = apiDataForCrn.offenceAnalysis) => {
@@ -284,16 +318,22 @@ export const q16IndexOffenceDetails = (contents: string, answer: string = apiDat
   expectSoftly(contents, 'Offence Analysis\n-->').to.contain(answer)
 }
 
-export const q17LicenceConditions = (contents: string, details: Record<string, string>[] | string) => {
+export const q17LicenceConditions = (contents: string, details: string[]) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[17]), contents.indexOf(partASections[18]))
   cy.log(`Q17: ${contents} ${details}`)
+  details.forEach(detail => {
+    expectSoftly(contents).to.match(new RegExp(`${LicenceConditions[detail]}\\s*✓`))
+  })
 }
 
-export const q18AdditionalConditions = (contents: string, details: Record<string, string>[] | string) => {
+export const q18AdditionalConditions = (contents: string, details: string[]) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[18]), contents.indexOf(partASections[19]))
   cy.log(`Q18: ${contents} ${details}`)
+  details.forEach(detail => {
+    expectSoftly(contents).to.contain(LicenceConditions[detail])
+  })
 }
 
 export const q19CircumstancesLeadingToRecall = (contents: string, details: Record<string, string>[] | string) => {
