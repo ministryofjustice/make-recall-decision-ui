@@ -51,6 +51,9 @@ import managerCountersignatureController from '../controllers/recommendation/man
 import requestAcoCountersignController from '../controllers/recommendation/requestAcoCountersignController'
 import countersignConfirmationController from '../controllers/recommendation/countersignConfirmationController'
 import rationaleCheckController from '../controllers/recommendation/rationaleCheckController'
+import confirmationPartAController from '../controllers/recommendation/confirmationPartAController'
+import contrabandController from '../controllers/recommendation/contrabandController'
+import addressDetailsController from '../controllers/recommendation/addressDetailsController'
 
 const recommendations = Router()
 
@@ -119,6 +122,12 @@ ppRouteBuilder.post('reasons-no-recall', reasonsNoRecallController.post)
 ppRouteBuilder.get('appointment-no-recall', appointmentNoRecallController.get)
 ppRouteBuilder.post('appointment-no-recall', appointmentNoRecallController.post)
 
+ppRouteBuilder.get('contraband', contrabandController.get)
+ppRouteBuilder.post('contraband', contrabandController.post)
+
+ppRouteBuilder.get('address-details', addressDetailsController.get)
+ppRouteBuilder.post('address-details', addressDetailsController.post)
+
 ppRouteBuilder.get('preview-no-recall', previewNoRecallLetterController.get)
 
 ppRouteBuilder.get('confirmation-no-recall', confirmationNoRecallController.get)
@@ -142,6 +151,8 @@ ppRouteBuilder
 ppRouteBuilder
   .withCheck(and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED))))
   .get('request-aco-countersign', requestAcoCountersignController.get)
+
+ppRouteBuilder.get('confirmation-part-a', confirmationPartAController.get)
 
 const spoRouteBuilder = ppRouteBuilder.withRoles([HMPPS_AUTH_ROLE.SPO])
 

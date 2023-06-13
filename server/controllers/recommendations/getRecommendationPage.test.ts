@@ -2,10 +2,11 @@ import { Request, Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendationPage } from './getRecommendationPage'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getRecommendation, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { fetchAndTransformLicenceConditions } from './licenceConditions/transform'
 import { AuditService } from '../../services/auditService'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -23,6 +24,7 @@ describe('getRecommendationPage', () => {
   })
 
   it('should fetch data and render a recommendation page', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     await getRecommendationPage(req, res)
     expect(res.locals.recommendation).toEqual(recommendationApiResponse)
@@ -34,6 +36,7 @@ describe('getRecommendationPage', () => {
   })
 
   it('should send a parameter to the UPDATE recommendation endpoint if the page needs data refreshed', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
     req = mockReq({ params: { recommendationId, pageUrlSlug: 'previous-releases' } })
@@ -47,12 +50,14 @@ describe('getRecommendationPage', () => {
   })
 
   it('should prevent page caching', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     await getRecommendationPage(req, res)
     expect(res.set).toHaveBeenCalledWith({ 'Cache-Control': 'no-store' })
   })
 
   it('should throw on an API error', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     const thrownErr = new Error('test')
     ;(getRecommendation as jest.Mock).mockRejectedValue(thrownErr)
     try {
@@ -63,6 +68,7 @@ describe('getRecommendationPage', () => {
   })
 
   it('should send appInsights & audit event', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     jest.spyOn(AuditService.prototype, 'recommendationView')
     await getRecommendationPage(req, res)
@@ -86,6 +92,7 @@ describe('getRecommendationPage', () => {
   })
 
   it('should redirect to case overview if the recommendation status is DOCUMENT_DOWNLOADED', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     const crn = 'X12345'
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
@@ -94,5 +101,11 @@ describe('getRecommendationPage', () => {
     })
     await getRecommendationPage(req, res)
     expect(res.redirect).toHaveBeenCalledWith(301, `/cases/${crn}/overview`)
+  })
+
+  it('should redirect to inappropriate access if the part a has been created and the current role is PP', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.PP_DOCUMENT_CREATED, active: true }])
+    await getRecommendationPage(req, res)
+    expect(res.redirect).toHaveBeenCalledWith(`/inappropriate-error`)
   })
 })

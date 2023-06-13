@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createDocument, getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { createDocument, getRecommendation, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { pageMetaData } from './helpers/pageMetaData'
 import { renderFormOptions } from './formOptions/formOptions'
 import { renderErrorMessages } from '../../utils/errors'
@@ -14,6 +14,7 @@ import { updatePageReviewedStatus } from './helpers/updatePageReviewedStatus'
 import { RecommendationDecorated } from '../../@types/api'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 const auditService = new AuditService()
 
@@ -27,6 +28,18 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
     user: { token, username, hasSpoRole },
     flags: featureFlags,
   } = res.locals
+
+  const statuses = (
+    await getStatuses({
+      recommendationId: String(recommendationId),
+      token,
+    })
+  ).filter(status => status.active)
+
+  if (statuses.find(el => el.name === STATUSES.PP_DOCUMENT_CREATED)) {
+    return res.redirect('/inappropriate-error')
+  }
+
   const { id, inputDisplayValues, reviewedProperty, propertyToRefresh } = pageMetaData(pageUrlSlug)
   let recommendation: RecommendationDecorated
   if (propertyToRefresh) {
