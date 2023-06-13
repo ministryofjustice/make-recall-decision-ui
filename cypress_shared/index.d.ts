@@ -11,7 +11,7 @@ declare global {
 
     export interface TableRowSelectors {
       tableCaption: string
-      rowQaAttr?: string
+      rowSelector?: string
       firstColValue?: string
     }
 

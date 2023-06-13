@@ -53,24 +53,26 @@ Cypress.Commands.add('getLinkHref', (selector, opts = { parent: 'body' }) =>
   cy.getElement(selector as string, opts).invoke('attr', 'href')
 )
 
-Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr, firstColValue }, opts = { parent: 'body' }) =>
-  cy
-    .get(opts.parent)
-    .contains('caption', tableCaption)
-    .parent('table')
-    .then($table => {
-      if (rowQaAttr) {
-        return cy.wrap($table).find(`[data-qa="${rowQaAttr}"]`).find('.govuk-table__cell')
-      }
-      if (firstColValue) {
-        return cy
-          .wrap($table)
-          .contains(exactMatchIgnoreWhitespace(firstColValue))
-          .parent('tr')
-          .find('.govuk-table__cell')
-      }
-    })
-    .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
+Cypress.Commands.add(
+  'getRowValuesFromTable',
+  ({ tableCaption, rowSelector, firstColValue }, opts = { parent: 'body' }) =>
+    cy
+      .get(opts.parent)
+      .contains('caption', tableCaption)
+      .parent('table')
+      .then($table => {
+        if (rowSelector) {
+          return cy.wrap($table).find(rowSelector).find('.govuk-table__cell')
+        }
+        if (firstColValue) {
+          return cy
+            .wrap($table)
+            .contains(exactMatchIgnoreWhitespace(firstColValue))
+            .parent('tr')
+            .find('.govuk-table__cell')
+        }
+      })
+      .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
 )
 
 Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>

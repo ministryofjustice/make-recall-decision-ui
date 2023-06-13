@@ -68,10 +68,11 @@ export const deleteOpenRecommendation = () => {
   cy.get('body').then($body => {
     if ($body.find('[data-qa="delete-recommendation"]').length) {
       // If the first Recommendation is Open then delete it so that a new recommendation can be created
-      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: 'recommendation-1' }).then(rowValues => {
-        if (rowValues.includes('Update recommendation'))
-          cy.get('[data-qa="recommendation-1"] [data-qa="delete-recommendation"]').click()
-      })
+      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
+        rowValues => {
+          if (rowValues.includes('Update recommendation')) cy.get('[data-qa] [data-qa="delete-recommendation"]').click()
+        }
+      )
     }
   })
 }
