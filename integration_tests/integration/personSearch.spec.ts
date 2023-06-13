@@ -41,7 +41,7 @@ context('Search for a person', () => {
     cy.clickLink('Change')
     cy.fillInput('Search', crnQuery)
     cy.clickButton('Search')
-    cy.getRowValuesFromTable({ tableCaption: 'Persons found', rowQaAttr: `row-${crn}` }).then(
+    cy.getRowValuesFromTable({ tableCaption: 'Persons found', rowSelector: `[data-qa="row-${crn}"]` }).then(
       ([first, second, third]) => {
         expect(first).to.equal(name)
         expect(second).to.equal(crn)

@@ -70,7 +70,7 @@ context('Recommendations tab in case summary', () => {
 
   const checkValuesInTable = expectedTableRows => {
     for (let i = 0; i < expectedTableRows.length; i += 1) {
-      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: `${i + 1}` }).then(row1 => {
+      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: `[data-qa="${i + 1}"]` }).then(row1 => {
         expect(row1).to.deep.eq(expectedTableRows[i])
       })
     }
