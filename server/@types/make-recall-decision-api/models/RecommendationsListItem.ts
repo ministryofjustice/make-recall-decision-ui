@@ -3,6 +3,11 @@
 /* eslint-disable */
 
 import type { RecallType } from './RecallType';
+import { RecommendationStatusResponse } from './RecommendationStatusReponse'
+
+export function isRecommendationsListItem(recommendation: any): recommendation is RecommendationsListItem {
+    return (recommendation as RecommendationsListItem).statuses !== undefined;
+}
 
 export type RecommendationsListItem = {
     recommendationId?: number;
@@ -10,6 +15,7 @@ export type RecommendationsListItem = {
     createdDate?: string;
     lastModifiedDate?: string;
     status?: RecommendationsListItem.status;
+    statuses?: RecommendationStatusResponse[];
     recallType?: RecallType;
 };
 

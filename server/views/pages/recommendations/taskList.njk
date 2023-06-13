@@ -17,8 +17,10 @@
 
             {% if flagTriggerWork %}
                 {% if isSpo %}
-                    <p class='govuk-body'>CRN: {{ recommendation.crn }}</p>
-                    <h1 class='govuk-heading-l'>Part A for {{ recommendation.personOnProbation.name }}</h1>
+                    <h1 class="govuk-heading-l">
+                      <span class="govuk-caption-l">CRN: {{ recommendation.crn }}</span>
+                      Part A for {{ recommendation.personOnProbation.name }}
+                    </h1>
                 {% else %}
                     <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                     <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.

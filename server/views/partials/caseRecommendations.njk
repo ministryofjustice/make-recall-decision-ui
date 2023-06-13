@@ -17,7 +17,7 @@
                     </thead>
                     <tbody class="govuk-table__body">
                     {% for recommendation in caseSummary.recommendations %}
-                        <tr class="govuk-table__row" data-qa='recommendation-{{ loop.index }}'>
+                        <tr class="govuk-table__row" data-qa='{{ recommendation.recommendationId }}'>
                             <td class="govuk-table__cell">{{ recommendationsListStatusLabel(recommendation.statusForRecallType) }}</td>
                             <td class="govuk-table__cell">{{ recommendation.lastModifiedByName }}</td>
                             <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: recommendation.lastModifiedDate, dateOnly: true, shortDate: true }) }}</td>
