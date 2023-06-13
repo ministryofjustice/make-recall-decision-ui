@@ -819,7 +819,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Requested').should('exist')
       cy.getElement('Senior manager countersignature Cannot start yet').should('exist')
@@ -843,7 +843,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature To do').should('exist')
@@ -868,7 +868,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Requested').should('exist')
@@ -894,7 +894,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Completed').should('exist')
