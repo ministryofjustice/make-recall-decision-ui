@@ -54,7 +54,8 @@ export class RouteBuilder {
   public post(endpoint: string, routerCallback: RouterCallback) {
     this.router.post(
       `/:recommendationId/${endpoint}`,
-      authorisationMiddleware(this.roles),
+      feedErrorsToExpress(authorisationMiddleware(this.roles)),
+      feedErrorsToExpress(recommendationStatusCheck(this.statusCheck)),
       sanitizeInputValues,
       parseRecommendationUrl,
       feedErrorsToExpress(routerCallback), // necessary for async functions
