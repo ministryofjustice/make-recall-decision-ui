@@ -131,6 +131,7 @@ context('Make a recommendation', () => {
           statusCode: 200,
           response: { ...recommendationResponse, recallConsideredList: null },
         })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
         cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
@@ -169,6 +170,7 @@ context('Make a recommendation', () => {
           statusCode: 200,
           response: { ...completeRecommendationResponse, recallConsideredList: null },
         })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
 
         cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager?flagTriggerWork=1`)
 
@@ -325,6 +327,7 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: { ...recommendationResponse, recallConsideredList: null },
           })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-review?flagConsiderRecall=1`)
           cy.pageHeading().should('equal', 'Stop and think')
         })
@@ -392,6 +395,7 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: { ...completeRecommendationResponse, managerRecallDecision: { selected: { value: 'RECALL' } } },
           })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.task('updateRecommendation', {
             statusCode: 500,
             response: { error: 'DELIUS_CONTACT_CREATION_FAILED' },
@@ -412,6 +416,7 @@ context('Make a recommendation', () => {
               managerRecallDecision: { selected: { value: 'NO_RECALL' } },
             },
           })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.task('updateRecommendation', {
             statusCode: 500,
             response: { error: 'RECOMMENDATION_UPDATE_FAILED' },
@@ -446,6 +451,7 @@ context('Make a recommendation', () => {
 
     it('prevents updating a recommendation if CRN is excluded', () => {
       cy.task('updateRecommendation', { statusCode: 403, response: excludedResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/123/custody-status`)
       cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
       cy.clickButton('Continue')
@@ -455,6 +461,7 @@ context('Make a recommendation', () => {
 
     it('prevents viewing a recommendation if CRN is excluded', () => {
       cy.task('getRecommendation', { statusCode: 200, response: excludedResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/123/custody-status`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
@@ -491,6 +498,7 @@ context('Make a recommendation', () => {
           ],
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getSelectableOptionByLabel(
         'What licence conditions has Paula Smith breached?',
@@ -510,6 +518,7 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
@@ -528,6 +537,7 @@ context('Make a recommendation', () => {
           activeConvictions: [{ sentence: { isCustodial: false } }],
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
         'There are no licence conditions. This person is not currently on licence. Double-check that the information in NDelius is correct.'
@@ -544,6 +554,7 @@ context('Make a recommendation', () => {
 
     it('lists personal details', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/personal-details`)
       cy.getDefinitionListValue('Name').should('contain', 'Paula Smith')
       cy.getDefinitionListValue('Gender').should('contain', 'Female')
@@ -559,6 +570,7 @@ context('Make a recommendation', () => {
 
     it('lists offence details', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getDefinitionListValue('Main offence').should('equal', 'Burglary')
       cy.getDefinitionListValue('Date of offence').should('equal', '3 October 2021')
@@ -587,6 +599,7 @@ context('Make a recommendation', () => {
           ],
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getElement(
         'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
@@ -613,6 +626,7 @@ context('Make a recommendation', () => {
           ],
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
@@ -621,6 +635,7 @@ context('Make a recommendation', () => {
 
     it('offence analysis - show index offence details', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
     })
@@ -630,6 +645,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, indexOffenceDetails: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getElement('OASys 2.1 Brief offence(s) details').should('not.exist')
       cy.getElement({ qaAttr: 'indexOffenceDetails' }).should('not.exist')
@@ -657,6 +673,7 @@ context('Make a recommendation', () => {
         },
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.getElement(
         'These are the last known addresses for Paula Smith in NDelius. If they are incorrect, update NDelius.'
@@ -690,6 +707,7 @@ context('Make a recommendation', () => {
         },
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.getElement('These are the last known addresses for Paula Smith')
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
@@ -708,6 +726,7 @@ context('Make a recommendation', () => {
         },
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.fillInput('Where can the police find Paula Smith?', '35 Hayward Rise, Carshalton, Surrey S1 8SH')
@@ -718,6 +737,7 @@ context('Make a recommendation', () => {
 
     it('lists one address', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.getElement('This is the last known address for Paula Smith')
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
@@ -747,6 +767,7 @@ context('Make a recommendation', () => {
           },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
       cy.getElement('Cat 0/Level 1 MAPPA').should('exist')
       cy.getElement('Last updated: 4 November 2022').should('exist')
@@ -763,6 +784,7 @@ context('Make a recommendation', () => {
           },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/mappa`)
       cy.getElement('Unknown MAPPA').should('exist')
     })
@@ -773,6 +795,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, currentRoshForPartA: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/rosh`)
       // RoSH table
       cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
@@ -819,7 +842,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Requested').should('exist')
       cy.getElement('Senior manager countersignature Cannot start yet').should('exist')
@@ -843,7 +866,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature To do').should('exist')
@@ -868,7 +891,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Requested').should('exist')
@@ -894,7 +917,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
 
-      cy.pageHeading().should('equal', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Completed').should('exist')
@@ -969,7 +992,13 @@ context('Make a recommendation', () => {
           spoRecallRationale: 'while I nodded, nearly napping',
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_RECORDED_RATIONALE', active: true },
+        ],
+      })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
@@ -1005,7 +1034,15 @@ context('Make a recommendation', () => {
           spoRecallRationale: 'while I nodded, nearly napping',
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+
+      // limitations of mocking in integration tests...
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_RECORDED_RATIONALE', active: true },
+        ],
+      })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 

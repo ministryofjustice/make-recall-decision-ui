@@ -11,7 +11,7 @@ declare global {
 
     export interface TableRowSelectors {
       tableCaption: string
-      rowQaAttr?: string
+      rowSelector?: string
       firstColValue?: string
     }
 
@@ -66,6 +66,12 @@ declare global {
       getLinkHref(selector: string | Selector, opts?: CommandOpts): Chainable<Element>
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>
+
+      getDataFromTable(
+        tableCaption: string,
+        readHrefInsteadOfTextWhereAvailable?: boolean,
+        opts?: CommandOpts
+      ): Chainable<Record<string, string>[]>
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 

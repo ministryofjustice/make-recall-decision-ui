@@ -2,6 +2,8 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import logger from '../../../../logger'
 import { RecommendationsListItem } from '../../../@types/make-recall-decision-api'
+import { STATUSES } from '../../../middleware/recommendationStatusCheck'
+import { isRecommendationsListItem } from '../../../@types/make-recall-decision-api/models/RecommendationsListItem'
 
 export enum RecommendationStatus {
   CONSIDERING_RECALL = 'CONSIDERING_RECALL',
@@ -22,6 +24,18 @@ export const recommendationStatus = (
   )
   const isNoRecall = recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL
 
+  let isClosed = status === RecommendationResponse.status.DOCUMENT_DOWNLOADED
+  if (isRecommendationsListItem(recommendation)) {
+    isClosed = !!recommendation.statuses.find(s => s.name === STATUSES.PP_DOCUMENT_CREATED && s.active)
+  }
+  if (isClosed) {
+    if (isNoRecall) {
+      return RecommendationStatus.DECIDED_NOT_TO_RECALL
+    }
+    if (isRecall) {
+      return RecommendationStatus.DECIDED_TO_RECALL
+    }
+  }
   if (status === RecommendationResponse.status.RECALL_CONSIDERED) {
     return RecommendationStatus.CONSIDERING_RECALL
   }
@@ -33,14 +47,6 @@ export const recommendationStatus = (
       return RecommendationStatus.MAKING_DECISION_TO_RECALL
     }
     return RecommendationStatus.RECOMMENDATION_STARTED
-  }
-  if (status === RecommendationResponse.status.DOCUMENT_DOWNLOADED) {
-    if (isNoRecall) {
-      return RecommendationStatus.DECIDED_NOT_TO_RECALL
-    }
-    if (isRecall) {
-      return RecommendationStatus.DECIDED_TO_RECALL
-    }
   }
   logger.error(`recommendationStatus: could not determine recommendation status from status: ${status}`)
   return RecommendationStatus.UNKNOWN

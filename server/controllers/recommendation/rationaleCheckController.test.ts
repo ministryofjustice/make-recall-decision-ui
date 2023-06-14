@@ -93,7 +93,7 @@ describe('post', () => {
       {
         errorId: 'missingRationaleCheck',
         href: '#rationaleCheck',
-        text: 'Please choose an option',
+        text: 'Choose an option',
         name: 'rationaleCheck',
         invalidParts: undefined,
         values: undefined,

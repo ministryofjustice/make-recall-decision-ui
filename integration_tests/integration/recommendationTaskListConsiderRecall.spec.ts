@@ -20,6 +20,7 @@ context('Recommendation - task list consider recall', () => {
 
   it('task list - To do ', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
     cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
@@ -31,6 +32,7 @@ context('Recommendation - task list consider recall', () => {
 
   it('task list - Complete ', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
     cy.getElement('What has made you think about recalling Paula Smith? Completed').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')

@@ -53,24 +53,67 @@ Cypress.Commands.add('getLinkHref', (selector, opts = { parent: 'body' }) =>
   cy.getElement(selector as string, opts).invoke('attr', 'href')
 )
 
-Cypress.Commands.add('getRowValuesFromTable', ({ tableCaption, rowQaAttr, firstColValue }, opts = { parent: 'body' }) =>
-  cy
-    .get(opts.parent)
-    .contains('caption', tableCaption)
-    .parent('table')
-    .then($table => {
-      if (rowQaAttr) {
-        return cy.wrap($table).find(`[data-qa="${rowQaAttr}"]`).find('.govuk-table__cell')
-      }
-      if (firstColValue) {
-        return cy
-          .wrap($table)
-          .contains(exactMatchIgnoreWhitespace(firstColValue))
-          .parent('tr')
-          .find('.govuk-table__cell')
-      }
-    })
-    .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
+Cypress.Commands.add(
+  'getRowValuesFromTable',
+  ({ tableCaption, rowSelector, firstColValue }, opts = { parent: 'body' }) =>
+    cy
+      .get(opts.parent)
+      .contains('caption', tableCaption)
+      .parent('table')
+      .then($table => {
+        if (rowSelector) {
+          return cy.wrap($table).find(rowSelector).find('.govuk-table__cell')
+        }
+        if (firstColValue) {
+          return cy
+            .wrap($table)
+            .contains(exactMatchIgnoreWhitespace(firstColValue))
+            .parent('tr')
+            .find('.govuk-table__cell')
+        }
+      })
+      .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
+)
+
+Cypress.Commands.add(
+  'getDataFromTable',
+  (tableCaption, readHrefInsteadOfTextWhereAvailable?: boolean, opts = { parent: 'body' }) => {
+    const tableData: Record<string, string>[] = []
+    let tableHeader = []
+    cy.get(opts.parent)
+      .contains('caption', tableCaption)
+      .parent('table')
+      .then($table => {
+        cy.wrap($table)
+          .find(`.govuk-table__header`)
+          .then(headers => {
+            tableHeader = headers.toArray().map(header => {
+              const columnName = header.innerText.trim()
+              return columnName.trim()
+            })
+          })
+        cy.wrap($table)
+          .find('tbody>.govuk-table__row')
+          .then(rows => {
+            rows.toArray().forEach(rowEls => {
+              const rowData = {}
+              const rowCells = rowEls.getElementsByTagName('td')
+              cy.log(`rowCells.length --> ${rowCells.length}`)
+              // eslint-disable-next-line no-plusplus
+              for (let i = 0; i < rowCells.length; i++) {
+                const cell = rowCells.item(i)
+                let fieldLink
+                if (readHrefInsteadOfTextWhereAvailable && cell.getElementsByTagName('a').length > 0)
+                  fieldLink = cell.getElementsByTagName('a').item(0).getAttribute('href')
+                const cellValue = cell.innerText.trim()
+                rowData[tableHeader[i]] = fieldLink || cellValue
+              }
+              tableData.push(rowData)
+            })
+          })
+      })
+    return cy.wrap(tableData)
+  }
 )
 
 Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>

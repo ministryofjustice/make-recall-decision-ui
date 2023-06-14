@@ -98,9 +98,73 @@ Feature: Rationale for a Recall decision
     And SPO requests ACO to countersign
     And ACO visits the countersigning link
     And ACO countersigns
-    When SPO logs back in to view the above CRN
+    When SPO logs back in to add rationale
     Then SPO is able to record rationale with RECALL decision
     And a confirmation of the decision is shown to SPO
+
+  @MRD-1466
+  Scenario: Case is closed when PO downloads Part A after rationale is recorded and SPO/ACO countersigns
+    Given a PO has created a recommendation to recall with:
+      | Indeterminate | No |
+      | Extended      | No |
+    And PO has created a Part A form without requesting SPO review with:
+      | RecallType          | STANDARD   |
+      | InCustody           | Yes Police |
+      | VictimContactScheme | No         |
+    And PO has requested an SPO to countersign
+    And SPO has visited the countersigning link
+    And SPO has recorded rationale with RECALL decision
+    And SPO has countersigned after recording rationale
+    And SPO has requested ACO to countersign
+    And ACO has visited the countersigning link
+    And ACO has countersigned
+    When PO logs back in to download Part A
+    # MRD-1466:AC1
+    Then PO can see the case is closed on the Overview page
+
+  @MRD-1466 @E2E
+  Scenario: SPO is able to record rationale and close the case even after PO has downloaded Part A
+    Given a PO has created a recommendation to recall with:
+      | Indeterminate | No |
+      | Extended      | No |
+    And PO has created a Part A form without requesting SPO review with:
+      | RecallType          | STANDARD   |
+      | InCustody           | Yes Police |
+      | VictimContactScheme | No         |
+    And PO requests an SPO to countersign
+    And SPO has visited the countersigning link
+    And SPO countersigns without recording rationale
+    And SPO requests ACO to countersign
+    And ACO visits the countersigning link
+    And ACO countersigns
+    And PO has logged in and downloaded Part A
+    When SPO logs back in to add rationale
+    # MRD-1466:AC3,AC5
+    Then SPO is able to record rationale with RECALL decision
+    And a confirmation of the decision is shown to SPO
+    And SPO can see the case is closed on the Overview page
+
+  @MRD-1466 @E2E
+  Scenario: Recommendation is closed when a new recommendation is created before SPOo records a rationale
+    Given a PO has created a recommendation to recall with:
+      | Indeterminate | No |
+      | Extended      | No |
+    And PO has created a Part A form without requesting SPO review with:
+      | RecallType          | STANDARD   |
+      | InCustody           | Yes Police |
+      | VictimContactScheme | No         |
+    And PO requests an SPO to countersign
+    And SPO has visited the countersigning link
+    And SPO countersigns without recording rationale
+    And SPO requests ACO to countersign
+    And ACO visits the countersigning link
+    And ACO countersigns
+    And PO has logged in and downloaded Part A
+    When PO creates a new Recommendation for same CRN
+    And PO returns to Recommendations page of CRN
+    # MRD-1466:AC4
+    Then the previous Recommendation should be marked a complete
+    And SPO can no longer record rationale
 
   @E2E
     @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1262 @MRD-1311
@@ -171,4 +235,4 @@ Feature: Rationale for a Recall decision
       | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  | SPODecision |
       | Yes           | No       | LIFE           | EMERGENCY  | Yes Police | RECALL      |
       | Yes           | Yes      | IPP            | EMERGENCY  | Yes Police | RECALL      |
-      | Yes           | Yes      | DPP            | EMERGENCY  | No         | NO RECALL   |
+      | Yes           | Yes      | DPP            | EMERGENCY  | No         | NO_RECALL   |
