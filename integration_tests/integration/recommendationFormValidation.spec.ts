@@ -461,4 +461,73 @@ context('Make a recommendation - form validation', () => {
       errorText: 'Select a RoSH level for the risk to prisoners',
     })
   })
+  it('Trigger leadnig to recall', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'triggerLeadingToRecall',
+      errorText: 'You must explain what has made you think about recalling Paula Smith',
+    })
+  })
+  it('Rationale Check', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'rationaleCheck',
+      errorText: 'Choose an option',
+    })
+  })
+
+  it('SPO rationale', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'spoRecallType',
+      errorText: 'There is a problem. Select whether you have decided to recall or made a decision not to recall',
+    })
+  })
+  it('SPO rationale - Yes', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
+    cy.selectRadio('Explain the decision', 'Recall - standard or fixed term')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'spoRecallRationale',
+      errorText: 'There is a problem. You must explain your decision',
+    })
+  })
+  it('SPO rationale - No', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
+    cy.selectRadio('Explain the decision', 'Do not recall - send a decision not to recall letter')
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'spoNoRecallRationale',
+      errorText: 'There is a problem. You must explain your decision',
+    })
+  })
+  it('Manager countersignature', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-countersignature`)
+    cy.clickButton('Countersign')
+    cy.assertErrorMessage({
+      fieldName: 'managerCountersignatureExposition',
+      errorText: 'You must add a comment to confirm your countersignature',
+    })
+  })
 })

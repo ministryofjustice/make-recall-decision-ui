@@ -4,15 +4,23 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isMandatoryTextValue } from '../../utils/utils'
+import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, statuses } = res.locals
+
+  const actives = (statuses as RecommendationStatusResponse[]).filter(el => el.active)
+
+  const recallDecided = !!actives.find(el => el.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+
   res.locals = {
     ...res.locals,
     backLink: 'spo-task-list-consider-recall',
     page: {
       id: 'spoRecallRationale',
     },
+    recallDecided,
     inputDisplayValues: {
       errors: res.locals.errors,
       spoRecallType: res.locals.errors?.spoRecallType ? '' : recommendation.spoRecallType,
