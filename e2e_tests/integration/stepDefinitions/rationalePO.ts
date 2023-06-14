@@ -367,7 +367,10 @@ Given('PO( has) requests/requested an SPO to countersign', () => {
   currentPage = `Request line manager's countersignature`
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
-  cy.getText('case-link').as('spoCounterSignatureLink')
+  cy.getText('case-link').then(text => {
+    cy.wrap(text).as('spoCounterSignatureLink')
+    cy.wrap(text.match('recommendations\\/(\\d*)\\/')[1]).as('recommendationId')
+  })
   cy.clickLink('Continue')
 })
 
@@ -397,4 +400,13 @@ Given('PO( has) requests/requested an SPO to review recommendation', function ()
   cy.clickLink('Continue')
   cy.log('Logging out as PO!')
   cy.clickLink('Sign out')
+})
+
+Then('the previous Recommendation should be marked a complete', function () {
+  cy.getRowValuesFromTable({
+    tableCaption: 'Recommendations',
+    rowSelector: `[data-qa="${this.recommendationId}"]`,
+  }).then(rowData => {
+    expect(rowData.join('|')).to.contain('Download Part A')
+  })
 })

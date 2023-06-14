@@ -70,9 +70,17 @@ export const deleteOpenRecommendation = () => {
       // If the first Recommendation is Open then delete it so that a new recommendation can be created
       cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
         rowValues => {
-          if (rowValues.includes('Update recommendation')) cy.get('[data-qa] [data-qa="delete-recommendation"]').click()
+          if (rowValues.includes('Update recommendation')) {
+            cy.get('tr[data-qa]:first-child [data-qa="delete-recommendation"]').click()
+            cy.log('Deleted Open recommendation!!')
+          }
         }
       )
+    }
+    if ($body.find('#main-content a:contains("Consider a recall")').length > 0) {
+      // If previous recommendation in Consider A Recall flow w/o SPO rationale recorded then delete it so that a new recommendation can be created
+      cy.get('tr[data-qa]:first-child [data-qa="delete-recommendation"]').click()
+      cy.log('Deleted previous recommendation w/o SPO rationale!!')
     }
   })
 }
@@ -93,6 +101,10 @@ const defaultStartPath = (crnNum: string) => {
 }
 
 function loginAndSearchCrn(userType: UserType) {
+  cy.get('body').then($body => {
+    const signOutSelector = '[data-qa="signOut"]'
+    if ($body.find(signOutSelector).length > 0) cy.get(signOutSelector).click()
+  })
   cy.clearAllCookies()
   cy.wait(1000)
   cy.reload(true)
@@ -109,6 +121,24 @@ When('{userType} logs( back) in to update/view Recommendation', function (userTy
   cy.clickLink('Update recommendation')
 })
 
+When('{userType} logs( back) in to view All Recommendations', function (userType: UserType) {
+  loginAndSearchCrn.call(this, userType)
+  cy.clickLink('Recommendations')
+})
+
+When('PO creates a new Recommendation for same CRN', function () {
+  cy.clickLink(`Back to overview for ${this.offenderName}`)
+  cy.clickLink('Consider a recall', { parent: '#main-content' })
+  cy.clickButton('Continue')
+})
+
+When('{userType}( has) logged/logs( back) in to/and download(ed) Part A', function (userType: UserType) {
+  loginAndSearchCrn.call(this, userType)
+  cy.clickLink('Update recommendation')
+  cy.clickLink('Create Part A')
+  cy.downloadDocX('Download the Part A').as('partAContent')
+})
+
 When('{userType}( has) logged/logs (back )in to Countersign', function (userType: UserType) {
   expect(userType, 'Checking only SPO/ACO user is passed!!').to.not.equal(UserType.PO)
   loginAndSearchCrn.call(this, userType)
@@ -116,8 +146,9 @@ When('{userType}( has) logged/logs (back )in to Countersign', function (userType
   if (userType === UserType.SPO) cy.clickLink('Line manager countersignature')
 })
 
-When('{userType} logs( back) in to view the above CRN', function (userType: UserType) {
+When('{userType} logs( back) in to add rationale', function (userType: UserType) {
   loginAndSearchCrn.call(this, userType)
+  cy.clickLink('Consider a recall', { parent: '#main-content' })
 })
 
 When('Maria signs in to the case overview for CRN {string}', (crnNum: string) => {
@@ -521,4 +552,24 @@ Then('PO/SPO/ACO can create Part A', function () {
 
 Then('PO/SPO/ACO can download Part A', function () {
   cy.downloadDocX('Download the Part A').as('partAContent')
+})
+
+When('PO/SPO/ACO returns to Recommendations page of CRN', function () {
+  cy.clickLink(`Back to overview for ${this.offenderName}`)
+  cy.clickLink('Recommendations')
+})
+
+Then('SPO can no longer record rationale', function () {
+  loginAndSearchCrn.call(this, UserType.SPO)
+  cy.get('#main-content a:contains("Consider a recall")').should('not.exist')
+})
+
+Then('SPO can see the case is closed on the Overview page', function () {
+  cy.clickLink('Return to overview')
+  cy.get('#main-content a:contains("Consider a recall")').should('not.exist')
+})
+
+Then('PO can see the case is closed on the Overview page', function () {
+  cy.clickLink(`Back to overview for ${this.offenderName}`)
+  cy.get('#main-content a:contains("Consider a recall")').should('not.exist')
 })

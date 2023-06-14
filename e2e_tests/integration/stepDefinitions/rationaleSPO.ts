@@ -134,7 +134,7 @@ Then('SPO( has) countersigns/countersigned without recording rationale with:', f
   doManagerCountersign.call(this, UserType.SPO, dataTable.rowsHash())
 })
 
-When('SPO requests ACO to countersign', function () {
+When('SPO( has) requests/requested ACO to countersign', function () {
   cy.getText('case-link').as('acoCounterSignatureLink')
 })
 
@@ -198,6 +198,5 @@ Given('SPO( has) records/recorded a review decision of {managersDecision}', func
 })
 
 Then('SPO is able to record rationale with {managersDecision} decision', function (decision: string) {
-  cy.clickLink('Consider a recall', { parent: '#main-content' })
   recordSpoDecision.call(this, decision)
 })

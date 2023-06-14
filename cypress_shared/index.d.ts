@@ -67,6 +67,12 @@ declare global {
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>
 
+      getDataFromTable(
+        tableCaption: string,
+        readHrefInsteadOfTextWhereAvailable?: boolean,
+        opts?: CommandOpts
+      ): Chainable<Record<string, string>[]>
+
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 
       contactTypeFiltersTotalCount(): Chainable<number>

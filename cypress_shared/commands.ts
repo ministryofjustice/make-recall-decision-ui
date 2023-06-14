@@ -75,6 +75,47 @@ Cypress.Commands.add(
       .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
 )
 
+Cypress.Commands.add(
+  'getDataFromTable',
+  (tableCaption, readHrefInsteadOfTextWhereAvailable?: boolean, opts = { parent: 'body' }) => {
+    const tableData: Record<string, string>[] = []
+    let tableHeader = []
+    cy.get(opts.parent)
+      .contains('caption', tableCaption)
+      .parent('table')
+      .then($table => {
+        cy.wrap($table)
+          .find(`.govuk-table__header`)
+          .then(headers => {
+            tableHeader = headers.toArray().map(header => {
+              const columnName = header.innerText.trim()
+              return columnName.trim()
+            })
+          })
+        cy.wrap($table)
+          .find('tbody>.govuk-table__row')
+          .then(rows => {
+            rows.toArray().forEach(rowEls => {
+              const rowData = {}
+              const rowCells = rowEls.getElementsByTagName('td')
+              cy.log(`rowCells.length --> ${rowCells.length}`)
+              // eslint-disable-next-line no-plusplus
+              for (let i = 0; i < rowCells.length; i++) {
+                const cell = rowCells.item(i)
+                let fieldLink
+                if (readHrefInsteadOfTextWhereAvailable && cell.getElementsByTagName('a').length > 0)
+                  fieldLink = cell.getElementsByTagName('a').item(0).getAttribute('href')
+                const cellValue = cell.innerText.trim()
+                rowData[tableHeader[i]] = fieldLink || cellValue
+              }
+              tableData.push(rowData)
+            })
+          })
+      })
+    return cy.wrap(tableData)
+  }
+)
+
 Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>
   cy
     .get(opts.parent)
