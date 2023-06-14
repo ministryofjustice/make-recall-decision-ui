@@ -57,14 +57,29 @@ import addressDetailsController from '../controllers/recommendation/addressDetai
 
 const recommendations = Router()
 
+RouteBuilder.build(recommendations)
+  .withRoles([HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO])
+  .withCheck(
+    or(
+      and(not(roleIsActive(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
+      and(
+        roleIsActive(HMPPS_AUTH_ROLE.SPO),
+        or(
+          not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
+          statusIsActive(STATUSES.SPO_CONSIDER_RECALL),
+          statusIsActive(STATUSES.SPO_CONSIDERING_RECALL)
+        )
+      )
+    )
+  )
+  .get('', redirectController.get)
+
 /*
  * This section contains the route for the Probation Practitioner (PP)
  */
 const ppRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles([HMPPS_AUTH_ROLE.PO])
   .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
-
-ppRouteBuilder.get('', redirectController.get)
 
 ppRouteBuilder.get('task-list-consider-recall', taskListConsiderRecallController.get)
 ppRouteBuilder.post('task-list-consider-recall', taskListConsiderRecallController.post)
