@@ -66,16 +66,17 @@ export const deleteOpenRecommendation = () => {
   cy.clickLink('Recommendations')
   // check if Delete button is available (the flag is enabled)
   cy.get('body').then($body => {
-    if ($body.find('[data-qa="delete-recommendation"]').length) {
+    const { length } = $body.find('[data-qa="delete-recommendation"]')
+    if (length) {
       // If the first Recommendation is Open then delete it so that a new recommendation can be created
-      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
-        rowValues => {
-          if (rowValues.includes('Update recommendation')) {
-            cy.get('tr[data-qa]:first-child [data-qa="delete-recommendation"]').click()
-            cy.log('Deleted Open recommendation!!')
+      for (let i = 0; i < length; i += 1) {
+        cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
+          // eslint-disable-next-line no-loop-func
+          () => {
+            cy.get('[data-qa] [data-qa="delete-recommendation"]').first().click()
           }
-        }
-      )
+        )
+      }
     }
     if ($body.find('#main-content a:contains("Consider a recall")').length > 0) {
       // If previous recommendation in Consider A Recall flow w/o SPO rationale recorded then delete it so that a new recommendation can be created
