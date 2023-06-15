@@ -48,7 +48,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     When SPO countersigns after recording rationale
     Then SPO task-list is updated with the following status:
       | Line manager countersignature   | Completed |
@@ -69,7 +69,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     When SPO countersigns after recording rationale
     When SPO requests ACO to countersign
     And ACO visits the countersigning link
@@ -113,7 +113,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO has requested an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     And SPO has countersigned after recording rationale
     And SPO has requested ACO to countersign
     And ACO has visited the countersigning link
@@ -180,7 +180,7 @@ Feature: Rationale for a Recall decision
     # MRD-1262: AC0/AC1
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with <SPODecision> decision
+    And SPO has recorded rationale
     And a confirmation of the decision is shown to SPO
     And SPO countersigns after recording rationale
     # MRD-1305: AC3
