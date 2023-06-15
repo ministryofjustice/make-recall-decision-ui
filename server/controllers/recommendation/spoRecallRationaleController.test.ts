@@ -41,6 +41,18 @@ describe('get', () => {
 
     expect(res.locals.recallDecided).toEqual(true)
   })
+  it('present without data while spo has signed', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        statuses: [{ name: STATUSES.SPO_SIGNED, active: true }],
+      },
+    })
+
+    await spoRecallRationaleController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.recallDecided).toEqual(true)
+  })
   it('present previous data', async () => {
     const res = mockRes({
       locals: {

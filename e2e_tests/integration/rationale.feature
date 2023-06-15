@@ -99,7 +99,7 @@ Feature: Rationale for a Recall decision
     And ACO visits the countersigning link
     And ACO countersigns
     When SPO logs back in to add rationale
-    Then SPO is able to record rationale with RECALL decision
+    Then SPO is able to record rationale
     And a confirmation of the decision is shown to SPO
 
   @MRD-1466

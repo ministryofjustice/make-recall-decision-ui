@@ -230,15 +230,18 @@ spoCounterSigningRouteBuilder
 RouteBuilder.build(recommendations)
   .withRoles([HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO])
   .withCheck(
-    or(
-      not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
-      and(
-        roleIsActive(HMPPS_AUTH_ROLE.SPO),
-        or(
-          statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
-          statusIsActive(STATUSES.SPO_SIGNED),
-          statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
-          statusIsActive(STATUSES.ACO_SIGNED)
+    and(
+      not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
+      or(
+        not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
+        and(
+          roleIsActive(HMPPS_AUTH_ROLE.SPO),
+          or(
+            statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
+            statusIsActive(STATUSES.SPO_SIGNED),
+            statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
+            statusIsActive(STATUSES.ACO_SIGNED)
+          )
         )
       )
     )
