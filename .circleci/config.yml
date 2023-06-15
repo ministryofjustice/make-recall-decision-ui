@@ -247,6 +247,8 @@ jobs:
           command: 'npm install -g npm@latest'
       - node/install-packages
       - run:
+          environment:
+            FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           name: E2E Check - << parameters.environment >>
           command: |
             SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split )
@@ -294,6 +296,8 @@ jobs:
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
+          environment:
+            FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           command: |
             npm ci --no-audit
             

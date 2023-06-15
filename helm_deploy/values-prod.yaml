@@ -13,6 +13,7 @@ generic-service:
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PROD"
     ENVIRONMENT: "PRODUCTION"
+    FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: false
 
   allowlist:
     north_shields_user: "194.33.192.1/24"

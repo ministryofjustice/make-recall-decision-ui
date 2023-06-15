@@ -15,6 +15,7 @@ generic-service:
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "DEVELOPMENT"
+    FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
 generic-prometheus-alerts:
   alertSeverity: make-recall-decision-nonprod
