@@ -33,6 +33,21 @@ const recordSpoDecision = function (spoDecision?: string) {
   this.testData.spoDecisionExplanation = faker.hacker.phrase()
   cy.get('div:not(.govuk-radios__conditional--hidden)>div>textarea').type(this.testData.spoDecisionExplanation)
   cy.clickButton('Continue')
+  cy.clickLink('Record the decision')
+  cy.clickButton('Send to NDelius')
+}
+
+const recordSpoDecisionAfterCountersigning = function () {
+  cy.clickLink(`Review practitioner's concerns`)
+  cy.clickButton('Continue')
+  cy.clickLink(`Review profile of ${this.offenderName}`)
+  cy.clickButton('Continue')
+  cy.clickLink(`Explain the decision`)
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
+  this.testData.spoDecision = 'RECALL'
+  this.testData.spoDecisionExplanation = faker.hacker.phrase()
+  cy.get('textarea').type(this.testData.spoDecisionExplanation)
+  cy.clickButton('Continue')
   cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   cy.clickLink('Record the decision')
   cy.clickButton('Send to NDelius')
@@ -47,7 +62,7 @@ const doManagerCountersign = function (userType: UserType, data?: Record<string,
     }
     cy.clickButton('Continue')
     this.testData.spoCounterSignature.reason = faker.hacker.phrase()
-    cy.get('#value').type(this.testData.spoCounterSignature.reason)
+    cy.get('#managerCountersignatureExposition').type(this.testData.spoCounterSignature.reason)
     cy.clickButton('Countersign')
   } else {
     this.testData.acoCounterSignature = {}
@@ -57,7 +72,7 @@ const doManagerCountersign = function (userType: UserType, data?: Record<string,
     }
     cy.clickButton('Continue')
     this.testData.acoCounterSignature.reason = faker.hacker.phrase()
-    cy.get('#value').type(this.testData.acoCounterSignature.reason)
+    cy.get('#managerCountersignatureExposition').type(this.testData.acoCounterSignature.reason)
     cy.clickButton('Countersign')
   }
 }
@@ -84,6 +99,13 @@ When('SPO( has) records/recorded rationale with {managersDecision} decision', fu
   cy.selectRadioByValue('You must record your rationale', YesNoType.YES.toUpperCase())
   cy.clickButton('Continue')
   recordSpoDecision.call(this, decision)
+})
+
+When('SPO( has) records/recorded rationale', function () {
+  cy.clickLink('Line manager countersignature')
+  cy.selectRadioByValue('You must record your rationale', YesNoType.YES.toUpperCase())
+  cy.clickButton('Continue')
+  recordSpoDecisionAfterCountersigning.call(this)
 })
 
 Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationPage: string) {
