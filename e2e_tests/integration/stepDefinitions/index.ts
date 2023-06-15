@@ -69,7 +69,8 @@ export const deleteOpenRecommendation = () => {
     const { length } = $body.find('[data-qa="delete-recommendation"]')
     if (length) {
       // If the first Recommendation is Open then delete it so that a new recommendation can be created
-      for (let i = 0; i < length; i += 1) {
+      // Cypress stops the tests if the screen redirects to same page more than 20 times, so limiting the deletes to first 10, if more exists
+      for (let i = 0; i < (length > 10 ? 10 : length); i += 1) {
         cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
           // eslint-disable-next-line no-loop-func
           () => {
@@ -77,11 +78,6 @@ export const deleteOpenRecommendation = () => {
           }
         )
       }
-    }
-    if ($body.find('#main-content a:contains("Consider a recall")').length > 0) {
-      // If previous recommendation in Consider A Recall flow w/o SPO rationale recorded then delete it so that a new recommendation can be created
-      cy.get('tr[data-qa]:first-child [data-qa="delete-recommendation"]').click()
-      cy.log('Deleted previous recommendation w/o SPO rationale!!')
     }
   })
 }
