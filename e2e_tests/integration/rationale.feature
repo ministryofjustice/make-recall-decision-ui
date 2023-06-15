@@ -113,7 +113,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO has requested an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     And SPO has countersigned after recording rationale
     And SPO has requested ACO to countersign
     And ACO has visited the countersigning link
