@@ -219,3 +219,7 @@ Given('SPO( has) records/recorded a review decision of {managersDecision}', func
 Then('SPO is able to record rationale with {managersDecision} decision', function (decision: string) {
   recordSpoDecision.call(this, decision)
 })
+
+Then('SPO is able to record rationale', function () {
+  recordSpoDecisionAfterCountersigning.call(this)
+})
