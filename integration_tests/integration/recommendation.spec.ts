@@ -1071,6 +1071,99 @@ context('Make a recommendation', () => {
       cy.signIn({ hasSpoRole: true })
     })
 
+    it('present rationale check while countersigning', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: 'SPO_RECORDED_RATIONALE', active: false },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+      cy.clickLink('Line manager countersignature')
+
+      cy.pageHeading().should('equal', 'You must record your rationale')
+    })
+
+    it('present telephone page after clicking no on rationale check', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: 'SPO_RECORDED_RATIONALE', active: false },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check?flagTriggerWork=1`)
+
+      cy.selectRadio('You must record your rationale', 'No - countersign the Part A first and record rationale later')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Enter your telephone number')
+    })
+
+    it('present spo rationale task list after clicking yes on rationale check', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: 'SPO_CONSIDER_RECALL', active: true },
+          { name: 'SPO_RECORDED_RATIONALE', active: false },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check?flagTriggerWork=1`)
+
+      cy.selectRadio('You must record your rationale', 'Yes - use this service to record rationale in NDelius')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
+    it('present SPO Rationale and return to task list during countersigning', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink('Explain the decision')
+
+      cy.pageHeading().should('equal', 'Explain the decision')
+
+      cy.fillInput('Explain your decision', 'some text')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
     it('present telephone entry while countersigning', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

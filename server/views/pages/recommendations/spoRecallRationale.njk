@@ -56,6 +56,14 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
 
+
+                {% if recallDecided %}
+                    <input type="hidden" name="spoRecallType" value="RECALL" />
+                    <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+                    {{ radioHintHtml | safe }}
+                    {{ rationaleRecallHtml | safe }}
+                {% else %}
+
                 {{ govukRadios({
                     idPrefix: "spoRecallType",
                     name: "spoRecallType",
@@ -79,6 +87,7 @@
                     }),
                     errorMessage: errorMessage(errors.spoRecallType)
                 }) }}
+                {% endif %}
                 {{ formSubmitButton() }}
             </form>
         </div>
