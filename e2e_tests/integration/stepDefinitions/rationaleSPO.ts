@@ -1,7 +1,7 @@
 import { DataTable, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { proxy } from '@alfonso-presa/soft-assert'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import { CustodyType, IndeterminateRecallType, NonIndeterminateRecallType, openApp, YesNoType } from './index'
+import { CustodyType, openApp, YesNoType } from './index'
 import { UserType } from '../../support/commands'
 import {
   assertAllPartA,
@@ -186,7 +186,10 @@ Then('Countersign button is visible on the Overview page', function () {
 
 Then('Part A details are correct', function () {
   const contents = this.partAContent.toString()
-  q1EmergencyRecall(contents, YesNoType[this.testData.emergencyRecall])
+  q1EmergencyRecall(
+    contents,
+    this.testData.recallType === 'EMERGENCY' ? YesNoType.YES : YesNoType[this.testData.emergencyRecall]
+  )
   q2IndeterminateSentenceType(contents, YesNoType[this.testData.indeterminate])
   q3ExtendedSentence(contents, YesNoType[this.testData.extended])
   // TODO: q4 - Offender details - Needs to retrieved from https://probation-offender-search-dev.hmpps.service.justice.gov.uk/phrase
@@ -196,13 +199,7 @@ Then('Part A details are correct', function () {
   q8ArrestIssues(contents, YesNoType[this.testData.hasArrestIssues], this.testData.arrestIssueDetails)
   q9LocalPoliceDetails(contents, this.testData.localpoliceDetails)
   q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
-  q22RecallType(
-    contents,
-    this.testData.indeterminate === 'NO' && this.testData.extended === 'NO'
-      ? NonIndeterminateRecallType[this.testData.recallType]
-      : IndeterminateRecallType[this.testData.recallType],
-    this.testData.partARecallReason
-  )
+  q22RecallType(contents, this.testData)
   q25ProbationDetails(contents)
   q27SPOEndorsement(contents, this.testData.spoCounterSignature)
   q28ACOAuthorisation(contents, this.testData.acoCounterSignature)
@@ -216,10 +213,6 @@ When('{userType}( has) countersigns/countersigned', function (userType: UserType
 })
 
 Given('SPO( has) records/recorded a review decision of {managersDecision}', function (decision: string) {
-  recordSpoDecision.call(this, decision)
-})
-
-Then('SPO is able to record rationale with {managersDecision} decision', function (decision: string) {
   recordSpoDecision.call(this, decision)
 })
 

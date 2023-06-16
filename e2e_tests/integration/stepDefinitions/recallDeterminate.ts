@@ -17,7 +17,8 @@ When('Maria downloads the Part A and confirms the fixed term recall', () => {
     q3ExtendedSentence(contents, 'No')
     q6CustodyStatus(contents, 'Prison Custody')
     q16IndexOffenceDetails(contents)
-    q22RecallType(contents, 'Fixed', 'Fixed term details...')
+    const recallDetails = { type: 'Fixed', reason: 'Fixed term details...' }
+    q22RecallType(contents, recallDetails)
     cy.log('Q23')
     expect(contents).to.contain('Additional licence condition for fixed term recall...')
     cy.log('Q25')
@@ -28,7 +29,8 @@ When('Maria downloads the Part A and confirms the fixed term recall', () => {
 
 When('Maria downloads the Part A and confirms the standard recall', () => {
   return cy.downloadDocX('Download the Part A').then(contents => {
-    q22RecallType(contents, 'Standard', 'Standard details...')
+    const recallDetails = { type: 'Standard', reason: 'Standard details...' }
+    q22RecallType(contents, recallDetails)
     assertAllPartA()
   })
 })
