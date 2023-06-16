@@ -39,6 +39,7 @@ describe('get', () => {
 
     await spoRecallRationaleController.get(mockReq(), res, mockNext())
 
+    expect(res.locals.page).toEqual({ id: 'spoRecallRationaleRecallDecided' })
     expect(res.locals.recallDecided).toEqual(true)
   })
   it('present without data while spo has signed', async () => {
@@ -51,6 +52,7 @@ describe('get', () => {
 
     await spoRecallRationaleController.get(mockReq(), res, mockNext())
 
+    expect(res.locals.page).toEqual({ id: 'spoRecallRationaleRecallDecided' })
     expect(res.locals.recallDecided).toEqual(true)
   })
   it('present previous data', async () => {
