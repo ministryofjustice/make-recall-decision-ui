@@ -26,16 +26,15 @@
                     <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
                             Complete the following sections of the Part A form. You can do this in any order.
                     </p>
-                    {% if taskCompleteness.areAllComplete %}
-                        <p class='govuk-body'>
-                            {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
-                            sensitive language in the form.
-                        </p>
-                        <div>
-                            <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
-                        </div>
-
-                    {% endif %}
+                {% endif %}
+                {% if taskCompleteness.areAllComplete %}
+                    <p class='govuk-body'>
+                        {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
+                        sensitive language in the form.
+                    </p>
+                    <div>
+                        <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
+                    </div>
                 {% endif %}
             {% else %}
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
