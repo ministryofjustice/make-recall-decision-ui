@@ -53,7 +53,11 @@ export const readFeatureFlags =
     }, {})
     Object.keys(flags).forEach(key => {
       const flag = req.query[key] || req.cookies[key]
-      if (flag) {
+      const userFeatureFlagSettingAllowed =
+        typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
+          ? true
+          : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
+      if (userFeatureFlagSettingAllowed.toString() === 'true' && flag) {
         const enabled = flag === '1'
         res.cookie(key, flag)
         res.locals.flags[key] = enabled
