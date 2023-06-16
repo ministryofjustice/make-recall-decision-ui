@@ -3,41 +3,40 @@ import { flush } from '@alfonso-presa/soft-assert'
 import { getTestDataPerEnvironment } from '../../utils'
 import { longDateMatchPattern } from '../../../cypress_shared/utils'
 import { UserType } from '../../support/commands'
+import {
+  q10Vulnerabilities,
+  q11Contraband,
+  q12MappaDetails,
+  q13RegisteredPPOIOM,
+  q14VLOContact,
+  q15RoshLevels,
+  q16IndexOffenceDetails,
+  q17LicenceConditions,
+  q18AdditionalConditions,
+  q19CircumstancesLeadingToRecall,
+  q1EmergencyRecall,
+  q20ResponseToSupervision,
+  q21Alternatives,
+  q22RecallType,
+  q23LicenceConditionsToAdd,
+  q24ISPESP,
+  q25ProbationDetails,
+  q26OffenderManager,
+  q27SPOEndorsement,
+  q28ACOAuthorisation,
+  q29Attachments,
+  q2IndeterminateSentenceType,
+  q3ExtendedSentence,
+  q4OffenderDetails,
+  q5SentenceDetails,
+  q6CustodyStatus,
+  q7Addresses,
+  q8ArrestIssues,
+  q9LocalPoliceDetails,
+} from './assertionsPartA'
+import { CustodyType, YesNoType } from '../../support/enums'
 
 const apiDataForCrn = getTestDataPerEnvironment()
-
-export enum YesNoType {
-  'YES' = 'Yes',
-  'NO' = 'No',
-}
-
-export enum YesNoNAType {
-  'YES' = 'Yes',
-  'NO' = 'No',
-  'NOT_APPLICABLE' = 'Not applicable',
-}
-
-export enum CustodyType {
-  'YES_POLICE' = 'Police Custody',
-  'YES_PRISON' = 'Prison Custody',
-  'NO' = 'No',
-}
-
-export enum NonIndeterminateRecallType {
-  'STANDARD' = 'Standard',
-  'FIXED_TERM' = 'Fixed',
-  'NO_RECALL' = 'No recall',
-}
-export enum IndeterminateRecallType {
-  'EMERGENCY' = 'Emergency recall',
-  'NO_RECALL' = 'No recall',
-}
-
-export enum IndeterminateOrExtendedSentenceDetailType {
-  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = '{{offenderName}} has shown behaviour similar to the index offence',
-  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = '{{offenderName}} has shown behaviour that could lead to a sexual or violent offence',
-  'OUT_OF_TOUCH' = '{{offenderName}} is out of touch',
-}
 
 defineParameterType({ name: 'userType', regexp: /PO|SPO|ACO/, transformer: s => UserType[s] })
 
@@ -51,7 +50,8 @@ Before({ tags: '@Rationale or @Trigger' }, () => {
   openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 })
 })
 
-After(() => {
+After(function () {
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   flush()
 })
 
@@ -82,12 +82,11 @@ export const deleteOpenRecommendation = () => {
   })
 }
 
-export const openApp = (queryParams: object, userType?: UserType, newUrl?: string) => {
+export const openApp = function (queryParams: object, userType?: UserType, newUrl?: string) {
   let queryParameters = ''
   Object.keys(queryParams).forEach(keyName => {
     queryParameters = `${queryParameters + keyName}=${queryParams[keyName]}&`
   })
-  cy.log(`queryParameters--> ${queryParameters}`)
   cy.visitPageAndLogin(`${newUrl || ''}?${queryParameters}`, userType || UserType.PO)
 }
 // ==================================== Recall
@@ -97,12 +96,16 @@ const defaultStartPath = (crnNum: string) => {
   return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
 
-function loginAndSearchCrn(userType: UserType) {
+export function signOut() {
   cy.get('body').then($body => {
     const signOutSelector = '[data-qa="signOut"]'
     if ($body.find(signOutSelector).length > 0) cy.get(signOutSelector).click()
   })
   cy.clearAllCookies()
+}
+
+function loginAndSearchCrn(userType: UserType) {
+  signOut()
   cy.wait(1000)
   cy.reload(true)
   cy.pageHeading().should('equal', 'Sign in')
@@ -359,7 +362,7 @@ When('Maria reviews the personal details', () => {
   cy.getDefinitionListValue('Name').should('match', apiDataForCrn.fullName)
   cy.getText('gender').as('gender')
   cy.getDefinitionListValue('Gender').should('match', apiDataForCrn.gender)
-  cy.getDateAttribute('dateOfBirth').as('dateOfBirth')
+  cy.getText('dateOfBirth').as('dateOfBirth')
   cy.getDefinitionListValue('Date of birth').should('match', longDateMatchPattern(apiDataForCrn.dateOfBirth))
   cy.clickLink('Continue')
   cy.getElement('Personal details Reviewed').should('exist')
@@ -392,7 +395,7 @@ When('Maria enters the offence analysis', () => {
 When('Maria enters the previous releases', function () {
   cy.getElement('Previous releases To do').should('exist')
   cy.clickLink('Previous releases')
-  cy.getDateAttribute('lastReleaseDate').as('lastReleaseDate')
+  cy.getText('lastReleaseDate').as('lastReleaseDate')
   cy.clickLink('Add a previous release')
   const firstReleaseDate = apiDataForCrn.previousReleaseDates[0]
   cy.enterDateTime(firstReleaseDate.parts)
@@ -427,7 +430,7 @@ When('Maria enters the previous releases', function () {
 When('Maria enters the previous recalls', function () {
   cy.getElement('Previous recalls To do').should('exist')
   cy.clickLink('Previous recalls')
-  cy.getDateAttribute('lastRecallDate').as('lastRecallDate')
+  cy.getText('lastRecallDate').as('lastRecallDate')
   cy.clickLink('Add a previous recall')
   const firstRecallDate = apiDataForCrn.previousRecallDates[0]
   cy.enterDateTime(firstRecallDate.parts)
@@ -549,6 +552,40 @@ Then('PO/SPO/ACO can create Part A', function () {
 
 Then('PO/SPO/ACO can download Part A', function () {
   cy.downloadDocX('Download the Part A').as('partAContent')
+})
+
+Then('Part A details are correct', function () {
+  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
+  const contents = this.partAContent.toString()
+  q1EmergencyRecall(contents, YesNoType[this.testData.emergencyRecall])
+  q2IndeterminateSentenceType(contents, YesNoType[this.testData.indeterminate])
+  q3ExtendedSentence(contents, YesNoType[this.testData.extended])
+  q4OffenderDetails(contents, this.testData.offenderDetails)
+  q5SentenceDetails(contents, this.testData.offenceDetails)
+  q6CustodyStatus(contents, CustodyType[this.testData.inCustody])
+  q7Addresses(contents, this.testData.custodyAddress)
+  q8ArrestIssues(contents, YesNoType[this.testData.hasArrestIssues], this.testData.arrestIssueDetails)
+  q9LocalPoliceDetails(contents, this.testData.localPoliceDetails)
+  q10Vulnerabilities(contents, this.testData.vulnerabilities)
+  q11Contraband(contents, this.testData.contraband)
+  q12MappaDetails(contents, this.testData.mappa)
+  q13RegisteredPPOIOM(contents, this.testData.iom)
+  q14VLOContact(contents, this.testData.vlo)
+  q15RoshLevels(contents, this.testData.currentRoshForPartA)
+  q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
+  q17LicenceConditions(contents, this.testData.licenceConditions.standard)
+  q18AdditionalConditions(contents, this.testData.licenceConditions.advanced)
+  q19CircumstancesLeadingToRecall(contents, this.testData.localPoliceDetails)
+  q20ResponseToSupervision(contents, this.testData.localPoliceDetails)
+  q21Alternatives(contents, this.testData.localPoliceDetails)
+  q22RecallType(contents, this.testData)
+  q23LicenceConditionsToAdd(contents, this.testData.localPoliceDetails)
+  q24ISPESP(contents, this.testData.localPoliceDetails)
+  q25ProbationDetails(contents)
+  q26OffenderManager(contents, this.testData.localPoliceDetails)
+  q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)
+  q28ACOAuthorisation.call(this, contents, this.testData.acoCounterSignature)
+  q29Attachments(contents, this.testData.localPoliceDetails)
 })
 
 When('PO/SPO/ACO returns to Recommendations page of CRN', function () {

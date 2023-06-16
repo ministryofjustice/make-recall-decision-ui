@@ -24,7 +24,11 @@ export const isoDateToObject = (isoDate: string) => {
   return { day, month, year }
 }
 
-export const formatObjectDate = (objectDate: Record<string, number | string>) => {
+export const formatObjectDateToLongFormat = (objectDate: Record<string, number | string>) => {
   const d = DateTime.fromObject(objectDate)
-  return d.toFormat('dd/LL/yyyy')
+  return d.toFormat('d MMMM yyyy')
+}
+
+export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
+  return DateTime.fromFormat(dateToConvert, 'dd MMMM yyyy').toFormat('dd/MM/yyyy')
 }

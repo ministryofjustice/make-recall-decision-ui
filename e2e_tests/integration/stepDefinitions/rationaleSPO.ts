@@ -1,24 +1,9 @@
 import { DataTable, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { proxy } from '@alfonso-presa/soft-assert'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import { CustodyType, openApp, YesNoType } from './index'
+import { openApp, signOut } from './index'
+import { YesNoType } from '../../support/enums'
 import { UserType } from '../../support/commands'
-import {
-  assertAllPartA,
-  q16IndexOffenceDetails,
-  q1EmergencyRecall,
-  q22RecallType,
-  q25ProbationDetails,
-  q27SPOEndorsement,
-  q28ACOAuthorisation,
-  q2IndeterminateSentenceType,
-  q3ExtendedSentence,
-  q5SentenceDetails,
-  q6CustodyStatus,
-  q7Addresses,
-  q8ArrestIssues,
-  q9LocalPoliceDetails,
-} from './assertionsPartA'
 
 const expectSoftly = proxy(expect)
 
@@ -78,6 +63,7 @@ const doManagerCountersign = function (userType: UserType, data?: Record<string,
 }
 
 When('{userType}( has) visits/visited the countersigning/review link', function (userType: UserType) {
+  signOut()
   cy.clearAllCookies()
   cy.wait(1000)
   cy.reload(true)
@@ -109,7 +95,6 @@ When('SPO( has) records/recorded rationale', function () {
 })
 
 Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationPage: string) {
-  cy.log(`testData after SPO Decision/SPO/ACO Countersigning--> ${JSON.stringify(this.testData)}`)
   cy.get('#main-content')
     .invoke('text')
     .then(innerText => {
@@ -129,6 +114,11 @@ Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationP
 Then('SPO( has) countersigns/countersigned after recording rationale', function () {
   cy.clickLink('Return to overview')
   cy.clickLink('Countersign')
+  cy.clickLink('Line manager countersignature')
+  doManagerCountersign.call(this, UserType.SPO, true)
+})
+
+Then('SPO( has) countersigns/countersigned after recording rationale in review', function () {
   cy.clickLink('Line manager countersignature')
   doManagerCountersign.call(this, UserType.SPO, true)
 })
@@ -170,7 +160,6 @@ When('SPO/ACO task-list is updated with the following status:', function (dataTa
 
 Then('confirmation page contains a link for ACO to countersign', function () {
   cy.getText('case-link').then(text => {
-    cy.log(`ACO sign link--> ${text}`)
     cy.url().then(url => {
       expect(text, 'Recommendation Number match').to.contain(url.match(/\/(\d+)\//)[1])
     })
@@ -182,28 +171,6 @@ Then('Countersign button is visible on the Overview page', function () {
     .find('a.govuk-button')
     .invoke('text')
     .then(text => expectSoftly(text).to.contain('Countersign'))
-})
-
-Then('Part A details are correct', function () {
-  const contents = this.partAContent.toString()
-  q1EmergencyRecall(
-    contents,
-    this.testData.recallType === 'EMERGENCY' ? YesNoType.YES : YesNoType[this.testData.emergencyRecall]
-  )
-  q2IndeterminateSentenceType(contents, YesNoType[this.testData.indeterminate])
-  q3ExtendedSentence(contents, YesNoType[this.testData.extended])
-  // TODO: q4 - Offender details - Needs to retrieved from https://probation-offender-search-dev.hmpps.service.justice.gov.uk/phrase
-  q5SentenceDetails(contents, this.testData.offenceDetails)
-  q6CustodyStatus(contents, CustodyType[this.testData.inCustody])
-  q7Addresses(contents, this.testData.custodyAddress)
-  q8ArrestIssues(contents, YesNoType[this.testData.hasArrestIssues], this.testData.arrestIssueDetails)
-  q9LocalPoliceDetails(contents, this.testData.localpoliceDetails)
-  q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
-  q22RecallType(contents, this.testData)
-  q25ProbationDetails(contents)
-  q27SPOEndorsement(contents, this.testData.spoCounterSignature)
-  q28ACOAuthorisation(contents, this.testData.acoCounterSignature)
-  assertAllPartA()
 })
 
 When('{userType}( has) countersigns/countersigned', function (userType: UserType) {

@@ -128,10 +128,10 @@ Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 
   cy
     .get(opts.parent)
     .find('.govuk-summary-list__key')
-    .contains(label)
+    .filter(`:contains("${label}")`)
     .next('.govuk-summary-list__value')
     .invoke('text')
-    .then(text => text.trim())
+    .then(text => text.trim().replace(/\n/g, '').replace(/\s\s+/g, ','))
 )
 
 Cypress.Commands.add('getListLabels', (labelQaAttr: string, opts = { parent: 'body' }) =>
@@ -229,7 +229,7 @@ Cypress.Commands.add('selectRadioByValue', (groupLabel, value, opts = { parent: 
     .contains('legend', groupLabel)
     .parent('fieldset')
     .then($fieldset => {
-      cy.wrap($fieldset).get(`input[value='${value}']`).click()
+      cy.wrap($fieldset).find(`input[value='${value}']`).click()
     })
 })
 
@@ -315,7 +315,6 @@ Cypress.Commands.add('getOffenceDetails', () => {
     offenceDetails.dateOfOriginalOffence = text
   })
   cy.getDefinitionListValue('Date of sentence').then(text => {
-    cy.log(`offenceDetails.dateOfSentence--> ${text}`)
     offenceDetails.dateOfSentence = text
   })
   cy.getDefinitionListValue('Length of sentence').then(text => {
@@ -334,4 +333,70 @@ Cypress.Commands.add('getOffenceDetails', () => {
     offenceDetails.extendedTerm = text
   })
   return cy.wrap(offenceDetails)
+})
+
+Cypress.Commands.add('getOffenderDetails', () => {
+  const offenderDetails: Record<string, string> = {}
+  cy.getDefinitionListValue('Name').then(text => {
+    offenderDetails.fullName = text
+  })
+  cy.getDefinitionListValue('Gender').then(text => {
+    offenderDetails.gender = text
+  })
+  cy.getDefinitionListValue('Date of birth').then(text => {
+    offenderDetails.dateOfBirth = text
+  })
+  cy.getDefinitionListValue('Ethnic group').then(text => {
+    offenderDetails.ethnicity = text
+  })
+  cy.getDefinitionListValue('Spoken').then(text => {
+    offenderDetails.spokenLanguage = text
+  })
+  cy.getDefinitionListValue('Written').then(text => {
+    offenderDetails.writtenLanguage = text
+  })
+  cy.getDefinitionListValue('CRO number').then(text => {
+    offenderDetails.cro = text
+  })
+  cy.getDefinitionListValue('PNC number').then(text => {
+    offenderDetails.pnc = text
+  })
+  cy.getDefinitionListValue('Prison number').then(text => {
+    offenderDetails.prisonNo = text
+  })
+  cy.getDefinitionListValue('PNOMIS number').then(text => {
+    offenderDetails.noms = text
+  })
+  return cy.wrap(offenderDetails)
+})
+
+Cypress.Commands.add('getPreviousReleases', () => {
+  const previousReleaseDetails: Record<string, string> = {}
+  if (Cypress.$('[data-qa="release-info-table"]:contains("Releasing prison or custodial establishment")').length > 0)
+    cy.getDefinitionListValue('Releasing prison or custodial establishment').then(text => {
+      previousReleaseDetails.releasingPrison = text
+    })
+  if (Cypress.$('[data-qa="release-info-table"]:contains("Last release")').length > 0)
+    cy.getDefinitionListValue('Last release').then(text => {
+      previousReleaseDetails.lastReleaseDate = text
+    })
+  if (Cypress.$('[data-qa="release-info-table"]:contains("Previous release")').length > 0)
+    cy.getDefinitionListValue('Previous release').then(text => {
+      previousReleaseDetails.previousReleaseDates = text
+    })
+  else previousReleaseDetails.previousReleaseDates = ''
+  return cy.wrap(previousReleaseDetails)
+})
+
+Cypress.Commands.add('getPreviousRecalls', () => {
+  const previousRecallDates = []
+  if (Cypress.$('[data-qa="recall-info-table"]:contains("Last recall")').length > 0)
+    cy.getDefinitionListValue('Last recall').then(text => {
+      previousRecallDates.push(text)
+    })
+  if (Cypress.$('[data-qa="recall-info-table"]:contains("Previous recall")').length > 0)
+    cy.getDefinitionListValue('Previous recall').then(text => {
+      previousRecallDates.push(text)
+    })
+  return cy.wrap(previousRecallDates)
 })
