@@ -1155,7 +1155,7 @@ context('Make a recommendation', () => {
 
       cy.clickLink('Explain the decision')
 
-      cy.pageHeading().should('equal', 'Explain the decision')
+      cy.pageHeading().should('equal', 'Explain the decision to recall Paula Smith')
 
       cy.fillInput('Explain your decision', 'some text')
 
