@@ -30,7 +30,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     mode,
     inputDisplayValues: {
       errors: res.locals.errors,
-      value: mode === 'SPO' ? recommendation.countersignSpoExposition : recommendation.countersignAcoExposition,
+      managerCountersignatureExposition:
+        mode === 'SPO' ? recommendation.countersignSpoExposition : recommendation.countersignAcoExposition,
     },
   }
 
@@ -40,7 +41,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { value, mode } = req.body
+  const { managerCountersignatureExposition, mode } = req.body
 
   if (mode !== 'SPO' && mode !== 'ACO') {
     throw new Error('Invalid mode')
@@ -54,7 +55,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const errors = []
 
-  if (!isMandatoryTextValue(value)) {
+  if (!isMandatoryTextValue(managerCountersignatureExposition)) {
     const errorId = 'missingManagerCountersignatureExposition'
     errors.push(
       makeErrorObject({
@@ -72,7 +73,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   await updateRecommendation({
     recommendationId,
-    valuesToSave: mode === 'SPO' ? { countersignSpoExposition: value } : { countersignAcoExposition: value },
+    valuesToSave:
+      mode === 'SPO'
+        ? { countersignSpoExposition: managerCountersignatureExposition }
+        : { countersignAcoExposition: managerCountersignatureExposition },
     token,
     featureFlags: flags,
   })

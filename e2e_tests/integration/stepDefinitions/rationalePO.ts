@@ -18,11 +18,7 @@ import {
 const expectSoftly = proxy(expect)
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const testData: Record<string, any> = {
-  licenceConditions: { standard: [], advanced: [] },
-  alternativesTried: [],
-  vulnerabilities: [],
-}
+let testData: Record<string, any>
 let currentPage
 
 const makeRecommendation = function (crn, recommendationDetails?: Record<string, string>) {
@@ -422,6 +418,11 @@ Given('a PO has created a recommendation to recall with:', (dataTable: DataTable
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
       : crns[1]
   cy.wrap(crn).as('crn')
+  testData = {
+    licenceConditions: { standard: [], advanced: [] },
+    alternativesTried: [],
+    vulnerabilities: [],
+  }
   makeRecommendation(crn, dataTable.rowsHash())
 })
 

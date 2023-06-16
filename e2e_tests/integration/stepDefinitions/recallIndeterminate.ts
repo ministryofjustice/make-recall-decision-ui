@@ -110,8 +110,8 @@ When('Maria downloads the Part A and confirms the indeterminate recall', functio
     cy.log('Q21')
     expectSoftly(contents).to.contain('Details on reporting')
     expectSoftly(contents).to.contain('Details on drug testing')
-
-    q22RecallType(contents, 'N/A', 'N/A')
+    const recallDetails = { type: 'N/A', reason: 'N/A' }
+    q22RecallType(contents, recallDetails)
     cy.log('Q23')
     expectSoftly(contents).to.contain(
       'Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link? Yes'

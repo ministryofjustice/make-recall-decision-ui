@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { proxy, flush } from '@alfonso-presa/soft-assert'
 import { changeDateFromLongFormatToShort, formatObjectDateToLongFormat, getTestDataPerEnvironment } from '../../utils'
-import { LicenceConditions, ROSHLevels, YesNoNAType, YesNoType } from '../../support/enums'
+import { LicenceConditions, NonIndeterminateRecallType, ROSHLevels, YesNoNAType, YesNoType } from '../../support/enums'
 
 const expectSoftly = proxy(expect)
 
@@ -354,14 +354,30 @@ export const q21Alternatives = (contents: string, details: Record<string, string
   cy.log(`Q21: ${contents} ${details}`)
 }
 
-export const q22RecallType = (contents: string, answer: string, details: string) => {
+export const q22RecallType = (contents: string, details: Record<string, string>) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[22]), contents.indexOf(partASections[23]))
+  if (details.indeterminate === 'NO' && details.extended === 'NO') {
+    // eslint-disable-next-line no-param-reassign
+    details.type = NonIndeterminateRecallType[details.recallType]
+    // eslint-disable-next-line no-param-reassign
+    details.reason = details.partARecallReason
+  } else if (details.indeterminate === 'YES' && details.extended === 'NO') {
+    // eslint-disable-next-line no-param-reassign
+    details.type = 'N/A (not a determinate recall)'
+    // eslint-disable-next-line no-param-reassign
+    details.reason = 'N/A (not a determinate recall)'
+  } else if (details.indeterminate === 'NO' && details.extended === 'YES') {
+    // eslint-disable-next-line no-param-reassign
+    details.type = 'N/A (extended sentence recall)'
+    // eslint-disable-next-line no-param-reassign
+    details.reason = 'N/A (extended sentence recall)'
+  }
   expectSoftly(contents, 'Recall Type\n-->').to.contain(
-    `Select the proposed recall type, having considered the information above: ${answer}`
+    `Select the proposed recall type, having considered the information above: ${details.type}`
   )
   expectSoftly(contents, 'Recall Type Reason\n-->').to.contain(
-    `Explain your reasons for the above recall type recommendation: ${details}`
+    `Explain your reasons for the above recall type recommendation: ${details.reason}`
   )
 }
 

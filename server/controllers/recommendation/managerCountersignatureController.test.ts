@@ -18,7 +18,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'lineManagerCountersignature' })
     expect(res.locals.backLink).toEqual('countersigning-telephone')
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
 
     expect(next).toHaveBeenCalled()
@@ -36,7 +36,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'seniorManagerCountersignature' })
     expect(res.locals.backLink).toEqual('countersigning-telephone')
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
 
     expect(next).toHaveBeenCalled()
@@ -51,7 +51,7 @@ describe('get', () => {
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum blah blah blah')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum blah blah blah')
   })
 
   it('load with existing data for ACO', async () => {
@@ -63,7 +63,7 @@ describe('get', () => {
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum blah blah blah')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum blah blah blah')
   })
 
   it('initial load with error data', async () => {
@@ -91,7 +91,7 @@ describe('get', () => {
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum')
     expect(res.locals.inputDisplayValues.errors).toEqual(errors)
   })
 })
@@ -103,7 +103,7 @@ describe('post', () => {
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
-      body: { mode: 'SPO', value: 'some value' },
+      body: { mode: 'SPO', managerCountersignatureExposition: 'some value' },
     })
 
     const res = mockRes({
@@ -144,7 +144,7 @@ describe('post', () => {
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
-      body: { mode: 'ACO', value: 'some value' },
+      body: { mode: 'ACO', managerCountersignatureExposition: 'some value' },
     })
 
     const res = mockRes({
@@ -185,7 +185,7 @@ describe('post', () => {
     const req = mockReq({
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
-      body: { mode: 'SPO', value: '' },
+      body: { mode: 'SPO', managerCountersignatureExposition: '' },
     })
 
     const res = mockRes({

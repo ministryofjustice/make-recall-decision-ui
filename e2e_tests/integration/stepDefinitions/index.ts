@@ -34,7 +34,7 @@ import {
   q8ArrestIssues,
   q9LocalPoliceDetails,
 } from './assertionsPartA'
-import { CustodyType, IndeterminateRecallType, NonIndeterminateRecallType, YesNoType } from '../../support/enums'
+import { CustodyType, YesNoType } from '../../support/enums'
 
 const apiDataForCrn = getTestDataPerEnvironment()
 
@@ -66,21 +66,18 @@ export const deleteOpenRecommendation = () => {
   cy.clickLink('Recommendations')
   // check if Delete button is available (the flag is enabled)
   cy.get('body').then($body => {
-    if ($body.find('[data-qa="delete-recommendation"]').length) {
+    const { length } = $body.find('[data-qa="delete-recommendation"]')
+    if (length) {
       // If the first Recommendation is Open then delete it so that a new recommendation can be created
-      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
-        rowValues => {
-          if (rowValues.includes('Update recommendation')) {
-            cy.get('tr[data-qa]:first-child [data-qa="delete-recommendation"]').click()
-            cy.log('Deleted Open recommendation!!')
+      // Cypress stops the tests if the screen redirects to same page more than 20 times, so limiting the deletes to first 10, if more exists
+      for (let i = 0; i < (length > 10 ? 10 : length); i += 1) {
+        cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: 'tr[data-qa]:first-child' }).then(
+          // eslint-disable-next-line no-loop-func
+          () => {
+            cy.get('[data-qa] [data-qa="delete-recommendation"]').first().click()
           }
-        }
-      )
-    }
-    if ($body.find('#main-content a:contains("Consider a recall")').length > 0) {
-      // If previous recommendation in Consider A Recall flow w/o SPO rationale recorded then delete it so that a new recommendation can be created
-      cy.get('tr[data-qa]:first-child [data-qa="delete-recommendation"]').click()
-      cy.log('Deleted previous recommendation w/o SPO rationale!!')
+        )
+      }
     }
   })
 }
@@ -577,13 +574,7 @@ Then('Part A details are correct', function () {
   q19CircumstancesLeadingToRecall(contents, this.testData.localPoliceDetails)
   q20ResponseToSupervision(contents, this.testData.localPoliceDetails)
   q21Alternatives(contents, this.testData.localPoliceDetails)
-  q22RecallType(
-    contents,
-    this.testData.indeterminate === 'NO' && this.testData.extended === 'NO'
-      ? NonIndeterminateRecallType[this.testData.recallType]
-      : IndeterminateRecallType[this.testData.recallType],
-    this.testData.partARecallReason
-  )
+  q22RecallType(contents, this.testData)
   q23LicenceConditionsToAdd(contents, this.testData.localPoliceDetails)
   q24ISPESP(contents, this.testData.localPoliceDetails)
   q25ProbationDetails(contents)

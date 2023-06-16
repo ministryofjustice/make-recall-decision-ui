@@ -48,7 +48,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     When SPO countersigns after recording rationale
     Then SPO task-list is updated with the following status:
       | Line manager countersignature   | Completed |
@@ -69,7 +69,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     When SPO countersigns after recording rationale
     When SPO requests ACO to countersign
     And ACO visits the countersigning link
@@ -99,7 +99,7 @@ Feature: Rationale for a Recall decision
     And ACO visits the countersigning link
     And ACO countersigns
     When SPO logs back in to add rationale
-    Then SPO is able to record rationale with RECALL decision
+    Then SPO is able to record rationale
     And a confirmation of the decision is shown to SPO
 
   @MRD-1466
@@ -113,7 +113,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No         |
     And PO has requested an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with RECALL decision
+    And SPO has recorded rationale
     And SPO has countersigned after recording rationale
     And SPO has requested ACO to countersign
     And ACO has visited the countersigning link
@@ -140,7 +140,7 @@ Feature: Rationale for a Recall decision
     And PO has logged in and downloaded Part A
     When SPO logs back in to add rationale
     # MRD-1466:AC3,AC5
-    Then SPO is able to record rationale with RECALL decision
+    Then SPO is able to record rationale
     And a confirmation of the decision is shown to SPO
     And SPO can see the case is closed on the Overview page
 
@@ -184,7 +184,7 @@ Feature: Rationale for a Recall decision
     # MRD-1262: AC0/AC1
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with <SPODecision> decision
+    And SPO has recorded rationale
     And a confirmation of the decision is shown to SPO
     And SPO countersigns after recording rationale
     # MRD-1305: AC3
@@ -204,11 +204,12 @@ Feature: Rationale for a Recall decision
     And Part A details are correct
 
     Examples:
-      | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  | Vulnerabilities | SPODecision |
-      | No            | No       |                | STANDARD   | No         | None            | RECALL      |
-      | No            | No       |                | FIXED_TERM | Yes Prison | Some            | RECALL      |
-      | No            | Yes      |                | EMERGENCY  | Yes Police | All             | RECALL      |
-      | Yes           | No       |                | EMERGENCY  | Yes Prison | Not known       | RECALL      |
+      | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  | Vulnerabilities |
+      | No            | No       |                | STANDARD   | No         | None            |
+      | No            | No       |                | FIXED_TERM | Yes Prison | Some            |
+      | No            | Yes      |                | EMERGENCY  | Yes Police | All             |
+      | Yes           | No       | LIFE           | EMERGENCY  | Yes Prison | Not known       |
+
 
   @E2E @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1267 @MRD-1449 @MRD-1465
   Scenario Outline: PO records a recall and SPO & ACO countersigns - login & search
@@ -222,7 +223,7 @@ Feature: Rationale for a Recall decision
       | VictimContactScheme | No           |
     And PO has requested an SPO to countersign
     And SPO has visited the countersigning link
-    And SPO has recorded rationale with <SPODecision> decision
+    And SPO has recorded rationale
     And a confirmation of the decision is shown to SPO
     And SPO has logged back in to Countersign
     And SPO has countersigned
@@ -232,7 +233,7 @@ Feature: Rationale for a Recall decision
     Then a confirmation of the countersigning is shown to ACO
 
     Examples:
-      | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  | SPODecision |
-      | Yes           | No       | LIFE           | EMERGENCY  | Yes Police | RECALL      |
-      | Yes           | Yes      | IPP            | EMERGENCY  | Yes Police | RECALL      |
-      | Yes           | Yes      | DPP            | EMERGENCY  | No         | NO_RECALL   |
+      | Indeterminate | Extended | TypeOfSentence | RecallType | InCustody  |
+      | Yes           | No       | LIFE           | EMERGENCY  | Yes Police |
+      | Yes           | Yes      | IPP            | EMERGENCY  | Yes Police |
+      | Yes           | Yes      | DPP            | EMERGENCY  | No         |
