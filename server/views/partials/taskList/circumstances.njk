@@ -34,7 +34,7 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
                 <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: hasData(recommendation.whatLedToRecall) }) }}</span>
             </li>
         {% endif %}
-        {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false %}
+        {% if recommendation.recallType.selected.value != 'NO_RECALL' and recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false %}
             <li class="moj-task-list__item">
                 <span class="moj-task-list__task-name">
                     <a aria-describedby='task-list-status-emergencyRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'emergency-recall', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.emergencyRecall }}</a>

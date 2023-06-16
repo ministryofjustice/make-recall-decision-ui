@@ -1304,6 +1304,22 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Enter your telephone number')
     })
+    it('present task-list with create part A button', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'ACO_SIGNED', active: true }],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+
+      cy.clickLink('Create Part A')
+
+      cy.pageHeading().should('equal', 'Part A created')
+    })
 
     it('present countersign exposition while countersigning', () => {
       cy.task('getRecommendation', {
