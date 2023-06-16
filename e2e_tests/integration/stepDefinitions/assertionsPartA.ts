@@ -289,26 +289,26 @@ export const q15RoshLevels = (contents: string, details?: Record<string, string>
   contents = contents.substring(contents.indexOf(partASections[15]), contents.indexOf(partASections[16]))
   expectSoftly(contents, 'ROSH Level: Risk to public\n-->').to.contain(
     `Public: ${
-      details.riskToPublic ? ROSHLevels[details.riskToPublic] : apiDataForCrn.currentRoshForPartA.riskToPublic
+      details?.riskToPublic ? ROSHLevels[details.riskToPublic] : apiDataForCrn.currentRoshForPartA.riskToPublic
     }`
   )
   expectSoftly(contents, 'ROSH Level: Risk to Known Adult\n-->').to.contain(
     `Known Adult: ${
-      details.riskToKnownAdult
+      details?.riskToKnownAdult
         ? ROSHLevels[details.riskToKnownAdult]
         : apiDataForCrn.currentRoshForPartA.riskToKnownAdult
     }`
   )
   expectSoftly(contents, 'ROSH Level:Risk to Known Children\n-->').to.contain(
     `Children: ${
-      details.riskToChildren ? ROSHLevels[details.riskToChildren] : apiDataForCrn.currentRoshForPartA.riskToChildren
+      details?.riskToChildren ? ROSHLevels[details.riskToChildren] : apiDataForCrn.currentRoshForPartA.riskToChildren
     }`
   )
   expectSoftly(contents, 'ROSH Level: Prisoners value\n-->').to.contain(
-    `Prisoners: ${details.riskToPrisoner ? ROSHLevels[details.riskToPrisoner] : 'N/A'}`
+    `Prisoners: ${details?.riskToPrisoner ? ROSHLevels[details.riskToPrisoner] : 'N/A'}`
   )
   expectSoftly(contents, 'ROSH Level: Risk to Staff\n-->').to.contain(
-    `Staff: ${details.riskToStaff ? ROSHLevels[details.riskToStaff] : 'Very High'}`
+    `Staff: ${details?.riskToStaff ? ROSHLevels[details.riskToStaff] : 'Very High'}`
   ) // case doesn't match with value in apiDataForCrn.currentRoshForPartA.riskToPublic
 }
 
@@ -362,16 +362,16 @@ export const q22RecallType = (contents: string, details: Record<string, string>)
     details.type = NonIndeterminateRecallType[details.recallType]
     // eslint-disable-next-line no-param-reassign
     details.reason = details.partARecallReason
-  } else if (details.indeterminate === 'YES' && details.extended === 'NO') {
-    // eslint-disable-next-line no-param-reassign
-    details.type = 'N/A (not a determinate recall)'
-    // eslint-disable-next-line no-param-reassign
-    details.reason = 'N/A (not a determinate recall)'
   } else if (details.indeterminate === 'NO' && details.extended === 'YES') {
     // eslint-disable-next-line no-param-reassign
     details.type = 'N/A (extended sentence recall)'
     // eslint-disable-next-line no-param-reassign
     details.reason = 'N/A (extended sentence recall)'
+  } else if (details.indeterminate === 'YES') {
+    // eslint-disable-next-line no-param-reassign
+    details.type = 'N/A (not a determinate recall)'
+    // eslint-disable-next-line no-param-reassign
+    details.reason = 'N/A (not a determinate recall)'
   }
   expectSoftly(contents, 'Recall Type\n-->').to.contain(
     `Select the proposed recall type, having considered the information above: ${details.type}`

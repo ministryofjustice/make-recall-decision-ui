@@ -63,7 +63,7 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       ) {
         cy.get('input[id^=additional-]').then(advancedLicenceConditions => {
           const addConditions =
-            recommendationDetails.LicenceConditions.toLowerCase() === 'all'
+            recommendationDetails.LicenceConditions && recommendationDetails.LicenceConditions.toLowerCase() === 'all'
               ? advancedLicenceConditions.toArray()
               : faker.helpers.arrayElements(advancedLicenceConditions.toArray())
           addConditions.forEach(htmlElement => {
@@ -179,6 +179,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     cy.selectRadioByValue('What do you recommend', testData.recallType)
     cy.clickButton('Continue')
     if (testData.recallType === 'EMERGENCY') {
+      testData.emergencyRecall = YesNoType.YES.toUpperCase()
       testData.indeterminateOrExtendedSentenceDetails = partADetails?.IndeterminateOrExtendedSentenceDetails
         ? Object.assign(
             {},

@@ -96,12 +96,16 @@ const defaultStartPath = (crnNum: string) => {
   return `/cases/${crnToUse}/overview?flagRecommendationsPage=1&flagDeleteRecommendation=1`
 }
 
-function loginAndSearchCrn(userType: UserType) {
+export function signOut() {
   cy.get('body').then($body => {
     const signOutSelector = '[data-qa="signOut"]'
     if ($body.find(signOutSelector).length > 0) cy.get(signOutSelector).click()
   })
   cy.clearAllCookies()
+}
+
+function loginAndSearchCrn(userType: UserType) {
+  signOut()
   cy.wait(1000)
   cy.reload(true)
   cy.pageHeading().should('equal', 'Sign in')

@@ -1,7 +1,7 @@
 import { DataTable, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { proxy } from '@alfonso-presa/soft-assert'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import { openApp } from './index'
+import { openApp, signOut } from './index'
 import { YesNoType } from '../../support/enums'
 import { UserType } from '../../support/commands'
 
@@ -16,7 +16,7 @@ const recordSpoDecision = function (spoDecision?: string) {
   this.testData.spoDecision = spoDecision || faker.helpers.arrayElement(['RECALL', 'NO_RECALL'])
   cy.selectRadioByValue('Explain the decision', this.testData.spoDecision)
   this.testData.spoDecisionExplanation = faker.hacker.phrase()
-  cy.get('textarea').type(this.testData.spoDecisionExplanation)
+  cy.get('div:not(.govuk-radios__conditional--hidden)>div>textarea').type(this.testData.spoDecisionExplanation)
   cy.clickButton('Continue')
   cy.clickLink('Record the decision')
   cy.clickButton('Send to NDelius')
@@ -63,6 +63,7 @@ const doManagerCountersign = function (userType: UserType, data?: Record<string,
 }
 
 When('{userType}( has) visits/visited the countersigning/review link', function (userType: UserType) {
+  signOut()
   cy.clearAllCookies()
   cy.wait(1000)
   cy.reload(true)
@@ -113,6 +114,11 @@ Then('a confirmation of the {word} is shown to SPO/ACO', function (confirmationP
 Then('SPO( has) countersigns/countersigned after recording rationale', function () {
   cy.clickLink('Return to overview')
   cy.clickLink('Countersign')
+  cy.clickLink('Line manager countersignature')
+  doManagerCountersign.call(this, UserType.SPO, true)
+})
+
+Then('SPO( has) countersigns/countersigned after recording rationale in review', function () {
   cy.clickLink('Line manager countersignature')
   doManagerCountersign.call(this, UserType.SPO, true)
 })
