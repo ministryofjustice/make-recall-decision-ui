@@ -40,7 +40,10 @@ describe('post', () => {
 
     await rationaleCheckController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/spo-task-list-consider-recall`)
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `/recommendations/123/spo-task-list-consider-recall?fromPageId=rationale-check`
+    )
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 

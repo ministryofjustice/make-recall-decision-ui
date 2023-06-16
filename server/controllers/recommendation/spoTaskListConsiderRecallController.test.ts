@@ -28,8 +28,36 @@ describe('get', () => {
     expect(res.locals.reviewOffenderProfileCompleted).toBeFalsy()
     expect(res.locals.explainTheDecisionCompleted).toBeFalsy()
     expect(res.locals.allTasksCompleted).toBeFalsy()
+    expect(res.locals.backLink).toEqual('/cases/X123/overview')
 
     expect(next).toHaveBeenCalled()
+  })
+
+  it('load with query from rationale-check', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDERING_RECALL, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
+    })
+    await spoTaskListConsiderRecallController.get(
+      mockReq({
+        query: {
+          fromPageId: 'rationale-check',
+        },
+        params: {
+          recommendationId: '123',
+        },
+      }),
+      res,
+      mockNext()
+    )
+
+    expect(res.locals.backLink).toEqual('/recommendations/123/rationale-check')
   })
 
   it('load with existing data', async () => {

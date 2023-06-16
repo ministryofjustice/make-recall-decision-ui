@@ -5,8 +5,8 @@
 {% block beforeContent %}
     <nav>
     {{ govukBackLink({
-        text: "Back to overview for " + recommendation.personOnProbation.name,
-        href:  '/cases/' + recommendation.crn + '/overview'
+        text: "Back",
+        href:  backLink
     }) }}
     </nav>
 {% endblock %}
