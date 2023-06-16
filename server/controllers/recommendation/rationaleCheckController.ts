@@ -35,8 +35,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     ]
     return res.redirect(303, req.originalUrl)
   }
-
-  const nextPageId = rationaleCheck === 'YES' ? 'spo-task-list-consider-recall' : 'countersigning-telephone'
+  const nextPageId =
+    rationaleCheck === 'YES' ? 'spo-task-list-consider-recall?fromPageId=rationale-check' : 'countersigning-telephone'
   res.redirect(303, `${urlInfo.basePath}${nextPageId}`)
 }
 

@@ -6,6 +6,7 @@ import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
+  const { fromPageId } = req.query
   const {
     recommendation,
     user: { token, roles },
@@ -40,6 +41,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
+    backLink:
+      fromPageId === 'rationale-check'
+        ? `/recommendations/${recommendationId}/rationale-check`
+        : `/cases/${recommendation.crn}/overview`,
     crn: recommendation.crn,
     reviewPractitionersConcernsCompleted,
     reviewOffenderProfileCompleted,
