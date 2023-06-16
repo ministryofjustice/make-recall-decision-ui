@@ -88,6 +88,7 @@ export const strings = {
     seniorManagerCountersignature: 'Senior manager countersignature',
     countersigningTelephone: 'Enter your telephone number',
     spoRecallRationale: 'Explain the decision',
+    spoRecallRationaleRecallDecided: 'Explain the decision to recall {{ fullName }}',
     spoRationaleConfirmation: 'Rationale Confirmation',
     spoRecordDecision: 'Record the decision in NDelius',
     reviewPractitionersConcerns: "Review practitioner's concerns",
