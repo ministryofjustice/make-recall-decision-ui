@@ -33,7 +33,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
     isAcoSigned,
     ...res.locals,
-    backLink: isSpoSigned ? 'spo-countersignature' : 'aco-countersignature',
+    backLink: 'task-list',
     page: {
       id: 'countersignConfirmation',
     },
