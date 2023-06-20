@@ -41,6 +41,7 @@ describe('get', () => {
     })
 
     expect(res.locals.page).toEqual({ id: 'countersignConfirmation' })
+    expect(res.locals.backLink).toEqual('task-list')
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/countersignConfirmation')
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(next).toHaveBeenCalled()
