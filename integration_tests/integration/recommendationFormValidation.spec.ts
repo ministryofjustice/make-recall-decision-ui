@@ -519,11 +519,22 @@ context('Make a recommendation - form validation', () => {
       errorText: 'There is a problem. You must explain your decision',
     })
   })
-  it('Manager countersignature', () => {
+  it('SPO countersignature', () => {
     cy.signIn({ hasSpoRole: true })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-countersignature`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-countersignature`)
+    cy.clickButton('Countersign')
+    cy.assertErrorMessage({
+      fieldName: 'managerCountersignatureExposition',
+      errorText: 'You must add a comment to confirm your countersignature',
+    })
+  })
+  it('ACO countersignature', () => {
+    cy.signIn({ hasSpoRole: true })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/aco-countersignature`)
     cy.clickButton('Countersign')
     cy.assertErrorMessage({
       fieldName: 'managerCountersignatureExposition',

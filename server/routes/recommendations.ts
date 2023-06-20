@@ -217,8 +217,15 @@ const spoCounterSigningRouteBuilder = spoRationaleRouteBuilder.withCheck(
 spoCounterSigningRouteBuilder.get('countersigning-telephone', countersigningTelephoneController.get)
 spoCounterSigningRouteBuilder.post('countersigning-telephone', countersigningTelephoneController.post)
 
-spoCounterSigningRouteBuilder.get('manager-countersignature', managerCountersignatureController.get)
-spoCounterSigningRouteBuilder.post('manager-countersignature', managerCountersignatureController.post)
+spoCounterSigningRouteBuilder
+  .withCheck(and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)))
+  .get('spo-countersignature', managerCountersignatureController.get)
+spoCounterSigningRouteBuilder.post('spo-countersignature', managerCountersignatureController.post)
+
+spoCounterSigningRouteBuilder
+  .withCheck(and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED)))
+  .get('aco-countersignature', managerCountersignatureController.get)
+spoCounterSigningRouteBuilder.post('aco-countersignature', managerCountersignatureController.post)
 
 spoCounterSigningRouteBuilder
   .withCheck(or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED)))

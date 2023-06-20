@@ -91,7 +91,7 @@ context('Make a recommendation - Branching / redirects', () => {
       response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?flagTriggerWork=0`)
     cy.getLinkHref('Back').should('contain', '/indeterminate-type')
   })
 
@@ -101,7 +101,7 @@ context('Make a recommendation - Branching / redirects', () => {
       response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?flagTriggerWork=0`)
     cy.getLinkHref('Back').should('contain', '/is-extended')
   })
 
@@ -112,7 +112,7 @@ context('Make a recommendation - Branching / redirects', () => {
     })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended?flagTriggerWork=0`)
     cy.selectRadio('Is Paula Smith on an extended sentence?', 'Yes')
     cy.clickButton('Continue')
     cy.selectRadio('What do you recommend?', 'Emergency recall')
