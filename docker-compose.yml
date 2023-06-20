@@ -52,6 +52,7 @@ services:
       - SYSTEM_CLIENT_ID=system-client-id
       - SYSTEM_CLIENT_SECRET=system-client-secret
       - SESSION_SECRET=session-secret
+      - FEATURE_FLAG_QUERY_PARAMETERS_ENABLED=true
 
 networks:
   hmpps:

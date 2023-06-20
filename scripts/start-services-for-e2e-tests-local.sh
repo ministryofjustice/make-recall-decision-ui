@@ -4,6 +4,7 @@ set -euo pipefail
 
 BUILD_HMPPS_AUTH=false
 RUN_DOCKER_COMPOSE_PULL=false
+export FEATURE_FLAG_QUERY_PARAMETERS_ENABLED=true
 
 instructions() {
   echo "Usage: $0 <opts>" >&2

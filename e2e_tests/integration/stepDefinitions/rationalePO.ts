@@ -414,6 +414,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
 }
 
 Given('a PO has created a recommendation to recall with:', (dataTable: DataTable) => {
+  process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED = 'true'
   const crn =
     Cypress.env('ENV')?.toString().toUpperCase() === 'DEV'
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
