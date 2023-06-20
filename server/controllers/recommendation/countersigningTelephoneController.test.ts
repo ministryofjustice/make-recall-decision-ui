@@ -120,7 +120,7 @@ describe('post', () => {
       featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/manager-countersignature`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/spo-countersignature`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with valid data for ACO', async () => {
@@ -155,7 +155,7 @@ describe('post', () => {
       featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/manager-countersignature`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/aco-countersignature`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

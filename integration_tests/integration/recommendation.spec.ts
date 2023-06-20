@@ -94,7 +94,7 @@ context('Make a recommendation', () => {
         cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
         cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: null } })
         cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.cases}/${crn}/overview`)
+        cy.visit(`${routeUrls.cases}/${crn}/overview?flagTriggerWork=0`)
         cy.clickLink('Update recommendation')
         cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
       })
@@ -519,7 +519,7 @@ context('Make a recommendation', () => {
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagTriggerWork=0`)
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
       ).should('exist')
@@ -538,7 +538,7 @@ context('Make a recommendation', () => {
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagTriggerWork=0`)
       cy.getElement(
         'There are no licence conditions. This person is not currently on licence. Double-check that the information in NDelius is correct.'
       ).should('exist')
