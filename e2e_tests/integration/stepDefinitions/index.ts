@@ -167,6 +167,16 @@ When(
   }
 )
 
+When(
+  'Maria signs in to the case overview for CRN {string} with feature flag {string} disabled',
+  (crnNum: string, featureFlag: string) => {
+    const flags = featureFlag ? `&${featureFlag}=0` : ''
+    cy.visitPage(`${defaultStartPath(crnNum)}${flags}`)
+    cy.get(`[data-qa="sectionHeading"]`).invoke('text').as('offenderName')
+    deleteOpenRecommendation()
+  }
+)
+
 When('Henry signs in to the case overview for CRN {string}', (crnNum: string) => {
   cy.visitPage(defaultStartPath(crnNum), true)
 })
