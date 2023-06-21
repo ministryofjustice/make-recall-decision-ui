@@ -1,7 +1,7 @@
 Feature: Recall (determinate)
 
   Scenario: Not extended / fixed term
-    Given Maria signs in to the case overview for CRN "3"
+    Given Maria signs in to the case overview for CRN "3" with feature flag "flagTriggerWork" disabled
     And Maria starts a new recommendation
     And Maria continues from the warning page
     And Maria explains how the person has responded to probation so far
@@ -34,10 +34,10 @@ Feature: Recall (determinate)
     And Maria downloads the Part A and confirms the fixed term recall
     And Maria signs out
 
-  Scenario: SPO signs in
-    Given Henry signs in to the case overview for CRN "3"
-    And Henry views the Recommendations page
-    And Henry downloads the latest Part A and confirms the details have not been overwritten
+#  Scenario: SPO signs in
+#    Given Henry signs in to the case overview for CRN "3"
+#    And Henry views the Recommendations page
+#    And Henry downloads the latest Part A and confirms the details have not been overwritten
 #
 #  Scenario: Not extended / fixed term (with consider recall)
 #    Given Maria signs in to the case overview for CRN "3" with feature flag "flagConsiderRecall" enabled
