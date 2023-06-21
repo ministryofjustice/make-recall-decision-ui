@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { FeatureFlagDefault } from '../@types/featureFlags'
+import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
   flagTriggerWork: {
@@ -53,9 +54,10 @@ export const readFeatureFlags =
     }, {})
     Object.keys(flags).forEach(key => {
       const flag = req.query[key] || req.cookies[key]
+      const featureFlagEnabledDefaultvalue = !isPreprodOrProd(process.env.ENVIRONMENT)
       const userFeatureFlagSettingAllowed =
         typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
-          ? true
+          ? featureFlagEnabledDefaultvalue
           : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
       if (userFeatureFlagSettingAllowed.toString() === 'true' && flag) {
         const enabled = flag === '1'
