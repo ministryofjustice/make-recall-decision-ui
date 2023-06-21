@@ -1,7 +1,7 @@
 Feature: No Recall (determinate)
 
   Background:
-    Given Maria signs in to the case overview for CRN "2"
+    Given Maria signs in to the case overview for CRN "2" with feature flag "flagTriggerWork" disabled
 
   Scenario: No recall
     Given Maria starts a new recommendation
