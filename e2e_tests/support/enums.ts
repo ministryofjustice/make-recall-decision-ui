@@ -71,3 +71,16 @@ export enum LicenceConditions {
   CONTACT_DETAILS = 'Tell your supervising officer if you change or add any contact details, including phone number or email.',
   'NLC8|NSTT8' = 'To only attend places of worship which have been previously agreed with your supervising officer.',
 }
+
+export enum Alternatives {
+  WARNINGS_LETTER = 'Warnings (including dates given)',
+  INCREASED_FREQUENCY = 'Increased frequency of reporting',
+  EXTRA_LICENCE_CONDITIONS = 'Additional licence conditions including AP/hostel accommodation',
+  REFERRAL_TO_OTHER_TEAMS = 'Referral to multi-disciplinary teams (e.g. IOM, MAPPA, Gangs Unit)',
+  REFERRAL_TO_PARTNERSHIP_AGENCIES = 'Referral to partnership agencies',
+  REFERRAL_TO_APPROVED_PREMISES = 'Referral to Approved Premises',
+  DRUG_TESTING = 'Drug testing',
+  ALTERNATIVE_TO_RECALL_OTHER = 'Other',
+}
+
+export const REGEXP_SPECIAL_CHAR = /[\!\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-]/g

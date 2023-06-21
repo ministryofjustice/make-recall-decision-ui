@@ -68,7 +68,14 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
               : faker.helpers.arrayElements(advancedLicenceConditions.toArray())
           addConditions.forEach(htmlElement => {
             htmlElement.click()
-            testData.licenceConditions.advanced.push(htmlElement.getAttribute('value').replace('additional|', ''))
+            cy.wrap(htmlElement)
+              .next('label')
+              .next('div')
+              .invoke('text')
+              .then(text => {
+                testData.licenceConditions.advanced.push(text.trim())
+              })
+            // testData.licenceConditions.advanced.push(htmlElement.getAttribute('value').replace('additional|', ''))
           })
         })
       }
@@ -94,29 +101,43 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       }
     })
   cy.clickLink(`What alternatives to recall have been tried already`)
-  cy.get(
-    `.govuk-checkboxes ${faker.helpers.arrayElement([
-      'input:not([data-behaviour="exclusive"])',
-      'input[data-behaviour="exclusive"]',
-    ])}`
-  ).then(alternativesToRecall => {
-    if (alternativesToRecall.length === 1) {
-      cy.wrap(alternativesToRecall).click()
-      testData.alternativesTried.length = 0
-      testData.alternativesTried.push('NONE')
-    } else {
-      const htmlElements = faker.helpers.arrayElements(alternativesToRecall.toArray())
-      htmlElements.forEach(htmlElement => {
-        htmlElement.click()
-        const alternativeName = htmlElement.getAttribute('value')
-        const alternativeNotes = faker.hacker.phrase()
-        cy.get(`#conditional-${alternativeName}`).find('textarea').type(alternativeNotes)
-        testData.alternativesTried.push({ alternativeName, alternativeNotes })
-      })
-    }
-    cy.wrap(testData).as('testData')
-    cy.clickButton('Continue')
-  })
+  const alternativesTried = recommendationDetails?.AlternativesTried
+  if (['All', 'Some'].includes(alternativesTried)) {
+    cy.get('.govuk-checkboxes input:not([data-behaviour="exclusive"])').then(alternatives => {
+      const htmlElements =
+        alternativesTried === 'All' ? alternatives.toArray() : faker.helpers.arrayElements(alternatives.toArray())
+      selectAlternativesTried(htmlElements)
+    })
+  } else if (alternativesTried === 'None') {
+    cy.get(`.govuk-checkboxes input[value="${alternativesTried.toUpperCase()}"]`).then(vulnerabilities => {
+      cy.wrap(vulnerabilities).click()
+      testData.alternativesTried.push(alternativesTried)
+    })
+  } else {
+    cy.get(
+      `.govuk-checkboxes ${faker.helpers.arrayElement([
+        'input:not([data-behaviour="exclusive"])',
+        'input[data-behaviour="exclusive"]',
+      ])}`
+    ).then(alternativesToRecall => {
+      if (alternativesToRecall.length === 1) {
+        cy.wrap(alternativesToRecall).click()
+        testData.alternativesTried.length = 0
+        testData.alternativesTried.push('NONE')
+      } else {
+        const htmlElements = faker.helpers.arrayElements(alternativesToRecall.toArray())
+        htmlElements.forEach(htmlElement => {
+          htmlElement.click()
+          const alternativeName = htmlElement.getAttribute('value')
+          const alternativeNotes = faker.hacker.phrase()
+          cy.get(`#conditional-${alternativeName}`).find('textarea').type(alternativeNotes)
+          testData.alternativesTried.push({ alternativeName, alternativeNotes })
+        })
+      }
+    })
+  }
+  cy.clickButton('Continue')
+  cy.wrap(testData).as('testData')
   cy.clickButton('Continue')
 }
 
@@ -132,6 +153,15 @@ function selectVulnerabilities(htmlElements: HTMLElement[]) {
       .then(text => {
         testData.vulnerabilities.push({ vulnerabilityName: text.trim(), vulnerabilityNotes })
       })
+  })
+}
+function selectAlternativesTried(htmlElements: HTMLElement[]) {
+  htmlElements.forEach(htmlElement => {
+    htmlElement.click()
+    const alternativeName = htmlElement.getAttribute('value')
+    const alternativeNotes = faker.hacker.phrase()
+    cy.get(`textarea#alternativesToRecallTriedDetail-${alternativeName}`).type(alternativeNotes)
+    testData.alternativesTried.push({ alternativeName, alternativeNotes })
   })
 }
 
@@ -216,7 +246,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickButton('Continue')
   cy.clickLink(`What has led to this recall`)
   cy.logPageTitle('What has led to this recall?')
-  cy.get(`#whatLedToRecall`).type(faker.hacker.phrase())
+  cy.get(`#whatLedToRecall`).type((testData.reasonForRecall = faker.hacker.phrase()))
   cy.clickButton('Continue')
   cy.clickLink(`Personal details`)
   cy.logPageTitle('Personal details')
@@ -331,7 +361,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     testData.vlo.vloDate = faker.date.past(1)
     cy.enterDateTime({
       day: testData.vlo.vloDate.getDate().toString(),
-      month: testData.vlo.vloDate.getMonth().toString(),
+      month: (testData.vlo.vloDate.getMonth() + 1).toString(),
       year: testData.vlo.vloDate.getFullYear().toString(),
     })
     cy.clickButton('Continue')
@@ -403,13 +433,20 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
   testData.mappa = {}
-  cy.get('[data-qa="mappa-heading"] strong')
-    .invoke('text')
-    .then(text => {
-      testData.mappa.mappaCategory = text.split('/')[0].replace('Cat', 'Category')
-      // eslint-disable-next-line prefer-destructuring
-      testData.mappa.mappaLevel = text.split('/')[1]
-    })
+  cy.get('body').then($body => {
+    if ($body.find('[data-qa="mappa-heading"] strong').length) {
+      cy.get('[data-qa="mappa-heading"] strong')
+        .invoke('text')
+        .then(text => {
+          testData.mappa.mappaCategory = text.split('/')[0].replace('Cat', 'Category')
+          // eslint-disable-next-line prefer-destructuring
+          testData.mappa.mappaLevel = text.split('/')[1]
+        })
+    } else {
+      testData.mappa.mappaCategory = 'N/A'
+      testData.mappa.mappaLevel = 'N/A'
+    }
+  })
   cy.clickLink('Continue')
 }
 
