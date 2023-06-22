@@ -11,9 +11,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token: user.token,
   })
 
-  const isSpoConsideringRecall = statuses
+  const isSpoConsiderRecall = statuses
     .filter(status => status.active)
-    .find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
+    .find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
   res.locals = {
     ...res.locals,
@@ -21,7 +21,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'spoRecordDecision',
     },
-    editable: !!isSpoConsideringRecall,
+    editable: !!isSpoConsiderRecall,
     recallType: recommendation.spoRecallType,
     spoRecallRationale: recommendation.spoRecallRationale,
     inputDisplayValues: {
@@ -71,7 +71,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     token,
     activate,
-    deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
+    deActivate: [STATUSES.SPO_CONSIDER_RECALL],
   })
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-rationale-confirmation', urlInfo }))

@@ -428,7 +428,7 @@ describe('get', () => {
 
   it('do show recommendation button for spo when recommendation doc and SPO_CONSIDERING_RECALL state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
     const req = mockReq({
       params: { crn, sectionId: 'overview' },
     })
@@ -451,7 +451,7 @@ describe('get', () => {
       dataAnalyticsEventCategory: 'spo_consider_recall_click',
       link: '/recommendations/1/',
       post: false,
-      title: 'Update recommendation',
+      title: 'Consider a recall',
     })
     expect(res.locals.backLink)
   })

@@ -20,7 +20,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   ).filter(status => status.active)
 
   const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
-  const isSpoConsideringRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
   const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
 
   const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
@@ -32,7 +31,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const recallType = recommendation?.recallType?.selected?.value
 
   if (isSpo) {
-    if (isSpoConsiderRecall || isSpoConsideringRecall) {
+    if (isSpoConsiderRecall) {
       nextPageId = 'spo-task-list-consider-recall'
     } else if (isSpoSignatureRequested || isAcoSignatureRequested) {
       nextPageId = 'task-list'
