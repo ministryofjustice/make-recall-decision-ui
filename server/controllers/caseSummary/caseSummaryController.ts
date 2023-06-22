@@ -76,8 +76,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
-      const isSpoConsideringRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
-
       const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
       const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
@@ -95,14 +93,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
           display: true,
           post: false,
           title: 'Consider a recall',
-          dataAnalyticsEventCategory: 'spo_consider_recall_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
-        }
-      } else if (isSpoConsideringRecall) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Update recommendation',
           dataAnalyticsEventCategory: 'spo_consider_recall_click',
           link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
         }
