@@ -589,7 +589,12 @@ Then('Part A details are correct', function () {
   q20ResponseToSupervision(contents, this.testData.probationResponse)
   q21Alternatives(contents, this.testData.alternativesTried)
   q22RecallType(contents, this.testData)
-  q23LicenceConditionsToAdd(contents, this.testData.fixedTermRecallNotes)
+  q23LicenceConditionsToAdd(contents, {
+    fixedTermRecallNotes: this.testData.fixedTermRecallNotes,
+    recallType: this.testData.recallType,
+    fixedTermRecall: this.testData.fixedTermRecall,
+    extended: this.testData.extended,
+  })
   q24ISPESP(contents, this.testData.localPoliceDetails)
   q25ProbationDetails(contents)
   q26OffenderManager(contents, this.testData.localPoliceDetails)

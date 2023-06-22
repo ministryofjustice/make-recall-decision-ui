@@ -30,5 +30,5 @@ export const formatObjectDateToLongFormat = (objectDate: Record<string, number |
 }
 
 export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
-  return DateTime.fromFormat(dateToConvert, 'dd MMMM yyyy').toFormat('dd/MM/yyyy')
+  return DateTime.fromFormat(dateToConvert, 'd MMMM yyyy').toFormat('dd/MM/yyyy')
 }

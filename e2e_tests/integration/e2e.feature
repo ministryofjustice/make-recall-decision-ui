@@ -37,8 +37,7 @@ Feature: E2E scenarios
       | Yes           | No       | LIFE           | EMERGENCY  | Yes Police | RECALL      |
       | No            | Yes      |                | EMERGENCY  | No         | RECALL      |
 
-  @focus
-    @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1262 @MRD-1311
+  @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1262 @MRD-1311
     @MRD-1276 @MRD-1391 @MRD-1391 @MRD-1327 @MRD-1449 @MRD-1465
   Scenario Outline: E2E - PO records a recall while countersigning and SPO & ACO countersigns - deeplink
     Given a PO has created a recommendation to recall with:

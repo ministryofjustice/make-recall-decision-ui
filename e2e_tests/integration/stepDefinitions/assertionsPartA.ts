@@ -78,19 +78,29 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
     `Date of birth: ${changeDateFromLongFormatToShort(context.dateOfBirth)}`
   )
   expectSoftly(contents, 'Offender: Ethnicity\n-->').to.match(
-    context.ethnicity ? (new RegExp(context.ethnicity) as RegExp) : (apiDataForCrn.ethnicity as RegExp)
+    context.ethnicity
+      ? new RegExp(context.ethnicity.replace(REGEXP_SPECIAL_CHAR, '\\$&'))
+      : (apiDataForCrn.ethnicity as RegExp)
   )
   expectSoftly(contents, 'Offender: CRO\n-->').to.match(
-    context.cro ? (new RegExp(context.cro) as RegExp) : (apiDataForCrn.cro as RegExp)
+    context.cro || context.cro === ''
+      ? new RegExp(context.cro.replace(REGEXP_SPECIAL_CHAR, '\\$&'))
+      : (apiDataForCrn.cro as RegExp)
   )
   expectSoftly(contents, 'Offender: PNC\n-->').to.match(
-    context.pnc ? (new RegExp(context.pnc) as RegExp) : (apiDataForCrn.pnc as RegExp)
+    context.pnc || context.pnc === ''
+      ? new RegExp(context.pnc.replace(REGEXP_SPECIAL_CHAR, '\\$&'))
+      : (apiDataForCrn.pnc as RegExp)
   )
   expectSoftly(contents, 'Offender: Prison Number\n-->').to.match(
-    context.prisonNo ? (new RegExp(context.prisonNo) as RegExp) : (apiDataForCrn.prisonNo as RegExp)
+    context.prisonNo || context.prisonNo === ''
+      ? new RegExp(context.prisonNo.replace(REGEXP_SPECIAL_CHAR, '\\$&'))
+      : (apiDataForCrn.prisonNo as RegExp)
   )
   expectSoftly(contents, 'Offender: Noms\n-->').to.match(
-    context.noms ? new RegExp(`PNOMIS No: ${context.noms}`) : (apiDataForCrn.noms as RegExp)
+    context.noms || context.noms === ''
+      ? new RegExp(`PNOMIS No: ${context.noms.replace(REGEXP_SPECIAL_CHAR, '\\$&')}`)
+      : (apiDataForCrn.noms as RegExp)
   )
   expectSoftly(contents, 'Offender: Last Release Details\n-->').to.contain(
     `Last release: ${context.lastReleaseDate ? changeDateFromLongFormatToShort(context.lastReleaseDate) : ''}`
@@ -110,7 +120,10 @@ export const q4OffenderDetails = function (contents: string, context: Record<str
     ? `${changeDateFromLongFormatToShort(context.lastRecallDate)}, `
     : ''
   expectSoftly(contents, 'Offender: Dates of previous recalls\n-->').to.contain(
-    context.previousRecallDates
+    // eslint-disable-next-line no-nested-ternary
+    context.previousRecallDates === ''
+      ? 'Dates of previous recalls on this sentence:'
+      : context.previousRecallDates && context.previousRecallDates.length > 0
       ? `Dates of previous recalls on this sentence: ${context.previousRecallDates
           .split(',')
           .map(previousRecallDate => changeDateFromLongFormatToShort(previousRecallDate.trim()))
@@ -130,51 +143,69 @@ export const q5SentenceDetails = function (contents: string, context: Record<str
   )
   expectSoftly(contents, 'Sentence Details: Dates of Original Offence\n-->').to.match(
     context.dateOfOriginalOffence
-      ? (new RegExp(
-          `Date of original offence: \\t${DateTime.fromFormat(context.dateOfOriginalOffence, 'dd MMMM yyyy').toFormat(
-            'dd/MM/yyyy'
+      ? new RegExp(
+          `Date of original offence: \\t${changeDateFromLongFormatToShort(context.dateOfOriginalOffence).replace(
+            REGEXP_SPECIAL_CHAR,
+            '\\$&'
           )}`
-        ) as RegExp)
+        )
       : (apiDataForCrn.dateOfOriginalOffence as RegExp)
   )
   expectSoftly(contents, 'Sentence Details: Dates\n-->').to.match(
     context.dateOfSentence
-      ? (new RegExp(
-          `Date of sentence: \\t${DateTime.fromFormat(context.dateOfSentence, 'dd MMMM yyyy').toFormat('dd/MM/yyyy')}`
-        ) as RegExp)
+      ? new RegExp(
+          `Date of sentence: \\t${changeDateFromLongFormatToShort(context.dateOfSentence).replace(
+            REGEXP_SPECIAL_CHAR,
+            '\\$&'
+          )}`
+        )
       : (apiDataForCrn.dateOfSentence as RegExp)
   )
   expectSoftly(contents, 'Sentence Details: Length\n-->').to.match(
     context.lengthOfSentence
-      ? (new RegExp(`Length of sentence: \\t${context.lengthOfSentence}`) as RegExp)
+      ? new RegExp(`Length of sentence: \\t${context.lengthOfSentence.replace(REGEXP_SPECIAL_CHAR, '\\$&')}`)
       : (apiDataForCrn.lengthOfSentence as RegExp)
   )
   expectSoftly(contents, 'Sentence Details: Licence Expiry Date\n-->').to.match(
-    context.licenceExpiryDate
-      ? (new RegExp(
-          `Licence expiry date: \\t${DateTime.fromFormat(context.licenceExpiryDate, 'dd MMMM yyyy').toFormat(
-            'dd/MM/yyyy'
+    // eslint-disable-next-line no-nested-ternary
+    context.licenceExpiryDate === ''
+      ? /Licence expiry date:/
+      : context.licenceExpiryDate && context.licenceExpiryDate.length > 0
+      ? new RegExp(
+          `Licence expiry date: \\t${changeDateFromLongFormatToShort(context.licenceExpiryDate).replace(
+            REGEXP_SPECIAL_CHAR,
+            '\\$&'
           )}`
-        ) as RegExp)
+        )
       : (apiDataForCrn.licenceExpiryDate as RegExp)
   )
   expectSoftly(contents, 'Sentence Details: Sentence Expiry Date\n-->').to.match(
-    context.sentenceExpiryDate
-      ? (new RegExp(
-          `Sentence expiry date: \\t${DateTime.fromFormat(context.sentenceExpiryDate, 'dd MMMM yyyy').toFormat(
-            'dd/MM/yyyy'
+    // eslint-disable-next-line no-nested-ternary
+    context.sentenceExpiryDate === ''
+      ? /Sentence expiry date:/
+      : context.sentenceExpiryDate && context.sentenceExpiryDate.length > 0
+      ? new RegExp(
+          `Sentence expiry date: \\t${changeDateFromLongFormatToShort(context.sentenceExpiryDate).replace(
+            REGEXP_SPECIAL_CHAR,
+            '\\$&'
           )}`
-        ) as RegExp)
+        )
       : (apiDataForCrn.sentenceExpiryDate as RegExp)
   )
   expectSoftly(contents, 'Sentence Details: Custodial Term\n-->').to.match(
-    context.custodialTerm
-      ? (new RegExp(`Custodial term: \\t${context.custodialTerm}`) as RegExp)
+    // eslint-disable-next-line no-nested-ternary
+    context.custodialTerm === ''
+      ? /Custodial term:/
+      : context.custodialTerm && context.custodialTerm.length > 0
+      ? new RegExp(`Custodial term: \\t${context.custodialTerm.replace(REGEXP_SPECIAL_CHAR, '\\$&')}`)
       : (apiDataForCrn.custodialTerm as RegExp)
   )
   expectSoftly(contents, 'Sentence Details: Extended Term\n-->').to.match(
-    context.extendedTerm
-      ? (new RegExp(`Extended term:\\t${context.extendedTerm}`) as RegExp)
+    // eslint-disable-next-line no-nested-ternary
+    context.extendedTerm === ''
+      ? /Extended term:/
+      : context.extendedTerm && context.extendedTerm.length > 0
+      ? new RegExp(`Extended term:\\t${context.extendedTerm.replace(REGEXP_SPECIAL_CHAR, '\\$&')}`)
       : (apiDataForCrn.extendedTerm as RegExp)
   )
 }
@@ -257,10 +288,14 @@ export const q12MappaDetails = (contents: string, details?: Record<string, strin
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[12]), contents.indexOf(partASections[13]))
   expectSoftly(contents, 'MAPPA Category\n-->').to.match(
-    details ? new RegExp(`MAPPA Category: ${details.mappaCategory}`) : (apiDataForCrn.mappaCategory as RegExp)
+    details
+      ? new RegExp(`MAPPA Category: ${details.mappaCategory.replace(REGEXP_SPECIAL_CHAR, '\\$&')}`)
+      : (apiDataForCrn.mappaCategory as RegExp)
   )
   expectSoftly(contents, 'MAPPA Level\n-->').to.match(
-    details ? new RegExp(`MAPPA Level: ${details.mappaLevel}`) : (apiDataForCrn.mappaLevel as RegExp)
+    details
+      ? new RegExp(`MAPPA Level: ${details.mappaLevel.replace(REGEXP_SPECIAL_CHAR, '\\$&')}`)
+      : (apiDataForCrn.mappaLevel as RegExp)
   )
 }
 
@@ -330,7 +365,9 @@ export const q17LicenceConditions = (contents: string, details: string[]) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[17]), contents.indexOf(partASections[18]))
   details.forEach(detail => {
-    expectSoftly(contents).to.match(new RegExp(`${LicenceConditions[detail]}\\s*✓`))
+    expectSoftly(contents).to.match(
+      new RegExp(`${LicenceConditions[detail].replace(REGEXP_SPECIAL_CHAR, '\\$&')}\\s*✓`)
+    )
   })
 }
 
@@ -398,10 +435,24 @@ export const q22RecallType = (contents: string, details: Record<string, string>)
   )
 }
 
-export const q23LicenceConditionsToAdd = (contents: string, details: string) => {
+export const q23LicenceConditionsToAdd = (contents: string, details: Record<string, string>) => {
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[23]), contents.indexOf(partASections[24]))
-  cy.log(`Q23: ${contents} ${details}`)
+  cy.log(`Q23. details--> ${JSON.stringify(details)}`)
+  expectSoftly(contents).to.contain(
+    // eslint-disable-next-line no-nested-ternary
+    details.recallType === 'STANDARD'
+      ? 'N/A (standard recall)'
+      : /* eslint-disable-next-line no-nested-ternary */
+      details.recallType === 'FIXED_TERM' && details.fixedTermRecall === 'NO'
+      ? ''
+      : /* eslint-disable-next-line no-nested-ternary */
+      details.extended === 'YES'
+      ? 'N/A (extended sentence recall)'
+      : details.recallType === 'EMERGENCY'
+      ? 'N/A (not a determinate recall)'
+      : details.fixedTermRecallNotes
+  )
 }
 
 export const q24ISPESP = (contents: string, details: Record<string, string>[] | string) => {

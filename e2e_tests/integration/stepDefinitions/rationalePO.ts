@@ -195,8 +195,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
       cy.logPageTitle('Fixed term call')
       cy.selectRadioByValue('Fixed term recall', testData.fixedTermRecall)
       if (testData.fixedTermRecall === 'YES') {
-        testData.fixedTermRecallNotes = faker.hacker.phrase()
-        cy.get('#hasFixedTermLicenceConditionsDetails').type(testData.fixedTermRecallNotes)
+        cy.get('#hasFixedTermLicenceConditionsDetails').type((testData.fixedTermRecallNotes = faker.hacker.phrase()))
       }
       cy.clickButton('Continue')
     }
@@ -467,11 +466,21 @@ Given('a PO has created a recommendation to recall with:', (dataTable: DataTable
 Given('a PO has created a recommendation', () => {
   const crn = crns[faker.helpers.arrayElement(Object.keys(crns))]
   cy.wrap(crn).as('crn')
+  testData = {
+    licenceConditions: { standard: [], advanced: [] },
+    alternativesTried: [],
+    vulnerabilities: [],
+  }
   makeRecommendation(crn)
 })
 
 Given('a PO has created a recommendation to recall CRN: {word} with:', (crn, dataTable: DataTable) => {
   cy.wrap(crn).as('crn')
+  testData = {
+    licenceConditions: { standard: [], advanced: [] },
+    alternativesTried: [],
+    vulnerabilities: [],
+  }
   makeRecommendation(crn, dataTable.rowsHash())
 })
 
