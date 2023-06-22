@@ -120,7 +120,7 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
   cy.clickButton('Continue')
 }
 
-function selectVulnerabilities(htmlElements: HTMLElement[]) {
+const selectVulnerabilities = function (htmlElements: HTMLElement[]) {
   htmlElements.forEach(htmlElement => {
     htmlElement.click()
     const vulnerabilityName = htmlElement.getAttribute('value')
@@ -412,6 +412,8 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     })
   cy.clickLink('Continue')
 }
+
+/* ---- Cucumber glue ---- */
 
 Given('a PO has created a recommendation to recall with:', (dataTable: DataTable) => {
   const crn =
