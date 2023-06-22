@@ -71,3 +71,16 @@ export enum LicenceConditions {
   CONTACT_DETAILS = 'Tell your supervising officer if you change or add any contact details, including phone number or email.',
   'NLC8|NSTT8' = 'To only attend places of worship which have been previously agreed with your supervising officer.',
 }
+
+export enum WhyConsiderRecall {
+  INCREASED_RIS = 'Your risk is assessed as increased',
+  CONTACT_WITH_PO_BROKEN = 'Contact with your probation practitioner has broken down',
+  RISK_AND_CONTACT_BROKEN = 'Your risk is assessed as increased and contact with your probation practitioner has broken down',
+}
+
+export enum ApptOptions {
+  TELEPHONE = 'Telephone',
+  VIDEO = 'Video call',
+  OFFICE = 'Office visit',
+  HOME = 'Home visit',
+}

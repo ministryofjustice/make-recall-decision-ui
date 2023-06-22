@@ -1,4 +1,4 @@
-import { Given, Then, DataTable } from '@badeball/cypress-cucumber-preprocessor'
+import { Given, Then, DataTable, When } from '@badeball/cypress-cucumber-preprocessor'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { proxy } from '@alfonso-presa/soft-assert'
 
@@ -13,6 +13,8 @@ import {
   YesNoNAType,
   Vulnerabilities,
   ROSHLevels,
+  WhyConsiderRecall,
+  ApptOptions,
 } from '../../support/enums'
 
 const expectSoftly = proxy(expect)
@@ -413,9 +415,54 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickLink('Continue')
 }
 
+const createDNTRLetter = function () {
+  cy.clickLink('Why you considered recall')
+  cy.selectRadio(
+    'Why you considered recall',
+    (testData.whyRecall = faker.helpers.arrayElement(Object.values(WhyConsiderRecall)))
+  )
+  cy.clickButton('Continue')
+
+  cy.fillInput(
+    "Explain the licence breach and why it's a problem",
+    (testData.licenceBreachDetails = faker.hacker.phrase())
+  )
+  cy.fillInput(
+    `Explain why you are not recalling ${this.offenderName}`,
+    (testData.noRecallReasonDetails = faker.hacker.phrase())
+  )
+  cy.fillInput(
+    `What progress has ${this.offenderName} made so far?`,
+    (testData.progressDetails = faker.hacker.phrase())
+  )
+  cy.fillInput(
+    `Explain what ${this.offenderName} thinks about the licence breach (optional)`,
+    (testData.licenceBreachExplanation = faker.hacker.phrase())
+  )
+  cy.fillInput('What actions have you agreed for the future?', (testData.FutureActionDetails = faker.hacker.phrase()))
+  cy.clickButton('Continue')
+
+  cy.selectRadio(
+    'How will the appointment happen?',
+    (testData.appoitmentOptions = faker.helpers.arrayElement(Object.values(ApptOptions)))
+  )
+  testData.apptDate = faker.date.future(1)
+  cy.enterDateTime({
+    day: testData.apptDate.getDate().toString(),
+    month: (testData.apptDate.getMonth() + 1).toString(),
+    year: testData.apptDate.getFullYear().toString(),
+    hour: testData.apptDate.getHours().toString(),
+    minute: testData.apptDate.getMinutes().toString(),
+  })
+
+  cy.fillInput('Probation telephone', (testData.phoneNumber = faker.phone.number('01277 ### ###')))
+  cy.clickButton('Continue')
+  cy.clickLink('Continue')
+}
+
 /* ---- Cucumber glue ---- */
 
-Given('a PO has created a recommendation to recall with:', (dataTable: DataTable) => {
+Given('a PO has created a recommendation to recall/no-recall with:', (dataTable: DataTable) => {
   const crn =
     Cypress.env('ENV')?.toString().toUpperCase() === 'DEV'
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
@@ -444,7 +491,6 @@ Given('PO( has) creates/created a Part A form with:', function (dataTable: DataT
   const partADetails = dataTable.rowsHash()
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
-
 Given('PO( has) creates/created a Part A form without requesting SPO review with:', function (dataTable: DataTable) {
   const partADetails = dataTable.rowsHash()
   cy.clickLink('Continue')
@@ -498,4 +544,24 @@ Then('the previous Recommendation should be marked a complete', function () {
   }).then(rowData => {
     expect(rowData.join('|')).to.contain('Download Part A')
   })
+})
+Then('PO can create the Decision Not To Recall letter', function (dataTable: DataTable) {
+  createDNTRLetter.call(this, dataTable)
+})
+
+When('PO confirms the review decision of {managersDecision}', function (decision: string) {
+  recordPoDecision.call(this, decision)
+})
+
+const recordPoDecision = function (poDecision?: string) {
+  this.testData.poDecision = poDecision || faker.helpers.arrayElement(['RECALL', 'NO_RECALL'])
+  cy.selectRadioByValue('What do you recommend?', this.testData.poDecision)
+  cy.clickButton('Continue')
+}
+Then('PO can download the Decision Not To Recall letter', function () {
+  cy.clickLink('Create letter')
+  cy.downloadDocX('Download the decision not to recall letter (DOCX).').as('DNTRLetter')
+})
+Then('Decision Not To Recall letter details are correct', function () {
+  cy.log('Checking DNTR Letter')
 })
