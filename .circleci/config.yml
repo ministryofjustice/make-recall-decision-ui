@@ -28,7 +28,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 6
+    default: 3
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:

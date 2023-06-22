@@ -28,12 +28,10 @@ const recordSpoDecisionAfterCountersigning = function () {
   cy.clickLink(`Review profile of ${this.offenderName}`)
   cy.clickButton('Continue')
   cy.clickLink(`Explain the decision`)
-  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   this.testData.spoDecision = 'RECALL'
   this.testData.spoDecisionExplanation = faker.hacker.phrase()
   cy.get('textarea').type(this.testData.spoDecisionExplanation)
   cy.clickButton('Continue')
-  cy.log(`this.testData--> ${JSON.stringify(this.testData)}`)
   cy.clickLink('Record the decision')
   cy.clickButton('Send to NDelius')
 }
@@ -61,6 +59,8 @@ const doManagerCountersign = function (userType: UserType, data?: Record<string,
     cy.clickButton('Countersign')
   }
 }
+
+/* ---- Cucumber glue ---- */
 
 When('{userType}( has) visits/visited the countersigning/review link', function (userType: UserType) {
   signOut()
