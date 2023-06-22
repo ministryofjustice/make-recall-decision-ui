@@ -487,7 +487,7 @@ context('Make a recommendation - form validation', () => {
   it('SPO rationale', () => {
     cy.signIn({ hasSpoRole: true })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
@@ -498,7 +498,7 @@ context('Make a recommendation - form validation', () => {
   it('SPO rationale - Yes', () => {
     cy.signIn({ hasSpoRole: true })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
     cy.selectRadio('Explain the decision', 'Recall - standard or fixed term')
     cy.clickButton('Continue')
@@ -510,7 +510,7 @@ context('Make a recommendation - form validation', () => {
   it('SPO rationale - No', () => {
     cy.signIn({ hasSpoRole: true })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
     cy.selectRadio('Explain the decision', 'Do not recall - send a decision not to recall letter')
     cy.clickButton('Continue')

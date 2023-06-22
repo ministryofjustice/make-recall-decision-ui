@@ -8,7 +8,7 @@ jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load record decision with RECALL type and editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -47,7 +47,7 @@ describe('get', () => {
     expect(res.locals.editable).toEqual(false)
   })
   it('load record decision with NO_RECALL type and editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -62,7 +62,7 @@ describe('get', () => {
     expect(res.locals.editable).toEqual(true)
   })
   it('load record decision with NO_RECALL type and not editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: false }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: false }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -116,7 +116,7 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       activate: [STATUSES.SPO_RECORDED_RATIONALE],
-      deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
+      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-rationale-confirmation`)
@@ -181,7 +181,7 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       activate: [STATUSES.SPO_RECORDED_RATIONALE, STATUSES.CLOSED],
-      deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
+      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
     })
   })
 })

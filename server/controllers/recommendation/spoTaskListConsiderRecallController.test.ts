@@ -1,14 +1,11 @@
 import spoTaskListConsiderRecallController from './spoTaskListConsiderRecallController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
-import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load with no data', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDERING_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
@@ -34,7 +31,6 @@ describe('get', () => {
   })
 
   it('load with query from rationale-check', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDERING_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
@@ -61,7 +57,6 @@ describe('get', () => {
   })
 
   it('load with existing data', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDERING_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -85,7 +80,6 @@ describe('get', () => {
   })
 
   it('redirect to spo-task-list-consider-recall and update spo status', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -110,12 +104,5 @@ describe('get', () => {
       res,
       next
     )
-
-    expect(updateStatuses).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token',
-      activate: [STATUSES.SPO_CONSIDERING_RECALL],
-      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
-    })
   })
 })
