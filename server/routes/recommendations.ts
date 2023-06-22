@@ -64,11 +64,7 @@ RouteBuilder.build(recommendations)
       and(not(roleIsActive(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
       and(
         roleIsActive(HMPPS_AUTH_ROLE.SPO),
-        or(
-          not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
-          statusIsActive(STATUSES.SPO_CONSIDER_RECALL),
-          statusIsActive(STATUSES.SPO_CONSIDERING_RECALL)
-        )
+        or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
       )
     )
   )
@@ -174,9 +170,7 @@ const spoRouteBuilder = ppRouteBuilder.withRoles([HMPPS_AUTH_ROLE.SPO])
 /*
  * This section contains the route for the Senior Probation Officer during the SPO Rationale journey.
  */
-const spoRationaleRouteBuilder = spoRouteBuilder.withCheck(
-  or(statusIsActive(STATUSES.SPO_CONSIDER_RECALL), statusIsActive(STATUSES.SPO_CONSIDERING_RECALL))
-)
+const spoRationaleRouteBuilder = spoRouteBuilder.withCheck(statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
 
 spoRationaleRouteBuilder.get('spo-task-list-consider-recall', spoTaskListConsiderRecallController.get)
 

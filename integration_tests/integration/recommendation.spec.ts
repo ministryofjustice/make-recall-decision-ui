@@ -938,7 +938,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_CONSIDER_RECALL', active: true },
           { name: 'SPO_SIGNATURE_REQUESTED', active: true },
         ],
       })
@@ -961,7 +961,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDERING_RECALL', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
@@ -995,7 +995,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_CONSIDER_RECALL', active: true },
           { name: 'SPO_RECORDED_RATIONALE', active: true },
         ],
       })
@@ -1039,7 +1039,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_CONSIDER_RECALL', active: true },
           { name: 'SPO_RECORDED_RATIONALE', active: true },
         ],
       })
@@ -1144,7 +1144,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDERING_RECALL', active: true },
+          { name: 'SPO_CONSIDER_RECALL', active: true },
           { name: 'SPO_SIGNATURE_REQUESTED', active: true },
         ],
       })
