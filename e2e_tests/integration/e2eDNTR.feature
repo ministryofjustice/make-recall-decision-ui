@@ -4,7 +4,7 @@ Feature: E2E Decision Not To Recall scenarios
   Test Scenarios that exercises the System E2E for Decision Not To Recall journey
 
   Scenario: E2E - Decision Not To Recall Letter details are correct when PO and SPO records rationale during review and countersign
-    Given a PO has created a recommendation to no-recall with:
+    Given a PO has created a recommendation of no-recall with:
       | Indeterminate  | No |
       | Extended       | No |
     And PO has requested an SPO to review recommendation

@@ -462,7 +462,7 @@ const createDNTRLetter = function () {
 
 /* ---- Cucumber glue ---- */
 
-Given('a PO has created a recommendation to recall/no-recall with:', (dataTable: DataTable) => {
+Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTable: DataTable) => {
   const crn =
     Cypress.env('ENV')?.toString().toUpperCase() === 'DEV'
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
