@@ -1,6 +1,17 @@
 import { Given, Then, DataTable, When } from '@badeball/cypress-cucumber-preprocessor'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { proxy } from '@alfonso-presa/soft-assert'
+import {
+  appointmentOptions,
+  futureActionDetails,
+  letterSubject,
+  licenceBreachDetails,
+  licenceBreachExplanation,
+  noRecallReasonDetails,
+  offendersPhoneNumber,
+  progressDetails,
+  whyRecall,
+} from './assertionsDNTR'
 
 import { crns, deleteOpenRecommendation } from './index'
 
@@ -439,12 +450,12 @@ const createDNTRLetter = function () {
     `Explain what ${this.offenderName} thinks about the licence breach (optional)`,
     (testData.licenceBreachExplanation = faker.hacker.phrase())
   )
-  cy.fillInput('What actions have you agreed for the future?', (testData.FutureActionDetails = faker.hacker.phrase()))
+  cy.fillInput('What actions have you agreed for the future?', (testData.futureActionDetails = faker.hacker.phrase()))
   cy.clickButton('Continue')
 
   cy.selectRadio(
     'How will the appointment happen?',
-    (testData.appoitmentOptions = faker.helpers.arrayElement(Object.values(ApptOptions)))
+    (testData.appointmentOptions = faker.helpers.arrayElement(Object.values(ApptOptions)))
   )
   testData.apptDate = faker.date.future(1)
   cy.enterDateTime({
@@ -563,5 +574,17 @@ Then('PO can download the Decision Not To Recall letter', function () {
   cy.downloadDocX('Download the decision not to recall letter (DOCX).').as('DNTRLetter')
 })
 Then('Decision Not To Recall letter details are correct', function () {
-  cy.log('Checking DNTR Letter')
+  cy.log(`Validating Decision Not To Recall Letter --> ${JSON.stringify(this.testData)}`)
+  const contents = this.DNTRLetter.toString()
+  letterSubject(contents)
+  whyRecall(contents, this.testData.whyRecall)
+  licenceBreachDetails(contents, this.testData.licenceBreachDetails)
+  noRecallReasonDetails(contents, this.testData.noRecallReasonDetails)
+  progressDetails(contents, this.testData.progressDetails)
+  licenceBreachExplanation(contents, this.testData.licenceBreachExplanation)
+  futureActionDetails(contents, this.testData.futureActionDetails)
+  appointmentOptions(contents, this.testData.appointmentOptions)
+  offendersPhoneNumber(contents, this.testData.phoneNumber)
+
+  // assert Date and Name
 })
