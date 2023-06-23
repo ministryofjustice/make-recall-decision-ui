@@ -102,7 +102,7 @@ defineParameterType({
   transformer: s => s,
 })
 
-Before({ tags: '@Rationale or @Trigger' }, () => {
+Before(() => {
   openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1 })
 })
 
@@ -187,9 +187,9 @@ Then('Part A details are correct', function () {
     fixedTermRecallNotes: this.testData.fixedTermRecallNotes,
     recallType: this.testData.recallType,
     fixedTermRecall: this.testData.fixedTermRecall,
-    extended: this.testData.extended,
+    indeterminate: this.testData.indeterminate,
   })
-  q24ISPESP(contents, this.testData.localPoliceDetails)
+  q24ISPESP(contents, this.testData.indeterminateOrExtendedSentenceDetails)
   q25ProbationDetails(contents)
   q26OffenderManager(contents, this.testData.localPoliceDetails)
   q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)

@@ -28,7 +28,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 3
+    default: 6
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -301,7 +301,7 @@ jobs:
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split)
+            SPECS=$(circleci tests glob e2e_tests/integration/**/*.feature | circleci tests split)
             echo $SPECS
 
             set +e

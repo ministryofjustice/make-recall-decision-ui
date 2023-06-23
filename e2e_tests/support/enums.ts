@@ -26,9 +26,9 @@ export enum IndeterminateRecallType {
 }
 
 export enum IndeterminateOrExtendedSentenceDetailType {
-  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = '{{offenderName}} has shown behaviour similar to the index offence',
-  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = '{{offenderName}} has shown behaviour that could lead to a sexual or violent offence',
-  'OUT_OF_TOUCH' = '{{offenderName}} is out of touch',
+  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = 'Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link?',
+  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = 'Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence?',
+  'OUT_OF_TOUCH' = 'Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise?',
 }
 
 export enum Vulnerabilities {
