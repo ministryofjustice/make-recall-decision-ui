@@ -251,11 +251,13 @@ jobs:
             FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           name: E2E Check - << parameters.environment >>
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split )
+            shopt -s globstar
+            
+            SPECS=$(circleci tests glob "e2e_tests/integration/**/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env TAGS='@E2E',USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
@@ -303,8 +305,6 @@ jobs:
             
             shopt -s globstar
             
-            echo "circleci tests glob:"
-            echo $(circleci tests glob "e2e_tests/integration/**/*.feature")
             SPECS=$(circleci tests glob "e2e_tests/integration/**/*.feature" | circleci tests split --show-counts)
             echo "Running feature file(s): $SPECS"
 
