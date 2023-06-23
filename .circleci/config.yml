@@ -301,7 +301,7 @@ jobs:
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob "e2e_tests/integration/**.feature" | circleci tests split)
+            SPECS=$(circleci tests glob "e2e_tests/integration/**/*.feature" "e2e_tests/integration/*.feature" | circleci tests split)
             echo $SPECS
 
             set +e
