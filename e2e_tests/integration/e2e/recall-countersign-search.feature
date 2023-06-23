@@ -1,7 +1,8 @@
 @E2E
 Feature: E2E scenarios - Recall
 
-  Recall Test Scenarios that exercises the System E2E through 3 slightly different flows
+  Recall Test Scenarios where rationale is recorded while SPO is countersigning,
+  countersigning task list accessed after searching for CRN
 
   #NOTE:
   #TypeOfSentence: supports LIFE, IPP & DPP only

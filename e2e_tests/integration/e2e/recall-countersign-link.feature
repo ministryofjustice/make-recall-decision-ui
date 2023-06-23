@@ -1,7 +1,8 @@
 @E2E
 Feature: E2E scenarios - Recall
 
-  Recall Test Scenarios that exercises the System E2E through 3 slightly different flows
+  Recall Test Scenarios where rationale is recorded while SPO is countersigning,
+  countersigning task list accessed using the link sent by PO
 
   #NOTE:
   #TypeOfSentence: supports LIFE, IPP & DPP only
@@ -9,7 +10,6 @@ Feature: E2E scenarios - Recall
   #VictimContactScheme: supports 'Yes', 'No' & 'Not applicable'
   #InCustody: supports 'Yes, prison custody', 'Yes, police custody' & 'No'
 
-  @focus
   @MRD-1320 @MRD-1268 @MRD-1305 @MRD-1252 @MRD-1262 @MRD-1311
     @MRD-1276 @MRD-1391 @MRD-1391 @MRD-1327 @MRD-1449 @MRD-1465
   Scenario Outline: E2E - PO records a recall while countersigning and SPO & ACO countersigns - deeplink
@@ -49,4 +49,4 @@ Feature: E2E scenarios - Recall
     Examples:
       | Indeterminate | Extended | RecallType | InCustody  | Vulnerabilities |
       | No            | No       | STANDARD   | No         | None            |
-#      | No            | No       | FIXED_TERM | Yes Prison | Some            |
+      | No            | No       | FIXED_TERM | Yes Prison | Some            |
