@@ -301,8 +301,12 @@ jobs:
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob "e2e_tests/integration/*.feature" | circleci tests split)
-            echo "Running feature file(s) $SPECS"
+            shopt -s globstar
+            
+            echo "circleci tests glob:"
+            echo $(circleci tests glob "e2e_tests/integration/**/*.feature")
+            SPECS=$(circleci tests glob "e2e_tests/integration/**/*.feature" | circleci tests split --show-counts)
+            echo "Running feature file(s): $SPECS"
 
             set +e
 
