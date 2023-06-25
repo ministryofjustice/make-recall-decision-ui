@@ -2,6 +2,7 @@ import { Given, Then, DataTable, When } from '@badeball/cypress-cucumber-preproc
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { proxy } from '@alfonso-presa/soft-assert'
 import {
+  appointmentDate,
   appointmentOptions,
   futureActionDetails,
   letterSubject,
@@ -14,7 +15,6 @@ import {
 } from './assertionsDNTR'
 
 import { crns, deleteOpenRecommendation } from './index'
-
 import {
   IndeterminateOrExtendedSentenceDetailType,
   IndeterminateRecallType,
@@ -585,6 +585,5 @@ Then('Decision Not To Recall letter details are correct', function () {
   futureActionDetails(contents, this.testData.futureActionDetails)
   appointmentOptions(contents, this.testData.appointmentOptions)
   offendersPhoneNumber(contents, this.testData.phoneNumber)
-
-  // assert Date and Name
+  appointmentDate(contents, this.testData.apptDate)
 })

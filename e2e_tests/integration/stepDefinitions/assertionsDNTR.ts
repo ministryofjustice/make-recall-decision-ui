@@ -1,4 +1,5 @@
 import { proxy } from '@alfonso-presa/soft-assert'
+import { formatDateToDNTRLetterFormat } from '../../utils'
 
 const expectSoftly = proxy(expect)
 
@@ -28,4 +29,7 @@ export const appointmentOptions = (contents: string, answer: string) => {
 }
 export const offendersPhoneNumber = (contents: string, answer: string) => {
   expectSoftly(contents, 'Offenders contact number\n-->').to.contain(answer)
+}
+export const appointmentDate = (contents: string, objectDate) => {
+  expectSoftly(contents, 'Offenders next appointment date\n-->').to.contain(formatDateToDNTRLetterFormat(objectDate))
 }
