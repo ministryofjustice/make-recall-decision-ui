@@ -499,10 +499,10 @@ workflows:
           <<: *slack-fail-post-step
 
   e2e-check-dev:
-    when: << pipeline.parameters.e2e-check-dev >>
+#    when: << pipeline.parameters.e2e-check-dev >>
     triggers:
       - schedule:
-          cron: "43 17 * * *"
+          cron: "45 17 * * *"
           filters:
             branches:
               only: /.*/
