@@ -22,7 +22,7 @@ parameters:
     default: "6.2"
   e2e-check-dev:
     type: boolean
-    default: false
+    default: true
   e2e-check-preprod:
     type: boolean
     default: false
@@ -234,7 +234,7 @@ jobs:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
 
-    parallelism: << pipeline.parameters.e2e-parallelism >>
+#    parallelism: << pipeline.parameters.e2e-parallelism >>
     resource_class: large
     parameters:
       environment:
@@ -502,7 +502,7 @@ workflows:
     when: << pipeline.parameters.e2e-check-dev >>
     triggers:
       - schedule:
-          cron: "30 17 * * *"
+          cron: "35 17 * * *"
     jobs:
       - e2e_environment_test:
           name: e2e_test_dev
