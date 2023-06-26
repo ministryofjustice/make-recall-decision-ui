@@ -433,14 +433,14 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+#      - e2e_environment_test:
+#          name: e2e_test_dev
+#          environment: dev
+#          requires:
+#            - deploy_dev
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
@@ -499,13 +499,7 @@ workflows:
           <<: *slack-fail-post-step
 
   e2e-check-dev:
-#    when: << pipeline.parameters.e2e-check-dev >>
-    triggers:
-      - schedule:
-          cron: "47 17 * * *"
-          filters:
-            branches:
-              only: /.*/
+    when: << pipeline.parameters.e2e-check-dev >>
     jobs:
       - e2e_environment_test:
           name: e2e_test_dev
