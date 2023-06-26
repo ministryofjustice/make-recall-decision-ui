@@ -22,7 +22,7 @@ parameters:
     default: "6.2"
   e2e-check-dev:
     type: boolean
-    default: true
+    default: false
   e2e-check-preprod:
     type: boolean
     default: false
@@ -502,7 +502,7 @@ workflows:
 #    when: << pipeline.parameters.e2e-check-dev >>
     triggers:
       - schedule:
-          cron: "45 17 * * *"
+          cron: "47 17 * * *"
           filters:
             branches:
               only: /.*/
