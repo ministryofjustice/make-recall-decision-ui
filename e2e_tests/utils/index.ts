@@ -32,3 +32,31 @@ export const formatObjectDateToLongFormat = (objectDate: Record<string, number |
 export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
   return DateTime.fromFormat(dateToConvert, 'd MMMM yyyy').toFormat('dd/MM/yyyy')
 }
+
+export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
+  const nth = function (rawDate) {
+    if (rawDate > 3 && rawDate < 21) return 'th'
+    switch (rawDate % 10) {
+      case 1:
+        return 'st'
+      case 2:
+        return 'nd'
+      case 3:
+        return 'rd'
+      default:
+        return 'th'
+    }
+  }
+  cy.log(`objectDate--> ${objectDate.toDateString()} at ${objectDate.toTimeString()}`)
+  return DateTime.fromObject({
+    year: objectDate.getFullYear(),
+    month: objectDate.getMonth() + 1,
+    day: objectDate.getDate(),
+    weekday: objectDate.getDay(),
+    hour: objectDate.getHours(),
+    minute: objectDate.getMinutes(),
+    second: objectDate.getSeconds(),
+  })
+    .toFormat(`EEEE d'${nth(objectDate.getDate())}' MMMM yyyy 'at' h':'mma`)
+    .replace(/(AM|PM)/, (a, p1) => p1.toLowerCase())
+}

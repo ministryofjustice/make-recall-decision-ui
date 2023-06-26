@@ -1,6 +1,5 @@
 import { After, Before, defineParameterType, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { flush } from '@alfonso-presa/soft-assert'
-import { getTestDataPerEnvironment } from '../utils'
 import { UserType } from '../support/commands'
 import {
   q10Vulnerabilities,
@@ -34,8 +33,6 @@ import {
   q9LocalPoliceDetails,
 } from './assertionsPartA'
 import { CustodyType, YesNoType } from '../support/enums'
-
-getTestDataPerEnvironment()
 
 export const crns = {
   1: Cypress.env('CRN') || 'X098092',
