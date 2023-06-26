@@ -1,7 +1,7 @@
 import { After, Before, defineParameterType, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { flush } from '@alfonso-presa/soft-assert'
-import { getTestDataPerEnvironment } from '../../utils'
-import { UserType } from '../../support/commands'
+import { getTestDataPerEnvironment } from '../utils'
+import { UserType } from '../support/commands'
 import {
   q10Vulnerabilities,
   q11Contraband,
@@ -33,7 +33,7 @@ import {
   q8ArrestIssues,
   q9LocalPoliceDetails,
 } from './assertionsPartA'
-import { CustodyType, YesNoType } from '../../support/enums'
+import { CustodyType, YesNoType } from '../support/enums'
 
 getTestDataPerEnvironment()
 

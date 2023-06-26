@@ -2,8 +2,8 @@ import { DataTable, Given, Then, When } from '@badeball/cypress-cucumber-preproc
 import { proxy } from '@alfonso-presa/soft-assert'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { openApp, signOut } from './index'
-import { YesNoType } from '../../support/enums'
-import { UserType } from '../../support/commands'
+import { YesNoType } from '../support/enums'
+import { UserType } from '../support/commands'
 
 const expectSoftly = proxy(expect)
 

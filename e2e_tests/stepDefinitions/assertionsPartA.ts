@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { proxy, flush } from '@alfonso-presa/soft-assert'
-import { changeDateFromLongFormatToShort, formatObjectDateToLongFormat, getTestDataPerEnvironment } from '../../utils'
+import { changeDateFromLongFormatToShort, formatObjectDateToLongFormat, getTestDataPerEnvironment } from '../utils'
 import {
   Alternatives,
   IndeterminateOrExtendedSentenceDetailType,
@@ -10,7 +10,7 @@ import {
   ROSHLevels,
   YesNoNAType,
   YesNoType,
-} from '../../support/enums'
+} from '../support/enums'
 
 const expectSoftly = proxy(expect)
 

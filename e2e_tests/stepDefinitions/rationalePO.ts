@@ -13,7 +13,7 @@ import {
   YesNoNAType,
   Vulnerabilities,
   ROSHLevels,
-} from '../../support/enums'
+} from '../support/enums'
 
 const expectSoftly = proxy(expect)
 

@@ -104,7 +104,7 @@
     ]
   },
   "cypress-cucumber-preprocessor": {
-    "stepDefinitions": "e2e_tests/integration/stepDefinitions/*.ts",
+    "stepDefinitions": "e2e_tests/stepDefinitions/*.ts",
     "nonGlobalStepDefinitions": false,
     "json": {
       "enabled": false
