@@ -120,7 +120,6 @@ describe('post', () => {
   const res = mockRes({
     token: 'token1',
     locals: {
-      flags: { flagTriggerWork: false },
       recommendation: { personOnProbation: { name: 'Harry Smith' } },
       urlInfo: { basePath: `/recommendations/123/` },
     },
@@ -154,7 +153,7 @@ describe('post', () => {
         spoRecallRationale: 'a good reason',
         explainTheDecision: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/spo-task-list-consider-recall`)
@@ -187,7 +186,7 @@ describe('post', () => {
         spoRecallRationale: 'another good reason',
         explainTheDecision: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
   })
 

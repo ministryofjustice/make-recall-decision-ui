@@ -8,23 +8,11 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const {
-    recommendation,
-    flags: { flagTriggerWork },
-  } = res.locals
-
-  let backLink
-  if (flagTriggerWork) {
-    backLink = 'discuss-with-manager'
-  } else if (recommendation.isIndeterminateSentence) {
-    backLink = 'indeterminate-type'
-  } else {
-    backLink = 'is-extended'
-  }
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink,
+    backLink: 'discuss-with-manager',
     page: {
       id: 'recallTypeIndeterminate',
     },

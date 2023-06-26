@@ -139,7 +139,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagTriggerWork: true },
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
@@ -165,7 +164,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagTriggerWork: true },
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
@@ -193,7 +191,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagTriggerWork: true },
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
@@ -224,7 +221,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagTriggerWork: true },
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
@@ -255,7 +251,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagTriggerWork: true },
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
@@ -282,7 +277,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagTriggerWork: true },
         user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
       },
     })

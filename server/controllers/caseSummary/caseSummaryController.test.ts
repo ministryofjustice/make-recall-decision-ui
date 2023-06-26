@@ -293,12 +293,11 @@ describe('get', () => {
     expect(res.locals.backLink)
   })
 
-  it('show recommendation button for existing recommendation that is not closed and flagTriggerWork set', async () => {
+  it('show recommendation button for existing recommendation that is not closed', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.CLOSED, active: true }])
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
 
-    res.locals.flags.flagTriggerWork = true
     await caseSummaryController.get(req, res, next)
 
     expect(res.locals.backLink).toEqual('/search')

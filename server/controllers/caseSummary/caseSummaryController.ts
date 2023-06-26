@@ -22,7 +22,7 @@ const auditService = new AuditService()
 
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
-  const { user, flags } = res.locals
+  const { user } = res.locals
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
@@ -107,7 +107,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       const isClosed = statuses.find(status => status.name === STATUSES.CLOSED)
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
-      if (flags.flagTriggerWork && isClosed) {
+      if (isClosed) {
         recommendationButton = {
           display: true,
           post: false,

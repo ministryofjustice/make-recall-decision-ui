@@ -6,30 +6,10 @@ import recommendationApiResponse from '../../../api/responses/get-recommendation
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load with no data', async () => {
+  it('test back button', async () => {
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        token: 'token1',
-        flags: { flagTriggerWork: false },
-      },
-    })
-    const next = mockNext()
-    await isIndeterminateSentenceController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'isIndeterminateSentence' })
-    expect(res.locals.backLink).toEqual('manager-review')
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/isIndeterminateSentence')
-
-    expect(next).toHaveBeenCalled()
-  })
-
-  it('test back button with feature flag', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        flags: { flagTriggerWork: true },
       },
     })
     await isIndeterminateSentenceController.get(mockReq(), res, mockNext())
@@ -113,7 +93,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -128,7 +107,7 @@ describe('post', () => {
       valuesToSave: {
         isIndeterminateSentence: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/is-extended`)
@@ -149,7 +128,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

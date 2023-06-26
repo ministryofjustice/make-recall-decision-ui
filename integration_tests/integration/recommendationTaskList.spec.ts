@@ -57,7 +57,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Address').should('not.exist')
     // should not exist
     cy.getElement('Is this an emergency recall?').should('not.exist')
-    cy.clickLink('Create Part A')
+
+    cy.getElement("Request line manager's countersignature To do").should('exist')
   })
 
   it('task list - Completed - not in custody', () => {
@@ -71,7 +72,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Local police contact details Completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? Completed').should('exist')
     cy.getElement('Address Completed').should('exist')
-    cy.clickLink('Create Part A')
+    cy.getElement("Request line manager's countersignature To do").should('exist')
   })
 
   it('task list - Completed - determinate sentence not extended', () => {

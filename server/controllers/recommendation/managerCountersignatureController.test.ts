@@ -111,7 +111,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
-        flags: {},
       },
     })
     const next = mockNext()
@@ -152,7 +151,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
-        flags: {},
       },
     })
     const next = mockNext()
@@ -190,7 +188,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: {},
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

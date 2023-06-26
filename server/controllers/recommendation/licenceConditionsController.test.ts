@@ -35,32 +35,17 @@ describe('get', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         token: 'token1',
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
     await licenceConditionsController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'licenceConditions' })
-    expect(res.locals.backLink).toEqual('response-to-probation')
+    expect(res.locals.backLink).toEqual('task-list-consider-recall')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 
     expect(next).toHaveBeenCalled()
-  })
-
-  it('test back button with feature flag', async () => {
-    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
-
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        flags: { flagTriggerWork: true },
-      },
-    })
-    await licenceConditionsController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.backLink).toEqual('task-list-consider-recall')
   })
 
   it('load with existing data', async () => {
@@ -150,7 +135,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -205,36 +189,11 @@ describe('post', () => {
           },
         },
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/alternatives-tried`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-  it('post with valid data triggerwork flag set', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        activeCustodialConvictionCount: '1',
-        licenceConditionsBreached: 'standard|NAME_CHANGE',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        flags: { flagTriggerWork: true },
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-
-    await licenceConditionsController.post(req, res, mockNext())
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
@@ -251,7 +210,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

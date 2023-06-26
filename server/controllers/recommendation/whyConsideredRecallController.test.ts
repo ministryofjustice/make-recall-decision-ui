@@ -159,7 +159,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },
