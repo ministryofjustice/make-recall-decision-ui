@@ -38,7 +38,7 @@ export const createAndDownloadDocument =
     res.send(Buffer.from(fileContents, 'base64'))
 
     const isSpo = user.roles.includes(HMPPS_AUTH_ROLE.SPO)
-    if (!isSpo || !flags.flagTriggerWork) {
+    if (!isSpo) {
       const statuses = (
         await getStatuses({
           recommendationId,
@@ -52,7 +52,7 @@ export const createAndDownloadDocument =
         const activate = [STATUSES.PP_DOCUMENT_CREATED]
 
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
-        if ((!isSpo && isSpoRecordedRationale) || !flags.flagTriggerWork) {
+        if (!isSpo && isSpoRecordedRationale) {
           activate.push(STATUSES.CLOSED)
         }
 

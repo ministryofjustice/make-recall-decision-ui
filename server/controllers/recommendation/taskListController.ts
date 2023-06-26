@@ -27,11 +27,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-no-recall', urlInfo }))
   }
 
-  if (!featureFlags.flagTriggerWork) {
-    const recallType = recommendation?.recallType?.selected?.value
-    if (recallType === undefined) {
-      return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
-    }
+  const recallType = recommendation?.recallType?.selected?.value
+  if (recallType === undefined) {
+    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
   }
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   const isSpoRationaleRecorded = !!statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
@@ -45,7 +43,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let seniorManagerCountersignStyle = 'grey'
 
   let isAcoSigned = false
-  if (completeness.areAllComplete && featureFlags.flagTriggerWork) {
+  if (completeness.areAllComplete) {
     completeness.areAllComplete = false
 
     const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
@@ -101,7 +99,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     seniorManagerCountersignLabel,
     lineManagerCountersignStyle,
     seniorManagerCountersignStyle,
-    flagTriggerWork: featureFlags.flagTriggerWork,
     taskCompleteness: completeness,
   }
 

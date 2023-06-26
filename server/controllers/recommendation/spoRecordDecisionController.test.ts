@@ -94,7 +94,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -109,7 +108,7 @@ describe('post', () => {
         sensitive: true,
         sendSpoRationaleToDelius: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -138,7 +137,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -151,7 +149,7 @@ describe('post', () => {
         sensitive: false,
         sendSpoRationaleToDelius: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
   })
   it('close document', async () => {
@@ -169,7 +167,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })

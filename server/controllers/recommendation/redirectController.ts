@@ -7,7 +7,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
     recommendation,
-    flags: { flagTriggerWork },
     urlInfo: { basePath },
     user: { token, roles },
   } = res.locals
@@ -39,18 +38,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
       nextPageId = 'spo-task-list-consider-recall'
     }
   } else if (!isDefined(recallType)) {
-    if (flagTriggerWork) {
-      if (isSpoRecordedRationale) {
-        if (recommendation?.isExtendedSentence || recommendation?.isIndeterminateSentence) {
-          nextPageId = 'recall-type-indeterminate'
-        } else {
-          nextPageId = 'recall-type'
-        }
+    if (isSpoRecordedRationale) {
+      if (recommendation?.isExtendedSentence || recommendation?.isIndeterminateSentence) {
+        nextPageId = 'recall-type-indeterminate'
       } else {
-        nextPageId = 'task-list-consider-recall'
+        nextPageId = 'recall-type'
       }
     } else {
-      nextPageId = 'response-to-probation'
+      nextPageId = 'task-list-consider-recall'
     }
   } else if (recallType === 'NO_RECALL') {
     nextPageId = 'task-list-no-recall'

@@ -11,7 +11,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { recallType: undefined },
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
@@ -22,7 +21,7 @@ describe('get', () => {
     const next = mockNext()
     await redirectController.get(mockReq(), res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/response-to-probation')
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-consider-recall')
     expect(next).toHaveBeenCalled()
   })
 
@@ -31,7 +30,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { recallType: undefined },
-        flags: { flagTriggerWork: true },
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
@@ -124,7 +122,6 @@ describe('get', () => {
           isExtendedSentence: true,
         },
         urlInfo: { basePath: '/recommendation/123/' },
-        flags: { flagTriggerWork: true },
         user: {
           token: 'token1',
           roles: ['ROLE_MAKE_RECALL_DECISION'],
@@ -148,7 +145,6 @@ describe('get', () => {
           isIndeterminateSentence: true,
         },
         urlInfo: { basePath: '/recommendation/123/' },
-        flags: { flagTriggerWork: true },
         user: {
           token: 'token1',
           roles: ['ROLE_MAKE_RECALL_DECISION'],
@@ -173,7 +169,6 @@ describe('get', () => {
           isExtendedSentence: false,
         },
         urlInfo: { basePath: '/recommendation/123/' },
-        flags: { flagTriggerWork: true },
         user: {
           token: 'token1',
           roles: ['ROLE_MAKE_RECALL_DECISION'],

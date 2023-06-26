@@ -91,8 +91,8 @@ context('Make a recommendation - Branching / redirects', () => {
       response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?flagTriggerWork=0`)
-    cy.getLinkHref('Back').should('contain', '/indeterminate-type')
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
+    cy.getLinkHref('Back').should('contain', '/discuss-with-manager')
   })
 
   it('indeterminate recall type - links back to extended sentence if extended sentence', () => {
@@ -101,21 +101,21 @@ context('Make a recommendation - Branching / redirects', () => {
       response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?flagTriggerWork=0`)
-    cy.getLinkHref('Back').should('contain', '/is-extended')
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
+    cy.getLinkHref('Back').should('contain', '/discuss-with-manager')
   })
 
-  it('indeterminate sentence - if extended sentence is selected, redirect to indeterminate recommendation page', () => {
+  it('indeterminate sentence - if extended sentence is selected, task list', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...recommendationResponse, isIndeterminateSentence: false },
     })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended?flagTriggerWork=0`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
     cy.selectRadio('Is Paula Smith on an extended sentence?', 'Yes')
     cy.clickButton('Continue')
-    cy.selectRadio('What do you recommend?', 'Emergency recall')
+    cy.pageHeading().should('contain', 'Consider a recall')
   })
 
   it('victim contact scheme - directs "no" to the task list page', () => {

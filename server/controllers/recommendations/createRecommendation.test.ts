@@ -10,7 +10,7 @@ jest.mock('../../monitoring/azureAppInsights')
 const crn = ' A1234AB '
 let res: Response
 const token = 'token'
-const featureFlags = { flagDomainEventRecommendationStarted: true, flagTriggerWork: false }
+const featureFlags = { flagDomainEventRecommendationStarted: true }
 
 describe('createRecommendationController', () => {
   beforeEach(() => {
@@ -26,7 +26,6 @@ describe('createRecommendationController', () => {
     await createRecommendationController(req, res)
     expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token, {
       flagDomainEventRecommendationStarted: true,
-      flagTriggerWork: false,
     })
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/')
     expect(req.session.errors).toBeUndefined()

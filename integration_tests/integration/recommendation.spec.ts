@@ -90,21 +90,6 @@ context('Make a recommendation', () => {
         cy.pageHeading().should('equal', 'Create a decision not to recall letter')
       })
 
-      it('update button links to response to probation if recall decision has not been made yet', () => {
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-        cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: null } })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.cases}/${crn}/overview?flagTriggerWork=0`)
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
-      })
-    })
-
-    describe('flagTriggerWork is set', () => {
-      beforeEach(() => {
-        cy.signIn()
-      })
-
       it('display consider recall task list if "update recommendation"', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
@@ -115,7 +100,7 @@ context('Make a recommendation', () => {
           },
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/`)
         cy.pageHeading().should('equal', 'Consider a recall')
 
         cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
@@ -134,7 +119,7 @@ context('Make a recommendation', () => {
         cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
         cy.clickLink('What has made you think about recalling Paula Smith?')
 
         cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
@@ -154,7 +139,7 @@ context('Make a recommendation', () => {
 
         cy.task('updateStatuses', { statusCode: 200, response: [] })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
 
         cy.clickButton('Continue')
 
@@ -172,7 +157,7 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
 
         cy.clickLink('Continue')
 
@@ -190,7 +175,7 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
         cy.getElement("Request line manager's countersignature To do").should('exist')
         cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -206,7 +191,7 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
         cy.getElement("Request line manager's countersignature Requested").should('exist')
         cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -219,7 +204,7 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
         cy.getElement("Request line manager's countersignature Completed").should('exist')
         cy.getElement("Request senior manager's countersignature To do").should('exist')
@@ -241,7 +226,7 @@ context('Make a recommendation', () => {
           ],
         })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
         cy.getElement("Request line manager's countersignature Completed").should('exist')
         cy.getElement("Request senior manager's countersignature Requested").should('exist')
@@ -260,7 +245,7 @@ context('Make a recommendation', () => {
           ],
         })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
         cy.getElement("Request line manager's countersignature Completed").should('exist')
         cy.getElement("Request senior manager's countersignature Completed").should('exist')
@@ -519,12 +504,12 @@ context('Make a recommendation', () => {
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagTriggerWork=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
       ).should('exist')
       cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
+      cy.pageHeading().should('equal', 'Consider a recall')
     })
 
     it('licence conditions - shows message if person has no active custodial convictions', () => {
@@ -538,12 +523,12 @@ context('Make a recommendation', () => {
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagTriggerWork=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
         'There are no licence conditions. This person is not currently on licence. Double-check that the information in NDelius is correct.'
       ).should('exist')
       cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'What alternatives to recall have been tried already?')
+      cy.pageHeading().should('equal', 'Consider a recall')
     })
   })
 
@@ -840,7 +825,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -864,7 +849,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -889,7 +874,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -915,7 +900,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -1084,7 +1069,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1104,7 +1089,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
 
       cy.selectRadio('You must record your rationale', 'No - countersign the Part A first and record rationale later')
 
@@ -1127,7 +1112,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
 
       cy.selectRadio('You must record your rationale', 'Yes - use this service to record rationale in NDelius')
 
@@ -1177,7 +1162,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1194,7 +1179,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1211,7 +1196,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
 
       cy.selectRadio('You must record your rationale', 'No - countersign the Part A first and record rationale later')
       cy.clickButton('Continue')
@@ -1232,7 +1217,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
 
       cy.selectRadio('You must record your rationale', 'Yes - use this service to record rationale in NDelius')
       cy.clickButton('Continue')
@@ -1253,7 +1238,7 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a&flagTriggerWork=1`
+        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a`
       )
 
       cy.pageHeading().should('equal', 'Enter your telephone number')
@@ -1276,7 +1261,7 @@ context('Make a recommendation', () => {
       })
       cy.task('updateStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/countersign-confirmation?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/countersign-confirmation`)
 
       cy.pageHeading().should('contains', 'Part A countersigned')
 
@@ -1298,7 +1283,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Senior manager countersignature')
 
@@ -1314,7 +1299,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'ACO_SIGNED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Create Part A')
 
@@ -1334,7 +1319,7 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a&flagTriggerWork=1`
+        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a`
       )
 
       cy.pageHeading().should('equal', 'Enter your telephone number')
@@ -1356,7 +1341,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/countersign-confirmation?flagTriggerWork=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/countersign-confirmation`)
 
       cy.pageHeading().should('contains', 'Part A countersigned')
 

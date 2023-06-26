@@ -21,7 +21,6 @@ describe('audit', () => {
       mockRes({
         locals: {
           user: { username: 'tommy' },
-          flags: { flagTriggerWork: false },
           recommendation: { crn: 'abc' },
         },
       }),
@@ -36,9 +35,7 @@ describe('audit', () => {
         pageUrlSlug: 'whatever',
         recommendationId: '123',
       },
-      {
-        flagTriggerWork: false,
-      }
+      {}
     )
 
     expect(AuditService.prototype.recommendationView).toHaveBeenCalledWith({
