@@ -9,7 +9,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
@@ -89,7 +88,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -119,7 +117,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })

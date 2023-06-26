@@ -5,11 +5,11 @@ import { booleanToYesNo } from '../../utils/utils'
 import { validateIsIndeterminateSentence } from '../recommendations/isIndeterminateSentence/formValidator'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { flags, recommendation } = res.locals
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'manager-review',
+    backLink: 'task-list-consider-recall',
     page: {
       id: 'isIndeterminateSentence',
     },

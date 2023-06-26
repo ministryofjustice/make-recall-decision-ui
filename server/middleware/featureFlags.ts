@@ -4,11 +4,6 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
-  flagTriggerWork: {
-    label: 'Trigger Work',
-    description: 'POs enter a new workflow over considering a recall, and then share a link with the SPO.',
-    default: true,
-  },
   flagConsiderRecall: {
     label: 'Consider a recall / manager decision',
     description:

@@ -61,9 +61,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-
-  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'recall-type-indeterminate'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }

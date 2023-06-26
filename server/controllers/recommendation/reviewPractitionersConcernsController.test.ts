@@ -180,7 +180,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -194,7 +193,7 @@ describe('post', () => {
       valuesToSave: {
         reviewPractitionersConcerns: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-task-list-consider-recall`)

@@ -11,7 +11,7 @@ describe('get', () => {
       locals: {
         recommendation: {},
         token: 'token1',
-        flags: { flagTriggerWork: false },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -103,7 +103,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -122,10 +121,10 @@ describe('post', () => {
         recallType: null,
         isThisAnEmergencyRecall: null,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type-indeterminate`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -146,7 +145,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -161,7 +159,7 @@ describe('post', () => {
       valuesToSave: {
         isExtendedSentence: false,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/indeterminate-type`)
@@ -185,7 +183,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -204,10 +201,10 @@ describe('post', () => {
         recallType: null,
         isThisAnEmergencyRecall: null,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type-indeterminate`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -225,7 +222,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

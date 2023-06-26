@@ -30,29 +30,10 @@ describe('get', () => {
     ],
   }
 
-  it('load with no data', async () => {
+  it('test back button', async () => {
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        flags: { flagTriggerWork: false },
-      },
-    })
-    const next = mockNext()
-    await alternativesToRecallTriedController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'alternativesToRecallTried' })
-    expect(res.locals.backLink).toEqual('licence-conditions')
-    expect(res.locals.inputDisplayValues).not.toBeDefined()
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/alternativesToRecallTried')
-
-    expect(next).toHaveBeenCalled()
-  })
-
-  it('test back button with feature flag', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        flags: { flagTriggerWork: true },
       },
     })
     await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
@@ -127,68 +108,6 @@ describe('post', () => {
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const basePath = `/recommendations/123/`
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        alternativesToRecallTried: 'WARNINGS_LETTER',
-        'alternativesToRecallTriedDetail-WARNINGS_LETTER': 'a warning',
-        'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
-        'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
-        'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
-        'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
-        'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
-        'alternativesToRecallTriedDetail-DRUG_TESTING': '',
-        'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        flags: { flagTriggerWork: false },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath },
-      },
-    })
-    const next = mockNext()
-
-    await alternativesToRecallTriedController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
-      valuesToSave: {
-        alternativesToRecallTried: {
-          selected: [
-            {
-              value: 'WARNINGS_LETTER',
-              details: 'a warning',
-            },
-          ],
-          allOptions: [
-            { value: 'NONE', text: 'None' },
-            { value: 'WARNINGS_LETTER', text: 'Warnings / licence breach letters' },
-            { value: 'INCREASED_FREQUENCY', text: 'Increased frequency of reporting' },
-            { value: 'EXTRA_LICENCE_CONDITIONS', text: 'Additional licence conditions' },
-            { value: 'REFERRAL_TO_OTHER_TEAMS', text: 'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)' },
-            { value: 'REFERRAL_TO_PARTNERSHIP_AGENCIES', text: 'Referral to partnership agencies' },
-            { value: 'REFERRAL_TO_APPROVED_PREMISES', text: 'Referral to approved premises' },
-            { value: 'DRUG_TESTING', text: 'Drug testing' },
-            { value: 'ALTERNATIVE_TO_RECALL_OTHER', text: 'Other' },
-          ],
-        },
-      },
-      featureFlags: { flagTriggerWork: false },
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/manager-review`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-
-  it('post with valid data triggerwork flag set', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
@@ -206,7 +125,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },
@@ -239,7 +157,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

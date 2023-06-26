@@ -25,33 +25,17 @@
                 html: html
             }) }}
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
-            {% if flags.flagTriggerWork %}
-
-                <ol class='govuk-list govuk-list--number'>
-                    <li>
-                        <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>
-                            Download the Part A.</a>
-                    </li>
-                    <li>Double-check that everything is correct.</li>
-                    <li>Fill in any missing details from question 25 onwards.</li>
-                    <li>Upload the Part A to NDelius.</li>
-                    <li>Update OASys with any new risk information.</li>
-                </ol>
-                <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a></p>
-
-            {% else %}
-                <p class='govuk-body'>
+            <ol class='govuk-list govuk-list--number'>
+                <li>
                     <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>
-                        Download the Part A (DOCX).</a> Double-check that everything is correct.
-                </p>
-                <p class='govuk-body'>You’ll also need to answer these questions:</p>
-                <ul class='govuk-list govuk-list--bullet'>
-                    <li>question 25 onwards - your details and sign off by managers</li>
-                </ul>
-                <p class='govuk-body'>Upload the Part A to NDelius when you’ve checked it. Update OASys with any new risk information.</p>
-                <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to case overview</a></p>
-            {% endif %}
-
+                        Download the Part A.</a>
+                </li>
+                <li>Double-check that everything is correct.</li>
+                <li>Fill in any missing details from question 25 onwards.</li>
+                <li>Upload the Part A to NDelius.</li>
+                <li>Update OASys with any new risk information.</li>
+            </ol>
+            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a></p>
         </div>
     </div>
 {% endblock %}

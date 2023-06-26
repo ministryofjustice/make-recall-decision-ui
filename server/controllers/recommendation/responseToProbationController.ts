@@ -6,11 +6,11 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isMandatoryTextValue } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { flags, recommendation } = res.locals
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : `/cases/${recommendation.crn}/overview`,
+    backLink: 'task-list-consider-recall',
     page: {
       id: 'responseToProbation',
     },
@@ -59,9 +59,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-
-  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'licence-conditions'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }

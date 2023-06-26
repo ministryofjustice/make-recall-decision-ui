@@ -11,7 +11,6 @@ describe('get', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         token: 'token1',
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
@@ -101,7 +100,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -119,7 +117,7 @@ describe('post', () => {
         },
       },
       token: 'token1',
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-custody`)
@@ -139,7 +137,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

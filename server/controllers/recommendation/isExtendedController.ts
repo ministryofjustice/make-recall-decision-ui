@@ -77,15 +77,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  let nextPageId
-  if (isIndeterminateSentence) {
-    nextPageId = 'indeterminate-type'
-  } else if (flags.flagTriggerWork) {
-    nextPageId = 'task-list-consider-recall'
-  } else {
-    nextPageId = valuesToSave.isExtendedSentence ? 'recall-type-indeterminate' : 'recall-type'
-  }
-
+  const nextPageId = isIndeterminateSentence ? 'indeterminate-type' : 'task-list-consider-recall'
   res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
