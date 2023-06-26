@@ -502,7 +502,10 @@ workflows:
     when: << pipeline.parameters.e2e-check-dev >>
     triggers:
       - schedule:
-          cron: "35 17 * * *"
+          cron: "43 17 * * *"
+          filters:
+            branches:
+              only: /.*/
     jobs:
       - e2e_environment_test:
           name: e2e_test_dev
