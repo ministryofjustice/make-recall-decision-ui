@@ -29,6 +29,10 @@ parameters:
   e2e-parallelism:
     type: integer
     default: 6
+  e2e-parallelism-env:
+    type: integer
+    default: 3  
+    
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -234,7 +238,7 @@ jobs:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
 
-#    parallelism: << pipeline.parameters.e2e-parallelism >>
+    parallelism: << pipeline.parameters.e2e-parallelism-env >>
     resource_class: large
     parameters:
       environment:
@@ -517,6 +521,22 @@ workflows:
 #          context:
 #            - hmpps-common-vars
 #          <<: *slack-fail-post-step
+
+  e2e-check-dev-daily:
+    triggers:
+      - schedule:
+          cron: "00 21 * * 1-5"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
   security:
     triggers:
