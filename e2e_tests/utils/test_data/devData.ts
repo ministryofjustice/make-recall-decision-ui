@@ -17,7 +17,7 @@ export const devData = {
   nameOfPersonCompletingForm: /Name of person completing the form: Make Recall Decisions Probation Officer/,
   emailAddressOfPersonCompletingForm: /Email Address: .*@digital\.justice\.gov\.uk/,
   region: /Region: {2}(CPA London|London)/,
-  ldu: /LDU: C17 County|All London/,
+  ldu: /LDU: C17 County|All London|N07 Division|Unallocated Level 3\(N07\)/,
   dateOfDecision: 'Date of decision to request revocation:',
   timeOfDecision: /Time \(24 hour\) of decision to request information: \d{2}:\d{2}/,
 }

@@ -30,7 +30,7 @@ export const formatObjectDateToLongFormat = (objectDate: Record<string, number |
 }
 
 export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
-  return DateTime.fromFormat(dateToConvert, 'dd MMMM yyyy').toFormat('dd/MM/yyyy')
+  return DateTime.fromFormat(dateToConvert, 'd MMMM yyyy').toFormat('dd/MM/yyyy')
 }
 
 export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
@@ -56,5 +56,7 @@ export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
     hour: objectDate.getHours(),
     minute: objectDate.getMinutes(),
     second: objectDate.getSeconds(),
-  }).toFormat(`EEEE d'${nth(objectDate.getDate())}' MMMM yyyy 'at' h':'mma`)
+  })
+    .toFormat(`EEEE d'${nth(objectDate.getDate())}' MMMM yyyy 'at' h':'mma`)
+    .replace(/(AM|PM)/, (a, p1) => p1.toLowerCase())
 }

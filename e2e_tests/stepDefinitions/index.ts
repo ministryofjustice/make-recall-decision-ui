@@ -1,7 +1,6 @@
 import { After, Before, defineParameterType, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 import { flush } from '@alfonso-presa/soft-assert'
-import { getTestDataPerEnvironment } from '../../utils'
-import { UserType } from '../../support/commands'
+import { UserType } from '../support/commands'
 import {
   q10Vulnerabilities,
   q11Contraband,
@@ -33,9 +32,7 @@ import {
   q8ArrestIssues,
   q9LocalPoliceDetails,
 } from './assertionsPartA'
-import { CustodyType, YesNoType } from '../../support/enums'
-
-getTestDataPerEnvironment()
+import { CustodyType, YesNoType } from '../support/enums'
 
 export const crns = {
   1: Cypress.env('CRN') || 'X098092',
@@ -102,7 +99,7 @@ defineParameterType({
   transformer: s => s,
 })
 
-Before({ tags: '@Rationale or @Trigger' }, () => {
+Before(() => {
   openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1 })
 })
 
@@ -179,12 +176,18 @@ Then('Part A details are correct', function () {
   q16IndexOffenceDetails(contents, this.testData.offenceAnalysis)
   q17LicenceConditions(contents, this.testData.licenceConditions.standard)
   q18AdditionalConditions(contents, this.testData.licenceConditions.advanced)
-  q19CircumstancesLeadingToRecall(contents, this.testData.localPoliceDetails)
-  q20ResponseToSupervision(contents, this.testData.localPoliceDetails)
-  q21Alternatives(contents, this.testData.localPoliceDetails)
+  q19CircumstancesLeadingToRecall(contents, this.testData.reasonForRecall)
+  q20ResponseToSupervision(contents, this.testData.probationResponse)
+  q21Alternatives(contents, this.testData.alternativesTried)
   q22RecallType(contents, this.testData)
-  q23LicenceConditionsToAdd(contents, this.testData.localPoliceDetails)
-  q24ISPESP(contents, this.testData.localPoliceDetails)
+  q23LicenceConditionsToAdd(contents, {
+    fixedTermRecallNotes: this.testData.fixedTermRecallNotes,
+    recallType: this.testData.recallType,
+    fixedTermRecall: this.testData.fixedTermRecall,
+    indeterminate: this.testData.indeterminate,
+    extended: this.testData.extended,
+  })
+  q24ISPESP(contents, this.testData.indeterminateOrExtendedSentenceDetails)
   q25ProbationDetails(contents)
   q26OffenderManager(contents, this.testData.localPoliceDetails)
   q27SPOEndorsement.call(this, contents, this.testData.spoCounterSignature)

@@ -29,3 +29,10 @@ export const formatIsoDateShort = (isoDate: string) => DateTime.fromISO(isoDate,
 export const longDateMatchPattern = (isoDate: string | null) => {
   return isoDate !== null ? new RegExp(formatIsoDate(isoDate)) : /\d{1,2} [a-zA-Z]* \d{4}/
 }
+
+export const replaceMissingNDeliusInfoWithBlank = function (text: string) {
+  return text === '-This is information missing from NDelius.' ? '' : text
+}
+export const replaceMissingNDeliusInfoWithNotSpecified = function (text: string) {
+  return text === '-This is information missing from NDelius.' ? 'Not specified' : text
+}

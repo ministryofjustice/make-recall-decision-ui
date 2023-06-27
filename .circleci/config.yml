@@ -28,7 +28,11 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 3
+    default: 6
+  e2e-parallelism-env:
+    type: integer
+    default: 1
+    
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -234,7 +238,7 @@ jobs:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
 
-    parallelism: << pipeline.parameters.e2e-parallelism >>
+    parallelism: << pipeline.parameters.e2e-parallelism-env >>
     resource_class: large
     parameters:
       environment:
@@ -251,23 +255,28 @@ jobs:
             FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           name: E2E Check - << parameters.environment >>
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split )
+            shopt -s globstar
+            
+            SPECS=$(circleci tests glob "e2e_tests/features/e2e/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env TAGS='@E2E',USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},USERNAME_ACO=${CYPRESS_USERNAME_ACO_<< parameters.environment >>},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
-              --browser edge \
+              --browser chrome \
               --record false
             node scripts/fix-junit-reports.js
       - store_artifacts:
           path: e2e_tests/screenshots
           destination: screenshots
       - store_artifacts:
-          path: e2e_tests/reports
-          destination: reports
+          path: e2e_tests/videos
+          destination: videos
+      - store_artifacts:
+          path: e2e_tests/logs
+          destination: test-logs
       - store_artifacts:
           path: e2e_tests/junit
           destination: junit
@@ -301,8 +310,10 @@ jobs:
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split)
-            echo $SPECS
+            shopt -s globstar
+            
+            SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --split-by=timings --show-counts)
+            echo "Running feature file(s): $SPECS"
 
             set +e
 
@@ -332,11 +343,11 @@ jobs:
           path: make-recall-decision-ui/e2e_tests/screenshots
           destination: screenshots
       - store_artifacts:
-          path: make-recall-decision-ui/e2e_tests/reports
-          destination: reports
-      - store_artifacts:
           path: make-recall-decision-ui/e2e_tests/junit
           destination: junit
+      - store_artifacts:
+          path: make-recall-decision-ui/e2e_tests/logs
+          destination: test-logs
       - store_test_results:
           path: make-recall-decision-ui/e2e_tests/junit
 
@@ -494,15 +505,15 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-#  e2e-check-dev:
-#    when: << pipeline.parameters.e2e-check-dev >>
-#    jobs:
-#      - e2e_environment_test:
-#          name: e2e_test_dev
-#          environment: dev
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+  e2e-check-dev:
+    when: << pipeline.parameters.e2e-check-dev >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
 #  e2e-check-preprod:
 #    when: << pipeline.parameters.e2e-check-preprod >>
@@ -513,6 +524,23 @@ workflows:
 #          context:
 #            - hmpps-common-vars
 #          <<: *slack-fail-post-step
+
+#TODO: This is currently not getting scheduled, need to check why
+  e2e-check-dev-daily:
+    triggers:
+      - schedule:
+          cron: "00 21 * * 1-5"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
   security:
     triggers:

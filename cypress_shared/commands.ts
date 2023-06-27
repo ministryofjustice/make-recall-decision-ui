@@ -1,4 +1,8 @@
-import { exactMatchIgnoreWhitespace } from './utils'
+import {
+  exactMatchIgnoreWhitespace,
+  replaceMissingNDeliusInfoWithBlank,
+  replaceMissingNDeliusInfoWithNotSpecified,
+} from './utils'
 
 Cypress.Commands.add('pageHeading', () =>
   cy
@@ -312,25 +316,25 @@ Cypress.Commands.add('getOffenceDetails', () => {
     offenceDetails.indexOffenceDescription = text
   })
   cy.getDefinitionListValue('Date of offence').then(text => {
-    offenceDetails.dateOfOriginalOffence = text
+    offenceDetails.dateOfOriginalOffence = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Date of sentence').then(text => {
-    offenceDetails.dateOfSentence = text
+    offenceDetails.dateOfSentence = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Length of sentence').then(text => {
-    offenceDetails.lengthOfSentence = text
+    offenceDetails.lengthOfSentence = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Licence expiry date').then(text => {
-    offenceDetails.licenceExpiryDate = text
+    offenceDetails.licenceExpiryDate = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Sentence expiry date').then(text => {
-    offenceDetails.sentenceExpiryDate = text
+    offenceDetails.sentenceExpiryDate = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Custodial term').then(text => {
-    offenceDetails.custodialTerm = text
+    offenceDetails.custodialTerm = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Extended term').then(text => {
-    offenceDetails.extendedTerm = text
+    offenceDetails.extendedTerm = replaceMissingNDeliusInfoWithBlank(text)
   })
   return cy.wrap(offenceDetails)
 })
@@ -347,7 +351,7 @@ Cypress.Commands.add('getOffenderDetails', () => {
     offenderDetails.dateOfBirth = text
   })
   cy.getDefinitionListValue('Ethnic group').then(text => {
-    offenderDetails.ethnicity = text
+    offenderDetails.ethnicity = replaceMissingNDeliusInfoWithNotSpecified(text)
   })
   cy.getDefinitionListValue('Spoken').then(text => {
     offenderDetails.spokenLanguage = text
@@ -356,16 +360,16 @@ Cypress.Commands.add('getOffenderDetails', () => {
     offenderDetails.writtenLanguage = text
   })
   cy.getDefinitionListValue('CRO number').then(text => {
-    offenderDetails.cro = text
+    offenderDetails.cro = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('PNC number').then(text => {
-    offenderDetails.pnc = text
+    offenderDetails.pnc = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('Prison number').then(text => {
-    offenderDetails.prisonNo = text
+    offenderDetails.prisonNo = replaceMissingNDeliusInfoWithBlank(text)
   })
   cy.getDefinitionListValue('PNOMIS number').then(text => {
-    offenderDetails.noms = text
+    offenderDetails.noms = replaceMissingNDeliusInfoWithBlank(text)
   })
   return cy.wrap(offenderDetails)
 })
@@ -374,15 +378,15 @@ Cypress.Commands.add('getPreviousReleases', () => {
   const previousReleaseDetails: Record<string, string> = {}
   if (Cypress.$('[data-qa="release-info-table"]:contains("Releasing prison or custodial establishment")').length > 0)
     cy.getDefinitionListValue('Releasing prison or custodial establishment').then(text => {
-      previousReleaseDetails.releasingPrison = text
+      previousReleaseDetails.releasingPrison = replaceMissingNDeliusInfoWithBlank(text)
     })
   if (Cypress.$('[data-qa="release-info-table"]:contains("Last release")').length > 0)
     cy.getDefinitionListValue('Last release').then(text => {
-      previousReleaseDetails.lastReleaseDate = text
+      previousReleaseDetails.lastReleaseDate = replaceMissingNDeliusInfoWithBlank(text)
     })
   if (Cypress.$('[data-qa="release-info-table"]:contains("Previous release")').length > 0)
     cy.getDefinitionListValue('Previous release').then(text => {
-      previousReleaseDetails.previousReleaseDates = text
+      previousReleaseDetails.previousReleaseDates = replaceMissingNDeliusInfoWithBlank(text)
     })
   else previousReleaseDetails.previousReleaseDates = ''
   return cy.wrap(previousReleaseDetails)
@@ -392,11 +396,11 @@ Cypress.Commands.add('getPreviousRecalls', () => {
   const previousRecallDates = []
   if (Cypress.$('[data-qa="recall-info-table"]:contains("Last recall")').length > 0)
     cy.getDefinitionListValue('Last recall').then(text => {
-      previousRecallDates.push(text)
+      previousRecallDates.push(replaceMissingNDeliusInfoWithBlank(text))
     })
   if (Cypress.$('[data-qa="recall-info-table"]:contains("Previous recall")').length > 0)
     cy.getDefinitionListValue('Previous recall').then(text => {
-      previousRecallDates.push(text)
+      previousRecallDates.push(replaceMissingNDeliusInfoWithBlank(text))
     })
   return cy.wrap(previousRecallDates)
 })

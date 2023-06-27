@@ -26,9 +26,9 @@ export enum IndeterminateRecallType {
 }
 
 export enum IndeterminateOrExtendedSentenceDetailType {
-  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = '{{offenderName}} has shown behaviour similar to the index offence',
-  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = '{{offenderName}} has shown behaviour that could lead to a sexual or violent offence',
-  'OUT_OF_TOUCH' = '{{offenderName}} is out of touch',
+  'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE' = 'Has the offender exhibited behaviour similar to the circumstances surrounding the index offence; is there a causal link?',
+  'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE' = 'Has the offender exhibited behaviour likely to give rise, or does give rise to the commission of a sexual or violent offence?',
+  'OUT_OF_TOUCH' = 'Is the offender out of touch with probation/YOT and the assumption can be made that any of (i) to (ii) may arise?',
 }
 
 export enum Vulnerabilities {
@@ -84,3 +84,16 @@ export enum ApptOptions {
   OFFICE = 'Office visit',
   HOME = 'Home visit',
 }
+
+export enum Alternatives {
+  WARNINGS_LETTER = 'Warnings (including dates given)',
+  INCREASED_FREQUENCY = 'Increased frequency of reporting',
+  EXTRA_LICENCE_CONDITIONS = 'Additional licence conditions including AP/hostel accommodation',
+  REFERRAL_TO_OTHER_TEAMS = 'Referral to multi-disciplinary teams (e.g. IOM, MAPPA, Gangs Unit)',
+  REFERRAL_TO_PARTNERSHIP_AGENCIES = 'Referral to partnership agencies',
+  REFERRAL_TO_APPROVED_PREMISES = 'Referral to Approved Premises',
+  DRUG_TESTING = 'Drug testing',
+  ALTERNATIVE_TO_RECALL_OTHER = 'Other',
+}
+
+export const REGEXP_SPECIAL_CHAR = /[\!\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-]/g

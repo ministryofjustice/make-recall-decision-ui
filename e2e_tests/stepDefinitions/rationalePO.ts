@@ -15,6 +15,7 @@ import {
 } from './assertionsDNTR'
 
 import { crns, deleteOpenRecommendation } from './index'
+
 import {
   IndeterminateOrExtendedSentenceDetailType,
   IndeterminateRecallType,
@@ -26,7 +27,7 @@ import {
   ROSHLevels,
   WhyConsiderRecall,
   ApptOptions,
-} from '../../support/enums'
+} from '../support/enums'
 
 const expectSoftly = proxy(expect)
 
@@ -81,7 +82,14 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
               : faker.helpers.arrayElements(advancedLicenceConditions.toArray())
           addConditions.forEach(htmlElement => {
             htmlElement.click()
-            testData.licenceConditions.advanced.push(htmlElement.getAttribute('value').replace('additional|', ''))
+            cy.wrap(htmlElement)
+              .next('label')
+              .next('div')
+              .invoke('text')
+              .then(text => {
+                testData.licenceConditions.advanced.push(text.trim())
+              })
+            // testData.licenceConditions.advanced.push(htmlElement.getAttribute('value').replace('additional|', ''))
           })
         })
       }
@@ -107,29 +115,43 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       }
     })
   cy.clickLink(`What alternatives to recall have been tried already`)
-  cy.get(
-    `.govuk-checkboxes ${faker.helpers.arrayElement([
-      'input:not([data-behaviour="exclusive"])',
-      'input[data-behaviour="exclusive"]',
-    ])}`
-  ).then(alternativesToRecall => {
-    if (alternativesToRecall.length === 1) {
-      cy.wrap(alternativesToRecall).click()
-      testData.alternativesTried.length = 0
-      testData.alternativesTried.push('NONE')
-    } else {
-      const htmlElements = faker.helpers.arrayElements(alternativesToRecall.toArray())
-      htmlElements.forEach(htmlElement => {
-        htmlElement.click()
-        const alternativeName = htmlElement.getAttribute('value')
-        const alternativeNotes = faker.hacker.phrase()
-        cy.get(`#conditional-${alternativeName}`).find('textarea').type(alternativeNotes)
-        testData.alternativesTried.push({ alternativeName, alternativeNotes })
-      })
-    }
-    cy.wrap(testData).as('testData')
-    cy.clickButton('Continue')
-  })
+  const alternativesTried = recommendationDetails?.AlternativesTried
+  if (['All', 'Some'].includes(alternativesTried)) {
+    cy.get('.govuk-checkboxes input:not([data-behaviour="exclusive"])').then(alternatives => {
+      const htmlElements =
+        alternativesTried === 'All' ? alternatives.toArray() : faker.helpers.arrayElements(alternatives.toArray())
+      selectAlternativesTried(htmlElements)
+    })
+  } else if (alternativesTried === 'None') {
+    cy.get(`.govuk-checkboxes input[value="${alternativesTried.toUpperCase()}"]`).then(vulnerabilities => {
+      cy.wrap(vulnerabilities).click()
+      testData.alternativesTried.push(alternativesTried)
+    })
+  } else {
+    cy.get(
+      `.govuk-checkboxes ${faker.helpers.arrayElement([
+        'input:not([data-behaviour="exclusive"])',
+        'input[data-behaviour="exclusive"]',
+      ])}`
+    ).then(alternativesToRecall => {
+      if (alternativesToRecall.length === 1) {
+        cy.wrap(alternativesToRecall).click()
+        testData.alternativesTried.length = 0
+        testData.alternativesTried.push('NONE')
+      } else {
+        const htmlElements = faker.helpers.arrayElements(alternativesToRecall.toArray())
+        htmlElements.forEach(htmlElement => {
+          htmlElement.click()
+          const alternativeName = htmlElement.getAttribute('value')
+          const alternativeNotes = faker.hacker.phrase()
+          cy.get(`#conditional-${alternativeName}`).find('textarea').type(alternativeNotes)
+          testData.alternativesTried.push({ alternativeName, alternativeNotes })
+        })
+      }
+    })
+  }
+  cy.clickButton('Continue')
+  cy.wrap(testData).as('testData')
   cy.clickButton('Continue')
 }
 
@@ -145,6 +167,15 @@ const selectVulnerabilities = function (htmlElements: HTMLElement[]) {
       .then(text => {
         testData.vulnerabilities.push({ vulnerabilityName: text.trim(), vulnerabilityNotes })
       })
+  })
+}
+function selectAlternativesTried(htmlElements: HTMLElement[]) {
+  htmlElements.forEach(htmlElement => {
+    htmlElement.click()
+    const alternativeName = htmlElement.getAttribute('value')
+    const alternativeNotes = faker.hacker.phrase()
+    cy.get(`textarea#alternativesToRecallTriedDetail-${alternativeName}`).type(alternativeNotes)
+    testData.alternativesTried.push({ alternativeName, alternativeNotes })
   })
 }
 
@@ -178,8 +209,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
       cy.logPageTitle('Fixed term call')
       cy.selectRadioByValue('Fixed term recall', testData.fixedTermRecall)
       if (testData.fixedTermRecall === 'YES') {
-        testData.fixedTermRecallNotes = faker.hacker.phrase()
-        cy.get('#hasFixedTermLicenceConditionsDetails').type(testData.fixedTermRecallNotes)
+        cy.get('#hasFixedTermLicenceConditionsDetails').type((testData.fixedTermRecallNotes = faker.hacker.phrase()))
       }
       cy.clickButton('Continue')
     }
@@ -229,7 +259,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickButton('Continue')
   cy.clickLink(`What has led to this recall`)
   cy.logPageTitle('What has led to this recall?')
-  cy.get(`#whatLedToRecall`).type(faker.hacker.phrase())
+  cy.get(`#whatLedToRecall`).type((testData.reasonForRecall = faker.hacker.phrase()))
   cy.clickButton('Continue')
   cy.clickLink(`Personal details`)
   cy.logPageTitle('Personal details')
@@ -344,7 +374,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
     testData.vlo.vloDate = faker.date.past(1)
     cy.enterDateTime({
       day: testData.vlo.vloDate.getDate().toString(),
-      month: testData.vlo.vloDate.getMonth().toString(),
+      month: (testData.vlo.vloDate.getMonth() + 1).toString(),
       year: testData.vlo.vloDate.getFullYear().toString(),
     })
     cy.clickButton('Continue')
@@ -416,13 +446,20 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   cy.clickLink(currentPage)
   cy.logPageTitle(currentPage)
   testData.mappa = {}
-  cy.get('[data-qa="mappa-heading"] strong')
-    .invoke('text')
-    .then(text => {
-      testData.mappa.mappaCategory = text.split('/')[0].replace('Cat', 'Category')
-      // eslint-disable-next-line prefer-destructuring
-      testData.mappa.mappaLevel = text.split('/')[1]
-    })
+  cy.get('body').then($body => {
+    if ($body.find('[data-qa="mappa-heading"] strong').length) {
+      cy.get('[data-qa="mappa-heading"] strong')
+        .invoke('text')
+        .then(text => {
+          testData.mappa.mappaCategory = text.split('/')[0].replace('Cat', 'Category')
+          // eslint-disable-next-line prefer-destructuring
+          testData.mappa.mappaLevel = text.split('/')[1]
+        })
+    } else {
+      testData.mappa.mappaCategory = 'N/A'
+      testData.mappa.mappaLevel = 'N/A'
+    }
+  })
   cy.clickLink('Continue')
 }
 
@@ -471,6 +508,12 @@ const createDNTRLetter = function () {
   cy.clickLink('Continue')
 }
 
+const recordPoDecision = function (poDecision?: string) {
+  this.testData.poDecision = poDecision || faker.helpers.arrayElement(['RECALL', 'NO_RECALL'])
+  cy.selectRadioByValue('What do you recommend?', this.testData.poDecision)
+  cy.clickButton('Continue')
+}
+
 /* ---- Cucumber glue ---- */
 
 Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTable: DataTable) => {
@@ -479,6 +522,7 @@ Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTab
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
       : crns[1]
   cy.wrap(crn).as('crn')
+  cy.log(`Using CRN---> ${crn}`)
   testData = {
     licenceConditions: { standard: [], advanced: [] },
     alternativesTried: [],
@@ -490,11 +534,21 @@ Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTab
 Given('a PO has created a recommendation', () => {
   const crn = crns[faker.helpers.arrayElement(Object.keys(crns))]
   cy.wrap(crn).as('crn')
+  testData = {
+    licenceConditions: { standard: [], advanced: [] },
+    alternativesTried: [],
+    vulnerabilities: [],
+  }
   makeRecommendation(crn)
 })
 
 Given('a PO has created a recommendation to recall CRN: {word} with:', (crn, dataTable: DataTable) => {
   cy.wrap(crn).as('crn')
+  testData = {
+    licenceConditions: { standard: [], advanced: [] },
+    alternativesTried: [],
+    vulnerabilities: [],
+  }
   makeRecommendation(crn, dataTable.rowsHash())
 })
 
@@ -502,6 +556,7 @@ Given('PO( has) creates/created a Part A form with:', function (dataTable: DataT
   const partADetails = dataTable.rowsHash()
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
+
 Given('PO( has) creates/created a Part A form without requesting SPO review with:', function (dataTable: DataTable) {
   const partADetails = dataTable.rowsHash()
   cy.clickLink('Continue')
@@ -556,6 +611,7 @@ Then('the previous Recommendation should be marked a complete', function () {
     expect(rowData.join('|')).to.contain('Download Part A')
   })
 })
+
 Then('PO can create the Decision Not To Recall letter', function (dataTable: DataTable) {
   createDNTRLetter.call(this, dataTable)
 })
@@ -564,15 +620,11 @@ When('PO confirms the review decision of {managersDecision}', function (decision
   recordPoDecision.call(this, decision)
 })
 
-const recordPoDecision = function (poDecision?: string) {
-  this.testData.poDecision = poDecision || faker.helpers.arrayElement(['RECALL', 'NO_RECALL'])
-  cy.selectRadioByValue('What do you recommend?', this.testData.poDecision)
-  cy.clickButton('Continue')
-}
 Then('PO can download the Decision Not To Recall letter', function () {
   cy.clickLink('Create letter')
   cy.downloadDocX('Download the decision not to recall letter (DOCX).').as('DNTRLetter')
 })
+
 Then('Decision Not To Recall letter details are correct', function () {
   cy.log(`Validating Decision Not To Recall Letter --> ${JSON.stringify(this.testData)}`)
   const contents = this.DNTRLetter.toString()

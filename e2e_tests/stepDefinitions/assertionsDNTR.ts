@@ -1,5 +1,5 @@
 import { proxy } from '@alfonso-presa/soft-assert'
-import { formatDateToDNTRLetterFormat } from '../../utils'
+import { formatDateToDNTRLetterFormat } from '../utils'
 
 const expectSoftly = proxy(expect)
 
