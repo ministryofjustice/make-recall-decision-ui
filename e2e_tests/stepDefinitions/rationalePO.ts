@@ -295,7 +295,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   })
   cy.clickButton('Continue')
   cy.clickLink(`Previous recalls`)
-  cy.logPageTitle('Previous releases')
+  cy.logPageTitle('Previous recalls')
   if (partADetails?.PreviousRecalls) {
     const previousRecalls = partADetails?.PreviousRecalls.split(',').map(s => s.trim())
     previousRecalls.forEach(previousRelease => {
@@ -522,7 +522,7 @@ Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTab
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
       : crns[1]
   cy.wrap(crn).as('crn')
-  cy.log(`Using CRN---> ${crn}`)
+  cy.log(`Using CRN--> ${crn}`)
   testData = {
     licenceConditions: { standard: [], advanced: [] },
     alternativesTried: [],

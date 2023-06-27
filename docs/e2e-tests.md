@@ -41,13 +41,13 @@ You can run the E2E tests in your local repo against dev or preprod env. Useful 
 You can run your local tests against dev env using:
 
 ```
-npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,USERNAME_ACO=<username_aco>,PASSWORD_ACO=<password_aco>,ENV=dev --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
 ```
 
 You can run your local tests against preprod env using:
 
 ```
-npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,CRN=<crn1>,CRN2=<crn2>,CRN3=<crn3>,CRN4=<crn4>,CRN5=<crn5>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
+npx cypress open --env USERNAME=<username>,PASSWORD=<password>,USERNAME_SPO=<username_spo>,PASSWORD_SPO=<password_spo>,USERNAME_ACO=<username_aco>,PASSWORD_ACO=<password_aco>,CRN=<crn1>,CRN2=<crn2>,CRN3=<crn3>,CRN4=<crn4>,CRN5=<crn5>,ENV=preprod --config-file e2e_tests/cypress.config.ts --config baseUrl=https://make-recall-decision-preprod.hmpps.service.justice.gov.uk
 ```
 
 With params replaced as follows:
