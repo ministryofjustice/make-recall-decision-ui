@@ -36,384 +36,218 @@ context('Make a recommendation', () => {
   }
 
   describe('Create / update a recommendation', () => {
-    describe('flagConsiderRecall not set', () => {
-      beforeEach(() => {
-        cy.signIn()
-      })
-
-      it('shows a "Make a recommendation" button if no active recommendation', () => {
-        const caseResponse = {
-          ...getCaseOverviewResponse,
-          activeRecommendation: undefined,
-        }
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-        cy.task('createRecommendation', { statusCode: 201, response: recommendationResponse })
-        cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-        cy.visit(`${routeUrls.cases}/${crn}/overview`)
-        cy.clickLink('Make a recommendation')
-        cy.pageHeading().should('equal', 'Important')
-      })
-
-      it('shows an error if "Make a recommendation" creation fails', () => {
-        const caseResponse = {
-          ...getCaseOverviewResponse,
-          activeRecommendation: undefined,
-        }
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-        cy.task('createRecommendation', { statusCode: 500, response: 'API save error' })
-        cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
-        cy.clickButton('Continue')
-        cy.getElement('An error occurred creating a new recommendation').should('exist')
-      })
-
-      it('update button links to Part A task list if recall is set', () => {
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.cases}/${crn}/overview`)
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should('equal', 'Create a Part A form')
-      })
-
-      it('update button links to no recall task list if no recall is set', () => {
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.cases}/${crn}/overview`)
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should('equal', 'Create a decision not to recall letter')
-      })
-
-      it('display consider recall task list if "update recommendation"', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: {
-            ...recommendationResponse,
-            recallConsideredList: null,
-            recallType: { selected: { value: undefined } },
-          },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/`)
-        cy.pageHeading().should('equal', 'Consider a recall')
-
-        cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
-        cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
-        cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
-        cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-        cy.getElement('Is Paula Smith on an indeterminate sentence? To do').should('exist')
-        cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
-      })
-
-      it('present trigger-leading-to-recall', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse, recallConsideredList: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
-        cy.clickLink('What has made you think about recalling Paula Smith?')
-
-        cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
-
-        cy.get('textarea').type('Some details')
-        cy.get('button').click()
-
-        cy.pageHeading().should('equal', 'Consider a recall')
-      })
-
-      it('present share-case-with-manager', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.task('updateStatuses', { statusCode: 200, response: [] })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
-
-        cy.clickButton('Continue')
-
-        cy.pageHeading().should('equal', 'Share this case with your manager')
-
-        cy.clickLink('Continue')
-
-        cy.pageHeading().should('equal', 'Discuss with your manager')
-      })
-
-      it('present discuss-with-manager', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
-
-        cy.clickLink('Continue')
-
-        cy.pageHeading().should('equal', 'Discuss with your manager')
-
-        cy.clickLink('Continue')
-
-        cy.pageHeading().should('equal', 'What do you recommend?')
-      })
-
-      it('present task-list for all items completed', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-
-        cy.getElement("Request line manager's countersignature To do").should('exist')
-        cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
-
-        cy.clickLink("Request line manager's countersignature")
-        cy.pageHeading().should('equal', 'Request countersignature')
-      })
-
-      it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-
-        cy.getElement("Request line manager's countersignature Requested").should('exist')
-        cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
-      })
-
-      it('present task-list for SPO_SIGNED', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-
-        cy.getElement("Request line manager's countersignature Completed").should('exist')
-        cy.getElement("Request senior manager's countersignature To do").should('exist')
-
-        cy.clickLink("Request senior manager's countersignature")
-        cy.pageHeading().should('equal', 'Request countersignature')
-      })
-
-      it('present task-list for SPO_SIGNED and ACO_SIGNATURE_REQUESTED', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse },
-        })
-        cy.task('getStatuses', {
-          statusCode: 200,
-          response: [
-            { name: 'SPO_SIGNED', active: true },
-            { name: 'ACO_SIGNATURE_REQUESTED', active: true },
-          ],
-        })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-
-        cy.getElement("Request line manager's countersignature Completed").should('exist')
-        cy.getElement("Request senior manager's countersignature Requested").should('exist')
-      })
-
-      it('present task-list for SPO_SIGNED and ACO_SIGNED', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse },
-        })
-        cy.task('getStatuses', {
-          statusCode: 200,
-          response: [
-            { name: 'SPO_SIGNED', active: true },
-            { name: 'ACO_SIGNED', active: true },
-          ],
-        })
-
-        cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-
-        cy.getElement("Request line manager's countersignature Completed").should('exist')
-        cy.getElement("Request senior manager's countersignature Completed").should('exist')
-      })
+    beforeEach(() => {
+      cy.signIn()
     })
 
-    describe('flagConsiderRecall is set', () => {
-      const recallConsideredDetail =
-        'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
-      const activeRecommendation = {
-        recommendationId: '123',
-        status: 'RECALL_CONSIDERED',
-        recallConsideredList: [
-          {
-            createdDate: '2022-06-24T20:39:00.000Z',
-            userName: 'Bill',
-            recallConsideredDetail,
-          },
-        ],
+    it('shows a "Make a recommendation" button if no active recommendation', () => {
+      const caseResponse = {
+        ...getCaseOverviewResponse,
+        activeRecommendation: undefined,
       }
-      describe('Probation officer', () => {
-        beforeEach(() => {
-          cy.signIn()
-        })
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+      cy.task('createRecommendation', { statusCode: 201, response: recommendationResponse })
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.clickLink('Make a recommendation')
+      cy.pageHeading().should('equal', 'Important')
+    })
 
-        it('shows a "Consider a recall" banner to the PO if there\'s an active recommendation', () => {
-          cy.task('getCase', {
-            sectionId: 'overview',
-            statusCode: 200,
-            response: {
-              ...getCaseOverviewResponse,
-              activeRecommendation,
-            },
-          })
-          cy.task('updateRecommendation', {
-            statusCode: 200,
-            response: completeRecommendationResponse,
-          })
-          cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
-          cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
-          cy.getElement({ qaAttr: 'consider-recall-button' }).should('not.exist')
-          cy.clickButton('Make a recommendation')
-          cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
-        })
+    it('shows an error if "Make a recommendation" creation fails', () => {
+      const caseResponse = {
+        ...getCaseOverviewResponse,
+        activeRecommendation: undefined,
+      }
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+      cy.task('createRecommendation', { statusCode: 500, response: 'API save error' })
+      cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
+      cy.clickButton('Continue')
+      cy.getElement('An error occurred creating a new recommendation').should('exist')
+    })
 
-        // this scenario could occur if a user starts a recommendation before the consider recall feature is enabled,
-        // and then returns to case summary. There will be an active recommendation, but no 'consider recall' data
-        it('shows a "Update recommendation" button to the PO if an active recommendation with no consider recall data', () => {
-          const caseResponse = {
-            ...getCaseOverviewResponse,
-            activeRecommendation: { recommendationId: 123 },
-          }
-          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.clickLink('Update recommendation')
-          cy.pageHeading().should('equal', 'Create a Part A form')
-        })
+    it('update button links to Part A task list if recall is set', () => {
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.clickLink('Update recommendation')
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
 
-        it('stop and think page shown if no consider recall text', () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: { ...recommendationResponse, recallConsideredList: null },
-          })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-review?flagConsiderRecall=1`)
-          cy.pageHeading().should('equal', 'Stop and think')
-        })
+    it('update button links to no recall task list if no recall is set', () => {
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.clickLink('Update recommendation')
+      cy.pageHeading().should('equal', 'Create a decision not to recall letter')
+    })
+
+    it('display consider recall task list if "update recommendation"', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...recommendationResponse,
+          recallConsideredList: null,
+          recallType: { selected: { value: undefined } },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/`)
+      cy.pageHeading().should('equal', 'Consider a recall')
+
+      cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
+      cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
+      cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
+      cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
+      cy.getElement('Is Paula Smith on an indeterminate sentence? To do').should('exist')
+      cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
+    })
+
+    it('present trigger-leading-to-recall', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+      cy.clickLink('What has made you think about recalling Paula Smith?')
+
+      cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
+
+      cy.get('textarea').type('Some details')
+      cy.get('button').click()
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
+    it('present share-case-with-manager', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Share this case with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+    })
+
+    it('present discuss-with-manager', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+    })
+
+    it('present task-list for all items completed', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+
+      cy.getElement("Request line manager's countersignature To do").should('exist')
+      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+
+      cy.clickLink("Request line manager's countersignature")
+      cy.pageHeading().should('equal', 'Request countersignature')
+    })
+
+    it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+
+      cy.getElement("Request line manager's countersignature Requested").should('exist')
+      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+    })
+
+    it('present task-list for SPO_SIGNED', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+
+      cy.getElement("Request line manager's countersignature Completed").should('exist')
+      cy.getElement("Request senior manager's countersignature To do").should('exist')
+
+      cy.clickLink("Request senior manager's countersignature")
+      cy.pageHeading().should('equal', 'Request countersignature')
+    })
+
+    it('present task-list for SPO_SIGNED and ACO_SIGNATURE_REQUESTED', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNED', active: true },
+          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+        ],
       })
 
-      describe('Senior probation officer', () => {
-        beforeEach(() => {
-          cy.signIn({ hasSpoRole: true })
-        })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
-        it('does not show a "Consider a recall" button or banner if no active recommendation', () => {
-          const caseResponse = {
-            ...getCaseOverviewResponse,
-            activeRecommendation: undefined,
-          }
-          cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
-          cy.task('createRecommendation', { sstatusCode: 201, response: completeRecommendationResponse })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.getElement('Consider a recall').should('have.length', 1)
-          cy.getElement({ qaAttr: 'recallConsideredDetail' }).should('not.exist')
-        })
+      cy.getElement("Request line manager's countersignature Completed").should('exist')
+      cy.getElement("Request senior manager's countersignature Requested").should('exist')
+    })
 
-        it('shows a "Consider a recall" banner to the SPO if there\'s an active recommendation', () => {
-          cy.task('getCase', {
-            sectionId: 'overview',
-            statusCode: 200,
-            response: {
-              ...getCaseOverviewResponse,
-              activeRecommendation,
-            },
-          })
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: { ...completeRecommendationResponse, managerRecallDecision: null },
-          })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.getText('recallConsideredDetail').should('equal', recallConsideredDetail)
-          cy.getText('recallConsideredUserDate').should('equal', 'Bill, 24 June 2022 at 21:39')
-          cy.clickLink('Record your decision')
-          cy.pageHeading().should('equal', 'Record your decision')
-        })
-
-        it('shows a View your decision link if the active recommendation has a recorded decision', () => {
-          cy.task('getCase', {
-            sectionId: 'overview',
-            statusCode: 200,
-            response: {
-              ...getCaseOverviewResponse,
-              activeRecommendation: {
-                ...activeRecommendation,
-                managerRecallDecision: { isSentToDelius: true },
-              },
-            },
-          })
-          cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.visit(`${routeUrls.cases}/${crn}/overview?flagConsiderRecall=1`)
-          cy.clickLink('View your decision')
-          cy.pageHeading().should('equal', 'Your decision')
-        })
-
-        it("shows an error if the Delius contact can't be created from the Record your decision in Delius page", () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: { ...completeRecommendationResponse, managerRecallDecision: { selected: { value: 'RECALL' } } },
-          })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.task('updateRecommendation', {
-            statusCode: 500,
-            response: { error: 'DELIUS_CONTACT_CREATION_FAILED' },
-            suffix: 'manager-recall-decision',
-          })
-          cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/manager-record-decision-delius?flagConsiderRecall=1`
-          )
-          cy.clickButton('Record your decision')
-          cy.getElement('An error occurred creating a contact in NDelius').should('exist')
-        })
-
-        it('shows an error if the recommendation save errored from the Record your decision in Delius page', () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: {
-              ...completeRecommendationResponse,
-              managerRecallDecision: { selected: { value: 'NO_RECALL' } },
-            },
-          })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.task('updateRecommendation', {
-            statusCode: 500,
-            response: { error: 'RECOMMENDATION_UPDATE_FAILED' },
-            suffix: 'manager-recall-decision',
-          })
-          cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/manager-record-decision-delius?flagConsiderRecall=1`
-          )
-          cy.clickButton('Record your decision')
-          cy.getElement('An error occurred saving your changes to your recommendation').should('exist')
-        })
+    it('present task-list for SPO_SIGNED and ACO_SIGNED', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
       })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNED', active: true },
+          { name: 'ACO_SIGNED', active: true },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+
+      cy.getElement("Request line manager's countersignature Completed").should('exist')
+      cy.getElement("Request senior manager's countersignature Completed").should('exist')
     })
   })
 

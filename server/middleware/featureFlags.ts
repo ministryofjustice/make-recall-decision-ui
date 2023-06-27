@@ -4,12 +4,6 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
-  flagConsiderRecall: {
-    label: 'Consider a recall / manager decision',
-    description:
-      'POs can enter a "Consider a recall" rationale. They are then blocked from progressing past the "Review with a manager" page until an SPO records their decision.',
-    default: false,
-  },
   flagDomainEventRecommendationStarted: {
     label: 'Create NDelius contact when user creates a recommendation',
     description: 'Adds a contact in NDelius when a new recommendation is created',
