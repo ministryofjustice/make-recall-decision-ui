@@ -348,6 +348,9 @@ jobs:
       - store_artifacts:
           path: make-recall-decision-ui/e2e_tests/junit
           destination: junit
+      - store_artifacts:
+          path: make-recall-decision-ui/e2e_tests/logs
+          destination: test-logs
       - store_test_results:
           path: make-recall-decision-ui/e2e_tests/junit
 

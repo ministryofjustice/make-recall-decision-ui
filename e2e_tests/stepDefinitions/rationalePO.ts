@@ -522,6 +522,7 @@ Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTab
       ? crns[faker.helpers.arrayElement(Object.keys(crns))]
       : crns[1]
   cy.wrap(crn).as('crn')
+  cy.log(`Using CRN---> ${crn}`)
   testData = {
     licenceConditions: { standard: [], advanced: [] },
     alternativesTried: [],

@@ -185,6 +185,7 @@ Then('Part A details are correct', function () {
     recallType: this.testData.recallType,
     fixedTermRecall: this.testData.fixedTermRecall,
     indeterminate: this.testData.indeterminate,
+    extended: this.testData.extended,
   })
   q24ISPESP(contents, this.testData.indeterminateOrExtendedSentenceDetails)
   q25ProbationDetails(contents)

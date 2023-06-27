@@ -446,10 +446,10 @@ export const q23LicenceConditionsToAdd = (contents: string, details: Record<stri
       details.recallType === 'FIXED_TERM' && details.fixedTermRecall === 'NO'
       ? ''
       : /* eslint-disable-next-line no-nested-ternary */
-      details.indeterminate === 'NO'
-      ? 'N/A (extended sentence recall)'
-      : details.indeterminate === 'YES'
+      details.indeterminate === 'YES'
       ? 'N/A (not a determinate recall)'
+      : details.extended === 'YES'
+      ? 'N/A (extended sentence recall)'
       : details.fixedTermRecallNotes
   )
 }

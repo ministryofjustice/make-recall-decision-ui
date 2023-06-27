@@ -24,6 +24,7 @@ Feature: E2E scenarios - Recall
       | VictimContactScheme | Yes               |
       | Vulnerabilities     | <Vulnerabilities> |
       | HasContrabandRisk   | No                |
+      | EmergencyRecall     | <EmergencyRecall> |
     # MRD-1262: AC0/AC1
     And PO requests an SPO to countersign
     And SPO has visited the countersigning link
@@ -47,6 +48,6 @@ Feature: E2E scenarios - Recall
     And Part A details are correct
 
     Examples:
-      | Indeterminate | Extended | RecallType | InCustody  | Vulnerabilities |
-      | No            | No       | STANDARD   | No         | None            |
-      | No            | No       | FIXED_TERM | Yes Prison | Some            |
+      | Indeterminate | Extended | RecallType | InCustody  | Vulnerabilities | EmergencyRecall |
+      | No            | No       | STANDARD   | No         | None            |                 |
+      | No            | No       | FIXED_TERM | Yes Prison | Some            | Yes             |
