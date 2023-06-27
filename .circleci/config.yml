@@ -265,7 +265,7 @@ jobs:
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
-              --browser edge \
+              --browser chrome \
               --record false
             node scripts/fix-junit-reports.js
       - store_artifacts:
@@ -525,6 +525,7 @@ workflows:
 #            - hmpps-common-vars
 #          <<: *slack-fail-post-step
 
+#TODO: This is currently not getting scheduled, need to check why
   e2e-check-dev-daily:
     triggers:
       - schedule:
