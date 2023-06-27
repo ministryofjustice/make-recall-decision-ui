@@ -275,8 +275,8 @@ jobs:
           path: e2e_tests/videos
           destination: videos
       - store_artifacts:
-          path: e2e_tests/reports
-          destination: reports
+          path: e2e_tests/logs
+          destination: test-logs
       - store_artifacts:
           path: e2e_tests/junit
           destination: junit
@@ -342,9 +342,6 @@ jobs:
       - store_artifacts:
           path: make-recall-decision-ui/e2e_tests/screenshots
           destination: screenshots
-      - store_artifacts:
-          path: make-recall-decision-ui/e2e_tests/reports
-          destination: reports
       - store_artifacts:
           path: make-recall-decision-ui/e2e_tests/junit
           destination: junit
