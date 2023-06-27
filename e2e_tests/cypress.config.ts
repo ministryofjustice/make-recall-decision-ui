@@ -12,7 +12,7 @@ export default defineConfig({
   fixturesFolder: 'e2e_tests/fixtures',
   screenshotsFolder: 'e2e_tests/screenshots',
   videosFolder: 'e2e_tests/videos',
-  video: false,
+  video: true,
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
     reportDir: 'e2e_tests/reports',
@@ -25,7 +25,7 @@ export default defineConfig({
     },
   },
   retries: {
-    runMode: 2,
+    runMode: 0,
     openMode: 0,
   },
   e2e: {
