@@ -50,8 +50,6 @@ export const checkForRedirectPath = ({
   basePathRecFlow,
   recommendationStatus,
   crn,
-  hasSpoRole,
-  featureFlags = {},
 }: {
   requestedPageId: string
   recommendation: RecommendationResponse
@@ -64,39 +62,6 @@ export const checkForRedirectPath = ({
   const caseOverviewPath = `${routeUrls.cases}/${crn}/overview`
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
-  const isTaskList = isRecallTaskListRequested || isNoRecallTaskListRequested
-
-  if (featureFlags.flagConsiderRecall) {
-    // SPO / manager decision
-    const managerDecisionForms = ['manager-record-decision', 'manager-record-decision-delius']
-    const managerDecisionPages = [...managerDecisionForms, 'manager-view-decision', 'manager-decision-confirmation']
-    const isManagerDecisionSaved = recommendation?.managerRecallDecision?.isSentToDelius === true
-
-    if (managerDecisionPages.includes(requestedPageId)) {
-      if (!hasSpoRole) {
-        return caseOverviewPath
-      }
-    } else if (hasSpoRole) {
-      return caseOverviewPath
-    }
-    if (managerDecisionForms.includes(requestedPageId)) {
-      if (isManagerDecisionSaved) {
-        return `${basePathRecFlow}manager-view-decision`
-      }
-    }
-
-    // if a PO tries to get to a page beyond 'review with a manager' and the manager has not recorded a decision
-    // if one of the task lists was requested, don't deal with it in this block - allow to fall through to the checks below
-    const isRecommendationPreamblePage = [
-      'response-to-probation',
-      'licence-conditions',
-      'alternatives-tried',
-      'manager-review',
-    ].includes(requestedPageId)
-    if (!isRecommendationPreamblePage && !isTaskList && !isManagerDecisionSaved && !hasSpoRole) {
-      return `${basePathRecFlow}manager-review`
-    }
-  }
 
   // task lists / confirmation pages
   const recallType = recommendation?.recallType?.selected?.value
