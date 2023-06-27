@@ -31,7 +31,7 @@ parameters:
     default: 6
   e2e-parallelism-env:
     type: integer
-    default: 3  
+    default: 1
     
 
 slack-fail-post-step: &slack-fail-post-step
