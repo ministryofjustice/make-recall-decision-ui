@@ -41,9 +41,9 @@ export const appInsightsEvent = (
   eventName: string,
   userName: string,
   eventData: Record<string, unknown>,
-  featureFlags: FeatureFlags
+  _: FeatureFlags
 ) => {
-  if (defaultClient && eventName && featureFlags.flagExcludeFromAnalytics !== true) {
+  if (defaultClient && eventName) {
     defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
   }
 }

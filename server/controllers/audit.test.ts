@@ -15,8 +15,8 @@ describe('audit', () => {
       mockReq({
         params: {
           recommendationId: '123',
-          pageUrlSlug: 'whatever',
         },
+        path: '1231/whatever',
       }),
       mockRes({
         locals: {

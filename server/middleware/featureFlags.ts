@@ -4,11 +4,6 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
-  flagDomainEventRecommendationStarted: {
-    label: 'Create NDelius contact when user creates a recommendation',
-    description: 'Adds a contact in NDelius when a new recommendation is created',
-    default: false,
-  },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
     description:
@@ -20,12 +15,6 @@ export const featureFlagsDefaults = {
     description:
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
-  },
-  flagExcludeFromAnalytics: {
-    label: "Don't send events to Google Analytics or App Insights for my activity",
-    default: false,
-    description:
-      'Development team use only - allows you to browse and use the product without creating analytics data. Note - audit data will still be created.',
   },
   flagCreateVaryLicenceData: {
     label: "Show tab for 'Create & vary a licence' data",
