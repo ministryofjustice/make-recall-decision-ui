@@ -8,7 +8,7 @@ Feature: Case closure scenarios
   #VictimContactScheme: supports 'Yes', 'No' & 'Not applicable'
   #InCustody: supports 'Yes, prison custody', 'Yes, police custody' & 'No'
 
-  @MRD-1466
+  @MRD-1466 @focus
   Scenario: E2E - SPO is able to record rationale and close the case even after PO has downloaded Part A
     Given a PO has created a recommendation to recall with:
       | Indeterminate | No |
