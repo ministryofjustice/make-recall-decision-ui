@@ -311,30 +311,43 @@ Cypress.Commands.add('getTextFromClipboard', () =>
 Cypress.Commands.add('logPageTitle', pageTitle => cy.log(`On page "${pageTitle}"`))
 
 Cypress.Commands.add('getOffenceDetails', () => {
-  const offenceDetails: Record<string, string> = {}
-  cy.getDefinitionListValue('Main offence').then(text => {
-    offenceDetails.indexOffenceDescription = text
-  })
-  cy.getDefinitionListValue('Date of offence').then(text => {
-    offenceDetails.dateOfOriginalOffence = replaceMissingNDeliusInfoWithBlank(text)
-  })
-  cy.getDefinitionListValue('Date of sentence').then(text => {
-    offenceDetails.dateOfSentence = replaceMissingNDeliusInfoWithBlank(text)
-  })
-  cy.getDefinitionListValue('Length of sentence').then(text => {
-    offenceDetails.lengthOfSentence = replaceMissingNDeliusInfoWithBlank(text)
-  })
-  cy.getDefinitionListValue('Licence expiry date').then(text => {
-    offenceDetails.licenceExpiryDate = replaceMissingNDeliusInfoWithBlank(text)
-  })
-  cy.getDefinitionListValue('Sentence expiry date').then(text => {
-    offenceDetails.sentenceExpiryDate = replaceMissingNDeliusInfoWithBlank(text)
-  })
-  cy.getDefinitionListValue('Custodial term').then(text => {
-    offenceDetails.custodialTerm = replaceMissingNDeliusInfoWithBlank(text)
-  })
-  cy.getDefinitionListValue('Extended term').then(text => {
-    offenceDetails.extendedTerm = replaceMissingNDeliusInfoWithBlank(text)
+  const offenceDetails: Record<string, string> = {
+    indexOffenceDescription: '',
+    dateOfOriginalOffence: '',
+    dateOfSentence: '',
+    lengthOfSentence: '',
+    licenceExpiryDate: '',
+    sentenceExpiryDate: '',
+    custodialTerm: '',
+    extendedTerm: '',
+  }
+  cy.get('body').then($body => {
+    if ($body.find('.govuk-notification-banner__header h2').length === 0) {
+      cy.getDefinitionListValue('Main offence').then(text => {
+        offenceDetails.indexOffenceDescription = text
+      })
+      cy.getDefinitionListValue('Date of offence').then(text => {
+        offenceDetails.dateOfOriginalOffence = replaceMissingNDeliusInfoWithBlank(text)
+      })
+      cy.getDefinitionListValue('Date of sentence').then(text => {
+        offenceDetails.dateOfSentence = replaceMissingNDeliusInfoWithBlank(text)
+      })
+      cy.getDefinitionListValue('Length of sentence').then(text => {
+        offenceDetails.lengthOfSentence = replaceMissingNDeliusInfoWithBlank(text)
+      })
+      cy.getDefinitionListValue('Licence expiry date').then(text => {
+        offenceDetails.licenceExpiryDate = replaceMissingNDeliusInfoWithBlank(text)
+      })
+      cy.getDefinitionListValue('Sentence expiry date').then(text => {
+        offenceDetails.sentenceExpiryDate = replaceMissingNDeliusInfoWithBlank(text)
+      })
+      cy.getDefinitionListValue('Custodial term').then(text => {
+        offenceDetails.custodialTerm = replaceMissingNDeliusInfoWithBlank(text)
+      })
+      cy.getDefinitionListValue('Extended term').then(text => {
+        offenceDetails.extendedTerm = replaceMissingNDeliusInfoWithBlank(text)
+      })
+    }
   })
   return cy.wrap(offenceDetails)
 })

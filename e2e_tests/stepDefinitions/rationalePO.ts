@@ -73,24 +73,28 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
       // select additional licence randomly or if recommendationDetails.LicenceConditions === 'all' is passed
       if (
         faker.datatype.boolean() ||
-        (recommendationDetails.LicenceConditions && recommendationDetails.LicenceConditions.toLowerCase() === 'all')
+        (recommendationDetails.LicenceConditions && recommendationDetails.LicenceConditions.length !== 0)
       ) {
-        cy.get('input[id^=additional-]').then(advancedLicenceConditions => {
-          const addConditions =
-            recommendationDetails.LicenceConditions && recommendationDetails.LicenceConditions.toLowerCase() === 'all'
-              ? advancedLicenceConditions.toArray()
-              : faker.helpers.arrayElements(advancedLicenceConditions.toArray())
-          addConditions.forEach(htmlElement => {
-            htmlElement.click()
-            cy.wrap(htmlElement)
-              .next('label')
-              .next('div')
-              .invoke('text')
-              .then(text => {
-                testData.licenceConditions.advanced.push(text.trim())
+        cy.get('body').then($body => {
+          if ($body.find('input[id^=additional-]').length !== 0) {
+            cy.get('input[id^=additional-]').then(advancedLicenceConditions => {
+              const addConditions =
+                recommendationDetails.LicenceConditions &&
+                recommendationDetails.LicenceConditions.toLowerCase() === 'all'
+                  ? advancedLicenceConditions.toArray()
+                  : faker.helpers.arrayElements(advancedLicenceConditions.toArray())
+              addConditions.forEach(htmlElement => {
+                htmlElement.click()
+                cy.wrap(htmlElement)
+                  .next('label')
+                  .next('div')
+                  .invoke('text')
+                  .then(text => {
+                    testData.licenceConditions.advanced.push(text.trim())
+                  })
               })
-            // testData.licenceConditions.advanced.push(htmlElement.getAttribute('value').replace('additional|', ''))
-          })
+            })
+          }
         })
       }
       cy.clickButton('Continue')
@@ -295,7 +299,7 @@ const createPartAOrNoRecallLetter = function (partADetails?: Record<string, stri
   })
   cy.clickButton('Continue')
   cy.clickLink(`Previous recalls`)
-  cy.logPageTitle('Previous releases')
+  cy.logPageTitle('Previous recalls')
   if (partADetails?.PreviousRecalls) {
     const previousRecalls = partADetails?.PreviousRecalls.split(',').map(s => s.trim())
     previousRecalls.forEach(previousRelease => {
@@ -517,12 +521,11 @@ const recordPoDecision = function (poDecision?: string) {
 /* ---- Cucumber glue ---- */
 
 Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTable: DataTable) => {
-  const crn =
-    Cypress.env('ENV')?.toString().toUpperCase() === 'DEV'
-      ? crns[faker.helpers.arrayElement(Object.keys(crns))]
-      : crns[1]
+  const crn = ['DEV', 'PREPROD'].includes(Cypress.env('ENV')?.toString().toUpperCase())
+    ? crns[faker.helpers.arrayElement(Object.keys(crns))]
+    : crns[1]
   cy.wrap(crn).as('crn')
-  cy.log(`Using CRN---> ${crn}`)
+  cy.log(`Using CRN--> ${crn}`)
   testData = {
     licenceConditions: { standard: [], advanced: [] },
     alternativesTried: [],
