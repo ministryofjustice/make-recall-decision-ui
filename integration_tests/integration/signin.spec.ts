@@ -26,13 +26,11 @@ context('SignIn', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
-  it('User can manage their details and give feedback', () => {
+  it('User sees development environment blurb', () => {
     cy.signIn()
-    cy.getLinkHref('J. Smith').should('contain', '/account-details')
-    cy.getText('feedback-form-link').should('equal', 'feedback Opens in a new tab')
-    cy.getLinkHref({ qaAttr: 'feedback-form-link' }).should(
-      'contain',
-      'https://docs.google.com/forms/d/1ZJPD40s-tzr9Uf0HwrrF0YP9bUilCe228Xk-2d2quNE/edit?ts=62d7ca55'
+    cy.getText('banner-text').should(
+      'equal',
+      'This version of the service is for testing purposes only. It is a replica of the live service to help you get familiar with it.'
     )
   })
 })
