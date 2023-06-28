@@ -20,6 +20,12 @@ parameters:
   redis-version:
     type: string
     default: "6.2"
+  e2e-tags:
+    type: string
+    default: "@E2E"
+  e2e-check-local:
+    type: boolean
+    default: false
   e2e-check-dev:
     type: boolean
     default: false
@@ -261,7 +267,7 @@ jobs:
             echo $SPECS
 
             npx cypress run \
-              --env TAGS='@E2E',USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},USERNAME_ACO=${CYPRESS_USERNAME_ACO_<< parameters.environment >>},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env TAGS='<< pipeline.parameters.e2e-tags >>',USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},USERNAME_ACO=${CYPRESS_USERNAME_ACO_<< parameters.environment >>},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
@@ -361,6 +367,7 @@ workflows:
     when:
       not:
         or:
+          - << pipeline.parameters.e2e-check-local >>
           - << pipeline.parameters.e2e-check-dev >>
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
@@ -517,6 +524,15 @@ workflows:
           sentry_create_release: true
           requires:
             - deploy_prod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
+  e2e-check-local:
+    when: << pipeline.parameters.e2e-check-local >>
+    jobs:
+      - e2e_local_test:
+          name: e2e_local_test
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
