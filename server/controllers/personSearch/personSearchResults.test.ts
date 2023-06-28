@@ -11,7 +11,7 @@ jest.mock('../../monitoring/azureAppInsights')
 const crn = ' A1234AB '
 let res: Response
 const token = 'token'
-const featureFlags = { flagExcludeFromAnalytics: false }
+const featureFlags = {}
 
 describe('personSearchResults', () => {
   beforeEach(() => {
