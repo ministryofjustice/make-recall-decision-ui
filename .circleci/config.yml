@@ -263,7 +263,7 @@ jobs:
           command: |
             shopt -s globstar
             
-            SPECS=$(circleci tests glob "e2e_tests/features/e2e/*.feature" | circleci tests split --show-counts)
+            SPECS=$(circleci tests glob "e2e_tests/features/e2e/**/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
             npx cypress run \
