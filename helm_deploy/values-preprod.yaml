@@ -13,7 +13,7 @@ generic-service:
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-preprod.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PRE-PROD"
     ENVIRONMENT: "PRE-PRODUCTION"
-    # FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+    FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
   allowlist:
     pen_tester: "195.95.131.65"
