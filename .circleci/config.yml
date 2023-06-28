@@ -365,6 +365,10 @@ workflows:
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - e2e_local_test:
+          filters:
+            branches:
+              only:
+                - main
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
@@ -427,7 +431,7 @@ workflows:
             - helm_lint
             - unit_test
             - integration_test
-#            - e2e_local_test
+            - e2e_local_test
             - build_docker
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
@@ -440,24 +444,32 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-#      - e2e_environment_test:
-#          name: e2e_test_dev
-#          environment: dev
-#          requires:
-#            - deploy_dev
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy_dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
           env: preprod
+          filters:
+            branches:
+              only:
+                - main
           context:
             - hmpps-common-vars
             - make-recall-decision-ui-preprod
           requires:
             - deploy_dev
-#            - e2e_test_dev
+            - e2e_test_dev
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
@@ -469,20 +481,24 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-#      - e2e_environment_test:
-#          name: e2e_test_preprod
-#          environment: preprod
-#          requires:
-#            - deploy_preprod
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy_preprod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
   
       - request-prod-approval:
           type: approval 
           requires:
             - deploy_preprod
-#            - e2e_test_preprod
+            - e2e_test_preprod
       - hmpps/deploy_env:
           name: deploy_prod
           env: prod
@@ -515,21 +531,20 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-#  e2e-check-preprod:
-#    when: << pipeline.parameters.e2e-check-preprod >>
-#    jobs:
-#      - e2e_environment_test:
-#          name: e2e_test_preprod
-#          environment: preprod
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+  e2e-check-preprod:
+    when: << pipeline.parameters.e2e-check-preprod >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
-#TODO: This is currently not getting scheduled, need to check why
   e2e-check-dev-daily:
     triggers:
       - schedule:
-          cron: "00 21 * * 1-5"
+          cron: "00 20 * * 1-5"
           filters:
             branches:
               only:
