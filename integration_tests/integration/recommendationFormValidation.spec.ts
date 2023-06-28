@@ -1,5 +1,4 @@
 import { routeUrls } from '../../server/routes/routeUrls'
-import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
 
@@ -26,38 +25,6 @@ context('Make a recommendation - form validation', () => {
       isSentToDelius: true,
     },
   }
-
-  it('"Consider a recall" page', () => {
-    cy.signIn()
-    const recallConsideredDetail =
-      'Paula has missed curfew tonight and smelling of alcohol recently in appointments. This links to his index offence of violence while under the influence.'
-    cy.task('getCase', {
-      sectionId: 'personal-details',
-      statusCode: 200,
-      response: {
-        ...getCaseOverviewResponse,
-        activeRecommendation: {
-          recommendationId: '123',
-          status: 'RECALL_CONSIDERED',
-          recallConsideredList: [
-            {
-              createdDate: '2022-06-24T20:39:00.000Z',
-              userName: 'Bill',
-              recallConsideredDetail,
-            },
-          ],
-        },
-      },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/consider-recall`)
-    cy.fillInput('What has made you think about recalling Paula Smith?', ' ', { clearExistingText: true })
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'recallConsideredDetail',
-      errorText: "Enter details about why you're considering a recall",
-    })
-    cy.getTextInputValue('What has made you think about recalling Paula Smith?').should('equal', '')
-  })
 
   it('Manager record decision', () => {
     cy.signIn({ hasSpoRole: true })
