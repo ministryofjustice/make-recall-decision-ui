@@ -517,10 +517,9 @@ const recordPoDecision = function (poDecision?: string) {
 /* ---- Cucumber glue ---- */
 
 Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTable: DataTable) => {
-  const crn =
-    Cypress.env('ENV')?.toString().toUpperCase() === 'DEV'
-      ? crns[faker.helpers.arrayElement(Object.keys(crns))]
-      : crns[1]
+  const crn = ['DEV', 'PREPROD'].includes(Cypress.env('ENV')?.toString().toUpperCase())
+    ? crns[faker.helpers.arrayElement(Object.keys(crns))]
+    : crns[1]
   cy.wrap(crn).as('crn')
   cy.log(`Using CRN--> ${crn}`)
   testData = {

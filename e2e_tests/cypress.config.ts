@@ -26,7 +26,7 @@ export default defineConfig({
     },
   },
   retries: {
-    runMode: 1,
+    runMode: 0,
     openMode: 0,
   },
   e2e: {
