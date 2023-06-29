@@ -491,6 +491,7 @@ workflows:
       - e2e_environment_test:
           name: e2e_test_preprod
           environment: preprod
+          e2e-tags: "@smoke"
           filters:
             branches:
               only:
@@ -551,14 +552,14 @@ workflows:
     when: << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - e2e_environment_test:
-          e2e-tags: "@smoke"
           name: e2e_test_preprod
           environment: preprod
+          e2e-tags: "@smoke"
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-# Disabling it as this is also triggered from CircleCI UI
+# Disabling it as this is also triggered from CircleCI Scheduler UI
 #  e2e-check-dev-daily:
 #    triggers:
 #      - schedule:
