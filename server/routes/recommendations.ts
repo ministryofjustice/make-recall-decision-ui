@@ -54,6 +54,9 @@ import rationaleCheckController from '../controllers/recommendation/rationaleChe
 import confirmationPartAController from '../controllers/recommendation/confirmationPartAController'
 import contrabandController from '../controllers/recommendation/contrabandController'
 import addressDetailsController from '../controllers/recommendation/addressDetailsController'
+import indeterminateDetailsController from '../controllers/recommendation/indeterminateDetailsController'
+import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
+import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
 
 const recommendations = Router()
 
@@ -121,6 +124,15 @@ ppRouteBuilder.post('what-led', whatLedController.post)
 
 ppRouteBuilder.get('recall-type-indeterminate', recallTypeIndeterminateController.get)
 ppRouteBuilder.post('recall-type-indeterminate', recallTypeIndeterminateController.post)
+
+ppRouteBuilder.get('fixed-licence', fixedTermLicenceConditionsController.get)
+ppRouteBuilder.post('fixed-licence', fixedTermLicenceConditionsController.post)
+
+ppRouteBuilder.get('indeterminate-details', indeterminateDetailsController.get)
+ppRouteBuilder.post('indeterminate-details', indeterminateDetailsController.post)
+
+ppRouteBuilder.get('vulnerabilities', vulnerabilitiesController.get)
+ppRouteBuilder.post('vulnerabilities', vulnerabilitiesController.post)
 
 ppRouteBuilder.get('task-list-no-recall', taskListNoRecallController.get)
 

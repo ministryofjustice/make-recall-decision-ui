@@ -13,7 +13,6 @@ import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
 import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import { yesNo } from './yesNo'
-import { recallTypeManager } from '../managerRecordDecision/formOptions'
 import { roshLevels } from '../rosh/formOptions'
 import { UiListItem } from '../../../@types/pagesForms'
 import { spoRecallTypeEnum } from './spoRecallTypeEnum'
@@ -36,7 +35,6 @@ export const formOptions = {
   yesNo,
   hasVictimsInContactScheme,
   isUnderIntegratedOffenderManagement,
-  recallTypeManager,
   roshLevels,
 }
 

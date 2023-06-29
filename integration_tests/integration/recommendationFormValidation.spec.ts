@@ -26,25 +26,6 @@ context('Make a recommendation - form validation', () => {
     },
   }
 
-  it('Manager record decision', () => {
-    cy.signIn({ hasSpoRole: true })
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, managerRecallDecision: null },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-record-decision`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'recallTypeManagerDetail',
-      errorText: 'You must explain your decision',
-    })
-    cy.assertErrorMessage({
-      fieldName: 'recallTypeManager',
-      errorText: 'Select whether you recommend a recall or not',
-    })
-  })
-
   it('Response to probation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
