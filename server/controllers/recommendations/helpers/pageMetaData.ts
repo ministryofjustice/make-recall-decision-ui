@@ -11,22 +11,13 @@ import { validateIntegratedOffenderManagement } from '../integratedOffenderManag
 import { inputDisplayValuesIntegratedOffenderManagement } from '../integratedOffenderManagement/inputDisplayValues'
 import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/formValidator'
 import { inputDisplayValuesLocalPoliceContactDetails } from '../localPoliceContactDetails/inputDisplayValues'
-import { inputDisplayValuesVulnerabilities } from '../vulnerabilities/inputDisplayValues'
-import { validateVulnerabilities } from '../vulnerabilities/formValidator'
 import { validateRecallTypeIndeterminate } from '../recallTypeIndeterminate/formValidator'
 import { inputDisplayValuesRecallTypeIndeterminate } from '../recallTypeIndeterminate/inputDisplayValues'
-import { validateFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/formValidator'
-import { inputDisplayValuesFixedTermLicenceConditions } from '../fixedTermAdditionalLicenceConditions/inputDisplayValues'
-import { validateIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/formValidator'
-import { inputDisplayValuesIndeterminateDetails } from '../indeterminateOrExtendedSentenceDetails/inputDisplayValues'
 import { validateOffenceAnalysis } from '../offenceAnalysis/formValidator'
 import { inputDisplayValuesOffenceAnalysis } from '../offenceAnalysis/inputDisplayValues'
 import { validatePreviousReleases } from '../previousReleases/formValidator'
 import { validateAddPreviousRelease } from '../addPreviousRelease/formValidator'
 import { inputDisplayValuesAddPreviousRelease } from '../addPreviousRelease/inputDisplayValues'
-import { validateManagerRecordDecision } from '../managerRecordDecision/formValidator'
-import { inputDisplayValuesManagerRecordDecision } from '../managerRecordDecision/inputDisplayValues'
-import { validateManagerRecordDecisionDelius } from '../managerRecordDecisionDelius/formValidator'
 import { validateRosh } from '../rosh/formValidator'
 import { inputDisplayValuesRosh } from '../rosh/inputDisplayValues'
 import { PageMetaData } from '../../../@types/pagesForms'
@@ -45,40 +36,6 @@ import { validateCustodyStatus } from '../custodyStatus/formValidator'
  *  */
 export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
-    // CONSIDER RECALL - so is DEFUNCT
-    case 'manager-record-decision':
-      return {
-        id: 'managerRecordDecision',
-        validator: validateManagerRecordDecision,
-        inputDisplayValues: inputDisplayValuesManagerRecordDecision,
-      }
-
-    // CONSIDER RECALL - so is DEFUNCT
-    case 'manager-record-decision-delius':
-      // This one raises an ap insight event
-      return {
-        id: 'managerRecordDecisionDelius',
-        validator: validateManagerRecordDecisionDelius,
-      }
-
-    case 'indeterminate-details':
-      return {
-        id: 'indeterminateOrExtendedSentenceDetails',
-        validator: validateIndeterminateDetails,
-        inputDisplayValues: inputDisplayValuesIndeterminateDetails,
-      }
-    case 'fixed-licence':
-      return {
-        id: 'fixedTermLicenceConditions',
-        validator: validateFixedTermLicenceConditions,
-        inputDisplayValues: inputDisplayValuesFixedTermLicenceConditions,
-      }
-    case 'vulnerabilities':
-      return {
-        id: 'vulnerabilities',
-        validator: validateVulnerabilities,
-        inputDisplayValues: inputDisplayValuesVulnerabilities,
-      }
     case 'iom':
       return {
         id: 'integratedOffenderManagement',

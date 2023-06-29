@@ -15,7 +15,7 @@ export const mockReq = ({
   baseUrl,
   path = '/',
 }: {
-  body?: Record<string, string | boolean>
+  body?: Record<string, string | boolean | string[]>
   query?: ParsedQs
   params?: ParamsDictionary
   headers?: Record<string, string | boolean>
