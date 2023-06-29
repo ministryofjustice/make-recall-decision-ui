@@ -90,7 +90,13 @@ const makeRecommendation = function (crn, recommendationDetails?: Record<string,
                   .next('div')
                   .invoke('text')
                   .then(text => {
-                    testData.licenceConditions.advanced.push(text.trim())
+                    testData.licenceConditions.advanced.push(
+                      text
+                        .replace(/\n/g, '')
+                        .replace(/\s{2,}/g, '')
+                        .replace('Notes', 'Note: ')
+                        .trim()
+                    )
                   })
               })
             })

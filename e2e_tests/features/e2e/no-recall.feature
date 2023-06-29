@@ -1,4 +1,4 @@
-@E2E
+@E2E @smoke
 Feature: E2E Decision Not To Recall scenarios
 
   Test Scenarios that exercises the System E2E for Decision Not To Recall journey

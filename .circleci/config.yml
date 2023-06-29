@@ -553,25 +553,27 @@ workflows:
       - e2e_environment_test:
           name: e2e_test_preprod
           environment: preprod
+          e2e-tags: @smoke
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-  e2e-check-dev-daily:
-    triggers:
-      - schedule:
-          cron: "00 20 * * 1-5"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+# Disabling it as this is also triggered from CircleCI UI
+#  e2e-check-dev-daily:
+#    triggers:
+#      - schedule:
+#          cron: "00 20 * * 1-5"
+#          filters:
+#            branches:
+#              only:
+#                - main
+#    jobs:
+#      - e2e_environment_test:
+#          name: e2e_test_dev
+#          environment: dev
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
   security:
     triggers:

@@ -8,9 +8,10 @@ There's a HMPPS dev 'community of practice' talk on [how the E2E tests are set u
 
 All dependencies will be mocked, including upstream APIs used by make-recall-decision-api, and HMPPS Auth.
 
-Set the CYPRESS_PASSWORD and CYPRESS_PASSWORD_SPO env vars in the [.env.local.sample](./.env.local.sample) file when you copy it to .env. The passwords can be obtained from the CYPRESS_PASSWORD_local and CYPRESS_PASSWORD_SPO_local env vars in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
+Set the `CYPRESS_PASSWORD`, `CYPRESS_PASSWORD_SPO` and `CYPRESS_PASSWORD_ACO` env vars in the [.env.local.sample](./.env.local.sample) file and copy it as `.env`. 
+The passwords can be obtained from the `CYPRESS_PASSWORD_local`, `CYPRESS_PASSWORD_SPO_local` and `CYPRESS_PASSWORD_ACO_local` env vars in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
 
-Run this command in the root of the project. It will start make-recall-decision-api up and other dependencies:
+Run this command in the root of the project. It will start `make-recall-decision-api` and other dependencies:
 
 ```
 ./scripts/start-services-for-e2e-tests-local.sh
@@ -51,7 +52,7 @@ To run the tests:
 3. Select `boolean` in **Parameter type** dropdown
 4. Enter `e2e-check-dev` in **Name** field for 'dev' and `e2e-check-preprod` for 'preprod'
 5. Select `true` in the **Value** field
-6. If you want to override the cucumber tags you can add another string parameter called `e2e-tags` and enter a valid cucumber tag expression, .e.g. `@E2E and not @ignore` without any quotes. This is optional, if not passed it defaults to `@E2E`.
+6. If you want to override the cucumber tags you can add another string parameter called `e2e-tags` and enter a valid cucumber tag expression, .e.g. `@E2E and not @ignore` without any quotes. This is optional, if not passed it defaults to `@E2E` when running on `dev` & `@smoke` on `preprod`.
 
 If a test fails, look under the **ARTIFACTS** tab for the CircleCI job to see a screenshot, video and logs of the failed step.
 
