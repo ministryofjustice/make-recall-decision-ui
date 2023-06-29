@@ -553,7 +553,8 @@ workflows:
       - e2e_environment_test:
           name: e2e_test_preprod
           environment: preprod
-          e2e-tags: \@smoke
+          parameters:
+            - e2e-tags: \@smoke
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
