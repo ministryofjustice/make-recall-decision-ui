@@ -3,7 +3,9 @@ import { getStatuses, updateRecommendation, updateStatuses } from '../../data/ma
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import spoRecordDecisionController from './spoRecordDecisionController'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
+jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
@@ -88,12 +90,14 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         sensitive: 'sensitive',
+        crn: 'X098092',
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
+        user: { username: 'Dave' },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -110,6 +114,16 @@ describe('post', () => {
       },
       featureFlags: {},
     })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdSpoRationaleRecorded',
+      'Dave',
+      {
+        crn: 'X098092',
+        recommendationId: '123',
+      },
+      {}
+    )
 
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',

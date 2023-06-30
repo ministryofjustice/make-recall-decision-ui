@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals
@@ -34,11 +36,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { sensitive } = req.body
+  const { crn, sensitive } = req.body
 
   const {
     flags,
-    user: { token },
+    user: { username, token },
     urlInfo,
   } = res.locals
 
@@ -66,6 +68,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (isPPDocumentCreated) {
     activate.push(STATUSES.CLOSED)
   }
+
+  appInsightsEvent(EVENTS.MRD_SPO_RATIONALE_SENT, username, { crn, recommendationId }, flags)
 
   await updateStatuses({
     recommendationId,
