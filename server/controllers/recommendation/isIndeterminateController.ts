@@ -51,6 +51,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  if (urlInfo.fromPageId === 'task-list-consider-recall') {
+    urlInfo.fromPageId = undefined
+  }
+
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo }))
 }
 
