@@ -4,7 +4,15 @@ import { routeUrls } from '../routes/routeUrls'
 import logger from '../../logger'
 
 const isValidFromPage = (pageUrlSlug: unknown) => {
-  const valid = isString(pageUrlSlug) && ['task-list', 'task-list-no-recall'].includes(pageUrlSlug as string)
+  const valid =
+    isString(pageUrlSlug) &&
+    [
+      'task-list',
+      'task-list-no-recall',
+      'task-list-consider-recall',
+      'spo-task-list-consider-recall',
+      'rationale-check',
+    ].includes(pageUrlSlug as string)
   if (!valid) {
     logger.error(`isValidFromPage: invalid pageUrlSlug: ${pageUrlSlug}`)
   }
