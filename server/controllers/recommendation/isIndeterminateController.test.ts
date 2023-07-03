@@ -94,7 +94,7 @@ describe('post', () => {
       token: 'token1',
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath },
+        urlInfo: { fromPageId: 'task-list-consider-recall', basePath },
       },
     })
     const next = mockNext()
