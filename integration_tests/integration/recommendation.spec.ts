@@ -790,7 +790,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Explain the decision')
 
-      cy.selectRadio('Explain the decision', 'Recall - standard or fixed term')
+      cy.selectRadio('Explain the decision', 'Recall')
 
       cy.fillInput('Explain your decision', 'some text')
 
