@@ -48,4 +48,35 @@ describe('audit', () => {
 
     expect(next).not.toHaveBeenCalled()
   })
+
+  it('emit audit message', async () => {
+    const next = jest.fn()
+
+    audit(
+      mockReq({
+        params: {
+          recommendationId: '123',
+        },
+        path: '1231/',
+      }),
+      mockRes({
+        locals: {
+          user: { username: 'tommy' },
+          recommendation: { crn: 'abc' },
+        },
+      }),
+      next
+    )
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      EVENTS.MRD_RECOMMENDATION_PAGE_VIEW,
+      'tommy',
+      {
+        crn: 'abc',
+        pageUrlSlug: '<root>',
+        recommendationId: '123',
+      },
+      {}
+    )
+  })
 })

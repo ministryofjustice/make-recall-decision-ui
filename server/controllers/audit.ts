@@ -19,7 +19,7 @@ export default function audit(req: Request, res: Response, _: NextFunction) {
     {
       crn: res.locals.recommendation.crn,
       recommendationId,
-      pageUrlSlug,
+      pageUrlSlug: pageUrlSlug.trim().length === 0 ? '<root>' : pageUrlSlug,
     },
     featureFlags
   )
