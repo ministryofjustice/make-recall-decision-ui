@@ -448,7 +448,7 @@ context('Make a recommendation - form validation', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
-    cy.selectRadio('Explain the decision', 'Recall - standard or fixed term')
+    cy.selectRadio('Explain the decision', 'Recall')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoRecallRationale',
