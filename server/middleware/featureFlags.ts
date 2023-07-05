@@ -37,7 +37,8 @@ export const readFeatureFlags =
         typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
           ? featureFlagEnabledDefaultvalue
           : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
-      if (userFeatureFlagSettingAllowed.toString() === 'true' && flag) {
+      const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
+      if (userFeatureFlagSettingAllowedAndFlagPresent || key === 'flagCreateVaryLicenceData') {
         const enabled = flag === '1'
         res.cookie(key, flag)
         res.locals.flags[key] = enabled
