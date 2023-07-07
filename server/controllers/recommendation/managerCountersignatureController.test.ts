@@ -17,7 +17,6 @@ describe('get', () => {
     await managerCountersignatureController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'lineManagerCountersignature' })
-    expect(res.locals.backLink).toEqual('countersigning-telephone')
     expect(res.locals.inputDisplayValues.managerCountersignatureExposition).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
 
@@ -35,7 +34,6 @@ describe('get', () => {
     await managerCountersignatureController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'seniorManagerCountersignature' })
-    expect(res.locals.backLink).toEqual('countersigning-telephone')
     expect(res.locals.inputDisplayValues.managerCountersignatureExposition).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
 

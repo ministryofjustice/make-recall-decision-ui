@@ -19,7 +19,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'spo-task-list-consider-recall',
     page: {
       id: 'spoRecordDecision',
     },

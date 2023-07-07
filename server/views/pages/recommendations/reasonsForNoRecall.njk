@@ -3,12 +3,7 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-        {{ govukBackLink({
-            text: "Back",
-            href: nextPageLinkUrl({ nextPageId: 'why-considered-recall', urlInfo: urlInfo })
-        }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}

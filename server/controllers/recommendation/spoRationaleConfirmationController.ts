@@ -4,7 +4,6 @@ function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
   res.locals = {
     ...res.locals,
-    backLink: 'spo-record-decision',
     page: {
       id: 'spoRationaleConfirmation',
     },

@@ -3,16 +3,11 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-    {{ govukBackLink({
-        text: "Back to overview for " + recommendation.personOnProbation.name,
-        href:  '/cases/' + recommendation.crn + '/overview'
-    }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row" onClick="alert('test');">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>

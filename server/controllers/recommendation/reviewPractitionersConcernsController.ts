@@ -57,7 +57,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'reviewPractitionersConcerns',
     },
-    backLink: 'spo-task-list-consider-recall',
     offenderName: recommendation.personOnProbation.name,
     triggerLeadingToRecall: recommendation.triggerLeadingToRecall,
     responseToProbation: recommendation.responseToProbation,

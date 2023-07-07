@@ -85,26 +85,6 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
 
-  it('indeterminate recall type - links back to indeterminate sentence type if indeterminate sentence', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
-    cy.getLinkHref('Back').should('contain', '/discuss-with-manager')
-  })
-
-  it('indeterminate recall type - links back to extended sentence if extended sentence', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
-    cy.getLinkHref('Back').should('contain', '/discuss-with-manager')
-  })
-
   it('indeterminate sentence - if extended sentence is selected, task list', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
@@ -127,59 +107,5 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a Part A form')
-  })
-
-  it('sensitive info - links back to indeterminate/extended criteria if indeterminate sentence', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: true, isExtendedSentence: false },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-    cy.getLinkHref('Back').should('contain', '/indeterminate-details')
-  })
-
-  it('sensitive info - links back to indeterminate/extended criteria if extended sentence', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-    cy.getLinkHref('Back').should('contain', '/indeterminate-details')
-  })
-
-  it('sensitive info - links back to emergency recall if determinate sentence / standard recall', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...recommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: false,
-        recallType: {
-          selected: { value: 'STANDARD' },
-        },
-      },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-    cy.getLinkHref('Back').should('contain', '/emergency-recall')
-  })
-
-  it('sensitive info - links back to fixed term licence conditions if determinate sentence / fixed term recall', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...recommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: false,
-        recallType: {
-          selected: { value: 'FIXED_TERM' },
-        },
-      },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-    cy.getLinkHref('Back').should('contain', '/fixed-licence')
   })
 })

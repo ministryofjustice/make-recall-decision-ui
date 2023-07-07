@@ -41,7 +41,6 @@ describe('get', () => {
     await licenceConditionsController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'licenceConditions' })
-    expect(res.locals.backLink).toEqual('task-list-consider-recall')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 

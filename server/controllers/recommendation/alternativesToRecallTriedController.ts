@@ -9,7 +9,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'task-list-consider-recall',
     page: {
       id: 'alternativesToRecallTried',
     },
