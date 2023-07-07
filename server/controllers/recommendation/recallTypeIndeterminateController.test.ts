@@ -20,23 +20,10 @@ describe('get', () => {
     await recallTypeIndeterminateController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'recallTypeIndeterminate' })
-    expect(res.locals.backLink).toEqual('discuss-with-manager')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallTypeIndeterminate')
 
     expect(next).toHaveBeenCalled()
-  })
-
-  it('load - indeterminate sentence', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { isIndeterminateSentence: true },
-        token: 'token1',
-      },
-    })
-    await recallTypeIndeterminateController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.backLink).toEqual('discuss-with-manager')
   })
 
   it('load with existing data', async () => {

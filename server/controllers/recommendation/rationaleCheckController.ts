@@ -6,7 +6,6 @@ import { strings } from '../../textStrings/en'
 function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
     ...res.locals,
-    backLink: 'task-list',
     page: {
       id: 'rationaleCheck',
     },

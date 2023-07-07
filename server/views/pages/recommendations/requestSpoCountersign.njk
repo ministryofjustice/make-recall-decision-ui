@@ -5,11 +5,7 @@
 {{  logMessage(pageTitle) }}
 
 {% block beforeContent %}
-    <nav>
-    {{ govukBackLink({
-        text: "Back",
-        href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
-    }) }}</nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}

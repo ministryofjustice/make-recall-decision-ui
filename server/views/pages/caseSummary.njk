@@ -14,12 +14,7 @@
 {% endblock %}
 
 {% block beforeContent %}
-    <nav aria-label='Back to person search'>
-        {{ govukBackLink({
-            html: "Back<span class='govuk-visually-hidden'> to person search</span>",
-            href:  backLink
-        }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}

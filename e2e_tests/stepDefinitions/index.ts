@@ -195,8 +195,9 @@ Then('Part A details are correct', function () {
   q29Attachments(contents, this.testData.localPoliceDetails)
 })
 
-When('PO/SPO/ACO returns to Recommendations page of CRN', function () {
-  cy.clickLink(`Back to overview for ${this.offenderName}`)
+When('PO returns to Recommendations page of CRN', function () {
+  cy.clickLink(`Back`)
+  cy.clickLink('Back')
   cy.clickLink('Recommendations')
 })
 

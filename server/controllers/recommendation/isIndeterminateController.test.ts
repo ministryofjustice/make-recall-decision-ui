@@ -6,17 +6,6 @@ import recommendationApiResponse from '../../../api/responses/get-recommendation
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('test back button', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-      },
-    })
-    await isIndeterminateSentenceController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.backLink).toEqual('task-list-consider-recall')
-  })
-
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {

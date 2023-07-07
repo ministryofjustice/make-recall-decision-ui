@@ -13,7 +13,7 @@ export default defineConfig({
   fixturesFolder: 'e2e_tests/fixtures',
   screenshotsFolder: 'e2e_tests/screenshots',
   videosFolder: 'e2e_tests/videos',
-  video: true,
+  video: process.env.ENVIRONMENT !== 'local',
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
     reportDir: 'e2e_tests/reports',
@@ -52,7 +52,6 @@ export default defineConfig({
       on('task', {
         readDocX,
       })
-
       return config
     },
     baseUrl: 'http://localhost:3000',

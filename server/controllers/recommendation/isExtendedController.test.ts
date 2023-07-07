@@ -18,7 +18,6 @@ describe('get', () => {
     await isExtendedSentenceController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'isExtendedSentence' })
-    expect(res.locals.backLink).toEqual('is-indeterminate')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/isExtendedSentence')
 

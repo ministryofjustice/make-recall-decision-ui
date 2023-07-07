@@ -17,7 +17,6 @@ function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
-    backLink: 'is-extended',
     page: {
       id: 'indeterminateSentenceType',
     },

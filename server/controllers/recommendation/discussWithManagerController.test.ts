@@ -14,7 +14,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'discussWithManager' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/discussWithManager')
     expect(res.locals.nextPageId).toEqual('recall-type')
-    expect(res.locals.backLink).toEqual('share-case-with-manager')
     expect(next).toHaveBeenCalled()
   })
   it('present with indeterminate', async () => {

@@ -19,7 +19,6 @@ describe('get', () => {
 
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoRecallRationale')
     expect(res.locals.page).toEqual({ id: 'spoRecallRationale' })
-    expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.inputDisplayValues).toEqual({
       errors: undefined,
       spoNoRecallRationale: '',

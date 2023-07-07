@@ -37,8 +37,6 @@ describe('get', () => {
       },
     })
     await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.backLink).toEqual('task-list-consider-recall')
   })
 
   it('load with existing data', async () => {

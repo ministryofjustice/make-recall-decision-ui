@@ -17,7 +17,6 @@ describe('get', () => {
     await indeterminateTypeController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'indeterminateSentenceType' })
-    expect(res.locals.backLink).toEqual('is-extended')
     expect(res.locals.pageHeadings.indeterminateSentenceType).toEqual('What type of sentence is Harry Smith on?')
     expect(res.locals.pageTitles.indeterminateSentenceType).toEqual('What type of sentence is the person on?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()

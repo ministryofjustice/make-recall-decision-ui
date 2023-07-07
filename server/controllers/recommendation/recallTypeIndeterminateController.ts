@@ -12,7 +12,6 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'discuss-with-manager',
     page: {
       id: 'recallTypeIndeterminate',
     },

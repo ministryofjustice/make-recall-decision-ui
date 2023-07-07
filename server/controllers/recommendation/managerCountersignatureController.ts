@@ -23,7 +23,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'countersigning-telephone',
     page: {
       id: pageId,
     },

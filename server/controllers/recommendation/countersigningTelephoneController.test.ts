@@ -17,7 +17,6 @@ describe('get', () => {
     await countersigningTelephoneController.get(mockReq(), res, next)
 
     expect(res.locals.mode).toEqual('SPO')
-    expect(res.locals.backLink).toEqual('task-list')
     expect(res.locals.page).toEqual({ id: 'countersigningTelephone' })
     expect(res.locals.inputDisplayValues).toEqual({
       details: undefined,
@@ -39,7 +38,6 @@ describe('get', () => {
     await countersigningTelephoneController.get(mockReq(), res, next)
 
     expect(res.locals.mode).toEqual('ACO')
-    expect(res.locals.backLink).toEqual('task-list')
     expect(res.locals.page).toEqual({ id: 'countersigningTelephone' })
     expect(res.locals.inputDisplayValues).toEqual({
       details: undefined,

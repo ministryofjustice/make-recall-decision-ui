@@ -10,7 +10,6 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'share-case-with-manager',
     page: {
       id: 'discussWithManager',
     },

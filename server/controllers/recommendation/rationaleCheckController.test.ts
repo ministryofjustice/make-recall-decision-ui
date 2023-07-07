@@ -12,7 +12,6 @@ describe('get', () => {
     await rationaleCheckController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'rationaleCheck' })
-    expect(res.locals.backLink).toEqual('task-list')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/rationaleCheck')
 

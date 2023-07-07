@@ -26,7 +26,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'spoRecordDecision' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoRecordDecision')
 
-    expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.recallType).toEqual('RECALL')
     expect(res.locals.spoRecallRationale).toEqual('some reason')
     expect(res.locals.editable).toEqual(true)

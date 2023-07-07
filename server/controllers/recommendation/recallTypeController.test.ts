@@ -20,7 +20,6 @@ describe('get', () => {
     await recallTypeController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'recallType' })
-    expect(res.locals.backLink).toEqual('discuss-with-manager')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
 

@@ -17,7 +17,6 @@ function get(req: Request, res: Response, next: NextFunction) {
     !!actives.find(el => el.name === STATUSES.SPO_SIGNED)
   res.locals = {
     ...res.locals,
-    backLink: 'spo-task-list-consider-recall',
     page: {
       id: recallDecided ? 'spoRecallRationaleRecallDecided' : 'spoRecallRationale',
     },
