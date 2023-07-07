@@ -201,11 +201,6 @@ When('PO returns to Recommendations page of CRN', function () {
   cy.clickLink('Recommendations')
 })
 
-// When('SPO/ACO returns to Recommendations page of CRN', function () {
-//   cy.clickLink(`Back`)
-//   cy.clickLink('Back')
-// })
-
 Then('SPO can no longer record rationale', function () {
   loginAndSearchCrn.call(this, UserType.SPO)
   cy.get('#main-content a:contains("Consider a recall")').should('not.exist')
