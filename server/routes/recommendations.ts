@@ -57,6 +57,10 @@ import addressDetailsController from '../controllers/recommendation/addressDetai
 import indeterminateDetailsController from '../controllers/recommendation/indeterminateDetailsController'
 import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
 import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
+import iomController from '../controllers/recommendation/iomController'
+import policeDetailsController from '../controllers/recommendation/policeDetailsController'
+import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
+import victimLiasonOfficerController from '../controllers/recommendation/victimLiasonOfficerController'
 
 const recommendations = Router()
 
@@ -150,6 +154,18 @@ ppRouteBuilder.post('contraband', contrabandController.post)
 
 ppRouteBuilder.get('address-details', addressDetailsController.get)
 ppRouteBuilder.post('address-details', addressDetailsController.post)
+
+ppRouteBuilder.get('iom', iomController.get)
+ppRouteBuilder.post('iom', iomController.post)
+
+ppRouteBuilder.get('police-details', policeDetailsController.get)
+ppRouteBuilder.post('police-details', policeDetailsController.post)
+
+ppRouteBuilder.get('victim-contact-scheme', victimContactSchemeController.get)
+ppRouteBuilder.post('victim-contact-scheme', victimContactSchemeController.post)
+
+ppRouteBuilder.get('victim-liaison-officer', victimLiasonOfficerController.get)
+ppRouteBuilder.post('victim-liaison-officer', victimLiasonOfficerController.post)
 
 ppRouteBuilder.get('preview-no-recall', previewNoRecallLetterController.get)
 

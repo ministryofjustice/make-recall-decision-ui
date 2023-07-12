@@ -1,16 +1,8 @@
 import { AppError } from '../../../AppError'
 import { validateRecallType } from '../recallType/formValidator'
 import { inputDisplayValuesRecallType } from '../recallType/inputDisplayValues'
-import { validateVictimContactScheme } from '../victimContactScheme/formValidator'
-import { inputDisplayValuesVictimContactScheme } from '../victimContactScheme/inputDisplayValues'
-import { validateVictimLiaisonOfficer } from '../victimLiaisonOfficer/formValidator'
-import { inputDisplayValuesVictimLiaisonOfficer } from '../victimLiaisonOfficer/inputDisplayValues'
 import { validateArrestIssues } from '../arrestIssues/formValidator'
 import { inputDisplayValuesArrestIssues } from '../arrestIssues/inputDisplayValues'
-import { validateIntegratedOffenderManagement } from '../integratedOffenderManagement/formValidator'
-import { inputDisplayValuesIntegratedOffenderManagement } from '../integratedOffenderManagement/inputDisplayValues'
-import { validateLocalPoliceContactDetails } from '../localPoliceContactDetails/formValidator'
-import { inputDisplayValuesLocalPoliceContactDetails } from '../localPoliceContactDetails/inputDisplayValues'
 import { validateRecallTypeIndeterminate } from '../recallTypeIndeterminate/formValidator'
 import { inputDisplayValuesRecallTypeIndeterminate } from '../recallTypeIndeterminate/inputDisplayValues'
 import { validateOffenceAnalysis } from '../offenceAnalysis/formValidator'
@@ -36,30 +28,6 @@ import { validateCustodyStatus } from '../custodyStatus/formValidator'
  *  */
 export const pageMetaData = (pageUrlSlug?: string): PageMetaData => {
   switch (pageUrlSlug) {
-    case 'iom':
-      return {
-        id: 'integratedOffenderManagement',
-        validator: validateIntegratedOffenderManagement,
-        inputDisplayValues: inputDisplayValuesIntegratedOffenderManagement,
-      }
-    case 'police-details':
-      return {
-        id: 'localPoliceContactDetails',
-        validator: validateLocalPoliceContactDetails,
-        inputDisplayValues: inputDisplayValuesLocalPoliceContactDetails,
-      }
-    case 'victim-contact-scheme':
-      return {
-        id: 'victimContactScheme',
-        validator: validateVictimContactScheme,
-        inputDisplayValues: inputDisplayValuesVictimContactScheme,
-      }
-    case 'victim-liaison-officer':
-      return {
-        id: 'victimLiaisonOfficer',
-        validator: validateVictimLiaisonOfficer,
-        inputDisplayValues: inputDisplayValuesVictimLiaisonOfficer,
-      }
     case 'arrest-issues':
       return {
         id: 'arrestIssues',
