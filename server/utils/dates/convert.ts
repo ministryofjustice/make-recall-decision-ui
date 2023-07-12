@@ -164,7 +164,7 @@ export const convertGmtDatePartsToUtc = (
 }
 
 export const splitIsoDateToParts = (isoDate?: string): DatePartsParsed | undefined => {
-  if (!isDefined(isoDate)) {
+  if (!isoDate) {
     return undefined
   }
   try {
