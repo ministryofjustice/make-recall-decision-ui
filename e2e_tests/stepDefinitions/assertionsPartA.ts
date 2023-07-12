@@ -491,6 +491,7 @@ export const q27SPOEndorsement = function (contents: string, details: Record<str
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[27]), contents.indexOf(partASections[28]))
   expectSoftly(contents, 'SPO Name').to.contain(`Name of person completing this form: ${this.SPO ? this.SPO.name : ''}`)
+  expectSoftly(contents, 'SPO Email').to.contain(`${this.SPO ? this.SPO.email : ''}`)
   expectSoftly(contents, 'SPO Telephone').to.contain(`Telephone Number: ${details.telephone ? details.telephone : ''}`)
   expectSoftly(contents, 'SPO Reason').to.contain(`Please provide additional information:${details.reason}`)
 }
@@ -498,6 +499,7 @@ export const q28ACOAuthorisation = function (contents: string, details: Record<s
   // eslint-disable-next-line no-param-reassign
   contents = contents.substring(contents.indexOf(partASections[28]), contents.indexOf(partASections[29]))
   expectSoftly(contents, 'ACO Name').to.contain(`Name of person completing this form: ${this.ACO ? this.ACO.name : ''}`)
+  expectSoftly(contents, 'ACO Email').to.contain(`${this.ACO ? this.ACO.email : ''}`)
   expectSoftly(contents, 'ACO Telephone').to.contain(`Telephone Number: ${details.telephone ? details.telephone : ''}`)
   expectSoftly(contents, 'ACO Reason').to.contain(
     `This means you are endorsing both the recall and the quality and content of the recall report.${details.reason}`
