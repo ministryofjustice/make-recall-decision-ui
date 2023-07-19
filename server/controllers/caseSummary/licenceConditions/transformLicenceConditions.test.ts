@@ -59,7 +59,7 @@ describe('transformLicenceConditions', () => {
         { sentence: { isCustodial: true, custodialStatusCode: 'A' } },
       ],
     })
-    expect(transformed.licenceConvictions.hasAllConvictionsReleasedOnLicence).toEqual(false)
+    expect(transformed.hasAllConvictionsReleasedOnLicence).toEqual(false)
   })
 
   it('sets hasAllConvictionsReleasedOnLicence property to true if all active custodial convictions have statusCode set to "Released - on licence"', () => {
@@ -70,7 +70,7 @@ describe('transformLicenceConditions', () => {
         { sentence: { isCustodial: true, custodialStatusCode: 'B' } },
       ],
     })
-    expect(transformed.licenceConvictions.hasAllConvictionsReleasedOnLicence).toEqual(true)
+    expect(transformed.hasAllConvictionsReleasedOnLicence).toEqual(true)
   })
 
   it('sets activeCustodial property to an empty array there are no active custodial convictions', () => {

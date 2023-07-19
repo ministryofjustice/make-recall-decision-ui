@@ -22,7 +22,7 @@ const auditService = new AuditService()
 
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
-  const { user } = res.locals
+  const { user, flags } = res.locals
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
@@ -32,7 +32,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
     normalizedCrn,
     res.locals.user.token,
     res.locals.user.userId,
-    req.query
+    req.query,
+    flags
   )
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)

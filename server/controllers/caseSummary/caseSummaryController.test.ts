@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import caseSummaryController from './caseSummaryController'
-import { getCaseSummary, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getCaseSummary, getCaseSummaryV2, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
@@ -15,6 +15,7 @@ import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { formOptions } from '../recommendations/formOptions/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -76,6 +77,23 @@ describe('get', () => {
       id: 'licence-conditions',
       label: 'Licence conditions',
     })
+  })
+
+  it('should return case details for licence conditions V2', async () => {
+    res = mockRes({
+      token,
+      locals: { flags: { flagCvl: true }, user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'] } },
+    })
+    ;(getCaseSummaryV2 as jest.Mock).mockReturnValueOnce(caseLicenceConditionsResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({ params: { crn, sectionId: 'licence-conditions' } })
+    await caseSummaryController.get(req, res, next)
+    expect(getCaseSummaryV2).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
+    expect(res.locals.caseSummary.licenceConvictions.activeCustodial).toStrictEqual(
+      caseLicenceConditionsResponse.activeConvictions.filter(conviction => conviction.sentence.isCustodial)
+    )
+    expect(res.locals.caseSummary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
+    expect(res.locals.caseSummary.activeConvictions).toBe(caseLicenceConditionsResponse.activeConvictions)
   })
 
   it('should return case details for personal details', async () => {
