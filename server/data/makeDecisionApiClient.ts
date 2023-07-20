@@ -31,6 +31,17 @@ export const getCaseSummary = <T>(
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<T>
 
+export const getCaseSummaryV2 = <T>(
+  crn: string,
+  sectionId: CaseSectionId,
+  token: string,
+  featureFlags?: FeatureFlags
+): Promise<T> =>
+  restClient(token).get({
+    path: `${routes.getCaseSummary}/${crn}/${sectionId}/v2`,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<T>
+
 export const createRecommendation = (
   data: CreateRecommendationRequest,
   token: string,

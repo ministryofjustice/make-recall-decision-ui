@@ -170,3 +170,141 @@ context('Licence conditions', () => {
     ).should('exist')
   })
 })
+
+context('Licence conditions - flagCvl', () => {
+  beforeEach(() => {
+    cy.window().then(win => win.sessionStorage.clear())
+    cy.signIn()
+  })
+
+  it('shows ndelius licence conditions when CVL has no licence', () => {
+    cy.task('getCaseV2', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        personalDetailsOverview: {
+          name: 'Charles Edwin',
+          dateOfBirth: '1980-07-24',
+          age: 41,
+          gender: 'Male',
+          crn: 'X430109',
+        },
+        hasAllConvictionsReleasedOnLicence: true,
+        activeConvictions: [
+          {
+            mainOffence: { description: 'Burglary - 05714' },
+            sentence: { isCustodial: true, custodialStatusCode: 'B' },
+            licenceConditions: [
+              {
+                notes: 'Must not enter Islington borough.',
+                mainCategory: {
+                  code: 'NLC9',
+                  description: 'Supervision in the community',
+                },
+                subCategory: {
+                  code: 'NSTT9',
+                  description: 'Bespoke Condition (See Notes)',
+                },
+              },
+            ],
+          },
+        ],
+        cvlLicence: null,
+      },
+    })
+
+    const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=1`)
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    // Standard licence conditions
+    cy.clickButton('Show', { parent: '[data-qa="standard"]' })
+    formOptions.standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
+    // Additional licence conditions
+    cy.getElement('Burglary - 05714').should('exist')
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
+    cy.getElement('Supervision in the community').should('exist')
+    cy.getText('condition-description').should('equal', 'Bespoke Condition (See Notes)')
+    cy.getText('condition-note').should('equal', 'Must not enter Islington borough.')
+  })
+
+  it('shows ndelius licence conditions when CVL has a licence', () => {
+    cy.task('getCaseV2', {
+      sectionId: 'licence-conditions',
+      statusCode: 200,
+      response: {
+        personalDetailsOverview: {
+          name: 'Charles Edwin',
+          dateOfBirth: '1980-07-24',
+          age: 41,
+          gender: 'Male',
+          crn: 'X430109',
+        },
+        hasAllConvictionsReleasedOnLicence: true,
+        activeConvictions: [
+          {
+            mainOffence: { description: 'Burglary - 05714' },
+            sentence: { isCustodial: true, custodialStatusCode: 'B' },
+            licenceConditions: [
+              {
+                notes: 'Must not enter Islington borough.',
+                mainCategory: {
+                  code: 'NLC9',
+                  description: 'Supervision in the community',
+                },
+                subCategory: {
+                  code: 'NSTT9',
+                  description: 'Bespoke Condition (See Notes)',
+                },
+              },
+            ],
+          },
+        ],
+        cvlLicence: {
+          licenceStatus: 'ACTIVE',
+          conditionalReleaseDate: '2022-06-10',
+          actualReleaseDate: '2022-06-11',
+          sentenceStartDate: '2022-06-12',
+          sentenceEndDate: '2022-06-13',
+          licenceStartDate: '2022-06-14',
+          licenceExpiryDate: '2022-06-15',
+          topupSupervisionStartDate: '2022-06-16',
+          topupSupervisionExpiryDate: '2022-06-17',
+          standardLicenceConditions: [
+            {
+              text: 'This is a standard licence condition',
+              expandedText: null,
+            },
+          ],
+          additionalLicenceConditions: [
+            {
+              text: 'This is an additional licence condition',
+              expandedText: 'Expanded additional licence condition',
+            },
+          ],
+          bespokeConditions: [
+            {
+              text: 'This is a bespoke condition',
+              expandedText: null,
+            },
+          ],
+        },
+      },
+    })
+
+    const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=1`)
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    // Standard licence conditions
+    cy.clickButton('Show', { parent: '[data-qa="standard"]' })
+    cy.getElement('This is a standard licence condition').should('exist')
+    // Additional licence conditions
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
+    cy.getElement('This is an additional licence condition').should('exist')
+    cy.getText('condition-note').should('equal', 'Expanded additional licence condition')
+    // Bespoke licence conditions
+    cy.get('[data-qa="bespoke"] .app-summary-card').should('have.length', 1)
+    cy.getElement('This is a bespoke condition').should('exist')
+  })
+})

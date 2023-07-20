@@ -4,6 +4,11 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
+  flagCvl: {
+    label: 'enable CVL',
+    description: 'Integrates CVL licence data into the licence tab and licence conditions entry page.',
+    default: false,
+  },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
     description:

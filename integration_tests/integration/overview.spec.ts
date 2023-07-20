@@ -226,6 +226,7 @@ context('Overview', () => {
         sectionId: 'overview',
         statusCode: 200,
         response: {
+          hasAllConvictionsReleasedOnLicence: true,
           ...getCaseOverviewResponse,
           activeConvictions,
         },
