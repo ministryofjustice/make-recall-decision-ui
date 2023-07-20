@@ -14,12 +14,12 @@
         attributes: {
             'data-qa': 'banner-multiple-active-custodial',
             'data-analytics-event': 'notification_banner',
-            'data-analytics-event-category': 'multipleCustodialConvictions' if caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence else 'multipleCustodialConvictionsNotAllReleasedOnLicence',
+            'data-analytics-event-category': 'multipleCustodialConvictions' if caseSummary.hasAllConvictionsReleasedOnLicence else 'multipleCustodialConvictionsNotAllReleasedOnLicence',
             'data-analytics-event-label': caseSummary.licenceConvictions.activeCustodial.length
         },
         classes: "govuk-notification-banner--error"
     }) }}
-{% elseif (not caseSummary.licenceConvictions.hasAllConvictionsReleasedOnLicence) and (caseSummary.licenceConvictions.activeCustodial.length === 1) %}
+{% elseif (not caseSummary.hasAllConvictionsReleasedOnLicence) and (caseSummary.licenceConvictions.activeCustodial.length === 1) %}
     {% set html %}
         <p class="govuk-notification-banner__heading">
             This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.
