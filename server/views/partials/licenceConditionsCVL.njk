@@ -21,6 +21,7 @@
             {% endfor %}
        </div>
     </div>
+    {% if caseSummary.cvlLicence.additionalLicenceConditions and caseSummary.cvlLicence.additionalLicenceConditions.length > 0 %}
     <div class="govuk-accordion__section govuk-accordion__section--expanded" data-qa='additional'>
         <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
@@ -50,17 +51,19 @@
                 {% set conditionNumber = conditionNumber + 1 %}
             {% endfor %}
        </div>
-   </div>
+    </div>
+    {% endif %}
 
-   <div class="govuk-accordion__section govuk-accordion__section--expanded" data-qa='bespoke'>
-      <div class="govuk-accordion__section-header">
+    {% if caseSummary.cvlLicence.bespokeConditions and caseSummary.cvlLicence.bespokeConditions.length > 0 %}
+    <div class="govuk-accordion__section govuk-accordion__section--expanded" data-qa='bespoke'>
+        <div class="govuk-accordion__section-header">
           <h2 class="govuk-accordion__section-heading">
               <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-3">
                 Bespoke licence conditions
               </span>
           </h2>
-      </div>
-      <div id="accordion-with-summary-sections-content-3"
+        </div>
+        <div id="accordion-with-summary-sections-content-3"
            class="govuk-accordion__section-content"
            aria-labelledby="accordion-with-summary-sections-heading-3">
            {% for condition in caseSummary.cvlLicence.bespokeConditions %}
@@ -72,6 +75,7 @@
                </div>
            </section>
            {% endfor %}
-      </div>
+        </div>
     </div>
+    {% endif %}
 </div>
