@@ -39,7 +39,7 @@
                     <p class='govuk-body' data-qa='condition-note'>{{ licenceCondition.expandedText }}</p>
                 {% endset %}
                 {{ appSummaryCard({
-                    titleText: licenceCondition.text,
+                    titleText: licenceCondition.category,
                     headingLevel: 3,
                     classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
                     html: conditionHtml,
