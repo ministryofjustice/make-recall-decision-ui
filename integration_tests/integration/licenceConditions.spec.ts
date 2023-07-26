@@ -50,7 +50,7 @@ const TEMPLATE = {
       ],
       additionalLicenceConditions: [
         {
-          text: 'This is an additional licence condition',
+          category: 'Freedom of Movement',
           expandedText: 'Expanded additional licence condition',
         },
       ],
@@ -276,7 +276,7 @@ context('Licence conditions - flagCvl', () => {
     cy.getElement('This is a standard licence condition').should('exist')
     // Additional licence conditions
     cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
-    cy.getElement('This is an additional licence condition').should('exist')
+    cy.getElement('Freedom of Movement').should('exist')
     cy.getText('condition-note').should('equal', 'Expanded additional licence condition')
     // Bespoke licence conditions
     cy.get('[data-qa="bespoke"] .app-summary-card').should('have.length', 1)
