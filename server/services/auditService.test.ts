@@ -11,7 +11,7 @@ describe('Audit service', () => {
 
   it('sends a prisoner search audit message', async () => {
     jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
-    await auditService.personSearch({ searchTerm: 'sdsd', username: 'username', logErrors: true })
+    await auditService.personSearch({ searchTerm: { crn: 'sdsd' }, username: 'username', logErrors: true })
     const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
     const { what, who, service, when, details } = JSON.parse(MessageBody)
     expect(QueueUrl).toEqual('foobar')
@@ -19,7 +19,7 @@ describe('Audit service', () => {
     expect(who).toEqual('username')
     expect(service).toEqual('make-recall-decision-ui')
     expect(when).toBeDefined()
-    expect(details).toEqual('{"searchTerm":"sdsd"}')
+    expect(details).toEqual('{"searchTerm":{"crn":"sdsd"}}')
   })
 
   it('sends a case summary audit message', async () => {
@@ -57,14 +57,14 @@ describe('Audit service', () => {
     const err = new Error('SQS queue not found')
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
     jest.spyOn(logger, 'error')
-    await auditService.personSearch({ searchTerm: 'sdsd', username: 'username', logErrors: true })
+    await auditService.personSearch({ searchTerm: { crn: 'sdsd' }, username: 'username', logErrors: true })
     expect(logger.error).toHaveBeenCalledWith('Problem sending message to SQS queue', err)
   })
 
   it('does not log out errors if logErrors is false', async () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
-    await auditService.personSearch({ searchTerm: 'sdsd', username: 'username', logErrors: false })
+    await auditService.personSearch({ searchTerm: { crn: 'sdsd' }, username: 'username', logErrors: false })
     expect(logger.error).not.toHaveBeenCalled()
   })
 })

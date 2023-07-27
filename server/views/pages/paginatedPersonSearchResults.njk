@@ -1,0 +1,79 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Search results"}) %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">Search results</h1>
+
+
+    {% if page.results.length == 0 %}
+        {% if crn %}
+            {{ mojBanner({
+                type: 'information',
+                html: '<span data-qa="no-results">No results found. Double-check you entered the right CRN.</span>',
+                iconFallbackText: 'information'
+            }) }}
+        {% else %}
+            {{ mojBanner({
+                type: 'information',
+                html: '<span data-qa="no-results">No results found. Double-check you entered the right name.</span>',
+                iconFallbackText: 'information'
+            }) }}
+        {% endif %}
+    {% endif %}
+
+    <p class="govuk-body-l">
+        {% if crn %}
+        <p class="govuk-body-l govuk-!-margin-bottom-3">
+            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Case reference number (CRN):</span>
+             <span>{{ crn }}</span>
+        </p>
+        <a href="/search-by-crn" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+        {% else %}
+        <p class="govuk-body-l  govuk-!-margin-bottom-0">
+            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Last name:</span>
+            <span>{{ lastName }}</span>
+        </p>
+        <p class="govuk-body-l govuk-!-margin-bottom-3">
+            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>First name:</span>
+            <span>{{ firstName }}</span>
+        </p>
+        <a href="/search-by-name" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+        {% endif %}
+    </p>
+
+    {% if page.results.length %}
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">CRN</th>
+            <th scope="col" class="govuk-table__header">Date of birth</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for person in page.results %}
+            <tr class="govuk-table__row" data-qa='row-{{ person.crn }}'>
+                <td class="govuk-table__cell">
+                    {% if person.userExcluded %}
+                        You are excluded from viewing this case
+                    {% elseif person.userRestricted %}
+                        This is a restricted case
+                    {% endif %}
+                    <a href='/cases/{{ person.crn }}/overview' data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
+                </td>
+                <td class="govuk-table__cell">{{ person.crn }}</td>
+                <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: person.dateOfBirth}) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ paginate({
+        href: '/search-results-by-name?firstName=' + firstName + '&lastName='  + lastName,
+        index: page.paging.page + 1,
+        total: page.paging.totalNumberOfPages
+        }) }}
+    {% endif %}
+
+{% endblock %}

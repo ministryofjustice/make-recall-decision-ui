@@ -1,7 +1,8 @@
 import { RequestHandler, Router } from 'express'
 import bodyParser from 'body-parser'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { personSearch } from '../controllers/personSearch/personSearch'
+import { personSearchByCRN } from '../controllers/personSearch/personSearchByCRN'
+import { personSearchByName } from '../controllers/personSearch/personSearchByName'
 import { personSearchResults } from '../controllers/personSearch/personSearchResults'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
@@ -16,6 +17,7 @@ import { getCreateRecommendationWarning } from '../controllers/recommendations/g
 import recommendations from './recommendations'
 import { isPreprodOrProd } from '../utils/utils'
 import replaceCurrentRecommendationController from '../controllers/recommendations/replaceCurrentRecommendationController'
+import { personSearchResultsByName } from '../controllers/personSearch/personSearchResultsByName'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -29,8 +31,10 @@ export default function routes(router: Router): Router {
   if (!isPreprodOrProd(process.env.ENVIRONMENT)) {
     get(routeUrls.flags, getFeatureFlags)
   }
-  get(routeUrls.search, personSearch)
-  get(routeUrls.searchResults, personSearchResults)
+  get(routeUrls.searchByCRN, personSearchByCRN)
+  get(routeUrls.searchByName, personSearchByName)
+  get(routeUrls.searchResultsByCRN, personSearchResults)
+  get(routeUrls.searchResultsByName, personSearchResultsByName)
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
   get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummaryController.get)

@@ -5,6 +5,8 @@ export const strings = {
     missingSpoRecallRationale: 'There is a problem. You must explain your decision',
     missingRationaleCheck: 'Choose an option',
     missingSpoNoRecallRationale: 'There is a problem. You must explain your decision',
+    missingLastName: 'Enter a last name',
+    missingFirstName: 'Enter a first name',
     missingCrn: 'Enter a Case Reference Number (CRN)',
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
     saveChanges: 'An error occurred saving your changes',

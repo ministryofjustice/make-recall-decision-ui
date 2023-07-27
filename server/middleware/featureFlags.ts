@@ -9,6 +9,11 @@ export const featureFlagsDefaults = {
     description: 'Integrates CVL licence data into the licence tab and licence conditions entry page.',
     default: false,
   },
+  flagSearchByName: {
+    label: 'Search by Name/Pagination',
+    description: 'Displays Search By Name option, and returns results, in paginated form.',
+    default: false,
+  },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
     description:
