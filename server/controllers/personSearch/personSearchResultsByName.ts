@@ -50,7 +50,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
   res.locals.firstName = firstName
   res.locals.lastName = lastName
 
-  res.locals.page = await getPersons(user.token, Number(page) - 1, 10, undefined, firstName, lastName)
+  res.locals.page = await getPersons(user.token, Number(page) - 1, 20, undefined, firstName, lastName)
   res.render('pages/paginatedPersonSearchResults')
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { lastName, firstName }, flags)
   auditService.personSearch({

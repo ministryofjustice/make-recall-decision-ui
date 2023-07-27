@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { personSearchResults } from './personSearchResults'
-import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
+import { getPersons, getPersonsByCrn } from '../../data/makeDecisionApiClient'
 import { AuditService } from '../../services/auditService'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
@@ -76,6 +76,54 @@ describe('personSearchResults', () => {
     await personSearchResults(req, res)
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
       searchTerm: { crn: '123' },
+      username: 'Dave',
+      logErrors: true,
+    })
+  })
+
+  const TEMPLATE = {
+    results: [
+      {
+        name: 'Harry 1 Smith',
+        crn: 'X098092',
+        dateOfBirth: '1980-05-06',
+        userExcluded: false,
+        userRestricted: false,
+      },
+    ],
+    paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
+  }
+
+  it('valid search with flag', async () => {
+    ;(getPersons as jest.Mock).mockReturnValueOnce(TEMPLATE)
+    jest.spyOn(AuditService.prototype, 'personSearch')
+    const req = mockReq({
+      query: {
+        crn: 'A123',
+        page: '1',
+      },
+    })
+
+    res = mockRes({
+      locals: { user: { username: 'Dave' }, flags: { flagSearchByName: true } },
+    })
+
+    await personSearchResults(req, res)
+    expect(getPersons).toHaveBeenCalledWith('token', 0, 20, 'A123', undefined, undefined)
+    expect(res.render).toHaveBeenCalledWith('pages/paginatedPersonSearchResults')
+    expect(res.locals.page).toEqual(TEMPLATE)
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdPersonSearchResults',
+      'Dave',
+      {
+        crn: 'A123',
+      },
+      { flagSearchByName: true }
+    )
+
+    expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
+      searchTerm: { crn: 'A123' },
       username: 'Dave',
       logErrors: true,
     })
