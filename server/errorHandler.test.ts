@@ -26,7 +26,7 @@ describe('Error pages', () => {
     const apiError = { status: 500 }
     ;(getPersonsByCrn as jest.Mock).mockRejectedValue(apiError)
     return request(appWithAllRoutes())
-      .get('/search-results?crn=123')
+      .get('/search-results-by-crn?crn=123')
       .expect(500)
       .expect('Content-Type', /html/)
       .expect(res => {

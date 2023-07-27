@@ -1,3 +1,11 @@
+{{ govukNotificationBanner({
+    text: 'Licence conditions come from NDelius. Update NDelius if anything is wrong. Refresh this page to see your update.',
+    classes: 'govuk-!-margin-bottom-4',
+    attributes: {
+        'data-analytics-event': 'notification_banner',
+        'data-analytics-event-category': 'ndeliusLicenceConditions'
+    }
+}) }}
 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-with-summary-sections">
     <div class="govuk-accordion__section" data-qa='standard'>
         <div class="govuk-accordion__section-header">

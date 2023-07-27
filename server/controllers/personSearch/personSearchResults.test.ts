@@ -46,7 +46,7 @@ describe('personSearchResults', () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ query: { crn: invalidCrn } })
     await personSearchResults(req, res)
-    expect(res.redirect).toHaveBeenCalledWith(303, '/search')
+    expect(res.redirect).toHaveBeenCalledWith(303, '/search-by-crn')
     expect(req.session.errors).toEqual([
       {
         href: '#crn',
@@ -75,7 +75,7 @@ describe('personSearchResults', () => {
     jest.spyOn(AuditService.prototype, 'personSearch')
     await personSearchResults(req, res)
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
-      searchTerm: '123',
+      searchTerm: { crn: '123' },
       username: 'Dave',
       logErrors: true,
     })

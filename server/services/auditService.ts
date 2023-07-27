@@ -26,7 +26,7 @@ export class AuditService {
     username,
     logErrors,
   }: {
-    searchTerm: string
+    searchTerm: Record<string, string>
     username: string
     logErrors: boolean
   }) {

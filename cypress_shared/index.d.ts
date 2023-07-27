@@ -36,6 +36,8 @@ declare global {
 
       fillInput(label: string, val: string, opts?: CommandOpts): Chainable<Element>
 
+      fillInputByName(name: string, val: string, opts?: CommandOpts): Chainable<Element>
+
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
 
       selectRadioByValue(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>

@@ -20,6 +20,27 @@ const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
 
+export const getPersons = (
+  token: string,
+  page: number,
+  pageSize: number,
+  crn: string | undefined,
+  firstName: string | undefined,
+  lastName: string | undefined
+): Promise<PersonDetails[]> => {
+  let queryString = `?page=${page}&pageSize=${pageSize}&`
+  if (crn) {
+    queryString += `crn=${crn}&`
+  }
+  if (firstName) {
+    queryString += `firstName=${firstName}&`
+  }
+  if (lastName) {
+    queryString += `lastName=${lastName}&`
+  }
+  return restClient(token).get({ path: `${routes.personSearchPaged}${queryString}` }) as Promise<PersonDetails[]>
+}
+
 export const getCaseSummary = <T>(
   crn: string,
   sectionId: CaseSectionId,

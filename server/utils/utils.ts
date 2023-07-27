@@ -164,6 +164,10 @@ export function isMandatoryTextValue(val: unknown): boolean {
 
 export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()
 
+export function isInvalidName(val: string) {
+  return !val.match(/^[A-Za-z '-]+$/)
+}
+
 export const stripHtmlTags = (str: string): string => {
   return isString(str) ? striptags(str) : str
 }
