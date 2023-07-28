@@ -24,7 +24,7 @@ export const personSearchResults = async (req: Request, res: Response) => {
   }
   res.locals.crn = searchValue
   if (flags.flagSearchByName) {
-    res.locals.page = await getPersons(user.token, Number(page) - 1, 10, searchValue, undefined, undefined)
+    res.locals.page = await getPersons(user.token, Number(page) - 1, 20, searchValue, undefined, undefined)
     res.render('pages/paginatedPersonSearchResults')
   } else {
     res.locals.persons = await getPersonsByCrn(searchValue, user.token)
