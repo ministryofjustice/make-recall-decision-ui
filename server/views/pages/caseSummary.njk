@@ -100,7 +100,12 @@
                         text: 'Recommendations',
                         href: pageUrlBase + 'recommendations',
                         active: section.id == 'recommendations'
-                    } if flags.flagRecommendationsPage else undefined
+                    } if flags.flagRecommendationsPage else undefined,
+                    {
+                        text: 'Last completed document',
+                        href: pageUrlBase + 'last-completed',
+                        active: section.id == 'last-completed'
+                    } if flags.flagLastCompleted else undefined
                 ])
             }) }}
             {% if section.id =='overview' %}
@@ -117,6 +122,8 @@
                 {% include '../partials/caseLicenceConditionsCvl.njk' %}
             {% elseif section.id =='contact-history' %}
                 {% include '../partials/caseContactHistory.njk' %}
+            {% elseif section.id =='last-completed' %}
+                {% include '../partials/caseCompleted.njk' %}
             {% elseif section.id =='recommendations' %}
                 {% include '../partials/caseRecommendations.njk' %}
             {% endif %}

@@ -37,32 +37,40 @@ export const createAndDownloadDocument =
     res.header('Content-Disposition', `attachment; filename="${fileName}"`)
     res.send(Buffer.from(fileContents, 'base64'))
 
+    const activate = []
+    const statuses = (
+      await getStatuses({
+        recommendationId,
+        token: user.token,
+      })
+    ).filter(status => status.active)
+
     const isSpo = user.roles.includes(HMPPS_AUTH_ROLE.SPO)
     if (!isSpo) {
-      const statuses = (
-        await getStatuses({
-          recommendationId,
-          token: user.token,
-        })
-      ).filter(status => status.active)
-
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
 
       if (!isPPDocumentCreated) {
-        const activate = [STATUSES.PP_DOCUMENT_CREATED]
+        activate.push(STATUSES.PP_DOCUMENT_CREATED)
 
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         if (!isSpo && isSpoRecordedRationale) {
           activate.push(STATUSES.CLOSED)
         }
-
-        await updateStatuses({
-          recommendationId,
-          token: user.token,
-          activate,
-          deActivate: [],
-        })
       }
+    }
+    if (documentType === 'NO_RECALL_LETTER') {
+      const isCompleted = statuses.find(status => status.name === STATUSES.COMPLETED)
+      if (!isCompleted) {
+        activate.push(STATUSES.COMPLETED)
+      }
+    }
+    if (activate.length > 0) {
+      await updateStatuses({
+        recommendationId,
+        token: user.token,
+        activate,
+        deActivate: [],
+      })
     }
 
     const auditData = {

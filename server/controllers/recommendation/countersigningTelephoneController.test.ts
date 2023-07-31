@@ -2,12 +2,13 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import countersigningTelephoneController from './countersigningTelephoneController'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load with no data for SPO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {},
@@ -28,7 +29,7 @@ describe('get', () => {
   })
 
   it('load with no data for ACO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {},
@@ -49,7 +50,7 @@ describe('get', () => {
   })
 
   it('load with existing data for SPO telephone', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -66,7 +67,7 @@ describe('get', () => {
     })
   })
   it('load with existing data for SPO telephone', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {

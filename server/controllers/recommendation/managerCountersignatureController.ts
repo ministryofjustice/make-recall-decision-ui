@@ -92,7 +92,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       recommendationId,
       token,
       deActivate: [STATUSES.ACO_SIGNATURE_REQUESTED],
-      activate: [STATUSES.ACO_SIGNED],
+      activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
     })
   }
 

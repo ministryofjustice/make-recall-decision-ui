@@ -3,6 +3,7 @@ import { getCaseSection } from './getCaseSection'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import {
   ContactHistoryResponse,
+  LastCompletedRecommendationsResponse,
   RecommendationResponse,
   VulnerabilitiesResponse,
 } from '../../@types/make-recall-decision-api'
@@ -61,6 +62,40 @@ describe('getCaseSection', () => {
     )
   })
 
+  it('returns last completed section', async () => {
+    const apiResponse = {
+      recommendations: [
+        {
+          recommendationId: 427954240,
+          lastModifiedByName: 'Making Recall Decisions SPO User',
+          createdDate: '2023-07-31T08:16:11.345Z',
+          lastModifiedDate: '2023-07-31T08:18:53.182Z',
+          status: 'DRAFT',
+          statuses: [
+            {
+              recommendationId: 427954240,
+              createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
+              createdByUserFullName: 'Making Recall Decisions SPO User',
+              created: '2023-07-31T08:18:53.361Z',
+              name: 'COMPLETED',
+              active: true,
+            },
+          ],
+          recallType: {
+            selected: { value: 'STANDARD', details: 'test' },
+          },
+        },
+      ],
+    }
+
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
+
+    const recs = caseSummary as LastCompletedRecommendationsResponse
+    expect(recs.recommendations[0].recallType).toBe('STANDARD')
+    expect(recs.recommendations[0].completedDate).toBe('2023-07-31T08:18:53.361Z')
+  })
+
   describe('Excluded', () => {
     const apiResponse = {
       userAccessResponse: {
@@ -107,6 +142,11 @@ describe('getCaseSection', () => {
 
     it('returns excluded data for recommendations', async () => {
       const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {}, {})
+      expect((caseSummary as RecommendationResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
+    it('returns excluded data for last-completed', async () => {
+      const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
       expect((caseSummary as RecommendationResponse).userAccessResponse.userExcluded).toEqual(true)
     })
   })
@@ -157,6 +197,11 @@ describe('getCaseSection', () => {
 
     it('returns restricted data for recommendations', async () => {
       const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {}, {})
+      expect((caseSummary as RecommendationResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
+    it('returns restricted data for last-completed', async () => {
+      const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
       expect((caseSummary as RecommendationResponse).userAccessResponse.userRestricted).toEqual(true)
     })
   })

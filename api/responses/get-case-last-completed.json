@@ -1,0 +1,164 @@
+{
+  "userAccessResponse": null,
+  "personalDetailsOverview": {
+    "fullName": "Harry Tom Smith",
+    "name": "Harry Smith",
+    "firstName": "Harry",
+    "middleNames": "Tom",
+    "surname": "Smith",
+    "dateOfBirth": "1990-09-15",
+    "age": 32,
+    "gender": "Male",
+    "crn": "X098092",
+    "ethnicity": "White",
+    "croNumber": "AB123XYZ",
+    "mostRecentPrisonerNumber": "MV123EDR",
+    "pncNumber": "GD123TEF",
+    "nomsNumber": "JG123POE",
+    "primaryLanguage": "English"
+  },
+  "recommendations": [
+    {
+      "recommendationId": 1,
+      "lastModifiedByName": "Making Recall Decisions SPO User",
+      "createdDate": "2023-07-31T08:16:11.345Z",
+      "lastModifiedDate": "2023-07-31T08:18:53.182Z",
+      "status": "DRAFT",
+      "statuses": [
+        {
+          "id": 75658211,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_USER",
+          "createdByUserFullName": "Making Recall Decisions User",
+          "created": "2023-07-31T08:16:36.505Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "SPO_CONSIDER_RECALL",
+          "recommendationHistoryId": 1200000051,
+          "active": true,
+          "emailAddress": null
+        },
+        {
+          "id": 1951661492,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_USER",
+          "createdByUserFullName": "Making Recall Decisions User",
+          "created": "2023-07-31T08:16:36.505Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "PO_RECALL_CONSULT_SPO",
+          "recommendationHistoryId": 1200000051,
+          "active": true,
+          "emailAddress": "making-recall-decisions-tech@digital.justice.gov.uk"
+        },
+        {
+          "id": 456540642,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_USER",
+          "createdByUserFullName": "Making Recall Decisions User",
+          "created": "2023-07-31T08:16:43.807Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "RECALL_DECIDED",
+          "recommendationHistoryId": 1200000051,
+          "active": true,
+          "emailAddress": null
+        },
+        {
+          "id": 1702432778,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "createdByUserFullName": "Making Recall Decisions SPO User",
+          "created": "2023-07-31T08:18:41.068Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "SPO_SIGNED",
+          "recommendationHistoryId": 348191528,
+          "active": true,
+          "emailAddress": "making-recall-decisions-spo-tech@digital.justice.gov.uk"
+        },
+        {
+          "id": 1354580684,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_USER",
+          "createdByUserFullName": "Making Recall Decisions User",
+          "created": "2023-07-31T08:18:03.597Z",
+          "modifiedBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "modifiedByUserFullName": "Making Recall Decisions SPO User",
+          "modified": "2023-07-31T08:18:40.650Z",
+          "name": "SPO_SIGNATURE_REQUESTED",
+          "recommendationHistoryId": 2098954897,
+          "active": false,
+          "emailAddress": null
+        },
+        {
+          "id": 9245290,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "createdByUserFullName": "Making Recall Decisions SPO User",
+          "created": "2023-07-31T08:18:53.361Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "ACO_SIGNED",
+          "recommendationHistoryId": 221797812,
+          "active": true,
+          "emailAddress": "making-recall-decisions-spo-tech@digital.justice.gov.uk"
+        },
+        {
+          "id": 1444777157,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "createdByUserFullName": "Making Recall Decisions SPO User",
+          "created": "2023-07-31T08:18:53.361Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "COMPLETED",
+          "recommendationHistoryId": 221797812,
+          "active": true,
+          "emailAddress": null
+        },
+        {
+          "id": 1346911775,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "createdByUserFullName": "Making Recall Decisions SPO User",
+          "created": "2023-07-31T08:18:41.642Z",
+          "modifiedBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "modifiedByUserFullName": "Making Recall Decisions SPO User",
+          "modified": "2023-07-31T08:18:53.216Z",
+          "name": "ACO_SIGNATURE_REQUESTED",
+          "recommendationHistoryId": 348191528,
+          "active": false,
+          "emailAddress": null
+        }
+      ],
+      "recallType": {
+        "selected": {
+          "value": "STANDARD",
+          "details": "test"
+        },
+        "allOptions": [
+          {
+            "value": "STANDARD",
+            "text": "Standard recall"
+          },
+          {
+            "value": "FIXED_TERM",
+            "text": "Fixed term recall"
+          },
+          {
+            "value": "NO_RECALL",
+            "text": "No recall"
+          }
+        ]
+      }
+    }
+  ],
+  "activeRecommendation": null
+}

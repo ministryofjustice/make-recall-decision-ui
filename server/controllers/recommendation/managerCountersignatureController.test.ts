@@ -2,12 +2,13 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import managerCountersignatureController from './managerCountersignatureController'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load with no data', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { crn: 'X123' },
@@ -24,7 +25,7 @@ describe('get', () => {
   })
 
   it('load with no data for ACO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { crn: 'X123' },
@@ -41,7 +42,7 @@ describe('get', () => {
   })
 
   it('load with existing data for SPO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { countersignSpoExposition: 'lorem ipsum blah blah blah' },
@@ -53,7 +54,7 @@ describe('get', () => {
   })
 
   it('load with existing data for ACO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { countersignAcoExposition: 'lorem ipsum blah blah blah' },
@@ -80,7 +81,7 @@ describe('get', () => {
         errorId: 'missingManagerCountersignatureExposition',
       },
     }
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         errors,
@@ -127,8 +128,8 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      deActivate: ['SPO_SIGNATURE_REQUESTED'],
-      activate: ['SPO_SIGNED'],
+      deActivate: [STATUSES.SPO_SIGNATURE_REQUESTED],
+      activate: [STATUSES.SPO_SIGNED],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
@@ -167,8 +168,8 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      deActivate: ['ACO_SIGNATURE_REQUESTED'],
-      activate: ['ACO_SIGNED'],
+      deActivate: [STATUSES.ACO_SIGNATURE_REQUESTED],
+      activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
