@@ -3,10 +3,10 @@ import { getCaseSection } from './getCaseSection'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import {
   ContactHistoryResponse,
+  LastCompletedRecommendationsResponse,
   RecommendationResponse,
   VulnerabilitiesResponse,
 } from '../../@types/make-recall-decision-api'
-import { LastCompletedRecommendationsResponse } from '../../@types/make-recall-decision-api/models/LastCompletedRecommendationsResponse'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('redis')
@@ -62,7 +62,7 @@ describe('getCaseSection', () => {
     )
   })
 
-  it('caches the contact history response in redis if CRN is not excluded or restricted', async () => {
+  it('returns last completed section', async () => {
     const apiResponse = {
       recommendations: [
         {

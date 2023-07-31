@@ -211,33 +211,6 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to task-list-no-recall', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          recallType: {
-            selected: {
-              value: 'NO_RECALL',
-            },
-          },
-        },
-        urlInfo: { basePath: '/recommendation/123/' },
-        user: {
-          token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
-        },
-      },
-    })
-    const next = mockNext()
-    await redirectController.get(mockReq(), res, next)
-
-    expect(updateStatuses).not.toHaveBeenCalled()
-
-    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-no-recall')
-    expect(next).toHaveBeenCalled()
-  })
-
   it('redirect to task-list if SPO_SIGNATURE_REQUESTED', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({

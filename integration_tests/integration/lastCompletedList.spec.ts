@@ -35,7 +35,7 @@ context('Recommendations tab in case summary', () => {
       statusCode: 200,
       response: {
         ...getLastCompletedRecommendationsResponse,
-        recommendations: [],
+        recommendations: null,
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/last-completed?flagLastCompleted=1`)

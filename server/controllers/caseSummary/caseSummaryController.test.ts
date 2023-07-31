@@ -413,37 +413,7 @@ describe('get', () => {
     expect(res.locals.backLink)
   })
 
-  it('do not show recommendation button for spo when recommendation doc and SPO_CONSIDER_RECALL state', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
-    const req = mockReq({
-      params: { crn, sectionId: 'overview' },
-    })
-    const response = mockRes({
-      token,
-      locals: {
-        user: {
-          username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
-        },
-      },
-    })
-
-    await caseSummaryController.get(req, response, next)
-
-    expect(response.locals.backLink).toEqual('/search')
-    expect(response.locals.pageUrlBase).toEqual('/cases/A1234AB/')
-    expect(response.locals.recommendationButton).toEqual({
-      display: true,
-      dataAnalyticsEventCategory: 'spo_consider_recall_click',
-      link: '/recommendations/1/',
-      post: false,
-      title: 'Consider a recall',
-    })
-    expect(response.locals.backLink)
-  })
-
-  it('do show recommendation button for spo when recommendation doc and SPO_CONSIDERING_RECALL state', async () => {
+  it('do show recommendation button for spo when recommendation doc and SPO_CONSIDER_RECALL state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
     const req = mockReq({
