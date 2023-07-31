@@ -65,11 +65,19 @@ export const getPersonsByCrn = ({ statusCode, response }) =>
     response,
   })
 
-export const getPersons = ({ statusCode, response }) =>
-  mockGet({
-    urlPathPattern: routes.personSearchPaged,
-    statusCode,
-    response,
+export const searchPersons = ({ statusCode, response }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPath: '/paged-search',
+    },
+    response: {
+      status: statusCode,
+      jsonBody: response,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
   })
 
 export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>

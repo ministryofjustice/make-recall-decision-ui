@@ -1,5 +1,5 @@
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getPersons } from '../../data/makeDecisionApiClient'
+import { searchPersons } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { personSearchResultsByName } from './personSearchResultsByName'
 import { AuditService } from '../../services/auditService'
@@ -23,7 +23,7 @@ const TEMPLATE = {
 
 describe('personSearchResultsByName', () => {
   it('valid search', async () => {
-    ;(getPersons as jest.Mock).mockReturnValueOnce(TEMPLATE)
+    ;(searchPersons as jest.Mock).mockReturnValueOnce(TEMPLATE)
     jest.spyOn(AuditService.prototype, 'personSearch')
     const req = mockReq({
       query: {
@@ -38,7 +38,7 @@ describe('personSearchResultsByName', () => {
     })
 
     await personSearchResultsByName(req, res)
-    expect(getPersons).toHaveBeenCalledWith('token', 0, 20, undefined, 'Harry', 'Styles')
+    expect(searchPersons).toHaveBeenCalledWith('token', 0, 20, undefined, 'Harry', 'Styles')
     expect(res.render).toHaveBeenCalledWith('pages/paginatedPersonSearchResults')
     expect(res.locals.page).toEqual(TEMPLATE)
 
