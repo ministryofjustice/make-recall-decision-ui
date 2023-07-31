@@ -33,7 +33,7 @@ describe('get', () => {
   })
 
   it('load record decision with RECALL type and not editable', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: false }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     const res = mockRes({
       locals: {
         recommendation: {

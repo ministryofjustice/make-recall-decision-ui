@@ -185,7 +185,7 @@ describe('get', () => {
   })
 
   it('redirect to task-list-no-recall if SPO_CONSIDER_RECALL', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDER_RECALL', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
     const res = mockRes({
       locals: {
         recommendation: {
@@ -211,8 +211,8 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to task-list-no-recall if SPO_CONSIDERING_RECALL', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_CONSIDERING_RECALL', active: true }])
+  it('redirect to task-list-no-recall', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
     const res = mockRes({
       locals: {
         recommendation: {

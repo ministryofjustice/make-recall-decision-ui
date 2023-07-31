@@ -4,4 +4,5 @@ export const routes = {
   getCaseSummary: '/cases',
   healthCheck: '/health',
   recommendations: '/recommendations',
+  recommendationComplete: '/recommendation/latest-complete/',
 }

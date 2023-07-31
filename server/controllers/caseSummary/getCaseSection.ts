@@ -21,6 +21,8 @@ import { transformRecommendations } from './recommendations/transformRecommendat
 import { ContactHistoryFilters } from '../../@types/contacts'
 import { CaseSectionId } from '../../@types/pagesForms'
 import { formOptions } from '../recommendations/formOptions/formOptions'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { LastCompletedRecommendationsResponse } from '../../@types/make-recall-decision-api/models/LastCompletedRecommendationsResponse'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
@@ -123,6 +125,21 @@ export const getCaseSection = async (
       caseSummaryRaw = await getCaseSummary<RecommendationsResponse>(trimmedCrn, 'recommendations', token)
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         caseSummary = transformRecommendations(caseSummaryRaw)
+      }
+      break
+    case 'last-completed':
+      sectionLabel = 'Last completed document'
+      caseSummaryRaw = await getCaseSummary<LastCompletedRecommendationsResponse>(trimmedCrn, 'last-completed', token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = {
+          ...caseSummaryRaw,
+          recommendations: caseSummaryRaw.recommendations?.map(recommendation => ({
+            ...recommendation,
+            completedDate: recommendation.statuses.find(status => status.active && status.name === STATUSES.COMPLETED)
+              .created,
+            recallType: recommendation.recallType.selected.value,
+          })),
+        }
       }
       break
     default:

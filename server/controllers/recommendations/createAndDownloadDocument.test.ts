@@ -119,12 +119,40 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).not.toHaveBeenCalled()
   })
 
+  it('do not mark DNTR as completed, if already set', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.COMPLETED,
+        active: true,
+      },
+    ])
+    const fileContents = '123'
+    const fileName = 'Letter.docx'
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName })
+    jest.spyOn(AuditService.prototype, 'createNoRecallLetter')
+
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
+
+    const res = mockRes({
+      token,
+      locals: { user: { username: 'Dave', email: 'dave@gov.uk', roles: [HMPPS_AUTH_ROLE.PO] }, flags: featureFlags },
+    })
+
+    await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '987',
+      token: 'token',
+      activate: [STATUSES.PP_DOCUMENT_CREATED],
+      deActivate: [],
+    })
+  })
+
   it('requests a no recall letter', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
     const fileContents = '123'
     const fileName = 'Letter.docx'
     ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName })
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
     jest.spyOn(AuditService.prototype, 'createNoRecallLetter')
 
     const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
@@ -141,7 +169,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: ['PP_DOCUMENT_CREATED'],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED],
       deActivate: [],
     })
 

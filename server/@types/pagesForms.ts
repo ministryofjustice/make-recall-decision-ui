@@ -35,6 +35,7 @@ export type CaseSectionId =
   | 'contact-history'
   | 'recommendations'
   | 'recommendations-prototype'
+  | 'last-completed'
 
 export interface PageMetaData {
   id: PageId

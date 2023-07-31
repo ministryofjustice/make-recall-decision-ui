@@ -5,8 +5,13 @@ import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
   flagCvl: {
-    label: 'enable CVL',
+    label: 'Enable CVL',
     description: 'Integrates CVL licence data into the licence tab and licence conditions entry page.',
+    default: false,
+  },
+  flagLastCompleted: {
+    label: 'Last Completed Tab',
+    description: 'Shows "Last Completed" tab on case overview.',
     default: false,
   },
   flagSearchByName: {

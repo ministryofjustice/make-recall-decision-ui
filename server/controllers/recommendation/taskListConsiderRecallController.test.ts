@@ -1,6 +1,7 @@
 import taskListConsiderRecallController from './taskListConsiderRecallController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -58,7 +59,7 @@ describe('post', () => {
   it('post with statuses', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
       {
-        name: 'SPO_CONSIDER_RECALL',
+        name: STATUSES.SPO_CONSIDER_RECALL,
         active: true,
         recommendationId: 123,
         createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
@@ -69,7 +70,7 @@ describe('post', () => {
         modifiedByUserFullName: null,
       },
       {
-        name: 'PO_RECALL_CONSULT_SPO',
+        name: STATUSES.PO_RECALL_CONSULT_SPO,
         active: true,
         recommendationId: 123,
         createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
@@ -132,7 +133,7 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      activate: ['SPO_CONSIDER_RECALL', 'PO_RECALL_CONSULT_SPO'],
+      activate: [STATUSES.SPO_CONSIDER_RECALL, STATUSES.PO_RECALL_CONSULT_SPO],
       deActivate: [],
     })
 
