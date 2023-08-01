@@ -7,7 +7,7 @@ describe('validatePersonSearch', () => {
         {
           href: '#crn',
           name: 'crn',
-          text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+          text: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
           errorId: 'invalidCrnFormat',
         },
       ],
@@ -21,7 +21,7 @@ describe('validatePersonSearch', () => {
         {
           href: '#crn',
           name: 'crn',
-          text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+          text: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
           errorId: 'invalidCrnFormat',
         },
       ],
