@@ -163,7 +163,7 @@
     "@types/bunyan-format": "^0.2.5",
     "@types/compression": "^1.7.2",
     "@types/connect-flash": "0.0.37",
-    "@types/connect-redis": "^0.0.19",
+    "@types/connect-redis": "^0.0.20",
     "@types/cookie-parser": "^1.4.3",
     "@types/cookie-session": "^2.0.44",
     "@types/csurf": "^1.11.2",
