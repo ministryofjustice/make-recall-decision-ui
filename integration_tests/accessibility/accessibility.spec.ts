@@ -62,7 +62,7 @@ const TEMPLATE = {
 context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
-    cy.task('getPersons', { statusCode: 200, response: TEMPLATE })
+    cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
     cy.mockCaseSummaryData()
     cy.mockRecommendationData()

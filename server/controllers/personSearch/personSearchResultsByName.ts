@@ -6,7 +6,7 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { getPersons } from '../../data/makeDecisionApiClient'
+import { searchPersons } from '../../data/makeDecisionApiClient'
 
 const auditService = new AuditService()
 
@@ -50,7 +50,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
   res.locals.firstName = firstName
   res.locals.lastName = lastName
 
-  res.locals.page = await getPersons(user.token, Number(page) - 1, 20, undefined, firstName, lastName)
+  res.locals.page = await searchPersons(user.token, Number(page) - 1, 20, undefined, firstName, lastName)
   res.render('pages/paginatedPersonSearchResults')
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { lastName, firstName }, flags)
   auditService.personSearch({

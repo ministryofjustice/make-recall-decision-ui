@@ -1,11 +1,14 @@
 import { Response } from 'superagent'
 import RestClient from './restClient'
 import config from '../config'
-import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
 
-import { CreateRecommendationRequest, RecommendationResponse } from '../@types/make-recall-decision-api'
-import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
+import {
+  CreateRecommendationRequest,
+  DocumentResponse,
+  RecommendationResponse,
+  PersonDetails,
+} from '../@types/make-recall-decision-api'
 import { FeatureFlags } from '../@types/featureFlags'
 import { CaseSectionId } from '../@types/pagesForms'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
@@ -20,7 +23,7 @@ const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
 
-export const getPersons = (
+export const searchPersons = (
   token: string,
   page: number,
   pageSize: number,
@@ -28,17 +31,21 @@ export const getPersons = (
   firstName: string | undefined,
   lastName: string | undefined
 ): Promise<PersonDetails[]> => {
-  let queryString = `?page=${page}&pageSize=${pageSize}&`
+  const body: Record<string, unknown> = {}
   if (crn) {
-    queryString += `crn=${crn}&`
+    body.crn = crn
   }
   if (firstName) {
-    queryString += `firstName=${firstName}&`
+    body.firstName = firstName
   }
   if (lastName) {
-    queryString += `lastName=${lastName}&`
+    body.lastName = lastName
   }
-  return restClient(token).get({ path: `${routes.personSearchPaged}${queryString}` }) as Promise<PersonDetails[]>
+  const queryString = `?page=${page}&pageSize=${pageSize}`
+  return restClient(token).post({
+    path: `${routes.personSearchPaged}${queryString}`,
+    data: body,
+  }) as Promise<PersonDetails[]>
 }
 
 export const getCaseSummary = <T>(

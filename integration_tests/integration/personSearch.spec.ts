@@ -91,7 +91,7 @@ context('Search for a person', () => {
     })
 
     // no search results
-    cy.task('getPersons', { statusCode: 200, response: { ...TEMPLATE, results: [] } })
+    cy.task('searchPersons', { statusCode: 200, response: { ...TEMPLATE, results: [] } })
     cy.fillInputByName('crn', crnQuery)
     cy.clickButton('Search')
     cy.pageHeading().should('equal', 'Search results')
@@ -99,7 +99,7 @@ context('Search for a person', () => {
     cy.getElement('No results found. Double-check you entered the right CRN.').should('exist')
 
     // one search result
-    cy.task('getPersons', { statusCode: 200, response: TEMPLATE })
+    cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.clickLink('Change')
     cy.fillInputByName('crn', crnQuery)
     cy.clickButton('Search')
@@ -136,7 +136,7 @@ context('Search for a person', () => {
     })
 
     // no search results
-    cy.task('getPersons', { statusCode: 200, response: { ...TEMPLATE, results: [] } })
+    cy.task('searchPersons', { statusCode: 200, response: { ...TEMPLATE, results: [] } })
     cy.fillInput('First name', 'Harry')
     cy.fillInput('Last name', 'Styles')
     cy.clickButton('Search')
@@ -146,7 +146,7 @@ context('Search for a person', () => {
     cy.getElement('No results found. Double-check you entered the right name.').should('exist')
 
     // one search result
-    cy.task('getPersons', { statusCode: 200, response: TEMPLATE })
+    cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.clickLink('Change')
     cy.fillInput('First name', 'Harry')
     cy.fillInput('Last name', 'Styles')
