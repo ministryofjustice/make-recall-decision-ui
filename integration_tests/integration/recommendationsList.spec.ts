@@ -70,7 +70,7 @@ context('Recommendations tab in case summary', () => {
 
   const checkValuesInTable = expectedTableRows => {
     for (let i = 0; i < expectedTableRows.length; i += 1) {
-      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowQaAttr: `recommendation-${i + 1}` }).then(row1 => {
+      cy.getRowValuesFromTable({ tableCaption: 'Recommendations', rowSelector: `[data-qa="${i + 1}"]` }).then(row1 => {
         expect(row1).to.deep.eq(expectedTableRows[i])
       })
     }
@@ -86,6 +86,7 @@ context('Recommendations tab in case summary', () => {
         recommendations,
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Paula Smith')
 
@@ -99,22 +100,22 @@ context('Recommendations tab in case summary', () => {
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
     ])
 
-    cy.getLinkHref('Update recommendation', { parent: '[data-qa="recommendation-2"]' }).should(
+    cy.getLinkHref('Update recommendation', { parent: '[data-qa="2"]' }).should(
       'contain',
       '/recommendations/2/task-list'
     )
-    cy.getLinkHref('Update recommendation', { parent: '[data-qa="recommendation-3"]' }).should(
+    cy.getLinkHref('Update recommendation', { parent: '[data-qa="3"]' }).should(
       'contain',
       '/recommendations/3/task-list'
     )
-    cy.getLinkHref('Update recommendation', { parent: '[data-qa="recommendation-4"]' }).should(
+    cy.getLinkHref('Update recommendation', { parent: '[data-qa="4"]' }).should(
       'contain',
       '/recommendations/4/task-list-no-recall'
     )
     cy.getLinkHref('Download Part A from 23 September 2021 at 14:59', {
-      parent: '[data-qa="recommendation-5"]',
+      parent: '[data-qa="5"]',
     }).should('contain', '/recommendations/5/documents/part-a?crn=X514364')
-    cy.getLinkHref('Download letter from 14 May 2019 at 14:59', { parent: '[data-qa="recommendation-6"]' }).should(
+    cy.getLinkHref('Download letter from 14 May 2019 at 14:59', { parent: '[data-qa="6"]' }).should(
       'contain',
       '/recommendations/6/documents/no-recall-letter?crn=X514364'
     )

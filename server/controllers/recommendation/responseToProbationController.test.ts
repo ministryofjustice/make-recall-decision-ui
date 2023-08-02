@@ -10,30 +10,16 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { crn: 'X123' },
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
     responseToProbationController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'responseToProbation' })
-    expect(res.locals.backLink).toEqual('/cases/X123/overview')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/responseToProbation')
 
     expect(next).toHaveBeenCalled()
-  })
-
-  it('test back button with feature flag', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        flags: { flagTriggerWork: true },
-      },
-    })
-    await responseToProbationController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.backLink).toEqual('task-list-consider-recall')
   })
 
   it('load with existing data', async () => {
@@ -74,7 +60,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -89,32 +74,11 @@ describe('post', () => {
       valuesToSave: {
         responseToProbation: 'some value',
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/licence-conditions`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-  it('post with valid data triggerwork flag set', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: { responseToProbation: 'some value' },
-    })
-
-    const res = mockRes({
-      locals: {
-        flags: { flagTriggerWork: true },
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-
-    await responseToProbationController.post(req, res, mockNext())
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
@@ -127,7 +91,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

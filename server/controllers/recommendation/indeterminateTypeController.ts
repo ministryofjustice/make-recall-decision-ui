@@ -17,7 +17,6 @@ function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
-    backLink: 'is-extended',
     page: {
       id: 'indeterminateSentenceType',
     },
@@ -61,9 +60,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-
-  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'recall-type-indeterminate'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }

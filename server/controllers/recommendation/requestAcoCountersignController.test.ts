@@ -33,9 +33,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'requestAcoCountersign' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/requestAcoCountersign')
-    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/')
-    expect(res.locals.backLink).toEqual('task-list#countersign')
-
+    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/task-list')
     expect(next).toHaveBeenCalled()
   })
   it('load with ACO_SIGNATURE_REQUESTED', async () => {
@@ -60,8 +58,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'requestAcoCountersign' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/requestAcoCountersign')
-    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/')
-    expect(res.locals.backLink).toEqual('task-list#countersign')
+    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/123/task-list')
 
     expect(next).toHaveBeenCalled()
   })

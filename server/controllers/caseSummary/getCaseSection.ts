@@ -1,7 +1,8 @@
 import { ParsedQs } from 'qs'
 import { performance } from 'perf_hooks'
 import { CaseSummaryOverviewResponse } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponse'
-import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import { CaseSummaryOverviewResponseV2 } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponseV2'
+import { getCaseSummary, getCaseSummaryV2 } from '../../data/makeDecisionApiClient'
 import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 import { RiskResponse } from '../../@types/make-recall-decision-api/models/RiskResponse'
 import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
@@ -19,13 +20,17 @@ import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import { transformRecommendations } from './recommendations/transformRecommendations'
 import { ContactHistoryFilters } from '../../@types/contacts'
 import { CaseSectionId } from '../../@types/pagesForms'
+import { formOptions } from '../recommendations/formOptions/formOptions'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { LastCompletedRecommendationsResponse } from '../../@types/make-recall-decision-api/models/LastCompletedRecommendationsResponse'
 
 export const getCaseSection = async (
   sectionId: CaseSectionId,
   crn: string,
   token: string,
   userId: string,
-  reqQuery: ParsedQs
+  reqQuery: ParsedQs,
+  flags: Record<string, boolean>
 ) => {
   let sectionLabel
   let caseSummary
@@ -70,10 +75,22 @@ export const getCaseSection = async (
     case 'licence-conditions':
       sectionLabel = 'Licence conditions'
       startTime = performance.now()
-      caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
-      appInsightsTimingMetric({ name: 'getCaseLicenceConditions', startTime })
-      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        caseSummary = transformLicenceConditions(caseSummaryRaw) as CaseSummaryOverviewResponse
+      if (flags.flagCvl) {
+        const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(trimmedCrn, sectionId, token)
+        appInsightsTimingMetric({ name: 'getCaseLicenceConditionsV2', startTime })
+        caseSummary = {
+          ...json,
+          licenceConvictions: {
+            activeCustodial: json.activeConvictions.filter(conviction => conviction.sentence.isCustodial),
+          },
+          standardLicenceConditions: formOptions.standardLicenceConditions,
+        }
+      } else {
+        caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
+        appInsightsTimingMetric({ name: 'getCaseLicenceConditions', startTime })
+        if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+          caseSummary = transformLicenceConditions(caseSummaryRaw) as CaseSummaryOverviewResponse
+        }
       }
       break
     case 'licence-conditions-cvl':
@@ -108,6 +125,21 @@ export const getCaseSection = async (
       caseSummaryRaw = await getCaseSummary<RecommendationsResponse>(trimmedCrn, 'recommendations', token)
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
         caseSummary = transformRecommendations(caseSummaryRaw)
+      }
+      break
+    case 'last-completed':
+      sectionLabel = 'Last completed document'
+      caseSummaryRaw = await getCaseSummary<LastCompletedRecommendationsResponse>(trimmedCrn, 'last-completed', token)
+      if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
+        caseSummary = {
+          ...caseSummaryRaw,
+          recommendations: caseSummaryRaw.recommendations?.map(recommendation => ({
+            ...recommendation,
+            completedDate: recommendation.statuses.find(status => status.active && status.name === STATUSES.COMPLETED)
+              .created,
+            recallType: recommendation.recallType.selected.value,
+          })),
+        }
       }
       break
     default:

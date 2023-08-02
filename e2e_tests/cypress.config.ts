@@ -2,15 +2,18 @@ import { defineConfig } from 'cypress'
 import createBundler from '@bahmutov/cypress-esbuild-preprocessor'
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor'
 import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild'
+import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter'
 import { readDocX } from '../cypress_shared/plugins'
 
 export default defineConfig({
+  viewportHeight: 900,
+  viewportWidth: 1600,
   chromeWebSecurity: false,
   downloadsFolder: 'e2e_tests/downloads',
   fixturesFolder: 'e2e_tests/fixtures',
   screenshotsFolder: 'e2e_tests/screenshots',
   videosFolder: 'e2e_tests/videos',
-  video: false,
+  video: process.env.ENVIRONMENT !== 'local',
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
     reportDir: 'e2e_tests/reports',
@@ -23,7 +26,7 @@ export default defineConfig({
     },
   },
   retries: {
-    runMode: 2,
+    runMode: 1,
     openMode: 0,
   },
   e2e: {
@@ -33,7 +36,12 @@ export default defineConfig({
     ): Promise<Cypress.PluginConfigOptions> {
       // This is required for the preprocessor to be able to generate JSON reports after each run, and more,
       await addCucumberPreprocessorPlugin(on, config)
-
+      installLogsPrinter(on, {
+        printLogsToFile: 'always',
+        printLogsToConsole: 'always',
+        outputRoot: `${config.projectRoot}/e2e_tests/logs`,
+        outputTarget: { 'out.txt': 'txt', 'out.json': 'json' },
+      })
       on(
         'file:preprocessor',
         createBundler({
@@ -44,7 +52,6 @@ export default defineConfig({
       on('task', {
         readDocX,
       })
-
       return config
     },
     baseUrl: 'http://localhost:3000',

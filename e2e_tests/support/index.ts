@@ -15,6 +15,9 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import installLogsCollector from 'cypress-terminal-report/src/installLogsCollector'
+
+installLogsCollector({ collectTypes: ['cy:log', 'cons:info', 'cons:warn', 'cons:error', 'cons:debug'], enableContinuousLogging: false })
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

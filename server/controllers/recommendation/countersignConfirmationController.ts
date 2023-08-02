@@ -33,11 +33,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
     isAcoSigned,
     ...res.locals,
-    backLink: 'manager-countersignature',
     page: {
       id: 'countersignConfirmation',
     },
-    link: `${config.domain}/recommendations/${recommendation.id}/`,
+    link: `${config.domain}/recommendations/${recommendation.id}/task-list`,
   }
 
   res.render(`pages/recommendations/countersignConfirmation`)

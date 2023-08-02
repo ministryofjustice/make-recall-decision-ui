@@ -145,7 +145,9 @@ export const normalizeCrn = (crn: string) => {
   return invalidCharsRemoved.toUpperCase()
 }
 
-export const isPreprodOrProd = (env?: string) => ['PREPRODUCTION', 'PRODUCTION'].includes(env)
+export const isPreprodOrProd = (env?: string) => {
+  return ['PREPRODUCTION', 'PRE-PRODUCTION', 'PRODUCTION'].includes(env?.toUpperCase())
+}
 
 export const booleanToYesNo = (val: boolean) => {
   if (val === true) return 'YES'
@@ -161,6 +163,10 @@ export function isMandatoryTextValue(val: unknown): boolean {
 }
 
 export const isEmptyStringOrWhitespace = (val: string | string[]) => !val || !(val as string).trim()
+
+export function isInvalidName(val: string) {
+  return !val.match(/^[A-Za-z '-]+$/)
+}
 
 export const stripHtmlTags = (str: string): string => {
   return isString(str) ? striptags(str) : str

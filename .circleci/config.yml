@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  browser-tools: circleci/browser-tools@1.3.0
+  browser-tools: circleci/browser-tools@1.4.3
   hmpps: ministryofjustice/hmpps@5.0.4
   node: circleci/node@4.5.2
   slack: circleci/slack@4.10.1
@@ -20,6 +20,9 @@ parameters:
   redis-version:
     type: string
     default: "6.2"
+  e2e-check-local:
+    type: boolean
+    default: false
   e2e-check-dev:
     type: boolean
     default: false
@@ -29,6 +32,10 @@ parameters:
   e2e-parallelism:
     type: integer
     default: 6
+  e2e-parallelism-env:
+    type: integer
+    default: 1
+    
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -138,7 +145,9 @@ jobs:
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
       - checkout
-      - browser-tools/install-chrome
+      - run: sudo apt-get update
+      - browser-tools/install-chrome:
+          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
       - browser-tools/install-chromedriver
       - node/install-packages
       - attach_workspace:
@@ -184,7 +193,9 @@ jobs:
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
       - checkout
-      - browser-tools/install-chrome
+      - run: sudo apt-get update
+      - browser-tools/install-chrome:
+          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
       - browser-tools/install-chromedriver
       - node/install-packages
       - attach_workspace:
@@ -234,12 +245,15 @@ jobs:
     docker:
       - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
 
-    parallelism: << pipeline.parameters.e2e-parallelism >>
+    parallelism: << pipeline.parameters.e2e-parallelism-env >>
     resource_class: large
     parameters:
       environment:
         type: string
         default: dev
+      e2e-tags:
+        type: string
+        default: "@E2E"
     steps:
       - checkout
       - run:
@@ -247,25 +261,32 @@ jobs:
           command: 'npm install -g npm@latest'
       - node/install-packages
       - run:
+          environment:
+            FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           name: E2E Check - << parameters.environment >>
           command: |
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split )
+            shopt -s globstar
+            
+            SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env TAGS='<< parameters.e2e-tags >>',USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},USERNAME_ACO=${CYPRESS_USERNAME_ACO_<< parameters.environment >>},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
-              --browser edge \
+              --browser chrome \
               --record false
             node scripts/fix-junit-reports.js
       - store_artifacts:
           path: e2e_tests/screenshots
           destination: screenshots
       - store_artifacts:
-          path: e2e_tests/reports
-          destination: reports
+          path: e2e_tests/videos
+          destination: videos
+      - store_artifacts:
+          path: e2e_tests/logs
+          destination: test-logs
       - store_artifacts:
           path: e2e_tests/junit
           destination: junit
@@ -294,16 +315,20 @@ jobs:
       - run:
           name: Run E2E tests
           working_directory: make-recall-decision-ui
+          environment:
+            FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           command: |
             npm ci --no-audit
             
-            SPECS=$(circleci tests glob e2e_tests/integration/*.feature | circleci tests split)
-            echo $SPECS
+            shopt -s globstar
+            
+            SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --split-by=timings --show-counts)
+            echo "Running feature file(s): $SPECS"
 
             set +e
 
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local} \
+              --env TAGS='not @E2E',USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local},USERNAME_ACO=${CYPRESS_USERNAME_ACO_local},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_local} \
               --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \
@@ -328,11 +353,11 @@ jobs:
           path: make-recall-decision-ui/e2e_tests/screenshots
           destination: screenshots
       - store_artifacts:
-          path: make-recall-decision-ui/e2e_tests/reports
-          destination: reports
-      - store_artifacts:
           path: make-recall-decision-ui/e2e_tests/junit
           destination: junit
+      - store_artifacts:
+          path: make-recall-decision-ui/e2e_tests/logs
+          destination: test-logs
       - store_test_results:
           path: make-recall-decision-ui/e2e_tests/junit
 
@@ -346,10 +371,15 @@ workflows:
     when:
       not:
         or:
+          - << pipeline.parameters.e2e-check-local >>
           - << pipeline.parameters.e2e-check-dev >>
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
       - e2e_local_test:
+          filters:
+            branches:
+              only:
+                - main
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
@@ -412,7 +442,7 @@ workflows:
             - helm_lint
             - unit_test
             - integration_test
-#            - e2e_local_test
+            - e2e_local_test
             - build_docker
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
@@ -425,24 +455,32 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-#      - e2e_environment_test:
-#          name: e2e_test_dev
-#          environment: dev
-#          requires:
-#            - deploy_dev
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy_dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
           env: preprod
+          filters:
+            branches:
+              only:
+                - main
           context:
             - hmpps-common-vars
             - make-recall-decision-ui-preprod
           requires:
             - deploy_dev
-#            - e2e_test_dev
+            - e2e_test_dev
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
@@ -454,20 +492,25 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-#      - e2e_environment_test:
-#          name: e2e_test_preprod
-#          environment: preprod
-#          requires:
-#            - deploy_preprod
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          e2e-tags: "@smoke"
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy_preprod
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
   
       - request-prod-approval:
           type: approval 
           requires:
             - deploy_preprod
-#            - e2e_test_preprod
+            - e2e_test_preprod
       - hmpps/deploy_env:
           name: deploy_prod
           env: prod
@@ -490,22 +533,49 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-#  e2e-check-dev:
-#    when: << pipeline.parameters.e2e-check-dev >>
+  e2e-check-local:
+    when: << pipeline.parameters.e2e-check-local >>
+    jobs:
+      - e2e_local_test:
+          name: e2e_local_test
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
+  e2e-check-dev:
+    when: << pipeline.parameters.e2e-check-dev >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_dev
+          environment: dev
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
+  e2e-check-preprod:
+    when: << pipeline.parameters.e2e-check-preprod >>
+    jobs:
+      - e2e_environment_test:
+          name: e2e_test_preprod
+          environment: preprod
+          e2e-tags: "@smoke"
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
+
+# Disabling it as this is also triggered from CircleCI Scheduler UI
+#  e2e-check-dev-daily:
+#    triggers:
+#      - schedule:
+#          cron: "00 20 * * 1-5"
+#          filters:
+#            branches:
+#              only:
+#                - main
 #    jobs:
 #      - e2e_environment_test:
 #          name: e2e_test_dev
 #          environment: dev
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
-
-#  e2e-check-preprod:
-#    when: << pipeline.parameters.e2e-check-preprod >>
-#    jobs:
-#      - e2e_environment_test:
-#          name: e2e_test_preprod
-#          environment: preprod
 #          context:
 #            - hmpps-common-vars
 #          <<: *slack-fail-post-step

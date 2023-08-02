@@ -19,7 +19,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'task-list',
     page: {
       id: 'countersigningTelephone',
     },
@@ -50,10 +49,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  res.redirect(
-    303,
-    nextPageLinkUrl({ nextPageId: 'manager-countersignature', urlInfo: { ...urlInfo, fromPageId: undefined } })
-  )
+
+  const nextPageId = mode === 'SPO' ? 'spo-countersignature' : 'aco-countersignature'
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo: { ...urlInfo, fromPageId: undefined } }))
 }
 
 export default { get, post }

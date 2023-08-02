@@ -11,14 +11,12 @@ describe('get', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         token: 'token1',
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
     await indeterminateTypeController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'indeterminateSentenceType' })
-    expect(res.locals.backLink).toEqual('is-extended')
     expect(res.locals.pageHeadings.indeterminateSentenceType).toEqual('What type of sentence is Harry Smith on?')
     expect(res.locals.pageTitles.indeterminateSentenceType).toEqual('What type of sentence is the person on?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
@@ -115,7 +113,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -140,10 +137,10 @@ describe('post', () => {
         },
       },
       token: 'token1',
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type-indeterminate`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -161,7 +158,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

@@ -22,7 +22,7 @@ const auditService = new AuditService()
 
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
-  const { user } = res.locals
+  const { user, flags } = res.locals
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
@@ -32,7 +32,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
     normalizedCrn,
     res.locals.user.token,
     res.locals.user.userId,
-    req.query
+    req.query,
+    flags
   )
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
@@ -76,33 +77,11 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
-      const isSpoConsideringRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
-
       const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
-
-      const isSpoSigned = statuses.find(status => status.name === STATUSES.SPO_SIGNED)
 
       const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
-      const isAcoSigned = statuses.find(status => status.name === STATUSES.ACO_SIGNED)
-
-      if (isSpoConsiderRecall) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Consider a recall',
-          dataAnalyticsEventCategory: 'spo_consider_recall_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
-        }
-      } else if (isSpoConsideringRecall) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Update recommendation',
-          dataAnalyticsEventCategory: 'spo_consider_recall_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
-        }
-      } else if (isSpoSignatureRequested || isSpoSigned || isAcoSignatureRequested || isAcoSigned) {
+      if (isSpoSignatureRequested || isAcoSignatureRequested) {
         recommendationButton = {
           display: true,
           post: false,
@@ -110,14 +89,49 @@ async function get(req: Request, res: Response, _: NextFunction) {
           dataAnalyticsEventCategory: 'spo_countersign_click',
           link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/task-list`,
         }
+      } else if (isSpoConsiderRecall) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Consider a recall',
+          dataAnalyticsEventCategory: 'spo_consider_recall_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
       }
     } else {
-      recommendationButton = {
-        display: true,
-        post: false,
-        title: 'Update recommendation',
-        dataAnalyticsEventCategory: 'update_recommendation_click',
-        link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+      const statuses = (
+        await getStatuses({
+          recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
+          token: user.token,
+        })
+      ).filter(status => status.active)
+
+      const isClosed = statuses.find(status => status.name === STATUSES.CLOSED)
+      const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+      if (isClosed) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Make a recommendation',
+          dataAnalyticsEventCategory: 'make_recommendation_click',
+          link: `${pageUrlBase}create-recommendation-warning`,
+        }
+      } else if (isPPDocumentCreated) {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Consider a recall',
+          dataAnalyticsEventCategory: 'make_recommendation_click',
+          link: `${pageUrlBase}replace-recommendation/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
+      } else {
+        recommendationButton = {
+          display: true,
+          post: false,
+          title: 'Update recommendation',
+          dataAnalyticsEventCategory: 'update_recommendation_click',
+          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+        }
       }
     }
   }

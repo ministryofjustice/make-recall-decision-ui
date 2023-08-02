@@ -2,12 +2,13 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import managerCountersignatureController from './managerCountersignatureController'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load with no data', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { crn: 'X123' },
@@ -17,15 +18,14 @@ describe('get', () => {
     await managerCountersignatureController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'lineManagerCountersignature' })
-    expect(res.locals.backLink).toEqual('countersigning-telephone')
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
 
     expect(next).toHaveBeenCalled()
   })
 
   it('load with no data for ACO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { crn: 'X123' },
@@ -35,15 +35,14 @@ describe('get', () => {
     await managerCountersignatureController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'seniorManagerCountersignature' })
-    expect(res.locals.backLink).toEqual('countersigning-telephone')
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/managerCountersignature')
 
     expect(next).toHaveBeenCalled()
   })
 
   it('load with existing data for SPO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { countersignSpoExposition: 'lorem ipsum blah blah blah' },
@@ -51,11 +50,11 @@ describe('get', () => {
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum blah blah blah')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum blah blah blah')
   })
 
   it('load with existing data for ACO', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'ACO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         recommendation: { countersignAcoExposition: 'lorem ipsum blah blah blah' },
@@ -63,7 +62,7 @@ describe('get', () => {
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum blah blah blah')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum blah blah blah')
   })
 
   it('initial load with error data', async () => {
@@ -82,7 +81,7 @@ describe('get', () => {
         errorId: 'missingManagerCountersignatureExposition',
       },
     }
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: 'SPO_SIGNATURE_REQUESTED', active: true }])
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
         errors,
@@ -91,7 +90,7 @@ describe('get', () => {
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum')
     expect(res.locals.inputDisplayValues.errors).toEqual(errors)
   })
 })
@@ -103,7 +102,7 @@ describe('post', () => {
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
-      body: { mode: 'SPO', value: 'some value' },
+      body: { mode: 'SPO', managerCountersignatureExposition: 'some value' },
     })
 
     const res = mockRes({
@@ -111,7 +110,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
-        flags: {},
       },
     })
     const next = mockNext()
@@ -130,8 +128,8 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      deActivate: ['SPO_SIGNATURE_REQUESTED'],
-      activate: ['SPO_SIGNED'],
+      deActivate: [STATUSES.SPO_SIGNATURE_REQUESTED],
+      activate: [STATUSES.SPO_SIGNED],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
@@ -144,7 +142,7 @@ describe('post', () => {
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
-      body: { mode: 'ACO', value: 'some value' },
+      body: { mode: 'ACO', managerCountersignatureExposition: 'some value' },
     })
 
     const res = mockRes({
@@ -152,7 +150,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
-        flags: {},
       },
     })
     const next = mockNext()
@@ -171,8 +168,8 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      deActivate: ['ACO_SIGNATURE_REQUESTED'],
-      activate: ['ACO_SIGNED'],
+      deActivate: [STATUSES.ACO_SIGNATURE_REQUESTED],
+      activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
@@ -185,12 +182,11 @@ describe('post', () => {
     const req = mockReq({
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
-      body: { mode: 'SPO', value: '' },
+      body: { mode: 'SPO', managerCountersignatureExposition: '' },
     })
 
     const res = mockRes({
       locals: {
-        flags: {},
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

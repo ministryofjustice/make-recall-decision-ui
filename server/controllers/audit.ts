@@ -7,18 +7,19 @@ import { AuditService } from '../services/auditService'
 const auditService = new AuditService()
 
 export default function audit(req: Request, res: Response, _: NextFunction) {
-  const { recommendationId, pageUrlSlug } = req.params
+  const { recommendationId } = req.params
   const {
     user: { username },
     flags: featureFlags,
   } = res.locals
+  const pageUrlSlug = req.path.substring(req.path.lastIndexOf('/') + 1)
   appInsightsEvent(
     EVENTS.MRD_RECOMMENDATION_PAGE_VIEW,
     username,
     {
       crn: res.locals.recommendation.crn,
       recommendationId,
-      pageUrlSlug,
+      pageUrlSlug: pageUrlSlug.trim().length === 0 ? '<root>' : pageUrlSlug,
     },
     featureFlags
   )

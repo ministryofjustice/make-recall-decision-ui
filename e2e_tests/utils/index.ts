@@ -24,7 +24,44 @@ export const isoDateToObject = (isoDate: string) => {
   return { day, month, year }
 }
 
-export const formatObjectDate = (objectDate: Record<string, number | string>) => {
+export const formatObjectDateToLongFormat = (objectDate: Record<string, number | string>) => {
   const d = DateTime.fromObject(objectDate)
-  return d.toFormat('dd/LL/yyyy')
+  return d.toFormat('d MMMM yyyy')
+}
+
+export const formatDateToCompletedDocumentFormat = () => {
+  const d = DateTime.now()
+  return d.toFormat('d MMM yyyy')
+}
+
+export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
+  return DateTime.fromFormat(dateToConvert, 'd MMMM yyyy').toFormat('dd/MM/yyyy')
+}
+
+export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
+  const nth = function (rawDate) {
+    if (rawDate > 3 && rawDate < 21) return 'th'
+    switch (rawDate % 10) {
+      case 1:
+        return 'st'
+      case 2:
+        return 'nd'
+      case 3:
+        return 'rd'
+      default:
+        return 'th'
+    }
+  }
+  cy.log(`objectDate--> ${objectDate.toDateString()} at ${objectDate.toTimeString()}`)
+  return DateTime.fromObject({
+    year: objectDate.getFullYear(),
+    month: objectDate.getMonth() + 1,
+    day: objectDate.getDate(),
+    weekday: objectDate.getDay(),
+    hour: objectDate.getHours(),
+    minute: objectDate.getMinutes(),
+    second: objectDate.getSeconds(),
+  })
+    .toFormat(`EEEE d'${nth(objectDate.getDate())}' MMMM yyyy 'at' h':'mma`)
+    .replace(/(AM|PM)/, (a, p1) => p1.toLowerCase())
 }

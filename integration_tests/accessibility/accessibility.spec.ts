@@ -9,9 +9,11 @@ const noRecallResponse = {
 
 const urls = [
   { url: '/' },
-  { url: '/search' },
-  { url: '/search-results' },
-  { url: '/search-results?crn=123' },
+  { url: '/search-by-crn' },
+  { url: '/search-by-name' },
+  { url: '/search-results-by-crn?crn=123' },
+  { url: '/search-results-by-crn?flagSearchByName=1&crn=123&page=0' },
+  { url: '/search-results-by-name?crn=123&page=0' },
   { url: `${routeUrls.cases}/123/overview` },
   { url: `${routeUrls.cases}/123/risk` },
   { url: `${routeUrls.cases}/123/vulnerabilities` },
@@ -37,9 +39,30 @@ const urls = [
   { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: true },
 ]
 
+const TEMPLATE = {
+  results: [
+    {
+      name: 'Harry 1 Smith',
+      crn: 'X098092',
+      dateOfBirth: '1980-05-06',
+      userExcluded: false,
+      userRestricted: false,
+    },
+    {
+      name: 'Harry 2 Hamburger',
+      crn: 'X098093',
+      dateOfBirth: '1980-05-06',
+      userExcluded: false,
+      userRestricted: false,
+    },
+  ],
+  paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
+}
+
 context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
+    cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
     cy.mockCaseSummaryData()
     cy.mockRecommendationData()

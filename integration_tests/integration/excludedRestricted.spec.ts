@@ -14,7 +14,7 @@ context('Excluded and restricted cases', () => {
     it('search results page', () => {
       cy.task('getPersonsByCrn', { statusCode: 200, response: personSearchExcludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.searchResults}?crn=${crn}`)
+      cy.visit(`${routeUrls.searchResultsByCRN}?crn=${crn}`)
       cy.contains('You are excluded from viewing this case').should('exist')
       cy.getText('name').should('equal', '(read more information)')
     })
@@ -64,7 +64,7 @@ context('Excluded and restricted cases', () => {
     it('search results page', () => {
       cy.task('getPersonsByCrn', { statusCode: 200, response: personSearchRestrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.searchResults}?crn=${crn}`)
+      cy.visit(`${routeUrls.searchResultsByCRN}?crn=${crn}`)
       cy.contains('This is a restricted case').should('exist')
       cy.getText('name').should('equal', '(read more information)')
     })

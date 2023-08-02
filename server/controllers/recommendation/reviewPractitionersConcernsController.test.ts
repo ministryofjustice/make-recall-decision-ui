@@ -73,7 +73,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
 
-    expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.offenderName).toEqual('Harry Smith')
     expect(res.locals.triggerLeadingToRecall).toBeUndefined()
     expect(res.locals.responseToProbation).toBeUndefined()
@@ -149,7 +148,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
 
-    expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.offenderName).toEqual('Harry Smith')
     expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
     expect(res.locals.responseToProbation).toEqual('some reason 2')
@@ -180,7 +178,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -194,7 +191,7 @@ describe('post', () => {
       valuesToSave: {
         reviewPractitionersConcerns: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/spo-task-list-consider-recall`)

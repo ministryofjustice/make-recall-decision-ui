@@ -3,46 +3,34 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-    {{ govukBackLink({
-        text: "Back to overview for " + recommendation.personOnProbation.name,
-        href:  '/cases/' + recommendation.crn + '/overview'
-    }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-
-            {% if flagTriggerWork %}
-                {% if isSpo %}
-                    <p class='govuk-body'>CRN: {{ recommendation.crn }}</p>
-                    <h1 class='govuk-heading-l'>Part A for {{ recommendation.personOnProbation.name }}</h1>
-                {% else %}
-                    <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-                    <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
-                            Complete the following sections of the Part A form. You can do this in any order.
-                    </p>
-                    {% if taskCompleteness.areAllComplete %}
-                        <p class='govuk-body'>
-                            {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
-                            sensitive language in the form.
-                        </p>
-                        <div>
-                            <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
-                        </div>
-
-                    {% endif %}
-                {% endif %}
+            {% if isSpo %}
+                <h1 class="govuk-heading-l">
+                  <span class="govuk-caption-l">CRN: {{ recommendation.crn }}</span>
+                  Part A for {{ recommendation.personOnProbation.name }}
+                </h1>
             {% else %}
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
                         Complete the following sections of the Part A form. You can do this in any order.
                 </p>
             {% endif %}
+            {% if taskCompleteness.areAllComplete %}
+                <p class='govuk-body'>
+                    {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
+                    sensitive language in the form.
+                </p>
+                <div>
+                    <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
+                </div>
+            {% endif %}
             <ol class="moj-task-list govuk-!-margin-top-8">
-                {% if flagTriggerWork and isSpo %}
+                {% if isSpo %}
                 <li>
                     <h2 class="moj-task-list__section" id='countersign-part-a'>
                         Countersign the Part A
@@ -51,9 +39,15 @@
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
                             {% if lineManagerCountersignLink %}
-                                <a aria-describedby='task-list-status-lineManagerCounterSignature'
-                                href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
-                                {{ pageHeadings.lineManagerCounterSignature }}</a>
+                                {% if isSpoRationaleRecorded %}
+                                    <a aria-describedby='task-list-status-lineManagerCounterSignature'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'countersigning-telephone', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
+                                    {{ pageHeadings.lineManagerCounterSignature }}</a>
+                                {% else %}
+                                    <a aria-describedby='task-list-status-lineManagerCounterSignature'
+                                    href="{{ changeLinkUrl({ pageUrlSlug: 'rationale-check', urlInfo: urlInfo, fromAnchor: 'countersign-part-a' }) }}">
+                                    {{ pageHeadings.lineManagerCounterSignature }}</a>
+                                {% endif %}
                             {% else %}
                                 {{ pageHeadings.lineManagerCounterSignature }}
                             {% endif %}
@@ -82,15 +76,10 @@
                 {% include '../../partials/taskList/vulnerabilitiesVictimLiaison.njk' %}
                 {% include '../../partials/taskList/custody.njk' %}
                 {% include '../../partials/taskList/riskProfile.njk' %}
-                {% if flagTriggerWork and not isSpo %}
+                {% if not isSpo %}
                 {% include '../../partials/taskList/countersign.njk' %}
                 {% endif %}
             </ol>
-            {% if not flagTriggerWork and taskCompleteness.areAllComplete == true %}
-            <div>
-                <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
-            </div>
-            {% endif %}
         </div>
     </div>
 

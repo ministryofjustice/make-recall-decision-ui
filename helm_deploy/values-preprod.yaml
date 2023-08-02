@@ -3,16 +3,17 @@
 
 generic-service:
   ingress:
-    host: make-recall-decision-preprod.hmpps.service.justice.gov.uk
+    host: consider-a-recall-preprod.hmpps.service.justice.gov.uk
     contextColour: green
 
-  env:
-    INGRESS_URL: "https://make-recall-decision-preprod.hmpps.service.justice.gov.uk"
+  env: 
+    INGRESS_URL: "https://consider-a-recall-preprod.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-preprod.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PRE-PROD"
     ENVIRONMENT: "PRE-PRODUCTION"
+    FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
   allowlist:
     pen_tester: "195.95.131.65"

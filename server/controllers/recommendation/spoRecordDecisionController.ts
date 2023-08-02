@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { getStatuses, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals
@@ -11,17 +13,16 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token: user.token,
   })
 
-  const isSpoConsideringRecall = statuses
+  const isSpoConsiderRecall = statuses
     .filter(status => status.active)
-    .find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
+    .find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
   res.locals = {
     ...res.locals,
-    backLink: 'spo-task-list-consider-recall',
     page: {
       id: 'spoRecordDecision',
     },
-    editable: !!isSpoConsideringRecall,
+    editable: !!isSpoConsiderRecall,
     recallType: recommendation.spoRecallType,
     spoRecallRationale: recommendation.spoRecallRationale,
     inputDisplayValues: {
@@ -34,11 +35,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { sensitive } = req.body
+  const { crn, sensitive } = req.body
 
   const {
     flags,
-    user: { token },
+    user: { username, token },
     urlInfo,
   } = res.locals
 
@@ -52,11 +53,28 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  const statuses = (
+    await getStatuses({
+      recommendationId,
+      token,
+    })
+  ).filter(status => status.active)
+
+  const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+
+  const activate = [STATUSES.SPO_RECORDED_RATIONALE]
+
+  if (isPPDocumentCreated) {
+    activate.push(STATUSES.CLOSED)
+  }
+
+  appInsightsEvent(EVENTS.MRD_SPO_RATIONALE_SENT, username, { crn, recommendationId }, flags)
+
   await updateStatuses({
     recommendationId,
     token,
-    activate: [STATUSES.SPO_RECORDED_RATIONALE],
-    deActivate: [STATUSES.SPO_CONSIDERING_RECALL],
+    activate,
+    deActivate: [STATUSES.SPO_CONSIDER_RECALL],
   })
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-rationale-confirmation', urlInfo }))

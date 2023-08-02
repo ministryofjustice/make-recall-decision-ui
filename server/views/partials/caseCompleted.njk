@@ -1,0 +1,42 @@
+<h1 class='govuk-heading-m govuk-visually-hidden'>Completed<span
+            class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
+<div class="govuk-grid-row">
+    {% if caseSummary.recommendations.length %}
+        <div class="govuk-grid-column-full">
+            <div class="moj-scrollable-pane">
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Recommendations</caption>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Date completed</th>
+                        <th scope="col" class="govuk-table__header">File</th>
+                        <th scope="col" class="govuk-table__header">Notes</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% for completed in caseSummary.recommendations %}
+                        <tr class="govuk-table__row" data-qa='{{ completed.recommendationId }}'>
+                            <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: completed.completedDate, dateOnly: true, shortDate: true }) }}</td>
+                            <td class="govuk-table__cell">
+                                {% if completed.recallType == 'NO_RECALL' %}
+                                <a href="/recommendations/{{ completed.recommendationId }}/documents/no-recall-letter?crn={{ caseSummary.personalDetailsOverview.crn }}" class="govuk-link">DNTR</a>
+                                {% else %}
+                                <a href="/recommendations/{{ completed.recommendationId }}/documents/part-a?crn={{ caseSummary.personalDetailsOverview.crn }}" class="govuk-link">Part A</a>
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell">This is the most recent completed document. It is not a draft.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h3 class='govuk-heading-m govuk-!-margin-bottom-3'>There are no documents to download</h3>
+            <p class='govuk-body'>There are no documents to download. This is because this service has not been used to
+            make a recommendation for {{ caseSummary.personalDetailsOverview.name }} yet. Check NDelius if you need an
+            old Part A or decision not to recall letter.</p>
+        </div>
+    {% endif %}
+</div>

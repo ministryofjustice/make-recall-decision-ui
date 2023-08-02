@@ -30,11 +30,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'task-list#countersign',
     page: {
       id: 'requestAcoCountersign',
     },
-    link: `${config.domain}/recommendations/${recommendation.id}/`,
+    link: `${config.domain}/recommendations/${recommendation.id}/task-list`,
   }
 
   res.render(`pages/recommendations/requestAcoCountersign`)

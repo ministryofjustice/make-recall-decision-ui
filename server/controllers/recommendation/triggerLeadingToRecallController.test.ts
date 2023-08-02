@@ -10,14 +10,12 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { crn: 'X123' },
-        flags: { flagTriggerWork: false },
       },
     })
     const next = mockNext()
     triggerLeadingToRecallController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'triggerLeadingToRecall' })
-    expect(res.locals.backLink).toEqual('task-list-consider-recall')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/triggerLeadingToRecall')
 
@@ -62,7 +60,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -77,7 +74,7 @@ describe('post', () => {
       valuesToSave: {
         triggerLeadingToRecall: 'some value',
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
@@ -95,7 +92,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

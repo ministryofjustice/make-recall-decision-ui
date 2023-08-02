@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import spoRecallRationaleController from './spoRecallRationaleController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -10,6 +11,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        statuses: [],
       },
     })
     const next = mockNext()
@@ -17,19 +19,46 @@ describe('get', () => {
 
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoRecallRationale')
     expect(res.locals.page).toEqual({ id: 'spoRecallRationale' })
-    expect(res.locals.backLink).toEqual('spo-task-list-consider-recall')
     expect(res.locals.inputDisplayValues).toEqual({
       errors: undefined,
       spoNoRecallRationale: '',
       spoRecallRationale: '',
       spoRecallType: undefined,
     })
+    expect(res.locals.recallDecided).toEqual(false)
     expect(next).toHaveBeenCalled()
+  })
+  it('present without data while recall has been decided', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        statuses: [{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }],
+      },
+    })
+
+    await spoRecallRationaleController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.page).toEqual({ id: 'spoRecallRationaleRecallDecided' })
+    expect(res.locals.recallDecided).toEqual(true)
+  })
+  it('present without data while spo has signed', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        statuses: [{ name: STATUSES.SPO_SIGNED, active: true }],
+      },
+    })
+
+    await spoRecallRationaleController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.page).toEqual({ id: 'spoRecallRationaleRecallDecided' })
+    expect(res.locals.recallDecided).toEqual(true)
   })
   it('present previous data', async () => {
     const res = mockRes({
       locals: {
         recommendation: { spoRecallType: 'RECALL', spoRecallRationale: 'some reason', spoNoRecallRationale: undefined },
+        statuses: [],
       },
     })
     await spoRecallRationaleController.get(mockReq(), res, mockNext())
@@ -59,6 +88,7 @@ describe('get', () => {
           },
         },
         recommendation: { spoRecallType: 'RECALL', spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        statuses: [],
       },
     })
     await spoRecallRationaleController.get(mockReq(), res, mockNext())
@@ -89,7 +119,6 @@ describe('post', () => {
   const res = mockRes({
     token: 'token1',
     locals: {
-      flags: { flagTriggerWork: false },
       recommendation: { personOnProbation: { name: 'Harry Smith' } },
       urlInfo: { basePath: `/recommendations/123/` },
     },
@@ -123,7 +152,7 @@ describe('post', () => {
         spoRecallRationale: 'a good reason',
         explainTheDecision: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/spo-task-list-consider-recall`)
@@ -156,7 +185,7 @@ describe('post', () => {
         spoRecallRationale: 'another good reason',
         explainTheDecision: true,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
   })
 

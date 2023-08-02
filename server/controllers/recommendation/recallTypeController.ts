@@ -8,14 +8,10 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const {
-    recommendation,
-    flags: { flagTriggerWork },
-  } = res.locals
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink: flagTriggerWork ? 'discuss-with-manager' : 'is-extended',
     page: {
       id: 'recallType',
     },

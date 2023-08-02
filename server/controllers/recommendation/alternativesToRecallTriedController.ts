@@ -5,11 +5,10 @@ import { inputDisplayValuesAlternativesToRecallTried } from '../recommendations/
 import { validateAlternativesTried } from '../recommendations/alternativesToRecallTried/formValidator'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { flags, recommendation } = res.locals
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'licence-conditions',
     page: {
       id: 'alternativesToRecallTried',
     },
@@ -52,9 +51,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-
-  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'manager-review'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }

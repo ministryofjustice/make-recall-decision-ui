@@ -3,6 +3,7 @@ import { getCaseSection } from './getCaseSection'
 import { getCaseSummary } from '../../data/makeDecisionApiClient'
 import {
   ContactHistoryResponse,
+  LastCompletedRecommendationsResponse,
   RecommendationResponse,
   VulnerabilitiesResponse,
 } from '../../@types/make-recall-decision-api'
@@ -54,11 +55,45 @@ describe('getCaseSection', () => {
     } as ContactHistoryResponse
     ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
     redisGet.mockResolvedValue(null)
-    await getCaseSection('contact-history', crn, token, userId, {})
+    await getCaseSection('contact-history', crn, token, userId, {}, {})
     expect(redisSet).toHaveBeenCalledWith(
       'contactHistory:A1234AB',
       JSON.stringify({ userIds: [userId], data: apiResponse })
     )
+  })
+
+  it('returns last completed section', async () => {
+    const apiResponse = {
+      recommendations: [
+        {
+          recommendationId: 427954240,
+          lastModifiedByName: 'Making Recall Decisions SPO User',
+          createdDate: '2023-07-31T08:16:11.345Z',
+          lastModifiedDate: '2023-07-31T08:18:53.182Z',
+          status: 'DRAFT',
+          statuses: [
+            {
+              recommendationId: 427954240,
+              createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
+              createdByUserFullName: 'Making Recall Decisions SPO User',
+              created: '2023-07-31T08:18:53.361Z',
+              name: 'COMPLETED',
+              active: true,
+            },
+          ],
+          recallType: {
+            selected: { value: 'STANDARD', details: 'test' },
+          },
+        },
+      ],
+    }
+
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
+
+    const recs = caseSummary as LastCompletedRecommendationsResponse
+    expect(recs.recommendations[0].recallType).toBe('STANDARD')
+    expect(recs.recommendations[0].completedDate).toBe('2023-07-31T08:18:53.361Z')
   })
 
   describe('Excluded', () => {
@@ -74,39 +109,44 @@ describe('getCaseSection', () => {
 
     it('does not cache the contact history response in redis if CRN is excluded', async () => {
       redisGet.mockResolvedValue(null)
-      const { section } = await getCaseSection('contact-history', crn, token, userId, {})
+      const { section } = await getCaseSection('contact-history', crn, token, userId, {}, {})
       expect(redisSet).not.toHaveBeenCalled()
       expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
       expect(section.label).toEqual('Contact history')
     })
 
     it('returns excluded data for contact history', async () => {
-      const { caseSummary } = await getCaseSection('contact-history', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('contact-history', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
     })
 
     it('returns excluded data for licence conditions', async () => {
-      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
     })
 
     it('returns excluded data for personal details', async () => {
-      const { caseSummary } = await getCaseSection('personal-details', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('personal-details', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
     })
 
     it('returns excluded data for vulnerabilities', async () => {
-      const { caseSummary } = await getCaseSection('vulnerabilities', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('vulnerabilities', crn, token, userId, {}, {})
       expect((caseSummary as VulnerabilitiesResponse).userAccessResponse.userExcluded).toEqual(true)
     })
 
     it('returns excluded data for risk', async () => {
-      const { caseSummary } = await getCaseSection('risk', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('risk', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
     })
 
     it('returns excluded data for recommendations', async () => {
-      const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {}, {})
+      expect((caseSummary as RecommendationResponse).userAccessResponse.userExcluded).toEqual(true)
+    })
+
+    it('returns excluded data for last-completed', async () => {
+      const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
       expect((caseSummary as RecommendationResponse).userAccessResponse.userExcluded).toEqual(true)
     })
   })
@@ -124,39 +164,44 @@ describe('getCaseSection', () => {
 
     it('does not cache the contact history response in redis if CRN is restricted', async () => {
       redisGet.mockResolvedValue(null)
-      const { section } = await getCaseSection('contact-history', crn, token, userId, {})
+      const { section } = await getCaseSection('contact-history', crn, token, userId, {}, {})
       expect(redisSet).not.toHaveBeenCalled()
       expect(redisDel).toHaveBeenCalledWith('contactHistory:A1234AB')
       expect(section.label).toEqual('Contact history')
     })
 
     it('returns restricted data for contact history', async () => {
-      const { caseSummary } = await getCaseSection('contact-history', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('contact-history', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
     })
 
     it('returns restricted data for licence conditions', async () => {
-      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
     })
 
     it('returns restricted data for personal details', async () => {
-      const { caseSummary } = await getCaseSection('personal-details', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('personal-details', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
     })
 
     it('returns restricted data for vulnerabilities', async () => {
-      const { caseSummary } = await getCaseSection('vulnerabilities', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('vulnerabilities', crn, token, userId, {}, {})
       expect((caseSummary as VulnerabilitiesResponse).userAccessResponse.userRestricted).toEqual(true)
     })
 
     it('returns restricted data for risk', async () => {
-      const { caseSummary } = await getCaseSection('risk', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('risk', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
     })
 
     it('returns restricted data for recommendations', async () => {
-      const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {})
+      const { caseSummary } = await getCaseSection('recommendations', crn, token, userId, {}, {})
+      expect((caseSummary as RecommendationResponse).userAccessResponse.userRestricted).toEqual(true)
+    })
+
+    it('returns restricted data for last-completed', async () => {
+      const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
       expect((caseSummary as RecommendationResponse).userAccessResponse.userRestricted).toEqual(true)
     })
   })

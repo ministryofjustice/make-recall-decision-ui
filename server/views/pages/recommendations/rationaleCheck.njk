@@ -1,0 +1,48 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
+            {% set radioHintHtml %}
+            <p class="govuk-body">You’ve been asked to countersign the Part A for
+                {{ recommendation.personOnProbation.name }}. You must also record the rationale for this decision within
+                one working day.</p>
+                <h2 class="govuk-heading-m" tabindex="0">Do you want to record your rationale now?</h2>
+            {% endset %}
+
+                {{ govukRadios({
+                    idPrefix: "rationaleCheck",
+                    name: "rationaleCheck",
+                    fieldset: {
+                        legend: {
+                            text: pageHeadings[page.id],
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    hint: {
+                        html: radioHintHtml
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.rationaleCheck,
+                        currentValues: inputDisplayValues.value
+                    }),
+                    errorMessage: errorMessage(errors.rationaleCheck)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

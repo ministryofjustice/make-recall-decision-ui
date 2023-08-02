@@ -130,3 +130,6 @@ e2e_tests/junit
 e2e_tests/screenshots
 e2e_tests/reports
 cypress/downloads
+e2e_tests/videos
+
+.DS_Store

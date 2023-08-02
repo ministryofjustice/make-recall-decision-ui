@@ -1,0 +1,41 @@
+{% extends "../partials/layout.njk" %}
+
+
+{% set pageTitle = makePageTitle({ pageHeading: "Search for a person on probation" }) %}
+
+{% block content %}
+    {% include '../partials/error-summary.njk' %}
+    <h1 class="govuk-heading-xl">Search for a person on probation</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <nav class="moj-sub-navigation" aria-label="Case summary sections">
+                <ul class="moj-sub-navigation__list">
+                    <li class="moj-sub-navigation__item">
+                        <a class="moj-sub-navigation__link" href="/search-by-name">Search by name</a>
+                    </li>
+                    <li class="moj-sub-navigation__item">
+                        <a class="moj-sub-navigation__link" aria-current="page" href="/search-by-crn">Search by case reference number (CRN)</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half-from-desktop">
+            <form action="/search-results-by-crn" method="get" novalidate>
+                {{ govukInput({
+                    id: "crn",
+                    name: "crn",
+                    hint: {
+                        text: 'For example, X123456'
+                    },
+                    errorMessage: errorMessage(errors.crn)
+                }) }}
+                <input type="hidden" name="page" value="1" />
+                <button class="govuk-button moj-search__button " data-module="govuk-button">
+                    Search
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

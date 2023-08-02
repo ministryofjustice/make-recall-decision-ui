@@ -31,8 +31,8 @@ export interface TransformedLicenceConditionsResponse {
     active: DecoratedConviction[]
     activeCustodial: DecoratedConviction[]
     hasMultipleActiveCustodial: boolean
-    hasAllConvictionsReleasedOnLicence: boolean
   }
+  hasAllConvictionsReleasedOnLicence: boolean
   standardLicenceConditions?: FormOption[]
 }
 
@@ -61,8 +61,8 @@ export const transformLicenceConditions = (
       active: activeConvictions,
       activeCustodial: activeCustodialConvictions,
       hasMultipleActiveCustodial: activeCustodialConvictions.length > 1,
-      hasAllConvictionsReleasedOnLicence,
     },
+    hasAllConvictionsReleasedOnLicence,
     standardLicenceConditions: formOptions.standardLicenceConditions,
   }
 }

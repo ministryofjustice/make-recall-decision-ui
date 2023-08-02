@@ -23,14 +23,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    backLink: 'countersigning-telephone',
     page: {
       id: pageId,
     },
     mode,
     inputDisplayValues: {
       errors: res.locals.errors,
-      value: mode === 'SPO' ? recommendation.countersignSpoExposition : recommendation.countersignAcoExposition,
+      managerCountersignatureExposition:
+        mode === 'SPO' ? recommendation.countersignSpoExposition : recommendation.countersignAcoExposition,
     },
   }
 
@@ -40,7 +40,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { value, mode } = req.body
+  const { managerCountersignatureExposition, mode } = req.body
 
   if (mode !== 'SPO' && mode !== 'ACO') {
     throw new Error('Invalid mode')
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const errors = []
 
-  if (!isMandatoryTextValue(value)) {
+  if (!isMandatoryTextValue(managerCountersignatureExposition)) {
     const errorId = 'missingManagerCountersignatureExposition'
     errors.push(
       makeErrorObject({
@@ -72,7 +72,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   await updateRecommendation({
     recommendationId,
-    valuesToSave: mode === 'SPO' ? { countersignSpoExposition: value } : { countersignAcoExposition: value },
+    valuesToSave:
+      mode === 'SPO'
+        ? { countersignSpoExposition: managerCountersignatureExposition }
+        : { countersignAcoExposition: managerCountersignatureExposition },
     token,
     featureFlags: flags,
   })
@@ -89,7 +92,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       recommendationId,
       token,
       deActivate: [STATUSES.ACO_SIGNATURE_REQUESTED],
-      activate: [STATUSES.ACO_SIGNED],
+      activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
     })
   }
 

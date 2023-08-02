@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { personSearchResults } from './personSearchResults'
-import { getPersonsByCrn } from '../../data/makeDecisionApiClient'
+import { searchPersons, getPersonsByCrn } from '../../data/makeDecisionApiClient'
 import { AuditService } from '../../services/auditService'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
@@ -11,7 +11,7 @@ jest.mock('../../monitoring/azureAppInsights')
 const crn = ' A1234AB '
 let res: Response
 const token = 'token'
-const featureFlags = { flagExcludeFromAnalytics: false }
+const featureFlags = {}
 
 describe('personSearchResults', () => {
   beforeEach(() => {
@@ -46,12 +46,12 @@ describe('personSearchResults', () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ query: { crn: invalidCrn } })
     await personSearchResults(req, res)
-    expect(res.redirect).toHaveBeenCalledWith(303, '/search')
+    expect(res.redirect).toHaveBeenCalledWith(303, '/search-by-crn')
     expect(req.session.errors).toEqual([
       {
         href: '#crn',
         name: 'crn',
-        text: 'Enter a Case Reference Number (CRN) in the correct format, for example X12345',
+        text: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
         errorId: 'invalidCrnFormat',
       },
     ])
@@ -75,7 +75,55 @@ describe('personSearchResults', () => {
     jest.spyOn(AuditService.prototype, 'personSearch')
     await personSearchResults(req, res)
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
-      searchTerm: '123',
+      searchTerm: { crn: '123' },
+      username: 'Dave',
+      logErrors: true,
+    })
+  })
+
+  const TEMPLATE = {
+    results: [
+      {
+        name: 'Harry 1 Smith',
+        crn: 'X098092',
+        dateOfBirth: '1980-05-06',
+        userExcluded: false,
+        userRestricted: false,
+      },
+    ],
+    paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
+  }
+
+  it('valid search with flag', async () => {
+    ;(searchPersons as jest.Mock).mockReturnValueOnce(TEMPLATE)
+    jest.spyOn(AuditService.prototype, 'personSearch')
+    const req = mockReq({
+      query: {
+        crn: 'A123',
+        page: '1',
+      },
+    })
+
+    res = mockRes({
+      locals: { user: { username: 'Dave' }, flags: { flagSearchByName: true } },
+    })
+
+    await personSearchResults(req, res)
+    expect(searchPersons).toHaveBeenCalledWith('token', 0, 20, 'A123', undefined, undefined)
+    expect(res.render).toHaveBeenCalledWith('pages/paginatedPersonSearchResults')
+    expect(res.locals.page).toEqual(TEMPLATE)
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdPersonSearchResults',
+      'Dave',
+      {
+        crn: 'A123',
+      },
+      { flagSearchByName: true }
+    )
+
+    expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
+      searchTerm: { crn: 'A123' },
       username: 'Dave',
       logErrors: true,
     })

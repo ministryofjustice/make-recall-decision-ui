@@ -7,14 +7,12 @@ import { validateLicenceConditionsBreached } from '../recommendations/licenceCon
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
-    flags,
     recommendation,
     user: { token },
   } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'response-to-probation',
     page: {
       id: 'licenceConditions',
     },
@@ -62,8 +60,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = flags.flagTriggerWork ? 'task-list-consider-recall' : 'alternatives-tried'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }

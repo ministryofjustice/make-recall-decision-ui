@@ -12,6 +12,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
   const isStandard = recallType === 'STANDARD'
   const missingDetailFixedTerm = isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
   const missingDetailStandard = isStandard && !recallTypeDetailsStandard
+  const isFromTaskList = urlInfo.fromPageId === 'task-list'
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
   if (hasError) {
     const errors = []
@@ -60,7 +61,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
       },
       allOptions: formOptions.recallType,
     },
-    isThisAnEmergencyRecall: isFixedTerm ? false : null,
+    isThisAnEmergencyRecall: isFixedTerm && !isFromTaskList ? false : null,
   }
   // ignore any 'from page', whatever the user selects they'll continue through the flow
   const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'

@@ -3,12 +3,7 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-        {{ govukBackLink({
-            text: "Back",
-            href: nextPageLinkUrl({ nextPagePath: backLink, urlInfo: urlInfo })
-        }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}
@@ -40,8 +35,8 @@
                             </label>
                           </h1>
                           {{ govukTextarea({
-                              name: "value",
-                              id: "value",
+                              name: "managerCountersignatureExposition",
+                              id: "managerCountersignatureExposition",
                               value: inputDisplayValues.value,
                               errorMessage: errorMessage(errors.managerCountersignatureExposition)
                           }) }}

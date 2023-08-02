@@ -1,3 +1,5 @@
+import { UserType } from '../e2e_tests/support/commands'
+
 export {}
 
 declare global {
@@ -9,7 +11,7 @@ declare global {
 
     export interface TableRowSelectors {
       tableCaption: string
-      rowQaAttr?: string
+      rowSelector?: string
       firstColValue?: string
     }
 
@@ -20,15 +22,21 @@ declare global {
     export interface Chainable {
       visitPage(url: string, isSpoUser?: boolean): Chainable<void>
 
+      visitPageAndLogin(url: string, userType?: UserType): Chainable<void>
+
       pageHeading(): Chainable<string>
 
       getText(qaAttr: string, opts?: CommandOpts): Chainable<string>
+
+      getTaskStatus(taskName: string, opts?: CommandOpts): Chainable<string>
 
       getTextFromClipboard(): Chainable<string>
 
       getListLabels(labelQaAttr: string, opts?: CommandOpts): Chainable<string[]>
 
       fillInput(label: string, val: string, opts?: CommandOpts): Chainable<Element>
+
+      fillInputByName(name: string, val: string, opts?: CommandOpts): Chainable<Element>
 
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
 
@@ -61,6 +69,12 @@ declare global {
 
       getRowValuesFromTable(selectors: TableRowSelectors, opts?: CommandOpts): Chainable<string[]>
 
+      getDataFromTable(
+        tableCaption: string,
+        readHrefInsteadOfTextWhereAvailable?: boolean,
+        opts?: CommandOpts
+      ): Chainable<Record<string, string>[]>
+
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>
 
       contactTypeFiltersTotalCount(): Chainable<number>
@@ -80,6 +94,14 @@ declare global {
       readBase64File(fileName: string): Chainable<string>
 
       logPageTitle(pageTitle: string): Chainable<void>
+
+      getOffenceDetails(): Chainable<Record<string, string>>
+
+      getOffenderDetails(): Chainable<Record<string, string>>
+
+      getPreviousReleases(): Chainable<Record<string, string>>
+
+      getPreviousRecalls(): Chainable<string[]>
     }
   }
 }

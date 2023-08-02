@@ -1,11 +1,14 @@
 import { Response } from 'superagent'
 import RestClient from './restClient'
 import config from '../config'
-import { PersonDetails } from '../@types/make-recall-decision-api/models/PersonDetails'
 import { routes } from '../../api/routes'
 
-import { CreateRecommendationRequest, RecommendationResponse } from '../@types/make-recall-decision-api'
-import { DocumentResponse } from '../@types/make-recall-decision-api/models/DocumentResponse'
+import {
+  CreateRecommendationRequest,
+  DocumentResponse,
+  RecommendationResponse,
+  PersonDetails,
+} from '../@types/make-recall-decision-api'
 import { FeatureFlags } from '../@types/featureFlags'
 import { CaseSectionId } from '../@types/pagesForms'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
@@ -20,6 +23,31 @@ const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
 
+export const searchPersons = (
+  token: string,
+  page: number,
+  pageSize: number,
+  crn: string | undefined,
+  firstName: string | undefined,
+  lastName: string | undefined
+): Promise<PersonDetails[]> => {
+  const body: Record<string, unknown> = {}
+  if (crn) {
+    body.crn = crn
+  }
+  if (firstName) {
+    body.firstName = firstName
+  }
+  if (lastName) {
+    body.lastName = lastName
+  }
+  const queryString = `?page=${page}&pageSize=${pageSize}`
+  return restClient(token).post({
+    path: `${routes.personSearchPaged}${queryString}`,
+    data: body,
+  }) as Promise<PersonDetails[]>
+}
+
 export const getCaseSummary = <T>(
   crn: string,
   sectionId: CaseSectionId,
@@ -28,6 +56,17 @@ export const getCaseSummary = <T>(
 ): Promise<T> =>
   restClient(token).get({
     path: `${routes.getCaseSummary}/${crn}/${sectionId}`,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<T>
+
+export const getCaseSummaryV2 = <T>(
+  crn: string,
+  sectionId: CaseSectionId,
+  token: string,
+  featureFlags?: FeatureFlags
+): Promise<T> =>
+  restClient(token).get({
+    path: `${routes.getCaseSummary}/${crn}/${sectionId}/v2`,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<T>
 

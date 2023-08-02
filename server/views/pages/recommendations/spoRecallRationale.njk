@@ -3,12 +3,7 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-        {{ govukBackLink({
-            text: "Back",
-            href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
-        }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}
@@ -40,7 +35,7 @@
                 }) }}
             {% endset %}
             {% set radioHintHtml %}
-            <p class="govuk-body">Write down the decision you made with the Probation Practitioner. This explanation
+            <p class="govuk-body">Write down the decision you made with the practitioner. This explanation
             will be recorded in NDelius.</p>
             <p class="govuk-body">Check you have considered:
                 <ul class="govuk-list govuk-list--bullet">
@@ -55,6 +50,14 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+
+
+                {% if recallDecided %}
+                    <input type="hidden" name="spoRecallType" value="RECALL" />
+                    <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+                    {{ radioHintHtml | safe }}
+                    {{ rationaleRecallHtml | safe }}
+                {% else %}
 
                 {{ govukRadios({
                     idPrefix: "spoRecallType",
@@ -79,6 +82,7 @@
                     }),
                     errorMessage: errorMessage(errors.spoRecallType)
                 }) }}
+                {% endif %}
                 {{ formSubmitButton() }}
             </form>
         </div>

@@ -65,9 +65,31 @@ export const getPersonsByCrn = ({ statusCode, response }) =>
     response,
   })
 
+export const searchPersons = ({ statusCode, response }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPath: '/paged-search',
+    },
+    response: {
+      status: statusCode,
+      jsonBody: response,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+
 export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>
   mockGet({
     urlPathPattern: `${routes.getCaseSummary}/(.*)/${sectionId}`,
+    statusCode,
+    response,
+  })
+
+export const getCaseV2 = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.getCaseSummary}/(.*)/${sectionId}/v2`,
     statusCode,
     response,
   })

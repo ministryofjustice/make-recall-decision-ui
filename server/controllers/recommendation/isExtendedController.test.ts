@@ -11,14 +11,13 @@ describe('get', () => {
       locals: {
         recommendation: {},
         token: 'token1',
-        flags: { flagTriggerWork: false },
+        flags: {},
       },
     })
     const next = mockNext()
     await isExtendedSentenceController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'isExtendedSentence' })
-    expect(res.locals.backLink).toEqual('is-indeterminate')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/isExtendedSentence')
 
@@ -94,6 +93,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
+        currentSavedValue: 'NO',
         isExtendedSentence: 'YES',
         isIndeterminateSentence: '0',
       },
@@ -102,7 +102,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -115,16 +114,20 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
+        indeterminateOrExtendedSentenceDetails: null,
+        indeterminateSentenceType: null,
         isExtendedSentence: true,
+        recallType: null,
+        isThisAnEmergencyRecall: null,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type-indeterminate`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('post with valid data, given prior indeterminateSentence set to true', async () => {
+  it('post with non extended, given prior indeterminateSentence set to true', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -132,6 +135,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
+        currentSavedValue: 'YES',
         isExtendedSentence: 'NO',
         isIndeterminateSentence: '1',
       },
@@ -140,7 +144,6 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        flags: { flagTriggerWork: false },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -155,10 +158,52 @@ describe('post', () => {
       valuesToSave: {
         isExtendedSentence: false,
       },
-      featureFlags: { flagTriggerWork: false },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/indeterminate-type`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with extended, given prior indeterminateSentence set to false', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        currentSavedValue: 'NO',
+        isExtendedSentence: 'YES',
+        isIndeterminateSentence: '0',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+
+    await isExtendedSentenceController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        indeterminateOrExtendedSentenceDetails: null,
+        indeterminateSentenceType: null,
+        isExtendedSentence: true,
+        recallType: null,
+        isThisAnEmergencyRecall: null,
+      },
+      featureFlags: {},
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -176,7 +221,6 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        flags: { flagTriggerWork: true },
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },

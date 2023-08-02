@@ -5,11 +5,10 @@ import { booleanToYesNo } from '../../utils/utils'
 import { validateIsIndeterminateSentence } from '../recommendations/isIndeterminateSentence/formValidator'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { flags, recommendation } = res.locals
+  const { recommendation } = res.locals
 
   res.locals = {
     ...res.locals,
-    backLink: flags.flagTriggerWork ? 'task-list-consider-recall' : 'manager-review',
     page: {
       id: 'isIndeterminateSentence',
     },
@@ -50,6 +49,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
+
+  if (urlInfo.fromPageId === 'task-list-consider-recall') {
+    urlInfo.fromPageId = undefined
+  }
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo }))
 }

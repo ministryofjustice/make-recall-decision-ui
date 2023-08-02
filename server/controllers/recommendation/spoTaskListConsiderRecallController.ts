@@ -1,25 +1,25 @@
 import { NextFunction, Request, Response } from 'express'
 import { hasData } from '../../utils/utils'
-import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendationId } = req.params
+  const {
+    flags,
+    recommendation,
+    user: { username },
+  } = res.locals
 
   const reviewPractitionersConcernsCompleted = hasData(recommendation.reviewPractitionersConcerns)
   const reviewOffenderProfileCompleted = hasData(recommendation.reviewOffenderProfile)
   const explainTheDecisionCompleted = hasData(recommendation.explainTheDecision)
-
-  const isSpoSignatureRequested = (res.locals.statuses as RecommendationStatusResponse[])
-    .filter(status => status.active)
-    .find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
   const allTasksCompleted =
     reviewPractitionersConcernsCompleted && reviewOffenderProfileCompleted && explainTheDecisionCompleted
 
   res.locals = {
     ...res.locals,
-    isSpoSignatureRequested,
     crn: recommendation.crn,
     reviewPractitionersConcernsCompleted,
     reviewOffenderProfileCompleted,
@@ -29,6 +29,16 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'spoTaskListConsiderRecall',
     },
   }
+
+  appInsightsEvent(
+    EVENTS.MRD_SPO_RATIONALE_TASKLIST_ACCESSED,
+    username,
+    {
+      crn: recommendation.crn,
+      recommendationId,
+    },
+    flags
+  )
 
   res.render(`pages/recommendations/spoTaskListConsiderRecall`)
   next()

@@ -1,6 +1,69 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formOptions } from '../../server/controllers/recommendations/formOptions/formOptions'
 
+const TEMPLATE = {
+  sectionId: 'licence-conditions',
+  statusCode: 200,
+  response: {
+    personalDetailsOverview: {
+      name: 'Charles Edwin',
+      dateOfBirth: '1980-07-24',
+      age: 41,
+      gender: 'Male',
+      crn: 'X430109',
+    },
+    hasAllConvictionsReleasedOnLicence: true,
+    activeConvictions: [
+      {
+        mainOffence: { description: 'Burglary - 05714' },
+        sentence: { isCustodial: true, custodialStatusCode: 'B' },
+        licenceConditions: [
+          {
+            notes: 'Must not enter Islington borough.',
+            mainCategory: {
+              code: 'NLC9',
+              description: 'Supervision in the community',
+            },
+            subCategory: {
+              code: 'NSTT9',
+              description: 'Bespoke Condition (See Notes)',
+            },
+          },
+        ],
+      },
+    ],
+    cvlLicence: {
+      licenceStatus: 'ACTIVE',
+      conditionalReleaseDate: '2022-06-10',
+      actualReleaseDate: '2022-06-11',
+      sentenceStartDate: '2022-06-12',
+      sentenceEndDate: '2022-06-13',
+      licenceStartDate: '2022-06-14',
+      licenceExpiryDate: '2022-06-15',
+      topupSupervisionStartDate: '2022-06-16',
+      topupSupervisionExpiryDate: '2022-06-17',
+      standardLicenceConditions: [
+        {
+          text: 'This is a standard licence condition',
+          expandedText: null,
+        },
+      ],
+      additionalLicenceConditions: [
+        {
+          category: 'Freedom of Movement',
+          expandedText: 'Expanded additional licence condition',
+        },
+      ],
+      bespokeConditions: [
+        {
+          text: 'This is a bespoke condition',
+          expandedText: null,
+        },
+      ],
+    },
+  },
+}
+
 context('Licence conditions', () => {
   beforeEach(() => {
     cy.window().then(win => win.sessionStorage.clear())
@@ -9,6 +72,7 @@ context('Licence conditions', () => {
 
   it('shows conditions for a single active custodial conviction', () => {
     const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     // Standard licence conditions
@@ -37,6 +101,7 @@ context('Licence conditions', () => {
       },
     })
     const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement('Burglary - 05714').should('exist')
     cy.getElement('There are no additional licence conditions in NDelius. Check the licence document.').should('exist')
@@ -51,6 +116,7 @@ context('Licence conditions', () => {
       },
     })
     const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement('This person has no active convictions.').should('exist')
   })
@@ -89,6 +155,7 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     // Additional licence conditions
     cy.getElement('Burglary - 05714').should('exist')
@@ -133,6 +200,7 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
@@ -156,11 +224,100 @@ context('Licence conditions', () => {
         ],
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
       'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
     ).should('exist')
+  })
+})
+
+context('Licence conditions - flagCvl', () => {
+  beforeEach(() => {
+    cy.window().then(win => win.sessionStorage.clear())
+    cy.signIn()
+  })
+
+  it('shows ndelius licence conditions when CVL has no licence', () => {
+    cy.task('getCaseV2', {
+      ...TEMPLATE,
+      response: {
+        ...TEMPLATE.response,
+        cvlLicence: null,
+      },
+    })
+
+    const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=1`)
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    // Standard licence conditions
+    cy.clickButton('Show', { parent: '[data-qa="standard"]' })
+    formOptions.standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
+    // Additional licence conditions
+    cy.getElement('Burglary - 05714').should('exist')
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
+    cy.getElement('Supervision in the community').should('exist')
+    cy.getText('condition-description').should('equal', 'Bespoke Condition (See Notes)')
+    cy.getText('condition-note').should('equal', 'Must not enter Islington borough.')
+  })
+
+  it('shows CVL licence conditions when CVL has a licence', () => {
+    cy.task('getCaseV2', TEMPLATE)
+
+    const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=1`)
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    // Standard licence conditions
+    cy.clickButton('Show', { parent: '[data-qa="standard"]' })
+    cy.getElement('This is a standard licence condition').should('exist')
+    // Additional licence conditions
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
+    cy.getElement('Freedom of Movement').should('exist')
+    cy.getText('condition-note').should('equal', 'Expanded additional licence condition')
+    // Bespoke licence conditions
+    cy.get('[data-qa="bespoke"] .app-summary-card').should('have.length', 1)
+    cy.getElement('This is a bespoke condition').should('exist')
+  })
+
+  it('do not show bespoke section if no bespoke licences', () => {
+    cy.task('getCaseV2', {
+      ...TEMPLATE,
+      response: {
+        ...TEMPLATE.response,
+        cvlLicence: {
+          ...TEMPLATE.response.cvlLicence,
+          bespokeConditions: [],
+        },
+      },
+    })
+
+    const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=1`)
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    cy.get('[data-qa="bespoke"]').should('not.exist')
+  })
+
+  it('do not show bespoke section if no additional licences', () => {
+    cy.task('getCaseV2', {
+      ...TEMPLATE,
+      response: {
+        ...TEMPLATE.response,
+        cvlLicence: {
+          ...TEMPLATE.response.cvlLicence,
+          additionalLicenceConditions: [],
+        },
+      },
+    })
+
+    const crn = 'X34983'
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=1`)
+    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    cy.get('[data-qa="additional"]').should('not.exist')
   })
 })

@@ -3,12 +3,7 @@
 {% set pageTitle = makePageTitle({ pageHeading: "What has made you think about recalling the person?", hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-        {{ govukBackLink({
-            text: "Back",
-            href: nextPageLinkUrl({ nextPagePath: pageUrlBase + 'overview', urlInfo: urlInfo })
-        }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}

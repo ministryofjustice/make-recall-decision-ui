@@ -1,13 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import { isDefined } from '../../utils/utils'
-import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
     recommendation,
-    flags: { flagTriggerWork },
     urlInfo: { basePath },
     user: { token, roles },
   } = res.locals
@@ -20,7 +19,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   ).filter(status => status.active)
 
   const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
-  const isSpoConsideringRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDERING_RECALL)
   const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
 
   const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
@@ -28,20 +26,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
 
-  if (isSpoConsiderRecall && isSpo) {
-    await updateStatuses({
-      recommendationId,
-      token,
-      activate: [STATUSES.SPO_CONSIDERING_RECALL],
-      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
-    })
-  }
-
   let nextPageId
   const recallType = recommendation?.recallType?.selected?.value
 
   if (isSpo) {
-    if (isSpoConsiderRecall || isSpoConsideringRecall) {
+    if (isSpoConsiderRecall) {
       nextPageId = 'spo-task-list-consider-recall'
     } else if (isSpoSignatureRequested || isAcoSignatureRequested) {
       nextPageId = 'task-list'
@@ -49,14 +38,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
       nextPageId = 'spo-task-list-consider-recall'
     }
   } else if (!isDefined(recallType)) {
-    if (flagTriggerWork) {
-      if (isSpoRecordedRationale) {
-        nextPageId = 'recall-type'
+    if (isSpoRecordedRationale) {
+      if (recommendation?.isExtendedSentence || recommendation?.isIndeterminateSentence) {
+        nextPageId = 'recall-type-indeterminate'
       } else {
-        nextPageId = 'task-list-consider-recall'
+        nextPageId = 'recall-type'
       }
     } else {
-      nextPageId = 'response-to-probation'
+      nextPageId = 'task-list-consider-recall'
     }
   } else if (recallType === 'NO_RECALL') {
     nextPageId = 'task-list-no-recall'

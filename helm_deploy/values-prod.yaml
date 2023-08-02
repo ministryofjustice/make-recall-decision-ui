@@ -3,16 +3,17 @@
 
 generic-service:
   ingress:
-    host: make-recall-decision.hmpps.service.justice.gov.uk
+    host: consider-a-recall.hmpps.service.justice.gov.uk
     contextColour: green
 
   env:
-    INGRESS_URL: "https://make-recall-decision.hmpps.service.justice.gov.uk"
+    INGRESS_URL: "https://consider-a-recall.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
     MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PROD"
     ENVIRONMENT: "PRODUCTION"
+    FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: false
 
   allowlist:
     north_shields_user: "194.33.192.1/24"

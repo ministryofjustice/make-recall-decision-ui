@@ -3,12 +3,7 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    <nav>
-        {{ govukBackLink({
-            text: "Back",
-            href: nextPageLinkUrl({ nextPageId: backLink, urlInfo: urlInfo })
-        }) }}
-    </nav>
+    {{ backLink() }}
 {% endblock %}
 
 {% block content %}
@@ -28,7 +23,9 @@
                     the outcome 'decision not to recall'. You cannot undo this.
                 </p>
                 <div class="govuk-inset-text" data-qa="reason">
-                {{ spoRecallRationale }}
+                    <pre class='govuk-body'>
+                    {{ spoRecallRationale }}
+                    </pre>
                 </div>
                 {% endset %}
                 {{ govukCheckboxes({
@@ -69,7 +66,9 @@
                             recall' with the outcome 'Decision not to recall'. You cannot undo this.
                         </p>
                         <div class="govuk-inset-text" data-qa="reason">
-                        {{ spoRecallRationale }}
+                            <pre class='govuk-body'>
+                            {{ spoRecallRationale }}
+                            </pre>
                         </div>
                     </div>
                 </fieldset>
@@ -87,7 +86,9 @@
                 outcome 'decision to recall'. You cannot undo this.
                 </p>
                 <div class="govuk-inset-text" data-qa="reason">
-                {{ spoRecallRationale }}
+                    <pre class='govuk-body'>
+                    {{ spoRecallRationale }}
+                    </pre>
                 </div>
                 {% endset %}
                 {{ govukCheckboxes({
@@ -128,7 +129,9 @@
                               recall'. You cannot undo this.
                         </p>
                         <div class="govuk-inset-text" data-qa="reason">
-                        {{ spoRecallRationale }}
+                            <pre class='govuk-body'>
+                            {{ spoRecallRationale }}
+                            </pre>
                         </div>
                     </div>
                 </fieldset>

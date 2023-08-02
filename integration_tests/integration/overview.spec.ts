@@ -11,6 +11,7 @@ context('Overview', () => {
   })
 
   it('shows licence and offence information', () => {
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
     // licence info
@@ -60,6 +61,7 @@ context('Overview', () => {
       statusCode: 200,
       response: { ...getCaseOverviewResponse, risk: { ...getCaseOverviewResponse.risk, flags: [] } },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getElement('No risks').should('exist')
   })
@@ -82,6 +84,7 @@ context('Overview', () => {
         },
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(`OASys was last updated in ${date}`).should('exist')
@@ -103,6 +106,7 @@ context('Overview', () => {
         },
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(`OASys was last updated in ${date}.`).should('exist')
@@ -124,6 +128,7 @@ context('Overview', () => {
         },
       },
     })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(
@@ -156,6 +161,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       const opts = { parent: '[data-qa="conviction-1"]' }
       cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', '17 June 2023')
@@ -182,6 +188,7 @@ context('Overview', () => {
           lastRelease: null,
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
@@ -201,6 +208,7 @@ context('Overview', () => {
           ],
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement(
         'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
@@ -218,11 +226,12 @@ context('Overview', () => {
         sectionId: 'overview',
         statusCode: 200,
         response: {
+          hasAllConvictionsReleasedOnLicence: true,
           ...getCaseOverviewResponse,
           activeConvictions,
         },
       })
-
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
@@ -245,7 +254,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
-
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
 
       // banner
@@ -267,6 +276,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement('This person has no active offences or convictions.').should('exist')
       cy.getText('lastReleaseDate').should('equal', 'Not available')
@@ -286,6 +296,7 @@ context('Overview', () => {
           risk: { ...getCaseOverviewResponse.risk, assessments: { offenceDataFromLatestCompleteAssessment: false } },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('banner-latest-complete-assessment').should(
         'contain',
@@ -302,6 +313,7 @@ context('Overview', () => {
           risk: { ...getCaseOverviewResponse.risk, assessments: { offencesMatch: false } },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('banner-offence-mismatch').should(
         'contain',
@@ -318,6 +330,7 @@ context('Overview', () => {
           risk: { ...getCaseOverviewResponse.risk, assessments: { error: 'NOT_FOUND' } },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('offence-analysis-error').should(
         'contain',
@@ -342,6 +355,7 @@ context('Overview', () => {
           },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement('Started on: 1 September 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
       cy.getText('banner-contingency-incomplete-assessment').should(
@@ -363,6 +377,7 @@ context('Overview', () => {
           },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
@@ -384,6 +399,7 @@ context('Overview', () => {
           },
         },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
