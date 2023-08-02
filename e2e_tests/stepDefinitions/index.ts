@@ -82,7 +82,10 @@ function loginAndSearchCrn(userType: UserType) {
   cy.wait(1000)
   cy.reload(true)
   cy.pageHeading().should('equal', 'Sign in')
-  openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 }, userType)
+  openApp(
+    { flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1, flagLastCompleted: 1 },
+    userType
+  )
   cy.clickLink('Start now')
   cy.fillInput('Search by Case Reference Number', this.crn)
   cy.clickButton('Search')

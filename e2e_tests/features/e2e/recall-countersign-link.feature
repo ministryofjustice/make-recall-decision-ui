@@ -46,6 +46,9 @@ Feature: E2E scenarios - Recall
     And PO can download Part A
     # MRD-1391: AC1/AC2, MRD-1383: AC1/AC2
     And Part A details are correct
+    # MRD-1591
+    And the Last Completed Document tab has a link to download the latest Part-A document
+
 
     Examples:
       | Indeterminate | Extended | RecallType | InCustody  | Vulnerabilities | EmergencyRecall |

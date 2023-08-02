@@ -29,6 +29,11 @@ export const formatObjectDateToLongFormat = (objectDate: Record<string, number |
   return d.toFormat('d MMMM yyyy')
 }
 
+export const formatDateToCompletedDocumentFormat = () => {
+  const d = DateTime.now()
+  return d.toFormat('d MMM yyyy')
+}
+
 export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
   return DateTime.fromFormat(dateToConvert, 'd MMMM yyyy').toFormat('dd/MM/yyyy')
 }
