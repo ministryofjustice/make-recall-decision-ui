@@ -28,6 +28,7 @@ import {
   WhyConsiderRecall,
   ApptOptions,
 } from '../support/enums'
+import { formatDateToCompletedDocumentFormat } from '../utils'
 
 const expectSoftly = proxy(expect)
 
@@ -524,6 +525,21 @@ const recordPoDecision = function (poDecision?: string) {
   cy.clickButton('Continue')
 }
 
+const navigateToLastCompletedDocumentFromDownloadLetterPage = function () {
+  cy.clickLink('to overview')
+  cy.clickLink('Last completed document')
+}
+const validateLastCompletedDocumentTabDetails = function (letterType: string) {
+  cy.getRowValuesFromTable({
+    tableCaption: 'Recommendations',
+    rowSelector: `[data-qa]`,
+  }).then(rowData => {
+    expect(rowData.join('|')).to.contain(formatDateToCompletedDocumentFormat())
+    expect(rowData.join('|')).to.contain(letterType)
+    expect(rowData.join('|')).to.contain('This is the most recent completed document. It is not a draft.')
+  })
+}
+
 /* ---- Cucumber glue ---- */
 
 Given('a PO has created a recommendation to/of recall/no-recall with:', (dataTable: DataTable) => {
@@ -633,6 +649,14 @@ Then('PO can download the Decision Not To Recall letter', function () {
   cy.clickLink('Create letter')
   cy.downloadDocX('Download the decision not to recall letter (DOCX).').as('DNTRLetter')
 })
+
+Then(
+  'the Last Completed Document tab has a link to download the latest {word} document',
+  function (letterType: string) {
+    navigateToLastCompletedDocumentFromDownloadLetterPage()
+    validateLastCompletedDocumentTabDetails(letterType.replace('-', ' '))
+  }
+)
 
 Then('Decision Not To Recall letter details are correct', function () {
   cy.log(`Validating Decision Not To Recall Letter --> ${JSON.stringify(this.testData)}`)
