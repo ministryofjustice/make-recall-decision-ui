@@ -145,7 +145,9 @@ jobs:
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
       - checkout
-      - browser-tools/install-chrome
+      - run: sudo apt-get update
+      - browser-tools/install-chrome:
+          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
       - browser-tools/install-chromedriver
       - node/install-packages
       - attach_workspace:
@@ -191,7 +193,9 @@ jobs:
       redis_tag: << pipeline.parameters.redis-version >>
     steps:
       - checkout
-      - browser-tools/install-chrome
+      - run: sudo apt-get update
+      - browser-tools/install-chrome:
+          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
       - browser-tools/install-chromedriver
       - node/install-packages
       - attach_workspace:
