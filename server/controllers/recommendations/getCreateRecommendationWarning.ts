@@ -10,7 +10,7 @@ export const getCreateRecommendationWarning = async (req: Request, res: Response
   const { crn } = req.params
   const {
     env,
-    user: { username },
+    user: { username, region },
     flags,
   } = res.locals
   const normalizedCrn = validateCrn(crn)
@@ -23,6 +23,7 @@ export const getCreateRecommendationWarning = async (req: Request, res: Response
     {
       crn,
       pageUrlSlug,
+      region,
     },
     flags
   )

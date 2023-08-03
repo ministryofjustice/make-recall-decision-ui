@@ -4,6 +4,7 @@ import Page from '../pages/page'
 context('SignIn', () => {
   beforeEach(() => {
     cy.task('reset')
+    cy.task('getUser', { user: 'USER1', statusCode: 200, response: { homeArea: { code: 'N07', name: 'London' } } })
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
   })

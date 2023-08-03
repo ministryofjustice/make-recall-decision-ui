@@ -34,7 +34,7 @@ describe('personSearchResultsByName', () => {
     })
 
     const res = mockRes({
-      locals: { user: { username: 'Dave' }, flags: {} },
+      locals: { user: { username: 'Dave', region: { code: 'N07', name: 'London' } }, flags: {} },
     })
 
     await personSearchResultsByName(req, res)
@@ -48,6 +48,7 @@ describe('personSearchResultsByName', () => {
       {
         firstName: 'Harry',
         lastName: 'Styles',
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )

@@ -2,11 +2,13 @@ import { performance } from 'perf_hooks'
 import convertToTitleCase from '../utils/utils'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { appInsightsTimingMetric } from '../monitoring/azureAppInsights'
+import { getUserFromDeliusFacade, HomeArea } from '../data/deliusFacadeClient'
 
-interface UserDetails {
+export interface UserDetails {
   name: string
   displayName: string
   email?: string
+  region?: HomeArea
 }
 
 export default class UserService {
@@ -19,14 +21,16 @@ export default class UserService {
       this.hmppsAuthClient.getUserEmail(token),
     ])
     appInsightsTimingMetric({ name: 'getUser', startTime })
-    let email = ''
     if (userResponse.status === 'rejected') {
       throw userResponse.reason
     }
+    const clientToken = await this.hmppsAuthClient.getSystemClientToken()
+    const region = (await getUserFromDeliusFacade(userResponse.value.username, clientToken)).homeArea
     const user = userResponse.value
+    let email = ''
     if (emailResponse.status === 'fulfilled') {
       email = emailResponse.value.email
     }
-    return { ...user, email, displayName: convertToTitleCase(user.name as string) }
+    return { ...user, email, region, displayName: convertToTitleCase(user.name as string) }
   }
 }

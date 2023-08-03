@@ -39,7 +39,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const {
     flags,
-    user: { username, token },
+    user: { username, token, region },
     urlInfo,
   } = res.locals
 
@@ -68,7 +68,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     activate.push(STATUSES.CLOSED)
   }
 
-  appInsightsEvent(EVENTS.MRD_SPO_RATIONALE_SENT, username, { crn, recommendationId }, flags)
+  appInsightsEvent(EVENTS.MRD_SPO_RATIONALE_SENT, username, { crn, recommendationId, region }, flags)
 
   await updateStatuses({
     recommendationId,

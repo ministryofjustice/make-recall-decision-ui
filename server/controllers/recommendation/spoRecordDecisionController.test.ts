@@ -96,7 +96,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        user: { username: 'Dave' },
+        user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
         urlInfo: { basePath: '/recommendation/123/' },
       },
     })
@@ -120,6 +120,7 @@ describe('post', () => {
       {
         crn: 'X098092',
         recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )

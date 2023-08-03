@@ -30,7 +30,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
   const { status, crn } = req.body
   const {
     flags,
-    user: { token, username },
+    user: { token, username, region },
   } = res.locals
   if (!isValidStatus(status)) {
     throw new AppError('Invalid status', { status: 400, errorType: 'INVALID_RECOMMENDATION_STATUS' })
@@ -46,6 +46,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
       {
         crn: normalizedCrn,
         recommendationId,
+        region,
       },
       flags
     )

@@ -20,7 +20,7 @@ describe('audit', () => {
       }),
       mockRes({
         locals: {
-          user: { username: 'tommy' },
+          user: { username: 'tommy', region: { code: 'N07', name: 'London' } },
           recommendation: { crn: 'abc' },
         },
       }),
@@ -34,6 +34,7 @@ describe('audit', () => {
         crn: 'abc',
         pageUrlSlug: 'whatever',
         recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )

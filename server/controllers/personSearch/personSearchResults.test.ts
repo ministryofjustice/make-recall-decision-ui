@@ -15,7 +15,10 @@ const featureFlags = {}
 
 describe('personSearchResults', () => {
   beforeEach(() => {
-    res = mockRes({ token, locals: { user: { username: 'Dave' }, flags: featureFlags } })
+    res = mockRes({
+      token,
+      locals: { user: { username: 'Dave', region: { code: 'N07', name: 'London' } }, flags: featureFlags },
+    })
   })
 
   it('should return results for a valid CRN', async () => {
@@ -37,6 +40,7 @@ describe('personSearchResults', () => {
       'Dave',
       {
         crn: 'A1234AB',
+        region: { code: 'N07', name: 'London' },
       },
       featureFlags
     )

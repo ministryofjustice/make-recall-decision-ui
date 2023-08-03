@@ -19,6 +19,7 @@ export const createRecommendationController = async (req: Request, res: Response
       {
         crn: normalizedCrn,
         recommendationId: recommendation.id.toString(),
+        region: user.region,
       },
       flags
     )

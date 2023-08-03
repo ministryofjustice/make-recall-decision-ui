@@ -25,7 +25,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
   const { recommendationId, pageUrlSlug } = req.params
   const {
     urlInfo,
-    user: { token, username, hasSpoRole },
+    user: { token, username, hasSpoRole, region },
     flags: featureFlags,
   } = res.locals
 
@@ -112,6 +112,7 @@ export const getRecommendationPage = async (req: Request, res: Response): Promis
       crn: recommendation.crn,
       recommendationId,
       pageUrlSlug,
+      region,
     },
     featureFlags
   )

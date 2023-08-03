@@ -14,7 +14,10 @@ describe('getCreateRecommendationWarning', () => {
 
   beforeEach(() => {
     req = mockReq({ params: { crn, pageUrlSlug: 'custody-status' } })
-    res = mockRes({ token: accessToken, locals: { user: { username: 'Bill' } } })
+    res = mockRes({
+      token: accessToken,
+      locals: { user: { username: 'Bill', region: { code: 'N07', name: 'London' } } },
+    })
   })
 
   it('renders the create recommendation warning page', async () => {
@@ -30,6 +33,7 @@ describe('getCreateRecommendationWarning', () => {
       {
         crn,
         pageUrlSlug: 'create-recommendation-warning',
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )

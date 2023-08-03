@@ -20,7 +20,10 @@ let res: Response
 describe('getRecommendationPage', () => {
   beforeEach(() => {
     req = mockReq({ params: { recommendationId, pageUrlSlug: 'custody-status' } })
-    res = mockRes({ token: accessToken, locals: { user: { username: 'Bill' } } })
+    res = mockRes({
+      token: accessToken,
+      locals: { user: { username: 'Bill', region: { code: 'N07', name: 'London' } } },
+    })
   })
 
   it('should fetch data and render a recommendation page', async () => {
@@ -86,6 +89,7 @@ describe('getRecommendationPage', () => {
         crn: 'X12345',
         pageUrlSlug: 'custody-status',
         recommendationId,
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )

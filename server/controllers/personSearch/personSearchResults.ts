@@ -30,7 +30,7 @@ export const personSearchResults = async (req: Request, res: Response) => {
     res.locals.persons = await getPersonsByCrn(searchValue, user.token)
     res.render('pages/personSearchResults')
   }
-  appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue }, flags)
+  appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue, region: user.region }, flags)
   auditService.personSearch({
     searchTerm: { crn: searchValue },
     username: res.locals.user.username,

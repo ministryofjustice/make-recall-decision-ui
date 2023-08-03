@@ -9,7 +9,7 @@ const auditService = new AuditService()
 export default function audit(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
-    user: { username },
+    user: { username, region },
     flags: featureFlags,
   } = res.locals
   const pageUrlSlug = req.path.substring(req.path.lastIndexOf('/') + 1)
@@ -19,6 +19,7 @@ export default function audit(req: Request, res: Response, _: NextFunction) {
     {
       crn: res.locals.recommendation.crn,
       recommendationId,
+      region,
       pageUrlSlug: pageUrlSlug.trim().length === 0 ? '<root>' : pageUrlSlug,
     },
     featureFlags
