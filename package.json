@@ -210,7 +210,7 @@
     "multiple-cucumber-html-reporter": "^3.0.2",
     "nock": "^13.2.9",
     "nodemon": "^2.0.20",
-    "openapi-typescript-codegen": "^0.23.0",
+    "openapi-typescript-codegen": "^0.25.0",
     "pdf-parse": "^1.1.1",
     "prettier": "^2.8.2",
     "sass": "^1.57.1",
