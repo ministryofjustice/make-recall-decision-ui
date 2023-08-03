@@ -17,6 +17,10 @@ generic-service:
     ENVIRONMENT: "DEVELOPMENT"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
+  scheduledDowntime:
+    enabled: true
+
 generic-prometheus-alerts:
+  businessHoursOnly: true
   alertSeverity: make-recall-decision-nonprod
 
