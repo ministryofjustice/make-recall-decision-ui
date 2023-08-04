@@ -43,7 +43,7 @@ describe('validateRecallTypeIndeterminate', () => {
       expect(monitoringEvent).toEqual({
         eventName: EVENTS.MRD_RECALL_TYPE,
         data: {
-          recallType: 'STANDARD',
+          recallType: 'EMERGENCY_IND_EXT',
         },
       })
     })

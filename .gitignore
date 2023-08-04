@@ -133,3 +133,4 @@ cypress/downloads
 e2e_tests/videos
 
 .DS_Store
+*.iml
