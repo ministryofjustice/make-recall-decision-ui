@@ -2,8 +2,10 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import emergencyRecallController from './emergencyRecallController'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
   it('load with no data', async () => {
@@ -100,6 +102,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
+        user: { token: 'token1', username: 'Dave' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -116,6 +119,17 @@ describe('post', () => {
       token: 'token1',
       featureFlags: {},
     })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecallType',
+      'Dave',
+      {
+        crn: 'X098092',
+        recallType: 'EMERGENCY_DETERMINATE',
+        recommendationId: '123',
+      },
+      {}
+    )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.

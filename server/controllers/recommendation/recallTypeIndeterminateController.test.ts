@@ -146,7 +146,7 @@ describe('post', () => {
       'Dave',
       {
         crn: 'X098092',
-        recallType: 'STANDARD',
+        recallType: 'EMERGENCY_IND_EXT',
         recommendationId: '123',
       },
       {}

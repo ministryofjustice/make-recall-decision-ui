@@ -51,7 +51,7 @@ export const validateRecallTypeIndeterminate = async ({
     monitoringEvent: {
       eventName: EVENTS.MRD_RECALL_TYPE,
       data: {
-        recallType: valuesToSave.recallType.selected.value,
+        recallType: isNoRecall ? 'NO_RECALL' : 'EMERGENCY_IND_EXT',
       },
     },
   }
