@@ -84,6 +84,14 @@ export default {
       queueUrl: get('AUDIT_SQS_QUEUE_URL', 'foobar', requiredInProduction),
       serviceName: get('AUDIT_SERVICE_NAME', 'make-recall-decision-ui', requiredInProduction),
     },
+    makeRecallDecisionsDeliusFacade: {
+      url: get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL', 'http://localhost:8081/delius', requiredInProduction),
+      timeout: {
+        response: Number(get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_TIMEOUT_RESPONSE', 5000))),
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
 }

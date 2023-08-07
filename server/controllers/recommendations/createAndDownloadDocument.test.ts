@@ -25,7 +25,15 @@ describe('createAndDownloadDocument', () => {
 
     const res = mockRes({
       token,
-      locals: { user: { username: 'Dave', email: 'dave@gov.uk', roles: [HMPPS_AUTH_ROLE.PO] }, flags: featureFlags },
+      locals: {
+        user: {
+          username: 'Dave',
+          email: 'dave@gov.uk',
+          roles: [HMPPS_AUTH_ROLE.PO],
+          region: { code: 'N07', name: 'London' },
+        },
+        flags: featureFlags,
+      },
     })
 
     await createAndDownloadDocument('PART_A')(req, res)
@@ -52,6 +60,7 @@ describe('createAndDownloadDocument', () => {
       {
         crn: 'AB1234C',
         recommendationId: '987',
+        region: { code: 'N07', name: 'London' },
       },
       featureFlags
     )

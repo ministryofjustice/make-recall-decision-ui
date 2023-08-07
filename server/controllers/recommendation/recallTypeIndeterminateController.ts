@@ -32,7 +32,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const {
     flags,
-    user: { token, username },
+    user: { token, username, region },
     urlInfo,
   } = res.locals
 
@@ -84,6 +84,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         ...monitoringEvent.data,
         crn,
         recommendationId,
+        region,
       },
       flags
     )

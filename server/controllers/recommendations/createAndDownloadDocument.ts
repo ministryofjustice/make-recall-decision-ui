@@ -84,7 +84,7 @@ export const createAndDownloadDocument =
       appInsightsEvent(
         EVENTS.PART_A_DOCUMENT_DOWNLOADED,
         user.username,
-        { crn: normalizedCrn, recommendationId },
+        { crn: normalizedCrn, recommendationId, region: user.region },
         flags
       )
     } else {
@@ -95,6 +95,7 @@ export const createAndDownloadDocument =
         {
           crn: normalizedCrn,
           recommendationId,
+          region: user.region,
         },
         flags
       )

@@ -14,6 +14,7 @@ describe('get', () => {
         user: {
           username: 'Dave',
           token: 'token1',
+          region: { code: 'N07', name: 'London' },
           roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
@@ -43,6 +44,7 @@ describe('get', () => {
       {
         crn: 'X123',
         recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )

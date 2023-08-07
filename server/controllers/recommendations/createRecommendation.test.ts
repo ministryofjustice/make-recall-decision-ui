@@ -16,7 +16,7 @@ describe('createRecommendationController', () => {
   beforeEach(() => {
     res = mockRes({
       token,
-      locals: { user: { username: 'Dave' }, flags: featureFlags },
+      locals: { user: { username: 'Dave', region: { code: 'N07', name: 'London' } }, flags: featureFlags },
     })
   })
 
@@ -35,6 +35,7 @@ describe('createRecommendationController', () => {
       {
         crn: 'A1234AB',
         recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
       },
       featureFlags
     )

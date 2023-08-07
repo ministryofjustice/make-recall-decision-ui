@@ -8,7 +8,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const {
     flags,
     recommendation,
-    user: { username },
+    user: { username, region },
   } = res.locals
 
   const reviewPractitionersConcernsCompleted = hasData(recommendation.reviewPractitionersConcerns)
@@ -36,6 +36,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     {
       crn: recommendation.crn,
       recommendationId,
+      region,
     },
     flags
   )

@@ -80,6 +80,13 @@ export const searchPersons = ({ statusCode, response }) =>
     },
   })
 
+export const getUser = ({ user, statusCode, response }: { user: string; statusCode; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.getUser}/${user}`,
+    statusCode,
+    response,
+  })
+
 export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>
   mockGet({
     urlPathPattern: `${routes.getCaseSummary}/(.*)/${sectionId}`,

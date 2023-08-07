@@ -20,7 +20,13 @@ describe('postRecommendationForm', () => {
   let res: Response
 
   beforeEach(() => {
-    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Dave' }, flags: featureFlags } })
+    res = mockRes({
+      locals: {
+        urlInfo: { basePath },
+        user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
+        flags: featureFlags,
+      },
+    })
   })
 
   it('should update recommendation and redirect to next page', async () => {
@@ -121,6 +127,7 @@ describe('postRecommendationForm', () => {
         crn: 'AB1234C',
         recallType: 'STANDARD',
         recommendationId,
+        region: { code: 'N07', name: 'London' },
       },
       featureFlags
     )
@@ -142,6 +149,7 @@ describe('postRecommendationForm', () => {
         crn: 'AB1234C',
         recallType: 'NO_RECALL',
         recommendationId,
+        region: { code: 'N07', name: 'London' },
       },
       featureFlags
     )

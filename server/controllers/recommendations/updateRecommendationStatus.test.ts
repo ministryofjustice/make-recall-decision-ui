@@ -20,7 +20,13 @@ describe('updateRecommendationStatus', () => {
   const featureFlags = { flagExcludeFromAnalytics: true }
 
   beforeEach(() => {
-    res = mockRes({ locals: { urlInfo: { basePath }, user: { username: 'Bill' }, flags: featureFlags } })
+    res = mockRes({
+      locals: {
+        urlInfo: { basePath },
+        user: { username: 'Bill', region: { code: 'N07', name: 'London' } },
+        flags: featureFlags,
+      },
+    })
   })
 
   it('should update recommendation and redirect to recommendations tab if set to DELETED', async () => {
@@ -53,6 +59,7 @@ describe('updateRecommendationStatus', () => {
       {
         crn,
         recommendationId,
+        region: { code: 'N07', name: 'London' },
       },
       featureFlags
     )

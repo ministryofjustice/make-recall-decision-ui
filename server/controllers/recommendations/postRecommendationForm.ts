@@ -17,7 +17,7 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
     const { validator } = pageMetaData(pageUrlSlug)
     const {
       flags,
-      user: { token, username },
+      user: { token, username, region },
       urlInfo,
     } = res.locals
     const {
@@ -60,6 +60,7 @@ export const postRecommendationForm = async (req: Request, res: Response): Promi
             ...monitoringEvent.data,
             crn,
             recommendationId,
+            region,
           },
           flags
         )
