@@ -45,12 +45,13 @@ services:
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       - MAKE_RECALL_DECISION_API_URL=http://make-recall-decision-api:8080
+      - MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL=http://fake-delius-integration-api:8080
       - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:9090/verification
       # These will need to match new creds in the seed auth service auth
       - API_CLIENT_ID=make-recall-decision-ui
       - API_CLIENT_SECRET=clientsecret
-      - SYSTEM_CLIENT_ID=system-client-id
-      - SYSTEM_CLIENT_SECRET=system-client-secret
+      - SYSTEM_CLIENT_ID=make-recall-decision-api
+      - SYSTEM_CLIENT_SECRET=clientsecret
       - SESSION_SECRET=session-secret
 
 networks:
