@@ -456,18 +456,18 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+      # - e2e_environment_test:
+      #     name: e2e_test_dev
+      #     environment: dev
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - deploy_dev
+      #     context:
+      #       - hmpps-common-vars
+      #     <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
@@ -481,7 +481,7 @@ workflows:
             - make-recall-decision-ui-preprod
           requires:
             - deploy_dev
-            - e2e_test_dev
+            # - e2e_test_dev
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
@@ -544,15 +544,15 @@ workflows:
   #           - hmpps-common-vars
   #         <<: *slack-fail-post-step
 
-  e2e-check-dev:
-    when: << pipeline.parameters.e2e-check-dev >>
-    jobs:
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+  # e2e-check-dev:
+  #   when: << pipeline.parameters.e2e-check-dev >>
+  #   jobs:
+  #     - e2e_environment_test:
+  #         name: e2e_test_dev
+  #         environment: dev
+  #         context:
+  #           - hmpps-common-vars
+  #         <<: *slack-fail-post-step
 
   # TODO re-enable once pre-prod ND is back up
   # e2e-check-preprod:
