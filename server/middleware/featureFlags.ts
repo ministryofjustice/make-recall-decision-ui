@@ -12,12 +12,12 @@ export const featureFlagsDefaults = {
   flagLastCompleted: {
     label: 'Last Completed Tab',
     description: 'Shows "Last Completed" tab on case overview.',
-    default: false,
+    default: true,
   },
   flagSearchByName: {
     label: 'Search by Name/Pagination',
     description: 'Displays Search By Name option, and returns results, in paginated form.',
-    default: false,
+    default: true,
   },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
