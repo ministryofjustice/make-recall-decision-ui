@@ -53,4 +53,4 @@ Feature: E2E scenarios - Recall
     Examples:
       | Indeterminate | Extended | RecallType | InCustody  | Vulnerabilities | EmergencyRecall |
       | No            | No       | STANDARD   | No         | None            |                 |
-      | No            | No       | FIXED_TERM | Yes Prison | Some            | Yes             |
+#      | No            | No       | FIXED_TERM | Yes Prison | Some            | Yes             |

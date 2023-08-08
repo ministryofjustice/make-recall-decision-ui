@@ -1,6 +1,12 @@
 import { DateTime } from 'luxon'
 import { proxy, flush } from '@alfonso-presa/soft-assert'
-import { changeDateFromLongFormatToShort, formatObjectDateToLongFormat, getTestDataPerEnvironment } from '../utils'
+import {
+  changeDateFromLongFormatToShort,
+  formatObjectDateToLongFormat,
+  getTestDataPerEnvironment,
+  formattedTimeIn24HrFormat,
+  getCurrentTimeAndRange,
+} from '../utils'
 import {
   Alternatives,
   IndeterminateOrExtendedSentenceDetailType,
@@ -478,7 +484,13 @@ export const q25ProbationDetails = (contents: string, details: Record<string, an
   expectSoftly(contents, 'Probation-Date of Decision').to.contain(
     `${details.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`
   )
-  expectSoftly(contents, 'Probation-Time of Decision').to.match(details.timeOfDecision as RegExp)
+  const currentTime = formattedTimeIn24HrFormat()
+  const timeArray = getCurrentTimeAndRange()
+  expectSoftly(contents, 'Probation-Time of Decision').to.contain(`${details.timeOfDecision} ${currentTime}`)
+
+  expectSoftly(contents, 'Probation-Time of Decision').to.include(
+    `Time (24 hour) of decision to request information: ${timeArray[0] ? timeArray[0] : timeArray[1]}`
+  )
 }
 
 export const q26OffenderManager = (contents: string, details: Record<string, string>[] | string) => {

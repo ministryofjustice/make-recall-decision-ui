@@ -19,5 +19,5 @@ export const devData = {
   region: /Region: {2}(CPA London|London)/,
   ldu: /LDU: C17 County|All London|N07 Division|Unallocated Level 3\(N07\)/,
   dateOfDecision: 'Date of decision to request revocation:',
-  timeOfDecision: /Time \(24 hour\) of decision to request information: \d{2}:\d{2}/,
+  timeOfDecision: 'Time (24 hour) of decision to request information:',
 }
