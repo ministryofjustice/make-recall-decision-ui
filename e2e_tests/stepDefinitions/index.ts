@@ -83,7 +83,13 @@ function loginAndSearchCrn(userType: UserType) {
   cy.reload(true)
   cy.pageHeading().should('equal', 'Sign in')
   openApp(
-    { flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1, flagLastCompleted: 1 },
+    {
+      flagRecommendationsPage: 1,
+      flagDeleteRecommendation: 1,
+      flagTriggerWork: 1,
+      flagLastCompleted: 1,
+      flagSearchByName: 0,
+    },
     userType
   )
   cy.clickLink('Start now')
