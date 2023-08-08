@@ -21,7 +21,8 @@ export const featureFlagsDefaults = {
   },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
-    description: 'Shows a "Recommendations" tab in Case summary, with a list of all recommendations that have been created for that CRN',
+    description:
+      'Shows a "Recommendations" tab in Case summary, with a list of all recommendations that have been created for that CRN',
     default: false,
   },
   flagDeleteRecommendation: {
@@ -32,29 +33,31 @@ export const featureFlagsDefaults = {
   },
   flagCreateVaryLicenceData: {
     label: "Show tab for 'Create & vary a licence' data",
-    description: 'Development team use only - shows a tab on the Case summary showing data from the "Create & vary a licence" service',
+    description:
+      'Development team use only - shows a tab on the Case summary showing data from the "Create & vary a licence" service',
     default: false,
   },
 }
 
-export const readFeatureFlags = (flags: Record<string, FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
-  res.locals.flags = Object.keys(flags).reduce((acc, key) => {
-    acc[key] = flags[key].default
-    return acc
-  }, {})
-  Object.keys(flags).forEach(key => {
-    const flag = req.query[key] || req.cookies[key]
-    const featureFlagEnabledDefaultvalue = !isPreprodOrProd(process.env.ENVIRONMENT)
-    const userFeatureFlagSettingAllowed =
-      typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
-        ? featureFlagEnabledDefaultvalue
-        : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
-    const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
-    if (userFeatureFlagSettingAllowedAndFlagPresent || key === 'flagCvl') {
-      const enabled = flag === '1'
-      res.cookie(key, flag)
-      res.locals.flags[key] = enabled
-    }
-  })
-  next()
-}
+export const readFeatureFlags =
+  (flags: Record<string, FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
+    res.locals.flags = Object.keys(flags).reduce((acc, key) => {
+      acc[key] = flags[key].default
+      return acc
+    }, {})
+    Object.keys(flags).forEach(key => {
+      const flag = req.query[key] || req.cookies[key]
+      const featureFlagEnabledDefaultvalue = !isPreprodOrProd(process.env.ENVIRONMENT)
+      const userFeatureFlagSettingAllowed =
+        typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
+          ? featureFlagEnabledDefaultvalue
+          : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
+      const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
+      if (userFeatureFlagSettingAllowedAndFlagPresent || key === 'flagCvl') {
+        const enabled = flag === '1'
+        res.cookie(key, flag)
+        res.locals.flags[key] = enabled
+      }
+    })
+    next()
+  }

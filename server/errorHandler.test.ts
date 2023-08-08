@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import appWithAllRoutes from './routes/testutils/appSetup'
-import { getPersonsByCrn } from './data/makeDecisionApiClient'
+// import { getPersonsByCrn } from './data/makeDecisionApiClient'
 
 jest.mock('./data/makeDecisionApiClient')
 
