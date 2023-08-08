@@ -16,6 +16,7 @@ context('Search for a person', () => {
   })
 
   it('can search for a person on probation', () => {
+    cy.visit('http://localhost:3007/?flagSearchByName=0')
     const crnQuery = 'A12345'
     const { name, dateOfBirth, crn } = getPersonSearchResponse[0]
     cy.clickLink('Start')
