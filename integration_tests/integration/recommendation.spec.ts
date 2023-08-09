@@ -387,6 +387,13 @@ context('Make a recommendation', () => {
       cy.getDefinitionListValue('PNOMIS number').should('contain', 'A12345')
     })
 
+    it('shows error page if downstream error occurs', () => {
+      cy.task('updateRecommendation', { statusCode: 500 })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/personal-details`, { failOnStatusCode: false })
+      cy.pageHeading().should('equal', 'Sorry, there is a problem with the service')
+    })
+
     it('lists offence details', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
