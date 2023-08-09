@@ -38,6 +38,14 @@ export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
   return DateTime.fromFormat(dateToConvert, 'd MMMM yyyy').toFormat('dd/MM/yyyy')
 }
 
+export const formattedTimeIn24HrFormat = () => {
+  const currentDate = new Date()
+  const hrs = currentDate.getHours()
+  const minutes = currentDate.getMinutes()
+  const formattedHours = hrs < 10 ? `0${hrs}` : hrs
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
+  return `${formattedHours}:${formattedMinutes}`
+}
 export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
   const nth = function (rawDate) {
     if (rawDate > 3 && rawDate < 21) return 'th'

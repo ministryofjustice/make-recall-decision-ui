@@ -93,7 +93,8 @@ function loginAndSearchCrn(userType: UserType) {
     userType
   )
   cy.clickLink('Start now')
-  cy.fillInput('Search by Case Reference Number', this.crn)
+  cy.clickLink('Search by case reference number (CRN)')
+  cy.fillInputByName('crn', this.crn)
   cy.clickButton('Search')
   cy.clickLink(this.offenderName)
 }
