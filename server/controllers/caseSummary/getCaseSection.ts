@@ -81,7 +81,7 @@ export const getCaseSection = async (
         caseSummary = {
           ...json,
           licenceConvictions: {
-            activeCustodial: json.activeConvictions.filter(conviction => conviction.sentence.isCustodial),
+            activeCustodial: json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial),
           },
           standardLicenceConditions: formOptions.standardLicenceConditions,
         }

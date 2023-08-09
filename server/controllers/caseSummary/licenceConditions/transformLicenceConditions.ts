@@ -13,7 +13,7 @@ import { FormOption } from '../../../@types/pagesForms'
 const transformConviction = (conviction: Conviction) => {
   return {
     ...conviction,
-    isCustodial: conviction.sentence && conviction.sentence.isCustodial,
+    isCustodial: conviction.sentence && conviction.sentence?.isCustodial,
     licenceConditions: conviction.licenceConditions
       ? sortList(conviction.licenceConditions, 'mainCategory.description', true)
       : [],
@@ -44,7 +44,7 @@ export const transformLicenceConditions = (
   let hasAllConvictionsReleasedOnLicence = false
   if (caseSummary.activeConvictions) {
     activeConvictions = caseSummary.activeConvictions.map(conviction => transformConviction(conviction))
-    activeCustodialConvictions = activeConvictions.filter(conviction => conviction.isCustodial)
+    activeCustodialConvictions = activeConvictions.filter(conviction => conviction.sentence?.isCustodial)
     hasAllConvictionsReleasedOnLicence = activeCustodialConvictions.every(
       conviction => conviction.sentence?.custodialStatusCode === 'B'
     )

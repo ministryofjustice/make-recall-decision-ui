@@ -90,7 +90,7 @@ describe('get', () => {
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummaryV2).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
     expect(res.locals.caseSummary.licenceConvictions.activeCustodial).toStrictEqual(
-      caseLicenceConditionsResponse.activeConvictions.filter(conviction => conviction.sentence.isCustodial)
+      caseLicenceConditionsResponse.activeConvictions.filter(conviction => conviction.sentence?.isCustodial)
     )
     expect(res.locals.caseSummary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
     expect(res.locals.caseSummary.activeConvictions).toBe(caseLicenceConditionsResponse.activeConvictions)
