@@ -5,7 +5,6 @@ import {
   formatObjectDateToLongFormat,
   getTestDataPerEnvironment,
   formattedTimeIn24HrFormat,
-  getCurrentTimeAndRange,
 } from '../utils'
 import {
   Alternatives,
@@ -484,12 +483,8 @@ export const q25ProbationDetails = (contents: string, details: Record<string, an
   expectSoftly(contents, 'Probation-Date of Decision').to.contain(
     `${details.dateOfDecision} ${DateTime.now().toFormat('dd/MM/y')}`
   )
-  const currentTime = formattedTimeIn24HrFormat()
-  const timeArray = getCurrentTimeAndRange()
-  expectSoftly(contents, 'Probation-Time of Decision').to.contain(`${details.timeOfDecision} ${currentTime}`)
-
-  expectSoftly(contents, 'Probation-Time of Decision').to.include(
-    `Time (24 hour) of decision to request information: ${timeArray[0] ? timeArray[0] : timeArray[1]}`
+  expectSoftly(contents, 'Probation-Time of Decision').to.contain(
+    `${details.timeOfDecision} ${formattedTimeIn24HrFormat()}`
   )
 }
 

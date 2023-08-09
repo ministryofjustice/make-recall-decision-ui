@@ -38,7 +38,8 @@ let currentPage
 
 const makeRecommendation = function (crn, recommendationDetails?: Record<string, string>) {
   cy.clickLink('Start now')
-  cy.fillInput('Search by Case Reference Number', crn)
+  cy.clickLink('Search by case reference number (CRN)')
+  cy.fillInputByName('crn', crn)
   cy.clickButton('Search')
   // get offender name for use in subsequent pages
   cy.get(`[data-qa="row-${crn}"] [data-qa="name"]`)

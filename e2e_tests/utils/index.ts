@@ -46,39 +46,6 @@ export const formattedTimeIn24HrFormat = () => {
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
   return `${formattedHours}:${formattedMinutes}`
 }
-
-export const getCurrentTimeAndRange = () => {
-  const currentDate = new Date()
-
-  const hrs = currentDate.getHours()
-  const minutes = currentDate.getMinutes()
-
-  const lowerBound = new Date(currentDate)
-  lowerBound.setMinutes(minutes - 1)
-
-  const upperBound = new Date(currentDate)
-  upperBound.setMinutes(minutes + 1)
-
-  const formattedHours = hrs < 10 ? `0${hrs}` : hrs
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
-
-  const lowerBoundHours = lowerBound.getHours()
-  const lowerBoundMinutes = lowerBound.getMinutes()
-  const formattedLowerBoundHours = lowerBoundHours < 10 ? `0${lowerBoundHours}` : lowerBoundHours
-  const formattedLowerBoundMinutes = lowerBoundMinutes < 10 ? `0${lowerBoundMinutes}` : lowerBoundMinutes
-
-  const upperBoundHours = upperBound.getHours()
-  const upperBoundMinutes = upperBound.getMinutes()
-  const formattedUpperBoundHours = upperBoundHours < 10 ? `0${upperBoundHours}` : upperBoundHours
-  const formattedUpperBoundMinutes = upperBoundMinutes < 10 ? `0${upperBoundMinutes}` : upperBoundMinutes
-
-  return [
-    `${formattedHours}:${formattedMinutes}`,
-    `${formattedLowerBoundHours}:${formattedLowerBoundMinutes}`,
-    `${formattedUpperBoundHours}:${formattedUpperBoundMinutes}`,
-  ]
-}
-
 export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
   const nth = function (rawDate) {
     if (rawDate > 3 && rawDate < 21) return 'th'
