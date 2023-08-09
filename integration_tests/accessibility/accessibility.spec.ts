@@ -9,7 +9,7 @@ const noRecallResponse = {
 
 const urls = [
   { url: '/' },
-  { url: '/search-by-crn' },
+  { url: '/search-by-crn?flagSearchByName=0' },
   { url: '/search-by-name' },
   { url: '/search-results-by-crn?crn=123' },
   { url: '/search-results-by-crn?flagSearchByName=1&crn=123&page=0' },

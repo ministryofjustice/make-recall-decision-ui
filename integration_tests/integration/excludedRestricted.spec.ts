@@ -12,6 +12,7 @@ context('Excluded and restricted cases', () => {
 
   context('Excluded', () => {
     it('search results page', () => {
+      cy.visit(`${routeUrls.start}?flagSearchByName=0`)
       cy.task('getPersonsByCrn', { statusCode: 200, response: personSearchExcludedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.searchResultsByCRN}?crn=${crn}`)
@@ -62,6 +63,7 @@ context('Excluded and restricted cases', () => {
 
   context('Restricted', () => {
     it('search results page', () => {
+      cy.visit(`${routeUrls.start}?flagSearchByName=0`)
       cy.task('getPersonsByCrn', { statusCode: 200, response: personSearchRestrictedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.searchResultsByCRN}?crn=${crn}`)
