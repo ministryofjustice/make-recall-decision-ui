@@ -37,7 +37,7 @@
                         {
                             key: { html: 'Sentence expiry date' },
                             value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentence.sentenceExpiryDate if conviction.sentence.sentenceExpiryDate else 'Not available' }) }
-                        } if conviction.sentence.isCustodial else undefined
+                        } if conviction.sentence?.isCustodial else undefined
                     ]
                 }) }}
             </div>
