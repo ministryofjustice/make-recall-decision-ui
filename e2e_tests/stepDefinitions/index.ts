@@ -88,7 +88,6 @@ function loginAndSearchCrn(userType: UserType) {
       flagDeleteRecommendation: 1,
       flagTriggerWork: 1,
       flagLastCompleted: 1,
-      flagSearchByName: 0,
     },
     userType
   )
