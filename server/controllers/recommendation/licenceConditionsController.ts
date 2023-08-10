@@ -33,10 +33,13 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   if (featureFlags.flagCvl) {
     const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)
+
     res.locals.caseSummary = {
       ...json,
       licenceConvictions: {
-        activeCustodial: json.activeConvictions.filter(conviction => conviction.sentence.isCustodial),
+        activeCustodial: json.activeConvictions.filter(
+          conviction => conviction.sentence && conviction.sentence.isCustodial
+        ),
       },
       standardLicenceConditions: formOptions.standardLicenceConditions,
     }
