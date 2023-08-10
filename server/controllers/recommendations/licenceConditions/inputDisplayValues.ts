@@ -9,6 +9,16 @@ export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: Input
       additionalLicenceConditions: additionalLicenceConditions?.selectedOptions,
     }
   }
+  if (!isDefined(errors) && apiValues.cvlLicenceConditionsBreached) {
+    const { standardLicenceConditions, additionalLicenceConditions, bespokeLicenceConditions } =
+      apiValues.cvlLicenceConditionsBreached
+
+    return {
+      standardLicenceConditions: standardLicenceConditions?.selected,
+      additionalLicenceConditions: additionalLicenceConditions?.selected,
+      bespokeLicenceConditions: bespokeLicenceConditions?.selected,
+    }
+  }
   return {
     standardLicenceConditions: undefined,
     additionalLicenceConditions: undefined,

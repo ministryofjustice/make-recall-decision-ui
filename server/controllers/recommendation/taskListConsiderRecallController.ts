@@ -8,7 +8,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const triggerLeadingToRecallCompleted = hasData(recommendation.triggerLeadingToRecall)
   const responseToProbationCompleted = hasData(recommendation.responseToProbation)
-  const licenceConditionsBreachedCompleted = hasData(recommendation.licenceConditionsBreached)
+  const licenceConditionsBreachedCompleted =
+    hasData(recommendation.licenceConditionsBreached) || hasData(recommendation.cvlLicenceConditionsBreached)
   const alternativesToRecallTriedCompleted = hasData(recommendation.alternativesToRecallTried)
   const isExtendedSentenceCompleted = hasData(recommendation.isExtendedSentence)
   const isIndeterminateSentenceCompleted = hasData(recommendation.isIndeterminateSentence)

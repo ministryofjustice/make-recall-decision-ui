@@ -72,11 +72,12 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     nextAppointment: isNotNullOrUndefined(recommendation.nextAppointment),
   }
 
-  if (recommendation.activeCustodialConvictionCount === 1) {
-    statuses.licenceConditionsBreached =
-      hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
-      hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions)
-  }
+  statuses.licenceConditionsBreached =
+    hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
+    hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions) ||
+    hasData(recommendation.cvlLicenceConditionsBreached?.standardLicenceConditions?.selected) ||
+    hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
+    hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected)
 
   if (recommendation.isIndeterminateSentence === true) {
     statuses.indeterminateSentenceType = isNotNullOrUndefined(recommendation.indeterminateSentenceType)
