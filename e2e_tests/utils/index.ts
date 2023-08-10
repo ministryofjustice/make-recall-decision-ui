@@ -30,7 +30,7 @@ export const formatObjectDateToLongFormat = (objectDate: Record<string, number |
 }
 
 export const formatDateToCompletedDocumentFormat = () => {
-  const d = DateTime.now()
+  const d = DateTime.now().setZone('Europe/London')
   return d.toFormat('d MMM yyyy')
 }
 
