@@ -39,13 +39,16 @@ export const changeDateFromLongFormatToShort = (dateToConvert: string) => {
 }
 
 export const formattedTimeIn24HrFormat = () => {
-  const currentDate = new Date()
-  const hrs = currentDate.getHours()
-  const minutes = currentDate.getMinutes()
-  const formattedHours = hrs < 10 ? `0${hrs}` : hrs
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
-  return `${formattedHours}:${formattedMinutes}`
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: 'Europe/London',
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+  }
+  const currentTime: string = new Date().toLocaleTimeString('en-GB', options)
+  return currentTime
 }
+
 export const formatDateToDNTRLetterFormat = (objectDate: Date) => {
   const nth = function (rawDate) {
     if (rawDate > 3 && rawDate < 21) return 'th'
