@@ -1,0 +1,80 @@
+<div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error{% endif %}">
+    <fieldset
+            class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">{{ pageHeadings[page.id] }}</h1>
+        </legend>
+        {% if errors.licenceConditionsBreached %}
+            <p id="licenceConditionsBreached-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors.licenceConditionsBreached.text }}
+            </p>
+        {% endif %}
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            <h2 class='govuk-heading-m' tabindex="0">Standard licence conditions</h2>
+            {% for standardCondition in formOptions.standardLicenceConditions %}
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input"
+                           id="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}"
+                           name="licenceConditionsBreached"
+                           type="checkbox" value="standard|{{ standardCondition.value }}"
+                           {% if inputDisplayValues.standardLicenceConditions and standardCondition.value in inputDisplayValues.standardLicenceConditions %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label"
+                           for="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}">
+                        {{ standardCondition.text }}
+                    </label>
+                </div>
+            {% endfor %}
+            <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Additional licence conditions</h2>
+
+            {% set html %}
+                <p class="govuk-notification-banner__heading">
+                     Licence conditions come from NDelius. Update NDelius if anything is wrong. Refresh this page to see your update.
+                </p>
+            {% endset %}
+            {{ govukNotificationBanner({
+                html: html,
+                attributes: {
+                    'data-qa': 'banner-multiple-active-custodial',
+                    'data-analytics-event': 'notification_banner',
+                    'data-analytics-event-category': 'multipleCustodialConvictions' if caseSummary.hasAllConvictionsReleasedOnLicence else 'multipleCustodialConvictionsNotAllReleasedOnLicence',
+                    'data-analytics-event-label': caseSummary.licenceConvictions.activeCustodial.length
+                },
+                classes: "govuk-notification-banner--info"
+            }) }}
+
+            {% set conditionNumber = 1 %}
+            {% for conviction in caseSummary.licenceConvictions.activeCustodial %}
+                {% if conviction.licenceConditions.length %}
+                    {% for licenceCondition in conviction.licenceConditions %}
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input"
+                                   id="additional-{{ loop.index }}"
+                                   name="licenceConditionsBreached"
+                                   type="checkbox"
+                                   value="additional|{{ licenceCondition.mainCategory.code }}|{{ licenceCondition.subCategory.code }}"
+                                   aria-describedby="additional-hint-{{ loop.index }}"
+                                    {% if isObjectInArray({ properties: { mainCatCode: licenceCondition.mainCategory.code, subCatCode: licenceCondition.subCategory.code}, arr: inputDisplayValues.additionalLicenceConditions }) %} checked{% endif %}>
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-font-weight-bold"
+                                   for="additional-{{ loop.index }}">
+                                {{ licenceCondition.mainCategory.description }}
+                            </label>
+                            <div id="additional-hint-{{ loop.index }}"
+                                 class="govuk-hint govuk-checkboxes__hint">
+                                <p class='govuk-body govuk-!-margin-bottom-0'>{{ licenceCondition.subCategory.description }}</p>
+                                {% if licenceCondition.notes %}
+                                    <h4 class='govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-0'>
+                                        Notes</h4>
+                                    <p class='govuk-body'>{{ licenceCondition.notes }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class='govuk-body'>There are no additional licence conditions in NDelius.
+                        Check the licence document.</p>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </fieldset>
+</div>

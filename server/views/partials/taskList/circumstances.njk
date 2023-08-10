@@ -1,6 +1,9 @@
 {%
 set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached.standardLicenceConditions.selected) or
-      hasData(recommendation.licenceConditionsBreached.additionalLicenceConditions.selectedOptions)
+      hasData(recommendation.licenceConditionsBreached.additionalLicenceConditions.selectedOptions) or
+      hasData(recommendation.cvlLicenceConditionsBreached.standardLicenceConditions.selected) or
+      hasData(recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions.selectedOptions) or
+      hasData(recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions.selected)
 %}
 
 <li>

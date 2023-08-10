@@ -25,6 +25,7 @@ import type { UserAccessResponse } from './UserAccessResponse';
 import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
+import { CvlLicenceConditionsBreached } from "./CvlLicenceConditionsBreached";
 
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
@@ -49,6 +50,7 @@ export type RecommendationResponse = {
     personOnProbation?: PersonOnProbationDto;
     alternativesToRecallTried?: AlternativesToRecallTried;
     licenceConditionsBreached?: LicenceConditionsBreached;
+    cvlLicenceConditionsBreached?: CvlLicenceConditionsBreached;
     isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
     vulnerabilities?: VulnerabilitiesRecommendation;
     convictionDetail?: ConvictionDetail;

@@ -1,0 +1,76 @@
+<div class="govuk-form-group{% if errors.licenceConditionsBreached %} govuk-form-group--error{% endif %}">
+    <fieldset
+            class="govuk-fieldset"{% if errors.licenceConditionsBreached %} aria-describedby="licenceConditionsBreached-error"{% endif %}>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">{{ pageHeadings[page.id] }}</h1>
+        </legend>
+        {% if errors.licenceConditionsBreached %}
+            <p id="licenceConditionsBreached-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors.licenceConditionsBreached.text }}
+            </p>
+        {% endif %}
+
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            <h2 class='govuk-heading-m' tabindex="0">Standard licence conditions</h2>
+            {% for condition in caseSummary.cvlLicence.standardLicenceConditions %}
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input"
+                           id="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}"
+                           name="licenceConditionsBreached"
+                           type="checkbox" value="standard|{{ condition.code }}"
+                           {% if inputDisplayValues.standardLicenceConditions and condition.code in inputDisplayValues.standardLicenceConditions %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label"
+                           for="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}">
+                        {{ condition.text }}
+                    </label>
+                </div>
+            {% endfor %}
+            <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Additional licence conditions</h2>
+
+            {% if caseSummary.cvlLicence.additionalLicenceConditions %}
+                {% for licenceCondition in caseSummary.cvlLicence.additionalLicenceConditions %}
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input"
+                                   id="additional-{{ loop.index }}"
+                                   name="licenceConditionsBreached"
+                                   type="checkbox"
+                                   {% if inputDisplayValues.additionalLicenceConditions and licenceCondition.code in inputDisplayValues.additionalLicenceConditions %}checked{% endif %}
+                                   value="additional|{{ licenceCondition.code }}"
+                                   aria-describedby="additional-hint-{{ loop.index }}">
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-font-weight-bold govuk-!-margin-bottom-6"
+                                   for="additional-{{ loop.index }}">
+                                {{ licenceCondition.category }}
+                            </label>
+                            <div id="additional-hint-{{ loop.index }}" class="govuk-hint govuk-checkboxes__hint">
+                                <p class='govuk-body'>{{ licenceCondition.expandedText }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+            {% else %}
+                <p class='govuk-body'>There are no additional licence conditions in CVL. Check the licence document.</p>
+            {% endif %}
+
+            <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Bespoke licence conditions</h2>
+            {% if caseSummary.cvlLicence.bespokeConditions and caseSummary.cvlLicence.bespokeConditions.length %}
+
+                {% for licenceCondition in caseSummary.cvlLicence.bespokeConditions %}
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input"
+                                   id="additional-{{ loop.index }}"
+                                   name="licenceConditionsBreached"
+                                   type="checkbox"
+                                   {% if inputDisplayValues.bespokeLicenceConditions and licenceCondition.code in inputDisplayValues.bespokeLicenceConditions %}checked{% endif %}
+                                   value="bespoke|{{ licenceCondition.code }}"">
+                            <label class="govuk-label govuk-checkboxes__label"
+                                   for="additional-{{ loop.index }}">
+                                {{ licenceCondition.text }}
+                            </label>
+                        </div>
+                    {% endfor %}
+            {% else %}
+                <p class='govuk-body'>There are no bespoke licence conditions in CVL.</p>
+            {% endif %}
+
+        </div>
+    </fieldset>
+</div>

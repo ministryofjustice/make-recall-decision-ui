@@ -178,6 +178,48 @@ describe('taskCompleteness', () => {
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
     })
+
+    it('returns true if a standard cvl licence condition is selected', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        cvlLicenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: ['1', '2'],
+            allOptions: [],
+          },
+        },
+      } as RecommendationResponse)
+      expect(statuses.licenceConditionsBreached).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns true if a additional cvl licence condition is selected', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        cvlLicenceConditionsBreached: {
+          additionalLicenceConditions: {
+            selected: ['1', '2'],
+            allOptions: [],
+          },
+        },
+      } as RecommendationResponse)
+      expect(statuses.licenceConditionsBreached).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns true if a bespoke cvl licence condition is selected', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        cvlLicenceConditionsBreached: {
+          bespokeLicenceConditions: {
+            selected: ['1', '2'],
+            allOptions: [],
+          },
+        },
+      } as RecommendationResponse)
+      expect(statuses.licenceConditionsBreached).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
   })
 
   describe('Custody status', () => {
@@ -245,26 +287,6 @@ describe('taskCompleteness', () => {
         hasArrestIssues: null,
         localPoliceContact: null,
         isMainAddressWherePersonCanBeFound: null,
-      } as RecommendationResponse)
-      expect(areAllComplete).toEqual(true)
-    })
-  })
-
-  describe('Multiple active convictions', () => {
-    it('returns true for areAllComplete if user has no convictions and licenceConditionsBreached is null', () => {
-      const { areAllComplete } = taskCompleteness({
-        ...recommendationResponse,
-        activeCustodialConvictionCount: 0,
-        licenceConditionsBreached: null,
-      } as RecommendationResponse)
-      expect(areAllComplete).toEqual(true)
-    })
-
-    it('returns true for areAllComplete if user has multiple convictions and licenceConditionsBreached is null', () => {
-      const { areAllComplete } = taskCompleteness({
-        ...recommendationResponse,
-        activeCustodialConvictionCount: 2,
-        licenceConditionsBreached: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })

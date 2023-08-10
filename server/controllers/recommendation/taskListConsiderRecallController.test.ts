@@ -53,6 +53,26 @@ describe('get', () => {
     expect(res.locals.isIndeterminateSentenceCompleted).toBeTruthy()
     expect(res.locals.allTasksCompleted).toBeTruthy()
   })
+
+  it('load with existing data cvl licences', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          triggerLeadingToRecall: 'text',
+          responseToProbation: 'text',
+          cvlLicenceConditionsBreached: {},
+          alternativesToRecallTried: {},
+          isExtendedSentence: {},
+          isIndeterminateSentence: {},
+        },
+      },
+    })
+
+    await taskListConsiderRecallController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.licenceConditionsBreachedCompleted).toBeTruthy()
+    expect(res.locals.allTasksCompleted).toBeTruthy()
+  })
 })
 
 describe('post', () => {

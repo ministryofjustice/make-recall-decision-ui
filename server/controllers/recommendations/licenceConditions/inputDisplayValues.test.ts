@@ -108,4 +108,38 @@ describe('inputDisplayValuesLicenceConditions', () => {
       ],
     })
   })
+
+  it('should use cvlLicenceConditionsBreached', () => {
+    const unsavedValues = {}
+    const inputDisplayValues = inputDisplayValuesLicenceConditions({
+      errors: undefined,
+      unsavedValues,
+      apiValues: {
+        cvlLicenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: ['1', '2'],
+            allOptions: [
+              {
+                code: '1',
+                text: 'text',
+              },
+            ],
+          },
+          additionalLicenceConditions: {
+            selected: ['3'],
+            allOptions: [
+              {
+                code: '3',
+                text: 'text',
+              },
+            ],
+          },
+        },
+      },
+    })
+    expect(inputDisplayValues).toEqual({
+      additionalLicenceConditions: ['3'],
+      standardLicenceConditions: ['1', '2'],
+    })
+  })
 })
