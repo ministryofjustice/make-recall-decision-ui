@@ -22,5 +22,5 @@ export const preprodData = {
   region: /Region:.*/,
   ldu: /LDU:.*/,
   dateOfDecision: 'Date of decision to request revocation:',
-  timeOfDecision: /Time \(24 hour\) of decision to request information: \d{2}:\d{2}/,
+  timeOfDecision: 'Time (24 hour) of decision to request information:',
 }
