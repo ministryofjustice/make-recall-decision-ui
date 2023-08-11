@@ -188,7 +188,7 @@ describe('post', () => {
       {
         errorId: 'noRecallLicenceBreachDetails',
         href: '#licenceBreach',
-        text: 'You must explain the licence breach',
+        text: 'You must tell {{ fullName }} why the licence breach is a problem',
         name: 'licenceBreach',
         invalidParts: undefined,
         values: undefined,
