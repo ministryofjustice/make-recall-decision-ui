@@ -1,4 +1,6 @@
-{% if caseSummary.licenceConvictions.hasMultipleActiveCustodial %}
+{% if caseSummary.licenceConvictions.activeCustodial.length == 0 %}
+    <p class='govuk-body'>This person has no active convictions.  Double-check that the information in NDelius is correct.</p>
+{% elseif caseSummary.licenceConvictions.activeCustodial.length > 1 %}
     {% set html %}
         <p class="govuk-notification-banner__heading">
             {% if caseSummary.hasAllConvictionsReleasedOnLicence %}
@@ -36,3 +38,4 @@
         classes: "govuk-notification-banner--error"
     }) }}
 {% endif %}
+

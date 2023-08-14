@@ -137,16 +137,6 @@ const TEMPLATE = {
       },
       licenceConditions: [] as string[],
     },
-    {
-      number: '2',
-      sentence: undefined,
-      mainOffence: {
-        date: '2022-04-24',
-        code: '1234',
-        description: 'Buggery and attempted buggery',
-      },
-      licenceConditions: [] as string[],
-    },
   ],
   cvlLicence: {
     licenceStatus: 'ACTIVE',
@@ -207,6 +197,7 @@ describe('get - cvlFlag', () => {
         activeCustodial: TEMPLATE.activeConvictions.filter(
           conviction => conviction.sentence && conviction.sentence.isCustodial
         ),
+        hasMultipleActiveCustodial: false,
       },
       standardLicenceConditions: formOptions.standardLicenceConditions,
     })

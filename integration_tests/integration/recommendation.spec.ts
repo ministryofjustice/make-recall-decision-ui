@@ -298,9 +298,10 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
+          hasAllConvictionsReleasedOnLicence: true,
           activeConvictions: [
             {
-              sentence: { isCustodial: true },
+              sentence: { isCustodial: true, custodialStatusCode: 'B' },
               licenceConditions: [
                 {
                   mainCategory: {
@@ -363,9 +364,10 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
+          hasAllConvictionsReleasedOnLicence: true,
           activeConvictions: [
             {
-              sentence: { isCustodial: true },
+              sentence: { isCustodial: true, custodialStatusCode: 'B' },
               licenceConditions: [
                 {
                   mainCategory: {
@@ -439,9 +441,10 @@ context('Make a recommendation', () => {
         sectionId: 'licence-conditions',
         statusCode: 200,
         response: {
+          hasAllConvictionsReleasedOnLicence: true,
           activeConvictions: [
             {
-              sentence: { isCustodial: true },
+              sentence: { isCustodial: true, custodialStatusCode: 'B' },
               licenceConditions: [
                 {
                   mainCategory: {
@@ -456,6 +459,7 @@ context('Make a recommendation', () => {
               ],
             },
           ],
+          cvlLicence: null,
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -501,7 +505,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
-        'There are no licence conditions. This person is not currently on licence. Double-check that the information in NDelius is correct.'
+        'This person has no active convictions. Double-check that the information in NDelius is correct.'
       ).should('exist')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Consider a recall')

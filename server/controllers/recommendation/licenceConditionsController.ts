@@ -40,6 +40,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
         activeCustodial: json.activeConvictions.filter(
           conviction => conviction.sentence && conviction.sentence.isCustodial
         ),
+        hasMultipleActiveCustodial:
+          json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
       },
       standardLicenceConditions: formOptions.standardLicenceConditions,
     }

@@ -1,6 +1,6 @@
 import { createClient } from 'redis'
 import { getCaseSection } from './getCaseSection'
-import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import { getCaseSummary, getCaseSummaryV2 } from '../../data/makeDecisionApiClient'
 import {
   ContactHistoryResponse,
   LastCompletedRecommendationsResponse,
@@ -94,6 +94,69 @@ describe('getCaseSection', () => {
     const recs = caseSummary as LastCompletedRecommendationsResponse
     expect(recs.recommendations[0].recallType).toBe('STANDARD')
     expect(recs.recommendations[0].completedDate).toBe('2023-07-31T08:18:53.361Z')
+  })
+
+  it('returns licence-conditions - CVL Flag', async () => {
+    const apiResponse = {
+      activeConvictions: [
+        {
+          sentence: {
+            description: 'Extended Determinate Sentence',
+            isCustodial: true,
+            custodialStatusCode: 'B',
+          },
+          licenceConditions: [
+            {
+              startDate: '2022-04-24',
+            },
+          ],
+        },
+      ],
+      activeRecommendation: {
+        recommendationId: 1860300544,
+      },
+      cvlLicence: {
+        licenceStatus: 'ACTIVE',
+        conditionalReleaseDate: '2022-06-10',
+      },
+      hasAllConvictionsReleasedOnLicence: true,
+      personalDetailsOverview: {
+        fullName: 'Harry Tom Smith',
+      },
+    }
+
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
+    const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, { flagCvl: true })
+
+    const recs = caseSummary as Record<string, unknown>
+    expect(recs.licenceConvictions).toStrictEqual({
+      activeCustodial: [
+        {
+          licenceConditions: [
+            {
+              startDate: '2022-04-24',
+            },
+          ],
+          sentence: {
+            custodialStatusCode: 'B',
+            description: 'Extended Determinate Sentence',
+            isCustodial: true,
+          },
+        },
+      ],
+      hasMultipleActiveCustodial: false,
+    })
+    expect(recs.cvlLicence).toStrictEqual({
+      licenceStatus: 'ACTIVE',
+      conditionalReleaseDate: '2022-06-10',
+    })
+    expect(recs.hasAllConvictionsReleasedOnLicence).toStrictEqual(true)
+    expect(recs.personalDetailsOverview).toStrictEqual({
+      fullName: 'Harry Tom Smith',
+    })
+    expect(recs.activeRecommendation).toStrictEqual({
+      recommendationId: 1860300544,
+    })
   })
 
   describe('Excluded', () => {

@@ -4,13 +4,9 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
         <!-- We display the banners based on active convictions in NDelius. CVL does NOT matter -->
-        {% if caseSummary.licenceConvictions.activeCustodial.length %}
-            {% include './notificationBanners/convictionsLicencesBanner.njk' %}
-        {% else %}
-            <p class='govuk-body'>This person has no active convictions.</p>
-        {% endif %}
+        {% include './notificationBanners/convictionsLicencesBanner.njk' %}
 
-        {% if caseSummary.licenceConvictions.activeCustodial.length and caseSummary.hasAllConvictionsReleasedOnLicence %}
+        {% if  caseSummary.licenceConvictions.activeCustodial.length > 0 and caseSummary.hasAllConvictionsReleasedOnLicence %}
             {% if caseSummary.cvlLicence %}
                 {% include './licenceConditionsCVL.njk' %}
             {% else %}
