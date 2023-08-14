@@ -484,22 +484,25 @@ const createDNTRLetter = function () {
   cy.clickButton('Continue')
 
   cy.fillInput(
-    "Explain the licence breach and why it's a problem",
+    `Tell ${this.offenderName} why the licence breach is a problem`,
     (testData.licenceBreachDetails = faker.hacker.phrase())
   )
   cy.fillInput(
-    `Explain why you are not recalling ${this.offenderName}`,
+    `Tell ${this.offenderName} why you've made this decision`,
     (testData.noRecallReasonDetails = faker.hacker.phrase())
   )
   cy.fillInput(
-    `What progress has ${this.offenderName} made so far?`,
+    `Remind ${this.offenderName} about their progress so far`,
     (testData.progressDetails = faker.hacker.phrase())
   )
   cy.fillInput(
-    `Explain what ${this.offenderName} thinks about the licence breach (optional)`,
+    `Write down what ${this.offenderName} thinks about the licence breach (optional)`,
     (testData.licenceBreachExplanation = faker.hacker.phrase())
   )
-  cy.fillInput('What actions have you agreed for the future?', (testData.futureActionDetails = faker.hacker.phrase()))
+  cy.fillInput(
+    `Tell ${this.offenderName} what you've agreed for the future`,
+    (testData.futureActionDetails = faker.hacker.phrase())
+  )
   cy.clickButton('Continue')
 
   cy.selectRadio(
