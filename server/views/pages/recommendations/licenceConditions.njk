@@ -15,16 +15,10 @@
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <input type="hidden" name="activeCustodialConvictionCount"
                        value="{{ caseSummary.licenceConvictions.activeCustodial.length }}" />
-                {% if caseSummary.licenceConvictions.hasMultipleActiveCustodial or caseSummary.licenceConvictions.activeCustodial.length == 0 %}
 
-                    <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
-                    {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
-                    {% if caseSummary.licenceConvictions.activeCustodial.length == 0 %}
-                        <p class='govuk-body'>There are no licence conditions. This person is not currently on licence.
-                            Double-check that the information in NDelius is correct.</p>
-                    {% endif %}
-                {% elseif caseSummary.licenceConvictions.activeCustodial.length %}
+                {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
 
+                {% if caseSummary.licenceConvictions.activeCustodial.length > 0 and caseSummary.hasAllConvictionsReleasedOnLicence%}
                     {% if caseSummary.cvlLicence %}
                         {% include './licenceConditionsCVL.njk' %}
                     {% else %}
