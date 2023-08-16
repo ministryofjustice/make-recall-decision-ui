@@ -606,10 +606,66 @@ context('Make a recommendation', () => {
     })
 
     it('offence analysis - show index offence details', () => {
-      cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          offencesMatch: false,
+          offenceDataFromLatestCompleteAssessment: false,
+        },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
+      cy.getElement(
+        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete."
+      ).should('exist')
+
+      cy.getElement(
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+      ).should('exist')
+    })
+
+    it('offence analysis - show index offence details - not latest offence', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          offencesMatch: true,
+          offenceDataFromLatestCompleteAssessment: false,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
+      cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
+      cy.getElement(
+        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete."
+      ).should('exist')
+
+      cy.getElement(
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+      ).should('not.exist')
+    })
+
+    it('offence analysis - show index offence details - offence not matched', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          offencesMatch: false,
+          offenceDataFromLatestCompleteAssessment: true,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
+      cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
+      cy.getElement(
+        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete."
+      ).should('not.exist')
+
+      cy.getElement(
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+      ).should('exist')
     })
 
     it('offence analysis - hide index offence details if not available', () => {
