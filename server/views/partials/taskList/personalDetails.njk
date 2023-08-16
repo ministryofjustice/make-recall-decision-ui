@@ -39,7 +39,7 @@
                     <a aria-describedby='task-list-status-isMainAddressWherePersonCanBeFound' href="{{ changeLinkUrl({ pageUrlSlug: 'address-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">Address</a>
                 </span>
                 <span id='task-list-status-isMainAddressWherePersonCanBeFound'>
-                {{ taskStatus({ hasData: recommendation.custodyStatus.selected == 'NO' and hasData(recommendation.isMainAddressWherePersonCanBeFound) }) }}
+                {{ taskStatus({ hasData: hasData(recommendation.isMainAddressWherePersonCanBeFound) }) }}
                 </span>
             </li>
         {% endif %}
