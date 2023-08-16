@@ -1,0 +1,301 @@
+{%- from "node_modules/govuk-frontend/govuk/components/input/macro.njk" import govukInput -%}
+{%- from "node_modules/govuk-frontend/govuk/components/textarea/macro.njk" import govukTextarea -%}
+{%- from "node_modules/govuk-frontend/govuk/components/radios/macro.njk" import govukRadios -%}
+{%- from "node_modules/govuk-frontend/govuk/components/checkboxes/macro.njk" import govukCheckboxes -%}
+{%- from "node_modules/govuk-frontend/govuk/components/select/macro.njk" import govukSelect -%}
+{%- from "node_modules/govuk-frontend/govuk/components/date-input/macro.njk" import govukDateInput -%}
+{%- from "node_modules/govuk-frontend/govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+{%- from "node_modules/govuk-frontend/govuk/components/button/macro.njk" import govukButton -%}
+{%- from "node_modules/govuk-frontend/govuk/components/character-count/macro.njk" import govukCharacterCount -%}
+
+{% set labelClasses = '' %}
+{% if not options.useSmallLabel %}
+{% set labelClasses = labelClasses + ' govuk-label--m' %}
+{% endif %}
+{% if options.labelClasses %}
+{% set labelClasses = labelClasses + ' ' + options.labelClasses %}
+{% endif %}
+
+{% macro compileMultiValueAnswer(answerSchema, selectedAnswers) %}
+  {% if selectedAnswers %}
+    {% set newAnswerSchema = [] %}
+    {% for answer in answerSchema %}
+      {% if answer.text in selectedAnswers %}
+          {% set thisSchemaItem = answerSchema[loop.index0] | updateJsonValue('selected', true) %}
+          {% set newAnswerSchema = (newAnswerSchema.push(thisSchemaItem), newAnswerSchema) %}
+        {% else %}
+          {% set newAnswerSchema = (newAnswerSchema.push(answerSchema[loop.index0]), newAnswerSchema) %}
+      {% endif %}
+    {% endfor %}
+      {% set answerSchema = newAnswerSchema %}
+  {% endif %}
+  {% set selectedArray = [] %}
+  {% for answer in answerSchema %}
+    {% if answer.checked == true or answer.selected == true %}
+      {% set selectedArray = (selectedArray.push(answer.text), selectedArray) %}
+    {% endif %}
+  {% endfor %}
+  {% for answer in selectedArray %}
+      {{- answer }}{{ ", " if not loop.last else "" -}}
+  {% endfor %}
+{% endmacro %}
+
+{%- macro getQuestionText(question) -%}
+  {{ question.questionText }}
+{%- endmacro -%}
+
+{%- macro getQuestionAnswer(question, row='0') -%}
+  {% if question.answer | isArr %}
+    {% set value = question.answer[row] %}
+  {% else %}
+    {% set value = question.answer %}
+  {% endif %}
+  {% switch question.answerType %}
+    {% case 'date' %}{{ value | date("DD MMMM YYYY") }}
+    {% case 'radio' %}{{ compileMultiValueAnswer(question.answerDtos, value) }}
+    {% case 'checkbox' %}{{ compileMultiValueAnswer(question.answerDtos, value) }}
+    {% default %}{{ value }}
+  {% endswitch %}
+{%- endmacro -%}
+
+
+{# templates for each question type #}
+{% set questionAnswer = bodyAnswer or question.answer or '' %}
+{% set errorMessage = errors[question.questionCode] %}
+
+{% if question.type == 'group' %}
+  <h2 class="govuk-heading-m">
+    {{ question.title }}
+  </h2>
+
+  {% for question in question.contents %}
+      {{ renderQuestion(question, errors, options, bodyAnswers[question.questionCode]) }}
+  {% endfor %}
+{% endif %}
+
+{% if question.attributes.readonly == true and (question.questionCode).slice(0, 2) != 'ui'%}
+  {% if question.questionText or question.questionAnswer %}
+
+  <!-- {{ question.questionCode }} rendered as readonly -->
+  {{ govukSummaryList({
+    classes: 'govuk-summary-list--no-border govuk-summary-list--no-bottom-margin',
+    rows: [
+      {
+        key: {
+          text: question.questionText
+        },
+        value: {
+          html: questionAnswer | safe
+        }
+      }
+    ]
+  }) }}
+  {% endif %}
+
+{% else %}
+  {% set qType = question.answerType %}
+
+  {% if qType == 'numeric' %}
+    {% set formClass = question.formClasses + ' numeric' %}
+    {% set qType = 'freetext' %}
+  {% endif %}
+
+  {% switch qType %}
+    {% case 'noinput' %}
+      {{ govukInput({
+        id: question.questionCode,
+        name: question.questionCode,
+        formGroup : {
+          classes: formClass or question.formClasses
+        },
+        classes: 'moj-hidden',
+        attributes: question.attributes,
+        label: {
+          text: question.questionText,
+          isPageHeading: false,
+          classes: question.questionCode + labelClasses
+        },
+        hint: {
+          text: question.helpText
+        },
+        errorMessage: errorMessage
+      }) }}
+    {% case 'freetext' %}
+      {{ govukInput({
+        id: question.questionCode,
+        name: question.questionCode,
+        value: questionAnswer | encodeHtml | safe,
+        formGroup : {
+          classes: formClass or question.formClasses
+        },
+        attributes: question.attributes | addSpellcheck,
+        label: {
+          text: question.questionText,
+          isPageHeading: false,
+          classes: question.questionCode + labelClasses
+        },
+        hint: {
+          text: question.helpText
+        },
+        errorMessage: errorMessage,
+        classes: options.classes
+      }) }}
+    {% case 'textarea' %}
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="{{ options.characterCount | default(4000) }}">
+      <div class="govuk-form-group{% if errorMessage %} govuk-form-group--error{% endif %}">
+        <label class="govuk-label {{question.questionCode}}{% if labelClasses %}{{labelClasses}}{% else %} govuk-label--l{% endif %}" for="{{ question.questionCode }}">
+            {{ question.questionText }}
+        </label>
+        {% if errorMessage %}
+        <p id="{{question.questionCode}}-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> {{ errorMessage.text }}
+        </p>
+        {% endif %}
+        <div id="{{question.questionCode}}-hint" class="govuk-hint">
+          {{ question.helpText }}
+        </div>
+        <textarea class="govuk-textarea govuk-js-character-count" id="{{ question.questionCode }}" name="{{ question.questionCode }}" rows="5" aria-describedby="{{ question.questionCode }}-info {{ question.questionCode }}-hint{% if errorMessage %} {{ question.questionCode }}-error{% endif %}" spellcheck="true">
+        {%- for line in question.answer | splitLines -%}
+        {{- line | encodeHtml | safe -}}{% if not loop.last %}&#10;{% endif %}
+        {%- endfor -%}
+        </textarea>
+      </div>
+      <div id="{{ question.questionCode }}-info" class="govuk-hint govuk-character-count__message">
+        You can enter up to {{ options.characterCount | default(4000) }} characters
+      </div>
+    </div>
+    {% case 'radio' %}
+      {{ govukRadios({
+        idPrefix: question.questionCode,
+        name: question.questionCode,
+        formGroup : {
+          classes: question.formClasses
+        },
+        attributes: question.attributes,
+        fieldset: {
+          legend: {
+            text: question.questionText,
+            classes: question.questionCode + labelClasses
+          }
+        },
+        items: question.answerDtos,
+        errorMessage: errorMessage,
+        isConditional: question.isConditional,
+        hint: {
+          html: question.helpText
+        }
+      }) }}
+    {% case 'checkbox' %}
+      {{ govukCheckboxes({
+        idPrefix: question.questionCode,
+        name: question.questionCode,
+        formGroup : {
+          classes: question.formClasses
+        },
+        attributes: question.attributes,
+        fieldset: {
+          legend: {
+            text: question.questionText,
+            classes: question.questionCode + labelClasses
+          }
+        },
+        items: question.answerDtos,
+        errorMessage: errorMessage,
+        isConditional: question.isConditional,
+        hint: {
+          text: question.helpText
+        }
+      }) }}
+
+    {% case 'checkboxGroup' %}
+      {{ govukCheckboxes({
+        idPrefix: question.questionCode,
+        name: question.questionCode,
+        formGroup : {
+          classes: question.formClasses
+        },
+        attributes: question.attributes,
+        fieldset: {
+          legend: {
+            text: question.questionText,
+            classes: question.questionCode + labelClasses
+          }
+        },
+        items: question.answerDtos,
+        errorMessage: errorMessage,
+        isConditional: question.isConditional,
+        hint: {
+          text: question.helpText
+        }
+      }) }}
+
+    {% case 'dropdown' %}
+      {{ govukSelect({
+        id: question.questionCode,
+        name: question.questionCode,
+        formGroup : {
+          classes: question.formClasses
+        },
+        label: {
+          text: question.questionText,
+          classes: question.questionCode + labelClasses
+        },
+        attributes: question.attributes,
+        items: question.answerDtos,
+        errorMessage: errorMessage,
+        isConditional: question.isConditional,
+        hint: {
+          text: question.helpText
+        }
+      }) }}
+
+    {% case 'date' %}
+    {% set dateAnswer = question.answer.split('-') %}
+      {% if dateAnswer.length > 0 %}
+        {% set answerDay = dateAnswer[2] %}
+        {% set answerMonth = dateAnswer[1] %}
+        {% set answerYear = dateAnswer[0] %}
+      {% else %}
+        {% set answerDay = '' %}
+        {% set answerMonth = '' %}
+        {% set answerYear = '' %}
+      {% endif %}
+
+      {{ govukDateInput({
+        id: question.questionCode,
+        namePrefix: question.questionCode,
+        fieldset: {
+          legend: {
+            text: question.questionText,
+            isPageHeading: false,
+            classes: question.questionCode + labelClasses
+          }
+        },
+        hint: {
+          text: question.helpText
+        },
+        items: [
+          {
+            classes: "govuk-input--width-2",
+            name: "day",
+            value: answerDay
+          },
+          {
+            classes: "govuk-input--width-2",
+            name: "month",
+            value: answerMonth
+          },
+          {
+            classes: "govuk-input--width-4",
+            name: "year",
+            value: answerYear
+          }
+        ],
+        errorMessage: errorMessage,
+        attributes: question.attributes
+      }) }}
+
+    {% default %}
+      <!-- {{ question.questionCode }} - {{ question.answerType }} questions are not currently rendered -->
+  {% endswitch %}
+{% endif %}
