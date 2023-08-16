@@ -18,7 +18,7 @@
 
                 {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
 
-                {% if caseSummary.licenceConvictions.activeCustodial.length > 0 and caseSummary.hasAllConvictionsReleasedOnLicence%}
+                {% if caseSummary.licenceConvictions.activeCustodial.length > 0%}
                     {% if caseSummary.cvlLicence %}
                         {% include './licenceConditionsCVL.njk' %}
                     {% else %}
