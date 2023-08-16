@@ -1,6 +1,7 @@
 ---
 generic-service:
   nameOverride: make-recall-decision-ui
+  serviceAccountName: make-recall-decision
 
   replicaCount: 4
 
