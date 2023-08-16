@@ -488,6 +488,7 @@ context('Make a recommendation', () => {
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
       ).should('exist')
+      cy.getElement('What licence conditions has Paula Smith breached?').should('exist')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Consider a recall')
     })
