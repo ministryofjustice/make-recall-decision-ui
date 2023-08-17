@@ -7,7 +7,7 @@ export const featureFlagsDefaults = {
   flagCvl: {
     label: 'Enable CVL',
     description: 'Integrates CVL licence data into the licence tab and licence conditions entry page.',
-    default: false,
+    default: true,
   },
   flagLastCompleted: {
     label: 'Last Completed Tab',
@@ -53,7 +53,7 @@ export const readFeatureFlags =
           ? featureFlagEnabledDefaultvalue
           : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
       const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
-      if (userFeatureFlagSettingAllowedAndFlagPresent || key === 'flagCvl') {
+      if (userFeatureFlagSettingAllowedAndFlagPresent) {
         const enabled = flag === '1'
         res.cookie(key, flag)
         res.locals.flags[key] = enabled
