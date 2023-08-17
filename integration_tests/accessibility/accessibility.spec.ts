@@ -18,7 +18,7 @@ const urls = [
   { url: `${routeUrls.cases}/123/risk` },
   { url: `${routeUrls.cases}/123/vulnerabilities` },
   { url: `${routeUrls.cases}/123/personal-details` },
-  { url: `${routeUrls.cases}/123/licence-conditions` },
+  { url: `${routeUrls.cases}/123/licence-conditions?flagCvl=0` },
   { url: `${routeUrls.cases}/123/contact-history` },
   { url: `${routeUrls.cases}/123/recommendations` },
   // contact filter with valid dates
