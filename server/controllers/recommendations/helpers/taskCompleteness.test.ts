@@ -39,6 +39,10 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   currentRoshForPartA: undefined,
   previousReleases: undefined,
   previousRecalls: undefined,
+  fixedTermAdditionalLicenceConditions: undefined,
+  hasArrestIssues: undefined,
+  isMainAddressWherePersonCanBeFound: undefined,
+  localPoliceContact: undefined,
 }
 
 const indeterminateSentenceProperties: RecommendationResponse = {
@@ -79,6 +83,10 @@ describe('taskCompleteness', () => {
         ...setAllProperties(indeterminateSentenceProperties, false),
         isIndeterminateSentence: true,
         recallType: true,
+        fixedTermAdditionalLicenceConditions: true,
+        hasArrestIssues: true,
+        isMainAddressWherePersonCanBeFound: true,
+        localPoliceContact: true,
       })
       expect(areAllComplete).toEqual(false)
     })
@@ -91,6 +99,8 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(indeterminateSentenceProperties, true),
         ...setAllProperties(noRecallProperties, true),
+        previousRecalls: false,
+        previousReleases: false,
       })
       expect(areAllComplete).toEqual(true)
     })
@@ -108,6 +118,9 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(noRecallProperties, false),
         recallType: true,
+        previousRecalls: false,
+        previousReleases: false,
+        indeterminateSentenceType: false,
       })
       expect(areAllComplete).toEqual(false)
     })

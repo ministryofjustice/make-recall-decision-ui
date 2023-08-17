@@ -1,6 +1,6 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { hasData, isNotNullOrUndefined } from '../../../utils/utils'
+import { hasData, hasValue } from '../../../utils/utils'
 import { FeatureFlags } from '../../../@types/featureFlags'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
@@ -8,9 +8,9 @@ const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) =
     return false
   }
   if (recommendation.hasVictimsInContactScheme?.selected === 'YES') {
-    return isNotNullOrUndefined(recommendation.dateVloInformed)
+    return hasValue(recommendation.dateVloInformed)
   }
-  return isNotNullOrUndefined(recommendation.hasVictimsInContactScheme?.selected)
+  return hasValue(recommendation.hasVictimsInContactScheme?.selected)
 }
 
 const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
@@ -34,89 +34,107 @@ const isPreviousRecallsComplete = (recommendation: RecommendationResponse) => {
 }
 
 export const taskCompleteness = (recommendation: RecommendationResponse, _featureFlags?: FeatureFlags) => {
-  const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
-    recommendation.recallType?.selected?.value
-  )
-  const isNoRecall = recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL
-
-  let statuses: { [index: string]: boolean } = {
+  let statuses: Record<string, boolean> = {
     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
-    recallType: isNotNullOrUndefined(recommendation.recallType?.selected),
-    responseToProbation: isNotNullOrUndefined(recommendation.responseToProbation),
-    isIndeterminateSentence: isNotNullOrUndefined(recommendation.isIndeterminateSentence),
-    isExtendedSentence: isNotNullOrUndefined(recommendation.isExtendedSentence),
+    recallType: hasValue(recommendation.recallType?.selected),
+    responseToProbation: hasValue(recommendation.responseToProbation),
+    isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
+    isExtendedSentence: hasValue(recommendation.isExtendedSentence),
+    previousReleases: isPreviousReleasesComplete(recommendation),
+    previousRecalls: isPreviousRecallsComplete(recommendation),
+    indeterminateSentenceType:
+      !!recommendation.isIndeterminateSentence && hasValue(recommendation.indeterminateSentenceType),
+    licenceConditionsBreached:
+      hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
+      hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions) ||
+      hasData(recommendation.cvlLicenceConditionsBreached?.standardLicenceConditions?.selected) ||
+      hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
+      hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected),
   }
 
-  const recallStatuses = {
-    custodyStatus: isNotNullOrUndefined(recommendation.custodyStatus),
-    whatLedToRecall: isNotNullOrUndefined(recommendation.whatLedToRecall),
-    isThisAnEmergencyRecall: isNotNullOrUndefined(recommendation.isThisAnEmergencyRecall),
+  if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
+    const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
+    const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
+    const nextAppointment = hasValue(recommendation.nextAppointment)
+
+    return {
+      statuses: {
+        ...statuses,
+        whyConsideredRecall,
+        reasonsForNoRecall,
+        nextAppointment,
+      },
+      areAllComplete:
+        statuses.alternativesToRecallTried &&
+        statuses.recallType &&
+        statuses.responseToProbation &&
+        statuses.isIndeterminateSentence &&
+        statuses.isExtendedSentence &&
+        statuses.licenceConditionsBreached &&
+        statuses.indeterminateSentenceType &&
+        whyConsideredRecall &&
+        reasonsForNoRecall &&
+        nextAppointment,
+    }
+  }
+
+  statuses = {
+    ...statuses,
+    custodyStatus: hasValue(recommendation.custodyStatus),
+    whatLedToRecall: hasValue(recommendation.whatLedToRecall),
+    isThisAnEmergencyRecall: hasValue(recommendation.isThisAnEmergencyRecall),
     vulnerabilities: recommendation.vulnerabilities?.selected?.length > 0,
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
-    isUnderIntegratedOffenderManagement: isNotNullOrUndefined(
-      recommendation.isUnderIntegratedOffenderManagement?.selected
-    ),
-    hasContrabandRisk: isNotNullOrUndefined(recommendation.hasContrabandRisk),
+    isUnderIntegratedOffenderManagement: hasValue(recommendation.isUnderIntegratedOffenderManagement?.selected),
+    hasContrabandRisk: hasValue(recommendation.hasContrabandRisk),
     personOnProbation: recommendation.personOnProbation?.hasBeenReviewed === true,
-    offenceAnalysis: isNotNullOrUndefined(recommendation.offenceAnalysis),
+    offenceAnalysis: hasValue(recommendation.offenceAnalysis),
     convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
     mappa: recommendation.personOnProbation?.mappa?.hasBeenReviewed === true,
     previousReleases: isPreviousReleasesComplete(recommendation),
     previousRecalls: isPreviousRecallsComplete(recommendation),
-    currentRoshForPartA: isNotNullOrUndefined(recommendation.currentRoshForPartA),
+    currentRoshForPartA: hasValue(recommendation.currentRoshForPartA),
+    fixedTermAdditionalLicenceConditions:
+      recommendation.recallType?.selected?.value !== 'FIXED_TERM' ||
+      hasValue(recommendation.fixedTermAdditionalLicenceConditions),
+    indeterminateOrExtendedSentenceDetails:
+      recommendation.isIndeterminateSentence === false ||
+      hasValue(recommendation.indeterminateOrExtendedSentenceDetails),
+    hasArrestIssues: recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.hasArrestIssues),
+    localPoliceContact:
+      recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.localPoliceContact?.contactName),
+    isMainAddressWherePersonCanBeFound:
+      recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.isMainAddressWherePersonCanBeFound),
   }
 
-  const noRecallStatuses = {
-    whyConsideredRecall: isNotNullOrUndefined(recommendation.whyConsideredRecall),
-    reasonsForNoRecall: isNotNullOrUndefined(recommendation.reasonsForNoRecall),
-    nextAppointment: isNotNullOrUndefined(recommendation.nextAppointment),
-  }
-
-  statuses.licenceConditionsBreached =
-    hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
-    hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions) ||
-    hasData(recommendation.cvlLicenceConditionsBreached?.standardLicenceConditions?.selected) ||
-    hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
-    hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected)
-
-  if (recommendation.isIndeterminateSentence === true) {
-    statuses.indeterminateSentenceType = isNotNullOrUndefined(recommendation.indeterminateSentenceType)
-  }
-
-  if (isRecall) {
-    const isRecallTypeFixedTerm = recommendation.recallType?.selected?.value === 'FIXED_TERM'
-    statuses = {
-      ...statuses,
-      ...recallStatuses,
-    }
-    if (recommendation.custodyStatus?.selected === 'NO') {
-      statuses.hasArrestIssues = isNotNullOrUndefined(recommendation.hasArrestIssues)
-      statuses.localPoliceContact = isNotNullOrUndefined(recommendation.localPoliceContact?.contactName)
-      statuses.isMainAddressWherePersonCanBeFound = isNotNullOrUndefined(
-        recommendation.isMainAddressWherePersonCanBeFound
-      )
-    }
-    if (isRecallTypeFixedTerm) {
-      statuses.fixedTermAdditionalLicenceConditions = isNotNullOrUndefined(
-        recommendation.fixedTermAdditionalLicenceConditions
-      )
-    }
-    if (recommendation.isIndeterminateSentence === true) {
-      statuses.indeterminateOrExtendedSentenceDetails = isNotNullOrUndefined(
-        recommendation.indeterminateOrExtendedSentenceDetails
-      )
-    }
-  }
-
-  if (isNoRecall) {
-    statuses = {
-      ...statuses,
-      ...noRecallStatuses,
-    }
-  }
-  const areAllComplete = Object.keys(statuses).every(key => Boolean(statuses[key]))
   return {
     statuses,
-    areAllComplete,
+    areAllComplete:
+      statuses.alternativesToRecallTried &&
+      statuses.recallType &&
+      statuses.responseToProbation &&
+      statuses.isIndeterminateSentence &&
+      statuses.isExtendedSentence &&
+      statuses.licenceConditionsBreached &&
+      statuses.custodyStatus &&
+      statuses.whatLedToRecall &&
+      statuses.isThisAnEmergencyRecall &&
+      statuses.vulnerabilities &&
+      statuses.hasVictimsInContactScheme &&
+      statuses.isUnderIntegratedOffenderManagement &&
+      statuses.hasContrabandRisk &&
+      statuses.personOnProbation &&
+      statuses.offenceAnalysis &&
+      statuses.convictionDetail &&
+      statuses.mappa &&
+      statuses.previousReleases &&
+      statuses.previousRecalls &&
+      statuses.currentRoshForPartA &&
+      statuses.hasArrestIssues &&
+      statuses.localPoliceContact &&
+      statuses.isMainAddressWherePersonCanBeFound &&
+      (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
+      (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
+      statuses.fixedTermAdditionalLicenceConditions,
   }
 }
