@@ -34,7 +34,7 @@ export const isNotNull = (val: unknown) => {
   return val !== null
 }
 
-export const isNotNullOrUndefined = (val: unknown) => {
+export const hasValue = (val: unknown) => {
   return isNotNull(val) && isDefined(val)
 }
 

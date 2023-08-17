@@ -80,6 +80,9 @@ describe('get', () => {
       responseToProbation: true,
       vulnerabilities: true,
       whatLedToRecall: true,
+      fixedTermAdditionalLicenceConditions: true,
+      indeterminateOrExtendedSentenceDetails: true,
+      indeterminateSentenceType: false,
     },
   }
 
