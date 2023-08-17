@@ -33,7 +33,7 @@ context('Recommendation - task list', () => {
   it('task list - Completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=0`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')
@@ -67,12 +67,22 @@ context('Recommendation - task list', () => {
       response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagTriggerWork=0`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Is Paula Smith in custody now? Completed').should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? Completed').should('exist')
     cy.getElement('Address Completed').should('exist')
     cy.getElement("Request line manager's countersignature To do").should('exist')
+  })
+
+  it('task list - custody undetermined', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, custodyStatus: { selected: undefined } },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getElement('Address Completed').should('exist')
   })
 
   it('task list - Completed - determinate sentence not extended', () => {
