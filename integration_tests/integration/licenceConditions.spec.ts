@@ -72,6 +72,7 @@ context('Licence conditions', () => {
 
   it('shows conditions for a single active custodial conviction', () => {
     const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
@@ -101,6 +102,7 @@ context('Licence conditions', () => {
       },
     })
     const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement('Burglary - 05714').should('exist')
@@ -116,6 +118,7 @@ context('Licence conditions', () => {
       },
     })
     const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
     cy.getElement(
@@ -125,6 +128,7 @@ context('Licence conditions', () => {
 
   it('shows conditions for multiple active custodial convictions, and a banner', () => {
     const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getCase', {
       sectionId: 'licence-conditions',
       statusCode: 200,
@@ -184,6 +188,7 @@ context('Licence conditions', () => {
 
   it('shows no conditions for multiple active custodial convictions where one is not released on licence, and a banner', () => {
     const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getCase', {
       sectionId: 'licence-conditions',
       statusCode: 200,
@@ -213,6 +218,7 @@ context('Licence conditions', () => {
 
   it('shows no conditions for a single active custodial conviction which is not released on licence, and a banner', () => {
     const crn = 'X34983'
+    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getCase', {
       sectionId: 'licence-conditions',
       statusCode: 200,
