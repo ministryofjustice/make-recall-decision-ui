@@ -293,6 +293,7 @@ context('Make a recommendation', () => {
     })
 
     it('licence conditions - select saved conditions', () => {
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=0`)
       cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.task('getCase', {
         sectionId: 'licence-conditions',
@@ -480,6 +481,7 @@ context('Make a recommendation', () => {
     })
 
     it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=0`)
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getCase', licenceConditionsMultipleActiveCustodial)
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -494,6 +496,7 @@ context('Make a recommendation', () => {
     })
 
     it('licence conditions - shows message if person has no active custodial convictions', () => {
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=0`)
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getCase', {
