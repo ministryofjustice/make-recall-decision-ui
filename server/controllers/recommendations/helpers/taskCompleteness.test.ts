@@ -105,6 +105,22 @@ describe('taskCompleteness', () => {
       expect(areAllComplete).toEqual(true)
     })
 
+    it('all complete - sentence type not required if indeterminate is false', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...noRecallResponse,
+        isIndeterminateSentence: false,
+        indeterminateSentenceType: undefined,
+      } as RecommendationResponse)
+      expect(statuses).toEqual({
+        ...setAllProperties(sharedProperties, true),
+        ...setAllProperties(noRecallProperties, true),
+        previousRecalls: false,
+        previousReleases: false,
+        indeterminateSentenceType: false,
+      })
+      expect(areAllComplete).toEqual(true)
+    })
+
     const emptyNoRecall: RecommendationResponse = {
       ...setAllProperties(sharedProperties, null),
       ...setAllProperties(noRecallProperties, null),
