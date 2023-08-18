@@ -71,7 +71,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         statuses.isIndeterminateSentence &&
         statuses.isExtendedSentence &&
         statuses.licenceConditionsBreached &&
-        statuses.indeterminateSentenceType &&
+        (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
         whyConsideredRecall &&
         reasonsForNoRecall &&
         nextAppointment,
