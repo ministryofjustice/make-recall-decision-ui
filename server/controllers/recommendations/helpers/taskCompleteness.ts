@@ -107,6 +107,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.isMainAddressWherePersonCanBeFound),
   }
 
+  // const flagReviewAndSend = _featureFlags.flagReviewAndSend
+
   return {
     statuses,
     areAllComplete:
@@ -132,6 +134,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
+      // when we implement the following stories, we can set these statuses.
+      // (!flagReviewAndSend || statuses.whoCompletedPartA) &&
+      // (!flagReviewAndSend || statuses.revocationContact) &&
+      // (!flagReviewAndSend || statuses.correspondenceEmail) &&
       statuses.isMainAddressWherePersonCanBeFound &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&

@@ -235,6 +235,18 @@ context('Recommendation - task list', () => {
       '/recommendations/123/mappa?fromPageId=task-list&fromAnchor=heading-risk-profile'
     )
   })
+  it('task list - review and send', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagReviewAndSend=1`)
+
+    cy.getElement('Who completed this Part A?').should('exist')
+    cy.getElement('Where should the revocation order by sent?').should('exist')
+    cy.getElement('What email should be used for correspondence?').should('exist')
+  })
 
   it('task list - user can create Part A even if they have multiple active custodial convictions', () => {
     cy.task('getRecommendation', {
