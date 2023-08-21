@@ -107,7 +107,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.isMainAddressWherePersonCanBeFound),
   }
 
-  // const flagReviewAndSend = _featureFlags.flagReviewAndSend
+  // const flagProbationAdmin = _featureFlags.flagProbationAdmin
 
   return {
     statuses,
