@@ -76,14 +76,14 @@
                 {% include '../../partials/taskList/vulnerabilitiesVictimLiaison.njk' %}
                 {% include '../../partials/taskList/custody.njk' %}
                 {% include '../../partials/taskList/riskProfile.njk' %}
-                {% if flags.flagReviewAndSend %}
+                {% if flags.flagProbationAdmin %}
                 {% include '../../partials/taskList/reviewAndSend.njk' %}
                 {% endif %}
                 {% if not isSpo %}
                 {% include '../../partials/taskList/countersign.njk' %}
                 {% endif %}
             </ol>
-            {% if taskCompleteness.areAllComplete and flags.flagReviewAndSend %}
+            {% if taskCompleteness.areAllComplete and flags.flagProbationAdmin %}
                 <a href='{{ urlInfo.basePath }}send-ppcs' class='govuk-button govuk-button--primary'>Send to PPCS</a>
             {% endif %}
         </div>

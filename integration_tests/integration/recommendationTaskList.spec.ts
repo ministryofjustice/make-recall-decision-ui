@@ -241,10 +241,10 @@ context('Recommendation - task list', () => {
       response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagReviewAndSend=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=1`)
 
     cy.getElement('Who completed this Part A?').should('exist')
-    cy.getElement('Where should the revocation order by sent?').should('exist')
+    cy.getElement('Where should the revocation order be sent?').should('exist')
     cy.getElement('What email should be used for correspondence?').should('exist')
   })
 

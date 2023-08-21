@@ -4,9 +4,9 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
-  flagReviewAndSend: {
-    label: 'Enable Review And Send',
-    description: 'Enables Review and Send Logic',
+  flagProbationAdmin: {
+    label: 'Enable Probation Admin',
+    description: 'Enables Probation Admin',
     default: false,
   },
   flagCvl: {

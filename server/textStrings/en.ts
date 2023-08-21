@@ -122,7 +122,7 @@ export const strings = {
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
-    revocationContact: 'Where should the revocation order by sent?',
+    revocationContact: 'Where should the revocation order be sent?',
     correspondenceEmail: 'What email should be used for correspondence?',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
     victimLiaisonOfficer: 'Victim Liaison Officer (VLO)',

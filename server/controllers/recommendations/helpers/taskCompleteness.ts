@@ -135,9 +135,9 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
       // when we implement the following stories, we can set these statuses.
-      // (!flagReviewAndSend || statuses.whoCompletedPartA) &&
-      // (!flagReviewAndSend || statuses.revocationContact) &&
-      // (!flagReviewAndSend || statuses.correspondenceEmail) &&
+      // (!flagProbationAdmin || statuses.whoCompletedPartA) &&
+      // (!flagProbationAdmin || statuses.revocationContact) &&
+      // (!flagProbationAdmin || statuses.correspondenceEmail) &&
       statuses.isMainAddressWherePersonCanBeFound &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
