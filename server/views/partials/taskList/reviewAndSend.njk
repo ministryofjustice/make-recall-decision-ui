@@ -1,0 +1,25 @@
+<li>
+    <h2 class="moj-task-list__section" id='contact-information'>
+        Contact Information
+    </h2>
+    <ul class="moj-task-list__items">
+        <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-whoCompletedPartA' href="{{ urlInfo.basePath }}xyz">{{ pageHeadings.whoCompletedPartA }}</a>
+            </span>
+            <span id='task-list-status-whoCompletedPartA'>{{ taskStatus({ hasData: hasData(recommendation.xyz) }) }}</span>
+        </li>
+        <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-revocationContact' href="{{ urlInfo.basePath }}xyz">{{ pageHeadings.revocationContact }}</a>
+            </span>
+            <span id='task-list-status-revocationContact'>{{ taskStatus({ hasData: hasData(recommendation.xyz) }) }}</span>
+        </li>
+        <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-correspondenceEmail' href="{{ urlInfo.basePath }}xyz">{{ pageHeadings.correspondenceEmail }}</a>
+            </span>
+            <span id='task-list-status-correspondenceEmail'>{{ taskStatus({ hasData: hasData(recommendation.xyz) }) }}</span>
+        </li>
+    </ul>
+</li>

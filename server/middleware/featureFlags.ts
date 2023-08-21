@@ -4,6 +4,11 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
+  flagProbationAdmin: {
+    label: 'Enable Probation Admin',
+    description: 'Enables Probation Admin',
+    default: false,
+  },
   flagCvl: {
     label: 'Enable CVL',
     description: 'Integrates CVL licence data into the licence tab and licence conditions entry page.',
