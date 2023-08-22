@@ -38,30 +38,29 @@
 
         <div class="govuk-grid-column-one-third-from-desktop">
             <h2 class='govuk-heading-m govuk-!-margin-bottom-2'>OASys 2.1 Offence analysis</h2>
+            {% if not recommendation.offenceDataFromLatestCompleteAssessment and not recommendation.offencesMatch %}
+                {% set html %}
+                    <p data-qa="not-latest">This is from the latest complete OASys assessment. There&apos;s a more recent assessment that&apos;s not complete.</p>
+                    <p data-qa="offence-not-matched">The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.</p>
+                {% endset %}
+            {% elseif not recommendation.offenceDataFromLatestCompleteAssessment %}
+                {% set html %}
+                    <p data-qa="not-latest">This is from the latest complete OASys assessment. There&apos;s a more recent assessment that&apos;s not complete.</p>
+                {% endset %}
+            {% elseif not recommendation.offencesMatch %}
+                {% set html %}
+                    <p data-qa="offence-not-matched">The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.</p>
+                {% endset %}
+            {% endif %}
+
+            {% if not recommendation.offenceDataFromLatestCompleteAssessment or not recommendation.offencesMatch %}
+                {{ mojBanner({
+                    type: 'information',
+                    html: html,
+                    iconFallbackText: 'information'
+                }) }}
+            {% endif %}
             {% if recommendation.indexOffenceDetails %}
-                {% if not recommendation.offenceDataFromLatestCompleteAssessment and not recommendation.offencesMatch %}
-                    {% set html %}
-                        <p data-qa="not-latest">This is from the latest complete OASys assessment. There&apos;s a more recent assessment that&apos;s not complete.</p>
-                        <p data-qa="offence-not-matched">The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.</p>
-                    {% endset %}
-
-                {% elseif not recommendation.offenceDataFromLatestCompleteAssessment %}
-                    {% set html %}
-                        <p data-qa="not-latest">This is from the latest complete OASys assessment. There&apos;s a more recent assessment that&apos;s not complete.</p>
-                    {% endset %}
-                {% elseif not recommendation.offencesMatch %}
-                    {% set html %}
-                        <p data-qa="offence-not-matched">The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.</p>
-                    {% endset %}
-                {% endif %}
-
-                {% if not recommendation.offenceDataFromLatestCompleteAssessment or not recommendation.offencesMatch %}
-                    {{ mojBanner({
-                        type: 'information',
-                        html: html,
-                        iconFallbackText: 'information'
-                    }) }}
-                {% endif %}
                 <div class='mid-grey-panel'>
                     <div class='js-display-block'>
                         <div class='govuk-!-margin-bottom-6'>
