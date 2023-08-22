@@ -94,4 +94,6 @@ export default {
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  displayMaintenancePage: get('DISPLAY_MAINTENANCE_PAGE', false, requiredInProduction),
+  maintenancePageText: get('MAINTENANCE_PAGE_TEXT', null),
 }
