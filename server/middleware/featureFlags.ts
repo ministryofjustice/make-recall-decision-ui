@@ -58,7 +58,8 @@ export const readFeatureFlags =
           ? featureFlagEnabledDefaultvalue
           : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
       const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
-      if (userFeatureFlagSettingAllowedAndFlagPresent) {
+      const deleteFlagsPresent = key === 'flagRecommendationsPage' || key === 'flagDeleteRecommendation'
+      if (userFeatureFlagSettingAllowedAndFlagPresent || deleteFlagsPresent) {
         const enabled = flag === '1'
         res.cookie(key, flag)
         res.locals.flags[key] = enabled
