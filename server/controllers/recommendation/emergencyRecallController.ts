@@ -30,7 +30,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
     flags,
-    user: { token, username },
+    user: { token, username, region },
     urlInfo,
   } = res.locals
 
@@ -68,6 +68,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recallType: 'EMERGENCY_DETERMINATE',
         crn,
         recommendationId,
+        region,
       },
       flags
     )

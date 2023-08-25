@@ -102,7 +102,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        user: { token: 'token1', username: 'Dave' },
+        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
       },
@@ -127,6 +127,7 @@ describe('post', () => {
         crn: 'X098092',
         recallType: 'EMERGENCY_DETERMINATE',
         recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
       },
       {}
     )
