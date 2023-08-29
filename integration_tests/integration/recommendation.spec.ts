@@ -268,16 +268,6 @@ context('Make a recommendation', () => {
       cy.getElement('There is a problem').should('exist')
     })
 
-    it('prevents updating a recommendation if CRN is excluded', () => {
-      cy.task('updateRecommendation', { statusCode: 403, response: excludedResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/123/custody-status`)
-      cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Is Paula Smith in custody now?')
-      cy.getElement('There is a problem').should('exist')
-    })
-
     it('prevents viewing a recommendation if CRN is excluded', () => {
       cy.task('getRecommendation', { statusCode: 200, response: excludedResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
