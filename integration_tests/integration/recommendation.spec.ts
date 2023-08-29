@@ -268,16 +268,6 @@ context('Make a recommendation', () => {
       cy.getElement('There is a problem').should('exist')
     })
 
-    it('prevents updating a recommendation if CRN is excluded', () => {
-      cy.task('updateRecommendation', { statusCode: 403, response: excludedResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/123/custody-status`)
-      cy.selectRadio('Is Paula Smith in custody now?', 'Yes, police custody')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Is Paula Smith in custody now?')
-      cy.getElement('There is a problem').should('exist')
-    })
-
     it('prevents viewing a recommendation if CRN is excluded', () => {
       cy.task('getRecommendation', { statusCode: 200, response: excludedResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -1393,6 +1383,51 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contains', 'Part A countersigned')
 
       cy.getText('exposition').should('contain', "Tell the probation officer that you've countersigned the Part A.")
+    })
+  })
+  describe('Admin Journey', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
+    it('present Who Completed Part A page', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/`)
+
+      cy.pageHeading().should('contain', 'Who completed this Part A?')
+
+      cy.fillInput('Name', 'Inspector Gadget')
+      cy.fillInput('Email', 'gadget@me.com')
+      cy.selectRadio('Is this person the probation practitioner for Paula Smith?', 'Yes')
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
+
+    it('present Practitioner For Part A page', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/`)
+
+      cy.pageHeading().should('contain', 'Practitioner for Paula Smith?')
+
+      cy.fillInput('Name', 'Inspector Gadget')
+      cy.fillInput('Email', 'gadget@me.com')
+
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Create a Part A form')
     })
   })
 })

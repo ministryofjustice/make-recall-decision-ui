@@ -5,15 +5,15 @@
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
-                <a aria-describedby='task-list-status-whoCompletedPartA' href="{{ urlInfo.basePath }}xyz">{{ pageHeadings.whoCompletedPartA }}</a>
+                <a aria-describedby='task-list-status-whoCompletedPartA' href="{{ urlInfo.basePath }}who-completed-part-a">{{ pageHeadings.whoCompletedPartA }}</a>
             </span>
-            <span id='task-list-status-whoCompletedPartA'>{{ taskStatus({ hasData: hasData(recommendation.xyz) }) }}</span>
+            <span id='task-list-status-whoCompletedPartA'>{{ taskStatus({ hasData: hasData(recommendation.whoCompletedPartA) }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
-                <a aria-describedby='task-list-status-revocationContact' href="{{ urlInfo.basePath }}xyz">{{ pageHeadings.revocationContact }}</a>
+                <a aria-describedby='task-list-status-revocationContact' href="{{ urlInfo.basePath }}practitioner-for-part-a">{{ pageHeadings.revocationContact }}</a>
             </span>
-            <span id='task-list-status-revocationContact'>{{ taskStatus({ hasData: hasData(recommendation.xyz) }) }}</span>
+            <span id='task-list-status-revocationContact'>{{ taskStatus({ hasData: hasData(recommendation.revocationOrderRecipient) }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">

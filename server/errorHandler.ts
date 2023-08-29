@@ -17,9 +17,6 @@ export default function createErrorHandler() {
       return res.redirect('/sign-out')
     }
 
-    if (error.status === 404) {
-      return res.status(404).render('pages/error-404')
-    }
     logger.error(`Error handling request for '${req.originalUrl}', user '${res.locals.user?.username}'`, error)
     res.locals.isProduction = res.locals.env === 'PRODUCTION'
     if (!res.locals.isProduction) {

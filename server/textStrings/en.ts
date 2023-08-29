@@ -68,6 +68,14 @@ export const strings = {
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
     noDeletePreviousRecallIndex: 'Select a previous recall to delete',
     missingManagerCountersignatureExposition: 'You must add a comment to confirm your countersignature',
+    missingWhoCompletedPartAName: 'Enter the name of the person who completed the Part A',
+    missingWhoCompletedPartAEmail: 'Enter the email of the person who completed the Part A',
+    invalidWhoCompletedPartAEmail: 'Enter an email address in the correct format, like name@example.com',
+    missingIsPersonProbationPractitionerForOffender:
+      'Select whether this person is the probation practitioner for {{ fullName }}',
+    missingPractitionerForPartAName: 'Enter the name of the probation practitioner for {{ fullName }}',
+    missingPractitionerForPartAEmail: 'Enter the email of the probation practitioner for {{ fullName }}',
+    invalidPractitionerForPartAEmail: 'Enter an email address in the correct format, like name@example.com',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -122,6 +130,7 @@ export const strings = {
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
+    practitionerForPartA: 'Practitioner for {{ fullName }}?',
     revocationContact: 'Where should the revocation order be sent?',
     correspondenceEmail: 'What email should be used for correspondence?',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
