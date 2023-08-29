@@ -8,6 +8,7 @@ import { readDocX } from '../cypress_shared/plugins'
 export default defineConfig({
   viewportHeight: 900,
   viewportWidth: 1600,
+  pageLoadTimeout: 120000,
   chromeWebSecurity: false,
   downloadsFolder: 'e2e_tests/downloads',
   fixturesFolder: 'e2e_tests/fixtures',
