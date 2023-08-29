@@ -7,8 +7,6 @@ import retrieve from '../controllers/retrieveRecommendation'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
-import logger from '../../logger'
-import { saveErrorWithDetails } from '../utils/errors'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
@@ -71,20 +69,11 @@ export class RouteBuilder {
 }
 
 function feedErrorsToExpress(routerCallback: RouterCallback) {
-  function errorIs5xx(err: { status: number }) {
-    return err.status >= 500 && err.status <= 599
-  }
-
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       await routerCallback(req, res, next)
     } catch (err) {
-      if (err.name === 'AppError' || errorIs5xx(err)) {
-        return next(err)
-      }
-      logger.error(err)
-      req.session.errors = [saveErrorWithDetails({ err, isProduction: res.locals.env === 'PRODUCTION' })]
-      return res.redirect(303, req.originalUrl)
+      return next(err)
     }
   }
 }

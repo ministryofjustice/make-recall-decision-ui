@@ -1,0 +1,92 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                {{ pageHeadings[page.id] }}
+                            </h1>
+                        </legend>
+                        <div class="govuk-form-group">
+
+                            {{ govukInput({
+                                label: {
+                                    text: "Name",
+                                    classes: "govuk-label--m"
+                                },
+                                id: "name",
+                                name: "name",
+                                classes: "govuk-input--width-20",
+                                value: inputDisplayValues.name,
+                                errorMessage: errorMessage(errors.name)
+                            }) }}
+                            {{ govukInput({
+                                label: {
+                                    text: "Email",
+                                    classes: "govuk-label--m"
+                                },
+                                id: "email",
+                                name: "email",
+                                type: 'email',
+                                classes: "govuk-input--width-20",
+                                value: inputDisplayValues.email,
+                                errorMessage: errorMessage(errors.email)
+                            }) }}
+                            {{ govukInput({
+                                label: {
+                                    text: "Telephone",
+                                    classes: "govuk-label--m"
+                                },
+                                hint: {
+                                    text: 'PPCS may use this number to ask queries'
+                                },
+                                id: "telephone",
+                                name: "telephone",
+                                type: 'tel',
+                                classes: "govuk-input--width-20",
+                                value: inputDisplayValues.telephone,
+                                errorMessage: errorMessage(errors.telephone)
+                            }) }}
+                            {{ govukSelect({
+                              id: "region",
+                              name: "region",
+                              label: {
+                                text: "Region",
+                                classes: "govuk-label--m"
+                              },
+                              value: inputDisplayValues.region,
+                              items: regions
+                            }) }}
+                            {{ govukInput({
+                                label: {
+                                    text: "Local Delivery Unit",
+                                    classes: "govuk-label--m"
+                                },
+                                id: "localDeliveryUnit",
+                                name: "localDeliveryUnit",
+                                classes: "govuk-input--width-20",
+                                value: inputDisplayValues.localDeliveryUnit,
+                                errorMessage: errorMessage(errors.localDeliveryUnit)
+                            }) }}
+                        </div>
+                    </fieldset>
+                </div>
+               {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

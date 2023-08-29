@@ -61,6 +61,8 @@ import iomController from '../controllers/recommendation/iomController'
 import policeDetailsController from '../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
 import victimLiasonOfficerController from '../controllers/recommendation/victimLiasonOfficerController'
+import whoCompletedPartAController from '../controllers/recommendation/whoCompletedPartAController'
+import practitionerForPartAController from '../controllers/recommendation/practitionerForPartAController'
 
 const recommendations = Router()
 
@@ -180,6 +182,12 @@ ppRouteBuilder.get('offence-details', offenceDetailsController.get)
 ppRouteBuilder.get('mappa', mappaController.get)
 
 ppRouteBuilder.get('manager-view-decision', managerViewDecisionController.get)
+
+ppRouteBuilder.get('who-completed-part-a', whoCompletedPartAController.get)
+ppRouteBuilder.post('who-completed-part-a', whoCompletedPartAController.post)
+
+ppRouteBuilder.get('practitioner-for-part-a', practitionerForPartAController.get)
+ppRouteBuilder.post('practitioner-for-part-a', practitionerForPartAController.post)
 
 ppRouteBuilder.get('manager-decision-confirmation', managerDecisionConfirmationController.get)
 
