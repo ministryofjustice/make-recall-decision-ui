@@ -31,7 +31,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 6
+    default: 5
   e2e-parallelism-env:
     type: integer
     default: 1
