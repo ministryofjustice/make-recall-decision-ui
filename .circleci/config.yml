@@ -267,7 +267,7 @@ jobs:
           command: |
             shopt -s globstar
             
-            SPECS=$(circleci tests glob "e2e_tests/features/e2eJourneyTests.feature" | circleci tests split --show-counts)
+            SPECS=$(circleci tests glob "e2e_tests/features/e2eJourneyTests/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
             npx cypress run \
@@ -322,7 +322,7 @@ jobs:
             
             shopt -s globstar
             
-            SPECS=$(circleci tests glob "e2e_tests/features/e2eLocalTests.feature" | circleci tests split --split-by=timings --show-counts)
+            SPECS=$(circleci tests glob "e2e_tests/features/e2eLocalTests/*.feature" | circleci tests split --split-by=timings --show-counts)
             echo "Running feature file(s): $SPECS"
 
             set +e
