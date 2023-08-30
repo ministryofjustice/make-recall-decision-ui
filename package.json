@@ -133,7 +133,7 @@
     "express-prom-bundle": "^6.6.0",
     "express-session": "^1.17.3",
     "google-libphonenumber": "^3.2.31",
-    "govuk-frontend": "^4.5.0",
+    "govuk-frontend": "^4.7.0",
     "helmet": "^6.0.1",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.3",
