@@ -71,6 +71,9 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(recallProperties, true),
         ...setAllProperties(indeterminateSentenceProperties, true),
+        didProbationPractitionerCompletePartA: true,
+        whoCompletedPartA: false,
+        practitionerForPartA: false,
       })
       expect(areAllComplete).toEqual(true)
     })
@@ -87,6 +90,9 @@ describe('taskCompleteness', () => {
         hasArrestIssues: true,
         isMainAddressWherePersonCanBeFound: true,
         localPoliceContact: true,
+        didProbationPractitionerCompletePartA: true,
+        whoCompletedPartA: false,
+        practitionerForPartA: false,
       })
       expect(areAllComplete).toEqual(false)
     })
@@ -522,6 +528,68 @@ describe('taskCompleteness', () => {
         indeterminateSentenceType: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+    })
+  })
+  describe('Contact Information', () => {
+    it('returns false if who has completed Part A has not been supplied', () => {
+      const { areAllComplete, statuses } = taskCompleteness(
+        {
+          ...recommendationResponse,
+        } as RecommendationResponse,
+        { flagProbationAdmin: true }
+      )
+
+      expect(statuses.whoCompletedPartA).toEqual(false)
+      expect(statuses.didProbationPractitionerCompletePartA).toEqual(true)
+      expect(areAllComplete).toEqual(false)
+    })
+    it('returns true if the person who completed the part A is the probation practitioner', () => {
+      const { areAllComplete, statuses } = taskCompleteness(
+        {
+          ...recommendationResponse,
+          whoCompletedPartA: {
+            isPersonProbationPractitionerForOffender: true,
+          },
+        } as RecommendationResponse,
+        { flagProbationAdmin: true }
+      )
+
+      expect(statuses.whoCompletedPartA).toEqual(true)
+      expect(statuses.didProbationPractitionerCompletePartA).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
+    it('returns true if the person who completed the part A is not the probation practitioner and that section has been supplied', () => {
+      const { areAllComplete, statuses } = taskCompleteness(
+        {
+          ...recommendationResponse,
+          whoCompletedPartA: {
+            isPersonProbationPractitionerForOffender: false,
+          },
+          practitionerForPartA: {},
+        } as RecommendationResponse,
+        { flagProbationAdmin: true }
+      )
+
+      expect(statuses.whoCompletedPartA).toEqual(true)
+      expect(statuses.practitionerForPartA).toEqual(true)
+      expect(statuses.didProbationPractitionerCompletePartA).toEqual(false)
+      expect(areAllComplete).toEqual(true)
+    })
+    it('returns false if the person who completed the part A is not the probation practitioner and that section has not been supplied', () => {
+      const { areAllComplete, statuses } = taskCompleteness(
+        {
+          ...recommendationResponse,
+          whoCompletedPartA: {
+            isPersonProbationPractitionerForOffender: false,
+          },
+        } as RecommendationResponse,
+        { flagProbationAdmin: true }
+      )
+
+      expect(statuses.whoCompletedPartA).toEqual(true)
+      expect(statuses.practitionerForPartA).toEqual(false)
+      expect(statuses.didProbationPractitionerCompletePartA).toEqual(false)
+      expect(areAllComplete).toEqual(false)
     })
   })
 })

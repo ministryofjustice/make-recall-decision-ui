@@ -4,51 +4,51 @@ export const regionEnum = [
     text: 'Select your region',
   },
   {
-    value: 'East Midlands',
+    value: 'N53',
     text: 'East Midlands',
   },
   {
-    value: 'East of England',
+    value: 'N56',
     text: 'East of England',
   },
   {
-    value: 'Greater Manchester',
+    value: 'N50',
     text: 'Greater Manchester',
   },
   {
-    value: 'Kent, Surrey and Sussex',
+    value: 'N57',
     text: 'Kent, Surrey and Sussex',
   },
   {
-    value: 'London',
+    value: 'N07',
     text: 'London',
   },
   {
-    value: 'North East',
+    value: 'N54',
     text: 'North East',
   },
   {
-    value: 'North West',
+    value: 'N51',
     text: 'North West',
   },
   {
-    value: 'South Central',
+    value: 'N59',
     text: 'South Central',
   },
   {
-    value: 'South West',
+    value: 'N58',
     text: 'South West',
   },
   {
-    value: 'Wales',
+    value: 'N03',
     text: 'Wales',
   },
   {
-    value: 'West Midlands',
+    value: 'N52',
     text: 'West Midlands',
   },
   {
-    value: 'Yorkshire and the Humber',
+    value: 'N55',
     text: 'Yorkshire and the Humber',
   },
 ]
