@@ -83,6 +83,9 @@ describe('get', () => {
       fixedTermAdditionalLicenceConditions: true,
       indeterminateOrExtendedSentenceDetails: true,
       indeterminateSentenceType: false,
+      didProbationPractitionerCompletePartA: true,
+      practitionerForPartA: false,
+      whoCompletedPartA: false,
     },
   }
 

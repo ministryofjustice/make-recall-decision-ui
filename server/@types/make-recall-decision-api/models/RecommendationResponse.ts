@@ -74,6 +74,8 @@ export type RecommendationResponse = {
     recallConsideredList?: Array<RecallConsidered>;
     currentRoshForPartA?: RoshData;
     roshSummary?: RoshSummary;
+    whoCompletedPartA?: WhoCompletedPartA;
+    practitionerForPartA?: PractitionerForPartA;
 };
 
 export namespace RecommendationResponse {
@@ -88,3 +90,19 @@ export namespace RecommendationResponse {
 
 }
 
+export type WhoCompletedPartA = {
+    name?: string,
+    email?: string,
+    telephone?: string,
+    region?: string,
+    localDeliveryUnit?: string,
+    isPersonProbationPractitionerForOffender?: boolean
+}
+
+export type PractitionerForPartA = {
+    name?: string,
+    email?: string,
+    telephone?: string,
+    region?: string,
+    localDeliveryUnit?: string
+}

@@ -9,6 +9,14 @@
             </span>
             <span id='task-list-status-whoCompletedPartA'>{{ taskStatus({ hasData: hasData(recommendation.whoCompletedPartA) }) }}</span>
         </li>
+        {% if hasData(recommendation.whoCompletedPartA) and not recommendation.whoCompletedPartA.isPersonProbationPractitionerForOffender %}
+        <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-practitionerForPartA' href="{{ urlInfo.basePath }}practitioner-for-part-a">{{ pageHeadings.practitionerForPartA }}</a>
+            </span>
+            <span id='task-list-status-practitionerForPartA'>{{ taskStatus({ hasData: hasData(recommendation.practitionerForPartA) }) }}</span>
+        </li>
+        {% endif %}
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
                 <a aria-describedby='task-list-status-revocationContact' href="{{ urlInfo.basePath }}practitioner-for-part-a">{{ pageHeadings.revocationContact }}</a>

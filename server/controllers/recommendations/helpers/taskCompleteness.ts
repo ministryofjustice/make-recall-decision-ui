@@ -105,9 +105,14 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.localPoliceContact?.contactName),
     isMainAddressWherePersonCanBeFound:
       recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.isMainAddressWherePersonCanBeFound),
+    whoCompletedPartA: hasValue(recommendation.whoCompletedPartA),
+    practitionerForPartA: hasValue(recommendation.practitionerForPartA),
+    didProbationPractitionerCompletePartA:
+      !hasData(recommendation?.whoCompletedPartA) ||
+      recommendation.whoCompletedPartA.isPersonProbationPractitionerForOffender,
   }
 
-  // const flagProbationAdmin = _featureFlags.flagProbationAdmin
+  const flagProbationAdmin = _featureFlags?.flagProbationAdmin
 
   return {
     statuses,
@@ -135,7 +140,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
       // when we implement the following stories, we can set these statuses.
-      // (!flagProbationAdmin || statuses.whoCompletedPartA) &&
+      (!flagProbationAdmin || statuses.whoCompletedPartA) &&
+      (!flagProbationAdmin || statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
       // (!flagProbationAdmin || statuses.revocationContact) &&
       // (!flagProbationAdmin || statuses.correspondenceEmail) &&
       statuses.isMainAddressWherePersonCanBeFound &&
