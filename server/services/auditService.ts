@@ -9,7 +9,15 @@ export class AuditService {
     this.sqsClient = new SQSClient({})
   }
 
-  async personSearch({ searchTerm, username, logErrors }: { searchTerm: Record<string, string>; username: string; logErrors: boolean }) {
+  async personSearch({
+    searchTerm,
+    username,
+    logErrors,
+  }: {
+    searchTerm: Record<string, string>
+    username: string
+    logErrors: boolean
+  }) {
     return this.sendAuditMessage({
       action: 'SEARCHED_PERSONS',
       who: username,
@@ -20,7 +28,17 @@ export class AuditService {
     })
   }
 
-  async caseSummaryView({ sectionId, crn, username, logErrors }: { sectionId: string; crn: string; username: string; logErrors: boolean }) {
+  async caseSummaryView({
+    sectionId,
+    crn,
+    username,
+    logErrors,
+  }: {
+    sectionId: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
     return this.sendAuditMessage({
       action: 'VIEWED_CASE_SUMMARY',
       who: username,
@@ -103,7 +121,17 @@ export class AuditService {
     })
   }
 
-  async createPartA({ recommendationId, crn, username, logErrors }: { recommendationId: string; crn: string; username: string; logErrors: boolean }) {
+  async createPartA({
+    recommendationId,
+    crn,
+    username,
+    logErrors,
+  }: {
+    recommendationId: string
+    crn: string
+    username: string
+    logErrors: boolean
+  }) {
     return this.sendAuditMessage({
       action: 'CREATED_PART_A',
       who: username,
