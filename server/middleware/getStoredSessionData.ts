@@ -5,8 +5,10 @@ export const getStoredSessionData = async (req: Request, res: Response, next: Ne
   const { errors, unsavedValues, confirmationMessage } = req.session
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
-    res.locals.unsavedValues = unsavedValues
     delete req.session.errors
+  }
+  if (unsavedValues) {
+    res.locals.unsavedValues = unsavedValues
     delete req.session.unsavedValues
   }
   if (confirmationMessage) {
