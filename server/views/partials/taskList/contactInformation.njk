@@ -19,9 +19,9 @@
         {% endif %}
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
-                <a aria-describedby='task-list-status-revocationContact' href="{{ urlInfo.basePath }}practitioner-for-part-a">{{ pageHeadings.revocationContact }}</a>
+                <a aria-describedby='task-list-status-revocationContact' href="{{ urlInfo.basePath }}revocation-order-recipients">{{ pageHeadings.revocationContact }}</a>
             </span>
-            <span id='task-list-status-revocationContact'>{{ taskStatus({ hasData: hasData(recommendation.revocationOrderRecipient) }) }}</span>
+            <span id='task-list-status-revocationContact'>{{ taskStatus({ hasData: hasData(recommendation.revocationOrderRecipients) }) }}</span>
         </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
