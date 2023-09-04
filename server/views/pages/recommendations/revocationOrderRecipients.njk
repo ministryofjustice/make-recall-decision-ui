@@ -1,0 +1,68 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="size" value="{{ inputDisplayValues.revocationOrderRecipients.length }}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                {{ pageHeadings[page.id] }}
+                            </h1>
+                        </legend>
+                        <div class="govuk-form-group">
+
+                            {% for i in range(0, inputDisplayValues.revocationOrderRecipients.length) -%}
+
+                                {% if i != 0 %}
+                                    <div class="moj-button-action">
+                                        {{ govukButton({
+                                            name: 'remove_' + i,
+                                            text: 'Remove',
+                                            classes: 'govuk-button--secondary car-add-another__remove-button govuk-!-margin-bottom-4'
+                                        }) }}
+                                    </div>
+                                {% endif %}
+                                {{ govukInput({
+                                    label: {
+                                        text: "Enter email address",
+                                        classes: "govuk-label--m"
+                                    },
+                                    id: "email_" + i,
+                                    name: "email_" + i,
+                                    type: 'email',
+                                    classes: "govuk-input--width-20",
+                                    value: inputDisplayValues.revocationOrderRecipients[i],
+                                    errorMessage: errorMessage(errors['email_' + i])
+                                }) }}
+                            {%- endfor %}
+
+                        </div>
+                        {% if inputDisplayValues.revocationOrderRecipients.length < 20 %}
+                        <div class="moj-button-action">
+                            {{ govukButton({
+                                name: 'add',
+                                text: 'Add another email',
+                                classes: 'govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4'
+                            }) }}
+                        </div>
+                        {% endif %}
+                    </fieldset>
+                </div>
+               {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

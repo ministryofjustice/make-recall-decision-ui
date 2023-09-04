@@ -42,6 +42,7 @@ generic-service:
     AUDIT_SQS_REGION: "eu-west-2"
     DISPLAY_MAINTENANCE_PAGE: false
     MAINTENANCE_PAGE_TEXT: ""
+    HMPPS_SQS_USE_WEB_TOKEN: "true"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:

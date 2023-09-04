@@ -76,6 +76,8 @@ export const strings = {
     missingPractitionerForPartAName: 'Enter the name of the probation practitioner for {{ fullName }}',
     missingPractitionerForPartAEmail: 'Enter the email of the probation practitioner for {{ fullName }}',
     invalidPractitionerForPartAEmail: 'Enter an email address in the correct format, like name@example.com',
+    invalidRecipientEmail: 'Enter an email address in a correct format, like name@example.com',
+    missingRecipientEmail: 'Enter an email address',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -131,6 +133,7 @@ export const strings = {
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
     practitionerForPartA: 'Practitioner for {{ fullName }}?',
+    revocationOrderRecipients: 'Where should the revocation order be sent?',
     revocationContact: 'Where should the revocation order be sent?',
     correspondenceEmail: 'What email should be used for correspondence?',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',

@@ -1399,7 +1399,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/?flagProbationAdmin=1`)
 
       cy.pageHeading().should('contain', 'Who completed this Part A?')
 
@@ -1419,12 +1419,31 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/?flagProbationAdmin=1`)
 
       cy.pageHeading().should('contain', 'Practitioner for Paula Smith?')
 
       cy.fillInput('Name', 'Inspector Gadget')
       cy.fillInput('Email', 'gadget@me.com')
+
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
+
+    it('present Revocation Order Recipients', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients/?flagProbationAdmin=1`)
+
+      cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
+
+      cy.fillInput('Enter email address', 'gadget@me.com')
 
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
