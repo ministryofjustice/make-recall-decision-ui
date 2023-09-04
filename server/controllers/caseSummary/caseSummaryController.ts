@@ -9,6 +9,7 @@ import { CaseSectionId } from '../../@types/pagesForms'
 import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 interface RecommendationButton {
   display: boolean
@@ -135,6 +136,17 @@ async function get(req: Request, res: Response, _: NextFunction) {
       }
     }
   }
+  
+
+
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
+
+  console.log('NOTIFICATION')
+  console.log(`${config.notification}`)
+  console.log(Object.values(config.notification))
 
   res.locals = {
     ...res.locals,

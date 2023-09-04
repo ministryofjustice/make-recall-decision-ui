@@ -96,4 +96,9 @@ export default {
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   displayMaintenancePage: get('DISPLAY_MAINTENANCE_PAGE', false, requiredInProduction),
   maintenancePageText: get('MAINTENANCE_PAGE_TEXT', null),
+  notification: {
+    active: get('SHOW_NOTIFICATION', false, requiredInProduction),
+    header: get('NOTIFICATION_HEADER', null, { requireInProduction: true }),
+    body: get('NOTIFICATION_BODY', null, { requireInProduction: true }),
+  },
 }
