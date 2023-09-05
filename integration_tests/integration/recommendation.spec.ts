@@ -1448,5 +1448,23 @@ context('Make a recommendation', () => {
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
+    it('present PPCS Query Emails', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/?flagProbationAdmin=1`)
+
+      cy.pageHeading().should('contain', 'Where should the PPCS respond with questions?')
+
+      cy.fillInput('Enter email address', 'gadget@me.com')
+
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
   })
 })

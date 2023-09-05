@@ -64,6 +64,7 @@ import victimLiasonOfficerController from '../controllers/recommendation/victimL
 import whoCompletedPartAController from '../controllers/recommendation/whoCompletedPartAController'
 import practitionerForPartAController from '../controllers/recommendation/practitionerForPartAController'
 import revocationOrderRecipientsController from '../controllers/recommendation/revocationOrderRecipientsController'
+import ppcsQueryEmailsController from '../controllers/recommendation/ppcsQueryEmailsController'
 
 const recommendations = Router()
 
@@ -192,6 +193,9 @@ ppRouteBuilder.post('practitioner-for-part-a', practitionerForPartAController.po
 
 ppRouteBuilder.get('revocation-order-recipients', revocationOrderRecipientsController.get)
 ppRouteBuilder.post('revocation-order-recipients', revocationOrderRecipientsController.post)
+
+ppRouteBuilder.get('ppcs-query-emails', ppcsQueryEmailsController.get)
+ppRouteBuilder.post('ppcs-query-emails', ppcsQueryEmailsController.post)
 
 ppRouteBuilder.get('manager-decision-confirmation', managerDecisionConfirmationController.get)
 
