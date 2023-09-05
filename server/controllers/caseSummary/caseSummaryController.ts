@@ -144,10 +144,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
     isVisible: config.notification.body && config.notification.active,
   }
 
-  console.log('NOTIFICATION')
-  console.log(`${config.notification}`)
-  console.log(Object.values(config.notification))
-
   res.locals = {
     ...res.locals,
     crn: normalizedCrn,
