@@ -3,7 +3,6 @@ import { getStatuses, updateRecommendation, updateStatuses } from '../../data/ma
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import managerCountersignatureController from './managerCountersignatureController'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import config from '../../config'
 
 jest.mock('../../data/makeDecisionApiClient')
 
