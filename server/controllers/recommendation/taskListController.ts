@@ -4,8 +4,13 @@ import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
 import { isInCustody } from '../recommendations/helpers/isInCustody'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendationId } = req.params
   const {
     recommendation,

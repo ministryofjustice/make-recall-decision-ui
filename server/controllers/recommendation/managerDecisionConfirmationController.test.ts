@@ -1,5 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import managerDecisionConfirmationController from './managerDecisionConfirmationController'
+import config from '../../config'
 
 describe('get', () => {
   it('load with no data', async () => {

@@ -6,8 +6,13 @@ import { inputDisplayValuesRecallTypeIndeterminate } from '../recommendations/re
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation } = res.locals
 
   res.locals = {

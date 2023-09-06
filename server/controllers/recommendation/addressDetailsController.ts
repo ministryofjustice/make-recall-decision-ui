@@ -3,9 +3,14 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesAddress } from '../recommendations/addressDetails/inputDisplayValues'
 import { validateAddress } from '../recommendations/addressDetails/formValidator'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
 
   res.locals = {
     ...res.locals,

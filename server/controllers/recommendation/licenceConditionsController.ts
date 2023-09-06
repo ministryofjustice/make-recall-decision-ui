@@ -9,10 +9,15 @@ import { formOptions } from '../recommendations/formOptions/formOptions'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import config from '../../config'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
 async function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const {
     recommendation,
     user: { token },

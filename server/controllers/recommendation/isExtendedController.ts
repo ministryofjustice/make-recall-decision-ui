@@ -5,8 +5,13 @@ import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation } = res.locals
 
   res.locals = {

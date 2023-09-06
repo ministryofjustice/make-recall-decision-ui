@@ -2,8 +2,13 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
 import { fetchAndTransformLicenceConditions } from '../recommendations/licenceConditions/transform'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendationId } = req.params
   const {
     user: { token },

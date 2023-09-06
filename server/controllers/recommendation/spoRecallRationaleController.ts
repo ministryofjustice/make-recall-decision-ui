@@ -6,8 +6,13 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isMandatoryTextValue } from '../../utils/utils'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation, statuses } = res.locals
 
   const actives = (statuses as RecommendationStatusResponse[]).filter(el => el.active)

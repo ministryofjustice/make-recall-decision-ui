@@ -3,8 +3,13 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesIndeterminateDetails } from '../recommendations/indeterminateOrExtendedSentenceDetails/inputDisplayValues'
 import { validateIndeterminateDetails } from '../recommendations/indeterminateOrExtendedSentenceDetails/formValidator'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation } = res.locals
 
   res.locals = {

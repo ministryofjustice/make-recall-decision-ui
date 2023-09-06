@@ -55,8 +55,7 @@
 
 {% block header %}
   {% include "./header.njk" %}
-  {% include "./phaseBanner.njk" %}
-   {% if notification.isVisible %}
+     {% if notification.isVisible %}
     {% set html %}
       {% if notification.header %}
         <p class="govuk-notification-banner__heading">
@@ -70,6 +69,7 @@
       html: html
     }) }}
   {% endif %}
+  {% include "./phaseBanner.njk" %}
 {% endblock %}
 
 {% block bodyStart %}

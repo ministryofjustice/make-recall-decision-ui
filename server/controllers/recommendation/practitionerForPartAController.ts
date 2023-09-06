@@ -6,8 +6,13 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { regionEnum } from '../recommendations/formOptions/region'
 import { isEmailValid } from '../../utils/validate-formats'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation } = res.locals
 
   const { errors, unsavedValues } = res.locals

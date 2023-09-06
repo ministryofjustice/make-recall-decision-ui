@@ -4,8 +4,13 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesVulnerabilities } from '../recommendations/vulnerabilities/inputDisplayValues'
 import { validateVulnerabilities } from '../recommendations/vulnerabilities/formValidator'
 import { routeUrls } from '../../routes/routeUrls'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation } = res.locals
   res.locals = {
     ...res.locals,

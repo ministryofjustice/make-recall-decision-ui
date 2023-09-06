@@ -5,8 +5,13 @@ import { inputDisplayValuesEmergencyRecall } from '../recommendations/emergencyR
 import { validateEmergencyRecall } from '../recommendations/emergencyRecall/formValidator'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
+import config from '../../config'
 
 function get(req: Request, res: Response, next: NextFunction) {
+  res.locals.notification = {
+    ...config.notification,
+    isVisible: config.notification.body && config.notification.active,
+  }
   const { recommendation } = res.locals
 
   res.locals = {
