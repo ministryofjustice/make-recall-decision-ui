@@ -1,7 +1,6 @@
 import { RequestHandler, Router } from 'express'
 import { getStatuses } from '../data/makeDecisionApiClient'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import config from '../config'
 
 export enum STATUSES {
   SPO_CONSIDER_RECALL = 'SPO_CONSIDER_RECALL',
@@ -63,10 +62,6 @@ export function and(...statusChecks: StatusCheck[]): StatusCheck {
 
 export default function recommendationStatusCheck(statusCheck?: StatusCheck): RequestHandler {
   return async (req, res, next) => {
-    res.locals.notification = {
-      ...config.notification,
-      isVisible: config.notification.body && config.notification.active,
-    }
     const { recommendationId } = req.params
     const {
       user: { token, roles },
