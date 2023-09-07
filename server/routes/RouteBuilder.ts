@@ -7,7 +7,7 @@ import retrieve from '../controllers/retrieveRecommendation'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
-import config from '../config'
+import handleMaintenanceBanner from '../middleware/maintenanceHandler'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
@@ -68,14 +68,6 @@ export class RouteBuilder {
   static build(router: Router) {
     return new RouteBuilder(router)
   }
-}
-
-const handleMaintenanceBanner = (req: Request, res: Response, next: NextFunction) => {
-  res.locals.notification = {
-    ...config.notification,
-    isVisible: config.notification.body && config.notification.active,
-  }
-  next()
 }
 
 function feedErrorsToExpress(routerCallback: RouterCallback) {
