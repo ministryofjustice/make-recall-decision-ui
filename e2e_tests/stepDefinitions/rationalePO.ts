@@ -643,6 +643,30 @@ Then('the PO task-list has the following status:', function (dataTable: DataTabl
       .then(status => {
         expectSoftly(status).to.contain(statuses.SeniorManagerSignature)
       })
+  if (statuses.WhoCompletedPartA)
+    cy.get('#task-list-status-whoCompletedPartA')
+      .invoke('text')
+      .then(status => {
+        expectSoftly(status).to.contain(statuses.WhoCompletedPartA)
+      })
+  if (statuses.PractitionerForPartA)
+    cy.get('#task-list-status-practitionerForPartA')
+      .invoke('text')
+      .then(status => {
+        expectSoftly(status).to.contain(statuses.PractitionerForPartA)
+      })
+  if (statuses.RevocationContact)
+    cy.get('#task-list-status-revocationContact')
+      .invoke('text')
+      .then(status => {
+        expectSoftly(status).to.contain(statuses.RevocationContact)
+      })
+  if (statuses.PpcsQueryEmails)
+    cy.get('#task-list-status-ppcsQueryEmails')
+      .invoke('text')
+      .then(status => {
+        expectSoftly(status).to.contain(statuses.PpcsQueryEmails)
+      })
 })
 
 Given('PO( has) requests/requested an SPO to review recommendation', function () {
@@ -697,27 +721,27 @@ Then('Decision Not To Recall letter details are correct', function () {
   offendersPhoneNumber(contents, this.testData.phoneNumber)
   appointmentDate(contents, this.testData.apptDate)
 })
-When('PO has updated Who completed this Part A question under Contact Information section', function () {
-  currentPage = `Who completed this Part A?`
-  cy.clickLink(currentPage)
-  cy.logPageTitle(currentPage)
-  cy.get(`#name`).type(faker.name.fullName())
-  cy.get(`#email`).type(faker.internet.email())
-  cy.selectRadio('Is this person the probation practitioner', 'No')
-  cy.clickButton('Continue')
-  currentPage = `Practitioner for ${this.offenderName}`
-  cy.logPageTitle(`${currentPage}?`)
-  cy.get(`#name`).type(faker.name.fullName())
-  cy.get(`#email`).type(faker.internet.email())
-  cy.clickButton('Continue')
-})
 
 When('PO has updated {string} under Contact Information section', function (question: string) {
   currentPage = question
-  cy.clickLink(currentPage)
-  cy.logPageTitle(currentPage)
-  cy.get(`#email_0`).type(faker.internet.email())
-  cy.clickButton('Add another email')
-  cy.get(`#email_1`).type(faker.internet.email())
-  cy.clickButton('Continue')
+  if (question === 'Who completed this Part A?') {
+    cy.clickLink(currentPage)
+    cy.logPageTitle(currentPage)
+    cy.get(`#name`).type(faker.name.fullName())
+    cy.get(`#email`).type(faker.internet.email())
+    cy.selectRadio('Is this person the probation practitioner', 'No')
+    cy.clickButton('Continue')
+    currentPage = `Practitioner for ${this.offenderName}`
+    cy.logPageTitle(`${currentPage}?`)
+    cy.get(`#name`).type(faker.name.fullName())
+    cy.get(`#email`).type(faker.internet.email())
+    cy.clickButton('Continue')
+  } else {
+    cy.clickLink(currentPage)
+    cy.logPageTitle(currentPage)
+    cy.get(`#email_0`).type(faker.internet.email())
+    cy.clickButton('Add another email')
+    cy.get(`#email_1`).type(faker.internet.email())
+    cy.clickButton('Continue')
+  }
 })
