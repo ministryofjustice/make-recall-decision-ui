@@ -586,6 +586,27 @@ Given('PO( has) creates/created a Part A form with:', function (dataTable: DataT
   createPartAOrNoRecallLetter.call(this, partADetails)
 })
 
+Given('PO has started creating the Part A form without requesting SPO review', function () {
+  cy.clickLink('Continue')
+  cy.clickLink('Continue')
+  cy.logPageTitle('What do you recommend?')
+  cy.selectRadio('What do you recommend', NonIndeterminateRecallType.STANDARD)
+  cy.get(
+    `#recallTypeDetails${NonIndeterminateRecallType.STANDARD.toString()
+      .split('_')
+      .map(i => Cypress._.capitalize(i))
+      .join('')}`
+  ).type(faker.hacker.phrase())
+  cy.clickButton('Continue')
+  cy.selectRadio('Is this an emergency recall', 'No')
+  cy.clickButton('Continue')
+  cy.clickLink('Continue')
+  currentPage = `Is ${this.offenderName} in custody now`
+  cy.logPageTitle(`${currentPage}?`)
+  cy.selectRadio(currentPage, CustodyType.NO)
+  cy.clickButton('Continue')
+})
+
 Given('PO( has) creates/created a Part A form without requesting SPO review with:', function (dataTable: DataTable) {
   const partADetails = dataTable.rowsHash()
   cy.clickLink('Continue')
@@ -675,4 +696,28 @@ Then('Decision Not To Recall letter details are correct', function () {
   appointmentOptions(contents, this.testData.appointmentOptions)
   offendersPhoneNumber(contents, this.testData.phoneNumber)
   appointmentDate(contents, this.testData.apptDate)
+})
+When('PO has updated Who completed this Part A question under Contact Information section', function () {
+  currentPage = `Who completed this Part A?`
+  cy.clickLink(currentPage)
+  cy.logPageTitle(currentPage)
+  cy.get(`#name`).type(faker.name.fullName())
+  cy.get(`#email`).type(faker.internet.email())
+  cy.selectRadio('Is this person the probation practitioner', 'No')
+  cy.clickButton('Continue')
+  currentPage = `Practitioner for ${this.offenderName}`
+  cy.logPageTitle(`${currentPage}?`)
+  cy.get(`#name`).type(faker.name.fullName())
+  cy.get(`#email`).type(faker.internet.email())
+  cy.clickButton('Continue')
+})
+
+When('PO has updated {string} under Contact Information section', function (question: string) {
+  currentPage = question
+  cy.clickLink(currentPage)
+  cy.logPageTitle(currentPage)
+  cy.get(`#email_0`).type(faker.internet.email())
+  cy.clickButton('Add another email')
+  cy.get(`#email_1`).type(faker.internet.email())
+  cy.clickButton('Continue')
 })
