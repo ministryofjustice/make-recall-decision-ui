@@ -78,6 +78,8 @@ export const strings = {
     invalidPractitionerForPartAEmail: 'Enter an email address in the correct format, like name@example.com',
     invalidRecipientEmail: 'Enter an email address in a correct format, like name@example.com',
     missingRecipientEmail: 'Enter an email address',
+    missingPPCSEmail: 'Enter an email address',
+    invalidPPCSEmail: 'Enter an email address in the correct format, like name@example.com',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -134,8 +136,8 @@ export const strings = {
     whoCompletedPartA: 'Who completed this Part A?',
     practitionerForPartA: 'Practitioner for {{ fullName }}?',
     revocationOrderRecipients: 'Where should the revocation order be sent?',
+    ppcsQueryEmails: 'Where should the PPCS respond with questions?',
     revocationContact: 'Where should the revocation order be sent?',
-    correspondenceEmail: 'What email should be used for correspondence?',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
     victimLiaisonOfficer: 'Victim Liaison Officer (VLO)',
     whatLedToRecall: 'What has led to this recall?',
