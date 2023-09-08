@@ -17,6 +17,9 @@ generic-service:
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "DEVELOPMENT"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+    SHOW_NOTIFICATION: true
+    NOTIFICATION_HEADER: ""
+    NOTIFICATION_BODY: ""
 
   scheduledDowntime:
     enabled: true

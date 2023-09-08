@@ -139,7 +139,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   res.locals.notification = {
     ...config.notification,
-    isVisible: config.notification.body && config.notification.active,
+    isVisible: Boolean(config.notification.active === 'true'.toLowerCase()) && Boolean(config.notification.body),
   }
 
   res.locals = {
