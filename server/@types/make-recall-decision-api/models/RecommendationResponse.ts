@@ -76,6 +76,8 @@ export type RecommendationResponse = {
     roshSummary?: RoshSummary;
     whoCompletedPartA?: WhoCompletedPartA;
     practitionerForPartA?: PractitionerForPartA;
+    revocationOrderRecipients?: string[];
+    ppcsQueryEmails?: string[];
 };
 
 export namespace RecommendationResponse {

@@ -245,7 +245,7 @@ context('Recommendation - task list', () => {
 
     cy.getElement('Who completed this Part A?').should('exist')
     cy.getElement('Where should the revocation order be sent?').should('exist')
-    cy.getElement('What email should be used for correspondence?').should('exist')
+    cy.getElement('Where should the PPCS respond with questions?').should('exist')
   })
 
   it('task list - user can create Part A even if they have multiple active custodial convictions', () => {
