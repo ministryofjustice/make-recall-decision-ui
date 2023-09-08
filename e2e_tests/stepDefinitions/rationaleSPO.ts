@@ -69,7 +69,7 @@ When('{userType}( has) visits/visited the countersigning/review link', function 
   cy.reload(true)
   cy.pageHeading().should('equal', 'Sign in')
   openApp(
-    { flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1, flagProbationAdmin: 1 },
+    { flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagTriggerWork: 1 },
     userType,
     userType === UserType.SPO ? this.spoCounterSignatureLink : this.acoCounterSignatureLink
   )

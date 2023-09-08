@@ -745,3 +745,6 @@ When('PO has updated {string} under Contact Information section', function (ques
     cy.clickButton('Continue')
   }
 })
+Given('the probation admin flag is turned on', function () {
+  cy.url().then(urValue => cy.visit(`${urValue}?flagProbationAdmin=1`))
+})
