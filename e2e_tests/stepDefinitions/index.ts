@@ -88,6 +88,7 @@ function loginAndSearchCrn(userType: UserType) {
       flagDeleteRecommendation: 1,
       flagTriggerWork: 1,
       flagLastCompleted: 1,
+      flagProbationAdmin: 1,
     },
     userType
   )
@@ -109,7 +110,7 @@ defineParameterType({
 })
 
 Before(() => {
-  openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1 })
+  openApp({ flagRecommendationsPage: 1, flagDeleteRecommendation: 1, flagProbationAdmin: 1 })
 })
 
 After(function () {
