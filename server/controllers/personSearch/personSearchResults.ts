@@ -13,7 +13,7 @@ const auditService = new AuditService()
 export const personSearchResults = async (req: Request, res: Response) => {
   res.locals.notification = {
     ...config.notification,
-    isVisible: config.notification.active === 'true' && Boolean(config.notification.body),
+    isVisible: String(config.notification.active).toLowerCase() === 'true' && Boolean(config.notification.body),
   }
   const { crn, page } = {
     crn: req.query.crn as string,
