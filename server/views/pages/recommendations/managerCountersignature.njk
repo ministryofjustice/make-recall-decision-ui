@@ -13,6 +13,7 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="mode" value="{{ mode }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">

@@ -4,6 +4,8 @@ export enum EVENTS {
   MRD_RECOMMENDATION_PAGE_VIEW = 'mrdRecommendationPageView',
   MRD_SPO_RATIONALE_SENT = 'mrdSpoRationaleRecorded',
   MRD_SPO_RATIONALE_TASKLIST_ACCESSED = 'mrdSpoTasklistAccessed',
+  SPO_COUNTERSIGNATURE = 'mrdSpoCountersignature',
+  SENIOR_MANAGER_COUNTERSIGNATURE = 'mrdSrMgrCountersignature',
   MRD_RECALL_TYPE = 'mrdRecallType',
   PART_A_DOCUMENT_DOWNLOADED = 'mrdPartADocumentDownloaded',
   DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED = 'mrdDecisionNotToRecallLetterDownloaded',

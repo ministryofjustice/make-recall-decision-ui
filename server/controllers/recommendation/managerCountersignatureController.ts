@@ -5,6 +5,8 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { isMandatoryTextValue } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals
@@ -40,15 +42,17 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { managerCountersignatureExposition, mode } = req.body
+  const { managerCountersignatureExposition, mode, crn } = req.body
 
   if (mode !== 'SPO' && mode !== 'ACO') {
     throw new Error('Invalid mode')
   }
 
+  const isSpoMode = (): boolean => mode === 'SPO'
+
   const {
     flags,
-    user: { token },
+    user: { token, username, region },
     urlInfo,
   } = res.locals
 
@@ -72,15 +76,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   await updateRecommendation({
     recommendationId,
-    valuesToSave:
-      mode === 'SPO'
-        ? { countersignSpoExposition: managerCountersignatureExposition }
-        : { countersignAcoExposition: managerCountersignatureExposition },
+    valuesToSave: isSpoMode()
+      ? { countersignSpoExposition: managerCountersignatureExposition }
+      : { countersignAcoExposition: managerCountersignatureExposition },
     token,
     featureFlags: flags,
   })
 
-  if (mode === 'SPO') {
+  if (isSpoMode()) {
     await updateStatuses({
       recommendationId,
       token,
@@ -95,6 +98,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
       activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
     })
   }
+
+  appInsightsEvent(
+    isSpoMode() ? EVENTS.SPO_COUNTERSIGNATURE : EVENTS.SENIOR_MANAGER_COUNTERSIGNATURE,
+    username,
+    { crn, recommendationId, region },
+    flags
+  )
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'countersign-confirmation', urlInfo }))
 }
