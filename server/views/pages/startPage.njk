@@ -1,8 +1,19 @@
 {% extends "../partials/layout.njk" %}
-
-{% set pageTitle = makePageTitle({ pageHeading: "Start page" }) %}
-
+{% block beforeContent %}
+  {% if notification.isVisible %}
+    {% set html %}
+      {% if notification.header %}
+        <p class="govuk-notification-banner__heading">
+          {{ notification.header }}
+        </p>
+      {% endif %}
+      <span class="govuk-body">{{ notification.body }}</span>
+    {% endset %}
+    {{ govukNotificationBanner({html: html}) }}
+  {% endif %}
+{% endblock %}
 {% block content %}
+{% set pageTitle = makePageTitle({ pageHeading: "Start page" }) %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class="govuk-heading-xl">{{ applicationName }}</h1>

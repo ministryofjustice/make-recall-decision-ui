@@ -7,7 +7,6 @@ import retrieve from '../controllers/retrieveRecommendation'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
-import handleMaintenanceBanner from '../middleware/maintenanceHandler'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
@@ -35,7 +34,6 @@ export class RouteBuilder {
   public get(endpoint: string, routerCallback: RouterCallback): void {
     this.router.get(
       `/:recommendationId/${endpoint}`,
-      handleMaintenanceBanner,
       feedErrorsToExpress(authorisationMiddleware(this.roles)),
       feedErrorsToExpress(recommendationStatusCheck(this.statusCheck)),
       sanitizeInputValues,
