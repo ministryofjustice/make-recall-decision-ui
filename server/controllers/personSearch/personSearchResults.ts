@@ -6,15 +6,10 @@ import { AuditService } from '../../services/auditService'
 import { isPreprodOrProd } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
-import config from '../../config'
 
 const auditService = new AuditService()
 
 export const personSearchResults = async (req: Request, res: Response) => {
-  res.locals.notification = {
-    ...config.notification,
-    isVisible: String(config.notification.active).toLowerCase() === 'true' && Boolean(config.notification.body),
-  }
   const { crn, page } = {
     crn: req.query.crn as string,
     page: req.query.page as string,
