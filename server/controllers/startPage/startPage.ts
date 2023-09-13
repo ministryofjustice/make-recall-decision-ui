@@ -7,9 +7,9 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
   res.locals.notification = {
     ...config.notification,
     isVisible:
-      isBannerDisplayDateRangeValid() &&
       String(config.notification.active).toLowerCase() === 'true' &&
-      Boolean(config.notification.body),
+      Boolean(config.notification.body) &&
+      isBannerDisplayDateRangeValid()
   }
   if (flags.flagSearchByName) {
     res.locals.searchEndpoint = '/search-by-name'

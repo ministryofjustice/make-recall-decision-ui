@@ -146,9 +146,9 @@ async function get(req: Request, res: Response, _: NextFunction) {
   res.locals.notification = {
     ...config.notification,
     isVisible:
-      isBannerDisplayDateRangeValid() &&
       String(config.notification.active).toLowerCase() === 'true' &&
-      Boolean(config.notification.body),
+      Boolean(config.notification.body) &&
+      isBannerDisplayDateRangeValid()
   }
 
   res.locals = {
