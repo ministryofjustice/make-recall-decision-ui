@@ -97,5 +97,7 @@ export default {
     active: get('SHOW_NOTIFICATION', false, { requireInProduction: false }),
     header: get('NOTIFICATION_HEADER', null, { requireInProduction: false }),
     body: get('NOTIFICATION_BODY', null, { requireInProduction: false }),
+    startDate: get('START_DATE_TIME', null, { requireInProduction: false }),
+    endDate: get('END_DATE_TIME', null, { requireInProduction: false }),
   },
 }
