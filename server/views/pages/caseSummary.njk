@@ -15,6 +15,17 @@
 
 {% block beforeContent %}
     {{ backLink() }}
+    {% if notification.isVisible %}
+      {% set html %}
+        {% if notification.header %}
+          <p class="govuk-notification-banner__heading">
+            {{ notification.header }}
+          </p>
+        {% endif %}
+        <span class="govuk-body">{{ notification.body }}</span>
+      {% endset %}
+      {{ govukNotificationBanner({html: html}) }}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
