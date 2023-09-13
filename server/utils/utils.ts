@@ -124,6 +124,31 @@ export const removeParamsFromQueryString = ({
   return queryString ? `?${queryString}` : ''
 }
 
+function getTerminationDate() {
+  const bannerMessageBody = String(config.notification.body)
+  const terminationDateString = bannerMessageBody.substring(
+    bannerMessageBody.indexOf('on ') + 1,
+    bannerMessageBody.lastIndexOf(',')
+  )
+  const terminationDate = new Date(Date.parse(terminationDateString))
+  return terminationDate
+}
+
+export function isBannerDisplayDateRangeValid() {
+  const terminationDate = getTerminationDate()
+  const startDate = new Date(String(config.notification.startDate))
+  const endDate = new Date(String(config.notification.endDate))
+
+  terminationDate.setHours(0, 0, 0, 0)
+  startDate.setHours(0, 0, 0, 0)
+  endDate.setHours(0, 0, 0, 0)
+
+  const endDateIsAfterTerinationDate = Boolean(endDate.toISOString() > terminationDate.toISOString())
+  const startDateIsBeforeTerminationDate = Boolean(startDate.toISOString() < terminationDate.toISOString())
+
+  return startDateIsBeforeTerminationDate && endDateIsAfterTerinationDate
+}
+
 export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {
   return userAccessResponse?.userNotFound || userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
 }
