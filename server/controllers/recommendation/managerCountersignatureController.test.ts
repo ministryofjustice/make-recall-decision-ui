@@ -3,8 +3,10 @@ import { getStatuses, updateRecommendation, updateStatuses } from '../../data/ma
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import managerCountersignatureController from './managerCountersignatureController'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
   it('load with no data', async () => {
@@ -96,13 +98,18 @@ describe('get', () => {
 })
 
 describe('post', () => {
+  const crn = 'A12345'
+  const userName = 'JoeBloggs'
+  const regionCode = 'N07'
+  const regionName = 'London'
+
   it('post with valid data for SPO', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
-      body: { mode: 'SPO', managerCountersignatureExposition: 'some value' },
+      body: { mode: 'SPO', managerCountersignatureExposition: 'some value', crn },
     })
 
     const res = mockRes({
@@ -110,6 +117,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
+        user: { username: userName, region: { code: regionCode, name: regionName } },
       },
     })
     const next = mockNext()
@@ -132,6 +140,17 @@ describe('post', () => {
       activate: [STATUSES.SPO_SIGNED],
     })
 
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdSpoCountersignature',
+      userName,
+      {
+        crn,
+        recommendationId: '123',
+        region: { code: regionCode, name: regionName },
+      },
+      {}
+    )
+
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
@@ -142,7 +161,7 @@ describe('post', () => {
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
-      body: { mode: 'ACO', managerCountersignatureExposition: 'some value' },
+      body: { mode: 'ACO', managerCountersignatureExposition: 'some value', crn },
     })
 
     const res = mockRes({
@@ -150,6 +169,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
+        user: { username: userName, region: { code: regionCode, name: regionName } },
       },
     })
     const next = mockNext()
@@ -171,6 +191,17 @@ describe('post', () => {
       deActivate: [STATUSES.ACO_SIGNATURE_REQUESTED],
       activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
     })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdSrMgrCountersignature',
+      userName,
+      {
+        crn,
+        recommendationId: '123',
+        region: { code: regionCode, name: regionName },
+      },
+      {}
+    )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
