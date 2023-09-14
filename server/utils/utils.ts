@@ -124,29 +124,21 @@ export const removeParamsFromQueryString = ({
   return queryString ? `?${queryString}` : ''
 }
 
-function getTerminationDate() {
-  const bannerMessageBody = String(config.notification.body)
-  const terminationDateString = bannerMessageBody.substring(
-    bannerMessageBody.indexOf('on ') + 1,
-    bannerMessageBody.lastIndexOf(',')
-  )
-  const terminationDate = new Date(Date.parse(terminationDateString))
-  return terminationDate
-}
-
 export function isBannerDisplayDateRangeValid() {
-  const terminationDate = getTerminationDate()
+  const dateToday = new Date()
   const startDate = new Date(String(config.notification.startDate))
   const endDate = new Date(String(config.notification.endDate))
 
-  terminationDate.setHours(0, 0, 0, 0)
+  dateToday.setHours(0, 0, 0, 0)
   startDate.setHours(0, 0, 0, 0)
   endDate.setHours(0, 0, 0, 0)
 
-  const endDateIsAfterTerinationDate = Boolean(endDate.toISOString() > terminationDate.toISOString())
-  const startDateIsBeforeTerminationDate = Boolean(startDate.toISOString() < terminationDate.toISOString())
+  const endDateIsAfterDateToday = Boolean(endDate.toISOString() > dateToday.toISOString())
+  const endDateIsDateToday = Boolean(endDate.toISOString() === dateToday.toISOString())
+  const startDateIsBeforeDateToday = Boolean(startDate.toISOString() < dateToday.toISOString())
+  const startDateIsDateToday = Boolean(startDate.toISOString() === dateToday.toISOString())
 
-  return startDateIsBeforeTerminationDate && endDateIsAfterTerinationDate
+  return (startDateIsBeforeDateToday || startDateIsDateToday) && (endDateIsAfterDateToday || endDateIsDateToday)
 }
 
 export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {

@@ -18,6 +18,8 @@ generic-service:
     SHOW_NOTIFICATION: false
     NOTIFICATION_HEADER: ""
     NOTIFICATION_BODY: ""
+    START_DATE: ""
+    END_DATE: ""
 
   allowlist:
     pen_tester: "195.95.131.65"

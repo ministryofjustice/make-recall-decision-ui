@@ -43,6 +43,8 @@ generic-service:
     SHOW_NOTIFICATION: false
     NOTIFICATION_HEADER: ""
     NOTIFICATION_BODY: ""
+    START_DATE: ""
+    END_DATE: ""
     DISPLAY_MAINTENANCE_PAGE: false
     MAINTENANCE_PAGE_TEXT: ""
     HMPPS_SQS_USE_WEB_TOKEN: "true"

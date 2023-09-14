@@ -18,6 +18,8 @@ generic-service:
     SHOW_NOTIFICATION: false
     NOTIFICATION_HEADER: ""
     NOTIFICATION_BODY: ""
+    START_DATE: ""
+    END_DATE: ""
 
   allowlist:
     north_shields_user: "194.33.192.1/24"

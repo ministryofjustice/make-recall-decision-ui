@@ -233,13 +233,13 @@ describe('validateCrn', () => {
 
 describe('isBannerDisplayDateRangeValid', () => {
   config.notification.body = 'This application will be unavailable on 13 September 2023, save your work ahead of time'
-  it('returns true when date on banner is within date range in config', () => {
+  it('returns true when date today is within date range in config', () => {
     config.notification.startDate = '2000-09-13'
     config.notification.endDate = '2050-09-13'
     const result = isBannerDisplayDateRangeValid()
     expect(result).toEqual(true)
   })
-  it('returns false when date on banner is outside date range in config', () => {
+  it('returns false when date today is outside date range in config', () => {
     config.notification.startDate = '2040-09-13'
     config.notification.endDate = '2050-09-13'
     const result = isBannerDisplayDateRangeValid()
