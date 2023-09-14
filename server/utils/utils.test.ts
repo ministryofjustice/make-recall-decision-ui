@@ -1,6 +1,8 @@
+import config from '../config'
 import convertToTitleCase, {
   getProperty,
   hasData,
+  isBannerDisplayDateRangeValid,
   isPreprodOrProd,
   listToString,
   logMessage,
@@ -226,6 +228,22 @@ describe('validateCrn', () => {
   it('removes invalid characters', () => {
     const result = validateCrn('​​V127804')
     expect(result).toEqual('V127804')
+  })
+})
+
+describe('isBannerDisplayDateRangeValid', () => {
+  config.notification.body = 'This application will be unavailable on 13 September 2023, save your work ahead of time'
+  it('returns true when date today is within date range in config', () => {
+    config.notification.startDate = '2000-09-13'
+    config.notification.endDate = '2050-09-13'
+    const result = isBannerDisplayDateRangeValid()
+    expect(result).toEqual(true)
+  })
+  it('returns false when date today is outside date range in config', () => {
+    config.notification.startDate = '2040-09-13'
+    config.notification.endDate = '2050-09-13'
+    const result = isBannerDisplayDateRangeValid()
+    expect(result).toEqual(false)
   })
 })
 

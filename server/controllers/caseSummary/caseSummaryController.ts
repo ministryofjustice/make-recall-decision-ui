@@ -1,5 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { isCaseRestrictedOrExcluded, isPreprodOrProd, isString, validateCrn } from '../../utils/utils'
+import {
+  isBannerDisplayDateRangeValid,
+  isCaseRestrictedOrExcluded,
+  isPreprodOrProd,
+  isString,
+  validateCrn,
+} from '../../utils/utils'
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
 import { AuditService } from '../../services/auditService'
@@ -139,7 +145,10 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   res.locals.notification = {
     ...config.notification,
-    isVisible: String(config.notification.active).toLowerCase() === 'true' && Boolean(config.notification.body),
+    isVisible:
+      String(config.notification.active).toLowerCase() === 'true' &&
+      Boolean(config.notification.body) &&
+      isBannerDisplayDateRangeValid(),
   }
 
   res.locals = {

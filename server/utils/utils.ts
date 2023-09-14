@@ -124,6 +124,23 @@ export const removeParamsFromQueryString = ({
   return queryString ? `?${queryString}` : ''
 }
 
+export function isBannerDisplayDateRangeValid() {
+  const dateToday = new Date()
+  const startDate = new Date(String(config.notification.startDate))
+  const endDate = new Date(String(config.notification.endDate))
+
+  dateToday.setHours(0, 0, 0, 0)
+  startDate.setHours(0, 0, 0, 0)
+  endDate.setHours(0, 0, 0, 0)
+
+  const endDateIsAfterDateToday = Boolean(endDate.toISOString() > dateToday.toISOString())
+  const endDateIsDateToday = Boolean(endDate.toISOString() === dateToday.toISOString())
+  const startDateIsBeforeDateToday = Boolean(startDate.toISOString() < dateToday.toISOString())
+  const startDateIsDateToday = Boolean(startDate.toISOString() === dateToday.toISOString())
+
+  return (startDateIsBeforeDateToday || startDateIsDateToday) && (endDateIsAfterDateToday || endDateIsDateToday)
+}
+
 export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {
   return userAccessResponse?.userNotFound || userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
 }
