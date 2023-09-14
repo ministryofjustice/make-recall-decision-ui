@@ -18,6 +18,7 @@ generic-service:
     SHOW_NOTIFICATION: false
     NOTIFICATION_HEADER: ""
     NOTIFICATION_BODY: ""
+    # dates must be written in ISO format eg/YYYY-MM-DD
     START_DATE: ""
     END_DATE: ""
 
