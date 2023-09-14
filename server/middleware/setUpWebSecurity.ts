@@ -1,6 +1,7 @@
 import express, { Response, Router } from 'express'
 import helmet from 'helmet'
 import { randomBytes } from 'crypto'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -30,6 +31,7 @@ export default function setUpWebSecurity(): Router {
           fontSrc: ["'self'"],
           formAction: [
             "'self'",
+            config.apis.makeRecallDecisionApi.url,
             'sign-in-dev.hmpps.service.justice.gov.uk',
             'sign-in-preprod.hmpps.service.justice.gov.uk',
             'sign-in.hmpps.service.justice.gov.uk',

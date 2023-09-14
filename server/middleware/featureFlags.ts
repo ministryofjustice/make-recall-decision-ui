@@ -4,6 +4,12 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults = {
+  flagFileEndpointProxy: {
+    label: 'Enable File Endpoint Proxy',
+    description:
+      'Enables the file endpoint proxy so that file uploads and downloads will operate through the UI server.  The API server is restricted to a limited set of IPs.  Do not enable this in prod until we have a process manager at least.',
+    default: false,
+  },
   flagProbationAdmin: {
     label: 'Enable Probation Admin',
     description: 'Enables Probation Admin',

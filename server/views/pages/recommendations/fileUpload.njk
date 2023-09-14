@@ -1,0 +1,45 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <form method="post" enctype="multipart/form-data" action="{{ url }}">
+                <input type="hidden" name="token" value="{{ token }}" />
+                <input type="hidden" name="redirectSuccess" value="{{ redirectSuccess }}" />
+                <input type="hidden" name="redirectFailure" value="{{ redirectFailure }}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                {{ pageHeadings[page.id] }}
+                            </h1>
+                        </legend>
+                        <div class="govuk-form-group">
+                            {{ govukFileUpload({
+                              id: "file-upload",
+                              name: "files",
+                              attributes: {
+                                'accept': 'application/pdf, application/msword, application/doc, text/plain'
+                              },
+                              label: {
+                                text: "Upload a file"
+                              },
+                              errorMessage: errorMessage(errors.fileUpload)
+                            }) }}
+                        </div>
+                    </fieldset>
+                </div>
+               {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -5,6 +5,7 @@ import path from 'path'
 import createError from 'http-errors'
 import cookieParser from 'cookie-parser'
 
+import { createProxyMiddleware } from 'http-proxy-middleware'
 import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -44,6 +45,12 @@ export default function createApp(userService: UserService): express.Application
       res.locals.maintenancePageText = config.maintenancePageText
       return res.render('maintenance-page.njk')
     })
+  }
+
+  if (process.env.ENVIRONMENT !== 'PRODUCTION') {
+    const proxy = createProxyMiddleware({ target: config.apis.makeRecallDecisionApi.url, changeOrigin: true })
+    app.post('/recommendations/\\d*/file-upload', proxy)
+    app.get('/recommendations/\\d*/file/\\d*', proxy)
   }
 
   app.use(setUpSentry())

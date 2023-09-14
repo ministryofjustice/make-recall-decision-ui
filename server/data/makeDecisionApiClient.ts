@@ -12,6 +12,8 @@ import {
 import { FeatureFlags } from '../@types/featureFlags'
 import { CaseSectionId } from '../@types/pagesForms'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { CreateRecommendationFileRequest } from '../@types/make-recall-decision-api/models/CreateRecommendationFileRequest'
+import { RecommendationFileResponse } from '../@types/make-recall-decision-api/models/RecommendationFileResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -156,3 +158,27 @@ export const createDocument = (
     data,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<DocumentResponse>
+
+export const createFile = (
+  recommendationId: string,
+  data: CreateRecommendationFileRequest,
+  token: string,
+  featureFlags?: FeatureFlags
+): Promise<RecommendationFileResponse> =>
+  restClient(token).post({
+    path: `${routes.recommendations}/${recommendationId}/files`,
+    data,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<RecommendationFileResponse>
+
+export const getFiles = ({
+  recommendationId,
+  token,
+}: {
+  recommendationId: string
+  token: string
+}): Promise<RecommendationFileResponse[]> => {
+  return restClient(token).get({
+    path: `${routes.recommendations}/${recommendationId}/files`,
+  }) as Promise<RecommendationFileResponse[]>
+}

@@ -65,6 +65,8 @@ import whoCompletedPartAController from '../controllers/recommendation/whoComple
 import practitionerForPartAController from '../controllers/recommendation/practitionerForPartAController'
 import revocationOrderRecipientsController from '../controllers/recommendation/revocationOrderRecipientsController'
 import ppcsQueryEmailsController from '../controllers/recommendation/ppcsQueryEmailsController'
+import fileUploadController from '../controllers/recommendation/fileUploadController'
+import fileResultController from '../controllers/recommendation/fileResultController'
 
 const recommendations = Router()
 
@@ -208,6 +210,9 @@ ppRouteBuilder
   .get('request-aco-countersign', requestAcoCountersignController.get)
 
 ppRouteBuilder.get('confirmation-part-a', confirmationPartAController.get)
+
+ppRouteBuilder.get('file-upload', fileUploadController.get)
+ppRouteBuilder.get('file-result', fileResultController.get)
 
 const spoRouteBuilder = ppRouteBuilder.withRoles([HMPPS_AUTH_ROLE.SPO])
 

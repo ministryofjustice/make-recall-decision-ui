@@ -151,7 +151,8 @@
     "ts-loader": "^9.4.2",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0",
-    "web-vitals": "^3.1.0"
+    "web-vitals": "^3.1.0",
+    "http-proxy-middleware": "^2.0.6"
   },
   "devDependencies": {
     "@alfonso-presa/soft-assert": "^0.6.0",

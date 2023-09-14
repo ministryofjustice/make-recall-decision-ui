@@ -1,0 +1,39 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+<table class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Category</th>
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">Size</th>
+            <th scope="col" class="govuk-table__header"></th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+
+            {% for file in inputDisplayValues.files %}
+                <tr class="govuk-table__row" data-qa='row-{{ file.id }}'>
+                    <td class="govuk-table__cell">{{ file.category }}</td>
+                    <td class="govuk-table__cell">{{ file.name }}</td>
+                    <td class="govuk-table__cell">{{ file.size }}</td>
+                    <td class="govuk-table__cell">{% if file.name %}<a href="{{file.link}}">Download</a>{% endif %}</td>
+
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
