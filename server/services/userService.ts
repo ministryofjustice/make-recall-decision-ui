@@ -12,7 +12,9 @@ export interface UserDetails {
 }
 
 export default class UserService {
-  constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
+  constructor(private readonly hmppsAuthClient: HmppsAuthClient) {
+    // Do nothing
+  }
 
   async getUser(token: string): Promise<UserDetails> {
     const startTime = performance.now()

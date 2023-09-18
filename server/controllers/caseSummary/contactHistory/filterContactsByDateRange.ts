@@ -2,7 +2,7 @@ import { DateTime, Interval } from 'luxon'
 
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
-import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
+import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { formatDateRange } from '../../../utils/dates/format'
@@ -18,9 +18,9 @@ const parseDateParts = ({
   filters: ContactHistoryFilters
 }): string | ValidationError => {
   const dateTimeParts = {
-    day: filters[`${fieldPrefix}-day`],
-    month: filters[`${fieldPrefix}-month`],
-    year: filters[`${fieldPrefix}-year`],
+    day: filters[`${fieldPrefix}-day`] as string,
+    month: filters[`${fieldPrefix}-month`] as string,
+    year: filters[`${fieldPrefix}-year`] as string,
   }
   return convertGmtDatePartsToUtc(dateTimeParts, {
     includeTime: false,

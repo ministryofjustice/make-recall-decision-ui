@@ -7,7 +7,7 @@ export interface ContactTypeDecorated {
   systemGenerated: boolean
 }
 
-export interface ContactTypeCode {
+export interface ContactTypeCode extends Record<string, unknown> {
   value: string
   description: string
   html: string
@@ -23,7 +23,7 @@ export interface ContactTypeGroupDecorated {
   contactTypeCodesSystemGenerated?: ContactTypeCode[]
 }
 
-export interface ContactHistoryFilters {
+export interface ContactHistoryFilters extends Record<string, string | string[]> {
   'dateFrom-day': string
   'dateFrom-month': string
   'dateFrom-year': string

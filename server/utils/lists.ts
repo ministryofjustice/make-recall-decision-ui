@@ -2,7 +2,7 @@ import { getProperty, isDefined, isString } from './utils'
 
 import { UiListItem } from '../@types/pagesForms'
 
-export const sortList = <T>(list: T[], key: string, asc = true): T[] => {
+export const sortList = <T extends Record<string, unknown>>(list: T[], key: string, asc = true): T[] => {
   if (!Array.isArray(list)) {
     return undefined
   }
@@ -23,7 +23,7 @@ export const sortList = <T>(list: T[], key: string, asc = true): T[] => {
   })
 }
 
-export const groupListByValue = <T>({ list, groupByKey }: { list: T[]; groupByKey: string }) => {
+export const groupListByValue = <T>({ list, groupByKey }: { list: T[]; groupByKey: keyof T }) => {
   return list.reduce(
     (prev, current) => {
       let group = prev.items.find(item => item.groupValue === current[groupByKey])

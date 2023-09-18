@@ -2,16 +2,7 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import {
-  formatSingleLineAddress,
-  makePageTitle,
-  errorMessage,
-  countLabel,
-  isNotNull,
-  isDefined,
-  hasData,
-  logMessage,
-} from './utils'
+import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString } from './dates/format'
 import {
@@ -81,7 +72,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('makePageTitle', makePageTitle)
   njkEnv.addGlobal('errorMessage', errorMessage)
   njkEnv.addGlobal('isDatePartInvalid', isDatePartInvalid)
-  njkEnv.addGlobal('formatSingleLineAddress', formatSingleLineAddress)
   njkEnv.addGlobal('dateTimeItems', dateTimeItems)
   njkEnv.addGlobal('radioCheckboxItems', radioCheckboxItems)
   njkEnv.addGlobal('findListItemByValue', findListItemByValue)

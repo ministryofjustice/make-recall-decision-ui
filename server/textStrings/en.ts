@@ -1,4 +1,4 @@
-export const strings = {
+export const strings: Record<string, Record<string, string>> = {
   errors: {
     noSpoRecallTypeSelected:
       'There is a problem. Select whether you have decided to recall or made a decision not to recall',

@@ -100,7 +100,7 @@ export const renderErrorMessages = (
     return undefined
   }
   return Object.entries(errors).reduce(
-    (acc, [key, val]) => {
+    (acc: Record<string, unknown>, [key, val]) => {
       if (key === 'list') {
         acc.list = (val as unknown as NamedFormError[]).map(err => {
           const { text, ...rest } = err

@@ -49,7 +49,7 @@ export const transformLicenceConditions = (
       conviction => conviction.sentence?.custodialStatusCode === 'B'
     )
     activeConvictions = sortListByDateField({
-      list: activeConvictions,
+      list: activeConvictions as Record<string, unknown>[],
       dateKey: 'sentence.sentenceExpiryDate',
       newestFirst: true,
       undefinedValuesLast: true,
