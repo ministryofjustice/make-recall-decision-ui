@@ -94,7 +94,6 @@ export default {
   displayMaintenancePage: get('DISPLAY_MAINTENANCE_PAGE', false, requiredInProduction),
   maintenancePageText: get('MAINTENANCE_PAGE_TEXT', null),
   notification: {
-    active: get('SHOW_NOTIFICATION', false, { requireInProduction: false }),
     header: get('NOTIFICATION_HEADER', null, { requireInProduction: false }),
     body: get('NOTIFICATION_BODY', null, { requireInProduction: false }),
     startDate: get('NOTIFICATION_BANNER_START_DATE', null, { requireInProduction: false }),

@@ -26,6 +26,14 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 * [Deployment / Helm](./docs/helm-deploy.md) - including how to roll back a deployment
 * [Runbook](./RUNBOOK.md)
 
+### Maintenance Banner
+* To display a maintenance banner to make users aware of any planned outages four environment variables are required. These are available for each environment in the helm_deploy folder -
+  * **NOTIFICATION_HEADER** - the header of the banner
+  * **NOTIFICATION_BODY** - the text in the body of the banner. This must conform to GDS standards [see link](https://design-system.service.gov.uk/components/notification-banner/)
+  * **START_DATE** - must be written in ISO format eg/YYYY-MM-DD, the banner will only be displayed **_on or after_** this date
+  * **END_DATE** - must be written in ISO format eg/YYYY-MM-DD, the banner will only be displayed **_on or before_** this date
+
+
 ### Dashboards
 * MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN
   * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf6465)
