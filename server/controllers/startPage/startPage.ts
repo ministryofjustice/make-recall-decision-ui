@@ -6,10 +6,7 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
   const { flags } = res.locals
   res.locals.notification = {
     ...config.notification,
-    isVisible:
-      String(config.notification.active).toLowerCase() === 'true' &&
-      Boolean(config.notification.body) &&
-      isBannerDisplayDateRangeValid(),
+    isVisible: Boolean(config.notification.body) && isBannerDisplayDateRangeValid(),
   }
   if (flags.flagSearchByName) {
     res.locals.searchEndpoint = '/search-by-name'
