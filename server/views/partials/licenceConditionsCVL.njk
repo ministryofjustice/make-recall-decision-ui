@@ -9,7 +9,8 @@
        </div>
        <div id="accordion-with-summary-sections-content-1"
             class="govuk-accordion__section-content"
-            aria-labelledby="accordion-with-summary-sections-heading-1">
+            aria-labelledby="accordion-with-summary-sections-heading-1"
+            role="region">
             {% for condition in caseSummary.cvlLicence.standardLicenceConditions %}
             <section class="app-summary-card app-summary-card--white govuk-!-margin-bottom-6">
                 <div class="app-summary-card__header">
@@ -32,7 +33,8 @@
         </div>
         <div id="accordion-with-summary-sections-content-2"
             class="govuk-accordion__section-content"
-            aria-labelledby="accordion-with-summary-sections-heading-2">
+            aria-labelledby="accordion-with-summary-sections-heading-2"
+            role="region">
             {% set conditionNumber = 1 %}
             {% for licenceCondition in caseSummary.cvlLicence.additionalLicenceConditions %}
                 {% set conditionHtml %}
@@ -65,7 +67,8 @@
         </div>
         <div id="accordion-with-summary-sections-content-3"
            class="govuk-accordion__section-content"
-           aria-labelledby="accordion-with-summary-sections-heading-3">
+           aria-labelledby="accordion-with-summary-sections-heading-3"
+           role="region">
            {% for condition in caseSummary.cvlLicence.bespokeConditions %}
            <section class="app-summary-card app-summary-card--white govuk-!-margin-bottom-6">
                <div class="app-summary-card__header">
