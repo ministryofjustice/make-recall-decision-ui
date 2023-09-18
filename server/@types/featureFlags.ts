@@ -1,5 +1,6 @@
 export interface FeatureFlagDefault {
   label: string
+  description: string
   default: boolean
 }
 

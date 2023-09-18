@@ -17,7 +17,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
     timeline = [...timeline, ...caseSummary.predictorScores.historical]
   }
   if (timeline.length) {
-    timeline = sortListByDateField({ list: timeline, dateKey: 'date', newestFirst: true })
+    timeline = sortListByDateField({ list: timeline as Record<string, unknown>[], dateKey: 'date', newestFirst: true })
   }
   return {
     ...caseSummary,

@@ -18,7 +18,11 @@ import { UiListItem } from '../../../@types/pagesForms'
 import { spoRecallTypeEnum } from './spoRecallTypeEnum'
 import { rationaleCheck } from '../rationaleCheck/formOptions'
 
-export const formOptions = {
+type FormOptionsType = {
+  [key: string]: { value: string; text: string }[]
+}
+
+export const formOptions: FormOptionsType = {
   recallType,
   rationaleCheck,
   spoRecallTypeEnum,
@@ -45,7 +49,7 @@ export const optionTextFromValue = (val: string, optionId: string) =>
   formOptions[optionId].find((option: UiListItem) => option.value === val)?.text
 
 export const renderFormOptions = (renderParams: Record<string, string>): Record<string, UiListItem[]> => {
-  const copy = {}
+  const copy: Record<string, UiListItem[]> = {}
   Object.keys(formOptions).forEach(key => {
     const options = formOptions[key]
     copy[key] = options.map((option: UiListItem) => ({

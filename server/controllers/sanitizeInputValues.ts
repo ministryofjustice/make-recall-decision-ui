@@ -24,7 +24,7 @@ function walk(input: unknown, apply: (input: unknown) => unknown): unknown {
   }
 
   if (input.constructor === Object) {
-    const dict = input
+    const dict = input as Record<string, unknown>
     Object.entries(dict).forEach(([key, value]) => {
       dict[key] = walk(value, apply)
     })

@@ -5,7 +5,7 @@ import { ValidationError } from '../../@types/dates'
 Settings.throwOnInvalid = true
 Settings.defaultZone = 'utc'
 
-export const getDateProperty = <T>(obj: T, dateKey: string) => {
+export const getDateProperty = <T extends Record<string, unknown>>(obj: T, dateKey: string) => {
   const val = getProperty<T, string>(obj, dateKey)
   return val ? DateTime.fromISO(val) : undefined
 }
@@ -24,7 +24,7 @@ export const diffDatesForSort = (dateA: DateTime, dateB: DateTime, newestFirst =
   return 0
 }
 
-export const sortListByDateField = <T>({
+export const sortListByDateField = <T extends Record<string, unknown>>({
   list,
   dateKey,
   newestFirst = true,

@@ -6,7 +6,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesFor
 
 export const validateRosh = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { riskToChildren, riskToPublic, riskToKnownAdult, riskToStaff, riskToPrisoners } = requestBody
-  const errorSuffixes = {
+  const errorSuffixes: Record<string, string> = {
     riskToChildren: 'children',
     riskToPublic: 'the public',
     riskToKnownAdult: 'a known adult',

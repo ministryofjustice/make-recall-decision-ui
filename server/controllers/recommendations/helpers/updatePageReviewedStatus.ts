@@ -1,5 +1,9 @@
 import { updateRecommendation } from '../../../data/makeDecisionApiClient'
 
+type ValuesToSaveType = {
+  hasBeenReviewed: Record<string, boolean>
+}
+
 export const updatePageReviewedStatus = async ({
   reviewedProperty,
   recommendationId,
@@ -10,7 +14,7 @@ export const updatePageReviewedStatus = async ({
   token: string
 }) => {
   if (reviewedProperty) {
-    const valuesToSave = { hasBeenReviewed: {} }
+    const valuesToSave: ValuesToSaveType = { hasBeenReviewed: {} }
     valuesToSave.hasBeenReviewed[reviewedProperty] = true
     await updateRecommendation({ recommendationId, valuesToSave, token })
   }

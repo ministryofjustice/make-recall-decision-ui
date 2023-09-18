@@ -2,7 +2,7 @@ import qs from 'qs'
 
 import striptags from 'striptags'
 import config from '../config'
-import { Address, UserAccessResponse } from '../@types/make-recall-decision-api'
+import { UserAccessResponse } from '../@types/make-recall-decision-api'
 
 import { AppError } from '../AppError'
 import { FormError } from '../@types/pagesForms'
@@ -80,18 +80,13 @@ export const listToString = (list: string[], conjunction?: string) => {
   return copy.join(', ')
 }
 
-export const formatSingleLineAddress = (address: Address) => {
-  const parts = ['line1', 'line2', 'town', 'postcode'].map(key => address[key]).filter(Boolean)
-  return listToString(parts, '')
-}
-
 export const errorMessage = (formError: FormError) => (formError ? { html: formError.text } : undefined)
 
-export const getProperty = <T, U>(obj: T, accessor: string): U => {
+export const getProperty = <T extends Record<string, unknown>, U>(obj: T, accessor: string): U => {
   const listOfKeys = accessor.split('.')
-  let traversed = obj
+  let traversed: Record<string, unknown> = obj
   listOfKeys.forEach(key => {
-    traversed = traversed?.[key]
+    traversed = traversed?.[key] as Record<string, unknown>
   })
   return traversed as unknown as U
 }
@@ -106,7 +101,7 @@ export const removeParamsFromQueryString = ({
   paramsToRemove: { key: string; value?: string }[]
   allParams: Record<string, string | string[]>
 }) => {
-  const updatedParams = {}
+  const updatedParams: Record<string, string | string[]> = {}
   Object.entries(allParams)
     .filter(([key]) => allParams[key] !== '')
     .forEach(([key, value]) => {

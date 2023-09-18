@@ -4,7 +4,7 @@
 
 import type { VulnerabilityDetail } from './VulnerabilityDetail';
 
-export type Vulnerabilities = {
+export interface Vulnerabilities extends Record<string, any> {
     error?: string;
     lastUpdatedDate?: string;
     suicide?: VulnerabilityDetail;
@@ -12,5 +12,4 @@ export type Vulnerabilities = {
     vulnerability?: VulnerabilityDetail;
     custody?: VulnerabilityDetail;
     hostelSetting?: VulnerabilityDetail;
-};
-
+}

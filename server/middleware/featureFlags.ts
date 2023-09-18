@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
-export const featureFlagsDefaults = {
+export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagProbationAdmin: {
     label: 'Enable Probation Admin',
     description: 'Enables Probation Admin',
@@ -46,7 +46,7 @@ export const featureFlagsDefaults = {
 
 export const readFeatureFlags =
   (flags: Record<string, FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
-    res.locals.flags = Object.keys(flags).reduce((acc, key) => {
+    res.locals.flags = Object.keys(flags).reduce((acc: Record<string, boolean>, key) => {
       acc[key] = flags[key].default
       return acc
     }, {})
