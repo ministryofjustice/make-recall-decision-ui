@@ -15,7 +15,6 @@ generic-service:
     SENTRY_ENVIRONMENT: "PROD"
     ENVIRONMENT: "PRODUCTION"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: false
-    SHOW_NOTIFICATION: false
     NOTIFICATION_HEADER: ""
     NOTIFICATION_BODY: ""
     # dates must be written in ISO format eg/YYYY-MM-DD

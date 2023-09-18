@@ -17,7 +17,6 @@ generic-service:
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "DEVELOPMENT"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
-    SHOW_NOTIFICATION: false
     NOTIFICATION_HEADER: "Scheduled Maintenance"
     NOTIFICATION_BODY: "This application will be unavailable from 15 September 2023 to 24 October 2023, save your work ahead of time"
     # dates must be written in ISO format eg/YYYY-MM-DD

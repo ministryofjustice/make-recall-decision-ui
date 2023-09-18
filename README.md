@@ -27,8 +27,7 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 * [Runbook](./RUNBOOK.md)
 
 ### Maintenance Banner
-* To display a maintenance banner to make users aware of any planned outages five environment variables are required. These are available for each environment in the helm_deploy folder -
-  * **SHOW_NOTIFICATION** - this must be set to true for the banner to manifest, by default it is false
+* To display a maintenance banner to make users aware of any planned outages four environment variables are required. These are available for each environment in the helm_deploy folder -
   * **NOTIFICATION_HEADER** - the header of the banner
   * **NOTIFICATION_BODY** - the text in the body of the banner. This must conform to GDS standards [see link](https://design-system.service.gov.uk/components/notification-banner/)
   * **START_DATE** - must be written in ISO format eg/YYYY-MM-DD, the banner will only be displayed **_on or after_** this date
