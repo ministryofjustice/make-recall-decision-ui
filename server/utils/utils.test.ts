@@ -245,6 +245,30 @@ describe('isBannerDisplayDateRangeValid', () => {
     const result = isBannerDisplayDateRangeValid()
     expect(result).toEqual(false)
   })
+  it('returns false when start date is null', () => {
+    config.notification.startDate = null
+    config.notification.endDate = '2050-09-13'
+    const result = isBannerDisplayDateRangeValid()
+    expect(result).toEqual(false)
+  })
+  it('returns false when start date is empty', () => {
+    config.notification.startDate = ''
+    config.notification.endDate = '2050-09-13'
+    const result = isBannerDisplayDateRangeValid()
+    expect(result).toEqual(false)
+  })
+  it('returns false when end date is empty', () => {
+    config.notification.startDate = '2023-09-18'
+    config.notification.endDate = ''
+    const result = isBannerDisplayDateRangeValid()
+    expect(result).toEqual(false)
+  })
+  it('returns false when end date is null', () => {
+    config.notification.startDate = '2023-09-18'
+    config.notification.endDate = null
+    const result = isBannerDisplayDateRangeValid()
+    expect(result).toEqual(false)
+  })
 })
 
 describe('isPreprodOrProd', () => {

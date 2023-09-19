@@ -121,6 +121,15 @@ export const removeParamsFromQueryString = ({
 
 export function isBannerDisplayDateRangeValid() {
   const dateToday = new Date()
+  if (
+    config.notification.startDate == null ||
+    config.notification.startDate === '' ||
+    config.notification.endDate === '' ||
+    config.notification.endDate == null
+  ) {
+    return false
+  }
+
   const startDate = new Date(String(config.notification.startDate))
   const endDate = new Date(String(config.notification.endDate))
 
