@@ -18,10 +18,10 @@ generic-service:
     ENVIRONMENT: "DEVELOPMENT"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
     NOTIFICATION_HEADER: "Scheduled Maintenance"
-    NOTIFICATION_BODY: "This application will be unavailable from 15 September 2023 to 24 October 2023, save your work ahead of time"
+    NOTIFICATION_BODY: "This application will be unavailable from 21 September 2023 to 24 October 2023"
     # dates must be written in ISO format eg/YYYY-MM-DD
-    NOTIFICATION_BANNER_START_DATE: ""
-    NOTIFICATION_BANNER_END_DATE: ""
+    NOTIFICATION_BANNER_START_DATE: "2023-09-19"
+    NOTIFICATION_BANNER_END_DATE: "2023-09-21"
 
   scheduledDowntime:
     enabled: true
