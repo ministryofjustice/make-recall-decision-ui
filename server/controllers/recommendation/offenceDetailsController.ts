@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
 import { fetchAndTransformLicenceConditions } from '../recommendations/licenceConditions/transform'
+import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
-    user: { token },
+    user: { username, region, token },
     flags: featureFlags,
   } = res.locals
 
@@ -37,6 +38,17 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendationId,
     token,
   })
+
+  raiseWarningBannerEvents(
+    res.locals.caseSummary?.licenceConvictions?.activeCustodial?.length,
+    res.locals.caseSummary.hasAllConvictionsReleasedOnLicence,
+    {
+      username,
+      region,
+    },
+    recommendation.crn,
+    featureFlags
+  )
 
   res.render(`pages/recommendations/offenceDetails`)
   next()

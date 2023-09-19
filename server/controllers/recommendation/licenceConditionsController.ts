@@ -9,13 +9,14 @@ import { formOptions } from '../recommendations/formOptions/formOptions'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
-    user: { token },
+    user: { username, region, token },
     flags: featureFlags,
   } = res.locals
 
@@ -51,6 +52,18 @@ async function get(req: Request, res: Response, next: NextFunction) {
       token,
     })
   }
+
+  raiseWarningBannerEvents(
+    res.locals.caseSummary?.licenceConvictions?.activeCustodial?.length,
+    res.locals.caseSummary?.hasAllConvictionsReleasedOnLicence,
+    {
+      username,
+      region,
+    },
+    recommendation.crn,
+    featureFlags
+  )
+
   res.render(`pages/recommendations/licenceConditions`)
   next()
 }
