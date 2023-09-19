@@ -78,7 +78,7 @@ jobs:
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
           # Can move back to npm@latest after upgrading to v10
-          command: 'sudo npm install -g npm@8'
+          command: 'sudo npm install -g npm@9'
       - node/install-packages
       - run:
           command: |
@@ -262,7 +262,7 @@ jobs:
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
           # Can move back to npm@latest after upgrading to v10
-          command: 'npm install -g npm@8'
+          command: 'npm install -g npm@9'
       - node/install-packages
       - run:
           environment:
