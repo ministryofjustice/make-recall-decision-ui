@@ -9,4 +9,7 @@ export enum EVENTS {
   MRD_RECALL_TYPE = 'mrdRecallType',
   PART_A_DOCUMENT_DOWNLOADED = 'mrdPartADocumentDownloaded',
   DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED = 'mrdDecisionNotToRecallLetterDownloaded',
+  PERSON_NOT_ON_LICENCE_NDELIUS = 'mrdNotOnLicenceNdelius',
+  PERSON_NOT_ON_LICENCE_ACTIVE = 'mrdNotOnLicenceActive',
+  TWO_ACTIVE_CONVICTIONS = 'mrdTwoActiveConvictions',
 }

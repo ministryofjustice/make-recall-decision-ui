@@ -4,9 +4,11 @@ import { fetchAndTransformLicenceConditions } from '../recommendations/licenceCo
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/licenceConditions/transform')
+jest.mock('../raiseWarningBannerEvents')
 
 describe('get', () => {
   const licenceConditionsBreached = {
@@ -29,12 +31,17 @@ describe('get', () => {
   }
 
   it('load with no data', async () => {
-    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({})
+    ;(fetchAndTransformLicenceConditions as jest.Mock).mockResolvedValue({
+      licenceConvictions: {
+        activeCustodial: [{}],
+      },
+      hasAllConvictionsReleasedOnLicence: true,
+    })
 
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        token: 'token1',
+        recommendation: { crn: 'ABC', personOnProbation: { name: 'Harry Smith' } },
+        user: { username: 'bob', token: 'token', region: { code: 'X', name: 'Y' } },
       },
     })
     const next = mockNext()
@@ -45,6 +52,16 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 
     expect(next).toHaveBeenCalled()
+    expect(raiseWarningBannerEvents).toHaveBeenCalledWith(
+      1,
+      true,
+      {
+        region: { code: 'X', name: 'Y' },
+        username: 'bob',
+      },
+      'ABC',
+      {}
+    )
   })
 
   it('load with existing data', async () => {
@@ -236,6 +253,7 @@ describe('get - cvlFlag', () => {
           cvlLicenceConditionsBreached,
         },
         token: 'token1',
+        featureFlags: { flagCvl: true },
       },
     })
     const next = mockNext()

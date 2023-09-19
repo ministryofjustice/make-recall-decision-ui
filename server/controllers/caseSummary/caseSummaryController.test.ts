@@ -16,10 +16,12 @@ import { createRedisClient, RedisClient } from '../../data/redisClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
+import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/redisClient')
+jest.mock('../raiseWarningBannerEvents')
 
 describe('get', () => {
   beforeEach(() => {
@@ -61,6 +63,7 @@ describe('get', () => {
       id: 'overview',
       label: 'Overview',
     })
+    expect(raiseWarningBannerEvents).not.toHaveBeenCalled()
   })
 
   it('should return case details for licence conditions', async () => {
@@ -94,6 +97,13 @@ describe('get', () => {
     )
     expect(res.locals.caseSummary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
     expect(res.locals.caseSummary.activeConvictions).toBe(caseLicenceConditionsResponse.activeConvictions)
+    expect(raiseWarningBannerEvents).toHaveBeenCalledWith(
+      1,
+      true,
+      { roles: ['ROLE_MAKE_RECALL_DECISION'], token: 'token', username: 'Dave' },
+      'A1234AB',
+      { flagCvl: true }
+    )
   })
 
   it('should return case details for personal details', async () => {

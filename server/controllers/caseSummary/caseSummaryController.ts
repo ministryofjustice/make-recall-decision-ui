@@ -16,6 +16,7 @@ import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiCli
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
+import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 interface RecommendationButton {
   display: boolean
@@ -160,6 +161,17 @@ async function get(req: Request, res: Response, _: NextFunction) {
   const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)
     ? 'pages/excludedRestrictedCrn'
     : 'pages/caseSummary'
+
+  if (sectionId === 'licence-conditions') {
+    raiseWarningBannerEvents(
+      res.locals.caseSummary?.licenceConvictions?.activeCustodial?.length,
+      res.locals.caseSummary.hasAllConvictionsReleasedOnLicence,
+      user,
+      normalizedCrn,
+      flags
+    )
+  }
+
   res.render(page)
   await auditService.caseSummaryView({
     crn: normalizedCrn,
