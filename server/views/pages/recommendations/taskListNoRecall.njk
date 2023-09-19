@@ -11,7 +11,9 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>
-                You’re not recommending a recall for {{ recommendation.personOnProbation.name }}. You must now create a decision not to recall letter.
+                You do not need to get this letter countersigned. If this is not the first
+                decision not to recall letter for {{ recommendation.personOnProbation.name }}, you must get
+                endorsement from your senior manager.
             </p>
             <ol class="moj-task-list govuk-!-margin-top-8">
                 {% include '../../partials/taskList/recommendation.njk' %}

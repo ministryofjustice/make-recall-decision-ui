@@ -696,7 +696,7 @@ When('PO confirms the review decision of {managersDecision}', function (decision
 
 Then('PO can download the Decision Not To Recall letter', function () {
   cy.clickLink('Create letter')
-  cy.downloadDocX('Download the decision not to recall letter (DOCX).').as('DNTRLetter')
+  cy.downloadDocX('Download the decision not to recall letter').as('DNTRLetter')
 })
 
 Then(
