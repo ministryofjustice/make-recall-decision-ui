@@ -973,6 +973,74 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', "Review practitioner's concerns")
 
+      cy.getElement({ qaAttr: 'licence-conditions-breached' }).click()
+
+      cy.getText('licence-conditions-breached-panel').should('contain', 'Be of good behaviour')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
+    it("present Review Practitioner's concerns and return to task list with CVL data", () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          licenceConditionsBreached: null,
+          recallConsideredList: null,
+          cvlLicenceConditionsBreached: {
+            standardLicenceConditions: {
+              selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
+              allOptions: [
+                {
+                  code: '9ce9d594-e346-4785-9642-c87e764bee37',
+                  text: 'This is a standard licence condition',
+                },
+              ],
+            },
+            additionalLicenceConditions: {
+              selected: ['9ce9d594-e346-4785-9642-c87e764bee42'],
+              allOptions: [
+                {
+                  code: '9ce9d594-e346-4785-9642-c87e764bee42',
+                  text: 'This is an additional licence condition',
+                },
+              ],
+            },
+            bespokeLicenceConditions: {
+              selected: ['9ce9d594-e346-4785-9642-c87e764bee43'],
+              allOptions: [
+                {
+                  code: '9ce9d594-e346-4785-9642-c87e764bee43',
+                  text: 'This is a bespoke licence condition',
+                },
+              ],
+            },
+          },
+        },
+      })
+
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_CONSIDER_RECALL', active: true },
+          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink("Review practitioner's concerns")
+
+      cy.pageHeading().should('equal', "Review practitioner's concerns")
+
+      cy.getElement({ qaAttr: 'licence-conditions-breached' }).click()
+
+      cy.getText('licence-conditions-breached-panel').should('contain', 'This is a standard licence condition')
+
       cy.clickButton('Continue')
 
       cy.pageHeading().should('equal', 'Consider a recall')
