@@ -46,14 +46,15 @@
                             <p>What licence conditions has {{ offenderName }} breached?</p>
                             <details class="govuk-details" data-module="govuk-details">
                               <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text"> View Answer </span>
+                                <span class="govuk-details__summary-text" data-qa="licence-conditions-breached"> View Answer </span>
                               </summary>
-                              <div class="govuk-details__text">
+                              <div class="govuk-details__text" data-qa="licence-conditions-breached-panel">
 
                                 {% for standardCondition in standardLicenceConditions %}
                                     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{standardCondition}}</p>
                                 {% endfor %}
 
+                                {% if additionalLicenceConditions %}
                                 <div class="govuk-!-margin-top-6">
                                     {% for additionalCondition in additionalLicenceConditions %}
                                         <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{additionalCondition.title}}</p>
@@ -64,6 +65,15 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
+                                {% endif %}
+
+                                {% if bespokeLicenceConditions %}
+                                <div class="govuk-!-margin-top-6">
+                                    {% for bespokeCondition in bespokeLicenceConditions %}
+                                        <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{bespokeCondition}}</p>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                               </div>
                             </details>
                         </li>
