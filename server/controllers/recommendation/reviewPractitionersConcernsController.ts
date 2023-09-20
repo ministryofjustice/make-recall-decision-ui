@@ -5,12 +5,15 @@ import { RecommendationDecorated } from '../../@types/api'
 import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decision-api'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
-  if (recommendation.licenceConditionsBreached) {
+  if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
     const { selected, allOptions } = recommendation.licenceConditionsBreached.standardLicenceConditions
     return selected.map((s: string) => allOptions.find((o: Record<string, string>) => o.value === s).text)
   }
 
-  if (recommendation.cvlLicenceConditionsBreached) {
+  if (
+    recommendation.cvlLicenceConditionsBreached &&
+    recommendation.cvlLicenceConditionsBreached.standardLicenceConditions
+  ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.standardLicenceConditions
     return selected.map((s: string) => allOptions.find((o: Record<string, string>) => o.code === s).text)
   }
@@ -19,7 +22,10 @@ function extractStandardLicenceConditions(recommendation: RecommendationDecorate
 }
 
 function extractAdditionalLicenceConditions(recommendation: RecommendationDecorated) {
-  if (recommendation.licenceConditionsBreached) {
+  if (
+    recommendation.licenceConditionsBreached &&
+    recommendation.licenceConditionsBreached.additionalLicenceConditions
+  ) {
     const { selectedOptions, allOptions } = recommendation.licenceConditionsBreached.additionalLicenceConditions
     return selectedOptions.map((s: { mainCatCode: string; subCatCode: string }) => {
       const option = allOptions.find(o => o.mainCatCode === s.mainCatCode && o.subCatCode === s.subCatCode)
@@ -31,7 +37,10 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
     })
   }
 
-  if (recommendation.cvlLicenceConditionsBreached) {
+  if (
+    recommendation.cvlLicenceConditionsBreached &&
+    recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions
+  ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions
     return selected.map((s: string) => {
       return {
@@ -47,7 +56,10 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
 }
 
 function extractBespokeLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
-  if (recommendation.cvlLicenceConditionsBreached) {
+  if (
+    recommendation.cvlLicenceConditionsBreached &&
+    recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions
+  ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions
     return selected.map((s: string) => allOptions.find((o: Record<string, string>) => o.code === s).text)
   }
