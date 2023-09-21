@@ -387,6 +387,7 @@ workflows:
             branches:
               only:
                 - main
+                - mrd-1788_e2e-test-migration-v2
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
