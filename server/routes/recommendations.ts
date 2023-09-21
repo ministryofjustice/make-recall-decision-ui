@@ -1,12 +1,9 @@
 import { RequestHandler, Router } from 'express'
 import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
-import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
 import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
-import { getRecommendationPage } from '../controllers/recommendations/getRecommendationPage'
-import { postRecommendationForm } from '../controllers/recommendations/postRecommendationForm'
 import { RouteBuilder } from './RouteBuilder'
 import { and, not, or, roleIsActive, STATUSES, statusIsActive } from '../middleware/recommendationStatusCheck'
 import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
@@ -66,6 +63,13 @@ import whoCompletedPartAController from '../controllers/recommendation/whoComple
 import practitionerForPartAController from '../controllers/recommendation/practitionerForPartAController'
 import revocationOrderRecipientsController from '../controllers/recommendation/revocationOrderRecipientsController'
 import ppcsQueryEmailsController from '../controllers/recommendation/ppcsQueryEmailsController'
+import arrestIssuesController from '../controllers/recommendation/arrestIssuesController'
+import addPreviousReleaseController from '../controllers/recommendation/addPreviousReleaseController'
+import addPreviousRecallController from '../controllers/recommendation/addPreviousRecallController'
+import previousRecallController from '../controllers/recommendation/previousRecallsController'
+import previousReleasesController from '../controllers/recommendation/previousReleasesController'
+import offenceAnalysisController from '../controllers/recommendation/offenceAnalysisController'
+import roshController from '../controllers/recommendation/roshController'
 
 const recommendations = Router()
 
@@ -200,6 +204,27 @@ ppRouteBuilder.post('revocation-order-recipients', revocationOrderRecipientsCont
 ppRouteBuilder.get('ppcs-query-emails', ppcsQueryEmailsController.get)
 ppRouteBuilder.post('ppcs-query-emails', ppcsQueryEmailsController.post)
 
+ppRouteBuilder.get('arrest-issues', arrestIssuesController.get)
+ppRouteBuilder.post('arrest-issues', arrestIssuesController.post)
+
+ppRouteBuilder.get('add-previous-release', addPreviousReleaseController.get)
+ppRouteBuilder.post('add-previous-release', addPreviousReleaseController.post)
+
+ppRouteBuilder.get('add-previous-recall', addPreviousRecallController.get)
+ppRouteBuilder.post('add-previous-recall', addPreviousRecallController.post)
+
+ppRouteBuilder.get('previous-recalls', previousRecallController.get)
+ppRouteBuilder.post('previous-recalls', previousRecallController.post)
+
+ppRouteBuilder.get('previous-releases', previousReleasesController.get)
+ppRouteBuilder.post('previous-releases', previousReleasesController.post)
+
+ppRouteBuilder.get('offence-analysis', offenceAnalysisController.get)
+ppRouteBuilder.post('offence-analysis', offenceAnalysisController.post)
+
+ppRouteBuilder.get('rosh', roshController.get)
+ppRouteBuilder.post('rosh', roshController.post)
+
 ppRouteBuilder.get('manager-decision-confirmation', managerDecisionConfirmationController.get)
 
 ppRouteBuilder
@@ -302,8 +327,5 @@ post('', createRecommendationController)
 get(`/:recommendationId/documents/part-a`, createAndDownloadDocument('PART_A'))
 get(`/:recommendationId/documents/no-recall-letter`, createAndDownloadDocument('NO_RECALL_LETTER'))
 post(`/:recommendationId/status`, updateRecommendationStatus)
-
-recommendations.get(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl, asyncMiddleware(getRecommendationPage))
-recommendations.post(`/:recommendationId/:pageUrlSlug`, parseRecommendationUrl, asyncMiddleware(postRecommendationForm))
 
 export default recommendations
