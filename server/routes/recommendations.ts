@@ -18,6 +18,7 @@ import isIndeterminateController from '../controllers/recommendation/isIndetermi
 import isExtendedController from '../controllers/recommendation/isExtendedController'
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
 import shareCaseWithManagerController from '../controllers/recommendation/shareCaseWithManagerController'
+import shareCaseWithAdminController from '../controllers/recommendation/shareCaseWithAdminController'
 import discussWithManagerController from '../controllers/recommendation/discussWithManagerController'
 import recallTypeController from '../controllers/recommendation/recallTypeController'
 import recallTypeIndeterminateController from '../controllers/recommendation/recallTypeIndeterminateController'
@@ -113,6 +114,8 @@ ppRouteBuilder.get('is-extended', isExtendedController.get)
 ppRouteBuilder.post('is-extended', isExtendedController.post)
 
 ppRouteBuilder.get('share-case-with-manager', shareCaseWithManagerController.get)
+
+ppRouteBuilder.get('share-case-with-admin', shareCaseWithAdminController.get)
 
 ppRouteBuilder.get('discuss-with-manager', discussWithManagerController.get)
 
