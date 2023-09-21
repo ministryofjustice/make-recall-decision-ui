@@ -341,4 +341,22 @@ context('Recommendation - task list', () => {
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
   })
+
+  describe('Admin Journey', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
+    it('present Who Completed Part A page', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagProbationAdmin=1`)
+
+      cy.getElement('Share this Part A').should('exist')
+    })
+  })
 })
