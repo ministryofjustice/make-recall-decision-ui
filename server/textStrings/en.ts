@@ -109,6 +109,7 @@ export const strings: Record<string, Record<string, string>> = {
     spoTaskListConsiderRecall: 'Consider a recall',
     taskListConsiderRecall: 'Consider a recall',
     shareCaseWithManager: 'Share this case with your manager',
+    shareCaseWithAdmin: 'Share with a case admin',
     requestSpoCountersign: 'Request countersignature',
     requestAcoCountersign: 'Request countersignature',
     discussWithManager: 'Discuss with your manager',
