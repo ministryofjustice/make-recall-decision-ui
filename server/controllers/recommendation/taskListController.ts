@@ -4,6 +4,7 @@ import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
 import { isInCustody } from '../recommendations/helpers/isInCustody'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -96,6 +97,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     lineManagerCountersignStyle,
     seniorManagerCountersignStyle,
     taskCompleteness: completeness,
+    shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
   }
 
   res.render(`pages/recommendations/taskList`)

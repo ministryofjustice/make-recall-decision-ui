@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import taskListController from './taskListController'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -99,7 +100,7 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await taskListController.get(mockReq(), res, next)
+    await taskListController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.locals.isAcoSigned).toEqual(false)
@@ -118,6 +119,7 @@ describe('get', () => {
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
     expect(res.locals.isSpo).toEqual(false)
+    expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
   })
 
   it('present - task-list-no-recall if recall type set to NO_RECALL', async () => {
