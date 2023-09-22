@@ -7,7 +7,7 @@ export class AuditService {
 
   constructor(private readonly queueUrl = config.apis.audit.queueUrl) {
     this.sqsClient = new SQSClient({
-      region: config.apis.audit.region
+      region: config.apis.audit.region,
     })
   }
 
