@@ -259,6 +259,7 @@ jobs:
     steps:
       - checkout
       - run:
+          working_directory: make-recall-decision-e2e-tests
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
           # Can move back to npm@latest after upgrading to v10
@@ -300,33 +301,36 @@ jobs:
   e2e_local_test:
     machine:
       image: ubuntu-2004:2023.07.1
-    resource_class: large
     parallelism: << pipeline.parameters.e2e-parallelism >>
     steps:
       - run:
-          name: Checkout/clone make-recall-decision-ui
+          name: Checkout/clone make-recall-decision-e2e-tests
           command: |
-            git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
-            cd make-recall-decision-ui
-            git checkout $CIRCLE_BRANCH
+            git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
+            cd make-recall-decision-e2e-tests 
+            git checkout main
       - run:
           name: Checkout/clone make-recall-decision-api
-          command: git clone https://github.com/ministryofjustice/make-recall-decision-api.git
+          command: |
+            git clone https://github.com/ministryofjustice/make-recall-decision-api.git
+            cd make-recall-decision-api
+            git checkout main
+      - run:
+          name: Checkout/clone make-recall-decision-ui
+          command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
       - run:
           name: Start components
           working_directory: make-recall-decision-ui
           command: ./scripts/start-services-for-e2e-tests.sh -p
       - run:
           name: Run E2E tests
-          working_directory: make-recall-decision-ui
-          environment:
-            FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
+          working_directory: make-recall-decision-e2e-tests
           command: |
             npm ci --no-audit
-            
+            echo PWD:: $PWD
             shopt -s globstar
             
-            SPECS=$(circleci tests glob "e2e_tests/features/e2eLocalTests/*.feature" | circleci tests split --split-by=timings --show-counts)
+            SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --split-by=timings --show-counts)
             echo "Running feature file(s): $SPECS"
 
             set +e
@@ -354,20 +358,17 @@ jobs:
           working_directory: make-recall-decision-ui
           command: docker-compose logs
       - store_artifacts:
-          path: make-recall-decision-ui/e2e_tests/screenshots
+          path: make-recall-decision-e2e-tests/e2e_tests/screenshots
           destination: screenshots
       - store_artifacts:
-          path: make-recall-decision-ui/e2e_tests/junit
-          destination: junit
+          path: make-recall-decision-e2e-tests/e2e_tests/reports
+          destination: reports
       - store_artifacts:
-          path: make-recall-decision-ui/e2e_tests/logs
-          destination: test-logs
+          path: make-recall-decision-e2e-tests/e2e_tests/junit
+          destination: junit
       - store_test_results:
-          path: make-recall-decision-ui/e2e_tests/junit
+          path: make-recall-decision-e2e-tests/e2e_tests/junit
 
-# E2E tests using the dev and pre-prod environments have been commented out.
-# They were actingas a 'gate' to prevent a broken production deployment, this has been superceded by a 'manual' gate step.
-# Deactivating these tests also removes flakiness caused by drifting test fixtures.
 # the E2E local test is still in place, it tests te FE/BE contract and assumes contracts between MRD and other external systems.
 workflows:
   version: 2
