@@ -79,7 +79,7 @@ export default {
     audit: {
       region: get('AUDIT_SQS_REGION', 'eu-west-2', requiredInProduction),
       queueUrl: get('AUDIT_SQS_QUEUE_URL', 'foobar', requiredInProduction),
-      serviceName: get('AUDIT_SERVICE_NAME', 'make-recall-decision-ui', requiredInProduction),
+      serviceName: get('AUDIT_SERVICE_NAME', 'make-recall-decision', requiredInProduction),
     },
     makeRecallDecisionsDeliusFacade: {
       url: get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL', 'http://localhost:8081/delius', requiredInProduction),
