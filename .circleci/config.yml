@@ -266,6 +266,7 @@ jobs:
           command: 'npm install -g npm@9'
       - node/install-packages
       - run:
+          working_directory: make-recall-decision-e2e-tests
           environment:
             FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           name: E2E Check - << parameters.environment >>
