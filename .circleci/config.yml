@@ -259,6 +259,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Checkout/clone make-recall-decision-e2e-tests
+          command: |
+            git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
+            cd make-recall-decision-e2e-tests 
+            git checkout main      
+      - run:
           working_directory: make-recall-decision-e2e-tests
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
