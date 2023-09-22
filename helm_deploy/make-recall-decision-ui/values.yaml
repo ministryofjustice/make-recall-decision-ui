@@ -38,7 +38,7 @@ generic-service:
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
     SENTRY_DSN: https://5c9e4014e8064f8c846bfbeb1810a32f@o345774.ingest.sentry.io/6360608
-    AUDIT_SERVICE_NAME: "make-recall-decision-ui"
+    AUDIT_SERVICE_NAME: "make-recall-decision"
     AUDIT_SQS_REGION: "eu-west-2"
     NOTIFICATION_HEADER: ""
     NOTIFICATION_BODY: ""
