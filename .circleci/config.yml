@@ -259,6 +259,7 @@ jobs:
     steps:
       - checkout
       - run:
+          working_directory: make-recall-decision-e2e-tests
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
           # Can move back to npm@latest after upgrading to v10
@@ -508,6 +509,7 @@ workflows:
             branches:
               only:
                 - main
+                - mrd-1788_e2e-test-migration-v2
           requires:
             - deploy_preprod
           context:
