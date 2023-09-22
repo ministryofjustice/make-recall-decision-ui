@@ -32,7 +32,7 @@ describe('Audit service', () => {
     expect(QueueUrl).toEqual('foobar')
     expect(what).toEqual('VIEWED_CASE_SUMMARY')
     expect(who).toEqual('username')
-    expect(service).toEqual('make-recall-decision-ui')
+    expect(service).toEqual('make-recall-decision')
     expect(when).toBeDefined()
     expect(details).toEqual(`{"crn":"${crn}","sectionId":"${sectionId}"}`)
   })
