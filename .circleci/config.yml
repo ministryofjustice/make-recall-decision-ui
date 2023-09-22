@@ -388,7 +388,6 @@ workflows:
             branches:
               only:
                 - main
-                - mrd-1788_e2e-test-migration-v2
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
@@ -471,9 +470,8 @@ workflows:
             branches:
               only:
                 - main
-                - mrd-1788_e2e-test-migration-v2
-          # requires:
-          #   - deploy_dev
+          requires:
+            - deploy_dev
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
@@ -510,7 +508,6 @@ workflows:
             branches:
               only:
                 - main
-                - mrd-1788_e2e-test-migration-v2
           requires:
             - deploy_preprod
           context:
