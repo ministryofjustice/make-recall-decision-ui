@@ -6,7 +6,10 @@ export class AuditService {
   private sqsClient: SQSClient
 
   constructor(private readonly queueUrl = config.apis.audit.queueUrl) {
-    this.sqsClient = new SQSClient({})
+    this.sqsClient = new SQSClient({
+      region: config.apis.audit.region,
+      endpoint: config.apis.audit.endpoint,
+    })
   }
 
   async personSearch({

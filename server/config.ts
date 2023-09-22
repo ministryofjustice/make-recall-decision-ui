@@ -78,6 +78,7 @@ export default {
     },
     audit: {
       region: get('AUDIT_SQS_REGION', 'eu-west-2', requiredInProduction),
+      endpoint: production ? null : 'http://localhost:4566',
       queueUrl: get('AUDIT_SQS_QUEUE_URL', 'foobar', requiredInProduction),
       serviceName: get('AUDIT_SERVICE_NAME', 'make-recall-decision', requiredInProduction),
     },
