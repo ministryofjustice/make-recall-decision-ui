@@ -166,5 +166,6 @@ export const strings: Record<string, Record<string, string>> = {
     nextAppointment: 'Next appointment for {{ fullName }}',
     previewNoRecallLetter: 'Preview the decision not to recall letter',
     countersignConfirmation: 'Part A countersigned',
+    previewPartA: 'Preview Part A',
   },
 }

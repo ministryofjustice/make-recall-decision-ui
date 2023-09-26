@@ -1,0 +1,31 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <p class='govuk-body govuk-!-margin-top-6'>
+                <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/preview-part-a?crn={{ recommendation.crn }}'
+                    download data-analytics-event='click_cta'
+                    data-analytics-event-category='download_part_a_click'>
+                        Download preview of Part A</a>
+            </p>
+
+            <p class='govuk-body govuk-!-margin-top-6'>This is just a preview.  You cannot send it to PPCS.  You can go back and edit the Part A if anything is wrong or missing.</p>
+
+
+            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-button' href='/recommendations/{{ recommendation.id }}/task-list'>Back</a></p>
+        </div>
+    </div>
+{% endblock %}
+
+
+

@@ -149,10 +149,11 @@ export const createDocument = (
   pathSuffix: string,
   data: Record<string, unknown>,
   token: string,
-  featureFlags?: FeatureFlags
+  featureFlags?: FeatureFlags,
+  preview?: boolean
 ): Promise<DocumentResponse> =>
   restClient(token).post({
-    path: `${routes.recommendations}/${recommendationId}/${pathSuffix}`,
+    path: `${routes.recommendations}/${recommendationId}/${pathSuffix}?preview=${String(preview)}`,
     data,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<DocumentResponse>
