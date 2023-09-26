@@ -263,6 +263,7 @@ jobs:
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
             cd make-recall-decision-e2e-tests 
             git checkout main
+            echo $pwd
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Update npm
@@ -276,6 +277,7 @@ jobs:
           name: E2E Check - << parameters.environment >>
           working_directory: make-recall-decision-e2e-tests
           command: |
+            echo $pwd
             cd make-recall-decision-e2e-tests
             shopt -s globstar
             
