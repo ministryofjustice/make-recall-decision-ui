@@ -474,7 +474,7 @@ workflows:
                 - main
                 - migrate-to-e2e-test-repo
           requires:
-            - deploy_dev
+            - build
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
