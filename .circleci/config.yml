@@ -284,7 +284,6 @@ jobs:
           environment:
             FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
           name: E2E Check - << parameters.environment >>
-          working_directory: make-recall-decision-e2e-tests
           command: |
             echo $(pwd)
             shopt -s globstar
