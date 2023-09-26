@@ -446,11 +446,6 @@ workflows:
           env: dev
           context:
             - hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-                - migrate-to-e2e-test-repo-v2
           requires:
             - helm_lint
             - unit_test
