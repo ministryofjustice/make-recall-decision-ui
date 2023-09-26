@@ -450,6 +450,7 @@ workflows:
             branches:
               only:
                 - main
+                - migrate-to-e2e-test-repo-v2
           requires:
             - helm_lint
             - unit_test
@@ -474,9 +475,9 @@ workflows:
             branches:
               only:
                 - main
-                - migrate-to-e2e-test-repo
+                - migrate-to-e2e-test-repo-v2
           requires:
-            - build
+            - deploy_dev
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
