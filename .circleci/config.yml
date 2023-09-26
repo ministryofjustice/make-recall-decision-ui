@@ -263,13 +263,18 @@ jobs:
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
             cd make-recall-decision-e2e-tests 
             git checkout main
-            node/install-packages
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
           # Can move back to npm@latest after upgrading to v10
           command: 'npm install -g npm@9'
+      - run:
+          working_directory: make-recall-decision-e2e-tests
+          name: Update install package
+          # Temporarily pinning the node version to allow pipeline builds to run.
+          # Can move back to npm@latest after upgrading to v10
+          command: 'npm install'
 #      - node/install-packages
       - run:
           environment:
