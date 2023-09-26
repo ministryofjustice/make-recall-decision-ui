@@ -1534,5 +1534,20 @@ context('Make a recommendation', () => {
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
+    it('present Preview Part A page', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-part-a/?flagProbationAdmin=1`)
+
+      cy.pageHeading().should('contain', 'Preview Part A')
+
+      cy.getElement('Download preview of Part A').should('exist')
+    })
   })
 })

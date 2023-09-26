@@ -9,7 +9,7 @@ import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 const auditService = new AuditService()
 
-type DocumentType = 'PART_A' | 'NO_RECALL_LETTER'
+type DocumentType = 'PART_A' | 'NO_RECALL_LETTER' | 'PREVIEW_PART_A'
 
 export const createAndDownloadDocument =
   (documentType: DocumentType) =>
@@ -19,6 +19,7 @@ export const createAndDownloadDocument =
     const normalizedCrn = validateCrn(crn)
     const { user, flags } = res.locals
     let pathSuffix = 'no-recall-letter'
+    let preview = false
     const requestBody: Record<string, unknown> = {
       format: 'download-docx',
     }
@@ -26,12 +27,18 @@ export const createAndDownloadDocument =
       pathSuffix = 'part-a'
       requestBody.userEmail = user.email
     }
+    if (documentType === 'PREVIEW_PART_A') {
+      pathSuffix = 'part-a'
+      requestBody.userEmail = user.email
+      preview = true
+    }
     const { fileName, fileContents } = await createDocument(
       recommendationId,
       pathSuffix,
       requestBody,
       user.token,
-      flags
+      flags,
+      preview
     )
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     res.header('Content-Disposition', `attachment; filename="${fileName}"`)
@@ -46,7 +53,7 @@ export const createAndDownloadDocument =
     ).filter(status => status.active)
 
     const isSpo = user.roles.includes(HMPPS_AUTH_ROLE.SPO)
-    if (!isSpo) {
+    if (!isSpo && (documentType === 'PART_A' || documentType === 'NO_RECALL_LETTER')) {
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
 
       if (!isPPDocumentCreated) {
@@ -87,7 +94,7 @@ export const createAndDownloadDocument =
         { crn: normalizedCrn, recommendationId, region: user.region },
         flags
       )
-    } else {
+    } else if (documentType === 'NO_RECALL_LETTER') {
       auditService.createNoRecallLetter(auditData)
       appInsightsEvent(
         EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED,

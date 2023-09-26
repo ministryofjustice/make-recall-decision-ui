@@ -43,7 +43,8 @@ describe('createAndDownloadDocument', () => {
       'part-a',
       { format: 'download-docx', userEmail: 'dave@gov.uk' },
       'token',
-      {}
+      {},
+      false
     )
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -70,6 +71,50 @@ describe('createAndDownloadDocument', () => {
       recommendationId: '987',
       username: 'Dave',
     })
+    expect(res.contentType).toHaveBeenCalledWith(
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
+  })
+
+  it('requests a Preview Part A', async () => {
+    const fileContents = '123'
+    const fileName = 'Preview_Part-A.docx'
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName })
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    jest.spyOn(AuditService.prototype, 'createPartA')
+
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
+
+    const res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          email: 'dave@gov.uk',
+          roles: [HMPPS_AUTH_ROLE.PO],
+          region: { code: 'N07', name: 'London' },
+        },
+        flags: featureFlags,
+      },
+    })
+
+    await createAndDownloadDocument('PREVIEW_PART_A')(req, res)
+
+    expect(createDocument).toHaveBeenCalledWith(
+      '987',
+      'part-a',
+      { format: 'download-docx', userEmail: 'dave@gov.uk' },
+      'token',
+      {},
+      true
+    )
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.send).toHaveBeenCalledWith(Buffer.from(fileContents, 'base64'))
+    expect(appInsightsEvent).not.toHaveBeenCalled()
+    expect(AuditService.prototype.createPartA).not.toHaveBeenCalled()
     expect(res.contentType).toHaveBeenCalledWith(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
@@ -173,7 +218,14 @@ describe('createAndDownloadDocument', () => {
 
     await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
 
-    expect(createDocument).toHaveBeenCalledWith('987', 'no-recall-letter', { format: 'download-docx' }, 'token', {})
+    expect(createDocument).toHaveBeenCalledWith(
+      '987',
+      'no-recall-letter',
+      { format: 'download-docx' },
+      'token',
+      {},
+      false
+    )
 
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',

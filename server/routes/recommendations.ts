@@ -70,6 +70,7 @@ import previousRecallController from '../controllers/recommendation/previousReca
 import previousReleasesController from '../controllers/recommendation/previousReleasesController'
 import offenceAnalysisController from '../controllers/recommendation/offenceAnalysisController'
 import roshController from '../controllers/recommendation/roshController'
+import previewPartAController from '../controllers/recommendation/previewPartAController'
 
 const recommendations = Router()
 
@@ -237,6 +238,8 @@ ppRouteBuilder
 
 ppRouteBuilder.get('confirmation-part-a', confirmationPartAController.get)
 
+ppRouteBuilder.get('preview-part-a', previewPartAController.get)
+
 const spoRouteBuilder = ppRouteBuilder.withRoles([HMPPS_AUTH_ROLE.SPO])
 
 /*
@@ -325,6 +328,7 @@ const get = (path: string, handler: RequestHandler) => recommendations.get(path,
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
 post('', createRecommendationController)
 get(`/:recommendationId/documents/part-a`, createAndDownloadDocument('PART_A'))
+get(`/:recommendationId/documents/preview-part-a`, createAndDownloadDocument('PREVIEW_PART_A'))
 get(`/:recommendationId/documents/no-recall-letter`, createAndDownloadDocument('NO_RECALL_LETTER'))
 post(`/:recommendationId/status`, updateRecommendationStatus)
 
