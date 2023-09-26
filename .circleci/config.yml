@@ -262,12 +262,6 @@ jobs:
           command: |
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
             cd make-recall-decision-e2e-tests 
-            git checkout main
-      - run:
-          name: Checkout/clone make-recall-decision-e2e-tests
-          command: |
-            git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
-            cd make-recall-decision-e2e-tests 
             git checkout main      
       - run:
           working_directory: make-recall-decision-e2e-tests
