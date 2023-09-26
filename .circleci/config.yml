@@ -257,7 +257,12 @@ jobs:
         type: string
         default: "@E2E"
     steps:
-      - checkout
+      - run:
+          name: Checkout/clone make-recall-decision-e2e-tests
+          command: |
+            git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
+            cd make-recall-decision-e2e-tests 
+            git checkout main
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Update npm
@@ -284,19 +289,19 @@ jobs:
               --record false
             node scripts/fix-junit-reports.js
       - store_artifacts:
-          path: e2e_tests/screenshots
+          path: make-recall-decision-e2e-tests/e2e_tests/screenshots
           destination: screenshots
       - store_artifacts:
-          path: e2e_tests/videos
+          path: make-recall-decision-e2e-tests/e2e_tests/videos
           destination: videos
       - store_artifacts:
-          path: e2e_tests/logs
+          path: make-recall-decision-e2e-tests/e2e_tests/logs
           destination: test-logs
       - store_artifacts:
-          path: e2e_tests/junit
+          path: make-recall-decision-e2e-tests/e2e_tests/junit
           destination: junit
       - store_test_results:
-          path: e2e_tests/junit
+          path: make-recall-decision-e2e-tests/e2e_tests/junit
 
   e2e_local_test:
     machine:
@@ -467,6 +472,7 @@ workflows:
             branches:
               only:
                 - main
+                - migrate-to-e2e-test-repo
           requires:
             - deploy_dev
           context:
