@@ -52,7 +52,7 @@
                                 {{ pageHeadings.lineManagerCounterSignature }}
                             {% endif %}
                             </span>
-                            <span id='task-list-status-lineManagerSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
+                            <span id='task-list-status-lineManagerCounterSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
@@ -64,7 +64,7 @@
                                 {{ pageHeadings.seniorManagerCounterSignature }}
                             {% endif %}
                             </span>
-                            <span id='task-list-status-seniorManagerSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: seniorManagerCountersignLabel }) }}</span>
+                            <span id='task-list-status-seniorManagerCounterSignature'>{{ statusBadge({ colour: seniorManagerCountersignStyle, label: seniorManagerCountersignLabel }) }}</span>
                         </li>
                     </ul>
                 </li>
@@ -95,6 +95,13 @@
 
             <div class="govuk-visually-hidden" data-js='copy-to-clipboard-text' data-qa='case-link'>{{ shareLink }}</div>
             <button class='govuk-button govuk-button--secondary govuk-!-margin-top-2' data-js='copy-to-clipboard-btn'>Copy link to share</button>
+
+            <span class="govuk-heading-m govuk-!-margin-top-2">Preview this Part A</span>
+
+            <div class='govuk-body '>You cannot send the preview to PPCS.</div>
+
+            <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2' href="{{ changeLinkUrl({ pageUrlSlug: 'preview-part-a', urlInfo: urlInfo }) }}">
+            Preview Part A</a>
         </div>
         {% endif %}
     </div>

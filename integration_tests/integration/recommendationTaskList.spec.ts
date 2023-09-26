@@ -347,7 +347,7 @@ context('Recommendation - task list', () => {
       cy.signIn()
     })
 
-    it('present Who Completed Part A page', () => {
+    it('present Share this Part A', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
@@ -357,6 +357,18 @@ context('Recommendation - task list', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagProbationAdmin=1`)
 
       cy.getElement('Share this Part A').should('exist')
+    })
+
+    it('present Preview Part A', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagProbationAdmin=1`)
+
+      cy.getElement('Preview this Part A').should('exist')
     })
   })
 })
