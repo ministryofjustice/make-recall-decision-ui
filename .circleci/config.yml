@@ -278,7 +278,6 @@ jobs:
           working_directory: make-recall-decision-e2e-tests
           command: |
             echo $(pwd)
-            cd make-recall-decision-e2e-tests
             shopt -s globstar
             
             SPECS=$(circleci tests glob "e2e_tests/features/e2eJourneyTests/*.feature" | circleci tests split --show-counts)
