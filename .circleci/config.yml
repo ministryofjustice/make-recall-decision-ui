@@ -271,9 +271,8 @@ jobs:
           command: 'npm install -g npm@9'
       - run:
           working_directory: make-recall-decision-e2e-tests
-          name: Update install package
+          name: Install packages
           command: 'npm install'
-#      - node/install-packages
       - run:
           environment:
             FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: 'true'
@@ -478,9 +477,8 @@ workflows:
             branches:
               only:
                 - main
-                - migrate-to-e2e-test-repo
           requires:
-            - build
+            - deploy_dev
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
@@ -517,9 +515,8 @@ workflows:
             branches:
               only:
                 - main
-                - migrate-to-e2e-test-repo
           requires:
-            - build
+            - deploy_preprod
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
