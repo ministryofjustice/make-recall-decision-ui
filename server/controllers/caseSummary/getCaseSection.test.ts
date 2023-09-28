@@ -96,7 +96,7 @@ describe('getCaseSection', () => {
     expect(recs.recommendations[0].completedDate).toBe('2023-07-31T08:18:53.361Z')
   })
 
-  it('returns licence-conditions - CVL Flag', async () => {
+  it('returns licence-conditions', async () => {
     const apiResponse = {
       activeConvictions: [
         {
@@ -126,7 +126,7 @@ describe('getCaseSection', () => {
     }
 
     ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
-    const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, { flagCvl: true })
+    const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
 
     const recs = caseSummary as Record<string, unknown>
     expect(recs.licenceConvictions).toStrictEqual({
@@ -184,6 +184,7 @@ describe('getCaseSection', () => {
     })
 
     it('returns excluded data for licence conditions', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
       const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userExcluded).toEqual(true)
     })
@@ -239,6 +240,7 @@ describe('getCaseSection', () => {
     })
 
     it('returns restricted data for licence conditions', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
       const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
       expect((caseSummary as ContactHistoryResponse).userAccessResponse.userRestricted).toEqual(true)
     })

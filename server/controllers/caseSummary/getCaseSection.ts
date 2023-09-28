@@ -30,7 +30,7 @@ export const getCaseSection = async (
   token: string,
   userId: string,
   reqQuery: ParsedQs,
-  flags: Record<string, boolean>
+  _: Record<string, boolean>
 ) => {
   let sectionLabel
   let caseSummary
@@ -75,24 +75,19 @@ export const getCaseSection = async (
     case 'licence-conditions':
       sectionLabel = 'Licence conditions'
       startTime = performance.now()
-      if (flags.flagCvl) {
-        const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(trimmedCrn, sectionId, token)
-        appInsightsTimingMetric({ name: 'getCaseLicenceConditionsV2', startTime })
-        caseSummary = {
-          ...json,
-          licenceConvictions: {
-            activeCustodial: json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial),
-            hasMultipleActiveCustodial:
-              json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
-          },
-          standardLicenceConditions: formOptions.standardLicenceConditions,
-        }
-      } else {
-        caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
-        appInsightsTimingMetric({ name: 'getCaseLicenceConditions', startTime })
-        if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-          caseSummary = transformLicenceConditions(caseSummaryRaw) as CaseSummaryOverviewResponse
-        }
+      caseSummaryRaw = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(trimmedCrn, sectionId, token)
+      appInsightsTimingMetric({ name: 'getCaseLicenceConditionsV2', startTime })
+      caseSummary = {
+        ...caseSummaryRaw,
+        licenceConvictions: {
+          activeCustodial:
+            !!caseSummaryRaw.activeConvictions &&
+            caseSummaryRaw.activeConvictions.filter(conviction => conviction.sentence?.isCustodial),
+          hasMultipleActiveCustodial:
+            !!caseSummaryRaw.activeConvictions &&
+            caseSummaryRaw.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
+        },
+        standardLicenceConditions: formOptions.standardLicenceConditions,
       }
       break
     case 'licence-conditions-cvl':

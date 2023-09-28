@@ -3,6 +3,9 @@ import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
 import { setResponsePropertiesToNull } from '../support/commands'
+import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
+import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
+import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -25,13 +28,6 @@ context('Make a recommendation', () => {
     recallType: { selected: { value: 'STANDARD' } },
     managerRecallDecision: {
       isSentToDelius: true,
-    },
-  }
-  const licenceConditionsMultipleActiveCustodial = {
-    sectionId: 'licence-conditions',
-    statusCode: 200,
-    response: {
-      activeConvictions: [{ sentence: { isCustodial: true } }, { sentence: { isCustodial: true } }],
     },
   }
 
@@ -283,33 +279,21 @@ context('Make a recommendation', () => {
     })
 
     it('licence conditions - select saved conditions', () => {
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=0`)
       cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-      cy.task('getCase', {
-        sectionId: 'licence-conditions',
-        statusCode: 200,
-        response: {
-          hasAllConvictionsReleasedOnLicence: true,
-          activeConvictions: [
-            {
-              sentence: { isCustodial: true, custodialStatusCode: 'B' },
-              licenceConditions: [
-                {
-                  mainCategory: {
-                    code: 'NLC5',
-                    description: 'Freedom of movement',
-                  },
-                  subCategory: {
-                    code: 'NST14',
-                    description: 'On release to be escorted by police to Approved Premises',
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task(
+        'getCaseV2',
+        caseTemplate()
+          .withActiveConviction(
+            standardActiveConvictionTemplate()
+              .withDescription('Robbery - 05714')
+              .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+          )
+          .withAllConvictionsReleasedOnLicence()
+          .build()
+      )
+
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getSelectableOptionByLabel(
         'What licence conditions has Paula Smith breached?',
@@ -320,12 +304,13 @@ context('Make a recommendation', () => {
         'What licence conditions has Paula Smith breached?',
         'Not commit any offence'
       ).should('be.checked')
-      cy.getSelectableOptionByLabel('What licence conditions has Paula Smith breached?', 'Freedom of movement').should(
-        'be.checked'
-      )
+      cy.getSelectableOptionByLabel(
+        'What licence conditions has Paula Smith breached?',
+        'Poss, own, control, inspect specified items /docs'
+      ).should('be.checked')
     })
 
-    it('licence conditions - CVL flag enabled - display CVL licence conditions', () => {
+    it('licence conditions - display CVL licence conditions', () => {
       const cvlLicenceConditionsBreached = {
         standardLicenceConditions: {
           selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
@@ -351,65 +336,18 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, cvlLicenceConditionsBreached, licenceConditionsBreached: null },
       })
-      cy.task('getCaseV2', {
-        sectionId: 'licence-conditions',
-        statusCode: 200,
-        response: {
-          hasAllConvictionsReleasedOnLicence: true,
-          activeConvictions: [
-            {
-              sentence: { isCustodial: true, custodialStatusCode: 'B' },
-              licenceConditions: [
-                {
-                  mainCategory: {
-                    code: 'NLC5',
-                    description: 'Freedom of movement',
-                  },
-                  subCategory: {
-                    code: 'NST14',
-                    description: 'On release to be escorted by police to Approved Premises',
-                  },
-                },
-              ],
-            },
-          ],
-          cvlLicence: {
-            licenceStatus: 'ACTIVE',
-            conditionalReleaseDate: '2022-06-10',
-            actualReleaseDate: '2022-06-11',
-            sentenceStartDate: '2022-06-12',
-            sentenceEndDate: '2022-06-13',
-            licenceStartDate: '4022-06-14',
-            licenceExpiryDate: '2022-06-15',
-            standardLicenceConditions: [
-              {
-                code: '9ce9d594-e346-4785-9642-c87e764bee37',
-                text: 'This is a standard licence condition',
-                expandedText: null as string,
-                category: null as string,
-              },
-            ],
-            additionalLicenceConditions: [
-              {
-                code: '9ce9d594-e346-4785-9642-c87e764bee39',
-                text: 'This is an additional licence condition',
-                expandedText: 'Expanded additional licence condition',
-                category: 'Freedom of movement',
-              },
-            ],
-            bespokeConditions: [
-              {
-                code: '9ce9d594-e346-4785-9642-c87e764bee45',
-                text: 'This is a bespoke condition',
-                expandedText: null as string,
-                category: null as string,
-              },
-            ],
-          },
-        },
-      })
+
+      cy.task(
+        'getCaseV2',
+        caseTemplate()
+          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+          .withAllConvictionsNotReleasedOnLicence()
+          .withCvlLicence()
+          .build()
+      )
+
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Paula Smith breached?',
@@ -426,35 +364,24 @@ context('Make a recommendation', () => {
       ).should('be.checked')
     })
 
-    it('licence conditions - CVL flag enabled - display Delius licence conditions', () => {
+    it('licence conditions - display Delius licence conditions', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getCaseV2', {
-        sectionId: 'licence-conditions',
-        statusCode: 200,
-        response: {
-          hasAllConvictionsReleasedOnLicence: true,
-          activeConvictions: [
-            {
-              sentence: { isCustodial: true, custodialStatusCode: 'B' },
-              licenceConditions: [
-                {
-                  mainCategory: {
-                    code: 'NLC5',
-                    description: 'Freedom of movement',
-                  },
-                  subCategory: {
-                    code: 'NST14',
-                    description: 'On release to be escorted by police to Approved Premises',
-                  },
-                },
-              ],
-            },
-          ],
-          cvlLicence: null,
-        },
-      })
+
+      cy.task(
+        'getCaseV2',
+        caseTemplate()
+          .withActiveConviction(
+            standardActiveConvictionTemplate()
+              .withDescription('Burglary - 05714')
+              .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+          )
+          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
+          .withAllConvictionsNotReleasedOnLicence()
+          .build()
+      )
+
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Paula Smith breached?',
@@ -465,44 +392,55 @@ context('Make a recommendation', () => {
         'What licence conditions has Paula Smith breached?',
         'Not commit any offence'
       ).should('be.checked')
-      cy.getSelectableOptionByLabel('What licence conditions has Paula Smith breached?', 'Freedom of movement').should(
-        'be.checked'
-      )
+      cy.getSelectableOptionByLabel(
+        'What licence conditions has Paula Smith breached?',
+        'Poss, own, control, inspect specified items /docs'
+      ).should('be.checked')
     })
 
     it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=0`)
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('getCase', licenceConditionsMultipleActiveCustodial)
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task(
+        'getCaseV2',
+        caseTemplate()
+          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
+          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
+          .withAllConvictionsNotReleasedOnLicence()
+          .build()
+      )
+
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
       ).should('exist')
       cy.getElement('What licence conditions has Paula Smith breached?').should('exist')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Consider a recall')
     })
 
     it('licence conditions - shows message if person has no active custodial convictions', () => {
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagCvl=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('getCase', {
-        sectionId: 'licence-conditions',
-        statusCode: 200,
-        response: {
-          activeConvictions: [{ sentence: { isCustodial: false } }],
-        },
-      })
+
+      cy.task(
+        'getCaseV2',
+        caseTemplate()
+          .withActiveConviction(
+            standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial()
+          )
+          .withActiveConviction(
+            standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial()
+          )
+          .withAllConvictionsNotReleasedOnLicence()
+          .build()
+      )
+
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
         'This person has no active convictions. Double-check that the information in NDelius is correct.'
       ).should('exist')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Consider a recall')
     })
   })
 

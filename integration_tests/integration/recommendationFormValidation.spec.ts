@@ -1,6 +1,8 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
+import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
+import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 
 context('Make a recommendation - form validation', () => {
   const crn = 'X34983'
@@ -41,6 +43,14 @@ context('Make a recommendation - form validation', () => {
   it('Licence conditions', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task(
+      'getCaseV2',
+      caseTemplate()
+        .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+        .withAllConvictionsReleasedOnLicence()
+        .build()
+    )
+
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
     cy.clickButton('Continue')
