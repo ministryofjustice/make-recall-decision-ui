@@ -9,11 +9,6 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description: 'Enables Probation Admin',
     default: false,
   },
-  flagCvl: {
-    label: 'Enable CVL',
-    description: 'Integrates CVL licence data into the licence tab and licence conditions entry page.',
-    default: true,
-  },
   flagLastCompleted: {
     label: 'Last Completed Tab',
     description: 'Shows "Last Completed" tab on case overview.',

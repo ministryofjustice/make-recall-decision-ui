@@ -45,9 +45,9 @@ context('Excluded and restricted cases', () => {
     })
 
     it('licence conditions page', () => {
-      cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
+      cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
+      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
     })
@@ -96,9 +96,9 @@ context('Excluded and restricted cases', () => {
     })
 
     it('licence conditions page', () => {
-      cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: restrictedResponse })
+      cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
+      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
       cy.pageHeading().should('equal', 'Restricted case')
       cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
     })
