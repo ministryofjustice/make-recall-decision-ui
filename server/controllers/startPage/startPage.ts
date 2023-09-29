@@ -3,15 +3,10 @@ import config from '../../config'
 import { isBannerDisplayDateRangeValid } from '../../utils/utils'
 
 export const startPage = async (req: Request, res: Response): Promise<Response | void> => {
-  const { flags } = res.locals
   res.locals.notification = {
     ...config.notification,
     isVisible: Boolean(config.notification.body) && isBannerDisplayDateRangeValid(),
   }
-  if (flags.flagSearchByName) {
-    res.locals.searchEndpoint = '/search-by-name'
-  } else {
-    res.locals.searchEndpoint = '/search-by-crn'
-  }
+  res.locals.searchEndpoint = '/search-by-name'
   res.render('pages/startPage')
 }

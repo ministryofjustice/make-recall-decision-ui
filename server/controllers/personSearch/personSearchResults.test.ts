@@ -21,31 +21,6 @@ describe('personSearchResults', () => {
     })
   })
 
-  it('should return results for a valid CRN', async () => {
-    const persons = [
-      {
-        name: 'Paula Smith',
-        crn,
-        dateOfBirth: '1990-10-30',
-      },
-    ]
-    ;(getPersonsByCrn as jest.Mock).mockReturnValueOnce(persons)
-    const req = mockReq({ query: { crn } })
-    await personSearchResults(req, res)
-    expect(getPersonsByCrn).toHaveBeenCalledWith(crn.trim(), token)
-    expect(res.render).toHaveBeenCalledWith('pages/personSearchResults')
-    expect(res.locals.persons).toEqual(persons)
-    expect(appInsightsEvent).toHaveBeenCalledWith(
-      'mrdPersonSearchResults',
-      'Dave',
-      {
-        crn: 'A1234AB',
-        region: { code: 'N07', name: 'London' },
-      },
-      featureFlags
-    )
-  })
-
   it('should return an error if no search query submitted', async () => {
     const invalidCrn = 50 as unknown as string
     const req = mockReq({ query: { crn: invalidCrn } })
@@ -98,7 +73,7 @@ describe('personSearchResults', () => {
     paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
   }
 
-  it('valid search with flag', async () => {
+  it('valid search', async () => {
     ;(searchPersons as jest.Mock).mockReturnValueOnce(TEMPLATE)
     jest.spyOn(AuditService.prototype, 'personSearch')
     const req = mockReq({
@@ -109,7 +84,7 @@ describe('personSearchResults', () => {
     })
 
     res = mockRes({
-      locals: { user: { username: 'Dave' }, flags: { flagSearchByName: true } },
+      locals: { user: { username: 'Dave' }, flags: {} },
     })
 
     await personSearchResults(req, res)
@@ -123,7 +98,7 @@ describe('personSearchResults', () => {
       {
         crn: 'A123',
       },
-      { flagSearchByName: true }
+      {}
     )
 
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({

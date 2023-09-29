@@ -9,15 +9,10 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description: 'Enables Probation Admin',
     default: false,
   },
-  flagLastCompleted: {
-    label: 'Last Completed Tab',
-    description: 'Shows "Last Completed" tab on case overview.',
-    default: true,
-  },
-  flagSearchByName: {
-    label: 'Search by Name/Pagination',
-    description: 'Displays Search By Name option, and returns results, in paginated form.',
-    default: true,
+  flagPreviewPartA: {
+    label: 'Enable Preview Part A',
+    description: 'Enables Preview Part A',
+    default: false,
   },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
@@ -29,12 +24,6 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     label: 'Allow deletion of a recommendation',
     description:
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
-    default: false,
-  },
-  flagCreateVaryLicenceData: {
-    label: "Show tab for 'Create & vary a licence' data",
-    description:
-      'Development team use only - shows a tab on the Case summary showing data from the "Create & vary a licence" service',
     default: false,
   },
 }
