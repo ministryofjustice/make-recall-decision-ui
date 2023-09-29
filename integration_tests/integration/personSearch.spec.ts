@@ -34,7 +34,7 @@ context('Search for a person', () => {
     paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
   }
 
-  it('can search for a person on probation by CRN with search by name flag', () => {
+  it('can search for a person on probation by CRN', () => {
     const crnQuery = 'A12345'
     cy.visit('http://localhost:3007/')
     cy.clickLink('Start')
@@ -77,7 +77,7 @@ context('Search for a person', () => {
     cy.pageHeading().should('equal', 'Search results')
   })
 
-  it('can search for a person on probation by name with search by name flag', () => {
+  it('can search for a person on probation by name', () => {
     cy.visit('http://localhost:3007/')
     cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')
