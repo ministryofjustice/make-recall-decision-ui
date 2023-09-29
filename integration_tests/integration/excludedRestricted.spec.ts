@@ -1,8 +1,6 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../api/responses/get-case-restricted.json'
-import personSearchExcludedResponse from '../../api/responses/get-person-search-excluded.json'
-import personSearchRestrictedResponse from '../../api/responses/get-person-search-restricted.json'
 
 context('Excluded and restricted cases', () => {
   beforeEach(() => {
@@ -11,15 +9,6 @@ context('Excluded and restricted cases', () => {
   })
 
   context('Excluded', () => {
-    it('search results page', () => {
-      cy.visit(`${routeUrls.start}?flagSearchByName=0`)
-      cy.task('getPersonsByCrn', { statusCode: 200, response: personSearchExcludedResponse })
-      const crn = 'X34983'
-      cy.visit(`${routeUrls.searchResultsByCRN}?crn=${crn}`)
-      cy.contains('You are excluded from viewing this case').should('exist')
-      cy.getText('name').should('equal', '(read more information)')
-    })
-
     it('overview page', () => {
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
@@ -62,15 +51,6 @@ context('Excluded and restricted cases', () => {
   })
 
   context('Restricted', () => {
-    it('search results page', () => {
-      cy.visit(`${routeUrls.start}?flagSearchByName=0`)
-      cy.task('getPersonsByCrn', { statusCode: 200, response: personSearchRestrictedResponse })
-      const crn = 'X34983'
-      cy.visit(`${routeUrls.searchResultsByCRN}?crn=${crn}`)
-      cy.contains('This is a restricted case').should('exist')
-      cy.getText('name').should('equal', '(read more information)')
-    })
-
     it('overview page', () => {
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'

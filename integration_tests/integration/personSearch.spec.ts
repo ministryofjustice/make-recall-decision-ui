@@ -1,4 +1,3 @@
-import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
@@ -13,49 +12,6 @@ context('Search for a person', () => {
     cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'contact-log', statusCode: 200, response: getCaseOverviewResponse })
-  })
-
-  it('can search for a person on probation', () => {
-    cy.visit('http://localhost:3007/?flagSearchByName=0')
-    const crnQuery = 'A12345'
-    const { name, dateOfBirth, crn } = getPersonSearchResponse[0]
-    cy.clickLink('Start')
-    cy.pageHeading().should('equal', 'Search for a person on probation')
-
-    // no search term entered
-    cy.clickButton('Search')
-    cy.assertErrorMessage({
-      fieldName: 'crn',
-      errorText: 'Enter a Case Reference Number (CRN)',
-    })
-
-    // no search results
-    cy.task('getPersonsByCrn', { statusCode: 200, response: [] })
-    cy.fillInput('Search', crnQuery)
-    cy.clickButton('Search')
-    cy.pageHeading().should('equal', 'Search results')
-    cy.getElement(`CRN: ${crnQuery}`).should('exist')
-    cy.getElement('No results').should('exist')
-
-    // one search result
-    cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
-    cy.clickLink('Change')
-    cy.fillInput('Search', crnQuery)
-    cy.clickButton('Search')
-    cy.getRowValuesFromTable({ tableCaption: 'Persons found', rowSelector: `[data-qa="row-${crn}"]` }).then(
-      ([first, second, third]) => {
-        expect(first).to.equal(name)
-        expect(second).to.equal(crn)
-        expect(third).to.equal(formatDateTimeFromIsoString({ isoDate: dateOfBirth }))
-      }
-    )
-
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    // link to case summary
-    cy.clickLink(name)
-    cy.pageHeading().should('equal', 'Overview for Paula Smith')
-    cy.clickLink('Back')
-    cy.pageHeading().should('equal', 'Search results')
   })
 
   const TEMPLATE = {
@@ -80,7 +36,7 @@ context('Search for a person', () => {
 
   it('can search for a person on probation by CRN with search by name flag', () => {
     const crnQuery = 'A12345'
-    cy.visit('http://localhost:3007/?flagSearchByName=1')
+    cy.visit('http://localhost:3007/')
     cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')
     cy.clickLink('Search by case reference number (CRN)')
@@ -122,7 +78,7 @@ context('Search for a person', () => {
   })
 
   it('can search for a person on probation by name with search by name flag', () => {
-    cy.visit('http://localhost:3007/?flagSearchByName=1')
+    cy.visit('http://localhost:3007/')
     cy.clickLink('Start')
     cy.pageHeading().should('equal', 'Search for a person on probation')
     // no search term entered

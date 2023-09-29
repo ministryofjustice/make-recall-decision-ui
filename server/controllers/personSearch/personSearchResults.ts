@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { searchPersons, getPersonsByCrn } from '../../data/makeDecisionApiClient'
+import { searchPersons } from '../../data/makeDecisionApiClient'
 import { validatePersonSearch } from './validators/validatePersonSearch'
 import { routeUrls } from '../../routes/routeUrls'
 import { AuditService } from '../../services/auditService'
@@ -23,13 +23,8 @@ export const personSearchResults = async (req: Request, res: Response) => {
     return res.redirect(303, routeUrls.searchByCRN)
   }
   res.locals.crn = searchValue
-  if (flags.flagSearchByName) {
-    res.locals.page = await searchPersons(user.token, Number(page) - 1, 20, searchValue, undefined, undefined)
-    res.render('pages/paginatedPersonSearchResults')
-  } else {
-    res.locals.persons = await getPersonsByCrn(searchValue, user.token)
-    res.render('pages/personSearchResults')
-  }
+  res.locals.page = await searchPersons(user.token, Number(page) - 1, 20, searchValue, undefined, undefined)
+  res.render('pages/paginatedPersonSearchResults')
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue, region: user.region }, flags)
   auditService.personSearch({
     searchTerm: { crn: searchValue },

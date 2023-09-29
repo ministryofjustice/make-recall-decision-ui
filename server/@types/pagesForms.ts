@@ -31,7 +31,6 @@ export type CaseSectionId =
   | 'vulnerabilities'
   | 'personal-details'
   | 'licence-conditions'
-  | 'licence-conditions-cvl'
   | 'contact-history'
   | 'recommendations'
   | 'recommendations-prototype'

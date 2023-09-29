@@ -22,7 +22,7 @@ context('Recommendations tab in case summary', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/last-completed?flagLastCompleted=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/last-completed`)
     cy.pageHeading().should('equal', 'Completed for Harry Smith')
 
     checkValuesInTable([['31 Jul 2023', 'Part A', 'This is the most recent completed document. It is not a draft.']])
@@ -38,7 +38,7 @@ context('Recommendations tab in case summary', () => {
         recommendations: null,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/last-completed?flagLastCompleted=1`)
+    cy.visit(`${routeUrls.cases}/${crn}/last-completed`)
     cy.getElement('There are no documents to download').should('exist')
     cy.getElement(
       'There are no documents to download. This is because this service has not been used to make a recommendation for Harry Smith yet. Check NDelius if you need an old Part A or decision not to recall letter.'
