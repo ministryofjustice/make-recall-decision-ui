@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesLicenceConditions } from '../recommendations/licenceConditions/inputDisplayValues'
+import { validateLicenceConditionsBreached } from '../recommendations/licenceConditions/formValidator'
 import { CaseSummaryOverviewResponseV2 } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponseV2'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { isDefined } from '../../utils/utils'
@@ -69,58 +70,72 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(req.body.crn, 'licence-conditions', token)
 
-  const errors = []
+  const cvlLicence = !!json?.cvlLicence
+  let errors = []
   let valuesToSave
   let unsavedValues
-  const { licenceConditionsBreached } = req.body
-  const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
+  if (cvlLicence) {
+    const { licenceConditionsBreached } = req.body
+    const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
 
-  const selectedStandardConditions = allSelectedConditions
-    .filter(item => item.startsWith('standard|'))
-    .map(item => item.replace('standard|', ''))
+    const selectedStandardConditions = allSelectedConditions
+      .filter(item => item.startsWith('standard|'))
+      .map(item => item.replace('standard|', ''))
 
-  const selectedAdditionalLicenceConditions = allSelectedConditions
-    .filter(item => item.startsWith('additional|'))
-    .map(item => item.replace('additional|', ''))
+    const selectedAdditionalLicenceConditions = allSelectedConditions
+      .filter(item => item.startsWith('additional|'))
+      .map(item => item.replace('additional|', ''))
 
-  const selectedBespokeLicenceConditions = allSelectedConditions
-    .filter(item => item.startsWith('bespoke|'))
-    .map(item => item.replace('bespoke|', ''))
+    const selectedBespokeLicenceConditions = allSelectedConditions
+      .filter(item => item.startsWith('bespoke|'))
+      .map(item => item.replace('bespoke|', ''))
 
-  if (allSelectedConditions.length === 0) {
-    errors.push(
-      makeErrorObject({
-        id: 'licenceConditionsBreached',
-        text: strings.errors.noLicenceConditionsSelected,
-        errorId: 'noLicenceConditionsSelected',
-      })
-    )
-  } else {
-    valuesToSave = {
-      cvlLicenceConditionsBreached: {
-        standardLicenceConditions: {
-          selected: selectedStandardConditions,
-          allOptions: json.cvlLicence.standardLicenceConditions.map(condition => ({
-            code: condition.code,
-            text: condition.text,
-          })),
+    if (allSelectedConditions.length === 0) {
+      errors.push(
+        makeErrorObject({
+          id: 'licenceConditionsBreached',
+          text: strings.errors.noLicenceConditionsSelected,
+          errorId: 'noLicenceConditionsSelected',
+        })
+      )
+    } else {
+      valuesToSave = {
+        cvlLicenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: selectedStandardConditions,
+            allOptions: json.cvlLicence.standardLicenceConditions.map(condition => ({
+              code: condition.code,
+              text: condition.text,
+            })),
+          },
+          additionalLicenceConditions: {
+            selected: selectedAdditionalLicenceConditions,
+            allOptions: json.cvlLicence.additionalLicenceConditions.map(condition => ({
+              code: condition.code,
+              text: condition.text,
+            })),
+          },
+          bespokeLicenceConditions: {
+            selected: selectedBespokeLicenceConditions,
+            allOptions: json.cvlLicence.bespokeConditions.map(condition => ({
+              code: condition.code,
+              text: condition.text,
+            })),
+          },
         },
-        additionalLicenceConditions: {
-          selected: selectedAdditionalLicenceConditions,
-          allOptions: json.cvlLicence.additionalLicenceConditions.map(condition => ({
-            code: condition.code,
-            text: condition.text,
-          })),
-        },
-        bespokeLicenceConditions: {
-          selected: selectedBespokeLicenceConditions,
-          allOptions: json.cvlLicence.bespokeConditions.map(condition => ({
-            code: condition.code,
-            text: condition.text,
-          })),
-        },
-      },
+      }
     }
+  } else {
+    const response = await validateLicenceConditionsBreached({
+      requestBody: req.body,
+      recommendationId,
+      urlInfo,
+      token,
+    })
+
+    errors = response.errors
+    valuesToSave = response.valuesToSave
+    unsavedValues = response.unsavedValues
   }
 
   if (errors && errors.length > 0) {

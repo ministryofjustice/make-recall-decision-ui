@@ -206,6 +206,83 @@ describe('get', () => {
 describe('post', () => {
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: 'standard|NAME_CHANGE',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+
+    await licenceConditionsController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        activeCustodialConvictionCount: 1,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: ['NAME_CHANGE'],
+            allOptions: [
+              {
+                value: 'GOOD_BEHAVIOUR',
+                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+              },
+              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
+              {
+                value: 'KEEP_IN_TOUCH',
+                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
+              },
+              {
+                value: 'SUPERVISING_OFFICER_VISIT',
+                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+              },
+              {
+                value: 'ADDRESS_APPROVED',
+                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
+              },
+              {
+                value: 'NO_WORK_UNDERTAKEN',
+                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
+              },
+              {
+                value: 'NO_TRAVEL_OUTSIDE_UK',
+                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
+              },
+              {
+                value: 'NAME_CHANGE',
+                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
+              },
+              {
+                value: 'CONTACT_DETAILS',
+                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
+              },
+            ],
+          },
+        },
+      },
+      featureFlags: {},
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with valid cvl data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
 
     const basePath = `/recommendations/123/`
