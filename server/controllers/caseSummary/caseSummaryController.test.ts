@@ -67,25 +67,9 @@ describe('get', () => {
   })
 
   it('should return case details for licence conditions', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseLicenceConditionsResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
-    const req = mockReq({ params: { crn, sectionId: 'licence-conditions' } })
-    await caseSummaryController.get(req, res, next)
-    expect(getCaseSummary).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
-    const metricsArg = (appInsightsTimingMetric as jest.Mock).mock.lastCall[0]
-    expect(metricsArg.name).toEqual('getCaseLicenceConditions')
-    expect(typeof metricsArg.startTime).toEqual('number')
-    expect(res.locals.caseSummary.licenceConvictions).toBeDefined()
-    expect(res.locals.section).toEqual({
-      id: 'licence-conditions',
-      label: 'Licence conditions',
-    })
-  })
-
-  it('should return case details for licence conditions V2', async () => {
     res = mockRes({
       token,
-      locals: { flags: { flagCvl: true }, user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'] } },
+      locals: { user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'] } },
     })
     ;(getCaseSummaryV2 as jest.Mock).mockReturnValueOnce(caseLicenceConditionsResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([])
@@ -102,7 +86,7 @@ describe('get', () => {
       true,
       { roles: ['ROLE_MAKE_RECALL_DECISION'], token: 'token', username: 'Dave' },
       'A1234AB',
-      { flagCvl: true }
+      {}
     )
   })
 
