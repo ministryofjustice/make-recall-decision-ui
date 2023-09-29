@@ -18,7 +18,7 @@ const urls = [
   { url: `${routeUrls.cases}/123/risk` },
   { url: `${routeUrls.cases}/123/vulnerabilities` },
   { url: `${routeUrls.cases}/123/personal-details` },
-  { url: `${routeUrls.cases}/123/licence-conditions?flagCvl=0` },
+  { url: `${routeUrls.cases}/123/licence-conditions` },
   { url: `${routeUrls.cases}/123/contact-history` },
   { url: `${routeUrls.cases}/123/recommendations` },
   // contact filter with valid dates
@@ -64,6 +64,7 @@ context('Accessibility (a11y) Checks', () => {
     cy.signIn()
     cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.mockCaseSummaryData()
     cy.mockRecommendationData()
   })

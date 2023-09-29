@@ -25,7 +25,7 @@ Cypress.Commands.add('mockCaseSummaryData', () => {
   cy.task('getCase', { sectionId: 'vulnerabilities', statusCode: 200, response: getCaseVulnerabilitiesResponse })
   cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
   cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: getCaseContactHistoryResponse })
-  cy.task('getCase', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })
+  cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })
   cy.task('getCase', { sectionId: 'recommendations', statusCode: 200, response: getRecommendationsResponse })
 })
 
