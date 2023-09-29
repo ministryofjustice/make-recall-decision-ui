@@ -71,10 +71,8 @@ context('Licence conditions', () => {
   })
 
   it('shows conditions for a single active custodial conviction', () => {
-    const crn = 'X34983'
-    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagCvl=0`)
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
     // Standard licence conditions
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
