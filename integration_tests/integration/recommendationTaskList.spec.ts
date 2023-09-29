@@ -366,7 +366,7 @@ context('Recommendation - task list', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagPreviewPartA=1`)
 
       cy.getElement('Preview this Part A').should('exist')
     })
