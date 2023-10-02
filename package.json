@@ -23,15 +23,12 @@
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
     "swagger-to-ts": "node ./scripts/swagger-to-ts.js",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests && tsc --noEmit -p e2e_tests",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests",
     "test": "jest --forceExit",
     "test:coverage": "jest --coverage --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.config.ts",
     "int-test-ui": "cypress open --config-file integration_tests/cypress.config.ts",
-    "e2e": "export $(cat .env) && npx cypress run --config-file e2e_tests/cypress.config.ts",
-    "e2e-ui": "export $(cat .env) && npx cypress open --config-file e2e_tests/cypress.config.ts",
-    "e2e:report": "node e2e_tests/cucumber-report.js",
     "accessibility-test": "cypress run --browser chrome --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "accessibility-test-ui": "cypress open --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "clean": "rm -rf dist build node_modules stylesheets"
@@ -88,8 +85,7 @@
       "migrations/*",
       "node_modules/*",
       "test/*",
-      "integration_tests/*",
-      "e2e_tests/*"
+      "integration_tests/*"
     ],
     "delay": 2500,
     "ext": "js,json,html,njk"
@@ -102,13 +98,6 @@
     "*.json": [
       "prettier --write"
     ]
-  },
-  "cypress-cucumber-preprocessor": {
-    "stepDefinitions": "e2e_tests/stepDefinitions/*.ts",
-    "nonGlobalStepDefinitions": false,
-    "json": {
-      "enabled": false
-    }
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.363.0",
