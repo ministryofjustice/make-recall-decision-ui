@@ -9,11 +9,6 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description: 'Enables Probation Admin',
     default: false,
   },
-  flagPreviewPartA: {
-    label: 'Enable Preview Part A',
-    description: 'Enables Preview Part A',
-    default: false,
-  },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
     description:

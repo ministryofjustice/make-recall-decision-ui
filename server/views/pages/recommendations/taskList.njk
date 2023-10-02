@@ -97,13 +97,11 @@
             <div class="govuk-visually-hidden" data-js='copy-to-clipboard-text' data-qa='case-link'>{{ shareLink }}</div>
             <button class='govuk-button govuk-button--secondary govuk-!-margin-top-2' data-js='copy-to-clipboard-btn'>Copy link to share</button>
             {% endif %}
-            {% if flags.flagPreviewPartA %}
             <span class="govuk-heading-m govuk-!-margin-top-2">Preview this Part A</span>
 
             <div class='govuk-body '>You cannot send the preview to PPCS.</div>
 
             <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2' href="{{ changeLinkUrl({ pageUrlSlug: 'preview-part-a', urlInfo: urlInfo }) }}">Preview Part A</a>
-            {% endif %}
         </div>
 
     </div>
