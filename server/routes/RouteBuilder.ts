@@ -7,6 +7,7 @@ import retrieve from '../controllers/retrieveRecommendation'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
+import { guardAgainstSpoAcoVewingPartACreatedScreen } from '../middleware/guardAgainstSpoAcoVewingPartACreatedScreen'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
@@ -39,6 +40,7 @@ export class RouteBuilder {
       sanitizeInputValues,
       parseRecommendationUrl,
       feedErrorsToExpress(retrieve), // necessary for async functions
+      guardAgainstSpoAcoVewingPartACreatedScreen,
       guardAgainstModifyingClosedRecommendation,
       customizeMessages,
       feedErrorsToExpress(routerCallback), // necessary for async functions
