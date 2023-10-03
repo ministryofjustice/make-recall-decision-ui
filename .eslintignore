@@ -1,9 +1,6 @@
 node_modules
 public
 assets
-e2e_tests/cucumber-report.js
-e2e_tests/plugins
-e2e_tests/support
 reporter-config.json
 dist/
 scripts/

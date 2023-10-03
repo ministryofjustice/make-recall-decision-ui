@@ -1,4 +1,4 @@
-import { UserType } from '../e2e_tests/support/commands'
+import { UserType } from './commands'
 
 export {}
 
