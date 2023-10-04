@@ -25,9 +25,6 @@
                     {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
                     sensitive language in the form.
                 </p>
-                <div>
-                    <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
-                </div>
             {% endif %}
             <ol class="moj-task-list govuk-!-margin-top-8">
                 {% if isSpo %}
@@ -105,6 +102,12 @@
         </div>
 
     </div>
+
+    {% if taskCompleteness.areAllComplete %}
+    <div>
+        <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
+    </div>
+    {% endif %}
 
 {% endblock %}
 
