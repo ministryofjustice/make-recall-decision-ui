@@ -1,6 +1,9 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({
+    pageHeading: pageTitles[page.id],
+    hasErrors: errors
+}) %}
 
 {% block beforeContent %}
     {{ backLink() }}
@@ -11,29 +14,67 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
-                <div class='govuk-!-font-size-24'>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
-                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>{{ recommendation.crn }}</div>
-                <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
+            <div class='govuk-!-font-size-24'>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
+            <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>{{ recommendation.crn }}</div>
+            <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
             {% endset %}
             {{ govukPanel({
                 titleText: pageHeadings[page.id],
                 html: html
             }) }}
+
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
-            <ol class='govuk-list govuk-list--number'>
+            <ol class='govuk-list govuk-list'>
                 <li>
-                    <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>
-                        Download the Part A.</a>
+                    <div>
+                        <a href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click' class='govuk-button govuk-button--secondary'>Download the Part A</a>
+                    </div>
                 </li>
-                <li>Double-check that everything is correct.</li>
-                <li>Fill in any missing details from question 25 onwards.</li>
-                <li>Upload the Part A to NDelius.</li>
-                <li>Update OASys with any new risk information.</li>
-            </ol>
-            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a></p>
-        </div>
-    </div>
+                <li id=part>
+                    <h2 id="part-a-confirmaton-number-bullet">➊</h2>  Send this Part A to PPCS with the supporting documents. This table shows what documents you need.<br><br>
+                    <table class="govuk-table">
+
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <tr>
+                                    <th class="govuk-table__cell">Document</th>
+                                    <th class="govuk-table__cell">Guidance</th>
+                                </tr>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__cell">Licence</th>
+                                <td class="govuk-table__cell">Required</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__cell">OASys</th>
+                                <td class="govuk-table__cell">OASys is not mandatory for cases that are:<br>
+                 • low risk<br>
+                 • medium risk with a sentence shorter than 12 months</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__cell">Previous convictions (MG16)</th>
+                                <td class="govuk-table__cell">Recommended</td>
+                            </tr>
+
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__cell">Pre-sentence report</th>
+                            <td class="govuk-table__cell">Optional</td>
+                        </tr>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__cell">Police charge sheet (MG4)</th>
+                        <td class="govuk-table__cell">Optional</td>
+                    </tr>
+                </tbody>
+            </table>
+        </li>
+        <li id=part-a-confirmaton-text><h2 id="part-a-confirmaton-number-bullet">➋</h2>  Upload the Part A to NDelius.</li>
+        <li id=part-a-confirmaton-text><h2 id="part-a-confirmaton-number-bullet">➌</h2>  Update OASys with any new information.</li>
+    </ol>
+    <p class='govuk-body govuk-!-margin-top-6'>
+        <a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a>
+    </p>
+</div>
+</div>
 {% endblock %}
-
-
-
