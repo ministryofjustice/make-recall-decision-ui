@@ -1,5 +1,4 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({
     pageHeading: pageTitles[page.id],
     hasErrors: errors
@@ -8,15 +7,15 @@
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
+{% if flags.flagProbationAdmin == true %}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set html %}
-            <div class='govuk-!-font-size-24'>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
-            <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>{{ recommendation.crn }}</div>
             <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
+            <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>CRN: {{ recommendation.crn }}</div>
             {% endset %}
             {{ govukPanel({
                 titleText: pageHeadings[page.id],
@@ -73,8 +72,36 @@
         <li id=part-a-confirmaton-text><h2 id="part-a-confirmaton-number-bullet">➌</h2>  Update OASys with any new information.</li>
     </ol>
     <p class='govuk-body govuk-!-margin-top-6'>
-        <a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a>
+        <a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Return to overview for {{ recommendation.personOnProbation.name }}</a>
     </p>
 </div>
 </div>
+{% else %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set html %}
+                <div class='govuk-!-font-size-24'>{{ getDisplayValueForOption({ value: recommendation.recallType.selected.value, allOptions: formOptions.recallType }) }}</div>
+                <div class='govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-font-size-24'>{{ recommendation.crn }}</div>
+                <div class='govuk-!-font-size-24'>{{ recommendation.personOnProbation.name }}</div>
+            {% endset %}
+            {{ govukPanel({
+                titleText: pageHeadings[page.id],
+                html: html
+            }) }}
+            <h2 class='govuk-heading-m govuk-!-margin-top-6'>What happens next</h2>
+            <ol class='govuk-list govuk-list--number'>
+                <li>
+                    <a class='govuk-link' href='/recommendations/{{ recommendation.id }}/documents/part-a?crn={{ recommendation.crn }}' download data-analytics-event='click_cta' data-analytics-event-category='download_part_a_click'>
+                        Download the Part A.</a>
+                </li>
+                <li>Double-check that everything is correct.</li>
+                <li>Fill in any missing details from question 25 onwards.</li>
+                <li>Upload the Part A to NDelius.</li>
+                <li>Update OASys with any new risk information.</li>
+            </ol>
+            <p class='govuk-body govuk-!-margin-top-6'><a class='govuk-link' href='/cases/{{ recommendation.crn }}/overview'>Back to overview for {{ recommendation.personOnProbation.name }}</a></p>
+        </div>
+    </div>    
+{% endif %}
 {% endblock %}

@@ -18,6 +18,9 @@ function createToken(authorities: string[]) {
 function createResWithToken({ authorities }: { authorities: string[] }): Response {
   return {
     locals: {
+      flags: {
+        flagProbationAdmin: 'true',
+      },
       user: {
         token: createToken(authorities),
       },
