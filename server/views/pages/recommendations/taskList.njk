@@ -26,6 +26,13 @@
                     sensitive language in the form.
                 </p>
             {% endif %}
+            {% if flags.flagProbationAdmin == false %}
+              {% if taskCompleteness.areAllComplete %}
+              <div>
+                <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
+             </div>
+             {% endif %}
+           {% endif %}
             <ol class="moj-task-list govuk-!-margin-top-8">
                 {% if isSpo %}
                 <li>
@@ -102,12 +109,13 @@
         </div>
 
     </div>
-
+{% if flags.flagProbationAdmin == true %}
     {% if taskCompleteness.areAllComplete %}
     <div>
         <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
     </div>
     {% endif %}
+{% endif %}
 
 {% endblock %}
 

@@ -8,15 +8,17 @@ export enum HMPPS_AUTH_ROLE {
 
 export function guardAgainstSpoAcoVewingPartACreatedScreen(req: Request, res: Response, next: NextFunction) {
   const {
+    flags,
     urlInfo: { currentPageId },
   } = res.locals
-  if (res.locals && res.locals.user && res.locals.user.token) {
+  const adminFlagOn = flags.flagProbationAdmin
+  if (res.locals && res.locals.user && res.locals.user.token && adminFlagOn) {
     const { authorities: roles = [] } = jwtDecode(res.locals.user.token) as { authorities?: string[] }
     res.locals.user.roles = roles
     res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
     if (currentPageId === 'confirmation-part-a' && res.locals.user.hasSpoRole) {
       return res.redirect('/inappropriate-error')
     }
-    return next()
   }
+  return next()
 }

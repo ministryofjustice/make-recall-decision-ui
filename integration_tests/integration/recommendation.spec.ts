@@ -1346,7 +1346,7 @@ context('Make a recommendation', () => {
 
       cy.clickLink('Create Part A')
 
-      cy.pageHeading().should('equal', 'You cannot access this page')
+      cy.pageHeading().should('equal', 'Part A created')
     })
 
     it('present countersign exposition while countersigning', () => {
