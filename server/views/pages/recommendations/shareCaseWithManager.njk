@@ -14,7 +14,7 @@
 
             <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
 
-            <p class='govuk-body'>Now you can share this case with your manager.</p>
+            <p class='govuk-body'>Now you can share your answers with your manager.</p>
 
             <ol class='govuk-list govuk-list--number'>
                 <li>
@@ -32,7 +32,10 @@
                 <li>Discuss the case together before making a decision.</li>
             </ol>
              <div>
-                <a href='{{urlInfo.pageBase}}discuss-with-manager' class='govuk-button govuk-button--primary'>Continue</a>
+                <a href='/cases/{{ recommendation.crn }}/overview' class='govuk-button govuk-button--primary'>Return to overview</a>
+                <p class="govuk-body">
+                    <a href='{{ urlInfo.pageBase }}discuss-with-manager' class="govuk-link">Continue to make a recommendation</a>
+                </p>
             </div>
         </div>
     </div>
