@@ -140,9 +140,29 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Share this case with your manager')
 
-      cy.clickLink('Continue')
+      cy.clickLink('Continue to make a recommendation')
 
       cy.pageHeading().should('equal', 'Discuss with your manager')
+    })
+
+    it('share-case-with-manager CTA returns to overview', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Share this case with your manager')
+
+      cy.clickLink('Return to overview')
+
+      cy.pageHeading().should('equal', 'Overview for Paula Smith')
     })
 
     it('present discuss-with-manager', () => {
@@ -154,7 +174,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
 
-      cy.clickLink('Continue')
+      cy.clickLink('Continue to make a recommendation')
 
       cy.pageHeading().should('equal', 'Discuss with your manager')
 
