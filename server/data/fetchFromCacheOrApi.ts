@@ -18,7 +18,7 @@ export const mrdApiCache = async () => {
   if (apiCache) {
     return apiCache
   }
-  apiCache = createRedisClient({ legacyMode: false })
+  apiCache = createRedisClient()
   await apiCache.connect().catch((err: Error) => logger.error(`mrdApiCache - Error connecting to Redis`, err))
   return apiCache
 }
