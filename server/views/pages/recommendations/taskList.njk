@@ -20,7 +20,7 @@
                         Complete the following sections of the Part A form. You can do this in any order.
                 </p>
             {% endif %}
-            {% if taskCompleteness.areAllComplete %}
+            {% if taskCompleteness.areAllComplete%}
                 <p class='govuk-body'>
                     {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
                     sensitive language in the form.
@@ -110,7 +110,7 @@
 
     </div>
 {% if flags.flagProbationAdmin == true %}
-    {% if taskCompleteness.areAllComplete %}
+    {% if taskCompleteness.areAllComplete and user.hasSpoRole == false %}
     <div>
         <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
     </div>

@@ -1,7 +1,6 @@
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = makePageTitle({ pageHeading: section.label + " - Case summary", hasErrors: errors }) %}
-
 {% block headEnd %}
     {% if section.id == 'overview' %}
     <link rel="prefetch" href="{{ pageUrlBase }}contact-history" as="document">
