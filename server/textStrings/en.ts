@@ -147,7 +147,7 @@ export const strings: Record<string, Record<string, string>> = {
     offenceAnalysis: 'Offence analysis',
     addressDetails: 'Address details',
     mappa: 'MAPPA for {{ fullName }}',
-    rosh: 'Current risk of serious harm',
+    rosh: 'Indicative risk assessment pending OASys review',
     requestLineManagerCounterSignature: "Request line manager's countersignature",
     requestSeniorManagerCounterSignature: "Request senior manager's countersignature",
     lineManagerCounterSignature: 'Line manager countersignature',
