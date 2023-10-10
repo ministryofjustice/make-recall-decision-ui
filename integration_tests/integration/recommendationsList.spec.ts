@@ -95,8 +95,8 @@ context('Recommendations tab in case summary', () => {
       ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', 'Update recommendation'],
       ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', 'Update recommendation'],
       ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', 'Update recommendation'],
-      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\nfrom 23 September 2021 at 14:59'],
-      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59'],
+      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\n from 23 September 2021 at 14:59'],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\n from 14 May 2019 at 14:59'],
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
     ])
 
@@ -140,8 +140,8 @@ context('Recommendations tab in case summary', () => {
       ['Recommendation started', 'Angelos Angelou', '23 Nov 2022', ''],
       ['Making decision to recall', 'Jamie Heifer', '7 Jun 2022', ''],
       ['Making decision not to recall', 'Gary Lamb', '17 Nov 2021', ''],
-      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\nfrom 23 September 2021 at 14:59'],
-      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59'],
+      ['Decided to recall', 'Barry Smithson', '23 Sep 2021', 'Download Part A\n from 23 September 2021 at 14:59'],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\n from 14 May 2019 at 14:59'],
       ['Unknown', 'A. Milner', '18 Apr 2016', ''],
     ])
   })
@@ -168,10 +168,10 @@ context('Recommendations tab in case summary', () => {
         'Decided to recall',
         'Barry Smithson',
         '23 Sep 2021',
-        'Download Part A\nfrom 23 September 2021 at 14:59',
+        'Download Part A\n from 23 September 2021 at 14:59',
         'Delete',
       ],
-      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\nfrom 14 May 2019 at 14:59', 'Delete'],
+      ['Decided not to recall', 'Mary Berry', '14 May 2019', 'Download letter\n from 14 May 2019 at 14:59', 'Delete'],
       ['Unknown', 'A. Milner', '18 Apr 2016', '', 'Delete'],
     ])
   })
