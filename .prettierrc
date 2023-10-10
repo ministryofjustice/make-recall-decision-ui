@@ -1,7 +1,7 @@
 {
   "trailingComma": "es5",
   "singleQuote": true,
-  "printWidth": 150,
+  "printWidth": 120,
   "semi": false,
   "arrowParens": "avoid",
   "singleAttributePerLine": false
