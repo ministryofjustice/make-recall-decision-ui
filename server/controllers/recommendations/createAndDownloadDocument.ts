@@ -55,18 +55,11 @@ export const createAndDownloadDocument =
     const isSpo = user.roles.includes(HMPPS_AUTH_ROLE.SPO)
     if (!isSpo && (documentType === 'PART_A' || documentType === 'NO_RECALL_LETTER')) {
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
-      const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
-      const adminFlagOn = flags.flagProbationAdmin
 
-      if (adminFlagOn) {
-        if (!isPPDocumentCreated && isSpoRecordedRationale) {
-          activate.push(STATUSES.PP_DOCUMENT_CREATED)
-          if (!isSpo && isSpoRecordedRationale) {
-            activate.push(STATUSES.CLOSED)
-          }
-        }
-      } else if (!isPPDocumentCreated) {
+      if (!isPPDocumentCreated) {
         activate.push(STATUSES.PP_DOCUMENT_CREATED)
+
+        const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         if (!isSpo && isSpoRecordedRationale) {
           activate.push(STATUSES.CLOSED)
         }
