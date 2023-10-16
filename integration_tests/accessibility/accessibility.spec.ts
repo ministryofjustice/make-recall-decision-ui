@@ -85,7 +85,7 @@ const urls = [
   recommendationEndpoint('task-list'),
   { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
   { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
-  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: true },
+  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
 
 const spoUrls = [
