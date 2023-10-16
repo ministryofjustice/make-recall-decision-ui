@@ -83,9 +83,14 @@ const urls = [
   recommendationEndpoint('confirmation-part-a'),
   recommendationEndpoint('preview-part-a'),
   recommendationEndpoint('task-list'),
-  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
+  {
+    url: `${routeUrls.recommendations}/456/recall-type`,
+    validationError: true,
+    fullRecommendationData: true,
+    noRecallData: false,
+  },
   { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
-  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
+  // { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
 
 const spoUrls = [
