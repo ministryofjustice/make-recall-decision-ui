@@ -60,7 +60,6 @@ const urls = [
   recommendationEndpoint('police-details'),
   recommendationEndpoint('victim-contact-scheme'),
   recommendationEndpoint('victim-liaison-officer'),
-  recommendationEndpoint('preview-no-recall'),
   recommendationEndpoint('confirmation-no-recall'),
   recommendationEndpoint('manager-review'),
   // recommendationEndpoint('offence-details'),
@@ -83,14 +82,9 @@ const urls = [
   recommendationEndpoint('confirmation-part-a'),
   recommendationEndpoint('preview-part-a'),
   recommendationEndpoint('task-list'),
-  {
-    url: `${routeUrls.recommendations}/456/recall-type`,
-    validationError: true,
-    fullRecommendationData: true,
-    noRecallData: false,
-  },
+  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
   { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
-  // { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
+  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
 
 const spoUrls = [
