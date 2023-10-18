@@ -469,8 +469,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ hasSpoRole: true })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
-    cy.selectRadio('Explain the decision', 'Do not recall - send a decision not to recall letter')
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-why-no-recall`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoNoRecallRationale',

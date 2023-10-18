@@ -22,18 +22,6 @@
                     errorMessage: errorMessage(errors.spoRecallRationale)
                 }) }}
             {% endset %}
-            {% set rationaleNoRecallHtml %}
-                {{ govukTextarea({
-                    name: "spoNoRecallRationale",
-                    id: "spoNoRecallRationale",
-                    label: {
-                        text: "Explain your decision",
-                        classes: "govuk-label--s"
-                    },
-                    value: inputDisplayValues.spoNoRecallRationale if inputDisplayValues.spoRecallType === 'NO_RECALL',
-                    errorMessage: errorMessage(errors.spoNoRecallRationale)
-                }) }}
-            {% endset %}
             {% set radioHintHtml %}
             <p class="govuk-body">Write down the decision you made with the practitioner. This explanation
             will be recorded in NDelius.</p>
@@ -76,8 +64,7 @@
                         items: formOptions.spoRecallTypeEnum,
                         currentValues: inputDisplayValues.spoRecallType,
                         conditionalContent: {
-                            RECALL: rationaleRecallHtml,
-                            NO_RECALL: rationaleNoRecallHtml
+                            RECALL: rationaleRecallHtml
                         }
                     }),
                     errorMessage: errorMessage(errors.spoRecallType)

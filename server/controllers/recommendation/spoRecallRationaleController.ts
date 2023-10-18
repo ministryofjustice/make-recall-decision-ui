@@ -41,7 +41,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { spoRecallType, spoRecallRationale, spoNoRecallRationale } = req.body
+  const { spoRecallType, spoRecallRationale } = req.body
 
   const {
     flags,
@@ -60,46 +60,43 @@ async function post(req: Request, res: Response, _: NextFunction) {
         errorId,
       })
     )
-  } else {
-    if (spoRecallType === 'RECALL' && !isMandatoryTextValue(spoRecallRationale)) {
-      const errorId = 'missingSpoRecallRationale'
-      errors.push(
-        makeErrorObject({
-          id: 'spoRecallRationale',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
-
-    if (spoRecallType === 'NO_RECALL' && !isMandatoryTextValue(spoNoRecallRationale)) {
-      const errorId = 'missingSpoNoRecallRationale'
-      errors.push(
-        makeErrorObject({
-          id: 'spoNoRecallRationale',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
+  } else if (spoRecallType === 'RECALL' && !isMandatoryTextValue(spoRecallRationale)) {
+    const errorId = 'missingSpoRecallRationale'
+    errors.push(
+      makeErrorObject({
+        id: 'spoRecallRationale',
+        text: strings.errors[errorId],
+        errorId,
+      })
+    )
   }
 
   if (errors.length > 0) {
     req.session.errors = errors
     return res.redirect(303, req.originalUrl)
   }
+
+  const valuesToSave: Record<string, unknown> = {
+    spoRecallType,
+    explainTheDecision: true,
+  }
+
+  if (spoRecallType === 'RECALL') {
+    valuesToSave.spoRecallRationale = spoRecallRationale
+  }
+
   await updateRecommendation({
     recommendationId,
-    valuesToSave: {
-      spoRecallType,
-      spoRecallRationale: spoRecallType === 'RECALL' ? spoRecallRationale : spoNoRecallRationale,
-      explainTheDecision: true,
-    },
+    valuesToSave,
     token,
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-task-list-consider-recall', urlInfo }))
+  if (spoRecallType === 'RECALL') {
+    res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-task-list-consider-recall', urlInfo }))
+  } else {
+    res.redirect(303, `${urlInfo.basePath}spo-why-no-recall`)
+  }
 }
 
 export default { get, post }

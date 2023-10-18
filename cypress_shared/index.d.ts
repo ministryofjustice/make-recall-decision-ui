@@ -38,6 +38,8 @@ declare global {
 
       fillInputByName(name: string, val: string, opts?: CommandOpts): Chainable<Element>
 
+      fillTextareaByName(name: string, val: string, opts?: CommandOpts): Chainable<Element>
+
       selectRadio(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
 
       selectRadioByValue(groupLabel: string, val: string, opts?: CommandOpts): Chainable<Element>
