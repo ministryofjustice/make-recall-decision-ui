@@ -14,15 +14,11 @@ export const validateLocalPoliceContactDetails = async ({
   const { contactName, phoneNumber, faxNumber, emailAddress } = requestBody
   const missingName = isEmptyStringOrWhitespace(contactName)
   const invalidEmail = emailAddress && !isEmailValid(emailAddress as string)
-  const invalidPhone = phoneNumber && !isPhoneValid(phoneNumber as string)
   const invalidFax = faxNumber && !isPhoneValid(faxNumber as string)
-  if (missingName || invalidPhone || invalidFax || invalidEmail) {
+  if (missingName || invalidFax || invalidEmail) {
     errors = []
     if (missingName) {
       errors.push({ id: 'contactName', errorId: 'noLocalPoliceName' })
-    }
-    if (invalidPhone) {
-      errors.push({ id: 'phoneNumber', errorId: 'invalidPhoneNumber' })
     }
     if (invalidFax) {
       errors.push({ id: 'faxNumber', errorId: 'invalidLocalPoliceFax' })
