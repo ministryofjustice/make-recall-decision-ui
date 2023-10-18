@@ -104,6 +104,8 @@ export const strings: Record<string, Record<string, string>> = {
     spoRecallRationale: 'Explain the decision',
     spoRecallRationaleRecallDecided: 'Explain the decision to recall {{ fullName }}',
     spoRationaleConfirmation: 'Rationale Confirmation',
+    spoWhyNoRecall: 'Why do you think {{ fullName }} should not be recalled?',
+    spoSeniorManagementEndorsement: 'Senior manager endorsement',
     spoRecordDecision: 'Record the decision in NDelius',
     reviewPractitionersConcerns: "Review practitioner's concerns",
     spoTaskListConsiderRecall: 'Consider a recall',

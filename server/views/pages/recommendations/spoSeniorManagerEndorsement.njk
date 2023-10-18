@@ -1,0 +1,23 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class="govuk-body">If this is not the first decision not to recall {{ recommendation.personOnProbation.name }} on this licence:</p>
+            <ul class='govuk-body govuk-list govuk-list--bullet govuk-!-margin-bottom-8'>
+                <li>you must get endorsement from your senior manager</li>
+                <li>your senior manager must record their decision in NDelius</li>
+            </ul>
+            <a class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'
+               href='/recommendations/{{ recommendation.id }}/spo-task-list-consider-recall'>Continue</a>
+        </div>
+    </div>
+{% endblock %}
+

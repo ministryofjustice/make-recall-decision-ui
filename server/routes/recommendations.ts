@@ -71,6 +71,8 @@ import previousReleasesController from '../controllers/recommendation/previousRe
 import offenceAnalysisController from '../controllers/recommendation/offenceAnalysisController'
 import roshController from '../controllers/recommendation/roshController'
 import previewPartAController from '../controllers/recommendation/previewPartAController'
+import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoRecallController'
+import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 
 const recommendations = Router()
 
@@ -257,6 +259,11 @@ spoRationaleRouteBuilder.post('review-practitioners-concerns', reviewPractitione
 
 spoRationaleRouteBuilder.get('spo-rationale', spoRecallRationaleController.get)
 spoRationaleRouteBuilder.post('spo-rationale', spoRecallRationaleController.post)
+
+spoRationaleRouteBuilder.get('spo-why-no-recall', spoWhyNoRecallController.get)
+spoRationaleRouteBuilder.post('spo-why-no-recall', spoWhyNoRecallController.post)
+
+spoRationaleRouteBuilder.get('spo-senior-manager-endorsement', spoSeniorManagerEndorsementController.get)
 
 spoRationaleRouteBuilder.get('spo-record-decision', spoRecordDecisionController.get)
 spoRationaleRouteBuilder.post('spo-record-decision', spoRecordDecisionController.post)
