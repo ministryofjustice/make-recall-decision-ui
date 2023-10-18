@@ -13,10 +13,10 @@ describe('inputDisplayValuesLocalPoliceContactDetails', () => {
   it("should use empty values if there's an error, and no unsaved values", () => {
     const errors = {
       localPoliceContact: {
-        errorId: 'noLocalPolicePhone',
-        href: '#phoneNumber',
-        name: 'phoneNumber',
-        text: 'Enter a phone number',
+        errorId: 'noLocalPoliceName',
+        href: '#contactName',
+        name: 'contactName',
+        text: 'Enter the police contact name',
       },
     }
     const inputDisplayValues = inputDisplayValuesLocalPoliceContactDetails({

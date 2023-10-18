@@ -20,6 +20,34 @@ describe('validateLocalPoliceContactDetails', () => {
     expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-custody')
   })
 
+  it('returns no errors if optional fields are missing', async () => {
+    const requestBody = {
+      contactName: 'Thomas Magnum',
+      phoneNumber: '',
+      faxNumber: '',
+      emailAddress: '',
+    }
+    const { errors } = await validateLocalPoliceContactDetails({
+      requestBody,
+      recommendationId,
+    })
+    expect(errors).toBeUndefined()
+  })
+
+  it('does not validate telephone number', async () => {
+    const requestBody = {
+      contactName: 'Thomas Magnum',
+      phoneNumber: 'invalid',
+      faxNumber: '',
+      emailAddress: '',
+    }
+    const { errors } = await validateLocalPoliceContactDetails({
+      requestBody,
+      recommendationId,
+    })
+    expect(errors).toBeUndefined()
+  })
+
   it('returns errors for missing name, and no valuesToSave', async () => {
     const requestBody = {
       contactName: ' ',
@@ -61,7 +89,7 @@ describe('validateLocalPoliceContactDetails', () => {
   it('returns errors and unsaved values for invalid fields', async () => {
     const requestBody = {
       contactName: 'Thomas Magnum',
-      phoneNumber: '123',
+      phoneNumber: '',
       faxNumber: '345',
       emailAddress: 'nope',
     }
@@ -71,12 +99,6 @@ describe('validateLocalPoliceContactDetails', () => {
     })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
-      {
-        errorId: 'invalidPhoneNumber',
-        href: '#phoneNumber',
-        name: 'phoneNumber',
-        text: 'Enter a telephone number, like 01277 960 001, 07364 900 982 or +44 808 157 0192',
-      },
       {
         errorId: 'invalidLocalPoliceFax',
         href: '#faxNumber',
