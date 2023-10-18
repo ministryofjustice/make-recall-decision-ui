@@ -9,11 +9,15 @@
 {% else %}
     <h2 class="govuk-heading-m text-uppercase"><strong>Unknown</strong> MAPPA</h2>
     <p class="govuk-body-m govuk-!-margin-bottom-2">Multi-agency public protection arrangements</p>
-    <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">
-        {% if params.mappa.error == 'NOT_FOUND' %}
-            This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.
-        {% else %}
-            Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.
-        {% endif %}</p>
+    <p class="govuk-body-m govuk-!-margin-bottom-0">
+            No MAPPA data found in NDelius.<br>
+            If you think this is wrong:<br>
+            <br>
+            1. Check and update NDelius.<br>
+            2. Refresh this page to see your update.<br>
+            <br>
+            You can continue with the Part A<br>
+            if you still get this error. Update the<br>
+            MAPPA section manually.<br></p>
 {% endif %}
 </div>
