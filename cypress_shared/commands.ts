@@ -30,6 +30,12 @@ Cypress.Commands.add('fillInputByName', (name, text, opts = {}) => {
   )
 })
 
+Cypress.Commands.add('fillTextareaByName', (name, text, opts = {}) => {
+  cy.get(`textarea[name='${name}']`).then($input =>
+    opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text)
+  )
+})
+
 Cypress.Commands.add('getTaskStatus', (taskName, opts = {}) => {
   cy.get(opts.parent || 'body')
     .contains('li', taskName)

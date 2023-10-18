@@ -1,0 +1,38 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                <p class="govuk-body">Explain your decision.  This will be recorded in NDelius. Include details about:
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>who has been involved in the decision</li>
+                        <li>summary of the risk right now - include protective factors</li>
+                        <li>how risk will be managed in the community</li>
+                        <li>follow-up actions - include review dates and people responsible</li>
+                    </ul>
+                </p>
+
+                {{ govukTextarea({
+                    name: "spoNoRecallRationale",
+                    id: "spoNoRecallRationale",
+                    value: inputDisplayValues.spoNoRecallRationale,
+                    errorMessage: errorMessage(errors.spoNoRecallRationale)
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

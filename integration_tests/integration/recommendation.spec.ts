@@ -984,7 +984,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Consider a recall')
     })
 
-    it('present SPO Rationale and return to task list', () => {
+    it('enter SPO Rationale and return to task list', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
@@ -1004,6 +1004,46 @@ context('Make a recommendation', () => {
       cy.fillInput('Explain your decision', 'some text')
 
       cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Consider a recall')
+    })
+
+    it('enter SPO Rationale (no Recall)', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-task-list-consider-recall`)
+
+      cy.clickLink('Explain the decision')
+
+      cy.url().should('contain', 'spo-rationale')
+
+      cy.pageHeading().should('equal', 'Explain the decision')
+
+      cy.selectRadio('Explain the decision', 'Do not recall - send a decision not to recall letter')
+
+      cy.clickButton('Continue')
+
+      cy.url().should('contain', 'spo-why-no-recall')
+
+      cy.pageHeading().should('equal', 'Why do you think Paula Smith should not be recalled?')
+
+      cy.fillTextareaByName('spoNoRecallRationale', 'some text')
+
+      cy.clickButton('Continue')
+
+      cy.url().should('contain', 'spo-senior-manager-endorsement')
+
+      cy.pageHeading().should('equal', 'Senior manager endorsement')
+
+      cy.clickLink('Continue')
+
+      cy.url().should('contain', 'spo-task-list-consider-recall')
 
       cy.pageHeading().should('equal', 'Consider a recall')
     })
@@ -1041,6 +1081,8 @@ context('Make a recommendation', () => {
       cy.selectCheckboxes('Record the decision in NDelius', [
         'Contains sensitive information - do not show to the person on probation',
       ])
+
+      cy.task('updateStatuses', { statusCode: 200, response: [] })
 
       cy.clickButton('Send to NDelius')
 
@@ -1085,6 +1127,8 @@ context('Make a recommendation', () => {
       cy.selectCheckboxes('Record the decision in NDelius', [
         'Contains sensitive information - do not show to the person on probation',
       ])
+
+      cy.task('updateStatuses', { statusCode: 200, response: [] })
 
       cy.clickButton('Send to NDelius')
 

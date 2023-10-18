@@ -10,7 +10,7 @@ describe('get', () => {
   it('present without data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
         statuses: [],
       },
     })
@@ -31,7 +31,7 @@ describe('get', () => {
   it('present without data while recall has been decided', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
         statuses: [{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }],
       },
     })
@@ -44,7 +44,7 @@ describe('get', () => {
   it('present without data while spo has signed', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
         statuses: [{ name: STATUSES.SPO_SIGNED, active: true }],
       },
     })
@@ -57,7 +57,7 @@ describe('get', () => {
   it('present previous data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: 'some reason', spoNoRecallRationale: undefined },
+        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: 'some reason' },
         statuses: [],
       },
     })
@@ -87,7 +87,7 @@ describe('get', () => {
             errorId: 'missingSpoRecallRationale',
           },
         },
-        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: undefined, spoNoRecallRationale: undefined },
+        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: undefined },
         statuses: [],
       },
     })
@@ -168,7 +168,6 @@ describe('post', () => {
         crn: 'X098092',
         spoRecallType: 'NO_RECALL',
         spoRecallRationale: '',
-        spoNoRecallRationale: 'another good reason',
       },
     })
 
@@ -182,7 +181,6 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         spoRecallType: 'NO_RECALL',
-        spoRecallRationale: 'another good reason',
         explainTheDecision: true,
       },
       featureFlags: {},
@@ -241,35 +239,6 @@ describe('post', () => {
         href: '#spoRecallRationale',
         invalidParts: undefined,
         name: 'spoRecallRationale',
-        text: 'There is a problem. You must explain your decision',
-        values: undefined,
-      },
-    ])
-  })
-
-  it('post with invalid data - no no-recall rationale', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const req = mockReq({
-      originalUrl: '/recommendations/123/spo-rationale',
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        spoRecallType: 'NO_RECALL',
-        spoRecallRationale: '',
-        spoNoRecallRationale: '',
-      },
-    })
-
-    await spoRecallRationaleController.post(req, res, mockNext())
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/spo-rationale`)
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'missingSpoNoRecallRationale',
-        href: '#spoNoRecallRationale',
-        invalidParts: undefined,
-        name: 'spoNoRecallRationale',
         text: 'There is a problem. You must explain your decision',
         values: undefined,
       },
