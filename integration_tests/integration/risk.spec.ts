@@ -105,12 +105,27 @@ context('Risk page', () => {
     )
     cy.getElement('Unknown RoSH').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
-    cy.getElement(
-      'This information cannot be retrieved from NDelius. Double-check NDelius as it might be out of date.',
-      {
-        parent: '[data-qa="mappa"]',
-      }
-    ).should('exist')
+    cy.getElement('No MAPPA data found in NDelius.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('If you think this is wrong:', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('1. Check and update NDelius.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('2. Refresh this page to see your update.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('You can continue with the Part A', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('if you still get this error. Update the', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('MAPPA section manually.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
   })
 
   it('shows messages if an error occurs fetching RoSH / MAPPA / predictor score data', () => {
@@ -132,7 +147,25 @@ context('Risk page', () => {
     cy.getElement('Unknown RoSH').should('exist')
     cy.getElement('This information cannot be retrieved from OASys.').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
-    cy.getElement('Something went wrong. Sorry, MAPPA data is not available at the moment. Try again later.', {
+    cy.getElement('No MAPPA data found in NDelius.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('If you think this is wrong:', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('1. Check and update NDelius.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('2. Refresh this page to see your update.', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('You can continue with the Part A', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('if you still get this error. Update the', {
+      parent: '[data-qa="mappa"]',
+    }).should('exist')
+    cy.getElement('MAPPA section manually.', {
       parent: '[data-qa="mappa"]',
     }).should('exist')
   })
