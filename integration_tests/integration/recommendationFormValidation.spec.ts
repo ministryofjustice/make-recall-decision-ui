@@ -450,7 +450,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoRecallType',
-      errorText: 'There is a problem. Select whether you have decided to recall or made a decision not to recall',
+      errorText: 'Select whether you have decided to recall or made a decision not to recall',
     })
   })
   it('SPO rationale - Yes', () => {
@@ -462,7 +462,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoRecallRationale',
-      errorText: 'There is a problem. You must explain your decision',
+      errorText: 'You must explain your decision',
     })
   })
   it('SPO rationale - No', () => {
@@ -473,7 +473,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoNoRecallRationale',
-      errorText: 'There is a problem. You must explain your decision',
+      errorText: 'You must explain your decision',
     })
   })
   it('SPO countersignature', () => {
