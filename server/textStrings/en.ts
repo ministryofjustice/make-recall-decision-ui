@@ -1,10 +1,9 @@
 export const strings: Record<string, Record<string, string>> = {
   errors: {
-    noSpoRecallTypeSelected:
-      'There is a problem. Select whether you have decided to recall or made a decision not to recall',
-    missingSpoRecallRationale: 'There is a problem. You must explain your decision',
+    noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
+    missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
-    missingSpoNoRecallRationale: 'There is a problem. You must explain your decision',
+    missingSpoNoRecallRationale: 'You must explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
     missingCrn: 'Enter a Case Reference Number (CRN)',

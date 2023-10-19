@@ -23,13 +23,11 @@ function get(req: Request, res: Response, next: NextFunction) {
     recallDecided,
     inputDisplayValues: {
       errors: res.locals.errors,
-      spoRecallType: res.locals.errors?.spoRecallType ? '' : recommendation.spoRecallType,
+      spoRecallType: res.locals.unsavedValues?.spoRecallType
+        ? res.locals.unsavedValues?.spoRecallType
+        : recommendation.spoRecallType,
       spoRecallRationale:
         res.locals.errors?.spoRecallRationale || recommendation.spoRecallType !== 'RECALL'
-          ? ''
-          : recommendation.spoRecallRationale,
-      spoNoRecallRationale:
-        res.locals.errors?.spoNoRecallRationale || recommendation.spoRecallType !== 'NO_RECALL'
           ? ''
           : recommendation.spoRecallRationale,
     },
@@ -73,6 +71,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (errors.length > 0) {
     req.session.errors = errors
+    req.session.unsavedValues = {
+      spoRecallType,
+      spoRecallRationale,
+    }
     return res.redirect(303, req.originalUrl)
   }
 

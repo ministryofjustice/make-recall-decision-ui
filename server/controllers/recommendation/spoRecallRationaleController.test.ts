@@ -21,7 +21,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'spoRecallRationale' })
     expect(res.locals.inputDisplayValues).toEqual({
       errors: undefined,
-      spoNoRecallRationale: '',
       spoRecallRationale: '',
       spoRecallType: undefined,
     })
@@ -64,7 +63,6 @@ describe('get', () => {
     await spoRecallRationaleController.get(mockReq(), res, mockNext())
     expect(res.locals.inputDisplayValues).toEqual({
       errors: undefined,
-      spoNoRecallRationale: '',
       spoRecallRationale: 'some reason',
       spoRecallType: 'RECALL',
     })
@@ -87,7 +85,10 @@ describe('get', () => {
             errorId: 'missingSpoRecallRationale',
           },
         },
-        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: undefined },
+        unsavedValues: {
+          spoRecallType: 'NO_RECALL',
+        },
+        recommendation: { spoRecallType: 'NO_RECALL', spoRecallRationale: undefined },
         statuses: [],
       },
     })
@@ -108,9 +109,8 @@ describe('get', () => {
           errorId: 'missingSpoRecallRationale',
         },
       },
-      spoNoRecallRationale: '',
       spoRecallRationale: '',
-      spoRecallType: 'RECALL',
+      spoRecallType: 'NO_RECALL',
     })
   })
 })
@@ -210,7 +210,7 @@ describe('post', () => {
         href: '#spoRecallType',
         invalidParts: undefined,
         name: 'spoRecallType',
-        text: 'There is a problem. Select whether you have decided to recall or made a decision not to recall',
+        text: 'Select whether you have decided to recall or made a decision not to recall',
         values: undefined,
       },
     ])
@@ -226,7 +226,6 @@ describe('post', () => {
         crn: 'X098092',
         spoRecallType: 'RECALL',
         spoRecallRationale: '',
-        spoNoRecallRationale: '',
       },
     })
 
@@ -239,9 +238,13 @@ describe('post', () => {
         href: '#spoRecallRationale',
         invalidParts: undefined,
         name: 'spoRecallRationale',
-        text: 'There is a problem. You must explain your decision',
+        text: 'You must explain your decision',
         values: undefined,
       },
     ])
+    expect(req.session.unsavedValues).toEqual({
+      spoRecallType: 'RECALL',
+      spoRecallRationale: '',
+    })
   })
 })

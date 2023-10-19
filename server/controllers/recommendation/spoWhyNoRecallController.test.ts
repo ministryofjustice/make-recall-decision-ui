@@ -138,7 +138,7 @@ describe('post', () => {
         href: '#spoNoRecallRationale',
         invalidParts: undefined,
         name: 'spoNoRecallRationale',
-        text: 'There is a problem. You must explain your decision',
+        text: 'You must explain your decision',
         values: undefined,
       },
     ])
