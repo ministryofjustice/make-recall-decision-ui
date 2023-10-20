@@ -80,11 +80,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const valuesToSave: Record<string, unknown> = {
     spoRecallType,
-    explainTheDecision: true,
   }
 
   if (spoRecallType === 'RECALL') {
     valuesToSave.spoRecallRationale = spoRecallRationale
+    valuesToSave.explainTheDecision = true
   }
 
   await updateRecommendation({

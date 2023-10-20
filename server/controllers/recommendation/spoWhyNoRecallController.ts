@@ -53,6 +53,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     valuesToSave: {
       spoRecallRationale: spoNoRecallRationale,
+      explainTheDecision: true,
     },
     token,
     featureFlags: flags,

@@ -109,6 +109,7 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
+        explainTheDecision: true,
         spoRecallRationale: 'a good reason',
       },
       featureFlags: {},
