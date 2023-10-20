@@ -181,7 +181,6 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         spoRecallType: 'NO_RECALL',
-        explainTheDecision: true,
       },
       featureFlags: {},
     })
