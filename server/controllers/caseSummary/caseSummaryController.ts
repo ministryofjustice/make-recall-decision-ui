@@ -52,6 +52,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   let recommendationButton: RecommendationButton = { display: false }
 
+  res.locals.user.hasPpcsRole = user.roles.includes('ROLE_MARD_PPCS')
   if (recommendationId) {
     // this will be true when the SPO is reviewing the case during the SPO consider recall flow.
     pageUrlBase = `/recommendations/${recommendationId}/review-case/${normalizedCrn}/`

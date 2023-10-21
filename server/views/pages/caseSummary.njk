@@ -50,7 +50,7 @@
                          data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
                 </div>
                 <div class='flex__item-no-shrink'>
-                    {% if recommendationButton.display %}
+                    {% if recommendationButton.display and not user.hasPpcsRole  %}
                     {% if recommendationButton.post %}
                     <form novalidate method="post">
                         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

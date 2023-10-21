@@ -84,7 +84,7 @@ describe('get', () => {
     expect(raiseWarningBannerEvents).toHaveBeenCalledWith(
       1,
       true,
-      { roles: ['ROLE_MAKE_RECALL_DECISION'], token: 'token', username: 'Dave' },
+      { hasPpcsRole: false, roles: ['ROLE_MAKE_RECALL_DECISION'], token: 'token', username: 'Dave' },
       'A1234AB',
       {}
     )
