@@ -1,6 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles.recallType, hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ backLink() }}
@@ -13,24 +13,26 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
-                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
+
 
                 {{ govukRadios({
-                    idPrefix: "isThisAnEmergencyRecall",
-                    name: "isThisAnEmergencyRecall",
+                    idPrefix: "recallType",
+                    name: "recallType",
                     fieldset: {
                         legend: {
-                            text: pageHeadings[page.id],
+                            text: pageHeadings.recallType,
                             classes: "govuk-fieldset__legend--l",
                             isPageHeading: true
                         }
                     },
+                    hint: {
+                        text: 'You’ll complete a Part A or write a decision not to recall letter after you’ve confirmed your recommendation.'
+                    },
                     items: radioCheckboxItems({
-                        items: formOptions.yesNo,
+                        items: formOptions.recallTypeExtended,
                         currentValues: inputDisplayValues.value
                     }),
-                    errorMessage: errorMessage(errors.isThisAnEmergencyRecall)
+                    errorMessage: errorMessage(errors.recallType)
                 }) }}
                 {{ formSubmitButton() }}
             </form>

@@ -32,6 +32,6 @@ describe('get', () => {
       },
     })
     await discussWithManagerController.get(mockReq(), res, mockNext())
-    expect(res.locals.nextPageId).toEqual('recall-type-indeterminate')
+    expect(res.locals.nextPageId).toEqual('recall-type-extended')
   })
 })
