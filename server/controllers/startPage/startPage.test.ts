@@ -22,9 +22,6 @@ function createResWithToken(
   return {
     token: createToken(authorities),
     locals: {
-      flags: {
-        flagProbationAdmin: 'true',
-      },
       user: {
         token: createToken(authorities),
       },
