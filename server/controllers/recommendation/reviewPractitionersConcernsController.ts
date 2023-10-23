@@ -3,11 +3,22 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { RecommendationDecorated } from '../../@types/api'
 import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decision-api'
+import logger from '../../../logger'
+import { isDefined } from '../../utils/utils'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
   if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
     const { selected, allOptions } = recommendation.licenceConditionsBreached.standardLicenceConditions
-    return selected.map((s: string) => allOptions.find((o: Record<string, string>) => o.value === s).text)
+    return selected
+      .map((s: string) => {
+        const option = allOptions.find((o: Record<string, string>) => o.value === s)
+        if (option) {
+          return option.text
+        }
+        logger.warn(`Delius selected value not found amongst available options: ${s}`)
+        return undefined
+      })
+      .filter(isDefined)
   }
 
   if (
@@ -15,9 +26,15 @@ function extractStandardLicenceConditions(recommendation: RecommendationDecorate
     recommendation.cvlLicenceConditionsBreached.standardLicenceConditions
   ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.standardLicenceConditions
-    return selected.map((s: string) => allOptions.find((o: Record<string, string>) => o.code === s).text)
+    return selected.map((s: string) => {
+      const option = allOptions.find((o: Record<string, string>) => o.code === s)
+      if (option) {
+        return option.text
+      }
+      logger.warn(`CVL standard selected value not found amongst available options: ${s}`)
+      return undefined
+    })
   }
-
   return []
 }
 
@@ -29,11 +46,15 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
     const { selectedOptions, allOptions } = recommendation.licenceConditionsBreached.additionalLicenceConditions
     return selectedOptions.map((s: { mainCatCode: string; subCatCode: string }) => {
       const option = allOptions.find(o => o.mainCatCode === s.mainCatCode && o.subCatCode === s.subCatCode)
-      return {
-        title: option.title,
-        details: option.details,
-        note: option.note,
+      if (option) {
+        return {
+          title: option.title,
+          details: option.details,
+          note: option.note,
+        }
       }
+      logger.warn(`Delius additional selected value not found amongst available options: ${JSON.stringify(s)}`)
+      return undefined
     })
   }
 
@@ -42,11 +63,18 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
     recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions
   ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions
-    return selected.map((s: string) => {
-      return {
-        title: allOptions.find((o: Record<string, string>) => o.code === s).text,
-      }
-    })
+    return selected
+      .map((s: string) => {
+        const option = allOptions.find((o: Record<string, string>) => o.code === s)
+        if (option) {
+          return {
+            title: option.text,
+          }
+        }
+        logger.warn(`CVL additional selected value not found amongst available options: ${s}`)
+        return undefined
+      })
+      .filter(isDefined)
   }
 
   return {
@@ -61,7 +89,16 @@ function extractBespokeLicenceConditions(recommendation: RecommendationDecorated
     recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions
   ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions
-    return selected.map((s: string) => allOptions.find((o: Record<string, string>) => o.code === s).text)
+    return selected
+      .map((s: string) => {
+        const option = allOptions.find((o: Record<string, string>) => o.code === s)
+        if (option) {
+          return option.text
+        }
+        logger.warn(`CVL bespoke selected value not found amongst available options: ${s}`)
+        return undefined
+      })
+      .filter(isDefined)
   }
 
   return []
@@ -73,15 +110,20 @@ function extractAlternativeTried(recommendation: RecommendationDecorated) {
     allOptions: [],
   }
 
-  return selected.map((s: { value: string; details: string }) => {
-    const option = allOptions.find((o: Record<string, string>) => o.value === s.value)
-
-    return {
-      value: option.value,
-      text: option.text,
-      details: s.details,
-    }
-  })
+  return selected
+    .map((s: { value: string; details: string }) => {
+      const option = allOptions.find((o: Record<string, string>) => o.value === s.value)
+      if (option) {
+        return {
+          value: option.value,
+          text: option.text,
+          details: s.details,
+        }
+      }
+      logger.warn(`Alternatives tried selected value not found amongst available options: ${JSON.stringify(s)}`)
+      return undefined
+    })
+    .filter(isDefined)
 }
 
 async function get(req: Request, res: Response, next: NextFunction) {
