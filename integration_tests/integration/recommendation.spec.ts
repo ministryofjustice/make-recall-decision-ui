@@ -181,6 +181,69 @@ context('Make a recommendation', () => {
       cy.clickLink('Continue')
 
       cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.url().should('contain', 'recall-type-indeterminate')
+
+      cy.getElement('Emergency recall').should('exist')
+    })
+
+    it('present discuss-with-manager', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null, isIndeterminateSentence: false },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
+
+      cy.clickLink('Continue to make a recommendation')
+
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.url().should('contain', 'recall-type-extended')
+
+      cy.getElement('No recall - send a decision not to recall letter').should('exist')
+    })
+
+    it('present what do you recommend for extended sentence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          recallConsideredList: null,
+          isIndeterminateSentence: false,
+        },
+      })
+
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-extended`)
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.selectRadio('What do you recommend?', 'No recall - send a decision not to recall letter')
+
+      cy.getElement('No recall - send a decision not to recall letter').should('exist')
+
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          recallConsideredList: null,
+          isIndeterminateSentence: false,
+          recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
+        },
+      })
+
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
 
     it('present task-list for all items completed', () => {
@@ -493,7 +556,22 @@ context('Make a recommendation', () => {
     })
 
     it('lists offence details', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+
+      cy.task('getCase', {
+        sectionId: 'licence-conditions',
+        statusCode: 200,
+        response: {
+          activeConvictions: [
+            {
+              sentence: { isCustodial: true, custodialStatusCode: 'B' },
+              licenceConditions: [],
+            },
+          ],
+        },
+      })
+
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getDefinitionListValue('Main offence').should('equal', 'Burglary')

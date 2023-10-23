@@ -73,6 +73,7 @@ import roshController from '../controllers/recommendation/roshController'
 import previewPartAController from '../controllers/recommendation/previewPartAController'
 import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoRecallController'
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
+import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 
 const recommendations = Router()
 
@@ -142,6 +143,9 @@ ppRouteBuilder.post('what-led', whatLedController.post)
 
 ppRouteBuilder.get('recall-type-indeterminate', recallTypeIndeterminateController.get)
 ppRouteBuilder.post('recall-type-indeterminate', recallTypeIndeterminateController.post)
+
+ppRouteBuilder.get('recall-type-extended', recallTypeExtendedController.get)
+ppRouteBuilder.post('recall-type-extended', recallTypeExtendedController.post)
 
 ppRouteBuilder.get('fixed-licence', fixedTermLicenceConditionsController.get)
 ppRouteBuilder.post('fixed-licence', fixedTermLicenceConditionsController.post)

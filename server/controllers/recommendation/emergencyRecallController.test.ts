@@ -171,4 +171,59 @@ describe('post', () => {
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
+  it('post with valid data for FIXED_TERM', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        recallType: 'FIXED_TERM',
+        isThisAnEmergencyRecall: 'NO',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+
+    await emergencyRecallController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/fixed-licence`)
+  })
+  it('post with valid data for extended sentence', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        recallType: 'STANDARD',
+        isExtendedSentence: true,
+        isThisAnEmergencyRecall: 'NO',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+
+    await emergencyRecallController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/indeterminate-details`)
+  })
 })

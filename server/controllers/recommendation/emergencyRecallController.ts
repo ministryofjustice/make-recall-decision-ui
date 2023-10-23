@@ -34,7 +34,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { recallType, crn } = req.body
+  const { recallType, crn, isExtendedSentence } = req.body
   const { errors, valuesToSave, unsavedValues } = await validateEmergencyRecall({
     requestBody: req.body,
     recommendationId,
@@ -55,7 +55,16 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = recallType === 'FIXED_TERM' ? 'fixed-licence' : 'sensitive-info'
+  let nextPageId = 'sensitive-info'
+
+  if (recallType === 'FIXED_TERM') {
+    nextPageId = 'fixed-licence'
+  }
+
+  if (recallType === 'STANDARD' && isExtendedSentence) {
+    nextPageId = 'indeterminate-details'
+  }
+
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
 
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

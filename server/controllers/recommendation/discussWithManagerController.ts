@@ -3,10 +3,13 @@ import { NextFunction, Request, Response } from 'express'
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const nextPageId =
-    recommendation.isIndeterminateSentence || recommendation.isExtendedSentence
-      ? 'recall-type-indeterminate'
-      : 'recall-type'
+  let nextPageId = 'recall-type'
+
+  if (recommendation.isIndeterminateSentence) {
+    nextPageId = 'recall-type-indeterminate'
+  } else if (recommendation.isExtendedSentence) {
+    nextPageId = 'recall-type-extended'
+  }
 
   res.locals = {
     ...res.locals,

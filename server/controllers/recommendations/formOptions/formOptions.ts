@@ -17,6 +17,7 @@ import { roshLevels } from '../rosh/formOptions'
 import { UiListItem } from '../../../@types/pagesForms'
 import { spoRecallTypeEnum } from './spoRecallTypeEnum'
 import { rationaleCheck } from '../rationaleCheck/formOptions'
+import { recallTypeExtended } from '../recallTypeExtended/formOptions'
 
 type FormOptionsType = {
   [key: string]: { value: string; text: string }[]
@@ -27,6 +28,7 @@ export const formOptions: FormOptionsType = {
   rationaleCheck,
   spoRecallTypeEnum,
   recallTypeIndeterminate,
+  recallTypeExtended,
   recallTypeIndeterminateApi,
   standardLicenceConditions,
   custodyStatus,
