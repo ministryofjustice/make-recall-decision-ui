@@ -61,7 +61,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'fixed-licence'
   }
 
-  if (recallType === 'STANDARD' && isExtendedSentence) {
+  if (recallType === 'STANDARD' && isExtendedSentence === 'true') {
     nextPageId = 'indeterminate-details'
   }
 
