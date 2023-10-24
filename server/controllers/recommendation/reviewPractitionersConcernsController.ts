@@ -26,14 +26,16 @@ function extractStandardLicenceConditions(recommendation: RecommendationDecorate
     recommendation.cvlLicenceConditionsBreached.standardLicenceConditions
   ) {
     const { selected, allOptions } = recommendation.cvlLicenceConditionsBreached.standardLicenceConditions
-    return selected.map((s: string) => {
-      const option = allOptions.find((o: Record<string, string>) => o.code === s)
-      if (option) {
-        return option.text
-      }
-      logger.warn(`CVL standard selected value not found amongst available options: ${s}`)
-      return undefined
-    })
+    return selected
+      .map((s: string) => {
+        const option = allOptions.find((o: Record<string, string>) => o.code === s)
+        if (option) {
+          return option.text
+        }
+        logger.warn(`CVL standard selected value not found amongst available options: ${s}`)
+        return undefined
+      })
+      .filter(isDefined)
   }
   return []
 }
@@ -44,18 +46,20 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
     recommendation.licenceConditionsBreached.additionalLicenceConditions
   ) {
     const { selectedOptions, allOptions } = recommendation.licenceConditionsBreached.additionalLicenceConditions
-    return selectedOptions.map((s: { mainCatCode: string; subCatCode: string }) => {
-      const option = allOptions.find(o => o.mainCatCode === s.mainCatCode && o.subCatCode === s.subCatCode)
-      if (option) {
-        return {
-          title: option.title,
-          details: option.details,
-          note: option.note,
+    return selectedOptions
+      .map((s: { mainCatCode: string; subCatCode: string }) => {
+        const option = allOptions.find(o => o.mainCatCode === s.mainCatCode && o.subCatCode === s.subCatCode)
+        if (option) {
+          return {
+            title: option.title,
+            details: option.details,
+            note: option.note,
+          }
         }
-      }
-      logger.warn(`Delius additional selected value not found amongst available options: ${JSON.stringify(s)}`)
-      return undefined
-    })
+        logger.warn(`Delius additional selected value not found amongst available options: ${JSON.stringify(s)}`)
+        return undefined
+      })
+      .filter(isDefined)
   }
 
   if (
