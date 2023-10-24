@@ -105,6 +105,7 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('exist')
+    cy.getElement('Is this an emergency recall?').should('exist')
   })
 
   it('task list - To do - not in custody', () => {
