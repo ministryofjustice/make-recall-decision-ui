@@ -180,6 +180,7 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'FIXED_TERM',
+        isExtendedSentence: 'false',
         isThisAnEmergencyRecall: 'NO',
       },
     })
@@ -207,7 +208,7 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'STANDARD',
-        isExtendedSentence: true,
+        isExtendedSentence: 'true',
         isThisAnEmergencyRecall: 'NO',
       },
     })
