@@ -100,6 +100,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
   }
 
+  if (recommendation.isIndeterminateSentence) {
+    res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'
+  } else if (recommendation.isExtendedSentence) {
+    res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-extended'
+  } else {
+    res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
+  }
+
   res.render(`pages/recommendations/taskList`)
   next()
 }

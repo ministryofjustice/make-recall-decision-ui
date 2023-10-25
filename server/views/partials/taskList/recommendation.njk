@@ -6,8 +6,8 @@
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
                 <a aria-describedby='task-list-status-recallType'
-                href="{{ changeLinkUrl({ pageUrlSlug: 'recall-type-indeterminate' if recommendation.isIndeterminateSentence or recommendation.isExtendedSentence else 'recall-type',
-                urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">What you recommend</a>
+                    href="{{ changeLinkUrl({ pageUrlSlug:  whatDoYouRecommendPageUrlSlug, urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}"
+                    >What you recommend</a>
             </span>
             <span id='task-list-status-recallType'>{{ taskStatus({ hasData: hasData(recommendation.recallType.selected) }) }}</span>
         </li>
