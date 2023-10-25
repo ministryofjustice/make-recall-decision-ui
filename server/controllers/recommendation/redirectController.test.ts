@@ -133,7 +133,7 @@ describe('get', () => {
 
     expect(updateStatuses).not.toHaveBeenCalled()
 
-    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-indeterminate')
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-extended')
     expect(next).toHaveBeenCalled()
   })
 
