@@ -120,6 +120,37 @@ describe('get', () => {
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
     expect(res.locals.isSpo).toEqual(false)
     expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type`)
+  })
+
+  it('present for indeterminate', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const recommendation = { ...recommendationTemplate, isIndeterminateSentence: true }
+    const res = mockRes({
+      locals: {
+        recommendation,
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
+      },
+    })
+    const next = mockNext()
+    await taskListController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
+
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type-indeterminate`)
+  })
+
+  it('present for extended', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const recommendation = { ...recommendationTemplate, isExtendedSentence: true }
+    const res = mockRes({
+      locals: {
+        recommendation,
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
+      },
+    })
+    const next = mockNext()
+    await taskListController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
+
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type-extended`)
   })
 
   it('present - task-list-no-recall if recall type set to NO_RECALL', async () => {
