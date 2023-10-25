@@ -35,7 +35,7 @@ describe('guardRecFlowFromPPCSAccess', () => {
   it('blocks PPCS access to rec flow', () => {
     let req: Request
     const next = jest.fn()
-    const res = createResWithToken({ authorities: ['ROLE_MARD_PPCS'] })
+    const res = createResWithToken({ authorities: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
     const response = guardRecFlowFromPPCSAccess(req, res, next)
     expect(response).toEqual('/inappropriate-error')
   })

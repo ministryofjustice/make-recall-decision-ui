@@ -4,7 +4,7 @@ import config from '../../config'
 import { isBannerDisplayDateRangeValid } from '../../utils/utils'
 
 export enum HMPPS_AUTH_ROLE {
-  PPCS = 'ROLE_MARD_PPCS',
+  PPCS = 'ROLE_MAKE_RECALL_DECISION_PPCS',
 }
 
 export const startPage = async (req: Request, res: Response): Promise<Response | void> => {

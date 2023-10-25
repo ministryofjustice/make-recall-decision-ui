@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import jwtDecode from 'jwt-decode'
 
 export enum HMPPS_AUTH_ROLE {
-  PPCS = 'ROLE_MARD_PPCS',
+  PPCS = 'ROLE_MAKE_RECALL_DECISION_PPCS',
 }
 
 export function guardRecFlowFromPPCSAccess(req: Request, res: Response, next: NextFunction) {

@@ -39,7 +39,7 @@ describe('startPage', () => {
     expect(res.render).toHaveBeenCalledWith('pages/startPage')
   })
   it('with PPCS role', async () => {
-    const res = createResWithToken({ authorities: ['ROLE_MARD_PPCS'] }, { currentPageId: 'startPage' })
+    const res = createResWithToken({ authorities: ['ROLE_MAKE_RECALL_DECISION_PPCS'] }, { currentPageId: 'startPage' })
     await startPage(mockReq(), res)
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
     expect(res.locals.findRecallRequest).toEqual('/find-a-recall-request')
