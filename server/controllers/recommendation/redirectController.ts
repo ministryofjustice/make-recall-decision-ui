@@ -39,8 +39,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   } else if (!isDefined(recallType)) {
     if (isSpoRecordedRationale) {
-      if (recommendation?.isExtendedSentence || recommendation?.isIndeterminateSentence) {
+      if (recommendation?.isIndeterminateSentence) {
         nextPageId = 'recall-type-indeterminate'
+      } else if (recommendation?.isExtendedSentence) {
+        nextPageId = 'recall-type-extended'
       } else {
         nextPageId = 'recall-type'
       }
