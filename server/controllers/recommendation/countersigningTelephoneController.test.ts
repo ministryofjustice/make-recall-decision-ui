@@ -18,6 +18,7 @@ describe('get', () => {
     await countersigningTelephoneController.get(mockReq(), res, next)
 
     expect(res.locals.mode).toEqual('SPO')
+    expect(res.locals.sameSigner).toEqual(false)
     expect(res.locals.page).toEqual({ id: 'countersigningTelephone' })
     expect(res.locals.inputDisplayValues).toEqual({
       details: undefined,
@@ -39,6 +40,7 @@ describe('get', () => {
     await countersigningTelephoneController.get(mockReq(), res, next)
 
     expect(res.locals.mode).toEqual('ACO')
+    expect(res.locals.sameSigner).toEqual(false)
     expect(res.locals.page).toEqual({ id: 'countersigningTelephone' })
     expect(res.locals.inputDisplayValues).toEqual({
       details: undefined,
@@ -83,6 +85,21 @@ describe('get', () => {
     expect(res.locals.inputDisplayValues).toEqual({
       value: '123456789',
     })
+  })
+
+  it('load with same signer', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNED, active: true, createdBy: 'xyz' }])
+    const res = mockRes({
+      locals: {
+        recommendation: {},
+        user: { username: 'xyz' },
+      },
+    })
+    const next = mockNext()
+    await countersigningTelephoneController.get(mockReq(), res, next)
+
+    expect(res.locals.sameSigner).toEqual(true)
+    expect(res.locals.link).toEqual('http://localhost:3000/recommendations/undefined/task-list')
   })
 })
 

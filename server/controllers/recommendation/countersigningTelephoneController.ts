@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals
@@ -11,11 +12,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token: user.token,
   })
 
-  const isSpoSignatureRequested = statuses
+  const spoSignatureRequested = statuses
     .filter(status => status.active)
     .find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
-  const mode = isSpoSignatureRequested ? 'SPO' : 'ACO'
+  const mode = spoSignatureRequested ? 'SPO' : 'ACO'
+
+  const spoSigned = statuses.find(status => status.name === STATUSES.SPO_SIGNED)
+  const sameSigner = !!spoSigned && spoSigned.createdBy === user.username
 
   res.locals = {
     ...res.locals,
@@ -23,6 +27,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'countersigningTelephone',
     },
     mode,
+    sameSigner,
+    link: `${config.domain}/recommendations/${recommendation.id}/task-list`,
     inputDisplayValues: {
       errors: res.locals.errors,
       value: mode === 'SPO' ? recommendation.countersignSpoTelephone : recommendation.countersignAcoTelephone,
