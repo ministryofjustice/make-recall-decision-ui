@@ -18,6 +18,8 @@ import recommendations from './recommendations'
 import { isPreprodOrProd } from '../utils/utils'
 import replaceCurrentRecommendationController from '../controllers/recommendations/replaceCurrentRecommendationController'
 import { personSearchResultsByName } from '../controllers/personSearch/personSearchResultsByName'
+import { findaRecallRequestByCRN } from '../controllers/personSearch/findaRecallRequestByCRN'
+import { findaRecallRequestByName } from '../controllers/personSearch/findaRecallRequestByName'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -32,6 +34,9 @@ export default function routes(router: Router): Router {
     get(routeUrls.flags, getFeatureFlags)
   }
   get(routeUrls.searchByCRN, personSearchByCRN)
+  get(routeUrls.searchByName, personSearchByName)
+  get(routeUrls.findaRecallRequestByCRN, findaRecallRequestByCRN)
+  get(routeUrls.findaRecallRequestByName, findaRecallRequestByName)
   get(routeUrls.searchByName, personSearchByName)
   get(routeUrls.searchResultsByCRN, personSearchResults)
   get(routeUrls.searchResultsByName, personSearchResultsByName)

@@ -16,6 +16,7 @@ export const personSearchResults = async (req: Request, res: Response) => {
   }
 
   const { user, flags } = res.locals
+  res.locals.user.hasPpcsRole = user.roles.includes('ROLE_MAKE_RECALL_DECISION_PPCS')
   const { errors, searchValue, unsavedValues } = validatePersonSearch(crn)
   if (errors) {
     req.session.errors = errors

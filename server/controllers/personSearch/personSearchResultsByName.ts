@@ -17,7 +17,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
     page: req.query.page as string,
   }
   const { user, flags } = res.locals
-
+  res.locals.user.hasPpcsRole = user.roles.includes('ROLE_MAKE_RECALL_DECISION_PPCS')
   const errors = []
   if (isEmptyStringOrWhitespace(lastName) || isInvalidName(lastName)) {
     const errorId = 'missingLastName'

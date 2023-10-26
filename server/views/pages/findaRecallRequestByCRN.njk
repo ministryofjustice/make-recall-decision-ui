@@ -1,0 +1,45 @@
+{% extends "../partials/layout.njk" %}
+
+
+{% set pageTitle = makePageTitle({ pageHeading: "Find a Recall Request" }) %}
+
+{% block content %}
+    {% include '../partials/error-summary.njk' %}
+    <h1 class="govuk-heading-xl">Find a Recall Request</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <nav class="moj-sub-navigation" aria-label="Case summary sections">
+                <ul class="moj-sub-navigation__list">
+                    <li class="moj-sub-navigation__item">
+                        <a class="moj-sub-navigation__link" href="/find-a-recall-request-by-name">Search by name</a>
+                    </li>
+                    <li class="moj-sub-navigation__item">
+                        <a class="moj-sub-navigation__link" aria-current="page" href="/find-a-recall-request-by-crn">Search by case reference number (CRN)</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half-from-desktop">
+            <form action="/search-results-by-crn" method="get" novalidate>
+                {{ govukInput({
+                    id: "crn",
+                    name: "crn",
+                     label: {
+                        text: "Search by Case Reference Number (CRN)",
+                        classes: "govuk-visually-hidden"
+                    },
+                    hint: {
+                        text: 'For example, X123456'
+                    },
+                    errorMessage: errorMessage(errors.crn)
+                }) }}
+                <input type="hidden" name="page" value="1" />
+                <button class="govuk-button" data-module="govuk-button">
+                    Search
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
