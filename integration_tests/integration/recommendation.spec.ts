@@ -1474,6 +1474,27 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Enter your telephone number')
     })
+    it('present notification on telephone entry page if same signer', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [
+          { name: 'SPO_SIGNED', active: true, createdBy: 'USER1' },
+          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+        ],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+
+      cy.clickLink('Senior manager countersignature')
+
+      cy.getElement('You have already countersigned this recall').should('exist')
+
+      cy.getElement('Enter your telephone number').should('exist')
+    })
     it('present task-list with create part A button', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
