@@ -98,6 +98,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     seniorManagerCountersignStyle,
     taskCompleteness: completeness,
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
+    countersignSpoExposition: recommendation.countersignSpoExposition,
   }
 
   if (recommendation.isIndeterminateSentence) {
