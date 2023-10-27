@@ -59,6 +59,18 @@
                             <span id='task-list-status-lineManagerCounterSignature'>{{ statusBadge({ colour: lineManagerCountersignStyle, label: lineManagerCountersignLabel }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
+                            {% if not lineManagerCountersignLink %}
+
+                                <div class="govuk-body">Line manager agrees that:</div>
+                                <ul class='govuk-list govuk-list--bullet'>
+                                    <li>alternatives to recall have been fully explored, if applicable</li>
+                                    <li>the correct recall type has been requested</li>
+                                    <li>I'm satisfied with the quality of the report</li>
+                                    <li>the person on probation is no longer manageable in the community</li>
+                                </ul>
+                                <h3 class="govuk-heading-m">Explanation for their decision</h3>
+                                <p class='govuk-body' data-qa='spo-exposition'>{{ countersignSpoExposition }}</p>
+                            {% endif %}
                             <span class="moj-task-list__task-name">
                             {% if seniorManagerCountersignLink %}
                                 <a aria-describedby='task-list-status-seniorManagerCounterSignature'

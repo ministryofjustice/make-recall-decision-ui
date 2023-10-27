@@ -226,7 +226,7 @@ describe('get', () => {
       { name: STATUSES.SPO_SIGNATURE_REQUESTED, active: false },
       { name: STATUSES.SPO_SIGNED, active: true },
     ])
-    const recommendation = { ...recommendationTemplate }
+    const recommendation = { ...recommendationTemplate, countersignSpoExposition: 'spo reasons' }
     const res = mockRes({
       locals: {
         recommendation,
@@ -248,6 +248,7 @@ describe('get', () => {
     expect(res.locals.seniorManagerCountersignLink).toEqual(true)
     expect(res.locals.seniorManagerCountersignLabel).toEqual('To do')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.countersignSpoExposition).toEqual('spo reasons')
   })
 
   it('present - tasks complete and ACO signature requested', async () => {

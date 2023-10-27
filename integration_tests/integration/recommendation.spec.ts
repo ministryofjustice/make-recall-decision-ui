@@ -1511,6 +1511,20 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Part A created')
     })
+    it('present task-list with spo exposition', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, countersignSpoExposition: 'reasons' },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'ACO_SIGNED', active: true }],
+      })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+
+      cy.getElement({ qaAttr: 'spo-exposition' }).should('have.text', 'reasons')
+    })
 
     it('present countersign exposition while countersigning', () => {
       cy.task('getRecommendation', {
