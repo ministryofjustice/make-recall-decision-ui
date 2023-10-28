@@ -17,10 +17,7 @@ describe('personSearchResults', () => {
   beforeEach(() => {
     res = mockRes({
       token,
-      locals: {
-        user: { username: 'Dave', region: { code: 'N07', name: 'London' }, roles: ['ROLE_MAKE_RECALL_DECISION'] },
-        flags: featureFlags,
-      },
+      locals: { user: { username: 'Dave', region: { code: 'N07', name: 'London' } }, flags: featureFlags },
     })
   })
 
@@ -87,7 +84,7 @@ describe('personSearchResults', () => {
     })
 
     res = mockRes({
-      locals: { user: { username: 'Dave', personSearchResults, roles: ['ROLE_MAKE_RECALL_DECISION'] }, flags: {} },
+      locals: { user: { username: 'Dave' }, flags: {} },
     })
 
     await personSearchResults(req, res)

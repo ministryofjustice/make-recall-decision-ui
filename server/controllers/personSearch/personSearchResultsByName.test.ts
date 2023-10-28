@@ -34,10 +34,7 @@ describe('personSearchResultsByName', () => {
     })
 
     const res = mockRes({
-      locals: {
-        user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'], region: { code: 'N07', name: 'London' } },
-        flags: {},
-      },
+      locals: { user: { username: 'Dave', region: { code: 'N07', name: 'London' } }, flags: {} },
     })
 
     await personSearchResultsByName(req, res)
@@ -73,7 +70,7 @@ describe('personSearchResultsByName', () => {
     })
 
     const res = mockRes({
-      locals: { user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'] }, flags: {} },
+      locals: { user: { username: 'Dave' }, flags: {} },
     })
 
     await personSearchResultsByName(req, res)
@@ -103,7 +100,7 @@ describe('personSearchResultsByName', () => {
     })
 
     const res = mockRes({
-      locals: { user: { username: 'Dave', roles: ['ROLE_MAKE_RECALL_DECISION'] }, flags: {} },
+      locals: { user: { username: 'Dave' }, flags: {} },
     })
 
     await personSearchResultsByName(req, res)

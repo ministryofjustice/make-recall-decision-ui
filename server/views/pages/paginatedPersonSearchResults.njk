@@ -27,8 +27,8 @@
                 <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Case reference number (CRN):</span>
                 <span>{{ crn }}</span>
             </p>
-            {% if user.hasPpcsRole %}
-                <a href="/find-a-recall-request-by-crn" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+            {% if hasPpcsRole %}
+                <a href="/search-by-crn?hasPpcsRole=true" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% else %}
                 <a href="/search-by-crn" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% endif %}
@@ -41,8 +41,8 @@
                 <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>First name:</span>
                 <span>{{ firstName }}</span>
             </p>
-            {% if user.hasPpcsRole %}
-                <a href="/find-a-recall-request-by-name" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+            {% if hasPpcsRole %}
+                <a href="/search-by-name?hasPpcsRole=true" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% else %}
                 <a href="/search-by-name" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% endif %}
@@ -68,28 +68,24 @@
                     {% elseif person.userRestricted %}
                         This is a restricted case
                     {% endif %}
-
-                            {% if user.hasPpcsRole %}
-                                <a href="/search-in-ppud" data-qa='name'>
-                                {% else %}
-                                    <a href='/cases/{{ person.crn }}/overview' data-qa='name'>
-                                    {% endif %}
-
-                                    {% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}
-                                    {% endif %}
-                                </a>
-                            </td>
-                            <td class="govuk-table__cell">{{ person.crn }}</td>
-                            <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: person.dateOfBirth}) }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {{ paginate({
-        href: '/search-results-by-name?firstName=' + firstName + '&lastName='  + lastName,
-        index: page.paging.page + 1,
-        total: page.paging.totalNumberOfPages
+                        {% if hasPpcsRole %}
+                            <a href="/search-in-ppud?hasPpcsRole=true" data-qa='name'>
+                        {% else %}
+                            <a href='/cases/{{ person.crn }}/overview' data-qa='name'>
+                        {% endif %}
+                        {% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell">{{ person.crn }}</td>
+                        <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: person.dateOfBirth}) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {{ paginate({
+            href: '/search-results-by-name?firstName=' + firstName + '&lastName='  + lastName,
+            index: page.paging.page + 1,
+            total: page.paging.totalNumberOfPages
         }) }}
         {% endif %}
-
     {% endblock %}

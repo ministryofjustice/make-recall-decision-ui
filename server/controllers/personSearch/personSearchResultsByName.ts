@@ -11,13 +11,13 @@ import { searchPersons } from '../../data/makeDecisionApiClient'
 const auditService = new AuditService()
 
 export const personSearchResultsByName = async (req: Request, res: Response) => {
-  const { lastName, firstName, page } = {
+  const { hasPpcsRole, lastName, firstName, page } = {
+    hasPpcsRole: req.query.hasPpcsRole as string,
     lastName: req.query.lastName as string,
     firstName: req.query.firstName as string,
     page: req.query.page as string,
   }
   const { user, flags } = res.locals
-  res.locals.user.hasPpcsRole = user.roles.includes('ROLE_MAKE_RECALL_DECISION_PPCS')
   const errors = []
   if (isEmptyStringOrWhitespace(lastName) || isInvalidName(lastName)) {
     const errorId = 'missingLastName'
@@ -49,6 +49,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
   res.locals.persons = []
   res.locals.firstName = firstName
   res.locals.lastName = lastName
+  res.locals.hasPpcsRole = hasPpcsRole
 
   res.locals.page = await searchPersons(user.token, Number(page) - 1, 20, undefined, firstName, lastName)
   res.render('pages/paginatedPersonSearchResults')
