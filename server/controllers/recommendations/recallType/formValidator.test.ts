@@ -31,7 +31,7 @@ describe('validateRecallType', () => {
       })
     })
 
-    it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid fixed term recall selected and fromPageId is task list', async () => {
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid fixed term recall selected and fromPageId is task list and value changed', async () => {
       const requestBody = {
         recallType: 'FIXED_TERM',
         recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
@@ -50,6 +50,19 @@ describe('validateRecallType', () => {
         },
         isThisAnEmergencyRecall: null,
       })
+    })
+
+    it('returns no isThisAnEmergencyRecall if recall type is set to FIXED_TERM and is not changed', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+        originalRecallType: 'FIXED_TERM',
+      }
+      const urlInfoCopy = { ...urlInfo, fromPageId: 'task-list' }
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo: urlInfoCopy })
+      expect(errors).toBeUndefined()
+      expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
     })
 
     it('returns monitoring event data', async () => {
@@ -87,6 +100,18 @@ describe('validateRecallType', () => {
       })
     })
 
+    it('returns no isThisAnEmergencyRecall if recall type is set to STANDARD and is not changed', async () => {
+      const requestBody = {
+        recallType: 'STANDARD',
+        recallTypeDetailsStandard: '<br />I recommend standard recall...',
+        crn: 'X34534',
+        originalRecallType: 'STANDARD',
+      }
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
+      expect(errors).toBeUndefined()
+      expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
+    })
+
     it('returns valuesToSave and no errors if valid no recall selected', async () => {
       const requestBody = {
         recallType: 'NO_RECALL',
@@ -103,6 +128,17 @@ describe('validateRecallType', () => {
         },
         isThisAnEmergencyRecall: null,
       })
+    })
+
+    it('returns no isThisAnEmergencyRecall if recall type is set to NO_RECALL and is not changed', async () => {
+      const requestBody = {
+        recallType: 'NO_RECALL',
+        crn: 'X34534',
+        originalRecallType: 'NO_RECALL',
+      }
+      const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })
+      expect(errors).toBeUndefined()
+      expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
     })
 
     describe('Redirects', () => {

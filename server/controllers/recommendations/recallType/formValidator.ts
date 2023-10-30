@@ -6,10 +6,11 @@ import { EVENTS } from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard } = requestBody
+  const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard, originalRecallType } = requestBody
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
+  const isChanged = recallType !== originalRecallType
   const missingDetailFixedTerm = isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
   const missingDetailStandard = isStandard && !recallTypeDetailsStandard
   const isFromTaskList = urlInfo.fromPageId === 'task-list'
@@ -61,8 +62,18 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
       },
       allOptions: formOptions.recallType,
     },
-    isThisAnEmergencyRecall: isFixedTerm && !isFromTaskList ? false : null,
+    isThisAnEmergencyRecall: false,
   }
+  if (isChanged) {
+    if (isFixedTerm && !isFromTaskList) {
+      valuesToSave.isThisAnEmergencyRecall = false
+    } else {
+      valuesToSave.isThisAnEmergencyRecall = null
+    }
+  } else {
+    delete valuesToSave.isThisAnEmergencyRecall
+  }
+
   // ignore any 'from page', whatever the user selects they'll continue through the flow
   const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
 
