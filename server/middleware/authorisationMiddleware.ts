@@ -6,6 +6,7 @@ import logger from '../../logger'
 export enum HMPPS_AUTH_ROLE {
   SPO = 'ROLE_MAKE_RECALL_DECISION_SPO',
   PO = 'ROLE_MAKE_RECALL_DECISION',
+  PPCS = 'ROLE_MAKE_RECALL_DECISION_PPCS',
 }
 
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
@@ -19,6 +20,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
       }
       res.locals.user.roles = roles
       res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
+      res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
       if (res.locals.env === 'PRE-PRODUCTION') {
         logger.info(`User roles: ${JSON.stringify(roles)} for path: ${req.path}`)
       }

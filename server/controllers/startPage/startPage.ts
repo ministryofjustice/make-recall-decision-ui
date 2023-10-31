@@ -16,7 +16,7 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
   res.locals.user.roles = roles
   res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
   if (res.locals.user.hasPpcsRole) {
-    res.locals.findRecallRequest = '/find-a-recall-request' // TODO !!
+    res.locals.findRecallRequest = '/search-by-name?hasPpcsRole=true'
     res.render('pages/startPPCS')
   } else {
     res.locals.searchEndpoint = '/search-by-name'
