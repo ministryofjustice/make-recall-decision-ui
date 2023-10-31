@@ -5,30 +5,16 @@
 
 {% block content %}
     {% include '../partials/error-summary.njk' %}
-    {% if user.hasPpcsRole %}
-        <h1 class="govuk-heading-xl">Find a Recall Request</h1>
-    {% else %}
-        <h1 class="govuk-heading-xl">Search for a person on probation</h1>
-    {% endif %}
+    <h1 class="govuk-heading-xl">Search for a person on probation</h1>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <nav class="moj-sub-navigation" aria-label="Case summary sections">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                    <input type="hidden" name="page" value="1" />
-                    {% if hasPpcsRole %}
-                        <a class="moj-sub-navigation__link" href="/search-by-name?hasPpcsRole=true">Search by name</a>
-                    {% else %}
                         <a class="moj-sub-navigation__link" aria-current="page" href="/search-by-name">Search by name</a>
-                    {% endif %}
                     </li>
                     <li class="moj-sub-navigation__item">
-                    <input type="hidden" name="page" value="1" />
-                    {% if hasPpcsRole %}
-                        <a class="moj-sub-navigation__link" href="/search-by-crn?hasPpcsRole=true">Search by case reference number (CRN)</a>
-                    {% else %}
                         <a class="moj-sub-navigation__link" href="/search-by-crn">Search by case reference number (CRN)</a>
-                    {% endif %}   
                     </li>
                 </ul>
             </nav>
@@ -36,6 +22,7 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half-from-desktop">
+
             <form action="/search-results-by-name" method="get" novalidate>
                  {{ govukInput({
                     label: {
@@ -58,9 +45,6 @@
                     errorMessage: errorMessage(errors.firstName)
                  }) }}
                 <input type="hidden" name="page" value="1" />
-                {% if hasPpcsRole %}
-                    <input type="hidden" name="hasPpcsRole" value="true" />
-                {% endif %} 
                 <button class="govuk-button" data-module="govuk-button">
                     Search
                 </button>
