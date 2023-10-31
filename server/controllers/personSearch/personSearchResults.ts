@@ -10,11 +10,11 @@ import { EVENTS } from '../../utils/constants'
 const auditService = new AuditService()
 
 export const personSearchResults = async (req: Request, res: Response) => {
-  const { hasPpcsRole, crn, page } = {
-    hasPpcsRole: req.query.hasPpcsRole as string,
+  const { crn, page } = {
     crn: req.query.crn as string,
     page: req.query.page as string,
   }
+
   const { user, flags } = res.locals
   const { errors, searchValue, unsavedValues } = validatePersonSearch(crn)
   if (errors) {
@@ -23,7 +23,6 @@ export const personSearchResults = async (req: Request, res: Response) => {
     return res.redirect(303, routeUrls.searchByCRN)
   }
   res.locals.crn = searchValue
-  res.locals.hasPpcsRole = hasPpcsRole
   res.locals.page = await searchPersons(user.token, Number(page) - 1, 20, searchValue, undefined, undefined)
   res.render('pages/paginatedPersonSearchResults')
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue, region: user.region }, flags)

@@ -40,9 +40,8 @@ describe('startPage', () => {
   })
   it('with PPCS role', async () => {
     const res = createResWithToken({ authorities: ['ROLE_MAKE_RECALL_DECISION_PPCS'] }, { currentPageId: 'startPage' })
-    res.locals.user.hasPpcsRole = true
     await startPage(mockReq(), res)
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
-    expect(res.locals.findRecallRequest).toEqual('/search-by-name?hasPpcsRole=true')
+    expect(res.locals.findRecallRequest).toEqual('/find-a-recall-request')
   })
 })
