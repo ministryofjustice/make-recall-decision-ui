@@ -70,7 +70,7 @@
                         This is a restricted case
                     {% endif %}
                     {% if hasPpcsRole %}
-                        <a href="/search-in-ppud?hasPpcsRole=true" data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
+                        <a href="/search-in-ppud?hasPpcsRole=true&crn={{ person.crn }}" data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
                     {% else %}
                         <a href='/cases/{{ person.crn }}/overview' data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
                     {% endif %}
