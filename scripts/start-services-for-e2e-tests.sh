@@ -47,8 +47,8 @@ readonly API_DIR="${SCRIPT_DIR}/../../${API_NAME}"
 
 if [[ "${RUN_DOCKER_COMPOSE_PULL}" == "true" ]]; then
   printf "\n\nRunning 'docker compose pull' on all services...\n\n"
-  docker-compose -f "${UI_DIR}/docker-compose.yml" pull
-  docker-compose -f "${API_DIR}/docker-compose.yml" pull
+  docker compose -f "${UI_DIR}/docker-compose.yml" pull
+  docker compose -f "${API_DIR}/docker-compose.yml" pull
 fi
 
 if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
@@ -62,14 +62,14 @@ fi
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev
-docker-compose build
-docker-compose up -d
+docker compose build
+docker compose up -d
 popd
 
 pushd "${UI_DIR}"
 printf "\n\nBuilding/starting UI components...\n\n"
-docker-compose build
-docker-compose up -d
+docker compose build
+docker compose up -d
 popd
 
 function wait_for {
