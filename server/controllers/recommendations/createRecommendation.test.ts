@@ -3,9 +3,12 @@ import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { createRecommendationController } from './createRecommendation'
 import { createRecommendation } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { getCaseSection } from '../caseSummary/getCaseSection'
+import { CaseSectionId } from '../../@types/pagesForms'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
+jest.mock('../caseSummary/getCaseSection')
 
 const crn = ' A1234AB '
 let res: Response
@@ -20,8 +23,28 @@ describe('createRecommendationController', () => {
     })
   })
 
+  it('should redirect to already-existing if recommendation exists', async () => {
+    ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { activeRecommendation: { recommendationId: '123' } },
+    })
+
+    const req = mockReq({ body: { crn } })
+    await createRecommendationController(req, res)
+
+    expect(getCaseSection).toHaveBeenCalledWith('overview' as CaseSectionId, 'A1234AB', 'token', undefined, req.query, {
+      flagDomainEventRecommendationStarted: true,
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/already-existing')
+    expect(createRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toBeUndefined()
+  })
+
   it('should redirect if successful', async () => {
     ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({ caseSummary: { activeRecommendation: null } })
+
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
     expect(createRecommendation).toHaveBeenCalledWith({ crn: 'A1234AB' }, token, {

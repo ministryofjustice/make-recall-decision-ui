@@ -61,6 +61,25 @@ context('Make a recommendation', () => {
       cy.getElement('An error occurred creating a new recommendation').should('exist')
     })
 
+    it('shows a warning page if "Make a recommendation" is submitted while another recommendation exists', () => {
+      const caseResponse = {
+        ...getCaseOverviewResponse,
+      }
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'There is already a recommendation for Paula Smith')
+
+      cy.clickLink('Update recommendation')
+      cy.pageHeading().should('equal', 'Create a Part A form')
+    })
+
     it('update button links to Part A task list if recall is set', () => {
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
       cy.task('getRecommendation', {
