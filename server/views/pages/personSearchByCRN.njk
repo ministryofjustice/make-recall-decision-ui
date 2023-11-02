@@ -5,7 +5,8 @@
 {% block content %}
     {% include '../partials/error-summary.njk' %}
     {% if hasPpcsRole %}
-        <h1 class="govuk-heading-xl">Find a Recall Request</h1>
+        <h1 class="govuk-heading-xl-no-bottom-margin">Find a Recall Request</h1>
+        <p class='govuk-body'>Search the consider a recall service to find a recall request.</p>
     {% else %}
         <h1 class="govuk-heading-xl">Search for a person on probation</h1>
     {% endif %}

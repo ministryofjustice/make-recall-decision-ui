@@ -4,6 +4,19 @@
   margin: 1px;
 }
 
+.govuk-heading-xl-no-bottom-margin {
+  color:#0b0c0c;
+  font-family:"GDS Transport",arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-weight:700;
+  font-size:48px;
+  line-height:1.09375;
+  display:block;
+  margin-top:0;
+  margin-bottom:10px
+}
+
 #part-a-confirmaton-text {
   white-space: pre;
   margin: 0px;
