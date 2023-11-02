@@ -74,6 +74,7 @@ import previewPartAController from '../controllers/recommendation/previewPartACo
 import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoRecallController'
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
+import alreadyExisting from '../controllers/recommendation/alreadyExisting'
 
 const recommendations = Router()
 
@@ -96,6 +97,8 @@ RouteBuilder.build(recommendations)
 const ppRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles([HMPPS_AUTH_ROLE.PO])
   .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
+
+ppRouteBuilder.get('already-existing', alreadyExisting.get)
 
 ppRouteBuilder.get('task-list-consider-recall', taskListConsiderRecallController.get)
 ppRouteBuilder.post('task-list-consider-recall', taskListConsiderRecallController.post)

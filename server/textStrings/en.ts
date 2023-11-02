@@ -169,5 +169,6 @@ export const strings: Record<string, Record<string, string>> = {
     previewNoRecallLetter: 'Preview the decision not to recall letter',
     countersignConfirmation: 'Part A countersigned',
     previewPartA: 'Preview Part A',
+    alreadyExisting: 'There is already a recommendation for {{ fullName }}',
   },
 }

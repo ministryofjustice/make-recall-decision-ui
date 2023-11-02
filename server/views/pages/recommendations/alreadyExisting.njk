@@ -1,0 +1,28 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+
+        <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+        <div >
+            <p class="govuk=body">{{ recommendation.personOnProbation.name }} started this recommendation on 31 October 3001.
+
+            <p class="govuk-body">
+                <a href='/recommendations/{{ recommendation.id }}/' class='govuk-button'>Update recommendation</a>
+            </p>
+
+            <p class="govuk-body">
+                <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview for {{ recommendation.personOnProbation.name }}</a>
+            </p>
+
+        </div>
+    </div>
+{% endblock %}
+
+
