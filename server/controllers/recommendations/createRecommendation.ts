@@ -1,11 +1,12 @@
 import { Request, Response } from 'express'
-import { createRecommendation } from '../../data/makeDecisionApiClient'
+import { createRecommendation, getStatuses } from '../../data/makeDecisionApiClient'
 import { validateCrn } from '../../utils/utils'
 import { routeUrls } from '../../routes/routeUrls'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { CaseSectionId } from '../../@types/pagesForms'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 export const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
   const normalizedCrn = validateCrn(req.body.crn)
@@ -23,8 +24,18 @@ export const createRecommendationController = async (req: Request, res: Response
 
     const recommendationId = caseSection.caseSummary.activeRecommendation?.recommendationId
     if (recommendationId) {
-      res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/already-existing`)
-      return
+      const statuses = (
+        await getStatuses({
+          recommendationId: String(recommendationId),
+          token: user.token,
+        })
+      ).filter(status => status.active)
+
+      const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+      if (!isPPDocumentCreated) {
+        res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/already-existing`)
+        return
+      }
     }
 
     const recommendation = await createRecommendation({ crn: normalizedCrn }, user.token, flags)
