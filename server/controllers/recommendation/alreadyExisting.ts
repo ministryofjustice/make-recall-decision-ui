@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { getDateTimeInEuropeLondon } from '../../utils/dates'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -8,6 +9,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'alreadyExisting',
     },
+    createdDate: getDateTimeInEuropeLondon(recommendation.createdDate),
     crn: recommendation.crn,
   }
 

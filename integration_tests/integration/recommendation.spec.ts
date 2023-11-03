@@ -13,6 +13,7 @@ context('Make a recommendation', () => {
   const recommendationResponse = {
     ...setResponsePropertiesToNull(completeRecommendationResponse),
     id: recommendationId,
+    createdDate: '2000-10-31T01:30:00.000Z',
     crn,
     personOnProbation: {
       name: 'Paula Smith',
