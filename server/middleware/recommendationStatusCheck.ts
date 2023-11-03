@@ -1,6 +1,5 @@
 import { RequestHandler, Router } from 'express'
-import { getStatuses } from '../data/makeDecisionApiClient'
-import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { Check } from './check'
 
 export enum STATUSES {
   SPO_CONSIDER_RECALL = 'SPO_CONSIDER_RECALL',
@@ -28,54 +27,10 @@ export function setupRecommendationStatusCheck(): Router {
   return router
 }
 
-export type StatusCheck = (statuses: RecommendationStatusResponse[], roles: string[]) => boolean
-
-export function statusIsActive(name: string): StatusCheck {
-  return (statuses: RecommendationStatusResponse[], _: string[]) => {
-    return !!statuses.find(status => status.name === name && status.active)
-  }
-}
-
-export function roleIsActive(name: string): StatusCheck {
-  return (_: RecommendationStatusResponse[], roles: string[]) => {
-    return !!roles.find(role => role === name)
-  }
-}
-
-export function not(statusCheck: StatusCheck): StatusCheck {
-  return (statuses: RecommendationStatusResponse[], roles: string[]) => {
-    return !statusCheck(statuses, roles)
-  }
-}
-
-export function or(...statusChecks: StatusCheck[]): StatusCheck {
-  return (statuses: RecommendationStatusResponse[], roles: string[]) => {
-    return statusChecks.some(check => check(statuses, roles))
-  }
-}
-
-export function and(...statusChecks: StatusCheck[]): StatusCheck {
-  return (statuses: RecommendationStatusResponse[], roles: string[]) => {
-    return statusChecks.every(check => check(statuses, roles))
-  }
-}
-
-export default function recommendationStatusCheck(statusCheck?: StatusCheck): RequestHandler {
-  return async (req, res, next) => {
-    const { recommendationId } = req.params
-    const {
-      user: { token, roles },
-    } = res.locals
-
-    if (statusCheck) {
-      const statuses = await getStatuses({
-        recommendationId,
-        token,
-      })
-      res.locals.statuses = statuses
-      if (!statusCheck(statuses, roles)) {
-        return res.redirect('/inappropriate-error')
-      }
+export default function recommendationStatusCheck(statusCheck?: Check): RequestHandler {
+  return (req, res, next) => {
+    if (statusCheck && !statusCheck(res.locals)) {
+      return res.redirect('/inappropriate-error')
     }
     next()
   }

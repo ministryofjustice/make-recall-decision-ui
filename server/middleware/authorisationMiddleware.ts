@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode'
-import { RequestHandler } from 'express'
+import { NextFunction, Request, Response } from 'express'
 
 import logger from '../../logger'
 
@@ -9,25 +9,20 @@ export enum HMPPS_AUTH_ROLE {
   PPCS = 'ROLE_MAKE_RECALL_DECISION_PPCS',
 }
 
-export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
-  return (req, res, next) => {
-    if (res.locals && res.locals.user && res.locals.user.token) {
-      const { authorities: roles = [] } = jwtDecode(res.locals.user.token) as { authorities?: string[] }
+export default function authorisationMiddleware(req: Request, res: Response, next: NextFunction) {
+  if (res?.locals?.user?.token) {
+    const { authorities: roles = [] } = jwtDecode(res.locals.user.token) as { authorities?: string[] }
 
-      if (authorisedRoles.length && !roles.some(role => authorisedRoles.includes(role))) {
-        logger.error('User is not authorised to access this')
-        return res.redirect('/authError')
-      }
-      res.locals.user.roles = roles
-      res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
-      res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
-      if (res.locals.env === 'PRE-PRODUCTION') {
-        logger.info(`User roles: ${JSON.stringify(roles)} for path: ${req.path}`)
-      }
-      return next()
+    res.locals.user.roles = roles
+    res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
+    res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
+
+    if (res.locals.env === 'PRE-PRODUCTION') {
+      logger.info(`User roles: ${JSON.stringify(roles)} for path: ${req.path}`)
     }
-
+  } else {
     req.session.returnTo = req.originalUrl
     return res.redirect('/sign-in')
   }
+  next()
 }
