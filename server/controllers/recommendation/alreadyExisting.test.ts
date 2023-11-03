@@ -5,7 +5,7 @@ describe('get', () => {
   it('present', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { crn: 'X1234B' },
+        recommendation: { crn: 'X1234B', createdDate: '2023-11-03T15:07:11.575Z' },
       },
     })
     const next = mockNext()

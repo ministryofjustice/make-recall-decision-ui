@@ -30,6 +30,8 @@ import { CvlLicenceConditionsBreached } from "./CvlLicenceConditionsBreached";
 export type RecommendationResponse = {
     userAccessResponse?: UserAccessResponse;
     id?: number;
+    createdBy?: string;
+    createdDate?: string;
     status?: RecommendationResponse.status;
     custodyStatus?: CustodyStatus;
     localPoliceContact?: LocalPoliceContact;
