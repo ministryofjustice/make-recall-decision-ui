@@ -33,18 +33,18 @@ describe('authorisationMiddleware', () => {
     } as unknown as Response
   }
 
-  it('should return next when no required roles', () => {
+  it('should call next when no required roles', () => {
     const res = createResWithToken({ authorities: [] })
 
-    const authorisationResponse = authorisationMiddleware()(req, res, next)
+    authorisationMiddleware(req, res, next)
 
-    expect(authorisationResponse).toEqual(next())
+    expect(next).toHaveBeenCalled()
   })
 
   it('sets hasSpoRole to true if SPO role is present', () => {
     const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.SPO] })
 
-    authorisationMiddleware()(req, res, next)
+    authorisationMiddleware(req, res, next)
 
     expect(res.locals.user.hasSpoRole).toEqual(true)
   })
@@ -52,7 +52,7 @@ describe('authorisationMiddleware', () => {
   it('sets hasPpcsRole to true if PPCS role is present', () => {
     const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.PPCS] })
 
-    authorisationMiddleware()(req, res, next)
+    authorisationMiddleware(req, res, next)
 
     expect(res.locals.user.hasPpcsRole).toEqual(true)
   })
@@ -60,7 +60,7 @@ describe('authorisationMiddleware', () => {
   it('should set roles', () => {
     const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO] })
 
-    authorisationMiddleware()(req, res, next)
+    authorisationMiddleware(req, res, next)
 
     expect(res.locals.user.roles).toEqual([HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO])
   })
@@ -68,24 +68,8 @@ describe('authorisationMiddleware', () => {
   it('sets hasSpoRole to false if SPO role is not present', () => {
     const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.PO] })
 
-    authorisationMiddleware()(req, res, next)
+    authorisationMiddleware(req, res, next)
 
     expect(res.locals.user.hasSpoRole).toEqual(false)
-  })
-
-  it('should redirect when user has no authorised roles', () => {
-    const res = createResWithToken({ authorities: [] })
-
-    const authorisationResponse = authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
-
-    expect(authorisationResponse).toEqual('/authError')
-  })
-
-  it('should return next when user has authorised role', () => {
-    const res = createResWithToken({ authorities: ['SOME_REQUIRED_ROLE'] })
-
-    const authorisationResponse = authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
-
-    expect(authorisationResponse).toEqual(next())
   })
 })

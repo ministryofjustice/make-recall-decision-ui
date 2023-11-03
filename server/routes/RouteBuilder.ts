@@ -1,48 +1,48 @@
 import { NextFunction, Request, Response, Router } from 'express'
-import authorisationMiddleware, { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
-import recommendationStatusCheck, { StatusCheck } from '../middleware/recommendationStatusCheck'
+import recommendationStatusCheck from '../middleware/recommendationStatusCheck'
 import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
-import retrieve from '../controllers/retrieveRecommendation'
+import retrieveRecommendation from '../controllers/retrieveRecommendation'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
-import { guardAgainstSpoAcoVewingPartACreatedScreen } from '../middleware/guardAgainstSpoAcoVewingPartACreatedScreen'
-import { guardRecFlowFromPPCSAccess } from '../middleware/guardRecFlowFromPPCSAccess'
+import retrieveStatuses from '../controllers/retrieveStatuses'
+import { authorisationCheck } from '../middleware/authorisationCheck'
+import { Check } from '../middleware/check'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
 export class RouteBuilder {
   private router: Router
 
-  private roles: string[]
+  private rolesCheck?: Check
 
-  private statusCheck?: StatusCheck
+  private statusCheck?: Check
 
-  constructor(router: Router, statusCheck?: StatusCheck, roles: string[] = [HMPPS_AUTH_ROLE.PO]) {
+  constructor(router: Router, statusCheck?: Check, roles?: Check) {
     this.router = router
-    this.roles = roles
+    this.rolesCheck = roles
     this.statusCheck = statusCheck
   }
 
-  public withRoles(roles: string[]): RouteBuilder {
-    return new RouteBuilder(this.router, this.statusCheck, roles)
+  public withRoles(rolesCheck: Check): RouteBuilder {
+    return new RouteBuilder(this.router, this.statusCheck, rolesCheck)
   }
 
-  public withCheck(statusCheck: StatusCheck): RouteBuilder {
-    return new RouteBuilder(this.router, statusCheck, this.roles)
+  public withCheck(statusCheck: Check): RouteBuilder {
+    return new RouteBuilder(this.router, statusCheck, this.rolesCheck)
   }
 
   public get(endpoint: string, routerCallback: RouterCallback): void {
     this.router.get(
       `/:recommendationId/${endpoint}`,
-      feedErrorsToExpress(authorisationMiddleware(this.roles)),
-      feedErrorsToExpress(recommendationStatusCheck(this.statusCheck)),
+      // authorisationMiddleware,
+      feedErrorsToExpress(retrieveStatuses),
+      authorisationCheck(this.rolesCheck),
+      recommendationStatusCheck(this.statusCheck),
       sanitizeInputValues,
       parseRecommendationUrl,
-      feedErrorsToExpress(retrieve), // necessary for async functions
-      guardRecFlowFromPPCSAccess,
-      guardAgainstSpoAcoVewingPartACreatedScreen,
+      feedErrorsToExpress(retrieveRecommendation),
       guardAgainstModifyingClosedRecommendation,
       customizeMessages,
       feedErrorsToExpress(routerCallback), // necessary for async functions
@@ -56,7 +56,8 @@ export class RouteBuilder {
   public post(endpoint: string, routerCallback: RouterCallback) {
     this.router.post(
       `/:recommendationId/${endpoint}`,
-      feedErrorsToExpress(authorisationMiddleware(this.roles)),
+      feedErrorsToExpress(retrieveStatuses),
+      authorisationCheck(this.rolesCheck),
       feedErrorsToExpress(recommendationStatusCheck(this.statusCheck)),
       sanitizeInputValues,
       parseRecommendationUrl,

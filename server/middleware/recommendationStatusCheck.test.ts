@@ -1,20 +1,23 @@
-import recommendationStatusCheck, { statusIsActive } from './recommendationStatusCheck'
+import recommendationStatusCheck from './recommendationStatusCheck'
 import { mockNext, mockReq, mockRes } from './testutils/mockRequestUtils'
 import { getStatuses } from '../data/makeDecisionApiClient'
+import { statusIsActive } from './check'
 
 jest.mock('../data/makeDecisionApiClient')
 
 describe('recommendationStatusCheck', () => {
   it('should allow as status is present and active', async () => {
-    const res = mockRes({})
-    const next = mockNext()
-
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: 'XYZ',
-        active: true,
+    const res = mockRes({
+      locals: {
+        statuses: [
+          {
+            name: 'XYZ',
+            active: true,
+          },
+        ],
       },
-    ])
+    })
+    const next = mockNext()
 
     await recommendationStatusCheck(statusIsActive('XYZ'))(
       mockReq({
@@ -35,10 +38,12 @@ describe('recommendationStatusCheck', () => {
   })
 
   it('should redirect as status is missing', async () => {
-    const res = mockRes({})
+    const res = mockRes({
+      locals: {
+        statuses: [],
+      },
+    })
     const next = mockNext()
-
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
 
     await recommendationStatusCheck(statusIsActive('XYZ'))(
       mockReq({
@@ -53,15 +58,17 @@ describe('recommendationStatusCheck', () => {
   })
 
   it('should redirect as status is inactive', async () => {
-    const res = mockRes({})
-    const next = mockNext()
-
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: 'XYZ',
-        active: false,
+    const res = mockRes({
+      locals: {
+        statuses: [
+          {
+            name: 'XYZ',
+            active: false,
+          },
+        ],
       },
-    ])
+    })
+    const next = mockNext()
 
     await recommendationStatusCheck(statusIsActive('XYZ'))(
       mockReq({

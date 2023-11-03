@@ -5,7 +5,7 @@ import { createRecommendationController } from '../controllers/recommendations/c
 import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
 import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
 import { RouteBuilder } from './RouteBuilder'
-import { and, not, or, roleIsActive, STATUSES, statusIsActive } from '../middleware/recommendationStatusCheck'
+import { STATUSES } from '../middleware/recommendationStatusCheck'
 import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
 import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
@@ -75,16 +75,17 @@ import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoReca
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 import alreadyExisting from '../controllers/recommendation/alreadyExisting'
+import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middleware/check'
 
 const recommendations = Router()
 
 RouteBuilder.build(recommendations)
-  .withRoles([HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO])
+  .withRoles(or(hasRole(HMPPS_AUTH_ROLE.SPO), hasRole(HMPPS_AUTH_ROLE.PO)))
   .withCheck(
     or(
-      and(not(roleIsActive(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
+      and(not(hasRole(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
       and(
-        roleIsActive(HMPPS_AUTH_ROLE.SPO),
+        hasRole(HMPPS_AUTH_ROLE.SPO),
         or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
       )
     )
@@ -95,7 +96,7 @@ RouteBuilder.build(recommendations)
  * This section contains the route for the Probation Practitioner (PP)
  */
 const ppRouteBuilder = RouteBuilder.build(recommendations)
-  .withRoles([HMPPS_AUTH_ROLE.PO])
+  .withRoles(and(hasRole(HMPPS_AUTH_ROLE.PO), not(hasRole(HMPPS_AUTH_ROLE.PPCS))))
   .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
 
 ppRouteBuilder.get('already-existing', alreadyExisting.get)
@@ -245,11 +246,19 @@ ppRouteBuilder
   .withCheck(and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED))))
   .get('request-aco-countersign', requestAcoCountersignController.get)
 
-ppRouteBuilder.get('confirmation-part-a', confirmationPartAController.get)
+ppRouteBuilder
+  .withRoles(
+    and(
+      hasRole(HMPPS_AUTH_ROLE.PO),
+      not(hasRole(HMPPS_AUTH_ROLE.PPCS)),
+      not(and(hasRole(HMPPS_AUTH_ROLE.SPO), flagIsActive('flagProbationAdmin')))
+    )
+  )
+  .get('confirmation-part-a', confirmationPartAController.get)
 
 ppRouteBuilder.get('preview-part-a', previewPartAController.get)
 
-const spoRouteBuilder = ppRouteBuilder.withRoles([HMPPS_AUTH_ROLE.SPO])
+const spoRouteBuilder = ppRouteBuilder.withRoles(hasRole(HMPPS_AUTH_ROLE.SPO))
 
 /*
  * This section contains the route for the Senior Probation Officer during the SPO Rationale journey.
@@ -318,14 +327,14 @@ spoCounterSigningRouteBuilder
  * The task-list page is accessed by many different roles under different circumstances.
  */
 RouteBuilder.build(recommendations)
-  .withRoles([HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO])
+  .withRoles(or(hasRole(HMPPS_AUTH_ROLE.SPO), hasRole(HMPPS_AUTH_ROLE.PO)))
   .withCheck(
     and(
       not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
       or(
-        not(roleIsActive(HMPPS_AUTH_ROLE.SPO)),
+        not(hasRole(HMPPS_AUTH_ROLE.SPO)),
         and(
-          roleIsActive(HMPPS_AUTH_ROLE.SPO),
+          hasRole(HMPPS_AUTH_ROLE.SPO),
           or(
             statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
             statusIsActive(STATUSES.SPO_SIGNED),
@@ -337,6 +346,8 @@ RouteBuilder.build(recommendations)
     )
   )
   .get('task-list', taskListController.get)
+
+// const ppcsRouteBuilder = ppRouteBuilder.withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
