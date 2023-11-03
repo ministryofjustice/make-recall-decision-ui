@@ -1,10 +1,11 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { createRecommendationController } from './createRecommendation'
-import { createRecommendation } from '../../data/makeDecisionApiClient'
+import { createRecommendation, getStatuses } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { CaseSectionId } from '../../@types/pagesForms'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -28,6 +29,7 @@ describe('createRecommendationController', () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
       caseSummary: { activeRecommendation: { recommendationId: '123' } },
     })
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
 
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
@@ -38,6 +40,30 @@ describe('createRecommendationController', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/already-existing')
     expect(createRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toBeUndefined()
+  })
+
+  it('should not redirect to already-existing if recommendation is awaiting spo rationale', async () => {
+    ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { activeRecommendation: { recommendationId: '123' } },
+    })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.PP_DOCUMENT_CREATED,
+        active: true,
+      },
+    ])
+
+    const req = mockReq({ body: { crn } })
+    await createRecommendationController(req, res)
+
+    expect(getCaseSection).toHaveBeenCalledWith('overview' as CaseSectionId, 'A1234AB', 'token', undefined, req.query, {
+      flagDomainEventRecommendationStarted: true,
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/')
+    expect(createRecommendation).toHaveBeenCalled()
     expect(req.session.errors).toBeUndefined()
   })
 
