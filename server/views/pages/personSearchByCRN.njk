@@ -15,18 +15,10 @@
             <nav class="moj-sub-navigation" aria-label="Case summary sections">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                    {% if hasPpcsRole %}
-                        <a class="moj-sub-navigation__link" href="/search-by-name?hasPpcsRole=true">Search by name</a>
-                    {% else %}
                         <a class="moj-sub-navigation__link" href="/search-by-name">Search by name</a>
-                    {% endif%}
                     </li>
                     <li class="moj-sub-navigation__item">
-                    {% if hasPpcsRole %}
-                        <a class="moj-sub-navigation__link" aria-current="page" href="/search-by-crn?hasPpcsRole=true">Search by case reference number (CRN)</a>
-                    {% else %}
                         <a class="moj-sub-navigation__link" aria-current="page" href="/search-by-crn">Search by case reference number (CRN)</a>
-                    {% endif %}
                     </li>
                 </ul>
             </nav>
@@ -48,9 +40,6 @@
                     errorMessage: errorMessage(errors.crn)
                 }) }}
                 <input type="hidden" name="page" value="1" />
-                {% if hasPpcsRole %}
-                    <input type="hidden" name="hasPpcsRole" value="true" />
-                {% endif %}
                 <button class="govuk-button" data-module="govuk-button">
                     Search
                 </button>

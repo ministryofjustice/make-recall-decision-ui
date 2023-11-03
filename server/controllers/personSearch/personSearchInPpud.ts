@@ -9,13 +9,12 @@ import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 
 const auditService = new AuditService()
 export const personSearchInPpud = async (req: Request, res: Response) => {
-  const { hasPpcsRole, crn } = {
-    hasPpcsRole: req.query.hasPpcsRole as string,
+  const { crn } = {
     crn: req.query.crn as string,
   }
   const caseSummary = await getCaseSummary<PersonDetailsResponse>(crn, 'personal-details', res.locals.user.token)
   const { user, flags } = res.locals
-  res.locals.hasPpcsRole = hasPpcsRole
+  res.locals.hasPpcsRole = user.hasPpcsRole
   res.locals.croNumber = caseSummary.personalDetailsOverview.croNumber
   res.locals.nomsNumber = caseSummary.personalDetailsOverview.nomsNumber
   res.locals.dateOfBirth = formatDateTimeFromIsoString({ isoDate: caseSummary.personalDetailsOverview.dateOfBirth })

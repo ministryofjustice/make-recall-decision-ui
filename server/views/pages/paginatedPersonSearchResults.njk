@@ -29,7 +29,7 @@
              <span>{{ crn }}</span>
         </p>
             {% if hasPpcsRole %}
-                <a href="/search-by-crn?hasPpcsRole=true" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+                <a href="/search-by-crn?" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% else %}
                 <a href="/search-by-crn" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% endif %}
@@ -43,7 +43,7 @@
             <span>{{ firstName }}</span>
         </p>
             {% if hasPpcsRole %}
-                <a href="/search-by-name?hasPpcsRole=true" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
+                <a href="/search-by-name?" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% else %}
                 <a href="/search-by-name" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
             {% endif %}
@@ -70,7 +70,7 @@
                         This is a restricted case
                     {% endif %}
                     {% if hasPpcsRole %}
-                        <a href="/search-in-ppud?hasPpcsRole=true&crn={{ person.crn }}" data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
+                        <a href="/search-in-ppud?&crn={{ person.crn }}" data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
                     {% else %}
                         <a href='/cases/{{ person.crn }}/overview' data-qa='name'>{% if person.userExcluded or person.userRestricted %}(read more information){% else %}{{ person.name }}{% endif %}</a>
                     {% endif %}
