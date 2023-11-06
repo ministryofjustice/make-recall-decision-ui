@@ -11,7 +11,7 @@
 
         <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
         <div >
-            <p class="govuk=body">{{ recommendation.personOnProbation.name }} started this recommendation on {{ formatDateTimeFromIsoString({isoDate: createdDate, dateOnly: true}) }}
+            <p class="govuk=body">{{ recommendation.createdByUserFullName }} started this recommendation on {{ formatDateTimeFromIsoString({isoDate: createdDate, dateOnly: true}) }}
 
             <p class="govuk-body">
                 <a href='/recommendations/{{ recommendation.id }}/' class='govuk-button'>Update recommendation</a>
