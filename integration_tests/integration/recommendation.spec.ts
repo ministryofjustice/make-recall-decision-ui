@@ -77,7 +77,7 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'There is already a recommendation for Paula Smith')
-      cy.getElement('Mr Anderson started this recommendation on 31 October 2000').should('exist')
+      cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
 
       cy.clickLink('Update recommendation')
       cy.pageHeading().should('equal', 'Create a Part A form')
