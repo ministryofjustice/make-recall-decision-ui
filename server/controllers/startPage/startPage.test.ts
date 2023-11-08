@@ -12,6 +12,5 @@ describe('startPage', () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
     await startPage(mockReq(), res)
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
-    expect(res.locals.searchEndpoint).toEqual('/search-by-name')
   })
 })

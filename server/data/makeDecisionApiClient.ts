@@ -12,6 +12,8 @@ import {
 import { FeatureFlags } from '../@types/featureFlags'
 import { CaseSectionId } from '../@types/pagesForms'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { PpcsSearchResponse } from '../@types/make-recall-decision-api/models/PpcsSearchResponse'
+import { PpudSearchResponse } from '../@types/make-recall-decision-api/models/ppudSearchResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -22,6 +24,36 @@ const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
 
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
+
+export const searchForPpcs = (token: string, crn: string): Promise<PpcsSearchResponse> => {
+  const body: Record<string, unknown> = {}
+  if (crn) {
+    body.crn = crn
+  }
+  return restClient(token).post({
+    path: `${routes.ppcsSearch}`,
+    data: body,
+  }) as Promise<PpcsSearchResponse>
+}
+
+export const searchPpud = (
+  token: string,
+  croNumber: string,
+  nomsId: string,
+  familyName: string,
+  dateOfBirth: string
+): Promise<PpudSearchResponse> => {
+  const body: Record<string, unknown> = {
+    croNumber,
+    nomsId,
+    familyName,
+    dateOfBirth,
+  }
+  return restClient(token).post({
+    path: `${routes.ppudSearch}`,
+    data: body,
+  }) as Promise<PpudSearchResponse>
+}
 
 export const searchPersons = (
   token: string,

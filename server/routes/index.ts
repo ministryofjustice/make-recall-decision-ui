@@ -19,9 +19,12 @@ import recommendations from './recommendations'
 import { isPreprodOrProd } from '../utils/utils'
 import replaceCurrentRecommendationController from '../controllers/recommendations/replaceCurrentRecommendationController'
 import { personSearchResultsByName } from '../controllers/personSearch/personSearchResultsByName'
+import ppcsSearch from '../controllers/personSearch/ppcsSearchController'
+import { nothingMore } from './nothing-more'
+import ppcsSearchResultsController from '../controllers/personSearch/ppcsSearchResultsController'
 
 export default function routes(router: Router): Router {
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
   router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults), setAnalyticsId)
@@ -37,6 +40,9 @@ export default function routes(router: Router): Router {
   get(routeUrls.searchResultsByCRN, personSearchResults)
   get(routeUrls.searchResultsByName, personSearchResultsByName)
   get(routeUrls.searchInPpud, personSearchInPpud)
+  get('/ppcs-search', ppcsSearch.get)
+  get('/ppcs-search-results', ppcsSearchResultsController.get)
+
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
   get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummaryController.get)

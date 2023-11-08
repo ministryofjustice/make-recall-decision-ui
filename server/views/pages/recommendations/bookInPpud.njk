@@ -1,6 +1,6 @@
-{% extends "../partials/layout.njk" %}
+{% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Search for a record in PPUD" }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ backLink() }}
@@ -9,9 +9,19 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../partials/error-summary.njk' %}
-                <h1 class='govuk-heading-l'>{{fullName}} <span
-            id=ppud-crn>{{ crn }}</span></h2>{{ pageHeadings[page.id] }}</h1>
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
+                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
+
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+                <div class='govuk-body'>
+                    There is already a record in PPUD for {{ recommendation.personOnProbation.fullName }}. You can book the recall on this record.
+                </div>
+
                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
@@ -22,7 +32,7 @@
                             Date of birth
                         </dt>
                         <dd class="govuk-summary-list__value">
-                              {{dateOfBirth}}
+                              {{ ppud.dateOfBirth }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -30,7 +40,7 @@
                             NOMIS ID
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{nomsNumber}} 
+                            {{ ppud.nomsId }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -38,14 +48,12 @@
                             CRO
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ croNumber }}
+                            {{ ppud.croNumber }}
                         </dd>
                     </div>
                 </dl>
-            <div class='govuk-!-margin-top-6'>
-                <a class='govuk-button' href='{{ urlInfo.basePath }}/ppud-search-results'>Search for a record in PPUD</a>
-            </div>
+                {{ formSubmitButton({ label: 'Book on to this record' }) }}
+            </form>
         </div>
     </div>
 {% endblock %}
-
