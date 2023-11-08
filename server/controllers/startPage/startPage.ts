@@ -12,10 +12,10 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
     isVisible: Boolean(config.notification.body) && isBannerDisplayDateRangeValid(),
   }
 
-  res.locals.searchEndpoint = '/search-by-name'
   if (res.locals.user.hasPpcsRole) {
     res.render('pages/startPPCS')
   } else {
+    res.locals.searchEndpoint = '/search-by-name'
     res.render('pages/startPage')
   }
 }

@@ -9,6 +9,7 @@ import audit from '../controllers/audit'
 import retrieveStatuses from '../controllers/retrieveStatuses'
 import { authorisationCheck } from '../middleware/authorisationCheck'
 import { Check } from '../middleware/check'
+import { nothingMore } from './nothing-more'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
@@ -36,7 +37,6 @@ export class RouteBuilder {
   public get(endpoint: string, routerCallback: RouterCallback): void {
     this.router.get(
       `/:recommendationId/${endpoint}`,
-      // authorisationMiddleware,
       feedErrorsToExpress(retrieveStatuses),
       authorisationCheck(this.rolesCheck),
       recommendationStatusCheck(this.statusCheck),
@@ -49,7 +49,8 @@ export class RouteBuilder {
       audit,
       (error: Error, req: Request, res: Response, next: NextFunction): void => {
         next(error) // forward errors to root router
-      }
+      },
+      nothingMore
     )
   }
 
@@ -64,7 +65,8 @@ export class RouteBuilder {
       feedErrorsToExpress(routerCallback), // necessary for async functions
       (error: Error, req: Request, res: Response, next: NextFunction): void => {
         next(error) // forward errors to root router
-      }
+      },
+      nothingMore
     )
   }
 

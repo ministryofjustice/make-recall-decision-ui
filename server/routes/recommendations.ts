@@ -76,6 +76,8 @@ import spoSeniorManagerEndorsementController from '../controllers/recommendation
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 import alreadyExisting from '../controllers/recommendation/alreadyExisting'
 import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middleware/check'
+import ppcsConsiderRecallController from '../controllers/recommendation/ppcsConsiderRecallController'
+import bookInPpudController from '../controllers/recommendation/bookInPpudController'
 
 const recommendations = Router()
 
@@ -347,7 +349,14 @@ RouteBuilder.build(recommendations)
   )
   .get('task-list', taskListController.get)
 
-// const ppcsRouteBuilder = ppRouteBuilder.withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
+const ppcsRouteBuilder = ppRouteBuilder
+  .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
+  .withCheck(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))
+
+ppcsRouteBuilder.get('ppcs-consider-recall', ppcsConsiderRecallController.get)
+
+ppcsRouteBuilder.get('book-in-ppud', bookInPpudController.get)
+ppcsRouteBuilder.post('book-in-ppud', bookInPpudController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

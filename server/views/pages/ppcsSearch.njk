@@ -1,0 +1,32 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Search for a person on probation" }) %}
+
+{% block content %}
+    {% include '../partials/error-summary.njk' %}
+
+    <h1 class="govuk-heading-xl-no-bottom-margin">Find a Recall Request (PPCS)</h1>
+    <p class='govuk-body'>Search the consider a recall service to find a recall request.</p>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half-from-desktop">
+            <form action="/ppcs-search-results" method="get" novalidate>
+                {{ govukInput({
+                    id: "crn",
+                    name: "crn",
+                     label: {
+                        text: "Search by Case Reference Number (CRN)",
+                        classes: "govuk-visually-hidden"
+                    },
+                    hint: {
+                        text: 'Please enter a CRN below.  For example, X123456'
+                    },
+                    errorMessage: errorMessage(errors.crn)
+                }) }}
+                <button class="govuk-button" data-module="govuk-button">
+                    Search
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

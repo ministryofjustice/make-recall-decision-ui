@@ -1,0 +1,54 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+                <h1 class='govuk-heading-l'>
+                    {{ recommendation.personOnProbation.fullName }}
+                    <span id=ppud-crn>{{ recommendation.crn }}</span>
+                </h1>
+
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Date of birth
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                              {{ recommendation.personOnProbation.dateOfBirth }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            NOMIS ID
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.nomsNumber }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            CRO
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ recommendation.personOnProbation.croNumber }}
+                        </dd>
+                    </div>
+                </dl>
+            <div class='govuk-!-margin-top-6'>
+                <a class='govuk-button' href='{{ urlInfo.basePath }}book-in-ppud'>Search for a record in PPUD</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
