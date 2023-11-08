@@ -29,6 +29,14 @@ function get(req: Request, res: Response, next: NextFunction) {
     },
     recommendation,
   }
+  if (recommendation.isIndeterminateSentence) {
+    res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'
+  } else if (recommendation.isExtendedSentence) {
+    res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-extended'
+  } else {
+    res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
+  }
+
   res.locals.taskCompleteness = taskCompleteness(recommendation, featureFlags)
 
   res.render(`pages/recommendations/taskListNoRecall`)
