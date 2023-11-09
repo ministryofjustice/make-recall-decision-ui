@@ -5,7 +5,7 @@
 {% block content %}
     <h1 class="govuk-heading-xl">Search results</h1>
 
-    {% if page.results.length == 0 %}
+    {% if results.length == 0 %}
         {{ mojBanner({
             type: 'information',
             html: '<span data-qa="no-results">No results found. Double-check you entered the right CRN.</span>',
@@ -21,7 +21,7 @@
         <a href="/ppcs-search" class="govuk-body-l govuk-link">Change <span class="govuk-visually-hidden">search term</span></a>
     </p>
 
-    {% if page.results.length %}
+    {% if results.length %}
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
         <thead class="govuk-table__head">
@@ -32,7 +32,7 @@
         </tr>
         </thead>
         <tbody class="govuk-table__body">
-        {% for person in page.results %}
+        {% for person in results %}
             <tr class="govuk-table__row" data-qa='row-{{ person.crn }}'>
                 <td class="govuk-table__cell">
                     {% if person.userExcluded %}
