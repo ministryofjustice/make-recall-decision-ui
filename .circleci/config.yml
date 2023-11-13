@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   browser-tools: circleci/browser-tools@1.4.6
-  hmpps: ministryofjustice/hmpps@7.5.0
+  hmpps: ministryofjustice/hmpps@7
   node: circleci/node@5.1.0
   slack: circleci/slack@4.12.5
   sonarcloud: sonarsource/sonarcloud@1.1.1
@@ -35,7 +35,6 @@ parameters:
   e2e-parallelism-env:
     type: integer
     default: 1
-    
 
 slack-fail-post-step: &slack-fail-post-step
   post-steps:
@@ -87,7 +86,8 @@ jobs:
             export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
             export GIT_REF="$CIRCLE_SHA1"
             npm run record-build-info
-      - run: # Run linter after build because the integration test code depend on compiled typescript...
+      - run:
+          # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
           command: npm run lint
       - persist_to_workspace:
@@ -281,7 +281,7 @@ jobs:
           command: |
             echo $(pwd)
             shopt -s globstar
-            
+
             SPECS=$(circleci tests glob "e2e_tests/features/e2eJourneyTests/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
@@ -339,7 +339,7 @@ jobs:
             npm ci --no-audit
             echo PWD:: $PWD
             shopt -s globstar
-            
+
             SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --split-by=timings --show-counts)
             echo "Running feature file(s): $SPECS"
 
@@ -520,9 +520,9 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-  
+
       - request-prod-approval:
-          type: approval 
+          type: approval
           requires:
             - deploy_preprod
             - e2e_test_preprod
@@ -579,22 +579,22 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-# Disabling it as this is also triggered from CircleCI Scheduler UI
-#  e2e-check-dev-daily:
-#    triggers:
-#      - schedule:
-#          cron: "00 20 * * 1-5"
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - e2e_environment_test:
-#          name: e2e_test_dev
-#          environment: dev
-#          context:
-#            - hmpps-common-vars
-#          <<: *slack-fail-post-step
+  # Disabling it as this is also triggered from CircleCI Scheduler UI
+  #  e2e-check-dev-daily:
+  #    triggers:
+  #      - schedule:
+  #          cron: "00 20 * * 1-5"
+  #          filters:
+  #            branches:
+  #              only:
+  #                - main
+  #    jobs:
+  #      - e2e_environment_test:
+  #          name: e2e_test_dev
+  #          environment: dev
+  #          context:
+  #            - hmpps-common-vars
+  #          <<: *slack-fail-post-step
 
   security:
     triggers:
