@@ -1,0 +1,76 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <p class="govuk=body">
+                These details are from NOMIS and the Part A.  Next you will add them to the PPUD record.  You Should:
+            </p>
+
+            <ul class='govuk-list govuk-list--number'>
+                <li>Double-check everything is correct.</li>
+                <li>Edit anything that's wrong.</li>
+                <li>Continue to the next page and select the index offence.</li>
+            </ul>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
+                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
+
+
+
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            UAL / custodial status
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                              {{ custodialStatus }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Probation area
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ probationArea }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            MAPPA level
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            Level {{ mappaLevel }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Decision following breach
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ decisionFollowingBreach }}
+                        </dd>
+                    </div>
+                </dl>
+                {{ formSubmitButton({ label: 'Book on to this record' }) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

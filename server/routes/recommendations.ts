@@ -77,7 +77,8 @@ import recallTypeExtendedController from '../controllers/recommendation/recallTy
 import alreadyExisting from '../controllers/recommendation/alreadyExisting'
 import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/ppcsConsiderRecallController'
-import bookInPpudController from '../controllers/recommendation/bookInPpudController'
+import searchPpudController from '../controllers/recommendation/searchPpudController'
+import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
 
 const recommendations = Router()
 
@@ -355,8 +356,11 @@ const ppcsRouteBuilder = ppRouteBuilder
 
 ppcsRouteBuilder.get('ppcs-consider-recall', ppcsConsiderRecallController.get)
 
-ppcsRouteBuilder.get('book-in-ppud', bookInPpudController.get)
-ppcsRouteBuilder.post('book-in-ppud', bookInPpudController.post)
+ppcsRouteBuilder.get('search-ppud', searchPpudController.get)
+ppcsRouteBuilder.post('search-ppud', searchPpudController.post)
+
+ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)
+ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

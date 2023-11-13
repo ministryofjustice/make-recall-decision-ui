@@ -172,5 +172,6 @@ export const strings: Record<string, Record<string, string>> = {
     alreadyExisting: 'There is already a recommendation for {{ fullName }}',
     ppcsConsiderRecall: 'Search for a record in PPUD',
     bookInPpud: 'PPUD record for {{ fullName }}',
+    checkBookingDetails: 'Check booking details for {{ fullName }}',
   },
 }

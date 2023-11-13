@@ -14,6 +14,7 @@ import { CaseSectionId } from '../@types/pagesForms'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { PpcsSearchResponse } from '../@types/make-recall-decision-api/models/PpcsSearchResponse'
 import { PpudSearchResponse } from '../@types/make-recall-decision-api/models/ppudSearchResponse'
+import { PrisonOffenderSearchResponse } from '../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -34,6 +35,17 @@ export const searchForPpcs = (token: string, crn: string): Promise<PpcsSearchRes
     path: `${routes.ppcsSearch}`,
     data: body,
   }) as Promise<PpcsSearchResponse>
+}
+
+export const searchForPrisonOffender = (token: string, nomsId: string): Promise<PrisonOffenderSearchResponse> => {
+  const body: Record<string, unknown> = {}
+  if (nomsId) {
+    body.nomsId = nomsId
+  }
+  return restClient(token).post({
+    path: `${routes.prisonOffenderSearch}`,
+    data: body,
+  }) as Promise<PrisonOffenderSearchResponse>
 }
 
 export const searchPpud = (
