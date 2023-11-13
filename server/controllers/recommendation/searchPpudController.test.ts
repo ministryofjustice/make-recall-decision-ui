@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { searchPpud } from '../../data/makeDecisionApiClient'
-import bookInPpudController from './bookInPpudController'
+import searchPpudController from './searchPpudController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -33,7 +33,7 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await bookInPpudController.get(mockReq(), res, next)
+    await searchPpudController.get(mockReq(), res, next)
 
     expect(res.locals.ppud).toEqual({
       id: '4F6666656E64657269643D313731383138G725H664',
@@ -60,8 +60,8 @@ describe('post', () => {
 
     const next = mockNext()
 
-    await bookInPpudController.post(mockReq(), res, next)
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/xyz`)
+    await searchPpudController.post(mockReq(), res, next)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/check-booking-details`)
 
     expect(next).toHaveBeenCalled()
   })

@@ -9,7 +9,7 @@ instructions() {
   echo "Usage: $0 <opts>" >&2
   echo " -h --> show usage" >&2
   echo " -a --> build hmpps-auth - needed for M1 macs (default=${BUILD_HMPPS_AUTH})" >&2
-  echo " -p --> run docker-compose pull (default=${RUN_DOCKER_COMPOSE_PULL})" >&2
+  echo " -p --> run docker compose pull (default=${RUN_DOCKER_COMPOSE_PULL})" >&2
 }
 
 while getopts ":h:ap" option; do

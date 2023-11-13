@@ -27,15 +27,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     ppud,
   }
-  res.render(`pages/recommendations/bookInPpud`)
+  res.render(`pages/recommendations/searchPpud`)
   next()
 }
 
 async function post(_: Request, res: Response, next: NextFunction) {
-  // book in ppud.
   const { urlInfo } = res.locals
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'xyz', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()

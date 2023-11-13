@@ -9,7 +9,7 @@ instructions() {
   echo "Usage: $0 <opts>" >&2
   echo " -h --> show usage" >&2
   echo " -a --> build hmpps-auth - needed for M1 macs (default=${BUILD_HMPPS_AUTH})" >&2
-  echo " -p --> run docker-compose pull (default=${RUN_DOCKER_COMPOSE_PULL})" >&2
+  echo " -p --> run docker compose pull (default=${RUN_DOCKER_COMPOSE_PULL})" >&2
 }
 
 while getopts ":h:ap" option; do
@@ -48,8 +48,8 @@ readonly API_LOGFILE="/tmp/${API_NAME}.log"
 
 if [[ "${RUN_DOCKER_COMPOSE_PULL}" == "true" ]]; then
   printf "\n\nRunning 'docker compose pull' on all services...\n\n"
-  docker-compose -f "${UI_DIR}/docker-compose.yml" pull
-  docker-compose -f "${API_DIR}/docker-compose.yml" pull
+  docker compose -f "${UI_DIR}/docker-compose.yml" pull
+  docker compose -f "${API_DIR}/docker-compose.yml" pull
 fi
 
 if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
@@ -61,19 +61,19 @@ if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
 fi
 
 pushd "${API_DIR}"
-docker-compose stop
+docker compose stop
 popd
 
 pushd "${UI_DIR}"
-docker-compose stop
-docker-compose -f docker-compose-test.yml stop
+docker compose stop
+docker compose -f docker-compose-test.yml stop
 printf "\n\nBuilding/starting UI components...\n\n"
-docker-compose up -d redis
+docker compose up -d redis
 popd
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-docker-compose up -d --scale=${API_NAME}=0
+docker compose up -d --scale=${API_NAME}=0
 ./gradlew --stop
 SYSTEM_CLIENT_ID=$SYSTEM_CLIENT_ID SYSTEM_CLIENT_SECRET=$SYSTEM_CLIENT_SECRET HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth PROBATION_OFFENDER_SEARCH_ENDPOINT_URL=https://probation-offender-search-dev.hmpps.service.justice.gov.uk SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 popd

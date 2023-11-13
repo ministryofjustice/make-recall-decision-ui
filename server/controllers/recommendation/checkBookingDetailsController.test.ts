@@ -1,0 +1,113 @@
+import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import { searchForPrisonOffender } from '../../data/makeDecisionApiClient'
+import checkBookingDetailsController from './checkBookingDetailsController'
+
+jest.mock('../../data/makeDecisionApiClient')
+
+describe('get', () => {
+  it('load', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue({
+      locationDescription: 'Graceland',
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            croNumber: '123X',
+            nomsNumber: '567Y',
+            surname: 'Mayer',
+            dateOfBirth: '2001-01-01',
+            mappa: {
+              level: '1',
+            },
+          },
+          whoCompletedPartA: {
+            localDeliveryUnit: 'who-completed-delivery-unit',
+            isPersonProbationPractitionerForOffender: false,
+          },
+          practitionerForPartA: {
+            localDeliveryUnit: 'practitioner-delivery-unit',
+          },
+        },
+        statuses: [
+          {
+            name: 'SPO_SIGNED',
+            active: true,
+            created: '2023-11-13T09:49:31.361Z',
+          },
+        ],
+      },
+    })
+    const next = mockNext()
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(searchForPrisonOffender).toHaveBeenCalledWith('token', '567Y')
+    expect(res.locals.page.id).toEqual('checkBookingDetails')
+    expect(res.locals.custodialStatus).toEqual('Graceland')
+    expect(res.locals.probationArea).toEqual('practitioner-delivery-unit')
+    expect(res.locals.mappaLevel).toEqual('1')
+    expect(res.locals.decisionFollowingBreach).toEqual('13 November 2023 at 09:49')
+    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('load', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue({
+      locationDescription: 'Graceland',
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            croNumber: '123X',
+            nomsNumber: '567Y',
+            surname: 'Mayer',
+            dateOfBirth: '2001-01-01',
+            mappa: {
+              level: '1',
+            },
+          },
+          whoCompletedPartA: {
+            localDeliveryUnit: 'who-completed-delivery-unit',
+            isPersonProbationPractitionerForOffender: true,
+          },
+          practitionerForPartA: {
+            localDeliveryUnit: 'practitioner-delivery-unit',
+          },
+        },
+        statuses: [
+          {
+            name: 'SPO_SIGNED',
+            active: true,
+            created: '2023-11-13T09:49:31.361Z',
+          },
+        ],
+      },
+    })
+    const next = mockNext()
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(res.locals.probationArea).toEqual('who-completed-delivery-unit')
+  })
+})
+
+describe('post', () => {
+  it('book in ppud', async () => {
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    const next = mockNext()
+
+    await checkBookingDetailsController.post(mockReq(), res, next)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/check-booking-details`)
+
+    expect(next).toHaveBeenCalled()
+  })
+})
