@@ -1,5 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { searchForPrisonOffender } from '../../data/makeDecisionApiClient'
+import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import checkBookingDetailsController from './checkBookingDetailsController'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -13,6 +13,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          id: '123',
           personOnProbation: {
             croNumber: '123X',
             nomsNumber: '567Y',
@@ -37,12 +38,24 @@ describe('get', () => {
             created: '2023-11-13T09:49:31.361Z',
           },
         ],
+        flags: {
+          xyz: 1,
+        },
       },
     })
     const next = mockNext()
+
     await checkBookingDetailsController.get(mockReq(), res, next)
 
     expect(searchForPrisonOffender).toHaveBeenCalledWith('token', '567Y')
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      featureFlags: { xyz: 1 },
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: { prisonApiLocationDescription: 'Graceland' },
+    })
+
     expect(res.locals.page.id).toEqual('checkBookingDetails')
     expect(res.locals.custodialStatus).toEqual('Graceland')
     expect(res.locals.probationArea).toEqual('practitioner-delivery-unit')

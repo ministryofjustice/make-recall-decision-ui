@@ -1,16 +1,32 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { searchForPrisonOffender } from '../../data/makeDecisionApiClient'
+import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { user, recommendation, statuses } = res.locals
+  const {
+    user: { token },
+    recommendation,
+    statuses,
+    flags,
+  } = res.locals
 
-  const response = await searchForPrisonOffender(user.token, recommendation.personOnProbation.nomsNumber)
+  const response = await searchForPrisonOffender(token, recommendation.personOnProbation.nomsNumber)
 
   const { locationDescription } = response
+
+  const valuesToSave = {
+    prisonApiLocationDescription: locationDescription,
+  }
+
+  await updateRecommendation({
+    recommendationId: recommendation.id,
+    valuesToSave,
+    token,
+    featureFlags: flags,
+  })
 
   let probationArea
   if (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender) {
