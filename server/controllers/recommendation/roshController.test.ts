@@ -38,6 +38,13 @@ describe('get', () => {
       },
     })
     expect(res.locals.page.id).toEqual('rosh')
+    expect(res.locals.inputDisplayValues).toEqual({
+      riskToChildren: 'LOW',
+      riskToPublic: 'LOW',
+      riskToKnownAdult: 'LOW',
+      riskToStaff: 'LOW',
+      riskToPrisoners: 'LOW',
+    })
   })
 
   it('initial load with error data', async () => {

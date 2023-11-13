@@ -33,8 +33,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
-  res.locals.inputDisplayValues = null
-
   res.render(`pages/recommendations/rosh`)
   next()
 }
