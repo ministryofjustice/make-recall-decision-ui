@@ -6,6 +6,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { user } = res.locals
 
   const { results } = await searchForPpcs(user.token, crn as string)
+
+  if (results.length === 0) {
+    res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
+    return
+  }
+
   res.locals = {
     ...res.locals,
     page: {
