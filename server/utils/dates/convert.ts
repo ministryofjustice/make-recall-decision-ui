@@ -183,3 +183,11 @@ export const splitIsoDateToParts = (isoDate?: string): DatePartsParsed | undefin
 }
 
 export const dateHasError = (field: string | ValidationError) => Boolean((field as ValidationError).errorId)
+
+export const extractDateFieldsToDateParts = (name: string, body: Record<string, string | string[]>) => {
+  return {
+    day: body[`${name}-day`] as string,
+    month: body[`${name}-month`] as string,
+    year: body[`${name}-year`] as string,
+  }
+}

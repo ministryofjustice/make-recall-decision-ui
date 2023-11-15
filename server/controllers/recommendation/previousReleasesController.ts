@@ -2,14 +2,17 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { routeUrls } from '../../routes/routeUrls'
-import { isDefined } from '../../utils/utils'
+import { booleanToYesNo, isDefined } from '../../utils/utils'
 import { validatePreviousReleases } from '../recommendations/previousReleases/formValidator'
+import { splitIsoDateToParts } from '../../utils/dates/convert'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
     user: { token },
     flags: featureFlags,
+    errors,
+    unsavedValues,
   } = res.locals
 
   const recommendation = await updateRecommendation({
@@ -27,6 +30,19 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
   }
 
+  if (errors) {
+    res.locals.inputDisplayValues = {
+      releaseUnderECSL: unsavedValues.releaseUnderECSL,
+      dateOfRelease: unsavedValues.dateOfRelease,
+      conditionalReleaseDate: unsavedValues.conditionalReleaseDate,
+    }
+  } else {
+    res.locals.inputDisplayValues = {
+      releaseUnderECSL: booleanToYesNo(recommendation.releaseUnderECSL),
+      dateOfRelease: splitIsoDateToParts(recommendation.dateOfRelease),
+      conditionalReleaseDate: splitIsoDateToParts(recommendation.conditionalReleaseDate),
+    }
+  }
   res.render(`pages/recommendations/previousReleases`)
   next()
 }

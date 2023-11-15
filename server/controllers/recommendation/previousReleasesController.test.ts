@@ -7,7 +7,11 @@ jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load with existing data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue('recommendation doc')
+    ;(updateRecommendation as jest.Mock).mockResolvedValue({
+      releaseUnderECSL: true,
+      dateOfRelease: '2001-01-02',
+      conditionalReleaseDate: '2003-04-05',
+    })
     const res = mockRes()
     const next = mockNext()
     await previousReleasesController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
@@ -19,8 +23,71 @@ describe('get', () => {
       token: 'token',
     })
 
-    expect(res.locals.recommendation).toEqual('recommendation doc')
+    expect(res.locals.recommendation).toEqual({
+      conditionalReleaseDate: '2003-04-05',
+      dateOfRelease: '2001-01-02',
+      releaseUnderECSL: true,
+    })
     expect(res.locals.page.id).toEqual('previousReleases')
+    expect(res.locals.inputDisplayValues).toEqual({
+      conditionalReleaseDate: {
+        day: '05',
+        month: '04',
+        year: '2003',
+      },
+      dateOfRelease: {
+        day: '02',
+        month: '01',
+        year: '2001',
+      },
+      releaseUnderECSL: 'YES',
+    })
+  })
+  it('load with errors', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue({
+      releaseUnderECSL: true,
+      dateOfRelease: '2001-01-02',
+      conditionalReleaseDate: '2003-04-05',
+    })
+    const res = mockRes({
+      locals: {
+        errors: [],
+        unsavedValues: {
+          releaseUnderECSL: 'YES',
+          dateOfRelease: { day: '03', month: '04', year: '2002' },
+          conditionalReleaseDate: { day: '06', month: '05', year: '2004' },
+        },
+      },
+    })
+    const next = mockNext()
+    await previousReleasesController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      featureFlags: {},
+      propertyToRefresh: 'previousReleases',
+      recommendationId: '123',
+      token: 'token',
+    })
+
+    expect(res.locals.recommendation).toEqual({
+      conditionalReleaseDate: '2003-04-05',
+      dateOfRelease: '2001-01-02',
+      releaseUnderECSL: true,
+    })
+    expect(res.locals.page.id).toEqual('previousReleases')
+    expect(res.locals.inputDisplayValues).toEqual({
+      conditionalReleaseDate: {
+        day: '06',
+        month: '05',
+        year: '2004',
+      },
+      dateOfRelease: {
+        day: '03',
+        month: '04',
+        year: '2002',
+      },
+      releaseUnderECSL: 'YES',
+    })
   })
 })
 
@@ -32,6 +99,13 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         continueButton: '1',
+        releaseUnderECSL: 'YES',
+        'dateOfRelease-day': '12',
+        'dateOfRelease-month': '11',
+        'dateOfRelease-year': '2012',
+        'conditionalReleaseDate-day': '23',
+        'conditionalReleaseDate-month': '06',
+        'conditionalReleaseDate-year': '2121',
       },
     })
 
@@ -50,9 +124,12 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
+        releaseUnderECSL: true,
         previousReleases: {
           hasBeenReleasedPreviously: true,
         },
+        dateOfRelease: '2012-11-12',
+        conditionalReleaseDate: '2121-06-23',
       },
       featureFlags: {},
     })
