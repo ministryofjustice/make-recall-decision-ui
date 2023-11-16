@@ -69,12 +69,56 @@
             <div class='govuk-!-margin-bottom-8 govuk-body'>
                 <a href='{{ urlInfo.basePath }}add-previous-release' class="govuk-link">Add a previous release</a>
             </div>
-            <div>
-                <form novalidate method="post">
+            <form novalidate method="post">
+                {% set yesDetailHtml %}
+                    {{ govukDateInput({
+                        id: "dateOfRelease",
+                        namePrefix: "dateOfRelease",
+                        fieldset: {
+                            legend: {
+                                html: "Release date",
+                                classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        items: dateTimeItems("dateOfRelease", inputDisplayValues.dateOfRelease),
+                        errorMessage: errorMessage(errors.dateOfRelease)
+                    }) }}
+                    {{ govukDateInput({
+                        id: "conditionalReleaseDate",
+                        namePrefix: "conditionalReleaseDate",
+                        fieldset: {
+                            legend: {
+                                html: "CRD (conditional release date)",
+                                classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        items: dateTimeItems("dateOfRelease", inputDisplayValues.conditionalReleaseDate),
+                        errorMessage: errorMessage(errors.conditionalReleaseDate)
+                    }) }}
+                {% endset %}
+                {{ govukRadios({
+                    idPrefix: "releaseUnderECSL",
+                    name: "releaseUnderECSL",
+                    fieldset: {
+                        legend: {
+                            text: "How " + recommendation.personOnProbation.name + " been released on an End of Custody Supervised Licence (ECSL)?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: inputDisplayValues.releaseUnderECSL,
+                        conditionalContent: {
+                            YES: yesDetailHtml
+                        }
+                    }),
+                    errorMessage: errorMessage(errors.releaseUnderECSL)
+                }) }}
+                <div>
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                     <button name='continueButton' value='{{ '1' if recommendation.previousReleases.previousReleaseDates.length else '0' }}' class="govuk-button">Continue</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}

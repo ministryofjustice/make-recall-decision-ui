@@ -60,13 +60,23 @@ describe('validatePreviousReleases', () => {
       const requestBody = {
         crn: 'X34534',
         continueButton: '1', // set to 1 if there are previous release dates
+        releaseUnderECSL: 'YES',
+        'dateOfRelease-day': '12',
+        'dateOfRelease-month': '11',
+        'dateOfRelease-year': '2012',
+        'conditionalReleaseDate-day': '23',
+        'conditionalReleaseDate-month': '06',
+        'conditionalReleaseDate-year': '2121',
       }
       const { errors, valuesToSave, nextPagePath } = await validatePreviousReleases({ requestBody, recommendationId })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
+        releaseUnderECSL: true,
         previousReleases: {
           hasBeenReleasedPreviously: true,
         },
+        dateOfRelease: '2012-11-12',
+        conditionalReleaseDate: '2121-06-23',
       })
       expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')
     })
@@ -75,15 +85,90 @@ describe('validatePreviousReleases', () => {
       const requestBody = {
         crn: 'X34534',
         continueButton: '0', // set to 0 if there are previous release dates
+        releaseUnderECSL: 'YES',
+        'dateOfRelease-day': '12',
+        'dateOfRelease-month': '11',
+        'dateOfRelease-year': '2012',
+        'conditionalReleaseDate-day': '23',
+        'conditionalReleaseDate-month': '06',
+        'conditionalReleaseDate-year': '2121',
       }
       const { errors, valuesToSave, nextPagePath } = await validatePreviousReleases({ requestBody, recommendationId })
       expect(errors).toBeUndefined()
       expect(valuesToSave).toEqual({
+        releaseUnderECSL: true,
         previousReleases: {
           hasBeenReleasedPreviously: false,
         },
+        dateOfRelease: '2012-11-12',
+        conditionalReleaseDate: '2121-06-23',
       })
       expect(nextPagePath).toEqual('/recommendations/34/task-list#heading-person-details')
+    })
+    it('returns error if ECSL is not supplied', async () => {
+      const requestBody = {
+        crn: 'X34534',
+        continueButton: '0',
+      }
+      const { errors, valuesToSave, nextPagePath } = await validatePreviousReleases({ requestBody, recommendationId })
+
+      expect(errors).toStrictEqual([
+        {
+          errorId: 'noReleaseUnderECSLSelected',
+          name: 'releaseUnderECSL',
+          href: '#releaseUnderECSL',
+          text: 'Please select ECSL value',
+          invalidParts: undefined,
+          values: undefined,
+        },
+      ])
+      expect(valuesToSave).toBeUndefined()
+      expect(nextPagePath).toBeUndefined()
+    })
+    it('returns error if release date is not supplied and release under ECSL is true', async () => {
+      const requestBody = {
+        crn: 'X34534',
+        continueButton: '0',
+        releaseUnderECSL: 'YES',
+      }
+      const { errors, valuesToSave, nextPagePath } = await validatePreviousReleases({ requestBody, recommendationId })
+
+      expect(errors).toStrictEqual([
+        {
+          errorId: 'blankDateTime',
+          name: 'dateOfRelease',
+          href: '#dateOfRelease-day',
+          text: 'Enter the date of release',
+          invalidParts: undefined,
+          values: { day: undefined, month: undefined, year: undefined },
+        },
+        {
+          errorId: 'blankDateTime',
+          name: 'conditionalReleaseDate',
+          href: '#conditionalReleaseDate-day',
+          text: 'Enter the conditional release date',
+          invalidParts: undefined,
+          values: { day: undefined, month: undefined, year: undefined },
+        },
+      ])
+      expect(valuesToSave).toBeUndefined()
+      expect(nextPagePath).toBeUndefined()
+    })
+    it('returns no errors if  release under ECSL is false, and no dates are supplied', async () => {
+      const requestBody = {
+        crn: 'X34534',
+        continueButton: '0',
+        releaseUnderECSL: 'NO',
+      }
+      const { errors, valuesToSave } = await validatePreviousReleases({ requestBody, recommendationId })
+
+      expect(errors).toBeUndefined()
+      expect(valuesToSave).toStrictEqual({
+        conditionalReleaseDate: '',
+        dateOfRelease: '',
+        previousReleases: { hasBeenReleasedPreviously: false },
+        releaseUnderECSL: false,
+      })
     })
   })
 })

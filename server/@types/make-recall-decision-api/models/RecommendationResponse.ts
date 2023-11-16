@@ -80,6 +80,9 @@ export type RecommendationResponse = {
     practitionerForPartA?: PractitionerForPartA;
     revocationOrderRecipients?: string[];
     ppcsQueryEmails?: string[];
+    releaseUnderECSL?: boolean;
+    dateOfRelease?: string;
+    conditionalReleaseDate?: string;
 };
 
 export namespace RecommendationResponse {
