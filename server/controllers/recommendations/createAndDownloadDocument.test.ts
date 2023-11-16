@@ -144,7 +144,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.CLOSED],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.CLOSED, STATUSES.SENT_TO_PPCS],
       deActivate: [],
     })
   })
@@ -173,10 +173,14 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).not.toHaveBeenCalled()
   })
 
-  it('do not mark DNTR as completed, if already set', async () => {
+  it('do not mark DNTR as completed or downloaded, if already set', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
       {
         name: STATUSES.COMPLETED,
+        active: true,
+      },
+      {
+        name: STATUSES.DNTR_DOWNLOADED,
         active: true,
       },
     ])
@@ -230,7 +234,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED, STATUSES.DNTR_DOWNLOADED],
       deActivate: [],
     })
 

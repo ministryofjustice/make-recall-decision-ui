@@ -62,13 +62,20 @@ export const createAndDownloadDocument =
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         if (!isSpo && isSpoRecordedRationale) {
           activate.push(STATUSES.CLOSED)
+          if (documentType === 'PART_A') {
+            activate.push(STATUSES.SENT_TO_PPCS)
+          }
         }
       }
     }
     if (documentType === 'NO_RECALL_LETTER') {
       const isCompleted = statuses.find(status => status.name === STATUSES.COMPLETED)
+      const isDntrDownloaded = statuses.find(status => status.name === STATUSES.DNTR_DOWNLOADED)
       if (!isCompleted) {
         activate.push(STATUSES.COMPLETED)
+      }
+      if (!isDntrDownloaded) {
+        activate.push(STATUSES.DNTR_DOWNLOADED)
       }
     }
     if (activate.length > 0) {
