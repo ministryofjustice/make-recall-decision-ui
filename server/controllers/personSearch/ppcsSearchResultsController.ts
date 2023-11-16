@@ -5,13 +5,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { crn } = req.query
   const { user } = res.locals
 
+  const { results } = await searchForPpcs(user.token, crn as string)
   res.locals = {
     ...res.locals,
     page: {
       id: 'ppcsSearchResults',
     },
     crn,
-    results: (await searchForPpcs(user.token, crn as string)).results,
+    result: results.length > 0 ? results[0] : undefined,
   }
 
   res.render(`pages/ppcsSearchResults`)
