@@ -60,7 +60,7 @@ export const validatePreviousReleases = async ({
 
   let dateOfReleaseIso
   let conditionalReleaseDateIso
-  let unsavedValues
+  let unsavedValues = {}
 
   errors = []
 

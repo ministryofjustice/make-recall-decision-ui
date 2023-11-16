@@ -110,7 +110,10 @@ describe('validatePreviousReleases', () => {
         crn: 'X34534',
         continueButton: '0',
       }
-      const { errors, valuesToSave, nextPagePath } = await validatePreviousReleases({ requestBody, recommendationId })
+      const { errors, valuesToSave, nextPagePath, unsavedValues } = await validatePreviousReleases({
+        requestBody,
+        recommendationId,
+      })
 
       expect(errors).toStrictEqual([
         {
@@ -124,6 +127,7 @@ describe('validatePreviousReleases', () => {
       ])
       expect(valuesToSave).toBeUndefined()
       expect(nextPagePath).toBeUndefined()
+      expect(unsavedValues).toStrictEqual({})
     })
     it('returns error if release date is not supplied and release under ECSL is true', async () => {
       const requestBody = {
@@ -131,7 +135,10 @@ describe('validatePreviousReleases', () => {
         continueButton: '0',
         releaseUnderECSL: 'YES',
       }
-      const { errors, valuesToSave, nextPagePath } = await validatePreviousReleases({ requestBody, recommendationId })
+      const { errors, valuesToSave, nextPagePath, unsavedValues } = await validatePreviousReleases({
+        requestBody,
+        recommendationId,
+      })
 
       expect(errors).toStrictEqual([
         {
@@ -153,6 +160,11 @@ describe('validatePreviousReleases', () => {
       ])
       expect(valuesToSave).toBeUndefined()
       expect(nextPagePath).toBeUndefined()
+      expect(unsavedValues).toStrictEqual({
+        conditionalReleaseDate: { day: undefined, month: undefined, year: undefined },
+        dateOfRelease: { day: undefined, month: undefined, year: undefined },
+        releaseUnderECSL: 'YES',
+      })
     })
     it('returns no errors if  release under ECSL is false, and no dates are supplied', async () => {
       const requestBody = {
@@ -160,7 +172,7 @@ describe('validatePreviousReleases', () => {
         continueButton: '0',
         releaseUnderECSL: 'NO',
       }
-      const { errors, valuesToSave } = await validatePreviousReleases({ requestBody, recommendationId })
+      const { errors, valuesToSave, unsavedValues } = await validatePreviousReleases({ requestBody, recommendationId })
 
       expect(errors).toBeUndefined()
       expect(valuesToSave).toStrictEqual({
@@ -169,6 +181,7 @@ describe('validatePreviousReleases', () => {
         previousReleases: { hasBeenReleasedPreviously: false },
         releaseUnderECSL: false,
       })
+      expect(unsavedValues).toBeUndefined()
     })
   })
 })
