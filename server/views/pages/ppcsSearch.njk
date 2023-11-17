@@ -5,8 +5,13 @@
 {% block content %}
     {% include '../partials/error-summary.njk' %}
 
-    <h1 class="govuk-heading-xl-no-bottom-margin">Find a Recall Request (PPCS)</h1>
-    <p class='govuk-body'>Search the consider a recall service to find a recall request.</p>
+    <h1 class="govuk-heading-xl-no-bottom-margin">Find a person  to book on</h1>
+    <p class='govuk-body'>Search by case reference number (CRN). This is the number probation staff use.</p>
+
+    {{ govukDetails({
+      summaryText: "How to find the CRN",
+      text: "You can find the CRN at the end of the filename of the Part A.  It's always a letter followed by 6 numbers.  It might have a '.docx' after it."
+    }) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half-from-desktop">
@@ -15,11 +20,8 @@
                     id: "crn",
                     name: "crn",
                      label: {
-                        text: "Search by Case Reference Number (CRN)",
-                        classes: "govuk-visually-hidden"
-                    },
-                    hint: {
-                        text: 'Please enter a CRN below.  For example, X123456'
+                        text: "Enter CRN number",
+                        classes: "govuk-label--m"
                     },
                     errorMessage: errorMessage(errors.crn)
                 }) }}
