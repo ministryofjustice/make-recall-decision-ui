@@ -76,8 +76,8 @@ import spoSeniorManagerEndorsementController from '../controllers/recommendation
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 import alreadyExisting from '../controllers/recommendation/alreadyExisting'
 import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middleware/check'
-import ppcsConsiderRecallController from '../controllers/recommendation/ppcsConsiderRecallController'
-import searchPpudController from '../controllers/recommendation/searchPpudController'
+import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
+import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
 
 const recommendations = Router()
@@ -356,8 +356,8 @@ const ppcsRouteBuilder = ppRouteBuilder
 
 ppcsRouteBuilder.get('ppcs-consider-recall', ppcsConsiderRecallController.get)
 
-ppcsRouteBuilder.get('search-ppud', searchPpudController.get)
-ppcsRouteBuilder.post('search-ppud', searchPpudController.post)
+ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
+ppcsRouteBuilder.post('search-ppud-results', searchPpudResultsController.post)
 
 ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)
 ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.post)

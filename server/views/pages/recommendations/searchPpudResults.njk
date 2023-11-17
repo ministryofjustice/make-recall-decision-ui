@@ -10,10 +10,17 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-                <h1 class='govuk-heading-l'>
-                    {{ recommendation.personOnProbation.fullName }}
-                    <span id=ppud-crn>{{ recommendation.crn }}</span>
-                </h1>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
+                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
+
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+                <div class='govuk-body'>
+                    There is already a record in PPUD for {{ recommendation.personOnProbation.fullName }}. You can book the recall on this record.
+                </div>
 
                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
@@ -25,7 +32,7 @@
                             Date of birth
                         </dt>
                         <dd class="govuk-summary-list__value">
-                              {{ recommendation.personOnProbation.dateOfBirth }}
+                              {{ ppud.dateOfBirth }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -33,7 +40,7 @@
                             NOMIS ID
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.nomsNumber }}
+                            {{ ppud.nomsId }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -41,14 +48,12 @@
                             CRO
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ recommendation.personOnProbation.croNumber }}
+                            {{ ppud.croNumber }}
                         </dd>
                     </div>
                 </dl>
-            <div class='govuk-!-margin-top-6'>
-                <a class='govuk-button' href='{{ urlInfo.basePath }}search-ppud'>Search for a record in PPUD</a>
-            </div>
+                {{ formSubmitButton({ label: 'Check prisoner details' }) }}
+            </form>
         </div>
     </div>
 {% endblock %}
-
