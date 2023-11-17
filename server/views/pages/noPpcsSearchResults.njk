@@ -1,0 +1,23 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: 'No recall request found' }) %}
+
+{% block content %}
+
+    <h1 class='govuk-heading-l'>No recall request found</h1>
+
+    {{ mojBanner({
+        type: 'information',
+        html: '<span data-qa="no-results">No results found. Double-check you entered the right CRN.</span>',
+        iconFallbackText: 'information'
+    }) }}
+
+    <p class="govuk-body-l">
+        <p class="govuk-body-l govuk-!-margin-bottom-5">
+            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Case reference number (CRN):</span>
+             <span>{{ crn }}</span>
+        </p>
+        <a href="/ppcs-search" class="govuk-body-l govuk-link">Start a new search</a>
+    </p>
+
+{% endblock %}

@@ -22,6 +22,7 @@ import { personSearchResultsByName } from '../controllers/personSearch/personSea
 import ppcsSearch from '../controllers/personSearch/ppcsSearchController'
 import { nothingMore } from './nothing-more'
 import ppcsSearchResultsController from '../controllers/personSearch/ppcsSearchResultsController'
+import noPpcsSearchResultsController from '../controllers/personSearch/noPpcsSearchResultsController'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
@@ -42,6 +43,7 @@ export default function routes(router: Router): Router {
   get(routeUrls.searchInPpud, personSearchInPpud)
   get('/ppcs-search', ppcsSearch.get)
   get('/ppcs-search-results', ppcsSearchResultsController.get)
+  get('/no-ppcs-search-results', noPpcsSearchResultsController.get)
 
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
   get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
