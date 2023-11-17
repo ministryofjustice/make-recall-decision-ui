@@ -171,8 +171,8 @@ export const strings: Record<string, Record<string, string>> = {
     countersignConfirmation: 'Part A countersigned',
     previewPartA: 'Preview Part A',
     alreadyExisting: 'There is already a recommendation for {{ fullName }}',
-    ppcsConsiderRecall: 'Search for a record in PPUD',
-    bookInPpud: 'PPUD record for {{ fullName }}',
+    searchPpud: 'Use these details to search PPUD',
+    searchPpudResults: 'PPUD record for {{ fullName }}',
     checkBookingDetails: 'Check booking details for {{ fullName }}',
   },
 }

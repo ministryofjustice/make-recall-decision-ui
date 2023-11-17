@@ -10,50 +10,52 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
-                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
-                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <div class="govuk-body">These details are from the 'Consider a recall' service. Check them against the licence before you search PPUD.  </div>
 
-                <div class='govuk-body'>
-                    There is already a record in PPUD for {{ recommendation.personOnProbation.fullName }}. You can book the recall on this record.
+            <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                    </dt>
                 </div>
-
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Date of birth
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                              {{ ppud.dateOfBirth }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            NOMIS ID
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ ppud.nomsId }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            CRO
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ ppud.croNumber }}
-                        </dd>
-                    </div>
-                </dl>
-                {{ formSubmitButton({ label: 'Check prisoner details' }) }}
-            </form>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                          {{ recommendation.personOnProbation.fullName }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Date of birth
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        NOMIS ID
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ recommendation.personOnProbation.nomsNumber }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        CRO
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ recommendation.personOnProbation.croNumber }}
+                    </dd>
+                </div>
+            </dl>
+            <div class='govuk-!-margin-top-6'>
+                <a class='govuk-button' href='{{ urlInfo.basePath }}search-ppud-results'>Search for a record in PPUD</a>
+            </div>
         </div>
     </div>
 {% endblock %}
+
