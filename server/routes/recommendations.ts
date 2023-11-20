@@ -357,7 +357,6 @@ const ppcsRouteBuilder = ppRouteBuilder
 ppcsRouteBuilder.get('ppcs-consider-recall', ppcsConsiderRecallController.get)
 
 ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
-ppcsRouteBuilder.post('search-ppud-results', searchPpudResultsController.post)
 
 ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)
 ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.post)

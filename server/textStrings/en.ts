@@ -172,7 +172,7 @@ export const strings: Record<string, Record<string, string>> = {
     previewPartA: 'Preview Part A',
     alreadyExisting: 'There is already a recommendation for {{ fullName }}',
     searchPpud: 'Use these details to search PPUD',
-    searchPpudResults: 'PPUD record for {{ fullName }}',
+    searchPpudResults: 'PPUD record found',
     checkBookingDetails: 'Check booking details for {{ fullName }}',
   },
 }

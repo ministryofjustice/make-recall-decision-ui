@@ -10,50 +10,49 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
-                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
-                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            {% if results.length > 1 %}
+                {% set html %}
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>Duplicate PPUD records</h1>
+                    <span>There is more than one match for NOMIS number {{ recommendation.personOnProbation.nomsNumber }}.</span>
+                {% endset %}
 
-                <div class='govuk-body'>
-                    There is already a record in PPUD for {{ recommendation.personOnProbation.fullName }}. You can book the recall on this record.
-                </div>
+                {{ mojBanner({
+                    type: 'warning',
+                    html: html,
+                    iconFallbackText: 'information'
+                }) }}
+            {% endif %}
 
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Date of birth
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                              {{ ppud.dateOfBirth }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            NOMIS ID
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ ppud.nomsId }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            CRO
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ ppud.croNumber }}
-                        </dd>
-                    </div>
-                </dl>
-                {{ formSubmitButton({ label: 'Check prisoner details' }) }}
-            </form>
+
+            <p class="govuk-body govuk-!-margin-bottom-3">
+                <a href="/ppcs-search" class="govuk-body-l govuk-link">Start a new search</a>
+            </p>
+
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">NOMIS ID</th>
+                    <th scope="col" class="govuk-table__header">Name</th>
+                    <th scope="col" class="govuk-table__header">Date of birth</th>
+                    <th scope="col" class="govuk-table__header">CRO</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                {% for ppud in results %}
+                    <tr class="govuk-table__row"  data-qa='row-{{ ppud.nomsId }}' >
+                        <td class="govuk-table__cell">{{ ppud.nomsId }}</td>
+                        <td class="govuk-table__cell">
+                            <a href="check-booking-details" class="govuk-link" >{{ ppud.firstNames }} {{ ppud.familyName }}</a>
+                        </td>
+                        <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: ppud.dateOfBirth}) }}</td>
+                        <td class="govuk-table__cell">{{ ppud.croNumber }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

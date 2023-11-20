@@ -18,7 +18,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'ppcsSearchResults',
     },
     crn,
-    result: results.length > 0 ? results[0] : undefined,
+    result: results[0],
   }
 
   res.render(`pages/ppcsSearchResults`)

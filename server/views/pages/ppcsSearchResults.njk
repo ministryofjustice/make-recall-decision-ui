@@ -13,7 +13,6 @@
         <a href="/ppcs-search" class="govuk-body-l govuk-link">Start a new search</a>
     </p>
 
-    {% if result %}
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
         <thead class="govuk-table__head">
@@ -34,5 +33,4 @@
         </tbody>
     </table>
     <a href="/recommendations/{{result.recommendationId}}/ppcs-consider-recall" class="govuk-body-l govuk-button">Search PPUD</a>
-    {% endif %}
 {% endblock %}
