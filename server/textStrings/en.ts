@@ -80,7 +80,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingRecipientEmail: 'Enter an email address',
     missingPPCSEmail: 'Enter an email address',
     invalidPPCSEmail: 'Enter an email address in the correct format, like name@example.com',
-    noReleaseUnderECSLSelected: 'Please select ECSL value',
+    noReleaseUnderECSLSelected: 'Select whether {{ fullName }} has been released on an ECSL',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',

@@ -120,7 +120,7 @@ describe('validatePreviousReleases', () => {
           errorId: 'noReleaseUnderECSLSelected',
           name: 'releaseUnderECSL',
           href: '#releaseUnderECSL',
-          text: 'Please select ECSL value',
+          text: 'Select whether {{ fullName }} has been released on an ECSL',
           invalidParts: undefined,
           values: undefined,
         },
