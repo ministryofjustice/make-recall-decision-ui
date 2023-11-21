@@ -1,5 +1,39 @@
 {% extends "../../partials/layout.njk" %}
 
+{% macro getRiskLevelText(level) %}
+    {% if level == 'VERY_HIGH' %}
+        Very high
+    {% elif level == 'HIGH' %}
+        High
+    {% elif level == 'MEDIUM' %}
+        Medium
+    {% elif level == 'LOW' %}
+        Low
+    {% endif %}
+{% endmacro %}
+
+{% macro formatAddress(address) %}
+    {% if not address.noFixedAbode %}
+     <p class="govuk-body">
+        {% if address.line1 %}
+            {{ address.line1 }},
+        {% endif %}
+        {% if address.line2 %}
+            {{ address.line2 }},
+        {% endif %}
+        {% if address.town %}
+            {{ address.town }},
+        {% endif %}
+        {% if address.postcode %}
+            {{ address.postcode }}
+        {% endif %}
+    </p>
+    {% endif %}
+{% endmacro %}
+
+
+
+
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -13,8 +47,8 @@
 
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
-            <p class="govuk=body">
-                These details are from NOMIS and the Part A.  Next you will add them to the PPUD record.  You Should:
+            <p class="govuk-body">
+                These details are from NOMIS and the Part A.  They will go into the PPUD record.  You should:
             </p>
 
             <ul class='govuk-list govuk-list--number'>
@@ -29,7 +63,7 @@
                 <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
                 <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
 
-
+                <h2 class='govuk-heading-m'>Personal details from NOMIS</h2>
 
                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
@@ -38,10 +72,213 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            UAL / custodial status
+                            Image
                         </dt>
                         <dd class="govuk-summary-list__value">
-                              {{ custodialStatus }}
+                          - <span class="govuk-visually-hidden">no value</span>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            NOMIS number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            - <span class="govuk-visually-hidden">no value</span>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            First name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Last name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Gender
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Ethnicity
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Date of birth
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            CRO
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            PNC
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Prison booking number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Releasing prison
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Custody status
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ custodialStatus }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Last known address
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                {% for address in recommendation.personOnProbation.addresses %}
+                                    {{ formatAddress(address) }}
+                                {% endfor %}
+                                <span class="govuk-body">
+                                    {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
+                                </span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                </dl>
+
+
+                <h2 class='govuk-heading-m'>Probation details from the Part A</h2>
+
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Recall received date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Recall received time
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Recall decision date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, dateOnly: true }) }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Recall received time
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, timeOnly: true }) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -54,6 +291,59 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            Probation practitioner
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ practitioner.name }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Probation practitioner email
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ practitioner.email }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Probation practitioner phone number
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ practitioner.telephone }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Local police contact
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-summary-list__text">
+                                - <span class="govuk-visually-hidden">no value</span>
+                            </div>
+                            <div class="govuk-summary-list__link">
+                                <a class='govuk-link' href='xyz'>Edit</a>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Senior manager (ACO)
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ acoSigned.createdByUserFullName }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Senior manager (ACO) email
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ acoSigned.emailAddress }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
                             MAPPA level
                         </dt>
                         <dd class="govuk-summary-list__value">
@@ -62,14 +352,19 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Decision following breach
+                            Current risk of serious harm
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ decisionFollowingBreach }}
+                            {{ getRiskLevelText(recommendation.roshSummary.riskOfSeriousHarm.overallRisk) }}
                         </dd>
                     </div>
                 </dl>
-                {{ formSubmitButton({ label: 'Book on to this record' }) }}
+
+                {{ govukDetails({
+                  summaryText: "If you think the Part A is wrong",
+                  text: "You can find the CRN at the end of the filename of the Part A.  It's always a letter followed by 6 numbers.  It might have a '.docx' after it."
+                }) }}
+                {{ formSubmitButton({ label: 'Accept and continue' }) }}
             </form>
         </div>
     </div>

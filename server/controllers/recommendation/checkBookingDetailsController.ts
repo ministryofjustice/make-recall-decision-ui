@@ -3,9 +3,8 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 
-async function get(req: Request, res: Response, next: NextFunction) {
+async function get(_: Request, res: Response, next: NextFunction) {
   const {
     user: { token },
     recommendation,
@@ -39,6 +38,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     .filter(status => status.active)
     .find(status => status.name === STATUSES.SPO_SIGNED)
 
+  const acoSigned = (statuses as RecommendationStatusResponse[])
+    .filter(status => status.active)
+    .find(status => status.name === STATUSES.ACO_SIGNED)
+
+  const poRecallConsultSpo = (statuses as RecommendationStatusResponse[])
+    .filter(status => status.active)
+    .find(status => status.name === STATUSES.PO_RECALL_CONSULT_SPO)
+
   res.locals = {
     ...res.locals,
     page: {
@@ -47,7 +54,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
     custodialStatus: locationDescription,
     probationArea,
     mappaLevel: recommendation.personOnProbation?.mappa?.level,
-    decisionFollowingBreach: formatDateTimeFromIsoString({ isoDate: spoSigned.created }),
+    spoSigned,
+    acoSigned,
+    poRecallConsultSpo,
+    practitioner: recommendation.practitionerForPartA
+      ? recommendation.practitionerForPartA
+      : recommendation.whoCompletedPartA,
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)
