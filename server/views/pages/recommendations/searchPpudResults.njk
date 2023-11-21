@@ -15,7 +15,7 @@
             {% if results.length > 1 %}
                 {% set html %}
                     <h1 class="govuk-heading-m" data-qa='multiple-results'>Duplicate PPUD records</h1>
-                    <span>There is more than one match for NOMIS number {{ recommendation.personOnProbation.nomsNumber }}.</span>
+                    <span>There is more than one match found in NOMIS.</span>
                 {% endset %}
 
                 {{ mojBanner({
