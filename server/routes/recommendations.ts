@@ -354,7 +354,7 @@ const ppcsRouteBuilder = ppRouteBuilder
   .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
   .withCheck(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))
 
-ppcsRouteBuilder.get('ppcs-consider-recall', ppcsConsiderRecallController.get)
+ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
 
 ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
 
