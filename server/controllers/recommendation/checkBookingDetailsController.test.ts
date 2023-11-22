@@ -37,6 +37,16 @@ describe('get', () => {
             active: true,
             created: '2023-11-13T09:49:31.361Z',
           },
+          {
+            name: 'ACO_SIGNED',
+            active: true,
+            created: '2023-11-13T09:49:31.361Z',
+          },
+          {
+            name: 'PO_RECALL_CONSULT_SPO',
+            active: true,
+            created: '2023-11-13T09:49:31.361Z',
+          },
         ],
         flags: {
           xyz: 1,
@@ -60,7 +70,21 @@ describe('get', () => {
     expect(res.locals.custodialStatus).toEqual('Graceland')
     expect(res.locals.probationArea).toEqual('practitioner-delivery-unit')
     expect(res.locals.mappaLevel).toEqual('1')
-    expect(res.locals.decisionFollowingBreach).toEqual('13 November 2023 at 09:49')
+    expect(res.locals.spoSigned).toEqual({
+      name: 'SPO_SIGNED',
+      active: true,
+      created: '2023-11-13T09:49:31.361Z',
+    })
+    expect(res.locals.acoSigned).toEqual({
+      name: 'ACO_SIGNED',
+      active: true,
+      created: '2023-11-13T09:49:31.361Z',
+    })
+    expect(res.locals.poRecallConsultSpo).toEqual({
+      name: 'PO_RECALL_CONSULT_SPO',
+      active: true,
+      created: '2023-11-13T09:49:31.361Z',
+    })
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
     expect(next).toHaveBeenCalled()
   })
