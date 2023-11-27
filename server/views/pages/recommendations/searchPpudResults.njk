@@ -43,12 +43,24 @@
                 <tbody class="govuk-table__body">
                 {% for ppud in results %}
                     <tr class="govuk-table__row"  data-qa='row-{{ ppud.nomsId }}' >
-                        <td class="govuk-table__cell">{{ ppud.nomsId }}</td>
+                        <td class="govuk-table__cell">
+                            {% if ppud.nomsId %}
+                                {{ ppud.nomsId }}
+                            {% else %}
+                                - <span class="govuk-visually-hidden">no value</span>
+                            {% endif %}
+                        </td>
                         <td class="govuk-table__cell">
                             <a href="check-booking-details" class="govuk-link" >{{ ppud.firstNames }} {{ ppud.familyName }}</a>
                         </td>
                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: ppud.dateOfBirth}) }}</td>
-                        <td class="govuk-table__cell">{{ ppud.croNumber }}</td>
+                        <td class="govuk-table__cell">
+                            {% if ppud.croNumber %}
+                                {{ ppud.croNumber }}
+                            {% else %}
+                                - <span class="govuk-visually-hidden">no value</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
