@@ -9,21 +9,12 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
             {% if results.length > 1 %}
-                {% set html %}
-                    <h1 class="govuk-heading-m" data-qa='multiple-results'>Duplicate PPUD records</h1>
-                    <span>There is more than one match found in NOMIS.</span>
-                {% endset %}
-
-                {{ mojBanner({
-                    type: 'warning',
-                    html: html,
-                    iconFallbackText: 'information'
-                }) }}
+                <h1 class='govuk-heading-l'>PPUD records found</h1>
+            {% else %}
+                <h1 class='govuk-heading-l'>PPUD record found</h1>
             {% endif %}
-
 
             <p class="govuk-body govuk-!-margin-bottom-3">
                 <a href="/ppcs-search" class="govuk-body govuk-link">Start a new search</a>
