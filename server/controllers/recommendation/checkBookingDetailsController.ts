@@ -12,20 +12,74 @@ async function get(_: Request, res: Response, next: NextFunction) {
     flags,
   } = res.locals
 
-  const response = await searchForPrisonOffender(token, recommendation.personOnProbation.nomsNumber)
+  let errorMessage
+  let prisonOffender
 
-  const { locationDescription } = response
+  if (recommendation.personOnProbation.nomsNumber !== undefined) {
+    prisonOffender = await searchForPrisonOffender(token, recommendation.personOnProbation.nomsNumber)
 
-  const valuesToSave = {
-    prisonApiLocationDescription: locationDescription,
+    if (prisonOffender === undefined) {
+      errorMessage = 'No NOMIS record found'
+    }
+  } else {
+    errorMessage = 'No NOMIS number found in Consider a Recall'
   }
 
-  await updateRecommendation({
-    recommendationId: recommendation.id,
-    valuesToSave,
-    token,
-    featureFlags: flags,
-  })
+  if (prisonOffender === undefined) {
+    prisonOffender = {
+      locationDescription: undefined,
+      bookingNo: undefined,
+      facialImageId: undefined,
+      firstName: undefined,
+      middleName: undefined,
+      lastName: undefined,
+      dateOfBirth: undefined,
+      status: undefined,
+      physicalAttributes: { gender: undefined, ethnicity: undefined },
+      identifiers: [],
+      image: undefined,
+    }
+  }
+
+  const {
+    locationDescription,
+    bookingNo,
+    facialImageId,
+    firstName,
+    middleName,
+    lastName,
+    dateOfBirth,
+    status,
+    physicalAttributes: { gender, ethnicity },
+    identifiers,
+    image,
+  } = prisonOffender
+
+  const valuesToSave = {
+    prisonOffender: {
+      locationDescription,
+      bookingNo,
+      facialImageId,
+      firstName,
+      middleName,
+      lastName,
+      dateOfBirth,
+      status,
+      gender,
+      ethnicity,
+      CRO: identifiers.find(id => id.type === 'CRO')?.value,
+      PNC: identifiers.find(id => id.type === 'PNC')?.value,
+    },
+  }
+
+  if (!errorMessage) {
+    await updateRecommendation({
+      recommendationId: recommendation.id,
+      valuesToSave,
+      token,
+      featureFlags: flags,
+    })
+  }
 
   let probationArea
   if (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender) {
@@ -35,23 +89,25 @@ async function get(_: Request, res: Response, next: NextFunction) {
   }
 
   const spoSigned = (statuses as RecommendationStatusResponse[])
-    .filter(status => status.active)
-    .find(status => status.name === STATUSES.SPO_SIGNED)
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.SPO_SIGNED)
 
   const acoSigned = (statuses as RecommendationStatusResponse[])
-    .filter(status => status.active)
-    .find(status => status.name === STATUSES.ACO_SIGNED)
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.ACO_SIGNED)
 
   const poRecallConsultSpo = (statuses as RecommendationStatusResponse[])
-    .filter(status => status.active)
-    .find(status => status.name === STATUSES.PO_RECALL_CONSULT_SPO)
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.PO_RECALL_CONSULT_SPO)
 
   res.locals = {
     ...res.locals,
     page: {
       id: 'checkBookingDetails',
     },
-    custodialStatus: locationDescription,
+    image,
+    errorMessage,
+    prisonOffender: valuesToSave.prisonOffender,
     probationArea,
     mappaLevel: recommendation.personOnProbation?.mappa?.level,
     spoSigned,
