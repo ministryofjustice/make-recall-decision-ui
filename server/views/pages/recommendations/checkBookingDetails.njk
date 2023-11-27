@@ -31,8 +31,13 @@
     {% endif %}
 {% endmacro %}
 
-
-
+{% macro hyphenForBlank(value) %}
+    {% if value %}
+        {{ value }}
+    {% else %}
+        - <span class="govuk-visually-hidden">no value</span>
+    {% endif %}
+{% endmacro %}
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
@@ -43,7 +48,6 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
 
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
@@ -56,6 +60,20 @@
                 <li>Edit anything that's wrong.</li>
                 <li>Continue to the next page and select the index offence.</li>
             </ul>
+
+            {% if errorMessage %}
+                {% set html %}
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>Nomis Error</h1>
+                    <span> {{errorMessage}}</span>
+                {% endset %}
+
+                {{ mojBanner({
+                    type: 'warning',
+                    html: html,
+                    iconFallbackText: 'information'
+                }) }}
+            {% endif %}
+
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -75,7 +93,7 @@
                             Image
                         </dt>
                         <dd class="govuk-summary-list__value">
-                          - <span class="govuk-visually-hidden">no value</span>
+                            <img src="{{ image }}"/>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -83,7 +101,7 @@
                             NOMIS number
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
+                            {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -92,7 +110,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.firstName) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -105,7 +123,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.lastName) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -118,7 +136,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.gender) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -131,7 +149,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.ethnicity) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -144,7 +162,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(formatDateTimeFromIsoString({ isoDate: prisonOffender.dateOfBirth, dateOnly: true })) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -157,7 +175,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.CRO) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -170,7 +188,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.PNC) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -183,7 +201,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-summary-list__text">
-                                - <span class="govuk-visually-hidden">no value</span>
+                                {{ hyphenForBlank(prisonOffender.bookingNo) }}
                             </div>
                             <div class="govuk-summary-list__link">
                                 <a class='govuk-link' href='xyz'>Edit</a>
@@ -208,7 +226,7 @@
                             Custody status
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ custodialStatus }}
+                            {{ hyphenForBlank(prisonOffender.locationDescription) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">

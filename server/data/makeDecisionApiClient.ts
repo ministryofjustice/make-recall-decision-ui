@@ -37,15 +37,23 @@ export const searchForPpcs = (token: string, crn: string): Promise<PpcsSearchRes
   }) as Promise<PpcsSearchResponse>
 }
 
-export const searchForPrisonOffender = (token: string, nomsId: string): Promise<PrisonOffenderSearchResponse> => {
+export const searchForPrisonOffender = async (token: string, nomsId: string): Promise<PrisonOffenderSearchResponse> => {
   const body: Record<string, unknown> = {}
   if (nomsId) {
     body.nomsId = nomsId
   }
-  return restClient(token).post({
-    path: `${routes.prisonOffenderSearch}`,
-    data: body,
-  }) as Promise<PrisonOffenderSearchResponse>
+
+  try {
+    return (await restClient(token).post({
+      path: `${routes.prisonOffenderSearch}`,
+      data: body,
+    })) as Promise<PrisonOffenderSearchResponse>
+  } catch (err) {
+    if (err.data.status === 404) {
+      return
+    }
+    throw err
+  }
 }
 
 export const searchPpud = (
