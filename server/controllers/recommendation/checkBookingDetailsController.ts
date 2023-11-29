@@ -116,6 +116,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     practitioner: recommendation.practitionerForPartA
       ? recommendation.practitionerForPartA
       : recommendation.whoCompletedPartA,
+    currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)
@@ -132,3 +133,63 @@ async function post(_: Request, res: Response, next: NextFunction) {
 }
 
 export default { get, post }
+
+export function currentHighestRosh(rosh: {
+  riskToChildren: string
+  riskToPublic: string
+  riskToKnownAdult: string
+  riskToStaff: string
+  riskToPrisoners: string
+}) {
+  if (rosh === undefined) {
+    return undefined
+  }
+
+  const values = []
+
+  function mapToNumber(val: string) {
+    if (val === 'VERY_HIGH') {
+      return 1
+    }
+    if (val === 'HIGH') {
+      return 2
+    }
+    if (val === 'MEDIUM') {
+      return 3
+    }
+    if (val === 'LOW') {
+      return 4
+    }
+    if (val === 'NOT_APPLICABLE') {
+      return 5
+    }
+  }
+
+  function mapFromNumber(val: number) {
+    if (val === 1) {
+      return 'VERY_HIGH'
+    }
+    if (val === 2) {
+      return 'HIGH'
+    }
+    if (val === 3) {
+      return 'MEDIUM'
+    }
+    if (val === 4) {
+      return 'LOW'
+    }
+    if (val === 5) {
+      return 'NOT_APPLICABLE'
+    }
+  }
+
+  values.push(mapToNumber(rosh.riskToChildren))
+  values.push(mapToNumber(rosh.riskToPublic))
+  values.push(mapToNumber(rosh.riskToKnownAdult))
+  values.push(mapToNumber(rosh.riskToStaff))
+  values.push(mapToNumber(rosh.riskToPrisoners))
+
+  values.sort()
+
+  return mapFromNumber(values[0])
+}

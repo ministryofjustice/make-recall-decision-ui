@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
-import checkBookingDetailsController from './checkBookingDetailsController'
+import checkBookingDetailsController, { currentHighestRosh } from './checkBookingDetailsController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -332,5 +332,59 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/check-booking-details`)
 
     expect(next).toHaveBeenCalled()
+  })
+})
+
+describe('rosh', () => {
+  it('mappings', async () => {
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'HIGH',
+        riskToPublic: 'LOW',
+        riskToStaff: 'MEDIUM',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'MEDIUM',
+      })
+    ).toEqual('HIGH')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'LOW',
+        riskToPublic: 'LOW',
+        riskToStaff: 'VERY_HIGH',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'MEDIUM',
+      })
+    ).toEqual('VERY_HIGH')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'LOW',
+        riskToPublic: 'MEDIUM',
+        riskToStaff: 'LOW',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'LOW',
+      })
+    ).toEqual('MEDIUM')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'LOW',
+        riskToPublic: 'LOW',
+        riskToStaff: 'LOW',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'LOW',
+      })
+    ).toEqual('LOW')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'NOT_APPLICABLE',
+        riskToPublic: 'NOT_APPLICABLE',
+        riskToStaff: 'NOT_APPLICABLE',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'NOT_APPLICABLE',
+      })
+    ).toEqual('NOT_APPLICABLE')
   })
 })
