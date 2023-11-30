@@ -44,6 +44,11 @@
 {% block head %}
   {% include "./analytics.njk" %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  <script src="/assets/applicationinsights-web.min.js"></script>
+  <script src="/assets/applicationinsights.js"></script>
+  <script nonce="{{ cspNonce }}">
+    window.applicationInsights.init('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}');
+  </script>
   <script src="/assets/js/jquery.min.js"></script>
   <script nonce='{{ cspNonce }}'>
     window.MOJFrontend = window.MOJFrontend || {};</script>
