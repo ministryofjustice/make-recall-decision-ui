@@ -9,6 +9,8 @@
         Medium
     {% elif level == 'LOW' %}
         Low
+    {% elif level == 'NOT_APPLICABLE' %}
+        Not applicable
     {% endif %}
 {% endmacro %}
 
@@ -358,15 +360,10 @@
                             Current risk of serious harm
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ getRiskLevelText(recommendation.roshSummary.riskOfSeriousHarm.overallRisk) }}
+                            {{ getRiskLevelText(currentHighestRosh) }}
                         </dd>
                     </div>
                 </dl>
-
-                {{ govukDetails({
-                  summaryText: "If you think the Part A is wrong",
-                  text: "You can find the CRN at the end of the filename of the Part A.  It's always a letter followed by 6 numbers.  It might have a '.docx' after it."
-                }) }}
                 {{ formSubmitButton({ label: 'Accept and continue' }) }}
             </form>
         </div>
