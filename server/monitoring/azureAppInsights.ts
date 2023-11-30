@@ -5,7 +5,7 @@ import applicationVersion from '../applicationVersion'
 
 import { FeatureFlags } from '../@types/featureFlags'
 
-function defaultName(): string {
+export function defaultName(): string {
   const {
     packageData: { name },
   } = applicationVersion
@@ -24,7 +24,7 @@ export function initialiseAppInsights(): void {
     // eslint-disable-next-line no-console
     console.log('Enabling azure application insights')
 
-    setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).enableWebInstrumentation(true).start()
+    setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
   }
 }
 

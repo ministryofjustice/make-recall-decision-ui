@@ -22,6 +22,7 @@ import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
+import { defaultName } from '../monitoring/azureAppInsights'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -30,6 +31,9 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = config.applicationName
+
+  app.locals.applicationInsightsConnectionString = config.applicationInsights.connectionString
+  app.locals.applicationInsightsRoleName = defaultName()
 
   // Cachebusting version string
   if (production) {
