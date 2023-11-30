@@ -15,7 +15,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
   let errorMessage
   let prisonOffender
 
-  if (recommendation.personOnProbation.nomsNumber !== undefined) {
+  if (
+    recommendation.personOnProbation.nomsNumber !== undefined &&
+    recommendation.personOnProbation.nomsNumber !== null
+  ) {
     prisonOffender = await searchForPrisonOffender(token, recommendation.personOnProbation.nomsNumber)
 
     if (prisonOffender === undefined) {
