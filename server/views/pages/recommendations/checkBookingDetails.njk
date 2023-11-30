@@ -31,14 +31,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro hyphenForBlank(value) %}
-    {% if value %}
-        {{ value }}
-    {% else %}
-        - <span class="govuk-visually-hidden">no value</span>
-    {% endif %}
-{% endmacro %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -81,287 +73,131 @@
                 <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
                 <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
 
-                <h2 class='govuk-heading-m'>Personal details from NOMIS</h2>
+                {{ listSummary('Personal details from NOMIS', [
+                    {
+                        "label": "Image",
+                        "image": image
+                    },
+                    {
+                        "label": "NOMIS number",
+                        "value": recommendation.personOnProbation.nomsNumber,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "First name",
+                        "value": prisonOffender.firstName,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Second name",
+                        "value": prisonOffender.middleName,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Last name",
+                        "value": prisonOffender.lastName,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Gender",
+                        "value": prisonOffender.gender,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Ethnicity",
+                        "value": prisonOffender.ethnicity,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Date of birth",
+                        "value": formatDateTimeFromIsoString({ isoDate: prisonOffender.dateOfBirth, dateOnly: true }),
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "CRO",
+                        "value": prisonOffender.CRO,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "PNC",
+                        "value": prisonOffender.PNC,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Prison booking number",
+                        "value": prisonOffender.bookingNo,
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Releasing prison",
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Custody status",
+                        "value": prisonOffender.locationDescription
+                    },
+                    {
+                        "label": "Last known address",
+                        "value": formatAddress(recommendation.personOnProbation.addresses) + recommendation.isMainAddressWherePersonCanBeFound.details,
+                        "editLink": "xyz"
+                    }
+                ]) }}
 
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Image
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            <img src="{{ image }}"/>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            NOMIS number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            First name
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.firstName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Second name
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.middleName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Last name
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.lastName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Gender
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.gender) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Ethnicity
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.ethnicity) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Date of birth
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(formatDateTimeFromIsoString({ isoDate: prisonOffender.dateOfBirth, dateOnly: true })) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            CRO
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.CRO) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            PNC
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.PNC) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Prison booking number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.bookingNo) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Releasing prison
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Custody status
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.locationDescription) }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Last known address
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {% for address in recommendation.personOnProbation.addresses %}
-                                {{ formatAddress(address) }}
-                            {% endfor %}
-                            <span class="govuk-body">
-                                {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
-                            </span>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                </dl>
-
-
-                <h2 class='govuk-heading-m'>Probation details from the Part A</h2>
-
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Recall received date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Recall received time
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Recall decision date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, dateOnly: true }) }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Recall received time
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, timeOnly: true }) }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Probation area
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ probationArea }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Probation practitioner
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ practitioner.name }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Probation practitioner email
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ practitioner.email }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Probation practitioner phone number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ practitioner.telephone }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Local police contact
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Senior manager (ACO)
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ acoSigned.createdByUserFullName }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Senior manager (ACO) email
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ acoSigned.emailAddress }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            MAPPA level
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            Level {{ mappaLevel }}
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Current risk of serious harm
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ getRiskLevelText(recommendation.roshSummary.riskOfSeriousHarm.overallRisk) }}
-                        </dd>
-                    </div>
-                </dl>
+                {{ listSummary('Probation details from the Part A', [
+                    {
+                        "label": "Recall received date",
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Recall received time",
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Recall decision date",
+                        "value": formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, dateOnly: true })
+                    },
+                    {
+                        "label": "Recall received time",
+                        "value": formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, timeOnly: true })
+                    },
+                    {
+                        "label": "Probation area",
+                        "value": probationArea
+                    },
+                    {
+                        "label": "Probation practitioner",
+                        "value": practitioner.name
+                    },
+                    {
+                        "label": "Probation practitioner email",
+                        "value": practitioner.email
+                    },
+                    {
+                        "label": "Probation practitioner phone number",
+                        "value": practitioner.telephone
+                    },
+                    {
+                        "label": "Local police contact",
+                        "editLink": "xyz"
+                    },
+                    {
+                        "label": "Senior manager (ACO)",
+                        "value": acoSigned.createdByUserFullName
+                    },
+                    {
+                        "label": "Senior manager (ACO) email",
+                        "value": acoSigned.emailAddress
+                    },
+                    {
+                        "label": "MAPPA level",
+                        "value": "Level " + mappaLevel
+                    },
+                    {
+                        "label": "Current risk of serious harm",
+                        "value": getRiskLevelText(recommendation.roshSummary.riskOfSeriousHarm.overallRisk)
+                    }
+    
+                ]) }}
 
                 {{ govukDetails({
                   summaryText: "If you think the Part A is wrong",

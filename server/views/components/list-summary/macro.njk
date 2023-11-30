@@ -1,0 +1,40 @@
+{# 
+  Types for listSummary macro
+
+  ListItem:
+    - label: string (required)
+    - value: string (optional)
+    - image: string (optional, URL of the image)
+    - editLink: string (optional)
+
+  ListSummaryProps:
+    - title: string (required)
+    - items: array of ListItem (required)
+#}
+
+{% macro listSummary(title, items) %}
+  <h2 class='govuk-heading-m'>{{ title }}</h2>
+  <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+    {% for item in items %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          {{ item.label }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {% if item.image %}
+            <img src="{{ item.image }}" alt="{{ item.label }}"/>
+          {% elif item.value %}
+            {{ item.value | safe }}
+          {% else %}
+            - <span class="govuk-visually-hidden">no value</span>
+          {% endif %}
+        </dd>
+        {% if item.editLink %}
+          <dd class="govuk-summary-list__actions">
+            <a class='govuk-link' href='{{ item.editLink }}'>Edit</a>
+          </dd>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </dl>
+{% endmacro %}
