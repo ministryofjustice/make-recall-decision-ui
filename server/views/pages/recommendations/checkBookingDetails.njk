@@ -95,7 +95,11 @@
                             Image
                         </dt>
                         <dd class="govuk-summary-list__value">
+                            {% if image %}
                             <img src="{{ image }}"/>
+                            {% else %}
+                            - <span class="govuk-visually-hidden">no value</span>
+                            {% endif %}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
