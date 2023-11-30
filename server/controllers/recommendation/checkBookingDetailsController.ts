@@ -134,7 +134,7 @@ async function post(_: Request, res: Response, next: NextFunction) {
 
 export default { get, post }
 
-export function currentHighestRosh(rosh: {
+export function currentHighestRosh(rosh?: {
   riskToChildren: string
   riskToPublic: string
   riskToKnownAdult: string
