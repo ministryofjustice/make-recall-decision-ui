@@ -221,12 +221,19 @@
                             Custody status
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.locationDescription) }}
+                            {% if prisonOffender.status == "ACTIVE IN" %}
+                                In custody - {{ prisonOffender.locationDescription}}
+                            {% elseif prisonOffender.status == "INACTIVE OUT" %}
+                                Unlawfully at large (UAL)
+                            {% elseif prisonOffender.status == "INACTIVE TRN" %}
+                                INACTIVE TRN
+                            {% endif %}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Last known address
+                            <p class="govuk-hint">From the Part A</p>
                         </dt>
                         <dd class="govuk-summary-list__value">
                             {% for address in recommendation.personOnProbation.addresses %}
@@ -352,7 +359,11 @@
                             MAPPA level
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            Level {{ mappaLevel }}
+                            {% if mappaLevel %}
+                                Level {{ mappaLevel }}
+                            {% else %}
+                                - <span class="govuk-visually-hidden">no value</span>
+                            {% endif %}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
