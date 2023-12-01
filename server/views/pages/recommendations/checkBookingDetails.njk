@@ -231,6 +231,8 @@
                                 Unlawfully at large (UAL)
                             {% elseif prisonOffender.status == "INACTIVE TRN" %}
                                 In transit - Unlawfully at large (UAL)
+                            {% else %}
+                                - <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
                         </dd>
                     </div>
@@ -243,8 +245,14 @@
                             {% for address in recommendation.personOnProbation.addresses %}
                                 {{ formatAddress(address) }}
                             {% endfor %}
+                            {% if not recommendation.personOnProbation.addresses %}
+                                - <span class="govuk-visually-hidden">no value</span>
+                            {% endif %}
+                            <p class="govuk-body govuk-!-font-weight-bold">
+                                Additional address
+                            </p>
                             <span class="govuk-body">
-                                {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
+                                {{ hyphenForBlank(recommendation.isMainAddressWherePersonCanBeFound.details) }}
                             </span>
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -304,7 +312,7 @@
                             Probation area
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ probationArea }}
+                            {{ hyphenForBlank(probationArea) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -312,7 +320,7 @@
                             Probation practitioner
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ practitioner.name }}
+                            {{ hyphenForBlank(practitioner.name) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -320,7 +328,7 @@
                             Probation practitioner email
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ practitioner.email }}
+                            {{ hyphenForBlank(practitioner.email) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -328,7 +336,7 @@
                             Probation practitioner phone number
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ practitioner.telephone }}
+                            {{ hyphenForBlank(practitioner.telephone) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
