@@ -15,6 +15,7 @@ import { RecommendationStatusResponse } from '../@types/make-recall-decision-api
 import { PpcsSearchResponse } from '../@types/make-recall-decision-api/models/PpcsSearchResponse'
 import { PpudSearchResponse } from '../@types/make-recall-decision-api/models/ppudSearchResponse'
 import { PrisonOffenderSearchResponse } from '../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
+import { PrisonSentence } from '../@types/make-recall-decision-api/models/PrisonSentence'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -48,6 +49,25 @@ export const searchForPrisonOffender = async (token: string, nomsId: string): Pr
       path: `${routes.prisonOffenderSearch}`,
       data: body,
     })) as Promise<PrisonOffenderSearchResponse>
+  } catch (err) {
+    if (err.data.status === 404) {
+      return
+    }
+    throw err
+  }
+}
+
+export const prisonSentences = async (token: string, nomsId: string): Promise<PrisonSentence[]> => {
+  const body: Record<string, unknown> = {}
+  if (nomsId) {
+    body.nomsId = nomsId
+  }
+
+  try {
+    return (await restClient(token).post({
+      path: `${routes.prisonSentences}`,
+      data: body,
+    })) as Promise<PrisonSentence[]>
   } catch (err) {
     if (err.data.status === 404) {
       return

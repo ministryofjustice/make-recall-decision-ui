@@ -79,6 +79,7 @@ import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middlewa
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
+import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 
 const recommendations = Router()
 
@@ -360,6 +361,9 @@ ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
 
 ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)
 ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.post)
+
+ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
+ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

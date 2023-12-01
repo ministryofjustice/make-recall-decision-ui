@@ -129,7 +129,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 async function post(_: Request, res: Response, next: NextFunction) {
   const { urlInfo } = res.locals
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'select-index-offence', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()
