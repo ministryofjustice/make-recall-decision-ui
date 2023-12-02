@@ -49,4 +49,27 @@ describe('get', () => {
 
     expect(next).toHaveBeenCalled()
   })
+  it('load when no results', async () => {
+    ;(searchPpud as jest.Mock).mockResolvedValue({
+      results: [],
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            fullName: 'Mr McMacintosh',
+          },
+        },
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await searchPpudController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'noSearchPpudResults' })
+    expect(res.locals.results).toEqual([])
+
+    expect(next).not.toHaveBeenCalled()
+  })
 })
