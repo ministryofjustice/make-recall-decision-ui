@@ -329,7 +329,7 @@ describe('post', () => {
     const next = mockNext()
 
     await checkBookingDetailsController.post(mockReq(), res, next)
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/check-booking-details`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/select-index-offence`)
 
     expect(next).toHaveBeenCalled()
   })
