@@ -494,7 +494,6 @@ describe('get', () => {
 describe('post', () => {
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
     const req = mockReq({
       params: { recommendationId: '123' },
     })

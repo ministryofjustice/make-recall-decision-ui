@@ -1,17 +1,32 @@
 import { NextFunction, Request, Response } from 'express'
-import { searchPpud } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { updateRecommendation, searchPpud } from '../../data/makeDecisionApiClient'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { user, recommendation, urlInfo } = res.locals
+  const { recommendationId } = req.params
+  const {
+    flags,
+    user: { token },
+    recommendation,
+    urlInfo,
+  } = res.locals
 
   const { results } = await searchPpud(
-    user.token,
+    token,
     recommendation.personOnProbation.croNumber,
     recommendation.personOnProbation.nomsNumber,
     recommendation.personOnProbation.surname,
     recommendation.personOnProbation.dateOfBirth
   )
+
+  await updateRecommendation({
+    recommendationId,
+    valuesToSave: {
+      ppudRecordPresent: results.length > 0,
+    },
+    token,
+    featureFlags: flags,
+  })
 
   if (results.length === 0) {
     res.locals = {
