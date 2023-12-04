@@ -1,0 +1,223 @@
+{% extends "../../partials/layout.njk" %}
+
+{% macro hyphenForBlank(value) %}
+    {% if value %}
+        {{ value }}
+    {% else %}
+        - <span class="govuk-visually-hidden">no value</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro formatTerm(term) %}
+    {% set latch = false %}
+    {% if term.years %}
+        {{ term.years }} years
+        {% set latch = true %}
+    {% endif %}
+    {% if term.months %}
+        {% if latch %}
+            ,
+            {% set latch = false %}
+        {% endif %}
+        {{ term.months }} months
+        {% set latch = true %}
+    {% endif %}
+    {% if term.weeks %}
+        {% if latch %}
+            ,
+            {% set latch = false %}
+        {% endif %}
+        {{ term.weeks }} weeks
+        {% set latch = true %}
+    {% endif %}
+    {% if term.days %}
+        {% if latch %}
+            ,
+            {% set latch = false %}
+        {% endif %}
+        {{ term.days }} days
+    {% endif %}
+{% endmacro %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+
+    {% set courtDescription = "" %}
+    {% set sentenceDate = "" %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <p class='govuk-body'>Compare the offence details in nomis with the Part A</p>
+
+            {% if errorMessage %}
+                {% set html %}
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>Nomis Error</h1>
+                    <span> {{errorMessage}}</span>
+                {% endset %}
+
+                {{ mojBanner({
+                    type: 'warning',
+                    html: html,
+                    iconFallbackText: 'warning'
+                }) }}
+            {% endif %}
+
+            <div class="govuk-grid-column-one-half">
+
+                <h3 class='govuk-heading-m'>NOMIS</h3>
+
+                <p class='govuk-body'>includes court cases, sentences and offences</p>
+
+                <hr/>
+
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                    <div class="govuk-radios" data-module="govuk-radios">
+                    {% for sentence in sentences %}
+
+                        {% if sentence.courtDescription != courtDescription and sentence.sentenceDate != sentenceDate %}
+                            <h3 class='govuk-heading-m'>Court case: {{ sentence.courtDescription }}</h3>
+                            <p class='govuk-body'>Date of sentence: {{ formatDateTimeFromIsoString({ isoDate: sentence.sentenceDate, dateOnly: true }) }}</p>
+                            {% set courtDescription = sentence.courtDescription %}
+                            {% set sentenceDate = sentence.sentenceDate %}
+                        {% endif %}
+
+                        {#
+                        {% for offence in sentence.offences %}
+
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="indexOffence" name="indexOffence" type="radio" value="england">
+                                <label class="govuk-label govuk-radios__label" for="indexOffence">
+                                    {{ offence.offenceDescription }}
+                                </label>
+
+                                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key govuk-body">
+                                            Sentence type
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            {{ sentence.sentenceTypeDescription }}
+                                        </dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            Start date
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            {{ sentence.sentenceStartDate }}
+                                        </dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            Sentence end date
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            {{ sentence.sentenceEndDate }}
+                                        </dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            Sentence length
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            {% for term in sentence.terms %}
+                                                <div>{{ formatTerm(term)  }}</div>
+                                            {% endfor %}
+                                        </dd>
+
+                                    </div>
+                                </dl>
+
+
+                            </div>
+
+                        {% endfor %}
+                        #}
+                    {% endfor %}
+                    </div>
+
+
+                    {{ formSubmitButton() }}
+                </form>
+            </div>
+            {#
+            <div class="govuk-grid-column-one-half">
+                <h3 class='govuk-heading-m'>Part A</h3>
+
+                <p class='govuk-body'>index offence</p>
+
+                <hr/>
+
+                <h3 class='govuk-heading-m'>Harassment</h3>
+
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Date of sentence
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Sentence type
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Start date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Sentence end date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(prisonOffender.middleName) }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Sentence length
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+
+                        </dd>
+                    </div>
+                </dl>
+
+            </div>
+            #}
+        </div>
+    </div>
+{% endblock %}

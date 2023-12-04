@@ -76,12 +76,8 @@
                 }) }}
             {% endif %}
 
-
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <input type="hidden" name="isExtendedSentence" value="{{ recommendation.isExtendedSentence }}" />
-                <input type="hidden" name="recallType" value="{{ recommendation.recallType.selected.value }}" />
 
                 <h2 class='govuk-heading-m'>Personal details from NOMIS</h2>
 
