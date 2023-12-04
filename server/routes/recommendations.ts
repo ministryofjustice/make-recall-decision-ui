@@ -79,6 +79,7 @@ import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middlewa
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
+import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 
 const recommendations = Router()
@@ -356,7 +357,7 @@ const ppcsRouteBuilder = ppRouteBuilder
   .withCheck(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))
 
 ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
-
+ppcsRouteBuilder.get('no-search-ppud-results', noSearchPpudResults.get)
 ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
 
 ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)

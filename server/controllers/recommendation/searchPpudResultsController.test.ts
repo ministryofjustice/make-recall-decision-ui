@@ -1,11 +1,16 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { searchPpud } from '../../data/makeDecisionApiClient'
 import searchPpudController from './searchPpudResultsController'
+import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { updateRecommendation, searchPpud } from '../../data/makeDecisionApiClient'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
     ;(searchPpud as jest.Mock).mockResolvedValue({
       results: [
         {
@@ -33,7 +38,15 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await searchPpudController.get(mockReq(), res, next)
+    await searchPpudController.get(req, res, next)
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        ppudRecordPresent: true,
+      },
+      featureFlags: {},
+    })
 
     expect(res.locals.page).toEqual({ id: 'searchPpudResults' })
     expect(res.locals.results).toEqual([
@@ -48,5 +61,39 @@ describe('get', () => {
     ])
 
     expect(next).toHaveBeenCalled()
+  })
+  it('load when no results', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(searchPpud as jest.Mock).mockResolvedValue({
+      results: [],
+    })
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            fullName: 'Mr McMacintosh',
+          },
+        },
+        token: 'token',
+      },
+    })
+    const next = mockNext()
+    await searchPpudController.get(req, res, next)
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        ppudRecordPresent: false,
+      },
+      featureFlags: {},
+    })
+
+    expect(res.locals.page).toEqual({ id: 'noSearchPpudResults' })
+    expect(res.locals.results).toEqual([])
+
+    expect(next).not.toHaveBeenCalled()
   })
 })
