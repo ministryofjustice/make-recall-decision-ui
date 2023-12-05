@@ -23,7 +23,9 @@
                         Name
                     </dt>
                     <dd class="govuk-summary-list__value">
+                    {% if recommendation.personOnProbation.fullName %}
                           {{ recommendation.personOnProbation.fullName }}
+                    {% else %}-{% endif %}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -31,7 +33,9 @@
                         Date of birth
                     </dt>
                     <dd class="govuk-summary-list__value">
+                    {% if recommendation.personOnProbation.dateOfBirth %}
                         {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) }}
+                    {% else %}-{% endif %}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -39,7 +43,9 @@
                         NOMIS ID
                     </dt>
                     <dd class="govuk-summary-list__value">
+                    {% if recommendation.personOnProbation.nomsNumber %}
                         {{ recommendation.personOnProbation.nomsNumber }}
+                    {% else %}-{% endif %}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -47,7 +53,9 @@
                         CRO
                     </dt>
                     <dd class="govuk-summary-list__value">
+                    {% if recommendation.personOnProbation.croNumber %}
                         {{ recommendation.personOnProbation.croNumber }}
+                    {% else %}-{% endif %}
                     </dd>
                 </div>
             </dl>

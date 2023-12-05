@@ -2,6 +2,7 @@ export enum EVENTS {
   PERSON_SEARCH_RESULTS = 'mrdPersonSearchResults',
   MRD_RECOMMENDATION_STARTED = 'mrdRecommendationStarted',
   MRD_RECOMMENDATION_PAGE_VIEW = 'mrdRecommendationPageView',
+  MRD_NO_PPUD_SEARCH_RESULTS = 'mrdNoPpudSearchResultsPageView',
   MRD_SPO_RATIONALE_SENT = 'mrdSpoRationaleRecorded',
   MRD_SPO_RATIONALE_TASKLIST_ACCESSED = 'mrdSpoTasklistAccessed',
   SPO_COUNTERSIGNATURE = 'mrdSpoCountersignature',

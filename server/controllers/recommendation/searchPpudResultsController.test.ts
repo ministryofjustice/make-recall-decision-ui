@@ -2,8 +2,10 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import searchPpudController from './searchPpudResultsController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { updateRecommendation, searchPpud } from '../../data/makeDecisionApiClient'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
   it('load', async () => {
@@ -72,7 +74,9 @@ describe('get', () => {
     })
     const res = mockRes({
       locals: {
+        user: { username: 'Bill', region: { code: 'N07', name: 'London' } },
         recommendation: {
+          crn: 'abc',
           personOnProbation: {
             fullName: 'Mr McMacintosh',
           },
@@ -81,7 +85,9 @@ describe('get', () => {
       },
     })
     const next = mockNext()
+
     await searchPpudController.get(req, res, next)
+
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token',
@@ -95,5 +101,15 @@ describe('get', () => {
     expect(res.locals.results).toEqual([])
 
     expect(next).not.toHaveBeenCalled()
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdNoPpudSearchResultsPageView',
+      'Bill',
+      {
+        crn: 'abc',
+        pageUrlSlug: 'no-ppud-search-results',
+        region: { code: 'N07', name: 'London' },
+      },
+      {}
+    )
   })
 })
