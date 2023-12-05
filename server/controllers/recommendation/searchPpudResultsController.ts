@@ -53,7 +53,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
     return
   }
-
   res.locals = {
     ...res.locals,
     page: {

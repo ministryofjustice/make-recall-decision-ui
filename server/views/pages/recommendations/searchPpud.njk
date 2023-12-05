@@ -1,4 +1,11 @@
 {% extends "../../partials/layout.njk" %}
+{% macro hyphenForBlank(value) %}
+    {% if value %}
+        {{ value }}
+    {% else %}
+        - <span class="govuk-visually-hidden">no value</span>
+    {% endif %}
+{% endmacro %}
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
@@ -23,9 +30,7 @@
                         Name
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {% if recommendation.personOnProbation.fullName %}
-                          {{ recommendation.personOnProbation.fullName }}
-                    {% else %}-{% endif %}
+                    {{ hyphenForBlank(recommendation.personOnProbation.fullName) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -33,9 +38,7 @@
                         Date of birth
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {% if recommendation.personOnProbation.dateOfBirth %}
-                        {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) }}
-                    {% else %}-{% endif %}
+                    {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth})) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -43,9 +46,7 @@
                         NOMIS ID
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {% if recommendation.personOnProbation.nomsNumber %}
-                        {{ recommendation.personOnProbation.nomsNumber }}
-                    {% else %}-{% endif %}
+                    {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -53,9 +54,7 @@
                         CRO
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {% if recommendation.personOnProbation.croNumber %}
-                        {{ recommendation.personOnProbation.croNumber }}
-                    {% else %}-{% endif %}
+                    {{ hyphenForBlank(recommendation.personOnProbation.croNumber) }}
                     </dd>
                 </div>
             </dl>
