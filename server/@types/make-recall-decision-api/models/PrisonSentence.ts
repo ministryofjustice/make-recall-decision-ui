@@ -1,5 +1,5 @@
 export type PrisonSentence = {
-  booking: number;
+  bookingId: number;
   sentenceSequence: number;
   lineSequence: number;
   caseSequence: number;
@@ -9,6 +9,7 @@ export type PrisonSentence = {
   sentenceCalculationType: string;
   sentenceTypeDescription: string;
   sentenceDate: string;
+  sentenceStartDate: string;
   sentenceEndDate: string;
   terms: Term[],
   offences: SentenceOffence[]

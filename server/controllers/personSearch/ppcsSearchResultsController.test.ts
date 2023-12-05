@@ -45,4 +45,13 @@ describe('get', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, 'no-ppcs-search-results?crn=123')
     expect(next).not.toHaveBeenCalled()
   })
+  it('redirect if crn is blank', async () => {
+    const res = mockRes()
+    const next = mockNext()
+    await ppcsSearchResultsController.get(mockReq({ query: { crn: '' } }), res, next)
+
+    expect(searchForPpcs).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith(303, 'no-ppcs-search-results?crn=')
+    expect(next).not.toHaveBeenCalled()
+  })
 })
