@@ -307,7 +307,7 @@ describe('get', () => {
       status: undefined,
     })
 
-    expect(res.locals.errorMessage).toEqual('No NOMIS number found in Consider a Recall')
+    expect(res.locals.errorMessage).toEqual("No NOMIS number found in 'Consider a recall'")
     expect(searchForPrisonOffender).not.toHaveBeenCalled()
     expect(updateRecommendation).not.toHaveBeenCalled()
 

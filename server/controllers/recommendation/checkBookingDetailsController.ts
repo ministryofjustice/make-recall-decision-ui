@@ -25,7 +25,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       errorMessage = 'No NOMIS record found'
     }
   } else {
-    errorMessage = 'No NOMIS number found in Consider a Recall'
+    errorMessage = "No NOMIS number found in 'Consider a recall'"
   }
 
   if (prisonOffender === undefined) {
