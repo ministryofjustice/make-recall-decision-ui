@@ -63,7 +63,7 @@
                 <li>Continue to the next page and select the index offence.</li>
             </ul>
 
-
+            {% if errorMessage %}
                 {% set html %}
                     <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
                     <span> {{errorMessage}}</span>
@@ -74,6 +74,7 @@
                     html: html,
                     iconFallbackText: 'none'
                 }) }}
+            {% endif %}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
