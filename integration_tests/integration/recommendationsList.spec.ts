@@ -122,7 +122,7 @@ context('Recommendations tab in case summary', () => {
   })
 
   it('if signed in user is a SPO - lists all recommendations with only download actions available', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -147,7 +147,7 @@ context('Recommendations tab in case summary', () => {
   })
 
   it('shows delete links if flag is on', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,

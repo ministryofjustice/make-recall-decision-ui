@@ -183,6 +183,36 @@ export const createPartA = ({ statusCode = 200, response }: { statusCode?; respo
     response,
   })
 
+export const ppcsSearch = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/ppcs-search`,
+    statusCode,
+    response,
+  })
+
+export const searchPpud = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/ppud/search`,
+    statusCode,
+    response,
+  })
+
+export const searchForPrisonOffender = ({ statusCode = 200, response }: { statusCode?; response }) => {
+  return mockUpdate({
+    urlPathPattern: `/prison-offender-search`,
+    statusCode,
+    response,
+  })
+}
+
+export const prisonSentences = ({ statusCode = 200, response }: { statusCode?; response }) => {
+  return mockUpdate({
+    urlPathPattern: `/prison-sentences`,
+    statusCode,
+    response,
+  })
+}
+
 export const createNoRecallLetter = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockUpdate({
     urlPathPattern: `${routes.recommendations}/(.*)/no-recall-letter`,

@@ -5,10 +5,11 @@ import { stubFor, getRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
 
 const createToken = opts => {
-  const authorities =
-    opts?.hasSpoRole === true
-      ? ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO']
-      : ['ROLE_MAKE_RECALL_DECISION']
+  const authorities = ['ROLE_MAKE_RECALL_DECISION']
+  const roles = opts?.roles
+  if (roles) {
+    authorities.push(...opts.roles)
+  }
   const payload = {
     user_name: 'USER1',
     scope: ['read'],
