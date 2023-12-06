@@ -7,7 +7,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { user } = res.locals
 
   if (!isDefined(crn) || isEmptyStringOrWhitespace(crn as string)) {
-    res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
+    res.redirect(303, `no-ppcs-search-results?crn=`)
     return
   }
 
