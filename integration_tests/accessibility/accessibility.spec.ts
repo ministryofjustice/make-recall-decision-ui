@@ -166,7 +166,7 @@ context('Accessibility (a11y) Checks', () => {
 
 context('Accessibility (a11y) SPO Checks', () => {
   beforeEach(() => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
 

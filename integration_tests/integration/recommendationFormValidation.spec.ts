@@ -420,7 +420,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
   it('Trigger leadnig to recall', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
@@ -431,7 +431,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
   it('Rationale Check', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
@@ -443,7 +443,7 @@ context('Make a recommendation - form validation', () => {
   })
 
   it('SPO rationale', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
@@ -454,7 +454,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
   it('SPO rationale - Yes', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
@@ -466,7 +466,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
   it('SPO rationale - No', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-why-no-recall`)
@@ -477,7 +477,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
   it('SPO countersignature', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-countersignature`)
@@ -488,7 +488,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
   it('ACO countersignature', () => {
-    cy.signIn({ hasSpoRole: true })
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/aco-countersignature`)

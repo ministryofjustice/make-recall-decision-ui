@@ -14,6 +14,10 @@ import {
   getStatuses,
   updateRecommendation,
   updateStatuses,
+  ppcsSearch,
+  searchPpud,
+  searchForPrisonOffender,
+  prisonSentences,
 } from './mockApis/makeRecallDecisionApi'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import { readDocX } from '../cypress_shared/plugins'
@@ -60,6 +64,10 @@ export default defineConfig({
         readDocX,
         createPartA,
         createNoRecallLetter,
+        ppcsSearch,
+        searchPpud,
+        searchForPrisonOffender,
+        prisonSentences,
       })
     },
     baseUrl: 'http://localhost:3007',

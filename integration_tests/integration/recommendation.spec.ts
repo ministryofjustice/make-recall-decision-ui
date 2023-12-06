@@ -901,7 +901,7 @@ context('Make a recommendation', () => {
 
   describe('SPO Countersignature Journey', () => {
     beforeEach(() => {
-      cy.signIn({ hasSpoRole: true })
+      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     })
 
     it('present Countersigning section on task list for SPO - line manager signature requested', () => {
@@ -1006,7 +1006,7 @@ context('Make a recommendation', () => {
 
   describe('SPO Rationale Journey', () => {
     beforeEach(() => {
-      cy.signIn({ hasSpoRole: true })
+      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     })
 
     it("present Review Practitioner's concerns and return to task list", () => {
@@ -1260,7 +1260,7 @@ context('Make a recommendation', () => {
   })
   describe('SPO Countersigning Journey', () => {
     beforeEach(() => {
-      cy.signIn({ hasSpoRole: true })
+      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     })
 
     it('present rationale check while countersigning', () => {
@@ -1477,7 +1477,7 @@ context('Make a recommendation', () => {
   })
   describe('ACO Countersigning Journey', () => {
     beforeEach(() => {
-      cy.signIn({ hasSpoRole: true })
+      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     })
 
     it('present telephone entry while countersigning', () => {
@@ -1685,6 +1685,199 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Preview Part A')
 
       cy.getElement('Download preview of Part A').should('exist')
+    })
+  })
+  describe('PPCS Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+    })
+    it('landing page for PPCS', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.start}`)
+
+      cy.pageHeading().should('contain', 'Check and book a recall')
+    })
+
+    it('Find a rec doc', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`/ppcs-search`)
+
+      cy.pageHeading().should('contain', 'Find a person to book on')
+    })
+
+    it('search results', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('ppcsSearch', {
+        statusCode: 200,
+        response: {
+          results: [
+            {
+              name: 'Harry Smith',
+              crn: 'X098092',
+              dateOfBirth: '1980-05-06',
+              recommendationId: 799270715,
+            },
+          ],
+        },
+      })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`/ppcs-search-results?crn=X098092`)
+
+      cy.pageHeading().should('contain', 'Search results')
+    })
+
+    it('search ppud', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('ppcsSearch', {
+        statusCode: 200,
+        response: {
+          results: [
+            {
+              name: 'Harry Smith',
+              crn: 'X098092',
+              dateOfBirth: '1980-05-06',
+              recommendationId: 799270715,
+            },
+          ],
+        },
+      })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`/recommendations/252523937/search-ppud`)
+
+      cy.pageHeading().should('contain', 'Use these details to search PPUD')
+    })
+
+    it('search ppud results', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('searchPpud', {
+        statusCode: 200,
+        response: {
+          results: [
+            {
+              id: '4F6666656E64657269643D313731383138G725H664',
+              croNumber: '123456/12A',
+              nomsId: 'JG123POE',
+              firstNames: 'John',
+              familyName: 'Teal',
+              dateOfBirth: '2000-01-01',
+            },
+          ],
+        },
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`/recommendations/252523937/search-ppud-results`)
+      cy.pageHeading().should('contain', 'PPUD record found')
+    })
+
+    it('check booking details', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('searchForPrisonOffender', {
+        statusCode: 200,
+        response: {
+          locationDescription: 'Graceland',
+          bookingNo: '1234',
+          firstName: 'Anne',
+          middleName: 'C',
+          lastName: 'McCaffrey',
+          facialImageId: 1234,
+          dateOfBirth: '1970-03-15',
+          status: 'ACTIVE IN',
+          physicalAttributes: {
+            gender: 'Male',
+            ethnicity: 'Caucasian',
+          },
+          identifiers: [
+            {
+              type: 'CRO',
+              value: '1234/2345',
+            },
+            {
+              type: 'PNC',
+              value: 'X234547',
+            },
+          ],
+        },
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`/recommendations/252523937/check-booking-details`)
+      cy.pageHeading().should('contain', 'Check booking details for Paula Smith')
+    })
+
+    it('select index offence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('prisonSentences', {
+        statusCode: 200,
+        response: [
+          {
+            bookingId: 13,
+            sentenceSequence: 4,
+            lineSequence: 4,
+            caseSequence: 2,
+            courtDescription: 'Blackburn County Court',
+            sentenceStatus: 'A',
+            sentenceCategory: '2003',
+            sentenceCalculationType: 'MLP',
+            sentenceTypeDescription: 'Adult Mandatory Life',
+            sentenceDate: '2023-11-16',
+            sentenceStartDate: '2023-11-16',
+            sentenceEndDate: '3022-11-15',
+            terms: [],
+            offences: [
+              {
+                offenderChargeId: 3934369,
+                offenceStartDate: '1899-01-01',
+                offenceStatute: 'SA96',
+                offenceCode: 'SA96036',
+                offenceDescription:
+                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                indicators: [],
+              },
+            ],
+          },
+        ],
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`/recommendations/252523937/select-index-offence`)
+      cy.pageHeading().should('contain', 'Select the index offence for Paula Smith')
     })
   })
 })
