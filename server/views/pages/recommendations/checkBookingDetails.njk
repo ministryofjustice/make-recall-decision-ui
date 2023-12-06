@@ -65,14 +65,14 @@
 
             {% if errorMessage %}
                 {% set html %}
-                    <h1 class="govuk-heading-m" data-qa='multiple-results'>Nomis Error</h1>
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
                     <span> {{errorMessage}}</span>
                 {% endset %}
 
                 {{ mojBanner({
                     type: 'warning',
                     html: html,
-                    iconFallbackText: 'information'
+                    iconFallbackText: 'none'
                 }) }}
             {% endif %}
 
@@ -222,7 +222,7 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             {% if prisonOffender.status == "ACTIVE IN" %}
-                                In custody - {{ prisonOffender.locationDescription}}
+                                In custody
                             {% elseif prisonOffender.status == "INACTIVE OUT" %}
                                 Unlawfully at large (UAL)
                             {% elseif prisonOffender.status == "INACTIVE TRN" %}

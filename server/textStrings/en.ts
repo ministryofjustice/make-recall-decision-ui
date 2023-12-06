@@ -9,6 +9,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingCrn: 'Enter a Case Reference Number (CRN)',
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
     saveChanges: 'An error occurred saving your changes',
+    noIndexOffenceSelected: 'You must select an index offence',
     noRecallTypeSelected: 'You must select a recommendation',
     noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
     noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',

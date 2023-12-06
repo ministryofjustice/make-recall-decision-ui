@@ -28,89 +28,104 @@ import type { WhyConsideredRecall } from './WhyConsideredRecall';
 import { CvlLicenceConditionsBreached } from "./CvlLicenceConditionsBreached";
 
 export type RecommendationResponse = {
-    userAccessResponse?: UserAccessResponse;
-    id?: number;
-    ppudRecordPresent?: boolean;
-    createdBy?: string;
-    createdDate?: string;
-    status?: RecommendationResponse.status;
-    custodyStatus?: CustodyStatus;
-    localPoliceContact?: LocalPoliceContact;
-    crn?: string;
-    managerRecallDecision?: ManagerRecallDecision;
-    recallType?: RecallType;
-    responseToProbation?: string;
-    whatLedToRecall?: string;
-    isThisAnEmergencyRecall?: boolean;
-    isIndeterminateSentence?: boolean;
-    isExtendedSentence?: boolean;
-    activeCustodialConvictionCount?: number;
-    hasVictimsInContactScheme?: VictimsInContactScheme;
-    indeterminateSentenceType?: IndeterminateSentenceType;
-    dateVloInformed?: string;
-    hasArrestIssues?: SelectedWithDetails;
-    hasContrabandRisk?: SelectedWithDetails;
-    personOnProbation?: PersonOnProbationDto;
-    alternativesToRecallTried?: AlternativesToRecallTried;
-    licenceConditionsBreached?: LicenceConditionsBreached;
-    cvlLicenceConditionsBreached?: CvlLicenceConditionsBreached;
-    isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
-    vulnerabilities?: VulnerabilitiesRecommendation;
-    convictionDetail?: ConvictionDetail;
-    region?: string;
-    localDeliveryUnit?: string;
-    userNamePartACompletedBy?: string;
-    userEmailPartACompletedBy?: string;
-    lastPartADownloadDateTime?: string;
-    userNameDntrLetterCompletedBy?: string;
-    lastDntrLetterDownloadDateTime?: string;
-    indexOffenceDetails?: string;
-    offenceAnalysis?: string;
-    fixedTermAdditionalLicenceConditions?: SelectedWithDetails;
-    indeterminateOrExtendedSentenceDetails?: IndeterminateOrExtendedSentenceDetails;
-    isMainAddressWherePersonCanBeFound?: SelectedWithDetails;
-    whyConsideredRecall?: WhyConsideredRecall;
-    reasonsForNoRecall?: ReasonsForNoRecall;
-    nextAppointment?: NextAppointment;
-    previousReleases?: PreviousReleases;
-    previousRecalls?: PreviousRecalls;
-    recallConsideredList?: Array<RecallConsidered>;
-    currentRoshForPartA?: RoshData;
-    roshSummary?: RoshSummary;
-    whoCompletedPartA?: WhoCompletedPartA;
-    practitionerForPartA?: PractitionerForPartA;
-    revocationOrderRecipients?: string[];
-    ppcsQueryEmails?: string[];
-    releaseUnderECSL?: boolean;
-    dateOfRelease?: string;
-    conditionalReleaseDate?: string;
+  userAccessResponse?: UserAccessResponse;
+  ppudRecordPresent?: boolean;
+  id?: number;
+  createdBy?: string;
+  createdDate?: string;
+  status?: RecommendationResponse.status;
+  custodyStatus?: CustodyStatus;
+  localPoliceContact?: LocalPoliceContact;
+  crn?: string;
+  managerRecallDecision?: ManagerRecallDecision;
+  recallType?: RecallType;
+  responseToProbation?: string;
+  whatLedToRecall?: string;
+  isThisAnEmergencyRecall?: boolean;
+  isIndeterminateSentence?: boolean;
+  isExtendedSentence?: boolean;
+  activeCustodialConvictionCount?: number;
+  hasVictimsInContactScheme?: VictimsInContactScheme;
+  indeterminateSentenceType?: IndeterminateSentenceType;
+  dateVloInformed?: string;
+  hasArrestIssues?: SelectedWithDetails;
+  hasContrabandRisk?: SelectedWithDetails;
+  personOnProbation?: PersonOnProbationDto;
+  alternativesToRecallTried?: AlternativesToRecallTried;
+  licenceConditionsBreached?: LicenceConditionsBreached;
+  cvlLicenceConditionsBreached?: CvlLicenceConditionsBreached;
+  isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
+  vulnerabilities?: VulnerabilitiesRecommendation;
+  convictionDetail?: ConvictionDetail;
+  region?: string;
+  localDeliveryUnit?: string;
+  userNamePartACompletedBy?: string;
+  userEmailPartACompletedBy?: string;
+  lastPartADownloadDateTime?: string;
+  userNameDntrLetterCompletedBy?: string;
+  lastDntrLetterDownloadDateTime?: string;
+  indexOffenceDetails?: string;
+  offenceAnalysis?: string;
+  fixedTermAdditionalLicenceConditions?: SelectedWithDetails;
+  indeterminateOrExtendedSentenceDetails?: IndeterminateOrExtendedSentenceDetails;
+  isMainAddressWherePersonCanBeFound?: SelectedWithDetails;
+  whyConsideredRecall?: WhyConsideredRecall;
+  reasonsForNoRecall?: ReasonsForNoRecall;
+  nextAppointment?: NextAppointment;
+  previousReleases?: PreviousReleases;
+  previousRecalls?: PreviousRecalls;
+  recallConsideredList?: Array<RecallConsidered>;
+  currentRoshForPartA?: RoshData;
+  roshSummary?: RoshSummary;
+  whoCompletedPartA?: WhoCompletedPartA;
+  practitionerForPartA?: PractitionerForPartA;
+  revocationOrderRecipients?: string[];
+  ppcsQueryEmails?: string[];
+  releaseUnderECSL?: boolean;
+  dateOfRelease?: string;
+  conditionalReleaseDate?: string;
+  nomisIndexOffence?: NomisIndexOffence;
 };
 
 export namespace RecommendationResponse {
-
-    export enum status {
-        DRAFT = 'DRAFT',
-        DELETED = 'DELETED',
-        RECALL_CONSIDERED = 'RECALL_CONSIDERED',
-        DOCUMENT_DOWNLOADED = 'DOCUMENT_DOWNLOADED',
-    }
-
-
+  export enum status {
+    DRAFT = 'DRAFT',
+    DELETED = 'DELETED',
+    RECALL_CONSIDERED = 'RECALL_CONSIDERED',
+    DOCUMENT_DOWNLOADED = 'DOCUMENT_DOWNLOADED',
+  }
 }
 
 export type WhoCompletedPartA = {
-    name?: string,
-    email?: string,
-    telephone?: string,
-    region?: string,
-    localDeliveryUnit?: string,
-    isPersonProbationPractitionerForOffender?: boolean
+  name?: string;
+  email?: string;
+  telephone?: string;
+  region?: string;
+  localDeliveryUnit?: string;
+  isPersonProbationPractitionerForOffender?: boolean
 }
 
 export type PractitionerForPartA = {
-    name?: string,
-    email?: string,
-    telephone?: string,
-    region?: string,
-    localDeliveryUnit?: string
+  name?: string;
+  email?: string;
+  telephone?: string;
+  region?: string;
+  localDeliveryUnit?: string
+}
+
+export type NomisIndexOffence = {
+  selected?: number;
+  allOptions?: OfferedOffence[]
+}
+
+export type OfferedOffence = {
+  offenderChargeId?: number;
+  offenceCode?: string;
+  offenceStatute: string;
+  offenceDescription: string;
+  sentenceDate: string;
+  courtDescription: string;
+  sentenceStartDate: string;
+  sentenceEndDate: string;
+  bookingId: number;
 }

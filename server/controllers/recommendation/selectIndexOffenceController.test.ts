@@ -1,6 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { prisonSentences } from '../../data/makeDecisionApiClient'
+import { getRecommendation, prisonSentences, updateRecommendation } from '../../data/makeDecisionApiClient'
 import selectIndexOffenceController from './selectIndexOffenceController'
+import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -9,8 +10,35 @@ describe('get', () => {
     ;(prisonSentences as jest.Mock).mockResolvedValue([
       {
         bookingId: 13,
+        sentenceSequence: 4,
+        lineSequence: 4,
+        caseSequence: 2,
+        courtDescription: 'Blackburn County Court',
+        sentenceStatus: 'A',
+        sentenceCategory: '2003',
+        sentenceCalculationType: 'MLP',
+        sentenceTypeDescription: 'Adult Mandatory Life',
+        sentenceDate: '2023-11-16',
+        sentenceStartDate: '2023-11-16',
+        sentenceEndDate: '3022-11-15',
+        terms: [],
+        offences: [
+          {
+            offenderChargeId: 3934369,
+            offenceStartDate: '1899-01-01',
+            offenceStatute: 'SA96',
+            offenceCode: 'SA96036',
+            offenceDescription:
+              'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+            indicators: [],
+          },
+        ],
       },
     ])
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
 
     const res = mockRes({
       locals: {
@@ -30,13 +58,62 @@ describe('get', () => {
     })
     const next = mockNext()
 
-    await selectIndexOffenceController.get(mockReq(), res, next)
+    await selectIndexOffenceController.get(req, res, next)
 
     expect(prisonSentences).toHaveBeenCalledWith('token', '567Y')
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      featureFlags: {},
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        nomisIndexOffence: {
+          allOptions: [
+            {
+              bookingId: 13,
+              courtDescription: 'Blackburn County Court',
+              offenceCode: 'SA96036',
+              offenceDescription:
+                'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+              offenceStatute: 'SA96',
+              offenderChargeId: 3934369,
+              sentenceDate: '2023-11-16',
+              sentenceEndDate: '3022-11-15',
+              sentenceStartDate: '2023-11-16',
+            },
+          ],
+          selected: undefined,
+        },
+      },
+    })
+
     expect(res.locals.page.id).toEqual('selectIndexOffence')
     expect(res.locals.sentences).toEqual([
       {
         bookingId: 13,
+        sentenceSequence: 4,
+        lineSequence: 4,
+        caseSequence: 2,
+        courtDescription: 'Blackburn County Court',
+        sentenceStatus: 'A',
+        sentenceCategory: '2003',
+        sentenceCalculationType: 'MLP',
+        sentenceTypeDescription: 'Adult Mandatory Life',
+        sentenceDate: '2023-11-16',
+        sentenceStartDate: '2023-11-16',
+        sentenceEndDate: '3022-11-15',
+        terms: [],
+        offences: [
+          {
+            offenderChargeId: 3934369,
+            offenceStartDate: '1899-01-01',
+            offenceStatute: 'SA96',
+            offenceCode: 'SA96036',
+            offenceDescription:
+              'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+            indicators: [],
+          },
+        ],
       },
     ])
     expect(res.locals.errorMessage).toBeUndefined()
@@ -71,6 +148,24 @@ describe('get', () => {
 
 describe('post', () => {
   it('select index offence', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      nomisIndexOffence: {
+        allOptions: [
+          {
+            id: 123,
+          },
+        ],
+      },
+    })
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: { indexOffence: '1234' },
+    })
+
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
@@ -81,9 +176,52 @@ describe('post', () => {
 
     const next = mockNext()
 
-    await selectIndexOffenceController.post(mockReq(), res, next)
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/map-index-offence`)
+    await selectIndexOffenceController.post(req, res, next)
 
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      featureFlags: {},
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        nomisIndexOffence: {
+          allOptions: [{ id: 123 }],
+          selected: '1234',
+        },
+      },
+    })
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/map-index-offence`)
     expect(next).toHaveBeenCalled()
+  })
+  it('missing index offence', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {},
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    const next = mockNext()
+
+    await selectIndexOffenceController.post(req, res, next)
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'noIndexOffenceSelected',
+        href: '#indexOffence',
+        invalidParts: undefined,
+        name: 'indexOffence',
+        text: 'You must select an index offence',
+        values: undefined,
+      },
+    ])
+    expect(next).not.toHaveBeenCalled()
   })
 })
