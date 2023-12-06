@@ -339,6 +339,8 @@ describe('rosh', () => {
   it('mappings', async () => {
     expect(currentHighestRosh(undefined)).toEqual(undefined)
 
+    expect(currentHighestRosh(null)).toEqual(undefined)
+
     expect(
       currentHighestRosh({
         riskToPrisoners: 'HIGH',

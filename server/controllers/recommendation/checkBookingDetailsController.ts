@@ -137,14 +137,16 @@ async function post(_: Request, res: Response, next: NextFunction) {
 
 export default { get, post }
 
-export function currentHighestRosh(rosh?: {
+type Rosh = {
   riskToChildren: string
   riskToPublic: string
   riskToKnownAdult: string
   riskToStaff: string
   riskToPrisoners: string
-}) {
-  if (rosh === undefined) {
+}
+
+export function currentHighestRosh(rosh?: Rosh | null) {
+  if (rosh === undefined || rosh === null) {
     return undefined
   }
 
