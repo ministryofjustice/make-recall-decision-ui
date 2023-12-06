@@ -1,4 +1,11 @@
 {% extends "../../partials/layout.njk" %}
+{% macro hyphenForBlank(value) %}
+    {% if value %}
+        {{ value }}
+    {% else %}
+        - <span class="govuk-visually-hidden">no value</span>
+    {% endif %}
+{% endmacro %}
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
@@ -23,7 +30,7 @@
                         Name
                     </dt>
                     <dd class="govuk-summary-list__value">
-                          {{ recommendation.personOnProbation.fullName }}
+                    {{ hyphenForBlank(recommendation.personOnProbation.fullName) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -31,7 +38,7 @@
                         Date of birth
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        {{ formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth}) }}
+                    {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth})) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -39,7 +46,7 @@
                         NOMIS ID
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        {{ recommendation.personOnProbation.nomsNumber }}
+                    {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -47,7 +54,7 @@
                         CRO
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        {{ recommendation.personOnProbation.croNumber }}
+                    {{ hyphenForBlank(recommendation.personOnProbation.croNumber) }}
                     </dd>
                 </div>
             </dl>
