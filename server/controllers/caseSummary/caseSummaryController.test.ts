@@ -307,7 +307,7 @@ describe('get', () => {
 
   it('show recommendation button for existing recommendation that is not closed', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.CLOSED, active: true }])
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SENT_TO_PPCS, active: true }])
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
 
     await caseSummaryController.get(req, res, next)

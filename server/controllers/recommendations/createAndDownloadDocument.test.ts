@@ -144,7 +144,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.CLOSED, STATUSES.SENT_TO_PPCS],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.SENT_TO_PPCS],
       deActivate: [],
     })
   })

@@ -61,7 +61,6 @@ export const createAndDownloadDocument =
 
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         if (!isSpo && isSpoRecordedRationale) {
-          activate.push(STATUSES.CLOSED)
           if (documentType === 'PART_A') {
             activate.push(STATUSES.SENT_TO_PPCS)
           }

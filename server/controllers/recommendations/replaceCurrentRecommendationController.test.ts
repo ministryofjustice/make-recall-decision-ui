@@ -19,7 +19,7 @@ describe('replaceCurrentRecommendation', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token',
-      activate: [STATUSES.CLOSED],
+      activate: [STATUSES.SENT_TO_PPCS],
       deActivate: [],
     })
 
@@ -41,7 +41,7 @@ describe('replaceCurrentRecommendation', () => {
   })
   it('do not close the current recommendation id', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
-      { name: STATUSES.CLOSED, active: true },
+      { name: STATUSES.SENT_TO_PPCS, active: true },
       { name: STATUSES.PP_DOCUMENT_CREATED, active: true },
     ])
     const req = mockReq({
