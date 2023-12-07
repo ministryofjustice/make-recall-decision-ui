@@ -180,7 +180,7 @@ describe('createAndDownloadDocument', () => {
         active: true,
       },
       {
-        name: STATUSES.DNTR_DOWNLOADED,
+        name: STATUSES.REC_CLOSED,
         active: true,
       },
     ])
@@ -234,7 +234,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED, STATUSES.DNTR_DOWNLOADED],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED, STATUSES.REC_CLOSED],
       deActivate: [],
     })
 

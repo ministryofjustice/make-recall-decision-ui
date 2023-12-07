@@ -70,12 +70,12 @@ export const createAndDownloadDocument =
     }
     if (documentType === 'NO_RECALL_LETTER') {
       const isCompleted = statuses.find(status => status.name === STATUSES.COMPLETED)
-      const isDntrDownloaded = statuses.find(status => status.name === STATUSES.DNTR_DOWNLOADED)
+      const isDntrDownloaded = statuses.find(status => status.name === STATUSES.REC_CLOSED)
       if (!isCompleted) {
         activate.push(STATUSES.COMPLETED)
       }
       if (!isDntrDownloaded) {
-        activate.push(STATUSES.DNTR_DOWNLOADED)
+        activate.push(STATUSES.REC_CLOSED)
       }
     }
     if (activate.length > 0) {
