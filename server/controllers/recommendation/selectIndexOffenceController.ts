@@ -45,6 +45,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
             sentenceStartDate: sentence.sentenceStartDate,
             sentenceEndDate: sentence.sentenceEndDate,
             bookingId: sentence.bookingId,
+            terms: sentence.terms,
+            sentenceTypeDescription: sentence.sentenceTypeDescription,
+            releaseDate: sentence.releaseDate,
+            releasingPrison: sentence.releasingPrison,
+            licenceExpiryDate: sentence.licenceExpiryDate,
           }
         })
       }
@@ -111,7 +116,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'map-index-offence', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'index-offence-selected', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()

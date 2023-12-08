@@ -1,48 +1,5 @@
 {% extends "../../partials/layout.njk" %}
 
-{% macro hyphenForBlank(value) %}
-    {% if value %}
-        {{ value }}
-    {% else %}
-        - <span class="govuk-visually-hidden">no value</span>
-    {% endif %}
-{% endmacro %}
-
-{% macro formatTerm(term) %}
-    {% set latch = false %}
-    {% if term.years %}
-        {{ term.years }} years
-        {% set latch = true %}
-    {% endif %}
-    {% if term.months %}
-        {% if latch %}
-            ,
-            {% set latch = false %}
-        {% endif %}
-        {{ term.months }} months
-        {% set latch = true %}
-    {% endif %}
-    {% if term.weeks %}
-        {% if latch %}
-            ,
-            {% set latch = false %}
-        {% endif %}
-        {{ term.weeks }} weeks
-        {% set latch = true %}
-    {% endif %}
-    {% if term.days %}
-        {% if latch %}
-            ,
-            {% set latch = false %}
-        {% endif %}
-        {{ term.days }} days
-        {% set latch = true %}
-    {% endif %}
-    {% if not latch %}
-        - <span class="govuk-visually-hidden">no value</span>
-    {% endif %}
-{% endmacro %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -101,7 +58,7 @@
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="indexOffence" name="indexOffence" type="radio" value="{{ offence.offenderChargeId }}">
                                 <label class="govuk-label govuk-radios__label" for="indexOffence">
-                                    {{ offence.offenceDescription }}
+                                    {{ hyphenForBlank(offence.offenceDescription) }}
                                 </label>
 
                                 <dl class="govuk-summary-list govuk-!-margin-bottom-4">
@@ -110,7 +67,7 @@
                                             Sentence type
                                         </dt>
                                         <dd class="govuk-summary-list__value">
-                                            {{ sentence.sentenceTypeDescription }}
+                                            {{ hyphenForBlank(sentence.sentenceTypeDescription) }}
                                         </dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
@@ -118,7 +75,7 @@
                                             Start date
                                         </dt>
                                         <dd class="govuk-summary-list__value">
-                                            {{ sentence.sentenceStartDate }}
+                                            {{ hyphenForBlank(sentence.sentenceStartDate) }}
                                         </dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
@@ -136,7 +93,7 @@
                                         </dt>
                                         <dd class="govuk-summary-list__value">
                                             {% for term in sentence.terms %}
-                                                <div>{{ formatTerm(term) }}</div>
+                                                <div>{{ hyphenForBlank(formatTerm(term)) }}</div>
                                             {% endfor %}
                                             {% if not sentence.terms.length %}
                                                 - <span class="govuk-visually-hidden">no value</span>
@@ -155,7 +112,7 @@
                                                 {% endif %}
                                             </dt>
                                             <dd class="govuk-summary-list__value">
-                                                <div>{{ formatTerm(term)}}</div>
+                                                <div>{{ hyphenForBlank(formatTerm(term))}}</div>
                                             </dd>
                                         </div>
                                     {% endfor %}
@@ -165,8 +122,6 @@
                         {% endfor %}
                     {% endfor %}
                     </div>
-
-
                     {{ formSubmitButton() }}
                 </form>
             </div>

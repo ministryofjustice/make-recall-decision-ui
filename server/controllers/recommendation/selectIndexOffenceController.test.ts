@@ -21,6 +21,9 @@ describe('get', () => {
         sentenceDate: '2023-11-16',
         sentenceStartDate: '2023-11-16',
         sentenceEndDate: '3022-11-15',
+        releaseDate: '2025-11-16',
+        licenceExpiryDate: '2025-11-17',
+        releasingPrison: 'Broad Moor',
         terms: [],
         offences: [
           {
@@ -80,6 +83,11 @@ describe('get', () => {
               sentenceDate: '2023-11-16',
               sentenceEndDate: '3022-11-15',
               sentenceStartDate: '2023-11-16',
+              sentenceTypeDescription: 'Adult Mandatory Life',
+              terms: [],
+              releaseDate: '2025-11-16',
+              licenceExpiryDate: '2025-11-17',
+              releasingPrison: 'Broad Moor',
             },
           ],
           selected: undefined,
@@ -102,6 +110,9 @@ describe('get', () => {
         sentenceDate: '2023-11-16',
         sentenceStartDate: '2023-11-16',
         sentenceEndDate: '3022-11-15',
+        licenceExpiryDate: '2025-11-17',
+        releasingPrison: 'Broad Moor',
+        releaseDate: '2025-11-16',
         terms: [],
         offences: [
           {
@@ -189,7 +200,7 @@ describe('post', () => {
         },
       },
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/map-index-offence`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/index-offence-selected`)
     expect(next).toHaveBeenCalled()
   })
   it('missing index offence', async () => {

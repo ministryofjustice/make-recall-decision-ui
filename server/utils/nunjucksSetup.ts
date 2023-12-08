@@ -4,7 +4,7 @@ import express from 'express'
 import * as pathModule from 'path'
 import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
-import { formatDateTimeFromIsoString } from './dates/format'
+import { formatDateTimeFromIsoString, formatTerm } from './dates/format'
 import {
   dateTimeItems,
   possessiveSuffix,
@@ -96,4 +96,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('recommendationsListStatusLabel', recommendationsListStatusLabel)
   njkEnv.addGlobal('isObjectInArray', isObjectInArray)
   njkEnv.addGlobal('countLabelSuffix', countLabelSuffix)
+  njkEnv.addGlobal('formatTerm', formatTerm)
 }

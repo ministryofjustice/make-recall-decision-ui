@@ -1,6 +1,7 @@
 import { DateTime, Settings } from 'luxon'
 import { isDefined, isNumber } from '../utils'
 import { europeLondon, getDateTimeInEuropeLondon } from './index'
+import { Term } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 Settings.throwOnInvalid = true
 Settings.defaultZone = 'utc'
@@ -63,3 +64,33 @@ export const formatDateRange = ({ dateFromIso, dateToIso }: { dateFromIso: strin
   )
     .setZone(europeLondon)
     .toFormat(dateFormatShortMonth)}`
+
+export const formatTerm = (term: Term) => {
+  let latch = false
+  let result = ''
+  if (term.years) {
+    result = `${result + term.years} years`
+    latch = true
+  }
+  if (term.months) {
+    if (latch) {
+      result += ', '
+    }
+    result = `${result + term.months} months`
+    latch = true
+  }
+  if (term.weeks) {
+    if (latch) {
+      result += ', '
+    }
+    result = `${result + term.weeks} weeks`
+    latch = true
+  }
+  if (term.days) {
+    if (latch) {
+      result += ', '
+    }
+    result = `${result + term.days} days`
+  }
+  return result
+}
