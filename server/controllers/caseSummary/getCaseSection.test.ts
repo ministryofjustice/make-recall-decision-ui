@@ -77,7 +77,7 @@ describe('getCaseSection', () => {
               createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
               createdByUserFullName: 'Making Recall Decisions SPO User',
               created: '2023-07-31T08:18:53.361Z',
-              name: 'COMPLETED',
+              name: 'REC_CLOSED',
               active: true,
             },
           ],

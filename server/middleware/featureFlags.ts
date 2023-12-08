@@ -4,6 +4,11 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
+  flagPpcs: {
+    label: 'Enable PPCS',
+    description: 'Enables continuation in PPCS',
+    default: false,
+  },
   flagProbationAdmin: {
     label: 'Enable Probation Admin',
     description: 'Enables Probation Admin',

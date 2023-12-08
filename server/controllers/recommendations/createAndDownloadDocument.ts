@@ -6,7 +6,6 @@ import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { AuditService } from '../../services/auditService'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
-import { flagIsActive } from '../../middleware/check'
 
 const auditService = new AuditService()
 
@@ -59,14 +58,14 @@ export const createAndDownloadDocument =
 
       if (!isPPDocumentCreated) {
         activate.push(STATUSES.PP_DOCUMENT_CREATED)
-    
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         if (!isSpo && isSpoRecordedRationale) {
           if (documentType === 'PART_A') {
-            if (flagIsActive('flagProbationAdmin')) {
+            if (flags.flagPpcs) {
               activate.push(STATUSES.SENT_TO_PPCS)
-            } else
-            activate.push(STATUSES.REC_CLOSED)
+            } else {
+              activate.push(STATUSES.REC_CLOSED)
+            }
           }
         }
       }

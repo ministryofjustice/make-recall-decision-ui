@@ -14,7 +14,7 @@ export enum STATUSES {
   DELETED = 'DELETED',
   PP_DOCUMENT_CREATED = 'PP_DOCUMENT_CREATED',
   SENT_TO_PPCS = 'SENT_TO_PPCS',
-  REC_CLOSED = 'REC_CLOSED ',
+  REC_CLOSED = 'REC_CLOSED',
 }
 
 const router = Router()
