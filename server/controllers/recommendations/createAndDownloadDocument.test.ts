@@ -121,7 +121,35 @@ describe('createAndDownloadDocument', () => {
     expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
   })
 
-  it('close document', async () => {
+  it('close document flagPpcs set', async () => {
+    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents: '123', fileName: 'Part-A.docx' })
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+
+    const req = mockReq({ params: { recommendationId }, query: { crn: 'AB1234C' } })
+
+    const res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          email: 'dave@gov.uk',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+        flags: { flagPpcs: 1 },
+      },
+    })
+
+    await createAndDownloadDocument('PART_A')(req, res)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '987',
+      token: 'token',
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.SENT_TO_PPCS],
+      deActivate: [],
+    })
+  })
+
+  it('close document flagPpcs not set', async () => {
     ;(createDocument as jest.Mock).mockResolvedValue({ fileContents: '123', fileName: 'Part-A.docx' })
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
 
@@ -144,7 +172,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.CLOSED, STATUSES.SENT_TO_PPCS],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.REC_CLOSED],
       deActivate: [],
     })
   })
@@ -175,10 +203,6 @@ describe('createAndDownloadDocument', () => {
 
   it('do not mark DNTR as completed or downloaded, if already set', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: STATUSES.COMPLETED,
-        active: true,
-      },
       {
         name: STATUSES.REC_CLOSED,
         active: true,
@@ -234,7 +258,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED, STATUSES.REC_CLOSED],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.REC_CLOSED],
       deActivate: [],
     })
 

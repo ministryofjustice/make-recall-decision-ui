@@ -114,7 +114,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
         })
       ).filter(status => status.active)
 
-      const isClosed = statuses.find(status => status.name === STATUSES.CLOSED)
+      const isClosed = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
       if (isClosed) {
         recommendationButton = {

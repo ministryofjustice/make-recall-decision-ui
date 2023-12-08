@@ -189,7 +189,7 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       deActivate: [STATUSES.ACO_SIGNATURE_REQUESTED],
-      activate: [STATUSES.ACO_SIGNED, STATUSES.COMPLETED],
+      activate: [STATUSES.ACO_SIGNED],
     })
 
     expect(appInsightsEvent).toHaveBeenCalledWith(

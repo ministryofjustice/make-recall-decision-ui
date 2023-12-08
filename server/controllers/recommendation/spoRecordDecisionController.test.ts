@@ -191,7 +191,7 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      activate: [STATUSES.SPO_RECORDED_RATIONALE, STATUSES.CLOSED],
+      activate: [STATUSES.SPO_RECORDED_RATIONALE, STATUSES.SENT_TO_PPCS],
       deActivate: [STATUSES.SPO_CONSIDER_RECALL],
     })
   })
