@@ -14,11 +14,13 @@ async function get(req: Request, res: Response) {
       token: user.token,
     })
   ).filter(status => status.active)
-
-  const isClosed = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
+  const isClosed =
+    statuses.find(status => status.name === STATUSES.SENT_TO_PPCS) ||
+    statuses.find(status => status.name === STATUSES.REC_CLOSED)
+  const isDntr = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED)
   const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
 
-  if (!isClosed && isPPDocumentCreated) {
+  if (!isClosed && !isDntr && isPPDocumentCreated) {
     await updateStatuses({
       recommendationId,
       token: user.token,
