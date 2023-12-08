@@ -128,4 +128,16 @@ export type OfferedOffence = {
   sentenceStartDate: string;
   sentenceEndDate: string;
   bookingId: number;
+  terms: Term[];
+  releaseDate: string;
+  releasingPrison: string;
+  licenceExpiryDate: string;
+}
+
+export type Term = {
+  years: number;
+  months: number;
+  weeks: number;
+  days: number
+  code: string;
 }

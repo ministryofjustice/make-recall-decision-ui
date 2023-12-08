@@ -176,5 +176,6 @@ export const strings: Record<string, Record<string, string>> = {
     searchPpudResults: 'PPUD record found',
     checkBookingDetails: 'Check booking details for {{ fullName }}',
     selectIndexOffence: 'Select the index offence for {{ fullName }}',
+    indexOffenceSelected: 'Index offence selected for {{ fullName }}',
   },
 }

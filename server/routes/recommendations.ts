@@ -81,6 +81,7 @@ import searchPpudResultsController from '../controllers/recommendation/searchPpu
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
+import indexOffenceSelectedController from '../controllers/recommendation/indexOffenceSelectedController'
 
 const recommendations = Router()
 
@@ -365,6 +366,8 @@ ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.pos
 
 ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
+
+ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
