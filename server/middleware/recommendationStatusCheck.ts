@@ -15,7 +15,6 @@ export enum STATUSES {
   PP_DOCUMENT_CREATED = 'PP_DOCUMENT_CREATED',
   SENT_TO_PPCS = 'SENT_TO_PPCS',
   REC_CLOSED = 'REC_CLOSED ',
-  COMPLETED = 'COMPLETED',
 }
 
 const router = Router()

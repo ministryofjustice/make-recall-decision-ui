@@ -6,6 +6,7 @@ import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { AuditService } from '../../services/auditService'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
+import { flagIsActive } from '../../middleware/check'
 
 const auditService = new AuditService()
 
@@ -58,22 +59,21 @@ export const createAndDownloadDocument =
 
       if (!isPPDocumentCreated) {
         activate.push(STATUSES.PP_DOCUMENT_CREATED)
-
+    
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         if (!isSpo && isSpoRecordedRationale) {
           if (documentType === 'PART_A') {
-            activate.push(STATUSES.SENT_TO_PPCS)
+            if (flagIsActive('flagProbationAdmin')) {
+              activate.push(STATUSES.SENT_TO_PPCS)
+            } else
+            activate.push(STATUSES.REC_CLOSED)
           }
         }
       }
     }
     if (documentType === 'NO_RECALL_LETTER') {
-      const isCompleted = statuses.find(status => status.name === STATUSES.COMPLETED)
-      const isDntrDownloaded = statuses.find(status => status.name === STATUSES.REC_CLOSED)
-      if (!isCompleted) {
-        activate.push(STATUSES.COMPLETED)
-      }
-      if (!isDntrDownloaded) {
+      const isRecClosed = statuses.find(status => status.name === STATUSES.REC_CLOSED)
+      if (!isRecClosed) {
         activate.push(STATUSES.REC_CLOSED)
       }
     }

@@ -176,10 +176,6 @@ describe('createAndDownloadDocument', () => {
   it('do not mark DNTR as completed or downloaded, if already set', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
       {
-        name: STATUSES.COMPLETED,
-        active: true,
-      },
-      {
         name: STATUSES.REC_CLOSED,
         active: true,
       },
@@ -234,7 +230,7 @@ describe('createAndDownloadDocument', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '987',
       token: 'token',
-      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.COMPLETED, STATUSES.REC_CLOSED],
+      activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.REC_CLOSED],
       deActivate: [],
     })
 
