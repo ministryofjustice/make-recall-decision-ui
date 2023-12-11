@@ -45,8 +45,7 @@
 
                     <div class="govuk-radios" data-module="govuk-radios">
                     {% for sentence in sentences %}
-
-                        {% if sentence.courtDescription != courtDescription and sentence.sentenceDate != sentenceDate %}
+                        {% if sentence.courtDescription != courtDescription or sentence.sentenceDate != sentenceDate %}
                             <h3 class='govuk-heading-m'>Court case: {{ sentence.courtDescription }}</h3>
                             <p class='govuk-body'>Date of sentence: {{ formatDateTimeFromIsoString({ isoDate: sentence.sentenceDate, dateOnly: true }) }}</p>
                             {% set courtDescription = sentence.courtDescription %}
