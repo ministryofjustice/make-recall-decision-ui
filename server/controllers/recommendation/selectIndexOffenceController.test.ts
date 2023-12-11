@@ -76,6 +76,7 @@ describe('get', () => {
               bookingId: 13,
               courtDescription: 'Blackburn County Court',
               offenceCode: 'SA96036',
+              offenceDate: '1899-01-01',
               offenceDescription:
                 'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
               offenceStatute: 'SA96',
