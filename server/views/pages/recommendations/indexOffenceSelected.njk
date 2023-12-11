@@ -42,7 +42,7 @@
                             Offence Date
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(offence.offenceDate) }}
+                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.offenceDate }) ) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
