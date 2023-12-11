@@ -123,6 +123,7 @@ export type OfferedOffence = {
   offenceCode?: string;
   offenceStatute: string;
   offenceDescription: string;
+  offenceDate: string;
   sentenceDate: string;
   courtDescription: string;
   sentenceStartDate: string;

@@ -38,6 +38,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
           return {
             offenderChargeId: offence.offenderChargeId,
             offenceCode: offence.offenceCode,
+            offenceDate: offence.offenceStartDate,
             offenceStatute: offence.offenceStatute,
             offenceDescription: offence.offenceDescription,
             sentenceDate: sentence.sentenceDate,
