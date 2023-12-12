@@ -1,0 +1,35 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{{  logMessage(pageTitle) }}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-panel govuk-panel--confirmation">
+              <h1 class="govuk-panel__title">
+                {{ pageHeadings[page.id] }}
+              </h1>
+              <div class="govuk-panel__body" data-qa="fullName">
+              {{ recommendation.personOnProbation.name }}
+              </div>
+              <div class="govuk-panel__body" data-qa="nomsId">
+                NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}
+              </div>
+            </div>
+
+            <h1 class="govuk-heading-m">What happens next</h1>
+
+            <p class="govuk-body">You have added this recall to PPUD.  The offence you've selected will go into the comments box in the offence screen.</p>
+
+            <p class="govuk-body">
+                <a href="{{urlInfo.pageBase}}task-list" class="govuk-link">Return to Part A</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

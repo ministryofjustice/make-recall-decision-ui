@@ -85,6 +85,7 @@ export type RecommendationResponse = {
   dateOfRelease?: string;
   conditionalReleaseDate?: string;
   nomisIndexOffence?: NomisIndexOffence;
+  bookRecallToPpud?: BookRecallToPpud;
 };
 
 export namespace RecommendationResponse {
@@ -141,4 +142,18 @@ export type Term = {
   weeks: number;
   days: number
   code: string;
+}
+
+export type BookRecallToPpud = {
+  decisionDateTime: string,
+  isInCustody: boolean,
+  mappaLevel: string,
+  policeForce: string,
+  probationArea: string,
+  recommendedToOwner: string,
+  receivedDateTime?: string,
+  releaseDate: string,
+  riskOfContrabandDetails: string,
+  riskOfSeriousHarmLevel: string,
+  sentenceDate: string,
 }

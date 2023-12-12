@@ -95,6 +95,17 @@ export const searchPpud = (
   }) as Promise<PpudSearchResponse>
 }
 
+export const bookRecallToPpud = (
+  token: string,
+  nomisId: string,
+  body: Record<string, string | boolean>
+): Promise<PpudSearchResponse> => {
+  return restClient(token).post({
+    path: `/ppud/book-recall/${nomisId}`,
+    data: body,
+  }) as Promise<PpudSearchResponse>
+}
+
 export const searchPersons = (
   token: string,
   page: number,
