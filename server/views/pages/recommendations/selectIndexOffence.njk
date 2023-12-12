@@ -17,11 +17,11 @@
 
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
-            <p class='govuk-body'>Compare the offence details in nomis with the Part A</p>
+            <p class='govuk-body'>Compare the offence details in NOMIS with the Part A</p>
 
             {% if errorMessage %}
                 {% set html %}
-                    <h1 class="govuk-heading-m" data-qa='multiple-results'>Nomis Error</h1>
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
                     <span> {{errorMessage}}</span>
                 {% endset %}
 
@@ -32,7 +32,7 @@
                 }) }}
             {% endif %}
 
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-three-quarters-from-desktop">
 
                 <h3 class='govuk-heading-m'>NOMIS</h3>
 
@@ -74,7 +74,7 @@
                                             Start date
                                         </dt>
                                         <dd class="govuk-summary-list__value">
-                                            {{ hyphenForBlank(sentence.sentenceStartDate) }}
+                                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceStartDate }) ) }}
                                         </dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
@@ -82,7 +82,7 @@
                                             Sentence end date
                                         </dt>
                                         <dd class="govuk-summary-list__value">
-                                            {{ hyphenForBlank(sentence.sentenceEndDate) }}
+                                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceEndDate }) ) }}
                                         </dd>
                                     </div>
                                     {% if sentence.terms.length < 2 %}
