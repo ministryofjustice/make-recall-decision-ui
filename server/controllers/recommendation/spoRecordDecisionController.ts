@@ -65,7 +65,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const activate = [STATUSES.SPO_RECORDED_RATIONALE]
 
   if (isPPDocumentCreated) {
-    activate.push(STATUSES.SENT_TO_PPCS)
+    if (flags.flagPpcs) {
+      activate.push(STATUSES.SENT_TO_PPCS)
+    } else {
+      activate.push(STATUSES.REC_CLOSED)
+    }
   }
 
   appInsightsEvent(EVENTS.MRD_SPO_RATIONALE_SENT, username, { crn, recommendationId, region }, flags)

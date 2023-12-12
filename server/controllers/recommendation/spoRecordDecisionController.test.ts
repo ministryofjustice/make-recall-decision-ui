@@ -191,6 +191,38 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
+      activate: [STATUSES.SPO_RECORDED_RATIONALE, STATUSES.REC_CLOSED],
+      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
+    })
+  })
+  it('sent to ppcs', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.PP_DOCUMENT_CREATED, active: true }])
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(updateStatuses as jest.Mock).mockResolvedValue([])
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        sensitive: 'sensitive',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        urlInfo: { basePath: '/recommendation/123/' },
+        flags: {
+          flagPpcs: true,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await spoRecordDecisionController.post(req, res, next)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
       activate: [STATUSES.SPO_RECORDED_RATIONALE, STATUSES.SENT_TO_PPCS],
       deActivate: [STATUSES.SPO_CONSIDER_RECALL],
     })
