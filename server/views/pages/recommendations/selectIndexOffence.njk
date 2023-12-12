@@ -32,166 +32,166 @@
                 }) }}
             {% endif %}
 
-            <div class="govuk-grid-column-three-quarters-from-desktop">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
 
-                <h3 class='govuk-heading-m'>NOMIS</h3>
+                    <h3 class='govuk-heading-m'>NOMIS</h3>
 
-                <p class='govuk-body'>includes court cases, sentences and offences</p>
+                    <p class='govuk-body govuk-body-underlined'>Includes court cases, sentences and offences</p>
 
-                <hr/>
+                    <form novalidate method="post">
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                <form novalidate method="post">
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                        <div class="govuk-radios" data-module="govuk-radios">
+                        {% for sentence in sentences %}
+                            {% if sentence.courtDescription != courtDescription or sentence.sentenceDate != sentenceDate %}
+                                <h3 class='govuk-heading-s govuk-!-margin-bottom-1 govuk-!-margin-top-6'>Court case: {{ sentence.courtDescription }}</h3>
+                                <p class='govuk-body'>Date of sentence: {{ formatDateTimeFromIsoString({ isoDate: sentence.sentenceDate, dateOnly: true }) }}</p>
+                                {% set courtDescription = sentence.courtDescription %}
+                                {% set sentenceDate = sentence.sentenceDate %}
+                            {% endif %}
 
-                    <div class="govuk-radios" data-module="govuk-radios">
-                    {% for sentence in sentences %}
-                        {% if sentence.courtDescription != courtDescription or sentence.sentenceDate != sentenceDate %}
-                            <h3 class='govuk-heading-m'>Court case: {{ sentence.courtDescription }}</h3>
-                            <p class='govuk-body'>Date of sentence: {{ formatDateTimeFromIsoString({ isoDate: sentence.sentenceDate, dateOnly: true }) }}</p>
-                            {% set courtDescription = sentence.courtDescription %}
-                            {% set sentenceDate = sentence.sentenceDate %}
-                        {% endif %}
+                            {% for offence in sentence.offences %}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="indexOffence" name="indexOffence" type="radio" value="{{ offence.offenderChargeId }}">
+                                    <label class="govuk-label govuk-radios__label" for="indexOffence">
+                                        {{ hyphenForBlank(offence.offenceDescription) }}
+                                    </label>
 
-                        {% for offence in sentence.offences %}
-
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="indexOffence" name="indexOffence" type="radio" value="{{ offence.offenderChargeId }}">
-                                <label class="govuk-label govuk-radios__label" for="indexOffence">
-                                    {{ hyphenForBlank(offence.offenceDescription) }}
-                                </label>
-
-                                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key govuk-body">
-                                            Sentence type
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">
-                                            {{ hyphenForBlank(sentence.sentenceTypeDescription) }}
-                                        </dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            Start date
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">
-                                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceStartDate }) ) }}
-                                        </dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            Sentence end date
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">
-                                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceEndDate }) ) }}
-                                        </dd>
-                                    </div>
-                                    {% if sentence.terms.length < 2 %}
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            Sentence length
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">
-                                            {% for term in sentence.terms %}
-                                                <div>{{ hyphenForBlank(formatTerm(term)) }}</div>
-                                            {% endfor %}
-                                            {% if not sentence.terms.length %}
-                                                - <span class="govuk-visually-hidden">no value</span>
-                                            {% endif %}
-                                        </dd>
-                                    </div>
-                                    {% else %}
-                                    {% for term in sentence.terms %}
+                                    <dl class="govuk-summary-list govuk-!-margin-left-3 govuk-!-margin-bottom-4">
                                         <div class="govuk-summary-list__row">
-                                            <dt class="govuk-summary-list__key">
-                                                {% if term.code === "IMP" %}
-                                                    Custodial term
-                                                {% endif %}
-                                                {% if term.code === "LIC" %}
-                                                    Extended term
-                                                {% endif %}
+                                            <dt class="govuk-summary-list__key govuk-body">
+                                                Sentence type
                                             </dt>
                                             <dd class="govuk-summary-list__value">
-                                                <div>{{ hyphenForBlank(formatTerm(term))}}</div>
+                                                {{ hyphenForBlank(sentence.sentenceTypeDescription) }}
                                             </dd>
                                         </div>
-                                    {% endfor %}
-                                    {% endif %}
-                                </dl>
-                            </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">
+                                                Start date
+                                            </dt>
+                                            <dd class="govuk-summary-list__value">
+                                                {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceStartDate }) ) }}
+                                            </dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">
+                                                Sentence end date
+                                            </dt>
+                                            <dd class="govuk-summary-list__value">
+                                                {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceEndDate }) ) }}
+                                            </dd>
+                                        </div>
+                                        {% if sentence.terms.length < 2 %}
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">
+                                                Sentence length
+                                            </dt>
+                                            <dd class="govuk-summary-list__value">
+                                                {% for term in sentence.terms %}
+                                                    <div>{{ hyphenForBlank(formatTerm(term)) }}</div>
+                                                {% endfor %}
+                                                {% if not sentence.terms.length %}
+                                                    - <span class="govuk-visually-hidden">no value</span>
+                                                {% endif %}
+                                            </dd>
+                                        </div>
+                                        {% else %}
+                                        {% for term in sentence.terms %}
+                                            <div class="govuk-summary-list__row">
+                                                <dt class="govuk-summary-list__key">
+                                                    {% if term.code === "IMP" %}
+                                                        Custodial term
+                                                    {% endif %}
+                                                    {% if term.code === "LIC" %}
+                                                        Extended term
+                                                    {% endif %}
+                                                </dt>
+                                                <dd class="govuk-summary-list__value">
+                                                    <div>{{ hyphenForBlank(formatTerm(term))}}</div>
+                                                </dd>
+                                            </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </dl>
+                                </div>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                    </div>
-                    {{ formSubmitButton() }}
-                </form>
+                        </div>
+                        {{ formSubmitButton() }}
+                    </form>
+                </div>
+
+                {#
+                <div class="govuk-grid-column-one-half">
+                    <h3 class='govuk-heading-m'>Part A</h3>
+
+                    <p class='govuk-body'>index offence</p>
+
+                    <hr/>
+
+                    <h3 class='govuk-heading-m'>Harassment</h3>
+
+                    <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                            </dt>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Date of sentence
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Sentence type
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Start date
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Sentence end date
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ hyphenForBlank(prisonOffender.middleName) }}
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Sentence length
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+
+                            </dd>
+                        </div>
+                    </dl>
+
+                </div>
+                #}
             </div>
-            {#
-            <div class="govuk-grid-column-one-half">
-                <h3 class='govuk-heading-m'>Part A</h3>
-
-                <p class='govuk-body'>index offence</p>
-
-                <hr/>
-
-                <h3 class='govuk-heading-m'>Harassment</h3>
-
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Date of sentence
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Sentence type
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Start date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Sentence end date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.middleName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Sentence length
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-
-                        </dd>
-                    </div>
-                </dl>
-
-            </div>
-            #}
         </div>
     </div>
 {% endblock %}

@@ -116,3 +116,10 @@ pre {
   max-width: 150px
 }
 
+.govuk-body-underlined {
+  border-style: solid;
+  border-width: 0;
+  border-color: gray;
+  border-bottom-width: 1px;
+  padding-bottom: 5px;
+}
