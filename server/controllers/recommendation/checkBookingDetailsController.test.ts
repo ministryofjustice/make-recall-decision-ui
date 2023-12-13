@@ -99,6 +99,19 @@ describe('get', () => {
           gender: 'Male',
           locationDescription: 'Graceland',
         },
+        bookRecallToPpud: {
+          decisionDateTime: '2023-11-13T09:49:31',
+          isInCustody: true,
+          mappaLevel: 'HARDCODED_VALUE',
+          policeForce: 'HARDCODED_VALUE',
+          probationArea: 'HARDCODED_VALUE',
+          receivedDateTime: null,
+          recommendedToOwner: 'HARDCODED_VALUE',
+          releaseDate: null,
+          riskOfContrabandDetails: '',
+          riskOfSeriousHarmLevel: undefined,
+          sentenceDate: null,
+        },
       },
     })
 

@@ -82,6 +82,7 @@ import checkBookingDetailsController from '../controllers/recommendation/checkBo
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 import indexOffenceSelectedController from '../controllers/recommendation/indexOffenceSelectedController'
+import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 
 const recommendations = Router()
 
@@ -355,7 +356,7 @@ RouteBuilder.build(recommendations)
 
 const ppcsRouteBuilder = ppRouteBuilder
   .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
-  .withCheck(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))
+  .withCheck(and(statusIsActive(STATUSES.PP_DOCUMENT_CREATED), not(statusIsActive(STATUSES.REC_CLOSED))))
 
 ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
 ppcsRouteBuilder.get('no-search-ppud-results', noSearchPpudResults.get)
@@ -368,6 +369,9 @@ ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 
 ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
+ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.post)
+
+ppcsRouteBuilder.get('booked-to-ppud', bookedToPpudController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

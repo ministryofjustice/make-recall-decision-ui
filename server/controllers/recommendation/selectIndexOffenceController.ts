@@ -105,12 +105,21 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
 
+  const indexOffenceData = recommendation.nomisIndexOffence.allOptions.find(
+    option => option.offenderChargeId === Number(indexOffence)
+  )
+
   await updateRecommendation({
     recommendationId,
     valuesToSave: {
       nomisIndexOffence: {
         selected: indexOffence,
         allOptions: recommendation.nomisIndexOffence?.allOptions,
+      },
+      bookRecallToPpud: {
+        ...recommendation.bookRecallToPpud,
+        releaseDate: indexOffenceData.releaseDate,
+        sentenceDate: indexOffenceData.sentenceDate,
       },
     },
     token,

@@ -165,9 +165,14 @@ describe('post', () => {
       nomisIndexOffence: {
         allOptions: [
           {
-            id: 123,
+            offenderChargeId: 1234,
+            releaseDate: '2039-12-01',
+            sentenceDate: '2019-01-20',
           },
         ],
+      },
+      bookRecallToPpud: {
+        mappaLevel: 'Mappa Level 1',
       },
     })
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
@@ -196,8 +201,19 @@ describe('post', () => {
       token: 'token',
       valuesToSave: {
         nomisIndexOffence: {
-          allOptions: [{ id: 123 }],
+          allOptions: [
+            {
+              offenderChargeId: 1234,
+              releaseDate: '2039-12-01',
+              sentenceDate: '2019-01-20',
+            },
+          ],
           selected: '1234',
+        },
+        bookRecallToPpud: {
+          mappaLevel: 'Mappa Level 1',
+          releaseDate: '2039-12-01',
+          sentenceDate: '2019-01-20',
         },
       },
     })

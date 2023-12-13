@@ -3,6 +3,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { BookRecallToPpud } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -58,32 +59,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
     image,
   } = prisonOffender
 
-  const valuesToSave = {
-    prisonOffender: {
-      locationDescription,
-      bookingNo,
-      facialImageId,
-      firstName,
-      middleName,
-      lastName,
-      dateOfBirth,
-      status,
-      gender,
-      ethnicity,
-      CRO: identifiers.find(id => id.type === 'CRO')?.value,
-      PNC: identifiers.find(id => id.type === 'PNC')?.value,
-    },
-  }
-
-  if (!errorMessage) {
-    await updateRecommendation({
-      recommendationId: recommendation.id,
-      valuesToSave,
-      token,
-      featureFlags: flags,
-    })
-  }
-
   let probationArea
   if (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender) {
     probationArea = recommendation?.whoCompletedPartA?.localDeliveryUnit
@@ -102,6 +77,49 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const poRecallConsultSpo = (statuses as RecommendationStatusResponse[])
     .filter(s => s.active)
     .find(s => s.name === STATUSES.PO_RECALL_CONSULT_SPO)
+
+  const bookRecallToPpud = {
+    decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
+    isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
+    mappaLevel: 'HARDCODED_VALUE',
+    policeForce: 'HARDCODED_VALUE',
+    probationArea: 'HARDCODED_VALUE',
+    recommendedToOwner: 'HARDCODED_VALUE',
+    riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
+      ? recommendation.hasContrabandRisk.details
+      : '',
+    riskOfSeriousHarmLevel: currentHighestRosh(recommendation.currentRoshForPartA),
+    receivedDateTime: null,
+    releaseDate: null,
+    sentenceDate: null,
+  } as BookRecallToPpud
+
+  const valuesToSave = {
+    prisonOffender: {
+      locationDescription,
+      bookingNo,
+      facialImageId,
+      firstName,
+      middleName,
+      lastName,
+      dateOfBirth,
+      status,
+      gender,
+      ethnicity,
+      CRO: identifiers.find(id => id.type === 'CRO')?.value,
+      PNC: identifiers.find(id => id.type === 'PNC')?.value,
+    },
+    bookRecallToPpud,
+  }
+
+  if (!errorMessage) {
+    await updateRecommendation({
+      recommendationId: recommendation.id,
+      valuesToSave,
+      token,
+      featureFlags: flags,
+    })
+  }
 
   res.locals = {
     ...res.locals,
