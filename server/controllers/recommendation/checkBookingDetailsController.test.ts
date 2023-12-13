@@ -362,7 +362,7 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'MEDIUM',
       })
-    ).toEqual('HIGH')
+    ).toEqual('High')
 
     expect(
       currentHighestRosh({
@@ -372,7 +372,7 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'MEDIUM',
       })
-    ).toEqual('VERY_HIGH')
+    ).toEqual('Very High')
 
     expect(
       currentHighestRosh({
@@ -382,7 +382,7 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'LOW',
       })
-    ).toEqual('MEDIUM')
+    ).toEqual('Medium')
 
     expect(
       currentHighestRosh({
@@ -392,7 +392,7 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'LOW',
       })
-    ).toEqual('LOW')
+    ).toEqual('Low')
 
     expect(
       currentHighestRosh({
@@ -402,6 +402,6 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'NOT_APPLICABLE',
       })
-    ).toEqual('NOT_APPLICABLE')
+    ).toEqual('Not Applicable')
   })
 })

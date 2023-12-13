@@ -356,7 +356,7 @@ RouteBuilder.build(recommendations)
 
 const ppcsRouteBuilder = ppRouteBuilder
   .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
-  .withCheck(and(statusIsActive(STATUSES.PP_DOCUMENT_CREATED), not(statusIsActive(STATUSES.REC_CLOSED))))
+  .withCheck(and(statusIsActive(STATUSES.SENT_TO_PPCS), not(statusIsActive(STATUSES.REC_CLOSED))))
 
 ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
 ppcsRouteBuilder.get('no-search-ppud-results', noSearchPpudResults.get)
@@ -371,7 +371,7 @@ ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
 ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.post)
 
-ppcsRouteBuilder.get('booked-to-ppud', bookedToPpudController.get)
+ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
