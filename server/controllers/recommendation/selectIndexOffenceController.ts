@@ -22,11 +22,15 @@ async function get(req: Request, res: Response, next: NextFunction) {
     errorMessage = 'No sentences found'
   }
 
+  const { convictionDetail } = recommendation
+  const isExtended: boolean = convictionDetail?.custodialTerm && convictionDetail?.extendedTerm
   res.locals = {
     ...res.locals,
     page: {
       id: 'selectIndexOffence',
     },
+    convictionDetail,
+    isExtended,
     sentences,
     errorMessage,
   }
