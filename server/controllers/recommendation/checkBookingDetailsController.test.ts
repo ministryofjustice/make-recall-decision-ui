@@ -372,7 +372,7 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'MEDIUM',
       })
-    ).toEqual('Very High')
+    ).toEqual('VeryHigh')
 
     expect(
       currentHighestRosh({
