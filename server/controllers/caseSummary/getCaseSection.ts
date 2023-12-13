@@ -128,8 +128,9 @@ export const getCaseSection = async (
           ...caseSummaryRaw,
           recommendations: caseSummaryRaw.recommendations?.map(recommendation => ({
             ...recommendation,
-            completedDate: recommendation.statuses.find(status => status.active && status.name === STATUSES.REC_CLOSED)
-              .created,
+            completedDate: recommendation.statuses.find(
+              status => status.active && (status.name === STATUSES.REC_CLOSED || status.name === STATUSES.SENT_TO_PPCS)
+            ).created,
             recallType: recommendation.recallType.selected.value,
           })),
         }
