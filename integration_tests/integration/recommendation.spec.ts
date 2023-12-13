@@ -1750,7 +1750,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
       cy.task('ppcsSearch', {
         statusCode: 200,
         response: {
@@ -1776,7 +1776,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
       cy.task('searchPpud', {
         statusCode: 200,
         response: {
@@ -1803,7 +1803,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
       cy.task('searchForPrisonOffender', {
         statusCode: 200,
         response: {
@@ -1842,7 +1842,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'PP_DOCUMENT_CREATED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
       cy.task('prisonSentences', {
         statusCode: 200,
         response: [
