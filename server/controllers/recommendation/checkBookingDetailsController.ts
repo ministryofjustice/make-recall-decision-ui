@@ -89,7 +89,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       ? recommendation.hasContrabandRisk.details
       : '',
     riskOfSeriousHarmLevel: currentHighestRosh(recommendation.currentRoshForPartA),
-    receivedDateTime: null,
+    receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
     releaseDate: null,
     sentenceDate: null,
   } as BookRecallToPpud

@@ -105,7 +105,7 @@ describe('get', () => {
           mappaLevel: 'HARDCODED_VALUE',
           policeForce: 'HARDCODED_VALUE',
           probationArea: 'HARDCODED_VALUE',
-          receivedDateTime: null,
+          receivedDateTime: '2023-11-13T09:49:31',
           recommendedToOwner: 'HARDCODED_VALUE',
           releaseDate: null,
           riskOfContrabandDetails: '',
