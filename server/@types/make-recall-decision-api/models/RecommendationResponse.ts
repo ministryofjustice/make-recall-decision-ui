@@ -147,6 +147,7 @@ export type Term = {
 export type BookRecallToPpud = {
   decisionDateTime: string,
   isInCustody: boolean,
+  custodyType: string,
   mappaLevel: string,
   policeForce: string,
   probationArea: string,

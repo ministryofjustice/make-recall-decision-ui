@@ -112,7 +112,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     bookRecallToPpud,
   }
 
-  if (!errorMessage) {
+  if (!errorMessage && recommendation.bookRecallToPpud === undefined) {
     await updateRecommendation({
       recommendationId: recommendation.id,
       valuesToSave,

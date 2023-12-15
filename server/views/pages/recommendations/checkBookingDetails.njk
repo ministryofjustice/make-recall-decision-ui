@@ -234,6 +234,17 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            Custody type
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                         {{ hyphenForBlank(recommendation.bookRecallToPpud.custodyType) }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class='govuk-link' href='edit-custody-type'>Edit</a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
                         </dt>
