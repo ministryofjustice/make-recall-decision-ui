@@ -4,71 +4,77 @@ import checkBookingDetailsController, { currentHighestRosh } from './checkBookin
 
 jest.mock('../../data/makeDecisionApiClient')
 
+const PRISON_OFFENDER_TEMPLATE = {
+  locationDescription: 'Graceland',
+  bookingNo: '1234',
+  firstName: 'Anne',
+  middleName: 'C',
+  lastName: 'McCaffrey',
+  facialImageId: 1234,
+  dateOfBirth: '1970-03-15',
+  status: 'ACTIVE IN',
+  physicalAttributes: {
+    gender: 'Male',
+    ethnicity: 'Caucasian',
+  },
+  identifiers: [
+    {
+      type: 'CRO',
+      value: '1234/2345',
+    },
+    {
+      type: 'PNC',
+      value: 'X234547',
+    },
+  ],
+}
+
+const RECOMMENDATION_TEMPLATE = {
+  id: '123',
+  personOnProbation: {
+    croNumber: '123X',
+    nomsNumber: '567Y',
+    surname: 'Mayer',
+    dateOfBirth: '2001-01-01',
+    mappa: {
+      level: '1',
+    },
+  },
+  whoCompletedPartA: {
+    localDeliveryUnit: 'who-completed-delivery-unit',
+    isPersonProbationPractitionerForOffender: false,
+  },
+  practitionerForPartA: {
+    localDeliveryUnit: 'practitioner-delivery-unit',
+  },
+}
+
+const STATUSES_TEMPLATE = [
+  {
+    name: 'SPO_SIGNED',
+    active: true,
+    created: '2023-11-13T09:49:31.361Z',
+  },
+  {
+    name: 'ACO_SIGNED',
+    active: true,
+    created: '2023-11-13T09:49:31.361Z',
+  },
+  {
+    name: 'PO_RECALL_CONSULT_SPO',
+    active: true,
+    created: '2023-11-13T09:49:31.361Z',
+  },
+]
+
 describe('get', () => {
   it('load', async () => {
-    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue({
-      locationDescription: 'Graceland',
-      bookingNo: '1234',
-      firstName: 'Anne',
-      middleName: 'C',
-      lastName: 'McCaffrey',
-      facialImageId: 1234,
-      dateOfBirth: '1970-03-15',
-      status: 'ACTIVE IN',
-      physicalAttributes: {
-        gender: 'Male',
-        ethnicity: 'Caucasian',
-      },
-      identifiers: [
-        {
-          type: 'CRO',
-          value: '1234/2345',
-        },
-        {
-          type: 'PNC',
-          value: 'X234547',
-        },
-      ],
-    })
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
 
     const res = mockRes({
       locals: {
-        recommendation: {
-          id: '123',
-          personOnProbation: {
-            croNumber: '123X',
-            nomsNumber: '567Y',
-            surname: 'Mayer',
-            dateOfBirth: '2001-01-01',
-            mappa: {
-              level: '1',
-            },
-          },
-          whoCompletedPartA: {
-            localDeliveryUnit: 'who-completed-delivery-unit',
-            isPersonProbationPractitionerForOffender: false,
-          },
-          practitionerForPartA: {
-            localDeliveryUnit: 'practitioner-delivery-unit',
-          },
-        },
-        statuses: [
-          {
-            name: 'SPO_SIGNED',
-            active: true,
-            created: '2023-11-13T09:49:31.361Z',
-          },
-          {
-            name: 'ACO_SIGNED',
-            active: true,
-            created: '2023-11-13T09:49:31.361Z',
-          },
-          {
-            name: 'PO_RECALL_CONSULT_SPO',
-            active: true,
-            created: '2023-11-13T09:49:31.361Z',
-          },
-        ],
+        recommendation: RECOMMENDATION_TEMPLATE,
+        statuses: STATUSES_TEMPLATE,
         flags: {
           xyz: 1,
         },
@@ -151,59 +157,41 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('load - alternative probation area', async () => {
-    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue({
-      locationDescription: 'Graceland',
-      bookingNo: '1234',
-      firstName: 'Anne',
-      middleName: 'C',
-      lastName: 'McCaffrey',
-      facialImageId: 1234,
-      dateOfBirth: '1970-03-15',
-      status: 'ACTIVE IN',
-      physicalAttributes: {
-        gender: 'Male',
-        ethnicity: 'Caucasian',
-      },
-      identifiers: [
-        {
-          type: 'CRO',
-          value: '1234/2345',
-        },
-        {
-          type: 'PNC',
-          value: 'X234547',
-        },
-      ],
-    })
+  it('do not update recommendation if bookRecallToPpud is present', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
 
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: {
-            croNumber: '123X',
-            nomsNumber: '567Y',
-            surname: 'Mayer',
-            dateOfBirth: '2001-01-01',
-            mappa: {
-              level: '1',
-            },
-          },
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: {},
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+  })
+
+  it('load - alternative probation area', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
           whoCompletedPartA: {
             localDeliveryUnit: 'who-completed-delivery-unit',
             isPersonProbationPractitionerForOffender: true,
           },
-          practitionerForPartA: {
-            localDeliveryUnit: 'practitioner-delivery-unit',
-          },
         },
-        statuses: [
-          {
-            name: 'SPO_SIGNED',
-            active: true,
-            created: '2023-11-13T09:49:31.361Z',
-          },
-        ],
+        statuses: STATUSES_TEMPLATE,
       },
     })
     const next = mockNext()
