@@ -123,7 +123,7 @@
                     </form>
                 </div>
 
-                {#
+                
                 <div class="govuk-grid-column-one-half">
                     <h3 class='govuk-heading-m'>Part A</h3>
 
@@ -131,7 +131,7 @@
 
                     <hr/>
 
-                    <h3 class='govuk-heading-m'>Harassment</h3>
+                    <h3 class='govuk-heading-m'>{{ hyphenForBlank(convictionDetail.indexOffenceDescription) }}</h3>
 
                     <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                         <div class="govuk-summary-list__row">
@@ -143,7 +143,7 @@
                                 Date of sentence
                             </dt>
                             <dd class="govuk-summary-list__value">
-
+                                {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: convictionDetail.dateOfSentence }) ) }}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -151,18 +151,7 @@
                                 Sentence type
                             </dt>
                             <dd class="govuk-summary-list__value">
-
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                Start date
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
+                                {{ hyphenForBlank(convictionDetail.sentenceDescription) }}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -170,27 +159,42 @@
                                 Sentence end date
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ hyphenForBlank(prisonOffender.middleName) }}
+                                {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: convictionDetail.sentenceExpiryDate }) ) }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
 
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
+                            {% if isExtended %}
+                            <dt class="govuk-summary-list__key">
+                                Custodial term
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ hyphenForBlank(convictionDetail.custodialTerm) }}
+                            </dd>  
+                            </div>
+                            <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Extended term
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ hyphenForBlank(convictionDetail.extendedTerm) }}
+                            </dd>
+                            </div>
+                            {% else %}
                             <dt class="govuk-summary-list__key">
                                 Sentence length
                             </dt>
                             <dd class="govuk-summary-list__value">
-
+                                {{ hyphenForBlank(convictionDetail.lengthOfSentence) }} {{ hyphenForBlank(convictionDetail.lengthOfSentenceUnits) }}
                             </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
+                            {% endif %}
                         </div>
                     </dl>
 
                 </div>
-                #}
+                
             </div>
         </div>
     </div>

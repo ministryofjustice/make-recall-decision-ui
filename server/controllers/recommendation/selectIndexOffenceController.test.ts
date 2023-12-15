@@ -47,6 +47,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           id: '123',
+          convictionDetail: { sentenceDescription: 'sentence' },
           personOnProbation: {
             croNumber: '123X',
             nomsNumber: '567Y',
@@ -138,6 +139,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          convictionDetail: { sentenceDescription: undefined },
           id: '123',
           personOnProbation: {
             nomsNumber: '567Y',
