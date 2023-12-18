@@ -4,41 +4,48 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
+    recommendation,
     user: { token },
   } = res.locals
 
-  const list = await ppudReferenceList(token, 'custody-types')
+  const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+  )
 
-  const custodyTypes = list.values.map(value => {
+  const list = await ppudReferenceList(token, 'index-offences')
+
+  const indexOffences = list.values.map(value => {
     return {
       text: value,
       value,
     }
   })
-  custodyTypes.unshift({
-    text: 'Select custody type',
+  indexOffences.unshift({
+    text: 'Select an offence',
     value: '',
   })
 
   res.locals = {
     ...res.locals,
     page: {
-      id: 'editCustodyType',
+      id: 'matchIndexOffence',
     },
-    custodyTypes,
+    indexOffences,
+    offence,
     errors: res.locals.errors,
   }
 
-  res.render(`pages/recommendations/editCustodyType`)
+  res.render(`pages/recommendations/matchIndexOffence`)
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { custodyType } = req.body
+  const { indexOffence } = req.body
 
   const {
     user: { token },
@@ -46,12 +53,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
     flags,
   } = res.locals
 
-  if (!isDefined(custodyType) || custodyType.trim().length === 0) {
-    const errorId = 'missingCustodyType'
+  if (!isDefined(indexOffence) || indexOffence.trim().length === 0) {
+    const errorId = 'missingIndexOffence'
 
     req.session.errors = [
       makeErrorObject({
-        id: 'custodyType',
+        id: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
       }),
@@ -66,14 +73,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        custodyType,
+        indexOffence,
       },
     },
     token,
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'book-to-ppud', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

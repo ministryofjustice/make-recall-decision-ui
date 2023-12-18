@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { bookRecallToPpud, getRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -24,24 +22,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
-  const { recommendationId } = req.params
-  const {
-    user: { token },
-    urlInfo,
-  } = res.locals
+  const { urlInfo } = res.locals
 
-  const recommendation = await getRecommendation(recommendationId, token)
-
-  await bookRecallToPpud(token, recommendation.personOnProbation.nomsNumber, recommendation.bookRecallToPpud)
-
-  await updateStatuses({
-    recommendationId,
-    token,
-    activate: [STATUSES.BOOKED_TO_PPUD, STATUSES.REC_CLOSED],
-    deActivate: [],
-  })
-
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'booked-to-ppud', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'match-index-offence', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

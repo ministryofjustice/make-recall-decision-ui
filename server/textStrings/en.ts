@@ -4,6 +4,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Select the custody type',
+    missingIndexOffence: 'Select the index offence',
     missingSpoNoRecallRationale: 'You must explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
@@ -180,5 +181,6 @@ export const strings: Record<string, Record<string, string>> = {
     indexOffenceSelected: 'Index offence selected for {{ fullName }}',
     bookedToPpud: 'Booked onto PPUD',
     editCustodyType: 'Edit custody type',
+    matchIndexOffence: 'Select a matching index offence in PPUD',
   },
 }

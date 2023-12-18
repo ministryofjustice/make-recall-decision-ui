@@ -1,7 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
-import editCustodyTypeController from './editCustodyTypeController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import matchIndexOffenceController from './matchIndexOffenceController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -15,16 +15,43 @@ describe('get', () => {
       },
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                bookingId: 13,
+                courtDescription: 'Blackburn County Court',
+                offenceCode: 'SA96036',
+                offenceDescription:
+                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceStatute: 'SA96',
+                offenderChargeId: 3934369,
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                sentenceStartDate: '2023-11-16',
+                sentenceTypeDescription: 'Adult Mandatory Life',
+                terms: [],
+                releaseDate: '2025-11-16',
+                licenceExpiryDate: '2025-11-17',
+                releasingPrison: 'Broad Moor',
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      },
+    })
     const next = mockNext()
-    await editCustodyTypeController.get(req, res, next)
+    await matchIndexOffenceController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'custody-types')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
 
-    expect(res.locals.page).toEqual({ id: 'editCustodyType' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editCustodyType')
-    expect(res.locals.custodyTypes).toEqual([
-      { text: 'Select custody type', value: '' },
+    expect(res.locals.page).toEqual({ id: 'matchIndexOffence' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence')
+    expect(res.locals.indexOffences).toEqual([
+      { text: 'Select an offence', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -47,7 +74,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        custodyType: 'home-bound',
+        indexOffence: 'some offence',
       },
     })
 
@@ -61,14 +88,14 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editCustodyTypeController.post(req, res, next)
+    await matchIndexOffenceController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          custodyType: 'home-bound',
+          indexOffence: 'some offence',
         },
       },
       token: 'token1',
@@ -77,7 +104,7 @@ describe('post', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/book-to-ppud`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with invalid data', async () => {
@@ -98,15 +125,15 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editCustodyTypeController.post(req, res, next)
+    await matchIndexOffenceController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingCustodyType',
+        errorId: 'missingIndexOffence',
         invalidParts: undefined,
-        href: '#custodyType',
-        name: 'custodyType',
-        text: 'Select the custody type',
+        href: '#indexOffence',
+        name: 'indexOffence',
+        text: 'Select the index offence',
         values: undefined,
       },
     ])
