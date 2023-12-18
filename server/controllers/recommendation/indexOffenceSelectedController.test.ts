@@ -1,7 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import indexOffenceSelectedController from './indexOffenceSelectedController'
-import { bookRecallToPpud, getRecommendation } from '../../data/makeDecisionApiClient'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -65,13 +63,6 @@ describe('get', () => {
 
 describe('post', () => {
   it('post', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        decisionDateTime: '2023-11-13T09:49:31.361Z',
-      },
-    })
-
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
@@ -88,11 +79,7 @@ describe('post', () => {
 
     await indexOffenceSelectedController.post(req, res, next)
 
-    expect(bookRecallToPpud).toHaveBeenCalledWith('token1', 'A12345', {
-      decisionDateTime: '2023-11-13T09:49:31.361Z',
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/booked-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/match-index-offence`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

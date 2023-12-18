@@ -84,6 +84,8 @@ import selectIndexOffenceController from '../controllers/recommendation/selectIn
 import indexOffenceSelectedController from '../controllers/recommendation/indexOffenceSelectedController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import matchIndexOffenceController from '../controllers/recommendation/matchIndexOffenceController'
+import bookToPpudController from '../controllers/recommendation/bookToPpudController'
 
 const recommendations = Router()
 
@@ -372,8 +374,13 @@ ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
 ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.post)
 
+ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
+ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
+
 ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
 ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
+
+ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
