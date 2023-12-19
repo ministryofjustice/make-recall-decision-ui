@@ -3,7 +3,7 @@ import { strings } from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { isMandatoryTextValue } from '../../utils/utils'
+import { isMandatoryTextValue, stripHtmlTags } from '../../utils/utils'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
@@ -83,7 +83,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
   }
 
   if (spoRecallType === 'RECALL') {
-    valuesToSave.spoRecallRationale = spoRecallRationale
+    // strip html tags on this value as it is written to delius and its just possible that they are not hardened to XSS.
+    valuesToSave.spoRecallRationale = stripHtmlTags(spoRecallRationale)
     valuesToSave.explainTheDecision = true
   }
 
