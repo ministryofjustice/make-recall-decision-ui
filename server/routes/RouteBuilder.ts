@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import recommendationStatusCheck from '../middleware/recommendationStatusCheck'
-import sanitizeInputValues from '../controllers/sanitizeInputValues'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import retrieveRecommendation from '../controllers/retrieveRecommendation'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
@@ -14,11 +13,11 @@ import { nothingMore } from './nothing-more'
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
 export class RouteBuilder {
-  private router: Router
+  private readonly router: Router
 
-  private rolesCheck?: Check
+  private readonly rolesCheck?: Check
 
-  private statusCheck?: Check
+  private readonly statusCheck?: Check
 
   constructor(router: Router, statusCheck?: Check, roles?: Check) {
     this.router = router
@@ -40,7 +39,6 @@ export class RouteBuilder {
       feedErrorsToExpress(retrieveStatuses),
       authorisationCheck(this.rolesCheck),
       recommendationStatusCheck(this.statusCheck),
-      sanitizeInputValues,
       parseRecommendationUrl,
       feedErrorsToExpress(retrieveRecommendation),
       guardAgainstModifyingClosedRecommendation,
@@ -60,7 +58,6 @@ export class RouteBuilder {
       feedErrorsToExpress(retrieveStatuses),
       authorisationCheck(this.rolesCheck),
       feedErrorsToExpress(recommendationStatusCheck(this.statusCheck)),
-      sanitizeInputValues,
       parseRecommendationUrl,
       feedErrorsToExpress(routerCallback), // necessary for async functions
       (error: Error, req: Request, res: Response, next: NextFunction): void => {
