@@ -10,7 +10,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     user: { token },
   } = res.locals
 
-  const list = await ppudReferenceList(token, 'releasing-prisons')
+  const list = await ppudReferenceList(token, 'establishments')
 
   const releasingPrisons = list.values.map(value => {
     return {

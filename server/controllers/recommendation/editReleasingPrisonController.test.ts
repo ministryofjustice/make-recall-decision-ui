@@ -19,7 +19,7 @@ describe('get', () => {
     const next = mockNext()
     await editReleasingPrisonController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'releasing-prisons')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'establishments')
 
     expect(res.locals.page).toEqual({ id: 'editReleasingPrison' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editReleasingPrison')
