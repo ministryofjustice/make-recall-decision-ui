@@ -3,7 +3,8 @@ export const strings: Record<string, Record<string, string>> = {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
     missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
-    missingCustodyType: 'Select the custody type',
+    missingCustodyType: 'Select a custody type',
+    missingReleasingPrison: 'Select a releasing prison',
     missingIndexOffence: 'Select the index offence',
     missingSpoNoRecallRationale: 'You must explain your decision',
     missingLastName: 'Enter a last name',
@@ -181,6 +182,7 @@ export const strings: Record<string, Record<string, string>> = {
     indexOffenceSelected: 'Index offence selected for {{ fullName }}',
     bookedToPpud: 'Booked onto PPUD',
     editCustodyType: 'Edit custody type',
+    editReleasingPrison: 'Edit releasing prison',
     matchIndexOffence: 'Select a matching index offence in PPUD',
   },
 }

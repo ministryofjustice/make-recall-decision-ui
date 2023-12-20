@@ -1,0 +1,45 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set html %}
+                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
+            {% endset %}
+            {{ govukNotificationBanner({
+                html: html,
+                classes: "govuk-notification-banner--info govuk-body"
+            }) }}
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+
+
+                {{ govukSelect({
+                  id: "releasingPrison",
+                  name: "releasingPrison",
+                  label: {
+                    text: "List of prisons",
+                    classes: "govuk-label--m"
+                  },
+                  hint: {
+                    text: "This is the prison that " + recommendation.personOnProbation.fullName + " was released from."
+                  },
+                  value: recommendation.bookRecallToPpud.releasingPrison,
+                  items: releasingPrisons
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

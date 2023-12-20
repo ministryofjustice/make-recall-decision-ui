@@ -1,7 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
-import editCustodyTypeController from './editCustodyTypeController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import editReleasingPrisonController from './editReleasingPrisonController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -17,14 +17,14 @@ describe('get', () => {
 
     const res = mockRes()
     const next = mockNext()
-    await editCustodyTypeController.get(req, res, next)
+    await editReleasingPrisonController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'custody-types')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'releasing-prisons')
 
-    expect(res.locals.page).toEqual({ id: 'editCustodyType' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editCustodyType')
-    expect(res.locals.custodyTypes).toEqual([
-      { text: 'Select custody type', value: '' },
+    expect(res.locals.page).toEqual({ id: 'editReleasingPrison' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editReleasingPrison')
+    expect(res.locals.releasingPrisons).toEqual([
+      { text: 'Select releasing prison', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -47,7 +47,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        custodyType: 'home-bound',
+        releasingPrison: 'home-bound',
       },
     })
 
@@ -61,14 +61,14 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editCustodyTypeController.post(req, res, next)
+    await editReleasingPrisonController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          custodyType: 'home-bound',
+          releasingPrison: 'home-bound',
         },
       },
       token: 'token1',
@@ -98,15 +98,15 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editCustodyTypeController.post(req, res, next)
+    await editReleasingPrisonController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingCustodyType',
+        errorId: 'missingReleasingPrison',
         invalidParts: undefined,
-        href: '#custodyType',
-        name: 'custodyType',
-        text: 'Select a custody type',
+        href: '#releasingPrison',
+        name: 'releasingPrison',
+        text: 'Select a releasing prison',
         values: undefined,
       },
     ])
