@@ -5,7 +5,7 @@ import { NamedFormError } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { hasValue, isDefined } from '../../utils/utils'
+import { hasValue, isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -23,7 +23,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const { convictionDetail } = recommendation
-  const isExtended: boolean = convictionDetail?.custodialTerm && convictionDetail?.extendedTerm
+  const isExtended: boolean =
+    !isEmptyStringOrWhitespace(convictionDetail?.custodialTerm) &&
+    !isEmptyStringOrWhitespace(convictionDetail?.extendedTerm)
+
   res.locals = {
     ...res.locals,
     page: {
