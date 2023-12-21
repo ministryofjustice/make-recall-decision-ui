@@ -81,7 +81,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const bookRecallToPpud = {
     decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
     isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
-    mappaLevel: 'HARDCODED_VALUE',
+    mappaLevel: `Level ${recommendation.personOnProbation?.mappa?.level}`,
     policeForce: 'HARDCODED_VALUE',
     probationArea: 'HARDCODED_VALUE',
     recommendedToOwner: 'HARDCODED_VALUE',
