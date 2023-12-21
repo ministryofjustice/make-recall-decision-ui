@@ -378,11 +378,10 @@
                             MAPPA level
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {% if mappaLevel %}
-                                Level {{ mappaLevel }}
-                            {% else %}
-                                - <span class="govuk-visually-hidden">no value</span>
-                            {% endif %}
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.mappaLevel) }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class='govuk-link' href='edit-mappa-level'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">

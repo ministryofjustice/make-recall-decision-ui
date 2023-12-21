@@ -108,7 +108,7 @@ describe('get', () => {
         bookRecallToPpud: {
           decisionDateTime: '2023-11-13T09:49:31',
           isInCustody: true,
-          mappaLevel: 'HARDCODED_VALUE',
+          mappaLevel: 'Level 1',
           policeForce: 'HARDCODED_VALUE',
           probationArea: 'HARDCODED_VALUE',
           receivedDateTime: '2023-11-13T09:49:31',
@@ -137,7 +137,6 @@ describe('get', () => {
       locationDescription: 'Graceland',
     })
     expect(res.locals.probationArea).toEqual('practitioner-delivery-unit')
-    expect(res.locals.mappaLevel).toEqual('1')
     expect(res.locals.spoSigned).toEqual({
       name: 'SPO_SIGNED',
       active: true,
