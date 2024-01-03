@@ -1,0 +1,37 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                <div class='govuk-label--m'>Email address on the Part A</div>
+                  <span class='mid-grey-panel'>
+                    <a class='govuk-body'>{{ recommendation.localPoliceContact.emailAddress }}</a>
+                </span>
+                </br>
+                </br>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukSelect({
+                  id: "policeForce",
+                  name: "policeForce",
+                  label: {
+                    text: "List of police forces",
+                    classes: "govuk-label--m"
+                  },
+                  value: recommendation.bookRecallToPpud.policeForce,
+                  items: policeForces
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
