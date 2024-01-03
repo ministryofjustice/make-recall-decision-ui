@@ -1,7 +1,13 @@
 import { Response } from 'express'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import caseSummaryController from './caseSummaryController'
-import { getCaseSummary, getCaseSummaryV2, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
+import {
+  getCaseSummary,
+  getCaseSummaryV2,
+  getRecommendation,
+  getStatuses,
+  updateRecommendation,
+} from '../../data/makeDecisionApiClient'
 import caseOverviewApiResponse from '../../../api/responses/get-case-overview.json'
 import caseRiskApiResponse from '../../../api/responses/get-case-risk.json'
 import caseLicenceConditionsResponse from '../../../api/responses/get-case-licence-conditions.json'
@@ -13,7 +19,7 @@ import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 import { AuditService } from '../../services/auditService'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import recommendationApiResponse from '../../../api/responses/get-recommendation-response.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
@@ -384,6 +390,8 @@ describe('get', () => {
   it('do not show recommendation button for spo when recommendation doc and no appropriate spo state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+
     const req = mockReq({
       params: { crn, sectionId: 'overview' },
     })
@@ -410,6 +418,7 @@ describe('get', () => {
   it('do show recommendation button for spo when recommendation doc and SPO_CONSIDER_RECALL state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
     const req = mockReq({
       params: { crn, sectionId: 'overview' },
     })
@@ -440,6 +449,7 @@ describe('get', () => {
   it('do show recommendation button for spo when SPO_SIGNATURE_REQUESTED state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
     const req = mockReq({
       params: { crn, sectionId: 'overview' },
     })
@@ -466,6 +476,7 @@ describe('get', () => {
   it('do show recommendation button for spo when ACO_SIGNATURE_REQUESTED state', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
     const req = mockReq({
       params: { crn, sectionId: 'overview' },
     })

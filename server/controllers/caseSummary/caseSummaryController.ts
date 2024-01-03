@@ -6,17 +6,19 @@ import {
   isString,
   validateCrn,
 } from '../../utils/utils'
+
 import { getCaseSection } from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
 import { AuditService } from '../../services/auditService'
 import { AppError } from '../../AppError'
 import { strings } from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
-import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getStatuses, getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
+import { RecommendationDecorated } from '../../@types/api'
 
 interface RecommendationButton {
   display: boolean
@@ -24,6 +26,16 @@ interface RecommendationButton {
   title?: string
   dataAnalyticsEventCategory?: string
   link?: string
+}
+
+interface RecommendationBanner {
+  display: boolean
+  createdByUserFullName?: string
+  createdDate?: string
+  personOnProbationName?: string
+  dataAnalyticsEventCategory?: string // TODO: Confirm if this is required
+  link?: string
+  text?: string
 }
 
 const auditService = new AuditService()
@@ -51,6 +63,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
   let backLink = '/search'
 
   let recommendationButton: RecommendationButton = { display: false }
+  const recommendationBanner: RecommendationBanner = { display: false }
 
   if (recommendationId) {
     // this will be true when the SPO is reviewing the case during the SPO consider recall flow.
@@ -76,6 +89,16 @@ async function get(req: Request, res: Response, _: NextFunction) {
         }
       }
     } else if (isSpo) {
+      const recommendation: RecommendationDecorated = await getRecommendation(
+        String(caseSection.caseSummary.activeRecommendation?.recommendationId),
+        user.token
+      )
+
+      recommendationBanner.display = true
+      recommendationBanner.createdByUserFullName = recommendation.createdBy
+      recommendationBanner.createdDate = recommendation.createdDate
+      recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
+
       const statuses = (
         await getStatuses({
           recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
@@ -88,6 +111,17 @@ async function get(req: Request, res: Response, _: NextFunction) {
       const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
       const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
+
+      const isDoNotRecall = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED)
+
+      const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED)
+
+      if (isRecommendationActive && !statuses.length) recommendationBanner.text = 'started a recommendation for'
+
+      if (isRecommendationActive && isDoNotRecall)
+        recommendationBanner.text = 'started a decision not to recall letter for'
+
+      if (isRecommendationActive && isRecallDecided) recommendationBanner.text = 'started a Part A for'
 
       if (isSpoSignatureRequested || isAcoSignatureRequested) {
         recommendationButton = {
@@ -149,14 +183,17 @@ async function get(req: Request, res: Response, _: NextFunction) {
     isVisible: Boolean(config.notification.body) && isBannerDisplayDateRangeValid(),
   }
 
+  const jsonData = JSON.stringify(caseSection, null, 2)
   res.locals = {
     ...res.locals,
     crn: normalizedCrn,
     ...caseSection,
     notifications: strings.notifications,
     recommendationButton,
+    recommendationBanner,
     backLink,
     pageUrlBase,
+    jsonData,
   }
   const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)
     ? 'pages/excludedRestrictedCrn'

@@ -1,0 +1,249 @@
+{
+  "userAccessResponse": null,
+  "id": 1272657033,
+  "createdByUserFullName": "Making Recall Decisions User",
+  "createdBy": "MAKE_RECALL_DECISION_USER",
+  "createdDate": "2023-12-11T10:54:29.007Z",
+  "status": "DRAFT",
+  "custodyStatus": null,
+  "localPoliceContact": null,
+  "crn": "X098083",
+  "sensitive": true,
+  "ppudRecordPresent": null,
+  "reviewPractitionersConcerns": true,
+  "reviewOffenderProfile": true,
+  "explainTheDecision": true,
+  "lastModifiedBy": "MAKE_RECALL_DECISION_USER",
+  "lastModifiedByUserName": "Making Recall Decisions User",
+  "lastModifiedDate": "2023-12-11T10:56:28.681Z",
+  "managerRecallDecision": {
+    "selected": {
+      "value": "NO_RECALL",
+      "details": "xyz"
+    },
+    "allOptions": null,
+    "isSentToDelius": true,
+    "createdBy": "Making Recall Decisions SPO User",
+    "createdDate": "2023-12-11T10:55:41.468Z"
+  },
+  "recallType": {
+    "selected": {
+      "value": "NO_RECALL",
+      "details": null
+    },
+    "allOptions": [
+      {
+        "value": "STANDARD",
+        "text": "Standard recall"
+      },
+      {
+        "value": "FIXED_TERM",
+        "text": "Fixed term recall"
+      },
+      {
+        "value": "NO_RECALL",
+        "text": "No recall"
+      }
+    ]
+  },
+  "responseToProbation": "2",
+  "triggerLeadingToRecall": "1",
+  "spoRecallType": "NO_RECALL",
+  "spoRecallRationale": "xyz",
+  "whatLedToRecall": null,
+  "isThisAnEmergencyRecall": null,
+  "isIndeterminateSentence": false,
+  "isExtendedSentence": false,
+  "activeCustodialConvictionCount": 1,
+  "hasVictimsInContactScheme": null,
+  "indeterminateSentenceType": {
+    "selected": "NO",
+    "allOptions": null
+  },
+  "dateVloInformed": null,
+  "hasArrestIssues": null,
+  "hasContrabandRisk": null,
+  "personOnProbation": {
+    "fullName": "Harry Tom Smith",
+    "name": "Harry Smith",
+    "firstName": "Harry",
+    "surname": "Smith",
+    "middleNames": "Tom",
+    "gender": "Male",
+    "ethnicity": "White",
+    "dateOfBirth": "1990-09-15",
+    "croNumber": "AB123XYZ",
+    "mostRecentPrisonerNumber": "MV123EDR",
+    "nomsNumber": "ZZZZZZ",
+    "pncNumber": "GD123TEF",
+    "mappa": null,
+    "addresses": [
+      {
+        "line1": "",
+        "line2": "",
+        "town": "",
+        "postcode": "",
+        "noFixedAbode": false
+      }
+    ],
+    "primaryLanguage": "English",
+    "hasBeenReviewed": false
+  },
+  "alternativesToRecallTried": {
+    "selected": [
+      {
+        "value": "NONE",
+        "details": null
+      }
+    ],
+    "allOptions": [
+      {
+        "value": "NONE",
+        "text": "None"
+      },
+      {
+        "value": "WARNINGS_LETTER",
+        "text": "Warnings / licence breach letters"
+      },
+      {
+        "value": "INCREASED_FREQUENCY",
+        "text": "Increased frequency of reporting"
+      },
+      {
+        "value": "EXTRA_LICENCE_CONDITIONS",
+        "text": "Additional licence conditions"
+      },
+      {
+        "value": "REFERRAL_TO_OTHER_TEAMS",
+        "text": "Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)"
+      },
+      {
+        "value": "REFERRAL_TO_PARTNERSHIP_AGENCIES",
+        "text": "Referral to partnership agencies"
+      },
+      {
+        "value": "REFERRAL_TO_APPROVED_PREMISES",
+        "text": "Referral to approved premises"
+      },
+      {
+        "value": "DRUG_TESTING",
+        "text": "Drug testing"
+      },
+      {
+        "value": "ALTERNATIVE_TO_RECALL_OTHER",
+        "text": "Other"
+      }
+    ]
+  },
+  "licenceConditionsBreached": {
+    "standardLicenceConditions": null,
+    "additionalLicenceConditions": {
+      "selected": null,
+      "selectedOptions": [
+        {
+          "mainCatCode": "NLC7",
+          "subCatCode": "NSTT7"
+        }
+      ],
+      "allOptions": [
+        {
+          "subCatCode": "NSTT8",
+          "mainCatCode": "NLC8",
+          "title": "Freedom of movement",
+          "details": "To only attend places of worship which have been previously agreed with your supervising officer.",
+          "note": "I am a licence condition note"
+        },
+        {
+          "subCatCode": "NSTT7",
+          "mainCatCode": "NLC7",
+          "title": "Inactive test",
+          "details": "I am inactive",
+          "note": "I am a second licence condition note"
+        }
+      ]
+    }
+  },
+  "cvlLicenceConditionsBreached": null,
+  "isUnderIntegratedOffenderManagement": null,
+  "vulnerabilities": null,
+  "convictionDetail": null,
+  "region": "NPS London",
+  "localDeliveryUnit": "All NPS London",
+  "userNameDntrLetterCompletedBy": null,
+  "lastDntrLetterDownloadDateTime": null,
+  "indexOffenceDetails": null,
+  "offenceDataFromLatestCompleteAssessment": null,
+  "offencesMatch": null,
+  "offenceAnalysis": null,
+  "fixedTermAdditionalLicenceConditions": null,
+  "indeterminateOrExtendedSentenceDetails": null,
+  "isMainAddressWherePersonCanBeFound": null,
+  "whyConsideredRecall": {
+    "selected": "RISK_INCREASED",
+    "allOptions": [
+      {
+        "value": "RISK_INCREASED",
+        "text": "Your risk is assessed as increased"
+      },
+      {
+        "value": "CONTACT_STOPPED",
+        "text": "Contact with your probation practitioner has broken down"
+      },
+      {
+        "value": "RISK_INCREASED_AND_CONTACT_STOPPED",
+        "text": "Your risk is assessed as increased and contact with your probation practitioner has broken down"
+      }
+    ]
+  },
+  "reasonsForNoRecall": {
+    "licenceBreach": "1",
+    "noRecallRationale": "2",
+    "popProgressMade": "3",
+    "popThoughts": "4",
+    "futureExpectations": "5"
+  },
+  "nextAppointment": {
+    "howWillAppointmentHappen": {
+      "selected": "TELEPHONE",
+      "allOptions": [
+        {
+          "value": "TELEPHONE",
+          "text": "Telephone"
+        },
+        {
+          "value": "VIDEO_CALL",
+          "text": "Video call"
+        },
+        {
+          "value": "OFFICE_VISIT",
+          "text": "Office visit"
+        },
+        {
+          "value": "HOME_VISIT",
+          "text": "Home visit"
+        }
+      ]
+    },
+    "dateTimeOfAppointment": "2024-12-01T00:01:00.000Z",
+    "probationPhoneNumber": "01392 456789"
+  },
+  "previousReleases": null,
+  "previousRecalls": null,
+  "recallConsideredList": null,
+  "currentRoshForPartA": null,
+  "roshSummary": null,
+  "countersignSpoTelephone": null,
+  "countersignSpoExposition": null,
+  "countersignAcoTelephone": null,
+  "countersignAcoExposition": null,
+  "whoCompletedPartA": null,
+  "practitionerForPartA": null,
+  "revocationOrderRecipients": null,
+  "ppcsQueryEmails": null,
+  "prisonOffender": null,
+  "releaseUnderECSL": null,
+  "dateOfRelease": null,
+  "conditionalReleaseDate": null,
+  "nomisIndexOffence": null,
+  "bookRecallToPpud": null
+}

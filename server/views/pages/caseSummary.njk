@@ -68,6 +68,23 @@
                     {% endif %}
                 </div>
             </div>
+            {% if flags.flagCancelRecommendationProcess and  recommendationBanner.display %}
+                
+                {% set bannerHtml %}
+                    <p>{{ recommendationBanner.createdByUserFullName }} {{ recommendationBanner.text}} {{ recommendationBanner.personOnProbationName }} on {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
+                    <p>
+                        <a href="">Cancel</a> if you need to stop this recommendation. You will be asked why.
+                    </p>
+                    </form>
+                {% endset %}
+
+                {{ mojBanner({
+                    type: 'information',
+                    html: bannerHtml,
+                    iconFallbackText: 'information'
+                }) }}
+
+            {% endif %}
             {{ mojSubNavigation({
                 label: 'Case summary sections',
                 items: removeUndefinedListItems([
