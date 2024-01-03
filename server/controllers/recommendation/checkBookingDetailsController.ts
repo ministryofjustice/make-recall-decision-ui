@@ -92,6 +92,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
     receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
     releaseDate: null,
     sentenceDate: null,
+    firstName: prisonOffender.firstName,
+    secondName: prisonOffender.middleName,
+    lastName: prisonOffender.lastName,
+    dateOfBirth: prisonOffender.dateOfBirth,
   } as BookRecallToPpud
 
   const valuesToSave = {

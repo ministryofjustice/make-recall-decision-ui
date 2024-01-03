@@ -1,0 +1,43 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            {% set html %}
+                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
+            {% endset %}
+            {{ govukNotificationBanner({
+                html: html,
+                classes: "govuk-notification-banner--info govuk-body"
+            }) }}
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukSelect({
+                  id: "ethnicity",
+                  name: "ethnicity",
+                  label: {
+                    text: "List of ethnicities",
+                    classes: "govuk-label--m"
+                  },
+                  hint: {
+                    text: "PPUD list of ethnic groupings"
+                  },
+                  value: recommendation.bookRecallToPpud.ethnicity,
+                  items: ethnicities
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

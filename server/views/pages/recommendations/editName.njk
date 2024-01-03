@@ -1,0 +1,68 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            {% set html %}
+                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
+            {% endset %}
+            {{ govukNotificationBanner({
+                html: html,
+                classes: "govuk-notification-banner--info govuk-body"
+            }) }}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukInput({
+                    label: {
+                        text: "First name",
+                        classes: "govuk-label--m"
+                    },
+                    id: "firstName",
+                    name: "firstName",
+                    type: 'text',
+                    classes: "govuk-input--width-20",
+                    value: values.firstName,
+                    errorMessage: errorMessage(errors.firstName)
+                }) }}
+
+                {{ govukInput({
+                    label: {
+                        text: "Second name",
+                        classes: "govuk-label--m"
+                    },
+                    id: "secondName",
+                    name: "secondName",
+                    type: 'text',
+                    classes: "govuk-input--width-20",
+                    value: values.secondName,
+                    errorMessage: errorMessage(errors.secondName)
+                }) }}
+
+                {{ govukInput({
+                    label: {
+                        text: "Last name",
+                        classes: "govuk-label--m"
+                    },
+                    id: "lastName",
+                    name: "lastName",
+                    type: 'text',
+                    classes: "govuk-input--width-20",
+                    value: values.lastName,
+                    errorMessage: errorMessage(errors.lastName)
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

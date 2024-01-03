@@ -158,4 +158,10 @@ export type BookRecallToPpud = {
   riskOfContrabandDetails: string,
   riskOfSeriousHarmLevel: string,
   sentenceDate: string,
+  gender: string,
+  ethnicity: string,
+  firstName: string,
+  secondName: string,
+  lastName: string,
+  dateOfBirth: string,
 }
