@@ -113,8 +113,11 @@
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(prisonOffender.firstName) }}
                         </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.firstName) }}
+                        </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-name'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -124,8 +127,11 @@
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(prisonOffender.middleName) }}
                         </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.secondName) }}
+                        </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-name'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -135,19 +141,26 @@
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(prisonOffender.lastName) }}
                         </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.lastName) }}
+                        </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-name'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Gender
                         </dt>
+
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(prisonOffender.gender) }}
                         </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.gender) }}
+                        </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-gender'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -156,9 +169,12 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(prisonOffender.ethnicity) }}
+                         </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.ethnicity) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-ethnicity'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -168,8 +184,12 @@
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(formatDateTimeFromIsoString({ isoDate: prisonOffender.dateOfBirth, dateOnly: true })) }}
                         </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(
+                            formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
+                        </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-date-of-birth'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -210,6 +230,8 @@
                             Releasing prison
                         </dt>
                         <dd class="govuk-summary-list__value">
+                         </dd>
+                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.releasingPrison) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -237,7 +259,10 @@
                             Custody type
                         </dt>
                         <dd class="govuk-summary-list__value">
-                         {{ hyphenForBlank(recommendation.bookRecallToPpud.custodyType) }}
+
+                        </dd>
+                        <dd class="govuk-summary-list__value">
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.custodyType) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-custody-type'>Edit</a>

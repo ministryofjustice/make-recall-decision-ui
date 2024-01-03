@@ -88,6 +88,10 @@ import matchIndexOffenceController from '../controllers/recommendation/matchInde
 import bookToPpudController from '../controllers/recommendation/bookToPpudController'
 import editReleasingPrisonController from '../controllers/recommendation/editReleasingPrisonController'
 import editMappaLevelController from '../controllers/recommendation/editMappaLevelController'
+import editGenderController from '../controllers/recommendation/editGenderController'
+import editEthnicityController from '../controllers/recommendation/editEthnicityController'
+import editNameController from '../controllers/recommendation/editNameController'
+import editDateOfBirthController from '../controllers/recommendation/editDateOfBirthController'
 
 const recommendations = Router()
 
@@ -379,6 +383,9 @@ ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.p
 ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
 ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
 
+ppcsRouteBuilder.get('edit-name', editNameController.get)
+ppcsRouteBuilder.post('edit-name', editNameController.post)
+
 ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
 ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
 
@@ -387,6 +394,15 @@ ppcsRouteBuilder.post('edit-releasing-prison', editReleasingPrisonController.pos
 
 ppcsRouteBuilder.get('edit-mappa-level', editMappaLevelController.get)
 ppcsRouteBuilder.post('edit-mappa-level', editMappaLevelController.post)
+
+ppcsRouteBuilder.get('edit-gender', editGenderController.get)
+ppcsRouteBuilder.post('edit-gender', editGenderController.post)
+
+ppcsRouteBuilder.get('edit-ethnicity', editEthnicityController.get)
+ppcsRouteBuilder.post('edit-ethnicity', editEthnicityController.post)
+
+ppcsRouteBuilder.get('edit-date-of-birth', editDateOfBirthController.get)
+ppcsRouteBuilder.post('edit-date-of-birth', editDateOfBirthController.post)
 
 ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 

@@ -106,7 +106,11 @@ describe('get', () => {
           locationDescription: 'Graceland',
         },
         bookRecallToPpud: {
+          dateOfBirth: '1970-03-15',
           decisionDateTime: '2023-11-13T09:49:31',
+          firstName: 'Anne',
+          lastName: 'McCaffrey',
+          secondName: 'C',
           isInCustody: true,
           mappaLevel: 'Level 1',
           policeForce: 'HARDCODED_VALUE',
