@@ -20,7 +20,7 @@
                 <div class="govuk-inset-text" data-qa="reason">
                     <p class='govuk-body  govuk-!-font-weight-bold'> {{ offence.offenceDescription }} </p>
                     <p class='govuk-body'> Start date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </p>
-                    <p class='govuk-body'> End date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </p>
+                    <p class='govuk-body'> Sentence end date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </p>
                 </div>
 
                 {{ govukSelect({
