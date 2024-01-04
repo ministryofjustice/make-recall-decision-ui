@@ -115,7 +115,10 @@ jobs:
           command: 'npm --version'
       - run:
           name: Run check
-          command: 'npm outdated typescript govuk-frontend'
+          # We aren't going to be updating govuk-frontend to v5 for the foreseeable future so
+          # let's avoid the clutter of failing jobs for now
+          # command: 'npm outdated typescript govuk-frontend'
+          command: 'npm outdated typescript'
       - slack/notify:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>
