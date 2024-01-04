@@ -19,7 +19,7 @@ import restrictedResponse from '../../../api/responses/get-case-restricted.json'
 import { AuditService } from '../../services/auditService'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
-import recommendationApiResponse from '../../../api/responses/get-recommendation-response.json'
+import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
@@ -499,6 +499,86 @@ describe('get', () => {
       post: false,
       title: 'Countersign',
     })
+  })
+  it('do not show recommendation banner for a PO when PO_START_RECALL state', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.PO_START_RECALL, active: true }])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.recommendationBanner).toEqual({
+      display: false,
+    })
+  })
+  it('do show recommendation banner for SPO when NO_RECALL_DECIDED state', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.NO_RECALL_DECIDED, active: true }])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.recommendationBanner).toEqual(
+      expect.objectContaining({
+        display: true,
+        dataAnalyticsEventCategory: 'spo_cancel_dntr_click',
+        linkText: 'Cancel the decision not to recall',
+        text: 'started a decision not to recall letter for',
+      })
+    )
+  })
+  it('do show recommendation banner for SPO when RECALL_DECIDED state', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.RECALL_DECIDED, active: true }])
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.recommendationBanner).toEqual(
+      expect.objectContaining({
+        display: true,
+        dataAnalyticsEventCategory: 'spo_cancel_part_a_click',
+        linkText: 'Cancel this Part A',
+        text: 'started a Part A for',
+      })
+    )
   })
 })
 

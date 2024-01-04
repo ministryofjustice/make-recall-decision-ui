@@ -25,7 +25,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description:
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
-  }, // TODO: set flagCancelRecommendationProcess to FALSE
+  },
   flagCancelRecommendationProcess: {
     label: 'Allow process workflow for delete recommendation',
     description: 'Shows banner for deleting a recommedation for SPO/ACO users',

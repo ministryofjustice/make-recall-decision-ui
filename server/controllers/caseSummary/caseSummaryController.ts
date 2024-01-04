@@ -33,8 +33,8 @@ interface RecommendationBanner {
   createdByUserFullName?: string
   createdDate?: string
   personOnProbationName?: string
-  dataAnalyticsEventCategory?: string // TODO: Confirm if this is required
-  link?: string
+  dataAnalyticsEventCategory?: string
+  linkText?: string
   text?: string
 }
 
@@ -94,11 +94,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
         user.token
       )
 
-      recommendationBanner.display = true
-      recommendationBanner.createdByUserFullName = recommendation.createdBy
-      recommendationBanner.createdDate = recommendation.createdDate
-      recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
-
       const statuses = (
         await getStatuses({
           recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
@@ -112,16 +107,33 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
+      // Recommendation banner should only be visible for the following statuses
       const isDoNotRecall = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED)
-
       const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED)
+      const isRecallStarted = statuses.find(status => status.name === STATUSES.PO_START_RECALL)
 
-      if (isRecommendationActive && !statuses.length) recommendationBanner.text = 'started a recommendation for'
+      if (isRecommendationActive) {
+        recommendationBanner.display = true
+        recommendationBanner.createdByUserFullName = recommendation.createdByUserFullName
+        recommendationBanner.createdDate = recommendation.createdDate
+        recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
 
-      if (isRecommendationActive && isDoNotRecall)
-        recommendationBanner.text = 'started a decision not to recall letter for'
-
-      if (isRecommendationActive && isRecallDecided) recommendationBanner.text = 'started a Part A for'
+        if (isDoNotRecall) {
+          recommendationBanner.text = 'started a decision not to recall letter for'
+          recommendationBanner.linkText = 'Cancel the decision not to recall'
+          recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_dntr_click'
+        } else if (isRecallDecided) {
+          recommendationBanner.text = 'started a Part A for'
+          recommendationBanner.linkText = 'Cancel this Part A'
+          recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_part_a_click'
+        } else if (isRecallStarted) {
+          recommendationBanner.text = 'started a recommendation for'
+          recommendationBanner.linkText = 'Cancel the recommendation'
+          recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_recommendation_click'
+        } else {
+          recommendationBanner.display = false
+        }
+      }
 
       if (isSpoSignatureRequested || isAcoSignatureRequested) {
         recommendationButton = {
@@ -183,7 +195,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
     isVisible: Boolean(config.notification.body) && isBannerDisplayDateRangeValid(),
   }
 
-  const jsonData = JSON.stringify(caseSection, null, 2)
   res.locals = {
     ...res.locals,
     crn: normalizedCrn,
@@ -193,7 +204,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
     recommendationBanner,
     backLink,
     pageUrlBase,
-    jsonData,
   }
   const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)
     ? 'pages/excludedRestrictedCrn'
