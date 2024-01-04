@@ -18,9 +18,9 @@
                 <p class='govuk-body'>You selected this index offence.  Now select the nearest match from the list in PPUD.</p>
 
                 <div class="govuk-inset-text" data-qa="reason">
-                    <p class='govuk-body  govuk-!-font-weight-bold'> {{ offence.offenceDescription }} </p>
-                    <p class='govuk-body'> Start date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </p>
-                    <p class='govuk-body'> Sentence end date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </p>
+                    <span class='govuk-body  govuk-!-font-weight-bold'> {{ offence.offenceDescription }} </span><br/>
+                    <span class='govuk-body'> Start date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </span><br/>
+                    <span class='govuk-body'> Sentence end date: {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true})) }} </span>
                 </div>
 
                 {{ govukSelect({
