@@ -127,7 +127,7 @@
     "helmet": "^7.0.0",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.3",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "luxon": "^3.2.1",
     "mammoth": "^1.5.1",
     "nocache": "^4.0.0",
