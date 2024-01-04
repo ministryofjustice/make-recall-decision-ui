@@ -148,7 +148,7 @@
     "@types/bunyan": "^1.8.10",
     "@types/bunyan-format": "^0.2.7",
     "@types/compression": "^1.7.4",
-    "@types/connect-flash": "0.0.39",
+    "@types/connect-flash": "0.0.40",
     "@types/cookie-parser": "^1.4.3",
     "@types/cookie-session": "^2.0.46",
     "@types/csurf": "^1.11.4",
