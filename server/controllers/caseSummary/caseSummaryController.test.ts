@@ -575,7 +575,7 @@ describe('get', () => {
       expect.objectContaining({
         display: true,
         dataAnalyticsEventCategory: 'spo_cancel_part_a_click',
-        linkText: 'Cancel this Part A',
+        linkText: 'Cancel the Part A',
         text: 'started a Part A for',
       })
     )
