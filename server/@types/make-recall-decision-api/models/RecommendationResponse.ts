@@ -31,6 +31,7 @@ export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
   ppudRecordPresent?: boolean;
   id?: number;
+  createdByUserFullName?: string;
   createdBy?: string;
   createdDate?: string;
   status?: RecommendationResponse.status;

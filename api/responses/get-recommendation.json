@@ -2,6 +2,9 @@
   "id": 1,
   "status": "DRAFT",
   "crn": "X12345",
+  "createdByUserFullName": "Making Recall Decisions User",
+  "createdBy": "MAKE_RECALL_DECISION_USER",
+  "createdDate": "2022-04-24T20:39:00.000Z",
   "activeCustodialConvictionCount": 1,
   "alternativesToRecallTried": {
     "selected": [
