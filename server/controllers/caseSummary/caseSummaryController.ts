@@ -124,7 +124,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_dntr_click'
         } else if (isRecallDecided) {
           recommendationBanner.text = 'started a Part A for'
-          recommendationBanner.linkText = 'Cancel this Part A'
+          recommendationBanner.linkText = 'Cancel the Part A'
           recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_part_a_click'
         } else if (isRecallStarted) {
           recommendationBanner.text = 'started a recommendation for'
