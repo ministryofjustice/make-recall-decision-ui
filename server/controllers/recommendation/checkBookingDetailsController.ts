@@ -15,6 +15,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
     flags,
   } = res.locals
 
+  const sentToPpcs = (statuses as RecommendationStatusResponse[])
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.SENT_TO_PPCS)
+  const recallReceived = recommendation.bookRecallToPpud?.receivedDateTime ?? sentToPpcs?.created
   const spoSigned = (statuses as RecommendationStatusResponse[])
     .filter(s => s.active)
     .find(s => s.name === STATUSES.SPO_SIGNED)
@@ -134,6 +138,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       ? recommendation.practitionerForPartA
       : recommendation.whoCompletedPartA,
     currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
+    recallReceived,
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)

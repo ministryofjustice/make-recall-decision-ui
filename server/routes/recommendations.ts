@@ -84,6 +84,7 @@ import selectIndexOffenceController from '../controllers/recommendation/selectIn
 import indexOffenceSelectedController from '../controllers/recommendation/indexOffenceSelectedController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
 import matchIndexOffenceController from '../controllers/recommendation/matchIndexOffenceController'
 import bookToPpudController from '../controllers/recommendation/bookToPpudController'
 import editReleasingPrisonController from '../controllers/recommendation/editReleasingPrisonController'
@@ -374,6 +375,9 @@ ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
 
 ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)
 ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.post)
+
+ppcsRouteBuilder.get('edit-recall-received', editRecallReceivedController.get)
+ppcsRouteBuilder.post('edit-recall-received', editRecallReceivedController.post)
 
 ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
