@@ -98,9 +98,13 @@ describe('get', () => {
 })
 
 describe('post', () => {
+  const recommendationWithBookRecallToPpud = {
+    bookRecallToPpud: { receivedDateTime: '' },
+    ...recommendationApiResponse,
+  }
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationWithBookRecallToPpud)
 
     const basePath = `/recommendations/1/`
     const req = mockReq({
@@ -140,7 +144,7 @@ describe('post', () => {
 
   it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationWithBookRecallToPpud)
 
     const req = mockReq({
       originalUrl: 'some-url',

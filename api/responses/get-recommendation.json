@@ -6,9 +6,6 @@
   "createdBy": "MAKE_RECALL_DECISION_USER",
   "createdDate": "2022-04-24T20:39:00.000Z",
   "activeCustodialConvictionCount": 1,
-  "bookRecallToPpud": {
-    "receivedDateTime": null
-  },
   "alternativesToRecallTried": {
     "selected": [
       {

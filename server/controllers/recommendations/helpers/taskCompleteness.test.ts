@@ -190,6 +190,7 @@ describe('taskCompleteness', () => {
             selectedOptions: [],
           },
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
@@ -209,6 +210,7 @@ describe('taskCompleteness', () => {
             ],
           },
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
@@ -223,6 +225,7 @@ describe('taskCompleteness', () => {
             allOptions: [],
           },
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
@@ -237,6 +240,7 @@ describe('taskCompleteness', () => {
             allOptions: [],
           },
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
@@ -251,6 +255,7 @@ describe('taskCompleteness', () => {
             allOptions: [],
           },
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
@@ -265,6 +270,7 @@ describe('taskCompleteness', () => {
         hasArrestIssues: null,
         localPoliceContact: null,
         isMainAddressWherePersonCanBeFound: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
@@ -276,6 +282,7 @@ describe('taskCompleteness', () => {
         hasArrestIssues: null,
         isMainAddressWherePersonCanBeFound: null,
         localPoliceContact: {},
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
@@ -287,6 +294,7 @@ describe('taskCompleteness', () => {
         hasArrestIssues: { selected: true, details: 'details' },
         isMainAddressWherePersonCanBeFound: { selected: true, details: 'details' },
         localPoliceContact: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
@@ -300,6 +308,7 @@ describe('taskCompleteness', () => {
         localPoliceContact: {
           contactName: 'Bob',
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -311,6 +320,7 @@ describe('taskCompleteness', () => {
         hasArrestIssues: null,
         localPoliceContact: null,
         isMainAddressWherePersonCanBeFound: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -322,6 +332,7 @@ describe('taskCompleteness', () => {
         hasArrestIssues: null,
         localPoliceContact: null,
         isMainAddressWherePersonCanBeFound: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -425,6 +436,7 @@ describe('taskCompleteness', () => {
         indeterminateSentenceType: {
           selected: 'LIFE' as IndeterminateSentenceType.selected,
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -434,6 +446,7 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         isIndeterminateSentence: false,
         indeterminateSentenceType: null,
+        bookRecallToPpud: null,
         fixedTermAdditionalLicenceConditions: {}, // the default recommendation doesn't have this set
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
@@ -444,6 +457,7 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         isIndeterminateSentence: true,
         indeterminateSentenceType: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
@@ -457,6 +471,7 @@ describe('taskCompleteness', () => {
         indeterminateOrExtendedSentenceDetails: {
           selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'Details' }],
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -466,6 +481,7 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         isIndeterminateSentence: true,
         indeterminateOrExtendedSentenceDetails: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
@@ -475,6 +491,7 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         isIndeterminateSentence: false,
         indeterminateOrExtendedSentenceDetails: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -488,6 +505,7 @@ describe('taskCompleteness', () => {
         fixedTermAdditionalLicenceConditions: {
           selected: true,
         },
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -497,6 +515,7 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         isIndeterminateSentence: true,
         fixedTermAdditionalLicenceConditions: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -506,6 +525,7 @@ describe('taskCompleteness', () => {
         ...recommendationResponse,
         isIndeterminateSentence: false,
         fixedTermAdditionalLicenceConditions: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -516,6 +536,7 @@ describe('taskCompleteness', () => {
         recallType: { selected: { value: 'FIXED_TERM' } },
         isIndeterminateSentence: false,
         fixedTermAdditionalLicenceConditions: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
     })
@@ -526,6 +547,7 @@ describe('taskCompleteness', () => {
         isIndeterminateSentence: false,
         isExtendedSentence: true,
         indeterminateSentenceType: null,
+        bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -535,6 +557,7 @@ describe('taskCompleteness', () => {
       const { areAllComplete, statuses } = taskCompleteness(
         {
           ...recommendationResponse,
+          bookRecallToPpud: null,
         } as RecommendationResponse,
         { flagProbationAdmin: true }
       )
@@ -550,6 +573,7 @@ describe('taskCompleteness', () => {
           whoCompletedPartA: {
             isPersonProbationPractitionerForOffender: true,
           },
+          bookRecallToPpud: null,
         } as RecommendationResponse,
         { flagProbationAdmin: true }
       )
@@ -566,6 +590,7 @@ describe('taskCompleteness', () => {
             isPersonProbationPractitionerForOffender: false,
           },
           practitionerForPartA: {},
+          bookRecallToPpud: null,
         } as RecommendationResponse,
         { flagProbationAdmin: true }
       )
@@ -582,6 +607,7 @@ describe('taskCompleteness', () => {
           whoCompletedPartA: {
             isPersonProbationPractitionerForOffender: false,
           },
+          bookRecallToPpud: null,
         } as RecommendationResponse,
         { flagProbationAdmin: true }
       )

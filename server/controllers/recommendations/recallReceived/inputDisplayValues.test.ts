@@ -3,7 +3,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 
 describe('inputDisplayValuesRecallReceived', () => {
   const apiValues = {
-    receivedDateTime: '2022-05-13T12:35:53.000Z',
+    bookRecallToPpud: { receivedDateTime: '2022-05-13T12:35:53.000Z' },
   } as RecommendationResponse
 
   it("should use empty strings and unsaved values for value if there's an error for value", () => {
