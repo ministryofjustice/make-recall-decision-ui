@@ -92,6 +92,7 @@ import editGenderController from '../controllers/recommendation/editGenderContro
 import editEthnicityController from '../controllers/recommendation/editEthnicityController'
 import editNameController from '../controllers/recommendation/editNameController'
 import editDateOfBirthController from '../controllers/recommendation/editDateOfBirthController'
+import editProbationAreaController from '../controllers/recommendation/editProbationAreaController'
 
 const recommendations = Router()
 
@@ -403,6 +404,9 @@ ppcsRouteBuilder.post('edit-ethnicity', editEthnicityController.post)
 
 ppcsRouteBuilder.get('edit-date-of-birth', editDateOfBirthController.get)
 ppcsRouteBuilder.post('edit-date-of-birth', editDateOfBirthController.post)
+
+ppcsRouteBuilder.get('edit-probation-area', editProbationAreaController.get)
+ppcsRouteBuilder.post('edit-probation-area', editProbationAreaController.post)
 
 ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 
