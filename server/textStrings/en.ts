@@ -8,6 +8,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingGender: 'Select a gender',
     missingEthnicity: 'Select an ethnicity',
     missingReleasingPrison: 'Select a releasing prison',
+    missingProbationArea: 'Select a probation area',
     missingIndexOffence: 'Select a matching index offence from PPUD',
     missingSpoNoRecallRationale: 'You must explain your decision',
     missingLastName: 'Enter a last name',
@@ -190,6 +191,7 @@ export const strings: Record<string, Record<string, string>> = {
     editEthnicity: 'Edit ethnicity',
     editDateOfBirth: 'Edit date of birth',
     editReleasingPrison: 'Edit releasing prison',
+    editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
   },
 }

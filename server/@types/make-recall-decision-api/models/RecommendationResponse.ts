@@ -86,6 +86,7 @@ export type RecommendationResponse = {
   conditionalReleaseDate?: string;
   nomisIndexOffence?: NomisIndexOffence;
   bookRecallToPpud?: BookRecallToPpud;
+  prisonOffender?: PrisonOffender;
 };
 
 export namespace RecommendationResponse {
@@ -164,4 +165,20 @@ export type BookRecallToPpud = {
   secondName: string,
   lastName: string,
   dateOfBirth: string,
+}
+
+export type PrisonOffender = {
+  image: string,
+  locationDescription: string,
+  bookingNo: string,
+  facialImageId: number,
+  firstName: string,
+  middleName: string,
+  lastName: string,
+  dateOfBirth: string,
+  status: string,
+  gender: string,
+  ethnicity: string,
+  CRO: string,
+  PNC: string,
 }

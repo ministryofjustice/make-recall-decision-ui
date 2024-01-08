@@ -91,8 +91,8 @@
                             Image
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {% if image %}
-                            <img src="{{ image }}"/>
+                            {% if recommendation.prisonOffender.image %}
+                            <img src="{{ recommendation.prisonOffender.image }}"/>
                             {% else %}
                             - <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
@@ -111,24 +111,7 @@
                             First name
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.firstName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.firstName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-name'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Second name
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.middleName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.secondName) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-name'>Edit</a>
@@ -138,9 +121,6 @@
                         <dt class="govuk-summary-list__key">
                             Last name
                         </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.lastName) }}
-                        </dd>
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.lastName) }}
                         </dd>
@@ -152,10 +132,6 @@
                         <dt class="govuk-summary-list__key">
                             Gender
                         </dt>
-
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.gender) }}
-                        </dd>
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.gender) }}
                         </dd>
@@ -168,9 +144,6 @@
                             Ethnicity
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.ethnicity) }}
-                         </dd>
-                        <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.ethnicity) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -181,9 +154,6 @@
                         <dt class="govuk-summary-list__key">
                             Date of birth
                         </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(formatDateTimeFromIsoString({ isoDate: prisonOffender.dateOfBirth, dateOnly: true })) }}
-                        </dd>
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(
                             formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
@@ -197,7 +167,7 @@
                             CRO
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.CRO) }}
+                            {{ hyphenForBlank(recommendation.prisonOffender.CRO) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='xyz'>Edit</a>
@@ -208,7 +178,7 @@
                             PNC
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.PNC) }}
+                            {{ hyphenForBlank(recommendation.prisonOffender.PNC) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='xyz'>Edit</a>
@@ -219,7 +189,7 @@
                             Prison booking number
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(prisonOffender.bookingNo) }}
+                            {{ hyphenForBlank(recommendation.prisonOffender.bookingNo) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='xyz'>Edit</a>
@@ -230,8 +200,6 @@
                             Releasing prison
                         </dt>
                         <dd class="govuk-summary-list__value">
-                         </dd>
-                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.releasingPrison) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -243,11 +211,11 @@
                             Custody status
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {% if prisonOffender.status == "ACTIVE IN" %}
+                            {% if recommendation.prisonOffender.status == "ACTIVE IN" %}
                                 In custody
-                            {% elseif prisonOffender.status == "INACTIVE OUT" %}
+                            {% elseif recommendation.prisonOffender.status == "INACTIVE OUT" %}
                                 Unlawfully at large (UAL)
-                            {% elseif prisonOffender.status == "INACTIVE TRN" %}
+                            {% elseif recommendation.prisonOffender.status == "INACTIVE TRN" %}
                                 In transit - Unlawfully at large (UAL)
                             {% else %}
                                 - <span class="govuk-visually-hidden">no value</span>
@@ -258,9 +226,6 @@
                         <dt class="govuk-summary-list__key">
                             Custody type
                         </dt>
-                        <dd class="govuk-summary-list__value">
-
-                        </dd>
                         <dd class="govuk-summary-list__value">
                             {{ hyphenForBlank(recommendation.bookRecallToPpud.custodyType) }}
                         </dd>
@@ -344,7 +309,10 @@
                             Probation area
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(probationArea) }}
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.probationArea) }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class='govuk-link' href='edit-probation-area'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
