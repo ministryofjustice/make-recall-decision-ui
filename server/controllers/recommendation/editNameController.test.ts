@@ -141,7 +141,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#firstNames',
         name: 'firstNames',
-        text: 'Enter a first name(s)',
+        text: 'Enter first name(s)',
         values: undefined,
       },
       {
