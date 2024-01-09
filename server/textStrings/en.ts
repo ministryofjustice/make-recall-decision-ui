@@ -4,7 +4,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Select a custody type',
-    missingPoliceForce: 'Select a police force area',
+    missingPoliceForce: 'Select a police force',
     missingMappaLevel: 'Select a MAPPA level',
     missingGender: 'Select a gender',
     missingEthnicity: 'Select an ethnicity',
