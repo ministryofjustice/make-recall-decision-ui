@@ -182,6 +182,7 @@ export const strings: Record<string, Record<string, string>> = {
     searchPpud: 'Use these details to search PPUD',
     searchPpudResults: 'PPUD record found',
     checkBookingDetails: 'Check booking details for {{ fullName }}',
+    editRecallReceived: 'Edit when PPCS received the recall',
     selectIndexOffence: 'Select the index offence for {{ fullName }}',
     indexOffenceSelected: 'Index offence selected for {{ fullName }}',
     bookedToPpud: 'Booked onto PPUD',

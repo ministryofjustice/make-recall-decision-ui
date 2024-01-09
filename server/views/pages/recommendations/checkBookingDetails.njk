@@ -271,10 +271,10 @@
                             Recall received date
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
+                            {{ formatDateTimeFromIsoString({ isoDate: recallReceived, dateOnly: true }) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-recall-received'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -282,10 +282,10 @@
                             Recall received time
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
+                            {{ formatDateTimeFromIsoString({ isoDate: recallReceived, timeOnly: true }) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-recall-received'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
