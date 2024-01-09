@@ -14,6 +14,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingSpoNoRecallRationale: 'You must explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
+    missingFirstNames: 'Enter a first name(s)',
     missingCrn: 'Enter a Case Reference Number (CRN)',
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
     saveChanges: 'An error occurred saving your changes',
@@ -196,5 +197,6 @@ export const strings: Record<string, Record<string, string>> = {
     editReleasingPrison: 'Edit releasing prison',
     editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
+    editName: 'Edit names',
   },
 }

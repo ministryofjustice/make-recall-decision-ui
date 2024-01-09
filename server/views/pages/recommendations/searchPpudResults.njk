@@ -34,22 +34,18 @@
                 {% for ppud in results %}
                     <tr class="govuk-table__row"  data-qa='row-{{ ppud.nomsId }}' >
                         <td class="govuk-table__cell">
-                            {% if ppud.nomsId %}
-                                {{ ppud.nomsId }}
-                            {% else %}
-                                - <span class="govuk-visually-hidden">no value</span>
-                            {% endif %}
+                            {{ hyphenForBlank(ppud.nomsId) }}
                         </td>
                         <td class="govuk-table__cell">
-                            <a href="check-booking-details" class="govuk-link" >{{ ppud.firstNames }} {{ ppud.familyName }}</a>
+                            <form novalidate method="post">
+                                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                                <input type="hidden" name="id" value="{{ ppud.id }}" />
+                                <button class="govuk-button-as-link" type="submit" >{{ ppud.firstNames }} {{ ppud.familyName }}</button>
+                            </form>
                         </td>
                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: ppud.dateOfBirth}) }}</td>
                         <td class="govuk-table__cell">
-                            {% if ppud.croNumber %}
-                                {{ ppud.croNumber }}
-                            {% else %}
-                                - <span class="govuk-visually-hidden">no value</span>
-                            {% endif %}
+                            {{ hyphenForBlank(ppud.croNumber) }}
                         </td>
                     </tr>
                 {% endfor %}

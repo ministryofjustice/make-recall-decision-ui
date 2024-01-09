@@ -162,8 +162,7 @@ export type BookRecallToPpud = {
   sentenceDate: string,
   gender: string,
   ethnicity: string,
-  firstName: string,
-  secondName: string,
+  firstNames: string,
   lastName: string,
   dateOfBirth: string,
 }

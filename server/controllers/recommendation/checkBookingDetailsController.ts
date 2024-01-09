@@ -38,7 +38,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   } as { bookRecallToPpud: BookRecallToPpud; prisonOffender: PrisonOffender }
 
   // if recommendation does not have prison offender from nomis, look it up and add it.
-  if (!isDefined(recommendation.prisonOffender)) {
+  if (!hasValue(recommendation.prisonOffender)) {
     if (hasValue(recommendation.personOnProbation.nomsNumber)) {
       const nomisPrisonOffender = (await searchForPrisonOffender(
         token,
@@ -70,7 +70,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   }
 
   // if recommendation does not have working values for book to ppud, add them.
-  if (!isDefined(recommendation.bookRecallToPpud)) {
+  if (!hasValue(recommendation.bookRecallToPpud)) {
     let firstName = ''
     let middleName = ''
     let lastName = ''
@@ -104,7 +104,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
       releaseDate: null,
       sentenceDate: null,
-      firstName: `${firstName} ${middleName}`,
+      firstNames: `${firstName} ${middleName}`,
       lastName,
       dateOfBirth,
     } as BookRecallToPpud

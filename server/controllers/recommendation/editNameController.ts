@@ -7,8 +7,7 @@ import { strings } from '../../textStrings/en'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, errors, unsavedValues } = res.locals
-
-  const { firstName, secondName, lastName } = recommendation.bookRecallToPpud
+  const { firstNames, lastName } = recommendation.bookRecallToPpud
 
   res.locals = {
     ...res.locals,
@@ -19,8 +18,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     values: isDefined(errors)
       ? unsavedValues
       : {
-          firstName,
-          secondName,
+          firstNames,
           lastName,
         },
   }
@@ -31,7 +29,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { firstName, secondName, lastName } = req.body
+  const { firstNames, lastName } = req.body
 
   const {
     user: { token },
@@ -41,12 +39,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const errors = []
 
-  if (!isDefined(firstName) || firstName.trim().length === 0) {
-    const errorId = 'missingFirstName'
+  if (!isDefined(firstNames) || firstNames.trim().length === 0) {
+    const errorId = 'missingFirstNames'
 
     errors.push(
       makeErrorObject({
-        id: 'firstName',
+        id: 'firstNames',
         text: strings.errors[errorId],
         errorId,
       })
@@ -68,8 +66,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors.length > 0) {
     req.session.errors = errors
     req.session.unsavedValues = {
-      firstName,
-      secondName,
+      firstNames,
       lastName,
     }
     return res.redirect(303, req.originalUrl)
@@ -82,8 +79,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        firstName,
-        secondName,
+        firstNames,
         lastName,
       },
     },

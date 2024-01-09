@@ -16,7 +16,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          bookRecallToPpud: { firstName: 'Harrison', secondName: 'C', lastName: 'Ford' },
+          bookRecallToPpud: { firstNames: 'Harrison C', lastName: 'Ford' },
         },
       },
     })
@@ -25,9 +25,8 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'editName' })
     expect(res.locals.values).toEqual({
-      firstName: 'Harrison',
+      firstNames: 'Harrison C',
       lastName: 'Ford',
-      secondName: 'C',
     })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editName')
     expect(next).toHaveBeenCalled()
@@ -48,7 +47,7 @@ describe('get', () => {
           secondName: 'H',
         },
         recommendation: {
-          bookRecallToPpud: { firstName: 'Harrison', secondName: 'C', lastName: 'Ford' },
+          bookRecallToPpud: { firstNames: 'Harrison C', lastName: 'Ford' },
         },
       },
     })
@@ -81,8 +80,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        firstName: 'Al',
-        secondName: 'Bert',
+        firstNames: 'Al Bert',
         lastName: 'Zweitestein',
       },
     })
@@ -104,8 +102,7 @@ describe('post', () => {
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          firstName: 'Al',
-          secondName: 'Bert',
+          firstNames: 'Al Bert',
           lastName: 'Zweitestein',
         },
       },
@@ -140,11 +137,11 @@ describe('post', () => {
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingFirstName',
+        errorId: 'missingFirstNames',
         invalidParts: undefined,
-        href: '#firstName',
-        name: 'firstName',
-        text: 'Enter a first name',
+        href: '#firstNames',
+        name: 'firstNames',
+        text: 'Enter a first name(s)',
         values: undefined,
       },
       {
