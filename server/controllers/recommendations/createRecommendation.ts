@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createRecommendation, getStatuses } from '../../data/makeDecisionApiClient'
+import { createRecommendation, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { validateCrn } from '../../utils/utils'
 import { routeUrls } from '../../routes/routeUrls'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
@@ -39,7 +39,12 @@ export const createRecommendationController = async (req: Request, res: Response
     }
 
     const recommendation = await createRecommendation({ crn: normalizedCrn }, user.token, flags)
-
+    await updateStatuses({
+      recommendationId: String(recommendation.id),
+      token: user.token,
+      activate: [STATUSES.PO_START_RECALL],
+      deActivate: [],
+    })
     res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/`)
 
     appInsightsEvent(

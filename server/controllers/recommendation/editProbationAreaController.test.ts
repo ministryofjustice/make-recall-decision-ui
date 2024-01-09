@@ -1,9 +1,29 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import matchIndexOffenceController from './matchIndexOffenceController'
+import editProbationAreaController from './editProbationAreaController'
 
 jest.mock('../../data/makeDecisionApiClient')
+
+const RECOMMENDATION_TEMPLATE = {
+  id: '123',
+  personOnProbation: {
+    croNumber: '123X',
+    nomsNumber: '567Y',
+    surname: 'Mayer',
+    dateOfBirth: '2001-01-01',
+    mappa: {
+      level: '1',
+    },
+  },
+  whoCompletedPartA: {
+    localDeliveryUnit: 'who-completed-delivery-unit',
+    isPersonProbationPractitionerForOffender: false,
+  },
+  practitionerForPartA: {
+    localDeliveryUnit: 'practitioner-delivery-unit',
+  },
+}
 
 describe('get', () => {
   it('load', async () => {
@@ -17,45 +37,26 @@ describe('get', () => {
 
     const res = mockRes({
       locals: {
-        recommendation: {
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                bookingId: 13,
-                courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
-                offenceStatute: 'SA96',
-                offenderChargeId: 3934369,
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                sentenceStartDate: '2023-11-16',
-                sentenceTypeDescription: 'Adult Mandatory Life',
-                terms: [],
-                releaseDate: '2025-11-16',
-                licenceExpiryDate: '2025-11-17',
-                releasingPrison: 'Broad Moor',
-              },
-            ],
-            selected: 3934369,
-          },
+        recommendation: RECOMMENDATION_TEMPLATE,
+        flags: {
+          xyz: 1,
         },
       },
     })
     const next = mockNext()
-    await matchIndexOffenceController.get(req, res, next)
+    await editProbationAreaController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'probation-services')
 
-    expect(res.locals.page).toEqual({ id: 'matchIndexOffence' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence')
-    expect(res.locals.indexOffences).toEqual([
-      { text: 'Select an offence', value: '' },
+    expect(res.locals.page).toEqual({ id: 'editProbationArea' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editProbationArea')
+    expect(res.locals.ppudProbationAreas).toEqual([
+      { text: 'Select probation area', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
     ])
+    expect(res.locals.partAProbationArea).toEqual('practitioner-delivery-unit')
     expect(next).toHaveBeenCalled()
   })
 })
@@ -74,7 +75,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        indexOffence: 'some offence',
+        probationArea: 'blue',
       },
     })
 
@@ -88,14 +89,14 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await matchIndexOffenceController.post(req, res, next)
+    await editProbationAreaController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          indexOffence: 'some offence',
+          probationArea: 'blue',
         },
       },
       token: 'token1',
@@ -104,7 +105,7 @@ describe('post', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/book-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with invalid data', async () => {
@@ -125,15 +126,15 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await matchIndexOffenceController.post(req, res, next)
+    await editProbationAreaController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingIndexOffence',
+        errorId: 'missingProbationArea',
         invalidParts: undefined,
-        href: '#indexOffence',
-        name: 'indexOffence',
-        text: 'Select a matching index offence from PPUD',
+        href: '#probationArea',
+        name: 'probationArea',
+        text: 'Select a probation area',
         values: undefined,
       },
     ])

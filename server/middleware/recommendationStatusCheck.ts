@@ -16,6 +16,7 @@ export enum STATUSES {
   SENT_TO_PPCS = 'SENT_TO_PPCS',
   BOOKED_TO_PPUD = 'BOOKED_TO_PPUD',
   REC_CLOSED = 'REC_CLOSED',
+  PO_START_RECALL = 'PO_START_RECALL',
 }
 
 const router = Router()

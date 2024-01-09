@@ -1,0 +1,96 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            {% set html %}
+                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
+            {% endset %}
+            {{ govukNotificationBanner({
+                html: html,
+                classes: "govuk-notification-banner--info govuk-body"
+            }) }}
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                <fieldset class="govuk-fieldset" role="group"
+                          aria-describedby="date-of-birth-hint appointment-time-hint{% if errors.dateOfBirth %} error{% endif %}">
+
+                    <div id="date-of-birth-hint" class="govuk-hint">
+                        For example, 31 3 1980
+                    </div>
+                    <div class="govuk-form-group{% if errors.dateOfBirth %} govuk-form-group--error{% endif %}">
+                        {% if errors.dateOfBirth %}
+                        <p id="error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> {{ errors.dateOfBirth.text }}
+                        </p>
+                        {% endif %}
+                        <div class="govuk-date-input" id="date-of-birth">
+                            <div class="govuk-date-input__item">
+                                {% from "govuk/components/input/macro.njk" import govukInput %}
+                                {{ govukInput({
+                                    label: {
+                                        text: "Day",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "day",
+                                    name: "day",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('day', errors.dateOfBirth)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: dateOfBirth.day
+                                }) }}
+                            </div>
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Month",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "month",
+                                    name: "month",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('month', errors.dateOfBirth)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: dateOfBirth.month
+                                }) }}
+                            </div>
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Year",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "year",
+                                    name: "year",
+                                    classes: 'govuk-input--width-4' + (' govuk-input--error' if isDatePartInvalid('year', errors.dateOfBirth)),
+                                    attributes: {
+                                        maxlength: 4,
+                                        inputmode: "numeric"
+                                    },
+                                    value: dateOfBirth.year
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import matchIndexOffenceController from './matchIndexOffenceController'
+import editEthnicityController from './editEthnicityController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -15,43 +15,16 @@ describe('get', () => {
       },
     })
 
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                bookingId: 13,
-                courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
-                offenceStatute: 'SA96',
-                offenderChargeId: 3934369,
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                sentenceStartDate: '2023-11-16',
-                sentenceTypeDescription: 'Adult Mandatory Life',
-                terms: [],
-                releaseDate: '2025-11-16',
-                licenceExpiryDate: '2025-11-17',
-                releasingPrison: 'Broad Moor',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      },
-    })
+    const res = mockRes()
     const next = mockNext()
-    await matchIndexOffenceController.get(req, res, next)
+    await editEthnicityController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'ethnicities')
 
-    expect(res.locals.page).toEqual({ id: 'matchIndexOffence' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence')
-    expect(res.locals.indexOffences).toEqual([
-      { text: 'Select an offence', value: '' },
+    expect(res.locals.page).toEqual({ id: 'editEthnicity' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editEthnicity')
+    expect(res.locals.ethnicities).toEqual([
+      { text: 'Select an ethnicity', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -74,7 +47,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        indexOffence: 'some offence',
+        ethnicity: 'blue',
       },
     })
 
@@ -88,14 +61,14 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await matchIndexOffenceController.post(req, res, next)
+    await editEthnicityController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          indexOffence: 'some offence',
+          ethnicity: 'blue',
         },
       },
       token: 'token1',
@@ -104,7 +77,7 @@ describe('post', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/book-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with invalid data', async () => {
@@ -125,15 +98,15 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await matchIndexOffenceController.post(req, res, next)
+    await editEthnicityController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingIndexOffence',
+        errorId: 'missingEthnicity',
         invalidParts: undefined,
-        href: '#indexOffence',
-        name: 'indexOffence',
-        text: 'Select a matching index offence from PPUD',
+        href: '#ethnicity',
+        name: 'ethnicity',
+        text: 'Select an ethnicity',
         values: undefined,
       },
     ])

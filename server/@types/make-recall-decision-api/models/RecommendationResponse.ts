@@ -31,6 +31,7 @@ export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
   ppudRecordPresent?: boolean;
   id?: number;
+  createdByUserFullName?: string;
   createdBy?: string;
   createdDate?: string;
   status?: RecommendationResponse.status;
@@ -86,6 +87,7 @@ export type RecommendationResponse = {
   conditionalReleaseDate?: string;
   nomisIndexOffence?: NomisIndexOffence;
   bookRecallToPpud?: BookRecallToPpud;
+  prisonOffender?: PrisonOffender;
 };
 
 export namespace RecommendationResponse {
@@ -158,4 +160,26 @@ export type BookRecallToPpud = {
   riskOfContrabandDetails: string,
   riskOfSeriousHarmLevel: string,
   sentenceDate: string,
+  gender: string,
+  ethnicity: string,
+  firstName: string,
+  secondName: string,
+  lastName: string,
+  dateOfBirth: string,
+}
+
+export type PrisonOffender = {
+  image: string,
+  locationDescription: string,
+  bookingNo: string,
+  facialImageId: number,
+  firstName: string,
+  middleName: string,
+  lastName: string,
+  dateOfBirth: string,
+  status: string,
+  gender: string,
+  ethnicity: string,
+  CRO: string,
+  PNC: string,
 }

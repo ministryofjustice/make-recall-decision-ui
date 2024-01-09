@@ -106,11 +106,14 @@ describe('get', () => {
           locationDescription: 'Graceland',
         },
         bookRecallToPpud: {
+          dateOfBirth: '1970-03-15',
           decisionDateTime: '2023-11-13T09:49:31',
+          firstName: 'Anne C',
+          lastName: 'McCaffrey',
           isInCustody: true,
           mappaLevel: 'Level 1',
           policeForce: 'HARDCODED_VALUE',
-          probationArea: 'HARDCODED_VALUE',
+          probationArea: '',
           receivedDateTime: '2023-11-13T09:49:31',
           recommendedToOwner: 'HARDCODED_VALUE',
           releaseDate: null,
@@ -122,7 +125,7 @@ describe('get', () => {
     })
 
     expect(res.locals.page.id).toEqual('checkBookingDetails')
-    expect(res.locals.prisonOffender).toEqual({
+    expect(res.locals.recommendation.prisonOffender).toEqual({
       CRO: '1234/2345',
       PNC: 'X234547',
       bookingNo: '1234',
@@ -136,7 +139,6 @@ describe('get', () => {
       gender: 'Male',
       locationDescription: 'Graceland',
     })
-    expect(res.locals.probationArea).toEqual('practitioner-delivery-unit')
     expect(res.locals.spoSigned).toEqual({
       name: 'SPO_SIGNED',
       active: true,
@@ -178,27 +180,6 @@ describe('get', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
   })
 
-  it('load - alternative probation area', async () => {
-    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
-
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          ...RECOMMENDATION_TEMPLATE,
-          whoCompletedPartA: {
-            localDeliveryUnit: 'who-completed-delivery-unit',
-            isPersonProbationPractitionerForOffender: true,
-          },
-        },
-        statuses: STATUSES_TEMPLATE,
-      },
-    })
-    const next = mockNext()
-    await checkBookingDetailsController.get(mockReq(), res, next)
-
-    expect(res.locals.probationArea).toEqual('who-completed-delivery-unit')
-  })
-
   it('load present blanks and banner for no nomis record found.', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(undefined)
 
@@ -215,6 +196,7 @@ describe('get', () => {
               level: '1',
             },
           },
+          bookRecallToPpud: {},
           whoCompletedPartA: {
             localDeliveryUnit: 'who-completed-delivery-unit',
             isPersonProbationPractitionerForOffender: true,
@@ -235,20 +217,7 @@ describe('get', () => {
     const next = mockNext()
     await checkBookingDetailsController.get(mockReq(), res, next)
 
-    expect(res.locals.prisonOffender).toEqual({
-      CRO: undefined,
-      PNC: undefined,
-      bookingNo: undefined,
-      dateOfBirth: undefined,
-      ethnicity: undefined,
-      facialImageId: undefined,
-      firstName: undefined,
-      gender: undefined,
-      lastName: undefined,
-      locationDescription: undefined,
-      middleName: undefined,
-      status: undefined,
-    })
+    expect(res.locals.recommendation.prisonOffender).toEqual(undefined)
 
     expect(res.locals.errorMessage).toEqual('No NOMIS record found')
     expect(updateRecommendation).not.toHaveBeenCalled()
@@ -272,6 +241,7 @@ describe('get', () => {
               level: '1',
             },
           },
+          bookRecallToPpud: {},
           whoCompletedPartA: {
             localDeliveryUnit: 'who-completed-delivery-unit',
             isPersonProbationPractitionerForOffender: true,
@@ -292,20 +262,7 @@ describe('get', () => {
     const next = mockNext()
     await checkBookingDetailsController.get(mockReq(), res, next)
 
-    expect(res.locals.prisonOffender).toEqual({
-      CRO: undefined,
-      PNC: undefined,
-      bookingNo: undefined,
-      dateOfBirth: undefined,
-      ethnicity: undefined,
-      facialImageId: undefined,
-      firstName: undefined,
-      gender: undefined,
-      lastName: undefined,
-      locationDescription: undefined,
-      middleName: undefined,
-      status: undefined,
-    })
+    expect(res.locals.recommendation.prisonOffender).toEqual(undefined)
 
     expect(res.locals.errorMessage).toEqual("No NOMIS number found in 'Consider a recall'")
     expect(searchForPrisonOffender).not.toHaveBeenCalled()

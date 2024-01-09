@@ -3,7 +3,9 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { BookRecallToPpud } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { BookRecallToPpud, PrisonOffender } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { hasValue, isDefined } from '../../utils/utils'
+import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -13,59 +15,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
     flags,
   } = res.locals
 
-  let errorMessage
-  let prisonOffender
-
-  if (
-    recommendation.personOnProbation.nomsNumber !== undefined &&
-    recommendation.personOnProbation.nomsNumber !== null
-  ) {
-    prisonOffender = await searchForPrisonOffender(token, recommendation.personOnProbation.nomsNumber)
-
-    if (prisonOffender === undefined) {
-      errorMessage = 'No NOMIS record found'
-    }
-  } else {
-    errorMessage = "No NOMIS number found in 'Consider a recall'"
-  }
-
-  if (prisonOffender === undefined) {
-    prisonOffender = {
-      locationDescription: undefined,
-      bookingNo: undefined,
-      facialImageId: undefined,
-      firstName: undefined,
-      middleName: undefined,
-      lastName: undefined,
-      dateOfBirth: undefined,
-      status: undefined,
-      physicalAttributes: { gender: undefined, ethnicity: undefined },
-      identifiers: [],
-      image: undefined,
-    }
-  }
-
-  const {
-    locationDescription,
-    bookingNo,
-    facialImageId,
-    firstName,
-    middleName,
-    lastName,
-    dateOfBirth,
-    status,
-    physicalAttributes: { gender, ethnicity },
-    identifiers,
-    image,
-  } = prisonOffender
-
-  let probationArea
-  if (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender) {
-    probationArea = recommendation?.whoCompletedPartA?.localDeliveryUnit
-  } else {
-    probationArea = recommendation?.practitionerForPartA?.localDeliveryUnit
-  }
-
+  const sentToPpcs = (statuses as RecommendationStatusResponse[])
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.SENT_TO_PPCS)
+  const recallReceived = recommendation.bookRecallToPpud?.receivedDateTime ?? sentToPpcs?.created
   const spoSigned = (statuses as RecommendationStatusResponse[])
     .filter(s => s.active)
     .find(s => s.name === STATUSES.SPO_SIGNED)
@@ -78,47 +31,98 @@ async function get(_: Request, res: Response, next: NextFunction) {
     .filter(s => s.active)
     .find(s => s.name === STATUSES.PO_RECALL_CONSULT_SPO)
 
-  const bookRecallToPpud = {
-    decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
-    isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
-    mappaLevel: `Level ${recommendation.personOnProbation?.mappa?.level}`,
-    policeForce: 'HARDCODED_VALUE',
-    probationArea: 'HARDCODED_VALUE',
-    recommendedToOwner: 'HARDCODED_VALUE',
-    riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
-      ? recommendation.hasContrabandRisk.details
-      : '',
-    riskOfSeriousHarmLevel: currentHighestRosh(recommendation.currentRoshForPartA),
-    receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
-    releaseDate: null,
-    sentenceDate: null,
-  } as BookRecallToPpud
-
+  let errorMessage
   const valuesToSave = {
-    prisonOffender: {
-      locationDescription,
-      bookingNo,
-      facialImageId,
-      firstName,
-      middleName,
-      lastName,
-      dateOfBirth,
-      status,
-      gender,
-      ethnicity,
-      CRO: identifiers.find(id => id.type === 'CRO')?.value,
-      PNC: identifiers.find(id => id.type === 'PNC')?.value,
-    },
-    bookRecallToPpud,
+    prisonOffender: undefined,
+    bookRecallToPpud: undefined,
+  } as { bookRecallToPpud: BookRecallToPpud; prisonOffender: PrisonOffender }
+
+  // if recommendation does not have prison offender from nomis, look it up and add it.
+  if (!isDefined(recommendation.prisonOffender)) {
+    if (hasValue(recommendation.personOnProbation.nomsNumber)) {
+      const nomisPrisonOffender = (await searchForPrisonOffender(
+        token,
+        recommendation.personOnProbation.nomsNumber
+      )) as PrisonOffenderSearchResponse
+
+      if (!isDefined(nomisPrisonOffender)) {
+        errorMessage = 'No NOMIS record found'
+      } else {
+        valuesToSave.prisonOffender = {
+          image: nomisPrisonOffender.image,
+          locationDescription: nomisPrisonOffender.locationDescription,
+          bookingNo: nomisPrisonOffender.bookingNo,
+          facialImageId: nomisPrisonOffender.facialImageId,
+          firstName: nomisPrisonOffender.firstName,
+          middleName: nomisPrisonOffender.middleName,
+          lastName: nomisPrisonOffender.lastName,
+          dateOfBirth: nomisPrisonOffender.dateOfBirth,
+          status: nomisPrisonOffender.status,
+          gender: nomisPrisonOffender.physicalAttributes.gender,
+          ethnicity: nomisPrisonOffender.physicalAttributes.ethnicity,
+          CRO: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
+          PNC: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
+        }
+      }
+    } else {
+      errorMessage = "No NOMIS number found in 'Consider a recall'"
+    }
   }
 
-  if (!errorMessage && recommendation.bookRecallToPpud === undefined) {
+  // if recommendation does not have working values for book to ppud, add them.
+  if (!isDefined(recommendation.bookRecallToPpud)) {
+    let firstName = ''
+    let middleName = ''
+    let lastName = ''
+    let dateOfBirth = ''
+
+    if (recommendation.prisonOffender) {
+      firstName = recommendation.prisonOffender.firstName
+      middleName = recommendation.prisonOffender.middleName
+      lastName = recommendation.prisonOffender.lastName
+      dateOfBirth = recommendation.prisonOffender.dateOfBirth
+    }
+
+    if (valuesToSave.prisonOffender) {
+      firstName = valuesToSave.prisonOffender.firstName
+      middleName = valuesToSave.prisonOffender.middleName
+      lastName = valuesToSave.prisonOffender.lastName
+      dateOfBirth = valuesToSave.prisonOffender.dateOfBirth
+    }
+
+    valuesToSave.bookRecallToPpud = {
+      decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
+      isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
+      mappaLevel: `Level ${recommendation.personOnProbation?.mappa?.level}`,
+      policeForce: 'HARDCODED_VALUE',
+      probationArea: '',
+      recommendedToOwner: 'HARDCODED_VALUE',
+      riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
+        ? recommendation.hasContrabandRisk.details
+        : '',
+      riskOfSeriousHarmLevel: currentHighestRosh(recommendation.currentRoshForPartA),
+      receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
+      releaseDate: null,
+      sentenceDate: null,
+      firstName: `${firstName} ${middleName}`,
+      lastName,
+      dateOfBirth,
+    } as BookRecallToPpud
+  }
+
+  if (isDefined(valuesToSave.bookRecallToPpud) || isDefined(valuesToSave.prisonOffender)) {
     await updateRecommendation({
       recommendationId: recommendation.id,
       valuesToSave,
       token,
       featureFlags: flags,
     })
+    if (!isDefined(recommendation.prisonOffender)) {
+      recommendation.prisonOffender = valuesToSave.prisonOffender
+    }
+    if (!isDefined(recommendation.bookRecallToPpud)) {
+      recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
+    }
   }
 
   res.locals = {
@@ -126,11 +130,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     page: {
       id: 'checkBookingDetails',
     },
-    image,
     errorMessage,
-    prisonOffender: valuesToSave.prisonOffender,
-    probationArea,
-    mappaLevel: recommendation.personOnProbation?.mappa?.level,
     spoSigned,
     acoSigned,
     poRecallConsultSpo,
@@ -138,6 +138,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       ? recommendation.practitionerForPartA
       : recommendation.whoCompletedPartA,
     currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
+    recallReceived,
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)

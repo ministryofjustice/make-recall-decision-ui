@@ -62,12 +62,32 @@
                     <a class='govuk-button'
                        href='{{recommendationButton.link}}'
                        data-analytics-event='click_cta' data-analytics-event-category='{{recommendationButton.dataAnalyticsEventCategory}}'>
-                       {{recommendationButton.title}}
+                       {{recommendationButton.title}} 
                     </a>
                     {% endif %}
-                    {% endif %}
+                    {% endif %} 
                 </div>
             </div>
+            {% if flags.flagCancelRecommendationProcess and  recommendationBanner.display %}
+                
+                {% set bannerHtml %}
+                    <p>{{ recommendationBanner.createdByUserFullName }} {{ recommendationBanner.text}} {{ recommendationBanner.personOnProbationName }} on {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
+                    <p>
+                        <a 
+                           href=""
+                           data-analytics-event='click_cta'
+                           data-analytics-event-category='{{ recommendationBanner.dataAnalyticsEventCategory }}'
+                           >{{ recommendationBanner.linkText }}</a> if you need to stop it. You'll have to explain why.
+                    </p>
+                {% endset %}
+
+                {{ mojBanner({
+                    type: 'information',
+                    html: bannerHtml,
+                    iconFallbackText: 'information'
+                }) }}
+
+            {% endif %}
             {{ mojSubNavigation({
                 label: 'Case summary sections',
                 items: removeUndefinedListItems([

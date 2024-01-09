@@ -85,10 +85,16 @@ import indexOffenceSelectedController from '../controllers/recommendation/indexO
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
 import matchIndexOffenceController from '../controllers/recommendation/matchIndexOffenceController'
 import bookToPpudController from '../controllers/recommendation/bookToPpudController'
 import editReleasingPrisonController from '../controllers/recommendation/editReleasingPrisonController'
 import editMappaLevelController from '../controllers/recommendation/editMappaLevelController'
+import editGenderController from '../controllers/recommendation/editGenderController'
+import editEthnicityController from '../controllers/recommendation/editEthnicityController'
+import editNameController from '../controllers/recommendation/editNameController'
+import editDateOfBirthController from '../controllers/recommendation/editDateOfBirthController'
+import editProbationAreaController from '../controllers/recommendation/editProbationAreaController'
 
 const recommendations = Router()
 
@@ -374,6 +380,9 @@ ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.pos
 ppcsRouteBuilder.get('edit-police-contact', editPoliceContactController.get)
 ppcsRouteBuilder.post('edit-police-contact', editPoliceContactController.post)
 
+ppcsRouteBuilder.get('edit-recall-received', editRecallReceivedController.get)
+ppcsRouteBuilder.post('edit-recall-received', editRecallReceivedController.post)
+
 ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 
@@ -383,6 +392,9 @@ ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.p
 ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
 ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
 
+ppcsRouteBuilder.get('edit-name', editNameController.get)
+ppcsRouteBuilder.post('edit-name', editNameController.post)
+
 ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
 ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
 
@@ -391,6 +403,18 @@ ppcsRouteBuilder.post('edit-releasing-prison', editReleasingPrisonController.pos
 
 ppcsRouteBuilder.get('edit-mappa-level', editMappaLevelController.get)
 ppcsRouteBuilder.post('edit-mappa-level', editMappaLevelController.post)
+
+ppcsRouteBuilder.get('edit-gender', editGenderController.get)
+ppcsRouteBuilder.post('edit-gender', editGenderController.post)
+
+ppcsRouteBuilder.get('edit-ethnicity', editEthnicityController.get)
+ppcsRouteBuilder.post('edit-ethnicity', editEthnicityController.post)
+
+ppcsRouteBuilder.get('edit-date-of-birth', editDateOfBirthController.get)
+ppcsRouteBuilder.post('edit-date-of-birth', editDateOfBirthController.post)
+
+ppcsRouteBuilder.get('edit-probation-area', editProbationAreaController.get)
+ppcsRouteBuilder.post('edit-probation-area', editProbationAreaController.post)
 
 ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 
