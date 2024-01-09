@@ -46,7 +46,6 @@
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -78,6 +77,7 @@
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
 
                 <h2 class='govuk-heading-m'>Personal details from NOMIS</h2>
 
@@ -344,10 +344,10 @@
                             Local police contact
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            - <span class="govuk-visually-hidden">no value</span>
+                            {{ hyphenForBlank(recommendation.bookRecallToPpud.policeForce) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            <a class='govuk-link' href='edit-police-contact'>Edit</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">

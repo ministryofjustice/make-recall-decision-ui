@@ -83,6 +83,7 @@ import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResul
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 import indexOffenceSelectedController from '../controllers/recommendation/indexOffenceSelectedController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
+import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
 import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
 import matchIndexOffenceController from '../controllers/recommendation/matchIndexOffenceController'
@@ -375,6 +376,9 @@ ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
 
 ppcsRouteBuilder.get('check-booking-details', checkBookingDetailsController.get)
 ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.post)
+
+ppcsRouteBuilder.get('edit-police-contact', editPoliceContactController.get)
+ppcsRouteBuilder.post('edit-police-contact', editPoliceContactController.post)
 
 ppcsRouteBuilder.get('edit-recall-received', editRecallReceivedController.get)
 ppcsRouteBuilder.post('edit-recall-received', editRecallReceivedController.post)
