@@ -1,11 +1,36 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import searchPpudController from './searchPpudResultsController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { updateRecommendation, searchPpud } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, searchPpud, ppudDetails } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
+
+const PPUD_DETAILS_TEMPLATE = {
+  offender: {
+    id: 'string',
+    croOtherNumber: 'string',
+    dateOfBirth: '2000-01-01',
+    ethnicity: 'Caucasian',
+    familyName: 'Teal',
+    firstNames: 'John',
+    gender: 'Male',
+    immigrationStatus: 'British',
+    nomsId: 'JG123POE',
+    prisonerCategory: 'Incarcerated',
+    prisonNumber: '1234567A',
+    sentences: [
+      {
+        dateOfSentence: '2024-01-05',
+        custodyType: 'Standard',
+        mappaLevel: 'Level 5',
+      },
+    ],
+    status: 'ACTIVE',
+    youngOffender: 'NO',
+  },
+}
 
 describe('get', () => {
   it('load', async () => {
@@ -41,14 +66,6 @@ describe('get', () => {
     })
     const next = mockNext()
     await searchPpudController.get(req, res, next)
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token',
-      valuesToSave: {
-        ppudRecordPresent: true,
-      },
-      featureFlags: {},
-    })
 
     expect(res.locals.page).toEqual({ id: 'searchPpudResults' })
     expect(res.locals.results).toEqual([
@@ -88,15 +105,6 @@ describe('get', () => {
 
     await searchPpudController.get(req, res, next)
 
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token',
-      valuesToSave: {
-        ppudRecordPresent: false,
-      },
-      featureFlags: {},
-    })
-
     expect(res.locals.page).toEqual({ id: 'noSearchPpudResults' })
     expect(res.locals.results).toEqual([])
 
@@ -111,5 +119,46 @@ describe('get', () => {
       },
       {}
     )
+  })
+})
+
+describe('post', () => {
+  it('post with valid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(ppudDetails as jest.Mock).mockResolvedValue(PPUD_DETAILS_TEMPLATE)
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+      body: {
+        id: '1234',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { token: 'token1' },
+        urlInfo: { basePath },
+        flags: { xyz: true },
+      },
+    })
+    const next = mockNext()
+
+    await searchPpudController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '1',
+      valuesToSave: {
+        ppudOffender: PPUD_DETAILS_TEMPLATE.offender,
+      },
+      token: 'token1',
+      featureFlags: {
+        xyz: true,
+      },
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

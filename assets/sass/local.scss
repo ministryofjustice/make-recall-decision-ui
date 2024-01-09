@@ -137,7 +137,7 @@ pre {
   font-size: 1.1875rem;
   line-height: 1.3157894737;
 
-  font-family: "GDS Transport",arial,sans-serif;
+  font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
@@ -150,18 +150,59 @@ pre {
   }
 
   .govuk-text-list__row {
-    display: table-row;
+    display: block;
   }
 
   .govuk-text-list__key {
-    display: table-cell;
+    display: inline;
     overflow-wrap: break-word;
-    font-weight: 700;
     vertical-align: top;
     width: 30%;
   }
+
+  .govuk-text-list__key:after {
+    content: ": "
+  }
+
   .govuk-text-list__value {
-    display: table-cell;
+    display: inline;
     overflow-wrap: break-word;
+    margin-inline-start: unset;
+  }
+}
+
+.govuk-button-as-link {
+  align-items: normal;
+  background-color: rgba(0, 0, 0, 0);
+  border-color: #1d70b8;
+  border-style: none;
+  box-sizing: content-box;
+  color: #1d70b8;
+  cursor: pointer;
+  display: inline;
+  font: inherit;
+  height: auto;
+  padding: 0;
+  perspective-origin: 0 0;
+  text-align: start;
+  text-decoration: underline;
+  transform-origin: 0 0;
+  width: auto;
+  -moz-appearance: none;
+  -webkit-logical-height: 1em;
+  -webkit-logical-width: auto;
+}
+
+.govuk-button-as-link:hover {
+  color: #003078;
+}
+@supports (-moz-appearance:none) {
+  .govuk-button-as-link::-moz-focus-inner {
+    border: none;
+    padding: 0;
+  }
+  .govuk-button-as-link:focus {
+    outline-style: dotted;
+    outline-width: 1px;
   }
 }

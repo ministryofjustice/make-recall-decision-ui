@@ -108,7 +108,7 @@ describe('get', () => {
         bookRecallToPpud: {
           dateOfBirth: '1970-03-15',
           decisionDateTime: '2023-11-13T09:49:31',
-          firstName: 'Anne C',
+          firstNames: 'Anne C',
           lastName: 'McCaffrey',
           isInCustody: true,
           mappaLevel: 'Level 1',
@@ -120,6 +120,7 @@ describe('get', () => {
           riskOfContrabandDetails: '',
           riskOfSeriousHarmLevel: undefined,
           sentenceDate: null,
+          image: undefined,
         },
       },
     })
@@ -166,6 +167,7 @@ describe('get', () => {
         recommendation: {
           ...RECOMMENDATION_TEMPLATE,
           bookRecallToPpud: {},
+          prisonOffender: {},
         },
         statuses: STATUSES_TEMPLATE,
         flags: {

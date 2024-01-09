@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { updateRecommendation, searchPpud } from '../../data/makeDecisionApiClient'
+import { ppudDetails, searchPpud, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendationId } = req.params
   const pageUrlSlug = 'no-ppud-search-results'
   const {
     flags,
@@ -21,14 +20,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation.personOnProbation.surname,
     recommendation.personOnProbation.dateOfBirth
   )
-  await updateRecommendation({
-    recommendationId,
-    valuesToSave: {
-      ppudRecordPresent: results.length > 0,
-    },
-    token,
-    featureFlags: flags,
-  })
 
   if (results.length === 0) {
     res.locals = {
@@ -64,4 +55,29 @@ async function get(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-export default { get }
+async function post(req: Request, res: Response, _: NextFunction) {
+  const { recommendationId } = req.params
+  const { id } = req.body
+
+  const {
+    user: { token },
+    urlInfo,
+    flags,
+  } = res.locals
+
+  const details = await ppudDetails(token, id)
+
+  await updateRecommendation({
+    recommendationId: String(recommendationId),
+    valuesToSave: {
+      ppudOffender: details.offender,
+    },
+    token,
+    featureFlags: flags,
+  })
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
+  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+}
+
+export default { get, post }
