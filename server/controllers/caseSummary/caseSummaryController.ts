@@ -34,6 +34,7 @@ interface RecommendationBanner {
   createdDate?: string
   personOnProbationName?: string
   dataAnalyticsEventCategory?: string
+  recommendationId?: string
   linkText?: string
   text?: string
 }
@@ -117,6 +118,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
         recommendationBanner.createdByUserFullName = recommendation.createdByUserFullName
         recommendationBanner.createdDate = recommendation.createdDate
         recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
+        recommendationBanner.recommendationId = String(caseSection.caseSummary.activeRecommendation?.recommendationId)
 
         if (isDoNotRecall) {
           recommendationBanner.text = 'started a decision not to recall letter for'

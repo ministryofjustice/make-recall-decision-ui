@@ -1,6 +1,7 @@
 export const strings: Record<string, Record<string, string>> = {
   errors: {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
+    missingSpoCancelRecommentationRationale: 'You must explain your decision',
     missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Select a custody type',
@@ -191,5 +192,8 @@ export const strings: Record<string, Record<string, string>> = {
     editDateOfBirth: 'Edit date of birth',
     editReleasingPrison: 'Edit releasing prison',
     matchIndexOffence: 'Select a matching index offence in PPUD',
+    cancelRecommendationRationale: 'Cancel recommendation for {{ fullName }}',
+    cancelPartARationale: 'Cancel Part A for {{ fullName }}',
+    cancelDntrRationale: 'Cancel decision not to recall for {{ fullName }}',
   },
 }

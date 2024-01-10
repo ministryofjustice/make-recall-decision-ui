@@ -23,6 +23,7 @@ import redirectController from '../controllers/recommendation/redirectController
 import spoTaskListConsiderRecallController from '../controllers/recommendation/spoTaskListConsiderRecallController'
 import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
+import spoCancelRecommendationController from '../controllers/recommendation/spoCancelRecommendationController'
 import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
 import spoRecordDecisionController from '../controllers/recommendation/spoRecordDecisionController'
 import spoRationaleConfirmationController from '../controllers/recommendation/spoRationaleConfirmationController'
@@ -362,6 +363,17 @@ RouteBuilder.build(recommendations)
     )
   )
   .get('task-list', taskListController.get)
+
+/*
+ * This section contains the route for the Senior Probation Officer during the SPO Cancel Recommendation
+ * Rationale journey.
+ */
+
+const spoCancelRouteBuilder = spoRouteBuilder.withCheck(
+  or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))
+)
+
+spoCancelRouteBuilder.get('spo-cancel-recommendation-rationale', spoCancelRecommendationController.get)
 
 const ppcsRouteBuilder = ppRouteBuilder
   .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
