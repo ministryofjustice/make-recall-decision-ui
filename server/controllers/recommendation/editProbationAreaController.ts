@@ -1,35 +1,53 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 
 async function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation, errors, unsavedValues } = res.locals
-  const { firstNames, lastName } = recommendation.bookRecallToPpud
+  const {
+    recommendation,
+    user: { token },
+  } = res.locals
+
+  const list = await ppudReferenceList(token, 'probation-services')
+
+  const ppudProbationAreas = list.values.map(value => {
+    return {
+      text: value,
+      value,
+    }
+  })
+  ppudProbationAreas.unshift({
+    text: 'Select probation area',
+    value: '',
+  })
+
+  let partAProbationArea
+  if (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender) {
+    partAProbationArea = recommendation?.whoCompletedPartA?.localDeliveryUnit
+  } else {
+    partAProbationArea = recommendation?.practitionerForPartA?.localDeliveryUnit
+  }
 
   res.locals = {
     ...res.locals,
     page: {
-      id: 'editName',
+      id: 'editProbationArea',
     },
+    partAProbationArea,
+    ppudProbationAreas,
     errors: res.locals.errors,
-    values: isDefined(errors)
-      ? unsavedValues
-      : {
-          firstNames,
-          lastName,
-        },
   }
 
-  res.render(`pages/recommendations/editName`)
+  res.render(`pages/recommendations/editProbationArea`)
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { firstNames, lastName } = req.body
+  const { probationArea } = req.body
 
   const {
     user: { token },
@@ -37,38 +55,16 @@ async function post(req: Request, res: Response, _: NextFunction) {
     flags,
   } = res.locals
 
-  const errors = []
+  if (!isDefined(probationArea) || probationArea.trim().length === 0) {
+    const errorId = 'missingProbationArea'
 
-  if (!isDefined(firstNames) || firstNames.trim().length === 0) {
-    const errorId = 'missingFirstNames'
-
-    errors.push(
+    req.session.errors = [
       makeErrorObject({
-        id: 'firstNames',
+        id: 'probationArea',
         text: strings.errors[errorId],
         errorId,
-      })
-    )
-  }
-
-  if (!isDefined(lastName) || lastName.trim().length === 0) {
-    const errorId = 'missingLastName'
-
-    errors.push(
-      makeErrorObject({
-        id: 'lastName',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (errors.length > 0) {
-    req.session.errors = errors
-    req.session.unsavedValues = {
-      firstNames,
-      lastName,
-    }
+      }),
+    ]
     return res.redirect(303, req.originalUrl)
   }
 
@@ -79,8 +75,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        firstNames,
-        lastName,
+        probationArea,
       },
     },
     token,

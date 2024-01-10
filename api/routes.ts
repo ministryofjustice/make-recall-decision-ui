@@ -5,6 +5,7 @@ export const routes = {
   prisonOffenderSearch: '/prison-offender-search',
   prisonSentences: '/prison-sentences',
   ppudSearch: '/ppud/search',
+  ppudDetails: '/ppud/details/',
   getCaseSummary: '/cases',
   healthCheck: '/health',
   recommendations: '/recommendations',

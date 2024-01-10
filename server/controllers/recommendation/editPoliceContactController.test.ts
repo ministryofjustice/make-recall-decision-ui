@@ -1,67 +1,34 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
+import editPoliceContactController from './editPoliceContactController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import editNameController from './editNameController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load', async () => {
+    ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
+
     const req = mockReq({
       params: {
         recommendationId: '123',
       },
     })
 
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          bookRecallToPpud: { firstNames: 'Harrison C', lastName: 'Ford' },
-        },
-      },
-    })
+    const res = mockRes()
     const next = mockNext()
-    await editNameController.get(req, res, next)
+    await editPoliceContactController.get(req, res, next)
 
-    expect(res.locals.page).toEqual({ id: 'editName' })
-    expect(res.locals.values).toEqual({
-      firstNames: 'Harrison C',
-      lastName: 'Ford',
-    })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editName')
-    expect(next).toHaveBeenCalled()
-  })
-  it('load with errors', async () => {
-    const req = mockReq({
-      params: {
-        recommendationId: '123',
-      },
-    })
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'police-forces')
 
-    const res = mockRes({
-      locals: {
-        errors: [],
-        unsavedValues: {
-          firstName: 'Ethan',
-          lastName: 'Hawk',
-          secondName: 'H',
-        },
-        recommendation: {
-          bookRecallToPpud: { firstNames: 'Harrison C', lastName: 'Ford' },
-        },
-      },
-    })
-    const next = mockNext()
-    await editNameController.get(req, res, next)
-
-    expect(res.locals.page).toEqual({ id: 'editName' })
-    expect(res.locals.errors).toEqual([])
-    expect(res.locals.values).toEqual({
-      firstName: 'Ethan',
-      lastName: 'Hawk',
-      secondName: 'H',
-    })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editName')
+    expect(res.locals.page).toEqual({ id: 'editPoliceContact' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editPoliceContact')
+    expect(res.locals.policeForces).toEqual([
+      { text: 'Select a police force', value: '' },
+      { text: 'one', value: 'one' },
+      { text: 'two', value: 'two' },
+      { text: 'three', value: 'three' },
+    ])
     expect(next).toHaveBeenCalled()
   })
 })
@@ -80,8 +47,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        firstNames: 'Al Bert',
-        lastName: 'Zweitestein',
+        policeForce: 'London',
       },
     })
 
@@ -95,15 +61,13 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editNameController.post(req, res, next)
+    await editPoliceContactController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
-          policeForce: 'Kent',
-          firstNames: 'Al Bert',
-          lastName: 'Zweitestein',
+          policeForce: 'London',
         },
       },
       token: 'token1',
@@ -133,23 +97,15 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editNameController.post(req, res, next)
+    await editPoliceContactController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingFirstNames',
+        errorId: 'missingPoliceForce',
         invalidParts: undefined,
-        href: '#firstNames',
-        name: 'firstNames',
-        text: 'Enter first name(s)',
-        values: undefined,
-      },
-      {
-        errorId: 'missingLastName',
-        invalidParts: undefined,
-        href: '#lastName',
-        name: 'lastName',
-        text: 'Enter a last name',
+        href: '#policeForce',
+        name: 'policeForce',
+        text: 'Select a police force',
         values: undefined,
       },
     ])

@@ -11,41 +11,52 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            {% set html %}
-                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
-            {% endset %}
-            {{ govukNotificationBanner({
-                html: html,
-                classes: "govuk-notification-banner--info govuk-body"
-            }) }}
+            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+
+            <dl class="govuk-text-list">
+                <h3 class='govuk-heading-s'>From NOMIS</h3>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">First name</dt>
+                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.firstName }}</dd>
+                </div>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">Middle name</dt>
+                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.middleName }}</dd>
+                </div>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">Last name</dt>
+                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.lastName }}</dd>
+                </div>
+            </dl>
+
+            {% if recommendation.ppudOffender %}
+                <dl class="govuk-text-list">
+                    <h3 class='govuk-heading-s'>From PPUD</h3>
+                    <div class="govuk-text-list__row">
+                        <dt class="govuk-text-list__key">First names</dt>
+                        <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.firstNames }}</dd>
+                    </div>
+                    <div class="govuk-text-list__row">
+                        <dt class="govuk-text-list__key">Last name</dt>
+                        <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.familyName }}</dd>
+                    </div>
+                </dl>
+            {% endif %}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 {{ govukInput({
                     label: {
-                        text: "First name",
+                        text: "First name(s)",
                         classes: "govuk-label--m"
                     },
-                    id: "firstName",
-                    name: "firstName",
+                    id: "firstNames",
+                    name: "firstNames",
                     type: 'text',
                     classes: "govuk-input--width-20",
-                    value: values.firstName,
-                    errorMessage: errorMessage(errors.firstName)
-                }) }}
-
-                {{ govukInput({
-                    label: {
-                        text: "Second name",
-                        classes: "govuk-label--m"
-                    },
-                    id: "secondName",
-                    name: "secondName",
-                    type: 'text',
-                    classes: "govuk-input--width-20",
-                    value: values.secondName,
-                    errorMessage: errorMessage(errors.secondName)
+                    value: values.firstNames,
+                    errorMessage: errorMessage(errors.firstNames)
                 }) }}
 
                 {{ govukInput({
