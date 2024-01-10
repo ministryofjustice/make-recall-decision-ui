@@ -7,7 +7,6 @@ import { strings } from '../../textStrings/en'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
-    recommendation,
     user: { token },
   } = res.locals
 
@@ -24,19 +23,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
     value: '',
   })
 
-  let partAProbationArea
-  if (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender) {
-    partAProbationArea = recommendation?.whoCompletedPartA?.localDeliveryUnit
-  } else {
-    partAProbationArea = recommendation?.practitionerForPartA?.localDeliveryUnit
-  }
-
   res.locals = {
     ...res.locals,
     page: {
       id: 'editProbationArea',
     },
-    partAProbationArea,
     ppudProbationAreas,
     errors: res.locals.errors,
   }

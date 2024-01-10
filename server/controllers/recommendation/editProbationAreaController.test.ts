@@ -5,26 +5,6 @@ import editProbationAreaController from './editProbationAreaController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
-const RECOMMENDATION_TEMPLATE = {
-  id: '123',
-  personOnProbation: {
-    croNumber: '123X',
-    nomsNumber: '567Y',
-    surname: 'Mayer',
-    dateOfBirth: '2001-01-01',
-    mappa: {
-      level: '1',
-    },
-  },
-  whoCompletedPartA: {
-    localDeliveryUnit: 'who-completed-delivery-unit',
-    isPersonProbationPractitionerForOffender: false,
-  },
-  practitionerForPartA: {
-    localDeliveryUnit: 'practitioner-delivery-unit',
-  },
-}
-
 describe('get', () => {
   it('load', async () => {
     ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
@@ -37,7 +17,6 @@ describe('get', () => {
 
     const res = mockRes({
       locals: {
-        recommendation: RECOMMENDATION_TEMPLATE,
         flags: {
           xyz: 1,
         },
@@ -56,7 +35,6 @@ describe('get', () => {
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
     ])
-    expect(res.locals.partAProbationArea).toEqual('practitioner-delivery-unit')
     expect(next).toHaveBeenCalled()
   })
 })
