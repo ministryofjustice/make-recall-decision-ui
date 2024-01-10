@@ -33,6 +33,7 @@
                   hint: {
                     text: "This is the prison that " + recommendation.personOnProbation.fullName + " was released from."
                   },
+                  errorMessage: errorMessage(errors.releasingPrison),
                   value: recommendation.bookRecallToPpud.releasingPrison,
                   items: releasingPrisons
                 }) }}
