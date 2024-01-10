@@ -1,0 +1,46 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({
+    pageHeading: pageTitles[page.id],
+    hasErrors: errors
+}) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class="govuk-body">You're about to {{ page.bodyText }}. You cannot undo this.</p>
+            <h2 class="govuk-heading-m">Explain why you’re cancelling this</h2>
+            <p class="govuk-body">This will help with future recommendations. You'll record your explanation in NDelius on the next page</p>
+            {% include '../../partials/error-summary.njk' %}
+            {% set cancelRationaleHtml %}
+            {{ govukTextarea({
+                    name: "spoCancelRecommendationRationale",
+                    id: "spoCancelRecommendationRationale",
+                    label: {
+                        text: "",
+                        classes: "govuk-label--s"
+                    }
+                }) }}
+            {% endset %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
+
+                {{ cancelRationaleHtml | safe }}
+                <p class='govuk-button-group'>
+                    <a  class="govuk-button"
+                        href="">{{ buttonText }}</a>
+
+                    <a  class="govuk-link govuk-link--no-visited-state" 
+                        href="/cases/{{ recommendation.crn }}/overview">Do not cancel</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

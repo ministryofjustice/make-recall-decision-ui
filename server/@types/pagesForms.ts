@@ -99,6 +99,9 @@ export type PageId =
   | 'previewNoRecallLetter'
   | 'confirmationNoRecallLetter'
   | 'taskListConsiderRecall'
+  | 'cancelRecommendationRationale'
+  | 'cancelPartARationale'
+  | 'cancelDntrRationale'
 
 export interface FormValidatorArgs {
   requestBody: Record<string, string | string[]>
