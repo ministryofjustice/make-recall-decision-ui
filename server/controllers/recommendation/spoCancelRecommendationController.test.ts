@@ -39,7 +39,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'cancelDntrRationale', bodyText: 'cancel this decision not to recall' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoCancelRecommendationRationale')
   })
-  it('present without data when in NO_RECALL_DECIDED state', async () => {
+  it('present without data when in PO_START_RECALL state', async () => {
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.PO_START_RECALL, active: true }])
     const res = mockRes({
       locals: {

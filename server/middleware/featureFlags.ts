@@ -28,7 +28,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   },
   flagCancelRecommendationProcess: {
     label: 'Allow process workflow for cancel recommendation',
-    description: 'Shows banner for deleting a recommedation for SPO/ACO users',
+    description: 'Shows banner for cancelling a recommedation for SPO/ACO users',
     default: false,
   },
 }
