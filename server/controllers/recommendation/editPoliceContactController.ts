@@ -1,35 +1,44 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 
 async function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation, errors, unsavedValues } = res.locals
-  const { firstNames, lastName } = recommendation.bookRecallToPpud
+  const {
+    user: { token },
+  } = res.locals
+
+  const list = await ppudReferenceList(token, 'police-forces')
+
+  const policeForces = list.values.map(value => {
+    return {
+      text: value,
+      value,
+    }
+  })
+  policeForces.unshift({
+    text: 'Select a police force',
+    value: '',
+  })
 
   res.locals = {
     ...res.locals,
     page: {
-      id: 'editName',
+      id: 'editPoliceContact',
     },
+    policeForces,
     errors: res.locals.errors,
-    values: isDefined(errors)
-      ? unsavedValues
-      : {
-          firstNames,
-          lastName,
-        },
   }
 
-  res.render(`pages/recommendations/editName`)
+  res.render(`pages/recommendations/editPoliceContact`)
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { firstNames, lastName } = req.body
+  const { policeForce } = req.body
 
   const {
     user: { token },
@@ -37,38 +46,16 @@ async function post(req: Request, res: Response, _: NextFunction) {
     flags,
   } = res.locals
 
-  const errors = []
+  if (!isDefined(policeForce) || policeForce.trim().length === 0) {
+    const errorId = 'missingPoliceForce'
 
-  if (!isDefined(firstNames) || firstNames.trim().length === 0) {
-    const errorId = 'missingFirstNames'
-
-    errors.push(
+    req.session.errors = [
       makeErrorObject({
-        id: 'firstNames',
+        id: 'policeForce',
         text: strings.errors[errorId],
         errorId,
-      })
-    )
-  }
-
-  if (!isDefined(lastName) || lastName.trim().length === 0) {
-    const errorId = 'missingLastName'
-
-    errors.push(
-      makeErrorObject({
-        id: 'lastName',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (errors.length > 0) {
-    req.session.errors = errors
-    req.session.unsavedValues = {
-      firstNames,
-      lastName,
-    }
+      }),
+    ]
     return res.redirect(303, req.originalUrl)
   }
 
@@ -79,8 +66,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        firstNames,
-        lastName,
+        policeForce,
       },
     },
     token,

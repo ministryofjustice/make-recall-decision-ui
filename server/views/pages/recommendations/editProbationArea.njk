@@ -1,0 +1,48 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <dl class="govuk-text-list">
+                <h3 class='govuk-heading-s'>From NOMIS</h3>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">Probation area</dt>
+                    <dd class="govuk-text-list__value">{{ partAProbationArea }}</dd>
+                </div>
+            </dl>
+
+            <dl class="govuk-text-list">
+                <h3 class='govuk-heading-s'>Already in PPUD</h3>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">Probation area</dt>
+                    <dd class="govuk-text-list__value"> TBD </dd>
+                </div>
+            </dl>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukSelect({
+                  id: "probationArea",
+                  name: "probationArea",
+                  label: {
+                    text: "List of probation areas"
+                  },
+                  value: recommendation.bookRecallToPpud.probationArea,
+                  items: ppudProbationAreas
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
