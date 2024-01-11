@@ -88,6 +88,7 @@ export type RecommendationResponse = {
   nomisIndexOffence?: NomisIndexOffence;
   bookRecallToPpud?: BookRecallToPpud;
   prisonOffender?: PrisonOffender;
+  ppudOffender?: PpudOffender;
 };
 
 export namespace RecommendationResponse {
@@ -182,3 +183,27 @@ export type PrisonOffender = {
   CRO: string,
   PNC: string,
 }
+
+export type PpudOffender = {
+  id: string,
+  croOtherNumber: string,
+  dateOfBirth: string,
+  ethnicity: string,
+  familyName: string,
+  firstNames: string,
+  gender: string,
+  immigrationStatus: string,
+  nomsId: string,
+  prisonerCategory: string,
+  prisonNumber: string,
+  sentences: PpudSentence[],
+  status: string,
+  youngOffender: string,
+}
+
+export type PpudSentence = {
+  dateOfSentence: string,
+  custodyType: string,
+  mappaLevel: string,
+}
+
