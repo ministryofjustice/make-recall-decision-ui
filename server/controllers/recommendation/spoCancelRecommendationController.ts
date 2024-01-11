@@ -6,6 +6,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let id: string
   let bodyText: string
   let buttonText: string
+  let headingText: string
 
   const statuses = (
     await getStatuses({
@@ -21,15 +22,18 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   if (isDoNotRecall) {
     id = 'cancelDntrRationale'
+    headingText = 'decision not to recall'
     bodyText = 'cancel this decision not to recall'
     buttonText = 'Cancel decision not to recall'
   } else if (isRecallDecided) {
     id = 'cancelPartARationale'
+    headingText = 'Part A'
     bodyText = 'cancel this Part A'
     buttonText = 'Cancel Part A'
   } else {
     // to capture legacy recommendations and any new ones that have status STATUSES.PO_START_RECALL
     id = 'cancelRecommendationRationale'
+    headingText = 'recommendation'
     bodyText = 'cancel this recommendation'
     buttonText = 'Cancel recommendation'
   }
@@ -40,6 +44,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id,
       bodyText,
     },
+    headingText,
     buttonText,
     backLink,
   }
