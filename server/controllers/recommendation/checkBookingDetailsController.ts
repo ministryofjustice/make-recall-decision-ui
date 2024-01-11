@@ -91,6 +91,8 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
 
     valuesToSave.bookRecallToPpud = {
+      ethnicity: recommendation.ppudOffender?.ethnicity,
+      gender: recommendation.ppudOffender?.gender,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
       isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
       mappaLevel: `Level ${recommendation.personOnProbation?.mappa?.level}`,

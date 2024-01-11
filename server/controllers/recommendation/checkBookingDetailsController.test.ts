@@ -40,6 +40,10 @@ const RECOMMENDATION_TEMPLATE = {
       level: '1',
     },
   },
+  ppudOffender: {
+    ethnicity: 'Caucasian',
+    gender: 'Male',
+  },
   whoCompletedPartA: {
     localDeliveryUnit: 'who-completed-delivery-unit',
     isPersonProbationPractitionerForOffender: false,
@@ -106,6 +110,8 @@ describe('get', () => {
           locationDescription: 'Graceland',
         },
         bookRecallToPpud: {
+          ethnicity: 'Caucasian',
+          gender: 'Male',
           dateOfBirth: '1970-03-15',
           decisionDateTime: '2023-11-13T09:49:31',
           firstNames: 'Anne C',
