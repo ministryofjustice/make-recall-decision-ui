@@ -1,0 +1,61 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+
+            <dl class="govuk-text-list">
+                <h3 class='govuk-heading-m'>From NOMIS</h3>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">CRO</dt>
+                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.cro }}</dd>
+                </div>
+            </dl>
+
+            {% if recommendation.ppudOffender %}
+                <dl class="govuk-text-list">
+                    <h3 class='govuk-heading-m'>From PPUD</h3>
+                    {% if recommendation.ppudOffender.croOtherNumber %}
+                    <div class="govuk-text-list__row">
+                        <dt class="govuk-text-list__key">CRO</dt>
+                        <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.croOtherNumber }}</dd>
+                    </div>
+                    {% else %}
+                        There is a PPUD record but the field is blank.
+                    {% endif %}
+                </dl>
+            {% endif %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukInput({
+                    label: {
+                        text: "CRO number",
+                        classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: 'For example, 123456/05X'
+                    },
+                    id: "cro",
+                    name: "cro",
+                    type: 'text',
+                    classes: "govuk-input--width-20",
+                    value: values.cro,
+                    errorMessage: errorMessage(errors.cro)
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

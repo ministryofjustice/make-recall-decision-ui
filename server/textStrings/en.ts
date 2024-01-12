@@ -193,6 +193,7 @@ export const strings: Record<string, Record<string, string>> = {
     editPoliceContact: 'Edit police local contact details',
     editMappaLevel: 'Edit MAPPA level',
     editGender: 'Edit gender',
+    editCro: 'Edit CRO',
     editEthnicity: 'Edit ethnicity',
     editDateOfBirth: 'Edit date of birth',
     editReleasingPrison: 'Edit releasing prison',

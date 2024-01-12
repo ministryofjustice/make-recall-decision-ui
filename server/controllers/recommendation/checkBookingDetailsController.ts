@@ -60,9 +60,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
           status: nomisPrisonOffender.status,
           gender: nomisPrisonOffender.physicalAttributes.gender,
           ethnicity: nomisPrisonOffender.physicalAttributes.ethnicity,
-          CRO: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
-          PNC: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
+          cro: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
+          pnc: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
         }
+        recommendation.prisonOffender = valuesToSave.prisonOffender
       }
     } else {
       errorMessage = "No NOMIS number found in 'Consider a recall'"
@@ -83,16 +84,8 @@ async function get(_: Request, res: Response, next: NextFunction) {
       dateOfBirth = recommendation.prisonOffender.dateOfBirth
     }
 
-    if (valuesToSave.prisonOffender) {
-      firstName = valuesToSave.prisonOffender.firstName
-      middleName = valuesToSave.prisonOffender.middleName
-      lastName = valuesToSave.prisonOffender.lastName
-      dateOfBirth = valuesToSave.prisonOffender.dateOfBirth
-    }
-
     valuesToSave.bookRecallToPpud = {
-      ethnicity: recommendation.ppudOffender?.ethnicity,
-      gender: recommendation.ppudOffender?.gender,
+      cro: recommendation.prisonOffender?.cro,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
       isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
       mappaLevel: `Level ${recommendation.personOnProbation?.mappa?.level}`,
@@ -110,6 +103,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       lastName,
       dateOfBirth,
     } as BookRecallToPpud
+    recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   }
 
   if (isDefined(valuesToSave.bookRecallToPpud) || isDefined(valuesToSave.prisonOffender)) {
@@ -119,12 +113,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       token,
       featureFlags: flags,
     })
-    if (!isDefined(recommendation.prisonOffender)) {
-      recommendation.prisonOffender = valuesToSave.prisonOffender
-    }
-    if (!isDefined(recommendation.bookRecallToPpud)) {
-      recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
-    }
   }
 
   res.locals = {
