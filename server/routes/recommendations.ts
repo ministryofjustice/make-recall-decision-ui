@@ -96,6 +96,7 @@ import editEthnicityController from '../controllers/recommendation/editEthnicity
 import editNameController from '../controllers/recommendation/editNameController'
 import editDateOfBirthController from '../controllers/recommendation/editDateOfBirthController'
 import editProbationAreaController from '../controllers/recommendation/editProbationAreaController'
+import editCroController from '../controllers/recommendation/editCroController'
 
 const recommendations = Router()
 
@@ -408,6 +409,9 @@ ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
 
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)
+
+ppcsRouteBuilder.get('edit-cro', editCroController.get)
+ppcsRouteBuilder.post('edit-cro', editCroController.post)
 
 ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
 ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
