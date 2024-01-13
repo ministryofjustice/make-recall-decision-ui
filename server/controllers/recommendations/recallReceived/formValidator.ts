@@ -17,7 +17,7 @@ export const validateRecallReceived = async ({ requestBody, urlInfo }: FormValid
   }
   const dateTimeIso = convertGmtDatePartsToUtc(dateTimeParts as Record<string, string>, {
     includeTime: true,
-    dateMustBeInFuture: true,
+    dateMustBeInFuture: false,
     validatePartLengths: false,
   })
   if (dateHasError(dateTimeIso)) {
