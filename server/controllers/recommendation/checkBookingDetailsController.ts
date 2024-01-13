@@ -101,7 +101,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       sentenceDate: null,
       firstNames: `${firstName} ${middleName}`,
       lastName,
-      dateOfBirth,
+      dateOfBirth: recommendation?.ppudOffender?.dateOfBirth ?? dateOfBirth,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   }

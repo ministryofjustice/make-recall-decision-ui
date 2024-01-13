@@ -16,8 +16,11 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          bookRecallToPpud: { dateOfBirth: '2003-01-01' },
+          prisonOffender: { dateOfBirth: '2003-01-01' },
+          ppudOffender: { dateOfBirth: '1984-09-08' },
         },
+        dateOfBirthNomis: '2003-01-01',
+        dateOfBirthPpud: '1984-09-08',
       },
     })
     const next = mockNext()
@@ -29,6 +32,8 @@ describe('get', () => {
       month: '01',
       year: '2003',
     })
+    expect(res.locals.dateOfBirthNomis).toEqual('2003-01-01')
+    expect(res.locals.dateOfBirthPpud).toEqual('1984-09-08')
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editDateOfBirth')
     expect(next).toHaveBeenCalled()
   })

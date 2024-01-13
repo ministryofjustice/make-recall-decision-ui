@@ -9,14 +9,17 @@ import { isDefined } from '../../utils/utils'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, errors, unsavedValues } = res.locals
-
+  const dobPpud = recommendation?.ppudOffender?.dateOfBirth
+  const dobNomis = recommendation?.prisonOffender?.dateOfBirth
   res.locals = {
     ...res.locals,
     page: {
       id: 'editDateOfBirth',
     },
     errors,
-    dateOfBirth: !isDefined(errors) ? splitIsoDateToParts(recommendation.bookRecallToPpud.dateOfBirth) : unsavedValues,
+    dateOfBirthNomis: dobNomis,
+    dateOfBirthPpud: dobPpud,
+    dateOfBirth: !isDefined(errors) ? splitIsoDateToParts(dobNomis) : unsavedValues,
   }
 
   res.render(`pages/recommendations/editDateOfBirth`)
@@ -44,7 +47,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     dateMustBeInPast: true,
     validatePartLengths: false,
   })
-
   const errors = []
 
   if (dateHasError(dateOfBirthIso)) {

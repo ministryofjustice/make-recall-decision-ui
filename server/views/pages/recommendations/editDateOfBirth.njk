@@ -11,23 +11,31 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            {% set html %}
+            {# {% set html %}
                 <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
+
             {% endset %}
             {{ govukNotificationBanner({
                 html: html,
                 classes: "govuk-notification-banner--info govuk-body"
-            }) }}
+            }) }} #}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
                 <fieldset class="govuk-fieldset" role="group"
                           aria-describedby="date-of-birth-hint appointment-time-hint{% if errors.dateOfBirth %} error{% endif %}">
 
-                    <div id="date-of-birth-hint" class="govuk-hint">
-                        For example, 31 3 1980
+                    <div class="govuk-body">
+                        {% if dateOfBirthNomis and dateOfBirthPpud %}
+                           <div class="govuk-summary-list__key">From NOMIS</div>
+                           {{ formatDateTimeFromIsoString({isoDate: dateOfBirthNomis})  }}
+                           <br><br>
+                           <div class="govuk-summary-list__key">From PPUD</div>
+                           {{ formatDateTimeFromIsoString({isoDate: dateOfBirthPpud})  }}
+                        {% else %}
+                            From NOMIS {{ dateOfBirthNomis }} <br>
+                        {% endif %}
                     </div>
                     <div class="govuk-form-group{% if errors.dateOfBirth %} govuk-form-group--error{% endif %}">
                         {% if errors.dateOfBirth %}
