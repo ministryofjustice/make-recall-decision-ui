@@ -11,8 +11,6 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
-
             <dl class="govuk-text-list">
                 <h3 class='govuk-heading-m'>From NOMIS</h3>
                 <div class="govuk-text-list__row">
@@ -37,6 +35,13 @@
                 {{ govukRadios({
                     idPrefix: "gender",
                     name: "gender",
+                    fieldset: {
+                        legend: {
+                            text: pageHeadings[page.id],
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
                     items: radioCheckboxItems({
                         items: genders,
                         currentValues: recommendation.bookRecallToPpud.gender

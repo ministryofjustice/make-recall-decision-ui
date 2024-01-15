@@ -11,15 +11,6 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
-
-            <dl class="govuk-text-list">
-                <h3 class='govuk-heading-m'>From Part A</h3>
-                <div class="govuk-text-list__row">
-                    <dt class="govuk-text-list__key">MAPPA Level</dt>
-                    <dd class="govuk-text-list__value"> Level {{ recommendation.personOnProbation.mappa.level }}</dd>
-                </div>
-            </dl>
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -27,11 +18,18 @@
                 {{ govukRadios({
                     idPrefix: "mappaLevel",
                     name: "mappaLevel",
+                    fieldset: {
+                        legend: {
+                            text: pageHeadings[page.id],
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
                     items: radioCheckboxItems({
                         items: mappaLevels,
                         currentValues: recommendation.bookRecallToPpud.mappaLevel
                     }),
-                    errorMessage: errorMessage(errors.mappaLevel)
+                    errorMessage: errorMessage(errors.mappaLevels)
                 }) }}
 
                 {{ formSubmitButton() }}
