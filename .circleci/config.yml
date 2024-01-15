@@ -5,7 +5,6 @@ orbs:
   hmpps: ministryofjustice/hmpps@7
   node: circleci/node@5.2.0
   slack: circleci/slack@4.12.5
-  sonarcloud: sonarsource/sonarcloud@1.1.1
 
 parameters:
   alerts-slack-channel:
@@ -135,7 +134,6 @@ jobs:
       - run:
           name: unit tests
           command: npm run test:coverage
-      - sonarcloud/scan
       - store_test_results:
           path: test_results
       - store_artifacts:
