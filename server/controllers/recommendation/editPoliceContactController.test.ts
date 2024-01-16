@@ -105,7 +105,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#policeForce',
         name: 'policeForce',
-        text: 'Select a police force area',
+        text: 'Select police force',
         values: undefined,
       },
     ])

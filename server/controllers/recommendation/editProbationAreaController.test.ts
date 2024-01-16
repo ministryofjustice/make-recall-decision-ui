@@ -112,7 +112,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#probationArea',
         name: 'probationArea',
-        text: 'Select a probation area',
+        text: 'Select probation area',
         values: undefined,
       },
     ])

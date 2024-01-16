@@ -106,7 +106,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#custodyType',
         name: 'custodyType',
-        text: 'Select a custody type',
+        text: 'Select custody type',
         values: undefined,
       },
     ])
