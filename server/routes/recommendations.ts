@@ -96,7 +96,7 @@ import editEthnicityController from '../controllers/recommendation/editEthnicity
 import editNameController from '../controllers/recommendation/editNameController'
 import editDateOfBirthController from '../controllers/recommendation/editDateOfBirthController'
 import editProbationAreaController from '../controllers/recommendation/editProbationAreaController'
-import spoRecordCancelRationale from '../controllers/recommendation/spoRecordDeleteRationaleController'
+import spoRecordDeleteRationaleController from '../controllers/recommendation/spoRecordDeleteRationaleController'
 import spoDeleteConfirmationController from '../controllers/recommendation/spoDeleteConfirmationController'
 import editCroController from '../controllers/recommendation/editCroController'
 
@@ -381,8 +381,8 @@ const spoCancelRouteBuilder = spoRouteBuilder.withCheck(
 
 spoCancelRouteBuilder.get('spo-cancel-recommendation-rationale', spoCancelRecommendationController.get)
 spoCancelRouteBuilder.post('spo-cancel-recommendation-rationale', spoCancelRecommendationController.post)
-spoCancelRouteBuilder.get('record-delete-rationale', spoRecordCancelRationale.get)
-spoCancelRouteBuilder.post('record-delete-rationale', spoRecordCancelRationale.post)
+spoCancelRouteBuilder.get('record-delete-rationale', spoRecordDeleteRationaleController.get)
+spoCancelRouteBuilder.post('record-delete-rationale', spoRecordDeleteRationaleController.post)
 
 spoRationaleRouteBuilder
   .withCheck(or(statusIsActive(STATUSES.REC_CANCELLED), statusIsActive(STATUSES.REC_CLOSED)))
