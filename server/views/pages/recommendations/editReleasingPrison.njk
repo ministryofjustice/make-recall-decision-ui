@@ -10,28 +10,26 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            {% set html %}
-                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
-            {% endset %}
-            {{ govukNotificationBanner({
-                html: html,
-                classes: "govuk-notification-banner--info govuk-body"
-            }) }}
+
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <dl class="govuk-text-list">
+                <h3 class='govuk-heading-m'>From NOMIS</h3>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">Prison</dt>
+                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.locationDescription }}</dd>
+                </div>
+            </dl>
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-
 
                 {{ govukSelect({
                   id: "releasingPrison",
                   name: "releasingPrison",
                   label: {
-                    text: "List of prisons"
-                  },
-                  hint: {
-                    text: "This is the prison that " + recommendation.personOnProbation.fullName + " was released from."
+                    text: "List of prisons",
+                    classes: "govuk-label--m"
                   },
                   errorMessage: errorMessage(errors.releasingPrison),
                   value: recommendation.bookRecallToPpud.releasingPrison,
