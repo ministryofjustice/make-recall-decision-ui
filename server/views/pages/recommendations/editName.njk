@@ -14,7 +14,7 @@
             <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
 
             <dl class="govuk-text-list">
-                <h3 class='govuk-heading-s'>From NOMIS</h3>
+                <h3 class='govuk-heading-m'>From NOMIS</h3>
                 <div class="govuk-text-list__row">
                     <dt class="govuk-text-list__key">First name</dt>
                     <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.firstName }}</dd>
@@ -31,7 +31,7 @@
 
             {% if recommendation.ppudOffender %}
                 <dl class="govuk-text-list">
-                    <h3 class='govuk-heading-s'>From PPUD</h3>
+                    <h3 class='govuk-heading-m'>From PPUD</h3>
                     <div class="govuk-text-list__row">
                         <dt class="govuk-text-list__key">First names</dt>
                         <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.firstNames }}</dd>

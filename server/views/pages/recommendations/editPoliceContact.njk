@@ -10,7 +10,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-                <div class='govuk-label--m'>Email address on the Part A</div>
+                <div class='govuk-body'>Email address on the Part A</div>
                   <span class='mid-grey-panel'>
                     <a class='govuk-body'>{{ recommendation.localPoliceContact.emailAddress }}</a>
                 </span>
@@ -24,7 +24,7 @@
                   name: "policeForce",
                   label: {
                     text: "List of police forces",
-                    classes: "govuk-label--m"
+                    classes: "govuk-body"
                   },
                   errorMessage: errorMessage(errors.policeForce),
                   value: recommendation.bookRecallToPpud.policeForce,

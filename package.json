@@ -120,7 +120,7 @@
     "csurf": "^1.11.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "express-prom-bundle": "^6.6.0",
+    "express-prom-bundle": "^7.0.0",
     "express-session": "^1.17.3",
     "google-libphonenumber": "^3.2.31",
     "govuk-frontend": "^4.7.0",

@@ -40,6 +40,10 @@ const RECOMMENDATION_TEMPLATE = {
       level: '1',
     },
   },
+  ppudOffender: {
+    ethnicity: 'Caucasian',
+    gender: 'Male',
+  },
   whoCompletedPartA: {
     localDeliveryUnit: 'who-completed-delivery-unit',
     isPersonProbationPractitionerForOffender: false,
@@ -92,8 +96,8 @@ describe('get', () => {
       token: 'token',
       valuesToSave: {
         prisonOffender: {
-          CRO: '1234/2345',
-          PNC: 'X234547',
+          cro: '1234/2345',
+          pnc: 'X234547',
           bookingNo: '1234',
           firstName: 'Anne',
           middleName: 'C',
@@ -110,8 +114,8 @@ describe('get', () => {
           decisionDateTime: '2023-11-13T09:49:31',
           firstNames: 'Anne C',
           lastName: 'McCaffrey',
+          cro: '1234/2345',
           isInCustody: true,
-          mappaLevel: 'Level 1',
           policeForce: 'HARDCODED_VALUE',
           probationArea: '',
           receivedDateTime: '2023-11-13T09:49:31',
@@ -127,8 +131,8 @@ describe('get', () => {
 
     expect(res.locals.page.id).toEqual('checkBookingDetails')
     expect(res.locals.recommendation.prisonOffender).toEqual({
-      CRO: '1234/2345',
-      PNC: 'X234547',
+      cro: '1234/2345',
+      pnc: 'X234547',
       bookingNo: '1234',
       firstName: 'Anne',
       middleName: 'C',

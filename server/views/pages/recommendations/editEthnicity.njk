@@ -10,14 +10,27 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            {% set html %}
-                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
-            {% endset %}
-            {{ govukNotificationBanner({
-                html: html,
-                classes: "govuk-notification-banner--info govuk-body"
-            }) }}
+
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+
+            <dl class="govuk-text-list">
+                <h3 class='govuk-heading-m'>From NOMIS</h3>
+                <div class="govuk-text-list__row">
+                    <dt class="govuk-text-list__key">Ethnicity</dt>
+                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.ethnicity }}</dd>
+                </div>
+            </dl>
+
+            {% if recommendation.ppudOffender %}
+                <dl class="govuk-text-list">
+                    <h3 class='govuk-heading-m'>From PPUD</h3>
+                    <div class="govuk-text-list__row">
+                        <dt class="govuk-text-list__key">Ethnicity</dt>
+                        <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.ethnicity }}</dd>
+                    </div>
+                </dl>
+            {% endif %}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -27,9 +40,6 @@
                   name: "ethnicity",
                   label: {
                     text: "List of ethnicities"
-                  },
-                  hint: {
-                    text: "PPUD list of ethnic groupings"
                   },
                   errorMessage: errorMessage(errors.ethnicity),
                   value: recommendation.bookRecallToPpud.ethnicity,
