@@ -23,7 +23,7 @@ import redirectController from '../controllers/recommendation/redirectController
 import spoTaskListConsiderRecallController from '../controllers/recommendation/spoTaskListConsiderRecallController'
 import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
-import spoCancelRecommendationController from '../controllers/recommendation/spoDeleteRecommendationController'
+import spoDeleteRecommendationController from '../controllers/recommendation/spoDeleteRecommendationController'
 import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
 import spoRecordDecisionController from '../controllers/recommendation/spoRecordDecisionController'
 import spoRationaleConfirmationController from '../controllers/recommendation/spoRationaleConfirmationController'
@@ -379,8 +379,8 @@ const spoCancelRouteBuilder = spoRouteBuilder.withCheck(
   or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))
 )
 
-spoCancelRouteBuilder.get('spo-cancel-recommendation-rationale', spoCancelRecommendationController.get)
-spoCancelRouteBuilder.post('spo-cancel-recommendation-rationale', spoCancelRecommendationController.post)
+spoCancelRouteBuilder.get('spo-cancel-recommendation-rationale', spoDeleteRecommendationController.get)
+spoCancelRouteBuilder.post('spo-cancel-recommendation-rationale', spoDeleteRecommendationController.post)
 spoCancelRouteBuilder.get('record-delete-rationale', spoRecordDeleteRationaleController.get)
 spoCancelRouteBuilder.post('record-delete-rationale', spoRecordDeleteRationaleController.post)
 
