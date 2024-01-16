@@ -25,6 +25,9 @@
                            {{ formatDateTimeFromIsoString({isoDate: recommendation.ppudOffender.dateOfBirth})  }}
                         {% endif %}
                     </div>
+                    <div id="date-of-birth-hint" class="govuk-hint">
+                        For example, 31 3 1980
+                    </div>
                     <div class="govuk-form-group{% if errors.dateOfBirth %} govuk-form-group--error{% endif %}">
                         {% if errors.dateOfBirth %}
                         <p id="error" class="govuk-error-message">
