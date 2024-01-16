@@ -1,0 +1,32 @@
+{% extends "../../partials/layout.njk" %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+          Recommendation deleted
+        </h1>
+        <div class="govuk-panel__body" data-qa="fullName">
+          {{ personOnProbation }}
+        </div>
+        <div class="govuk-panel__body" data-qa="crn">
+          CRN {{ crn }}
+        </div>
+        <div class="govuk-panel__body">
+          Recorded in NDelius
+        </div>
+      </div>
+      <p class="govuk-body">
+        Your decision has been recorded as a contact in NDelius called ‘Deleted recommendation in ‘Consider a recall’’.
+      </p>
+      <h1 class="govuk-heading-m">What happens next</h1>
+      <p class="govuk-body">
+        Tell the probation practitioner your decision.
+      </p>
+      <p class="govuk-body">
+        <a href="/cases/{{ crn }}/overview" class="govuk-link govuk-link--no-visited-state">Return to overview</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

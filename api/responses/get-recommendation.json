@@ -348,5 +348,7 @@
         "riskToPrisoners": "MEDIUM"
       }
     }
-  }
+  },
+  "spoCancelRecommendationRationale": "some reason to delete",
+  "spoDeleteRecommendationRationale": "some reason to delete"
 }

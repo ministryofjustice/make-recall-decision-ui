@@ -102,6 +102,7 @@ export type PageId =
   | 'cancelRecommendationRationale'
   | 'cancelPartARationale'
   | 'cancelDntrRationale'
+  | 'recordDeleteRecommendationRationale'
 
 export interface FormValidatorArgs {
   requestBody: Record<string, string | string[]>

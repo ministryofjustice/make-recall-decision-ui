@@ -1,5 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import spoCancelRecommendationController from './spoCancelRecommendationController'
+import spoDeleteRecommendationController from './spoDeleteRecommendationController'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 import { getStatuses } from '../../data/makeDecisionApiClient'
@@ -19,9 +19,9 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await spoCancelRecommendationController.get(mockReq(), res, next)
+    await spoDeleteRecommendationController.get(mockReq(), res, next)
     expect(res.locals.page).toEqual({ id: 'cancelPartARationale', bodyText: 'cancel this Part A' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoCancelRecommendationRationale')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
   it('present without data when in NO_RECALL_DECIDED state', async () => {
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.NO_RECALL_DECIDED, active: true }])
@@ -35,9 +35,9 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await spoCancelRecommendationController.get(mockReq(), res, next)
+    await spoDeleteRecommendationController.get(mockReq(), res, next)
     expect(res.locals.page).toEqual({ id: 'cancelDntrRationale', bodyText: 'cancel this decision not to recall' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoCancelRecommendationRationale')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
   it('present without data when in PO_START_RECALL state', async () => {
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.PO_START_RECALL, active: true }])
@@ -51,9 +51,9 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await spoCancelRecommendationController.get(mockReq(), res, next)
+    await spoDeleteRecommendationController.get(mockReq(), res, next)
     expect(res.locals.page).toEqual({ id: 'cancelRecommendationRationale', bodyText: 'cancel this recommendation' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoCancelRecommendationRationale')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
   it('present without data and is a legacy recommendation', async () => {
     ;(getStatuses as jest.Mock).mockReturnValueOnce([])
@@ -67,8 +67,8 @@ describe('get', () => {
       },
     })
     const next = mockNext()
-    await spoCancelRecommendationController.get(mockReq(), res, next)
+    await spoDeleteRecommendationController.get(mockReq(), res, next)
     expect(res.locals.page).toEqual({ id: 'cancelRecommendationRationale', bodyText: 'cancel this recommendation' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoCancelRecommendationRationale')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
 })
