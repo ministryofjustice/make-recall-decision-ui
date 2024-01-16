@@ -88,7 +88,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       cro: recommendation.prisonOffender?.cro,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
       isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
-      mappaLevel: `Level ${recommendation.personOnProbation?.mappa?.level}`,
       policeForce: 'HARDCODED_VALUE',
       probationArea: '',
       recommendedToOwner: 'HARDCODED_VALUE',
