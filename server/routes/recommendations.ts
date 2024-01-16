@@ -23,7 +23,7 @@ import redirectController from '../controllers/recommendation/redirectController
 import spoTaskListConsiderRecallController from '../controllers/recommendation/spoTaskListConsiderRecallController'
 import reviewPractitionersConcernsController from '../controllers/recommendation/reviewPractitionersConcernsController'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
-import spoCancelRecommendationController from '../controllers/recommendation/spoCancelRecommendationController'
+import spoCancelRecommendationController from '../controllers/recommendation/spoDeleteRecommendationController'
 import spoRecallRationaleController from '../controllers/recommendation/spoRecallRationaleController'
 import spoRecordDecisionController from '../controllers/recommendation/spoRecordDecisionController'
 import spoRationaleConfirmationController from '../controllers/recommendation/spoRationaleConfirmationController'
@@ -96,6 +96,8 @@ import editEthnicityController from '../controllers/recommendation/editEthnicity
 import editNameController from '../controllers/recommendation/editNameController'
 import editDateOfBirthController from '../controllers/recommendation/editDateOfBirthController'
 import editProbationAreaController from '../controllers/recommendation/editProbationAreaController'
+import spoRecordCancelRationale from '../controllers/recommendation/spoRecordDeleteRationaleController'
+import spoDeleteConfirmationController from '../controllers/recommendation/spoDeleteConfirmationController'
 
 const recommendations = Router()
 
@@ -377,6 +379,13 @@ const spoCancelRouteBuilder = spoRouteBuilder.withCheck(
 )
 
 spoCancelRouteBuilder.get('spo-cancel-recommendation-rationale', spoCancelRecommendationController.get)
+spoCancelRouteBuilder.post('spo-cancel-recommendation-rationale', spoCancelRecommendationController.post)
+spoCancelRouteBuilder.get('record-delete-rationale', spoRecordCancelRationale.get)
+spoCancelRouteBuilder.post('record-delete-rationale', spoRecordCancelRationale.post)
+
+spoRationaleRouteBuilder
+  .withCheck(or(statusIsActive(STATUSES.REC_CANCELLED), statusIsActive(STATUSES.REC_CLOSED)))
+  .get('spo-delete-confirmation', spoDeleteConfirmationController.get)
 
 const ppcsRouteBuilder = ppRouteBuilder
   .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))

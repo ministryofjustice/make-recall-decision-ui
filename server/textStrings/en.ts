@@ -1,7 +1,9 @@
 export const strings: Record<string, Record<string, string>> = {
   errors: {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
-    missingSpoCancelRecommendationRationale: 'You must explain your decision',
+    missingCancelDntrRationale: "Explain why you're cancelling this decision not to recall",
+    missingCancelPartARationale: "Explain why you're cancelling this Part A",
+    missingCancelRecommendationRationale: "Explain why you're cancelling this recommendation",
     missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Select a custody type',
@@ -202,5 +204,7 @@ export const strings: Record<string, Record<string, string>> = {
     cancelPartARationale: 'Cancel Part A for {{ fullName }}',
     cancelDntrRationale: 'Cancel decision not to recall for {{ fullName }}',
     editName: 'Edit names',
+    recordDeleteRecommendationRationale: 'Record the explanation in NDelius',
+    spoDeleteConfirmation: 'Dele Confirmation',
   },
 }

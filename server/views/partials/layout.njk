@@ -41,10 +41,9 @@
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
-
+{%- from "govuk/components/inset-text/macro.njk" import govukInsetText -%}
 {% block head %}
-  {% include "./analytics.njk" %}
-  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  {% include "./analytics.njk" %} <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
   <script src="/assets/applicationinsights-web.min.js"></script>
   <script src="/assets/applicationinsights.js"></script>
   <script nonce="{{ cspNonce }}">
@@ -52,27 +51,31 @@
   </script>
   <script src="/assets/js/jquery.min.js"></script>
   <script nonce='{{ cspNonce }}'>
-    window.MOJFrontend = window.MOJFrontend || {};</script>
+    window.MOJFrontend = window.MOJFrontend || {};
+  </script>
   <script src='/assets/moj/components/filter-toggle-button/filter-toggle-button.js'></script>
   {% block headEnd %}{% endblock %}
 {% endblock %}
-
-{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
-
+{% block pageTitle %}
+  {{ pageTitle | default(applicationName) }}
+{% endblock %}
 {% block header %}
   {% include "./header.njk" %}
   {% include "./phaseBanner.njk" %}
 {% endblock %}
-
 {% block bodyStart %}
   {% if googleTagManagerId %}
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ googleTagManagerId }}"
-                    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id={{ googleTagManagerId }}"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe>
+    </noscript>
   {% endif %}
 {% endblock %}
-
-    {% block footer %}
-      {{ govukFooter({
+{% block footer %}
+  {{ govukFooter({
         meta: {
           items: [
             {
@@ -82,11 +85,10 @@
           ]
         }
       }) }}
-    {% endblock %}
-
+{% endblock %}
 {% block bodyEnd %}
   {# Run JavaScript at end of the
-  <body>, to avoid blocking the initial render. #}
+    <body>, to avoid blocking the initial render. #}
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>

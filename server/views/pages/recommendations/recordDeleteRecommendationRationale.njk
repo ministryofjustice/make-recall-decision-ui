@@ -1,0 +1,47 @@
+{% extends "../../partials/layout.njk" %}
+{% set pageTitle = makePageTitle({
+    pageHeading: pageTitles[page.id],
+    hasErrors: errors
+}) %}
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class="govuk-body">The decision will be recorded as a contact in NDelius called ‘Decision not to recall deleted in
+                ‘Consider a recall’’. You cannot undo this.</p>
+            {{ govukInsetText({
+                text: recommendation.spoDeleteRecommendationRationale
+            }) }}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
+                    {{ govukCheckboxes({
+                    name: "sensitive",
+                    fieldset: {
+                        legend: {
+                            text: "",
+                            isPageHeading: false
+                        }
+                    },
+                    items: [
+                        {
+                            value: "sensitive",
+                            text: "Contains sensitive information - do not show to the person on probation"
+                        }
+                    ]
+                    }) }}
+                <p class='govuk-button-group'>
+                    {{ govukButton({
+                    text: "Send to NDelius",
+                    preventDoubleClick: true
+                    }) }}
+                    <a class="govuk-link govuk-link--no-visited-state" href="/cases/{{ recommendation.crn }}/overview">Do not delete</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>{% endblock %}

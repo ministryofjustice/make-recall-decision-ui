@@ -13,4 +13,5 @@ export enum EVENTS {
   PERSON_NOT_ON_LICENCE_NDELIUS = 'mrdNotOnLicenceNdelius',
   PERSON_NOT_ON_LICENCE_ACTIVE = 'mrdNotOnLicenceActive',
   TWO_ACTIVE_CONVICTIONS = 'mrdTwoActiveConvictions',
+  MRD_DELETED_RECOMMENDATION = 'mrdDeletedRecommendation',
 }
