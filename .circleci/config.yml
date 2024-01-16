@@ -135,6 +135,7 @@ jobs:
       - run:
           name: unit tests
           command: npm run test:coverage
+      - sonarcloud/scan
       - store_test_results:
           path: test_results
       - store_artifacts:
