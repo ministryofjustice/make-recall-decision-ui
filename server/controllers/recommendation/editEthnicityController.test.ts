@@ -106,7 +106,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#ethnicity',
         name: 'ethnicity',
-        text: 'Select an ethnicity',
+        text: 'Select ethnicity',
         values: undefined,
       },
     ])

@@ -105,7 +105,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#mappaLevel',
         name: 'mappaLevel',
-        text: 'Select a MAPPA level',
+        text: 'Select MAPPA level',
         values: undefined,
       },
     ])

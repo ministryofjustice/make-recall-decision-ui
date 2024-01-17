@@ -1,7 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import editReleasingPrisonController from './editReleasingPrisonController'
+import editLegislationReleasedUnderController from './editLegislationReleasedUnderController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -17,14 +17,14 @@ describe('get', () => {
 
     const res = mockRes()
     const next = mockNext()
-    await editReleasingPrisonController.get(req, res, next)
+    await editLegislationReleasedUnderController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'establishments')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'released-unders')
 
-    expect(res.locals.page).toEqual({ id: 'editReleasingPrison' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editReleasingPrison')
-    expect(res.locals.releasingPrisons).toEqual([
-      { text: 'Select releasing prison', value: '' },
+    expect(res.locals.page).toEqual({ id: 'editLegislationReleasedUnder' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/editLegislationReleasedUnder')
+    expect(res.locals.legislations).toEqual([
+      { text: 'Select legislation', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -47,7 +47,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        releasingPrison: 'home-bound',
+        legislationReleasedUnder: 'blue',
       },
     })
 
@@ -61,14 +61,14 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editReleasingPrisonController.post(req, res, next)
+    await editLegislationReleasedUnderController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          releasingPrison: 'home-bound',
+          legislationReleasedUnder: 'blue',
         },
       },
       token: 'token1',
@@ -98,15 +98,15 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await editReleasingPrisonController.post(req, res, next)
+    await editLegislationReleasedUnderController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
-        errorId: 'missingReleasingPrison',
+        errorId: 'missingLegislationReleasedUnder',
         invalidParts: undefined,
-        href: '#releasingPrison',
-        name: 'releasingPrison',
-        text: 'Select releasing prison',
+        href: '#legislationReleasedUnder',
+        name: 'legislationReleasedUnder',
+        text: 'Select legislation',
         values: undefined,
       },
     ])

@@ -133,7 +133,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#indexOffence',
         name: 'indexOffence',
-        text: 'Select a matching index offence from PPUD',
+        text: 'Select matching index offence from PPUD',
         values: undefined,
       },
     ])
