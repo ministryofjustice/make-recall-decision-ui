@@ -122,16 +122,16 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
         if (isDoNotRecall) {
           recommendationBanner.text = 'started a decision not to recall letter for'
-          recommendationBanner.linkText = 'Cancel the decision not to recall'
-          recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_dntr_click'
+          recommendationBanner.linkText = 'Delete the decision not to recall'
+          recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
         } else if (isRecallDecided) {
           recommendationBanner.text = 'started a Part A for'
-          recommendationBanner.linkText = 'Cancel the Part A'
-          recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_part_a_click'
+          recommendationBanner.linkText = 'Delete the Part A'
+          recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
         } else if (isRecallStarted) {
           recommendationBanner.text = 'started a recommendation for'
-          recommendationBanner.linkText = 'Cancel the recommendation'
-          recommendationBanner.dataAnalyticsEventCategory = 'spo_cancel_recommendation_click'
+          recommendationBanner.linkText = 'Delete the recommendation'
+          recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
         } else {
           recommendationBanner.display = false
         }

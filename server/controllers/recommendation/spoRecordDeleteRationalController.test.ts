@@ -26,7 +26,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'recordDeleteRecommendationRationale' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recordDeleteRecommendationRationale')
 
-    expect(res.locals.recommendation.spoCancelRecommendationRationale).toEqual('some reason to delete')
+    expect(res.locals.recommendation.spoDeleteRecommendationRationale).toEqual('some reason to delete')
     expect(next).toHaveBeenCalled()
   })
 })
@@ -77,7 +77,7 @@ describe('post', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token1',
-      activate: [STATUSES.REC_CLOSED, STATUSES.REC_CANCELLED],
+      activate: [STATUSES.REC_CLOSED, STATUSES.REC_DELETED],
       deActivate: [],
     })
 

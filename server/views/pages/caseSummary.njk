@@ -1,98 +1,86 @@
 {% extends "../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: section.label + " - Case summary", hasErrors: errors }) %}
 {% block headEnd %}
     {% if section.id == 'overview' %}
         <link rel="prefetch" href="{{ pageUrlBase }}contact-history" as="document">
-        <link rel="prefetch" href="{{ pageUrlBase }}overview" as="document">
-        <link rel="prefetch" href="{{ pageUrlBase }}risk" as="document">
-        <link rel="prefetch" href="{{ pageUrlBase }}personal-details" as="document">
-        <link rel="prefetch" href="{{ pageUrlBase }}licence-conditions" as="document">
-        <link rel="prefetch" href="{{ pageUrlBase }}recommendations" as="document">
-    {% endif %}
-{% endblock %}
-
-{% block beforeContent %}
-    {{ backLink() }}
-    {% if notification.isVisible %}
-        {% set html %}
-        {% if notification.header %}
-            <p class="govuk-notification-banner__heading">
-                {{ notification.header }}
-            </p>
-        {% endif %}
-        <span class="govuk-body">{{ notification.body }}</span>
-        {% endset %}
-        {{ govukNotificationBanner({html: html}) }}
-    {% endif %}
-{% endblock %}
-
-{% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            {% include '../partials/error-summary.njk' %}
-            <div class='flex-desktop flex--space-between flex--align-center'>
-                <div class='govuk-!-margin-bottom-8'>
-                    <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
-                        <li>CRN: <span
-                                    data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span>
-                            <span
-                                    class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span></li>
-                        <li>Date of birth: <span
-                                    data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span>
-                            (age <span
-                                    data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span
-                                    class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span></li>
-                        <li>Gender: <span
-                                    data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
-                        </li>
-                    </ul>
-                    <div class="govuk-heading-xl govuk-!-margin-bottom-0"
-                         data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
-                </div>
-                <div class='flex__item-no-shrink'>
-                    {% if recommendationButton.display and not user.hasPpcsRole %}
-                        {% if recommendationButton.post %}
-                            <form novalidate method="post">
-                                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                                <button class="govuk-button">
-                                    {{recommendationButton.title}}
-                                </button>
-                            </form>
-                        {% else %}
-                            <a class='govuk-button'
-                       href='{{recommendationButton.link}}'
-                       data-analytics-event='click_cta' data-analytics-event-category='{{recommendationButton.dataAnalyticsEventCategory}}'>
-                                {{recommendationButton.title}}
-                            </a>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-            {% if flags.flagCancelRecommendationProcess and recommendationBanner.display %}
-
-                {% set bannerHtml %}
-                <p>{{ recommendationBanner.createdByUserFullName }}
-                    {{ recommendationBanner.text}}
-                    {{ recommendationBanner.personOnProbationName }} on {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
-                <p>
-                    <a 
-                           class="govuk-link govuk-link--no-visited-state"
-                           href="/recommendations/{{ recommendationBanner.recommendationId }}/spo-cancel-recommendation-rationale"
-                           data-analytics-event='click_cta'
-                           data-analytics-event-category='{{ recommendationBanner.dataAnalyticsEventCategory }}'
-                           >{{ recommendationBanner.linkText }}</a> if you need to stop it. You'll have to explain why.
-                    </p>
-                {% endset %}
-
-                {{ mojBanner({
+            <link rel="prefetch" href="{{ pageUrlBase }}overview" as="document">
+                <link rel="prefetch" href="{{ pageUrlBase }}risk" as="document">
+                    <link rel="prefetch" href="{{ pageUrlBase }}personal-details" as="document">
+                        <link rel="prefetch" href="{{ pageUrlBase }}licence-conditions" as="document">
+                            <link rel="prefetch" href="{{ pageUrlBase }}recommendations" as="document">
+                            {% endif %}
+                        {% endblock %}
+                        {% block beforeContent %}
+                            {{ backLink() }}
+                            {% if notification.isVisible %}
+                                {% set html %}
+                                {% if notification.header %}
+                                    <p class="govuk-notification-banner__heading">
+                                        {{ notification.header }}
+                                    </p>
+                                {% endif %}
+                                <span class="govuk-body">{{ notification.body }}</span>
+                                {% endset %}
+                                {{ govukNotificationBanner({html: html}) }}
+                            {% endif %}
+                        {% endblock %}
+                        {% block content %}
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-full">
+                                    {% include '../partials/error-summary.njk' %}
+                                    <div class='flex-desktop flex--space-between flex--align-center'>
+                                        <div class='govuk-!-margin-bottom-8'>
+                                            <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
+                                                <li>CRN:
+                                                    <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span>
+                                                    <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
+                                                </li>
+                                                <li>Date of birth:
+                                                    <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span>
+                                                    (age
+                                                    <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
+                                                </li>
+                                                <li>Gender:
+                                                    <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
+                                                </li>
+                                            </ul>
+                                            <div class="govuk-heading-xl govuk-!-margin-bottom-0" data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
+                                        </div>
+                                        <div class='flex__item-no-shrink'>
+                                            {% if recommendationButton.display and not user.hasPpcsRole %}
+                                                {% if recommendationButton.post %}
+                                                    <form novalidate method="post">
+                                                        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                                                        <button class="govuk-button">
+                                                            {{ recommendationButton.title }}
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <a class='govuk-button' href='{{ recommendationButton.link }}' data-analytics-event='click_cta' data-analytics-event-category='{{ recommendationButton.dataAnalyticsEventCategory }}'>
+                                                        {{ recommendationButton.title }}
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if flags.flagDeleteRecommendationProcess and recommendationBanner.display %}
+                                        {% set bannerHtml %}
+                                        <p>{{ recommendationBanner.createdByUserFullName }}
+                                            {{ recommendationBanner.text }}
+                                            {{ recommendationBanner.personOnProbationName }} on
+                                            {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
+                                        <p>
+                                            <a class="govuk-link govuk-link--no-visited-state" href="/recommendations/{{ recommendationBanner.recommendationId }}/spo-delete-recommendation-rationale" data-analytics-event='click_cta' data-analytics-event-category='{{ recommendationBanner.dataAnalyticsEventCategory }}'>{{ recommendationBanner.linkText }}</a>
+                                            if you need to stop it. You'll have to explain why.
+                                        </p>
+                                        {% endset %}
+                                        {{ mojBanner({
                     type: 'information',
                     html: bannerHtml,
                     iconFallbackText: 'information'
                 }) }}
-
-            {% endif %}
-            {{ mojSubNavigation({
+                                    {% endif %}
+                                    {{ mojSubNavigation({
                 label: 'Case summary sections',
                 items: removeUndefinedListItems([
                     {
@@ -137,23 +125,23 @@
                     }
                 ])
             }) }}
-            {% if section.id == 'overview' %}
-                {% include '../partials/caseOverview.njk' %}
-            {% elseif section.id =='risk' %}
-                {% include '../partials/caseRisk.njk' %}
-            {% elseif section.id =='vulnerabilities' %}
-                {% include '../partials/caseVulnerabilities.njk' %}
-            {% elseif section.id =='personal-details' %}
-                {% include '../partials/casePersonalDetails.njk' %}
-            {% elseif section.id =='licence-conditions' %}
-                {% include '../partials/caseLicenceConditions.njk' %}
-            {% elseif section.id =='contact-history' %}
-                {% include '../partials/caseContactHistory.njk' %}
-            {% elseif section.id =='last-completed' %}
-                {% include '../partials/caseCompleted.njk' %}
-            {% elseif section.id =='recommendations' %}
-                {% include '../partials/caseRecommendations.njk' %}
-            {% endif %}
-        </div>
-    </div>
-{% endblock %}
+                                    {% if section.id == 'overview' %}
+                                        {% include '../partials/caseOverview.njk' %}
+                                    {% elseif section.id =='risk' %}
+                                        {% include '../partials/caseRisk.njk' %}
+                                    {% elseif section.id =='vulnerabilities' %}
+                                        {% include '../partials/caseVulnerabilities.njk' %}
+                                    {% elseif section.id =='personal-details' %}
+                                        {% include '../partials/casePersonalDetails.njk' %}
+                                    {% elseif section.id =='licence-conditions' %}
+                                        {% include '../partials/caseLicenceConditions.njk' %}
+                                    {% elseif section.id =='contact-history' %}
+                                        {% include '../partials/caseContactHistory.njk' %}
+                                    {% elseif section.id =='last-completed' %}
+                                        {% include '../partials/caseCompleted.njk' %}
+                                    {% elseif section.id =='recommendations' %}
+                                        {% include '../partials/caseRecommendations.njk' %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endblock %}

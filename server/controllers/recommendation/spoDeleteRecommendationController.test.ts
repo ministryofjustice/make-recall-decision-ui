@@ -20,7 +20,7 @@ describe('get', () => {
     })
     const next = mockNext()
     await spoDeleteRecommendationController.get(mockReq(), res, next)
-    expect(res.locals.page).toEqual({ id: 'cancelPartARationale', bodyText: 'cancel this Part A' })
+    expect(res.locals.page).toEqual({ id: 'deletePartARationale', bodyText: 'delete this Part A' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
   it('present without data when in NO_RECALL_DECIDED state', async () => {
@@ -36,7 +36,7 @@ describe('get', () => {
     })
     const next = mockNext()
     await spoDeleteRecommendationController.get(mockReq(), res, next)
-    expect(res.locals.page).toEqual({ id: 'cancelDntrRationale', bodyText: 'cancel this decision not to recall' })
+    expect(res.locals.page).toEqual({ id: 'deleteDntrRationale', bodyText: 'delete this decision not to recall' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
   it('present without data when in PO_START_RECALL state', async () => {
@@ -52,7 +52,7 @@ describe('get', () => {
     })
     const next = mockNext()
     await spoDeleteRecommendationController.get(mockReq(), res, next)
-    expect(res.locals.page).toEqual({ id: 'cancelRecommendationRationale', bodyText: 'cancel this recommendation' })
+    expect(res.locals.page).toEqual({ id: 'deleteRecommendationRationale', bodyText: 'delete this recommendation' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
   it('present without data and is a legacy recommendation', async () => {
@@ -68,7 +68,7 @@ describe('get', () => {
     })
     const next = mockNext()
     await spoDeleteRecommendationController.get(mockReq(), res, next)
-    expect(res.locals.page).toEqual({ id: 'cancelRecommendationRationale', bodyText: 'cancel this recommendation' })
+    expect(res.locals.page).toEqual({ id: 'deleteRecommendationRationale', bodyText: 'delete this recommendation' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/spoDeleteRecommendationRationale')
   })
 })
