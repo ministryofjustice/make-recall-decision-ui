@@ -17,16 +17,15 @@
                           aria-describedby="date-of-birth-hint appointment-time-hint{% if errors.dateOfBirth %} error{% endif %}">
                     <div class="govuk-body">
                         {% if recommendation.prisonOffender.dateOfBirth %}
-                           <div class="govuk-summary-list__key">From NOMIS</div>
-                           {{ formatDateTimeFromIsoString({isoDate: recommendation.prisonOffender.dateOfBirth})  }}
+                           <div class="govuk-text-list"><h3 class='govuk-heading-m'>From NOMIS</h3>
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.prisonOffender.dateOfBirth})  }}
+                           </div>
                         {% endif %}
                         {% if recommendation.ppudOffender.dateOfBirth %}
-                           <div class="govuk-summary-list__key">From PPUD</div>
-                           {{ formatDateTimeFromIsoString({isoDate: recommendation.ppudOffender.dateOfBirth})  }}
+                           <div class="govuk-text-list"><h3 class='govuk-heading-m'>From PPUD</h3>
+                            {{ formatDateTimeFromIsoString({isoDate: recommendation.ppudOffender.dateOfBirth})  }}
+                           </div>
                         {% endif %}
-                    </div>
-                    <div id="date-of-birth-hint" class="govuk-hint">
-                        For example, 31 3 1980
                     </div>
                     <div class="govuk-form-group{% if errors.dateOfBirth %} govuk-form-group--error{% endif %}">
                         {% if errors.dateOfBirth %}
