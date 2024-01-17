@@ -10,22 +10,21 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-
-            {% set html %}
-                <p class="govuk-body">This will update PPUD.  It will not update NOMIS.</p>
-            {% endset %}
-            {{ govukNotificationBanner({
-                html: html,
-                classes: "govuk-notification-banner--info govuk-body"
-            }) }}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
                 <fieldset class="govuk-fieldset" role="group"
                           aria-describedby="date-of-birth-hint appointment-time-hint{% if errors.dateOfBirth %} error{% endif %}">
-
+                    <div class="govuk-body">
+                        {% if recommendation.prisonOffender.dateOfBirth %}
+                           <div class="govuk-summary-list__key">From NOMIS</div>
+                           {{ formatDateTimeFromIsoString({isoDate: recommendation.prisonOffender.dateOfBirth})  }}
+                        {% endif %}
+                        {% if recommendation.ppudOffender.dateOfBirth %}
+                           <div class="govuk-summary-list__key">From PPUD</div>
+                           {{ formatDateTimeFromIsoString({isoDate: recommendation.ppudOffender.dateOfBirth})  }}
+                        {% endif %}
+                    </div>
                     <div id="date-of-birth-hint" class="govuk-hint">
                         For example, 31 3 1980
                     </div>

@@ -9,14 +9,16 @@ import { isDefined } from '../../utils/utils'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, errors, unsavedValues } = res.locals
-
+  const dobPpud = recommendation?.ppudOffender?.dateOfBirth
+  const dobNomis = recommendation?.prisonOffender?.dateOfBirth
+  const dobPpudBooked = recommendation?.bookRecallToPpud?.dateOfBirth
   res.locals = {
     ...res.locals,
     page: {
       id: 'editDateOfBirth',
     },
     errors,
-    dateOfBirth: !isDefined(errors) ? splitIsoDateToParts(recommendation.bookRecallToPpud.dateOfBirth) : unsavedValues,
+    dateOfBirth: !isDefined(errors) ? splitIsoDateToParts(dobPpudBooked ?? dobPpud ?? dobNomis) : unsavedValues,
   }
 
   res.render(`pages/recommendations/editDateOfBirth`)
@@ -44,7 +46,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     dateMustBeInPast: true,
     validatePartLengths: false,
   })
-
   const errors = []
 
   if (dateHasError(dateOfBirthIso)) {
