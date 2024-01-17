@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   })
   ethnicities.unshift({
-    text: 'Select an ethnicity',
+    text: 'Select ethnicity',
     value: '',
   })
 
