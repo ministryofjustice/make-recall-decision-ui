@@ -116,7 +116,7 @@ describe('get', () => {
           lastName: 'McCaffrey',
           cro: '1234/2345',
           isInCustody: true,
-          policeForce: 'HARDCODED_VALUE',
+          policeForce: null,
           probationArea: '',
           receivedDateTime: '2023-11-13T09:49:31',
           recommendedToOwner: 'HARDCODED_VALUE',
