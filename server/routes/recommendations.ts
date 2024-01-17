@@ -379,8 +379,8 @@ const spoCancelRouteBuilder = spoRouteBuilder.withCheck(
   or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))
 )
 
-spoCancelRouteBuilder.get('spo-cancel-recommendation-rationale', spoDeleteRecommendationController.get)
-spoCancelRouteBuilder.post('spo-cancel-recommendation-rationale', spoDeleteRecommendationController.post)
+spoCancelRouteBuilder.get('spo-delete-recommendation-rationale', spoDeleteRecommendationController.get)
+spoCancelRouteBuilder.post('spo-delete-recommendation-rationale', spoDeleteRecommendationController.post)
 spoCancelRouteBuilder.get('record-delete-rationale', spoRecordDeleteRationaleController.get)
 spoCancelRouteBuilder.post('record-delete-rationale', spoRecordDeleteRationaleController.post)
 

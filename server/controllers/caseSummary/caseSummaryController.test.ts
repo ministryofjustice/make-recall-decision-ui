@@ -546,8 +546,8 @@ describe('get', () => {
     expect(res.locals.recommendationBanner).toEqual(
       expect.objectContaining({
         display: true,
-        dataAnalyticsEventCategory: 'spo_cancel_dntr_click',
-        linkText: 'Cancel the decision not to recall',
+        dataAnalyticsEventCategory: 'spo_delete_dntr_click',
+        linkText: 'Delete the decision not to recall',
         text: 'started a decision not to recall letter for',
       })
     )
@@ -574,8 +574,8 @@ describe('get', () => {
     expect(res.locals.recommendationBanner).toEqual(
       expect.objectContaining({
         display: true,
-        dataAnalyticsEventCategory: 'spo_cancel_part_a_click',
-        linkText: 'Cancel the Part A',
+        dataAnalyticsEventCategory: 'spo_delete_part_a_click',
+        linkText: 'Delete the Part A',
         text: 'started a Part A for',
       })
     )
