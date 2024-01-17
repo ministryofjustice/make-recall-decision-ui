@@ -1,9 +1,9 @@
 export const strings: Record<string, Record<string, string>> = {
   errors: {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
-    missingCancelDntrRationale: "Explain why you're cancelling this decision not to recall",
-    missingCancelPartARationale: "Explain why you're cancelling this Part A",
-    missingCancelRecommendationRationale: "Explain why you're cancelling this recommendation",
+    missingDeleteDntrRationale: "Explain why you're deleting this decision not to recall",
+    missingDeletePartARationale: "Explain why you're deleting this Part A",
+    missingDeleteRecommendationRationale: "Explain why you're deleting this recommendation",
     missingSpoRecallRationale: 'You must explain your decision',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Select a custody type',
@@ -201,11 +201,11 @@ export const strings: Record<string, Record<string, string>> = {
     editReleasingPrison: 'Edit releasing prison',
     editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
-    cancelRecommendationRationale: 'Cancel recommendation for {{ fullName }}',
-    cancelPartARationale: 'Cancel Part A for {{ fullName }}',
-    cancelDntrRationale: 'Cancel decision not to recall for {{ fullName }}',
+    deleteRecommendationRationale: 'Delete recommendation for {{ fullName }}',
+    deletePartARationale: 'Delete Part A for {{ fullName }}',
+    deleteDntrRationale: 'Delete decision not to recall for {{ fullName }}',
     editName: 'Edit names',
     recordDeleteRecommendationRationale: 'Record the explanation in NDelius',
-    spoDeleteConfirmation: 'Dele Confirmation',
+    spoDeleteConfirmation: 'Delete Confirmation',
   },
 }

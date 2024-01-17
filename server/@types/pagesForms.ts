@@ -99,9 +99,9 @@ export type PageId =
   | 'previewNoRecallLetter'
   | 'confirmationNoRecallLetter'
   | 'taskListConsiderRecall'
-  | 'cancelRecommendationRationale'
-  | 'cancelPartARationale'
-  | 'cancelDntrRationale'
+  | 'deleteRecommendationRationale'
+  | 'deletePartARationale'
+  | 'deleteDntrRationale'
   | 'recordDeleteRecommendationRationale'
 
 export interface FormValidatorArgs {

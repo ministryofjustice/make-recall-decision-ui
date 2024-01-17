@@ -48,7 +48,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   await updateStatuses({
     recommendationId,
     token,
-    activate: [STATUSES.REC_CLOSED, STATUSES.REC_CANCELLED],
+    activate: [STATUSES.REC_CLOSED, STATUSES.REC_DELETED],
     deActivate: [],
   })
 

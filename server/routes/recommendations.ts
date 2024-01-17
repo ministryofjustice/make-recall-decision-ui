@@ -371,21 +371,21 @@ RouteBuilder.build(recommendations)
   .get('task-list', taskListController.get)
 
 /*
- * This section contains the route for the Senior Probation Officer during the SPO Cancel Recommendation
+ * This section contains the route for the Senior Probation Officer during the SPO Delete Recommendation
  * Rationale journey.
  */
 
-const spoCancelRouteBuilder = spoRouteBuilder.withCheck(
+const spoDeleteRouteBuilder = spoRouteBuilder.withCheck(
   or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))
 )
 
-spoCancelRouteBuilder.get('spo-delete-recommendation-rationale', spoDeleteRecommendationController.get)
-spoCancelRouteBuilder.post('spo-delete-recommendation-rationale', spoDeleteRecommendationController.post)
-spoCancelRouteBuilder.get('record-delete-rationale', spoRecordDeleteRationaleController.get)
-spoCancelRouteBuilder.post('record-delete-rationale', spoRecordDeleteRationaleController.post)
+spoDeleteRouteBuilder.get('spo-delete-recommendation-rationale', spoDeleteRecommendationController.get)
+spoDeleteRouteBuilder.post('spo-delete-recommendation-rationale', spoDeleteRecommendationController.post)
+spoDeleteRouteBuilder.get('record-delete-rationale', spoRecordDeleteRationaleController.get)
+spoDeleteRouteBuilder.post('record-delete-rationale', spoRecordDeleteRationaleController.post)
 
 spoRationaleRouteBuilder
-  .withCheck(or(statusIsActive(STATUSES.REC_CANCELLED), statusIsActive(STATUSES.REC_CLOSED)))
+  .withCheck(or(statusIsActive(STATUSES.REC_DELETED), statusIsActive(STATUSES.REC_CLOSED)))
   .get('spo-delete-confirmation', spoDeleteConfirmationController.get)
 
 const ppcsRouteBuilder = ppRouteBuilder

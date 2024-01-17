@@ -12,8 +12,8 @@
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class="govuk-body">You're about to {{ page.bodyText }}. You cannot undo this.</p>
-            {% set cancelRationaleHtml %}
-            {% set textboxLabel %} Explain why you’re cancelling this {{ headingText }}
+            {% set deleteRationaleHtml %}
+            {% set textboxLabel %} Explain why you’re deleting this {{ headingText }}
             {% endset %}
             {{ govukTextarea({
                     name: "spoDeleteRecommendationRationale",
@@ -30,13 +30,13 @@
             {% endset %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> {{ cancelRationaleHtml | safe }}
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> {{ deleteRationaleHtml | safe }}
                 <p class='govuk-button-group'>
                     {{ govukButton({
                         text: buttonText,
                         preventDoubleClick: true
                         }) }}
-                    <a class="govuk-link govuk-link--no-visited-state" href="/cases/{{ recommendation.crn }}/overview">Do not cancel</a>
+                    <a class="govuk-link govuk-link--no-visited-state" href="/cases/{{ recommendation.crn }}/overview">Do not delete</a>
                 </p>
             </form>
         </div>

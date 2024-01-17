@@ -25,21 +25,21 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED)
 
   if (isDoNotRecall) {
-    id = 'cancelDntrRationale'
+    id = 'deleteDntrRationale'
     headingText = 'decision not to recall'
-    bodyText = 'cancel this decision not to recall'
-    buttonText = 'Cancel decision not to recall'
+    bodyText = 'delete this decision not to recall'
+    buttonText = 'Delete decision not to recall'
   } else if (isRecallDecided) {
-    id = 'cancelPartARationale'
+    id = 'deletePartARationale'
     headingText = 'Part A'
-    bodyText = 'cancel this Part A'
-    buttonText = 'Cancel Part A'
+    bodyText = 'delete this Part A'
+    buttonText = 'Delete Part A'
   } else {
     // to capture legacy recommendations and any new ones that have status STATUSES.PO_START_RECALL
-    id = 'cancelRecommendationRationale'
+    id = 'deleteRecommendationRationale'
     headingText = 'recommendation'
-    bodyText = 'cancel this recommendation'
-    buttonText = 'Cancel recommendation'
+    bodyText = 'delete this recommendation'
+    buttonText = 'Delete recommendation'
   }
 
   res.locals = {
@@ -74,12 +74,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const isRecallDecided = statuses.find((status: { name: STATUSES }) => status.name === STATUSES.RECALL_DECIDED)
 
   if (isDoNotRecall) {
-    errorId = 'missingCancelDntrRationale'
+    errorId = 'missingDeleteDntrRationale'
   } else if (isRecallDecided) {
-    errorId = 'missingCancelPartARationale'
+    errorId = 'missingDeletePartARationale'
   } else {
     // to capture legacy recommendations and any new ones that have status STATUSES.PO_START_RECALL
-    errorId = 'missingCancelRecommendationRationale'
+    errorId = 'missingDeleteRecommendationRationale'
   }
   const errors = []
 
