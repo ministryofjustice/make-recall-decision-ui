@@ -24,7 +24,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editEthnicity' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editEthnicity')
     expect(res.locals.ethnicities).toEqual([
-      { text: 'Select an ethnicity', value: '' },
+      { text: 'Select ethnicity', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
