@@ -11,11 +11,13 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-            <p class="govuk-body">The decision will be recorded as a contact in NDelius called Deleted recommendation in
-                ‘Consider a recall’’. You cannot undo this.</p>
+            <p class="govuk-body">This will be recorded as a contact in NDelius called ‘Deleted recommendation in ‘Consider a
+                recall’’. You cannot undo this.</p>
+            <pre>
             {{ govukInsetText({
                 text: recommendation.spoDeleteRecommendationRationale
             }) }}
+            </pre>
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>

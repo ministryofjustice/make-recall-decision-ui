@@ -103,7 +103,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     spoDeleteRecommendationRationale,
   }
 
-  valuesToSave.spoDeleteRecommendationRationale = stripHtmlTags(spoDeleteRecommendationRationale)
+  valuesToSave.spoDeleteRecommendationRationale = stripHtmlTags(spoDeleteRecommendationRationale).trim()
 
   await updateRecommendation({
     recommendationId,
