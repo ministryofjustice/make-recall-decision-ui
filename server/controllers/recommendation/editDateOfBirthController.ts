@@ -9,7 +9,6 @@ import { isDefined } from '../../utils/utils'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, errors, unsavedValues } = res.locals
-  const dobPpud = recommendation?.ppudOffender?.dateOfBirth
   const dobNomis = recommendation?.prisonOffender?.dateOfBirth
   const dobPpudBooked = recommendation?.bookRecallToPpud?.dateOfBirth
   res.locals = {
@@ -18,7 +17,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       id: 'editDateOfBirth',
     },
     errors,
-    dateOfBirth: !isDefined(errors) ? splitIsoDateToParts(dobPpudBooked ?? dobPpud ?? dobNomis) : unsavedValues,
+    dateOfBirth: !isDefined(errors) ? splitIsoDateToParts(dobPpudBooked ?? dobNomis) : unsavedValues,
   }
 
   res.render(`pages/recommendations/editDateOfBirth`)
