@@ -33,11 +33,18 @@
     {% endif %}
 {% endmacro %}
 
-{% macro hyphenForBlank(value) %}
+{% macro blankSafe(value, mandatory, message) %}
     {% if value %}
         {{ value }}
     {% else %}
-        - <span class="govuk-visually-hidden">no value</span>
+        {% if mandatory %}
+            <svg class="govuk-icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+                <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8 C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"></path>
+            </svg>
+            {{ message }}
+        {% else %}
+            - <span class="govuk-visually-hidden">no value</span>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
@@ -49,6 +56,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% include '../../partials/error-summary.njk' %}
 
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
@@ -59,6 +67,30 @@
             <ul class='govuk-list govuk-list--number'>
                 <li>Double-check everything is correct.</li>
                 <li>Edit anything that's wrong.</li>
+
+                {% if warnings %}
+                    {% set html %}
+                        <p class="govuk-body-m govuk-!-margin-bottom-0">
+                            These details are different in PPUD.  Edit anything that's wrong.
+
+                            <ul class="govuk-list">
+                            {% for key, val in warnings %}
+                                  <li>
+                                    <span class="govuk-body govuk-!-font-weight-bold">{{ key }}:</span>
+                                    <span class="govuk-body">{{ blankSafe(val) }}</span>
+                                  </li>
+                            {% endfor %}
+                            </ul>
+                        </p>
+                    {% endset %}
+
+                    {{ govukNotificationBanner({
+                        titleText: 'Some NOMIS information is different to PPUD',
+                        html: html,
+                        classes: "govuk-notification-banner--info"
+                    }) }}
+                {% endif %}
+
                 <li>Continue to the next page and select the index offence.</li>
             </ul>
 
@@ -103,7 +135,7 @@
                             NOMIS number
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
+                            {{ blankSafe(recommendation.personOnProbation.nomsNumber) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -111,7 +143,7 @@
                             First names
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.firstNames) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.firstNames) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-name'>Edit</a>
@@ -122,7 +154,7 @@
                             Last name
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.lastName) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.lastName) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-name'>Edit</a>
@@ -130,10 +162,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.gender) }}
                             Gender
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.gender) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.gender, true, 'You must enter a gender') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-gender'>Edit</a>
@@ -141,10 +174,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.ethnicity) }}
                             Ethnicity
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.ethnicity) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'You must enter a ethnicity') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-ethnicity'>Edit</a>
@@ -155,7 +189,7 @@
                             Date of birth
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(
+                            {{ blankSafe(
                             formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -167,7 +201,7 @@
                             CRO
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.cro) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.cro) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-cro'>Edit</a>
@@ -175,21 +209,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            PNC
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.prisonOffender.PNC) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.prisonNumber) }}
                             Prison booking number
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.prisonOffender.bookingNo) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.prisonNumber) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='xyz'>Edit</a>
@@ -197,10 +221,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.releasingPrison) }}
                             Releasing prison
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.releasingPrison) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'You must enter releasing prison') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-releasing-prison'>Edit</a>
@@ -208,10 +233,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.legislationReleasedUnder) }}
                             Legislation released under
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.legislationReleasedUnder) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'You must enter legislation') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-legislation-released-under'>Edit</a>
@@ -235,10 +261,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.custodyType) }}
                             Custody type
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.custodyType) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.custodyType, true, 'You must enter a custody type') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-custody-type'>Edit</a>
@@ -260,7 +287,7 @@
                                 Additional address
                             </p>
                             <span class="govuk-body">
-                                {{ hyphenForBlank(recommendation.isMainAddressWherePersonCanBeFound.details) }}
+                                {{ blankSafe(recommendation.isMainAddressWherePersonCanBeFound.details) }}
                             </span>
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -317,10 +344,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.probationArea) }}
                             Probation area
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.probationArea) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'You must enter probation area') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-probation-area'>Edit</a>
@@ -331,7 +359,7 @@
                             Probation practitioner
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(practitioner.name) }}
+                            {{ blankSafe(practitioner.name) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -339,7 +367,7 @@
                             Probation practitioner email
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(practitioner.email) }}
+                            {{ blankSafe(practitioner.email) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -347,15 +375,16 @@
                             Probation practitioner phone number
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(practitioner.telephone) }}
+                            {{ blankSafe(practitioner.telephone) }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.policeForce) }}
                             Local police contact
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.policeForce) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'You must enter local police force') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-police-contact'>Edit</a>
@@ -379,10 +408,11 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.mappaLevel) }}
                             MAPPA level
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.mappaLevel) }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.mappaLevel, true, 'You must enter MAPPA level') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-mappa-level'>Edit</a>
