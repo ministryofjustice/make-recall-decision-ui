@@ -1,7 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import checkBookingDetailsController, { currentHighestRosh } from './checkBookingDetailsController'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -44,10 +43,6 @@ const RECOMMENDATION_TEMPLATE = {
   ppudOffender: {
     ethnicity: 'Caucasian',
     gender: 'Male',
-    firstNames: 'Robert Tate',
-    familyName: 'Harrison',
-    dateOfBirth: '1971-02-03',
-    prisonNumber: '12345678',
   },
   whoCompletedPartA: {
     localDeliveryUnit: 'who-completed-delivery-unit',
@@ -121,8 +116,10 @@ describe('get', () => {
           lastName: 'McCaffrey',
           cro: '1234/2345',
           isInCustody: true,
-          prisonNumber: '1234',
+          policeForce: null,
+          probationArea: '',
           receivedDateTime: '2023-11-13T09:49:31',
+          recommendedToOwner: 'HARDCODED_VALUE',
           releaseDate: null,
           riskOfContrabandDetails: '',
           riskOfSeriousHarmLevel: undefined,
@@ -163,13 +160,6 @@ describe('get', () => {
       created: '2023-11-13T09:49:31.361Z',
     })
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
-
-    expect(res.locals.warnings).toStrictEqual({
-      'PPUD-Date of birth': '3 February 1971',
-      'PPUD-First name': 'Robert Tate',
-      'PPUD-Last name': 'Harrison',
-      'PPUD-Prison booking number': '12345678',
-    })
     expect(next).toHaveBeenCalled()
   })
 
@@ -291,39 +281,6 @@ describe('get', () => {
 
 describe('post', () => {
   it('book in ppud', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        dateOfBirth: '1970-03-15',
-        decisionDateTime: '2023-11-13T09:49:31',
-        firstNames: 'Anne C',
-        lastName: 'McCaffrey',
-        cro: '1234/2345',
-        isInCustody: true,
-        prisonNumber: '1234',
-        receivedDateTime: '2023-11-13T09:49:31',
-        releaseDate: null,
-        riskOfContrabandDetails: '',
-        riskOfSeriousHarmLevel: undefined,
-        sentenceDate: null,
-        image: undefined,
-        gender: 'm',
-        ethnicity: 'caucasian',
-        custodyType: 'extended',
-        releasingPrison: 'traitors gate',
-        mappaLevel: '1',
-        policeForce: 'kent',
-        legislationReleasedUnder: 'c 2008',
-        probationArea: 'camden',
-      },
-    })
-
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '1' },
-      body: {},
-    })
-
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
@@ -334,120 +291,10 @@ describe('post', () => {
 
     const next = mockNext()
 
-    await checkBookingDetailsController.post(req, res, next)
-
-    expect(req.session.errors).toBeUndefined()
+    await checkBookingDetailsController.post(mockReq(), res, next)
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/select-index-offence`)
 
     expect(next).toHaveBeenCalled()
-  })
-  it('validation errors', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        dateOfBirth: '1970-03-15',
-        decisionDateTime: '2023-11-13T09:49:31',
-        firstNames: 'Anne C',
-        lastName: 'McCaffrey',
-        cro: '1234/2345',
-        isInCustody: true,
-        prisonNumber: '1234',
-        receivedDateTime: '2023-11-13T09:49:31',
-        releaseDate: null,
-        riskOfContrabandDetails: '',
-        riskOfSeriousHarmLevel: undefined,
-        sentenceDate: null,
-        image: undefined,
-      },
-    })
-
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '1' },
-      body: {},
-    })
-
-    const res = mockRes({
-      locals: {
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-
-    const next = mockNext()
-
-    await checkBookingDetailsController.post(req, res, next)
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
-
-    expect(req.session.errors).toStrictEqual([
-      {
-        errorId: 'missingGender',
-        href: '#gender',
-        name: 'gender',
-        text: 'Select gender',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingEthnicity',
-        href: '#ethnicity',
-        name: 'ethnicity',
-        text: 'Select ethnicity',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingLegislationReleasedUnder',
-        href: '#legislationReleasedUnder',
-        name: 'legislationReleasedUnder',
-        text: 'Select legislation',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingCustodyType',
-        href: '#custodyType',
-        name: 'custodyType',
-        text: 'Select custody type',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingProbationArea',
-        href: '#probationArea',
-        name: 'probationArea',
-        text: 'Select probation area',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingPoliceForce',
-        href: '#policeForce',
-        name: 'policeForce',
-        text: 'Select police force',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingReleasingPrison',
-        href: '#releasingPrison',
-        name: 'releasingPrison',
-        text: 'Select releasing prison',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        errorId: 'missingMappaLevel',
-        href: '#mappaLevel',
-        name: 'mappaLevel',
-        text: 'Select MAPPA level',
-        invalidParts: undefined,
-        values: undefined,
-      },
-    ])
-
-    expect(next).not.toHaveBeenCalled()
   })
 })
 

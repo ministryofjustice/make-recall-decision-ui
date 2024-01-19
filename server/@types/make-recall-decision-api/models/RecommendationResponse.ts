@@ -168,8 +168,6 @@ export type BookRecallToPpud = {
   dateOfBirth: string,
   cro: string,
   legislationReleasedUnder: string,
-  prisonNumber: string,
-  releasingPrison: string,
 }
 
 export type PrisonOffender = {

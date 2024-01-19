@@ -1,18 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import {
-  BookRecallToPpud,
-  PpudOffender,
-  PrisonOffender,
-} from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { BookRecallToPpud, PrisonOffender } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { hasValue, isDefined } from '../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
-import { formatDateTimeFromIsoString } from '../../utils/dates/format'
-import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -92,13 +85,12 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
 
     valuesToSave.bookRecallToPpud = {
-      firstNames: `${firstName} ${middleName}`,
-      lastName,
-      dateOfBirth,
-      prisonNumber: recommendation.prisonOffender.bookingNo,
       cro: recommendation.prisonOffender?.cro,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
       isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
+      policeForce: null,
+      probationArea: '',
+      recommendedToOwner: 'HARDCODED_VALUE',
       riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
         ? recommendation.hasContrabandRisk.details
         : '',
@@ -106,6 +98,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
       receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
       releaseDate: null,
       sentenceDate: null,
+      firstNames: `${firstName} ${middleName}`,
+      lastName,
+      dateOfBirth,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   }
@@ -117,35 +112,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       token,
       featureFlags: flags,
     })
-  }
-
-  const warnings = {} as Record<string, string>
-
-  if (isDefined(recommendation.ppudOffender) && isDefined(recommendation.prisonOffender)) {
-    const ppudOffender = recommendation.ppudOffender as PpudOffender
-    const prisonOffender = recommendation.prisonOffender as PrisonOffender
-    const bookToPpud = recommendation.bookRecallToPpud as BookRecallToPpud
-    if (prisonOffender.firstName !== ppudOffender.firstNames && bookToPpud.firstNames !== ppudOffender.firstNames) {
-      warnings['PPUD-First name'] = ppudOffender.firstNames
-    }
-    if (prisonOffender.lastName !== ppudOffender.familyName && bookToPpud.lastName !== ppudOffender.familyName) {
-      warnings['PPUD-Last name'] = ppudOffender.familyName
-    }
-    if (
-      prisonOffender.bookingNo !== ppudOffender.prisonNumber &&
-      bookToPpud.prisonNumber !== ppudOffender.prisonNumber
-    ) {
-      warnings['PPUD-Prison booking number'] = ppudOffender.prisonNumber
-    }
-    if (
-      prisonOffender.dateOfBirth !== ppudOffender.dateOfBirth &&
-      bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth
-    ) {
-      warnings['PPUD-Date of birth'] = formatDateTimeFromIsoString({
-        isoDate: ppudOffender.dateOfBirth,
-        dateOnly: true,
-      })
-    }
   }
 
   res.locals = {
@@ -162,134 +128,14 @@ async function get(_: Request, res: Response, next: NextFunction) {
       : recommendation.whoCompletedPartA,
     currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
     recallReceived,
-    warnings,
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)
   next()
 }
 
-async function post(req: Request, res: Response, next: NextFunction) {
-  const { recommendationId } = req.params
-  const {
-    user: { token },
-    urlInfo,
-  } = res.locals
-
-  const errors = []
-
-  const recommendation = await getRecommendation(recommendationId, token)
-
-  if (!hasValue(recommendation.bookRecallToPpud.gender) || recommendation.bookRecallToPpud.gender.length === 0) {
-    const errorId = 'missingGender'
-    errors.push(
-      makeErrorObject({
-        id: 'gender',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (!hasValue(recommendation.bookRecallToPpud.ethnicity) || recommendation.bookRecallToPpud.ethnicity.length === 0) {
-    const errorId = 'missingEthnicity'
-    errors.push(
-      makeErrorObject({
-        id: 'ethnicity',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (
-    !hasValue(recommendation.bookRecallToPpud.legislationReleasedUnder) ||
-    recommendation.bookRecallToPpud.legislationReleasedUnder.length === 0
-  ) {
-    const errorId = 'missingLegislationReleasedUnder'
-    errors.push(
-      makeErrorObject({
-        id: 'legislationReleasedUnder',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (
-    !hasValue(recommendation.bookRecallToPpud.custodyType) ||
-    recommendation.bookRecallToPpud.custodyType.length === 0
-  ) {
-    const errorId = 'missingCustodyType'
-    errors.push(
-      makeErrorObject({
-        id: 'custodyType',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (
-    !hasValue(recommendation.bookRecallToPpud.probationArea) ||
-    recommendation.bookRecallToPpud.probationArea.length === 0
-  ) {
-    const errorId = 'missingProbationArea'
-    errors.push(
-      makeErrorObject({
-        id: 'probationArea',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (
-    !hasValue(recommendation.bookRecallToPpud.policeForce) ||
-    recommendation.bookRecallToPpud.policeForce.length === 0
-  ) {
-    const errorId = 'missingPoliceForce'
-    errors.push(
-      makeErrorObject({
-        id: 'policeForce',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (
-    !hasValue(recommendation.bookRecallToPpud.releasingPrison) ||
-    recommendation.bookRecallToPpud.releasingPrison.length === 0
-  ) {
-    const errorId = 'missingReleasingPrison'
-    errors.push(
-      makeErrorObject({
-        id: 'releasingPrison',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (
-    !hasValue(recommendation.bookRecallToPpud.mappaLevel) ||
-    recommendation.bookRecallToPpud.mappaLevel.length === 0
-  ) {
-    const errorId = 'missingMappaLevel'
-    errors.push(
-      makeErrorObject({
-        id: 'mappaLevel',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (errors.length > 0) {
-    req.session.errors = errors
-    return res.redirect(303, req.originalUrl)
-  }
+async function post(_: Request, res: Response, next: NextFunction) {
+  const { urlInfo } = res.locals
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'select-index-offence', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

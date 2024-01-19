@@ -200,7 +200,6 @@ pre {
 .govuk-button-as-link:hover {
   color: #003078;
 }
-
 @supports (-moz-appearance:none) {
   .govuk-button-as-link::-moz-focus-inner {
     border: none;
@@ -210,30 +209,4 @@ pre {
     outline-style: dotted;
     outline-width: 1px;
   }
-}
-
-.govuk-icon {
-  color: #1d70b8;
-  font-size: 0;
-  margin-bottom: 30px;
-  fill: #1d70b8;
-  float: left;
-  margin-right: 10px;
-}
-
-.govuk-summary-list {
-  table-layout: auto;
-}
-
-.govuk-summary-list__key {
-  width: 30%;
-}
-
-.govuk-summary-list__value {
-  vertical-align:bottom;
-}
-
-.govuk-summary-list__actions {
-  width: 4em;
-  vertical-align:bottom;
 }
