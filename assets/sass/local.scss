@@ -124,6 +124,15 @@ pre {
   padding-bottom: 5px;
 }
 
+.govuk-body-not-underlined {
+  border-style: solid;
+  border-width: 0;
+  border-color: gray;
+  padding-bottom: 5px;
+  text-decoration: none;
+  font-size: 19px;
+}
+
 .wrap-reverse {
   display: flex;
   flex-wrap: wrap-reverse;

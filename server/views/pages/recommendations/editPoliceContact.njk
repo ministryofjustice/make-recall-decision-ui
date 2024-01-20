@@ -12,7 +12,7 @@
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
                 <div class='govuk-body'>Email address on the Part A</div>
                   <span class='mid-grey-panel'>
-                    <a class='govuk-body'>{{ recommendation.localPoliceContact.emailAddress }}</a>
+                    <a class='govuk-body-not-underlined'>{{ recommendation.localPoliceContact.emailAddress }}</a>
                 </span>
                 </br>
                 </br>
@@ -23,7 +23,7 @@
                   id: "policeForce",
                   name: "policeForce",
                   label: {
-                    text: "List of police forces",
+                    text: "List of police force areas",
                     classes: "govuk-body"
                   },
                   errorMessage: errorMessage(errors.policeForce),
