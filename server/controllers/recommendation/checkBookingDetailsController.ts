@@ -121,7 +121,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   const warnings = {} as Record<string, string>
 
-  if (isDefined(recommendation.ppudOffender) && isDefined(recommendation.prisonOffender)) {
+  if (hasValue(recommendation.ppudOffender) && hasValue(recommendation.prisonOffender)) {
     const ppudOffender = recommendation.ppudOffender as PpudOffender
     const prisonOffender = recommendation.prisonOffender as PrisonOffender
     const bookToPpud = recommendation.bookRecallToPpud as BookRecallToPpud
