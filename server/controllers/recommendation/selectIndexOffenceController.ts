@@ -15,7 +15,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
   } = res.locals
 
-  const sentences = await prisonSentences(token, recommendation.personOnProbation.nomsNumber)
+  const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
 
   let errorMessage
   if (hasValue(sentences) && sentences.length === 0) {

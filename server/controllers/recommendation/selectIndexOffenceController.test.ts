@@ -134,7 +134,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
   it('load with no sentences', async () => {
-    ;(prisonSentences as jest.Mock).mockResolvedValue([])
+    ;(prisonSentences as jest.Mock).mockResolvedValue(undefined)
 
     const res = mockRes({
       locals: {
