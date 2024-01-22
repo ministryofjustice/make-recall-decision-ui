@@ -77,6 +77,8 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   }
 
+  const edited = {} as Record<string, boolean>
+
   // if recommendation does not have working values for book to ppud, add them.
   if (!hasValue(recommendation.bookRecallToPpud)) {
     let firstName = ''
@@ -92,7 +94,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
 
     valuesToSave.bookRecallToPpud = {
-      firstNames: `${firstName} ${middleName}`,
+      firstNames: `${firstName} ${middleName}`.trim(),
       lastName,
       dateOfBirth,
       prisonNumber: recommendation.prisonOffender.bookingNo,
@@ -108,6 +110,25 @@ async function get(_: Request, res: Response, next: NextFunction) {
       sentenceDate: null,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
+  } else {
+    if (
+      recommendation.bookRecallToPpud.firstNames !==
+      `${recommendation.prisonOffender?.firstName} ${recommendation.prisonOffender?.middleName}`.trim()
+    ) {
+      edited.firstNames = true
+    }
+
+    if (recommendation.bookRecallToPpud.lastName !== recommendation.prisonOffender?.lastName) {
+      edited.lastName = true
+    }
+
+    if (recommendation.bookRecallToPpud.dateOfBirth !== recommendation.prisonOffender?.dateOfBirth) {
+      edited.dateOfBirth = true
+    }
+
+    if (recommendation.bookRecallToPpud.prisonNumber !== recommendation.prisonOffender?.bookingNo) {
+      edited.prisonNumber = true
+    }
   }
 
   if (isDefined(valuesToSave.bookRecallToPpud) || isDefined(valuesToSave.prisonOffender)) {
@@ -163,6 +184,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
     recallReceived,
     warnings,
+    edited,
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)

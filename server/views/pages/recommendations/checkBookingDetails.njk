@@ -48,6 +48,14 @@
     {% endif %}
 {% endmacro %}
 
+{% macro editedBadge(display) %}
+    {% if display %}
+        <strong class="govuk-tag">
+            Edited
+        </strong>
+    {% endif %}
+{% endmacro %}
+
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -143,6 +151,7 @@
                             First names
                         </dt>
                         <dd class="govuk-summary-list__value">
+                            {{ editedBadge(edited.firstNames) }}
                             {{ blankSafe(recommendation.bookRecallToPpud.firstNames) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -154,6 +163,7 @@
                             Last name
                         </dt>
                         <dd class="govuk-summary-list__value">
+                            {{ editedBadge(edited.lastName) }}
                             {{ blankSafe(recommendation.bookRecallToPpud.lastName) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
@@ -189,6 +199,7 @@
                             Date of birth
                         </dt>
                         <dd class="govuk-summary-list__value">
+                            {{ editedBadge(edited.dateOfBirth) }}
                             {{ blankSafe(
                             formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
                         </dd>
@@ -213,6 +224,7 @@
                             Prison booking number
                         </dt>
                         <dd class="govuk-summary-list__value">
+                            {{ editedBadge(edited.prisonNumber) }}
                             {{ blankSafe(recommendation.bookRecallToPpud.prisonNumber) }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
