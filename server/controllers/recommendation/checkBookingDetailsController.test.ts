@@ -196,6 +196,81 @@ describe('get', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
   })
 
+  it('show edits', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: {
+            firstNames: 'Ted',
+            lastName: 'Cunningham',
+            dateOfBirth: '2000-01-01',
+            prisonNumber: '1234',
+          },
+          prisonOffender: {
+            firstName: 'Teddy',
+            middleName: '',
+            lastName: 'Todsworth',
+            dateOfBirth: '2000-01-02',
+            bookingNo: '123',
+          },
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(res.locals.edited).toStrictEqual({
+      firstNames: true,
+      lastName: true,
+      dateOfBirth: true,
+      prisonNumber: true,
+    })
+  })
+
+  it('do not show edits', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: {
+            firstNames: 'Ted Trouble',
+            lastName: 'Todsworth',
+            dateOfBirth: '2000-01-01',
+            prisonNumber: '1234',
+          },
+          prisonOffender: {
+            firstName: 'Ted',
+            middleName: 'Trouble',
+            lastName: 'Todsworth',
+            dateOfBirth: '2000-01-01',
+            bookingNo: '1234',
+          },
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(res.locals.edited).toStrictEqual({})
+  })
+
   it('load present blanks and banner for no nomis record found.', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(undefined)
 
