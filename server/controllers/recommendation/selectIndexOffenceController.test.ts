@@ -219,7 +219,7 @@ describe('post', () => {
         },
       },
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/index-offence-selected`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/match-index-offence`)
     expect(next).toHaveBeenCalled()
   })
   it('missing index offence', async () => {

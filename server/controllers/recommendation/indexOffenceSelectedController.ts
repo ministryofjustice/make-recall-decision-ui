@@ -24,7 +24,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { urlInfo } = res.locals
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'match-index-offence', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'book-to-ppud', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

@@ -79,7 +79,7 @@ describe('post', () => {
 
     await indexOffenceSelectedController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/match-index-offence`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/book-to-ppud`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })
