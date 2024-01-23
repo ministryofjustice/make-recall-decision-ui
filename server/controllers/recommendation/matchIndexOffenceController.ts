@@ -80,7 +80,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'book-to-ppud', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'index-offence-selected', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

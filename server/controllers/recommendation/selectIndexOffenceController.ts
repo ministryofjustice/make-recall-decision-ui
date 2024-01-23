@@ -133,7 +133,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'index-offence-selected', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'match-index-offence', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()

@@ -411,11 +411,11 @@ ppcsRouteBuilder.post('edit-recall-received', editRecallReceivedController.post)
 ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 
-ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
-ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.post)
-
 ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
 ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
+
+ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
+ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.post)
 
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)
