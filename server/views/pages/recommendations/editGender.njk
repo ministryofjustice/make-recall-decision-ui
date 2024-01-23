@@ -13,13 +13,15 @@
 
             <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
 
-            <dl class="govuk-text-list">
-                <h3 class='govuk-heading-m'>From NOMIS</h3>
-                <div class="govuk-text-list__row">
-                    <dt class="govuk-text-list__key">Gender</dt>
-                    <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.gender }}</dd>
-                </div>
-            </dl>
+            {% if recommendation.prisonOffender.gender %}
+                <dl class="govuk-text-list">
+                    <h3 class='govuk-heading-m'>From NOMIS</h3>
+                    <div class="govuk-text-list__row">
+                        <dt class="govuk-text-list__key">Gender</dt>
+                        <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.gender }}</dd>
+                    </div>
+                </dl>
+            {% endif %}
 
             {% if recommendation.ppudOffender %}
                 <dl class="govuk-text-list">
