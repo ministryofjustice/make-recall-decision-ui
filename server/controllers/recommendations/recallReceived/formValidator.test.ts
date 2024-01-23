@@ -4,7 +4,7 @@ import { validateRecallReceived } from './formValidator'
 describe('validateRecallReceived', () => {
   const recommendationId = '34'
   const urlInfo = {
-    currentPageId: 'edit-recall-received',
+    currentPageId: 'edit-recall-received-date-and-time',
     basePath: `/recommendations/${recommendationId}/`,
     path: `/recommendations/${recommendationId}/check-booking-details`,
   }
