@@ -152,6 +152,7 @@ export type BookRecallToPpud = {
   isInCustody: boolean,
   custodyType: string,
   indexOffence: string,
+  ppudSentenceId?: string,
   mappaLevel: string,
   policeForce: string,
   probationArea: string,
@@ -206,8 +207,34 @@ export type PpudOffender = {
 }
 
 export type PpudSentence = {
+  id: string,
+  offenceDescription: string,
+  sentenceExpiryDate: string,
   dateOfSentence: string,
   custodyType: string,
   mappaLevel: string,
+  licenceExpiryDate: string,
+  offence: PpudOffence,
+  releases: PpudRelease[],
+  sentenceLength: PpudSentenceLength,
+  sentencingCourt: string,
 }
 
+export type PpudOffence = {
+  indexOffence: string,
+  dateOfIndexOffence: string,
+}
+
+export type PpudRelease = {
+  category: String,
+  dateOfRelease: String,
+  releasedFrom: String,
+  releasedUnder: String,
+  releaseType: String,
+}
+
+export type PpudSentenceLength = {
+  partYears: number,
+  partMonths: number,
+  partDays: number,
+}

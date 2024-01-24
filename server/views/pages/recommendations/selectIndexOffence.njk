@@ -53,7 +53,8 @@
 
                             {% for offence in sentence.offences %}
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="indexOffence" name="indexOffence" type="radio" value="{{ offence.offenderChargeId }}">
+                                    <input class="govuk-radios__input" id="indexOffence" name="indexOffence" type="radio"
+                                    value="{{ offence.offenderChargeId }}" {% if offence.offenderChargeId == recommendation.nomisIndexOffence.selected %}checked{% endif %}/>
                                     <label class="govuk-label govuk-radios__label" for="indexOffence">
                                         {{ hyphenForBlank(offence.offenceDescription) }}
                                     </label>

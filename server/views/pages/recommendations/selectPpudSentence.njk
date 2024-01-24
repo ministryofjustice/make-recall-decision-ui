@@ -1,0 +1,124 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+
+    {% set courtDescription = "" %}
+    {% set sentenceDate = "" %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <p class='govuk-body'>Check the details in your booking.  Then either:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+                <li>add your booking to an existing sentence in PPUD</li>
+                <li>create a new sentence in PPUD for your booking</li>
+            </ul>
+
+            <h3 class='govuk-heading-m'>Your booking - selected from NOMIS</h3>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                    </dt>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Offence
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ hyphenForBlank( offence.offenceDescription ) }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Date of sentence
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceDate }) ) }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Sentence end date
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+
+                    </dd>
+                </div>
+            </dl>
+
+            <h3 class='govuk-heading-m'>Add your booking to PPUD</h3>
+
+            <p class='govuk-body'>This will update anything that's different in PPUD.</p>
+
+            <h3 class='govuk-heading-m'>Sentences on PPUD</h3>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                <div class="govuk-radios" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="indexOffence" name="ppudSentenceId" type="radio"
+                            value="ADD_NEW" {% if 'ADD_NEW' == recommendation.bookRecallToPpud.ppudSentenceId %}checked{% endif %}>
+                        <label class="govuk-label govuk-radios__label" for="indexOffence">
+                            Add new sentence
+                        </label>
+                    </div>
+
+                    {% for sentence in recommendation.ppudOffender.sentences %}
+
+                    <div class="govuk-radios__item">
+
+                        <input class="govuk-radios__input" id="indexOffence" name="ppudSentenceId" type="radio"
+                            value="{{ sentence.id }}" {% if sentence.id == recommendation.bookRecallToPpud.ppudSentenceId %}checked{% endif %}/>
+                        <label class="govuk-label govuk-radios__label govuk-!-font-weight-bold" for="indexOffence">
+                            {{ hyphenForBlank(sentence.custodyType) }}
+                        </label>
+
+                        <dl class="govuk-summary-list govuk-!-margin-left-3 govuk-!-margin-bottom-4">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key govuk-body">
+                                    Offence
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ hyphenForBlank(sentence.offenceDescription) }}
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    Date of sentence
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.dateOfSentence }) ) }}
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    Sentence end date
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate }) ) }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{ formSubmitButton() }}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

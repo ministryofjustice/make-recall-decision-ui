@@ -107,6 +107,55 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/index-offence-selected`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
+  it('post with valid data - sentences', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      bookRecallToPpud: {
+        policeForce: 'Kent',
+      },
+      ppudOffender: {
+        sentences: [{}],
+      },
+    })
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+      body: {
+        indexOffence: 'some offence',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { token: 'token1' },
+        urlInfo: { basePath },
+        flags: { xyz: true },
+      },
+    })
+    const next = mockNext()
+
+    await matchIndexOffenceController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '1',
+      valuesToSave: {
+        bookRecallToPpud: {
+          policeForce: 'Kent',
+          indexOffence: 'some offence',
+        },
+      },
+      token: 'token1',
+      featureFlags: {
+        xyz: true,
+      },
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/select-ppud-sentence`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
   it('post with invalid data', async () => {
     const basePath = `/recommendations/1/`
     const req = mockReq({

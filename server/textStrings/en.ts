@@ -23,6 +23,7 @@ export const strings: Record<string, Record<string, string>> = {
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
     saveChanges: 'An error occurred saving your changes',
     noIndexOffenceSelected: 'You must select an index offence',
+    noPpudSentenceSelected: 'Select an existing sentence or add a new one',
     noRecallTypeSelected: 'You must select a recommendation',
     noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
     noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
@@ -209,5 +210,6 @@ export const strings: Record<string, Record<string, string>> = {
     editName: 'Edit names',
     recordDeleteRecommendationRationale: 'Record the explanation in NDelius',
     spoDeleteConfirmation: 'Delete Confirmation',
+    selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
   },
 }
