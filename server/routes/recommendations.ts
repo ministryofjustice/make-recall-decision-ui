@@ -405,8 +405,8 @@ ppcsRouteBuilder.post('check-booking-details', checkBookingDetailsController.pos
 ppcsRouteBuilder.get('edit-police-contact', editPoliceContactController.get)
 ppcsRouteBuilder.post('edit-police-contact', editPoliceContactController.post)
 
-ppcsRouteBuilder.get('edit-recall-received', editRecallReceivedController.get)
-ppcsRouteBuilder.post('edit-recall-received', editRecallReceivedController.post)
+ppcsRouteBuilder.get('edit-recall-received-date-and-time', editRecallReceivedController.get)
+ppcsRouteBuilder.post('edit-recall-received-date-and-time', editRecallReceivedController.post)
 
 ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
