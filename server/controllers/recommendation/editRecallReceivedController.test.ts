@@ -112,7 +112,7 @@ describe('post', () => {
       body: {
         'dateTime-day': '01',
         'dateTime-month': '05',
-        'dateTime-year': '2025',
+        'dateTime-year': '2023',
         'dateTime-hour': '12',
         'dateTime-minute': '59',
       },
@@ -133,7 +133,7 @@ describe('post', () => {
       recommendationId: '1',
       token: 'token1',
       valuesToSave: {
-        bookRecallToPpud: { receivedDateTime: '2025-05-01T11:59:00.000Z' },
+        bookRecallToPpud: { receivedDateTime: '2023-05-01T11:59:00.000Z' },
       },
       featureFlags: {},
     })
