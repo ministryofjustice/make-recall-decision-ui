@@ -8,19 +8,19 @@ describe('validateRecallReceived', () => {
     basePath: `/recommendations/${recommendationId}/`,
     path: `/recommendations/${recommendationId}/check-booking-details`,
   }
-  const { year } = DateTime.now().plus({ years: 1 })
+  const { year } = DateTime.now().plus({ years: 0 })
 
   it('returns valuesToSave and no errors, and redirects to preview, if valid', async () => {
     const requestBody = {
       'dateTime-day': '12',
-      'dateTime-month': '05',
+      'dateTime-month': '01',
       'dateTime-year': year.toString(),
-      'dateTime-hour': '12',
+      'dateTime-hour': '11',
       'dateTime-minute': '53',
     }
     const { errors, valuesToSave, nextPagePath } = await validateRecallReceived({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
-    expect(valuesToSave).toEqual({ receivedDateTime: '2025-05-12T11:53:00.000Z' })
+    expect(valuesToSave).toEqual({ receivedDateTime: '2024-01-12T11:53:00.000Z' })
     expect(nextPagePath).toEqual('/recommendations/34/check-booking-details')
   })
 
@@ -75,6 +75,34 @@ describe('validateRecallReceived', () => {
           minute: '53',
           month: '',
           year: '2022',
+        },
+      },
+    ])
+  })
+
+  it('returns an error, if date not set in past', async () => {
+    const requestBody = {
+      'dateTime-day': '12',
+      'dateTime-month': '01',
+      'dateTime-year': '2032',
+      'dateTime-hour': '12',
+      'dateTime-minute': '53',
+    }
+    const { errors, valuesToSave } = await validateRecallReceived({ requestBody, urlInfo })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
+      {
+        errorId: 'dateMustBeInPast',
+        href: '#dateTime-day',
+        invalidParts: undefined,
+        name: 'dateTime',
+        text: 'The date and time must be today or in the past',
+        values: {
+          day: '12',
+          hour: '12',
+          minute: '53',
+          month: '01',
+          year: '2032',
         },
       },
     ])
