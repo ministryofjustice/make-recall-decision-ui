@@ -82,7 +82,7 @@ import searchPpudResultsController from '../controllers/recommendation/searchPpu
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
-import indexOffenceSelectedController from '../controllers/recommendation/indexOffenceSelectedController'
+import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
@@ -415,8 +415,8 @@ ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
 ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
 
-ppcsRouteBuilder.get('index-offence-selected', indexOffenceSelectedController.get)
-ppcsRouteBuilder.post('index-offence-selected', indexOffenceSelectedController.post)
+ppcsRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
+ppcsRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
 
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)
