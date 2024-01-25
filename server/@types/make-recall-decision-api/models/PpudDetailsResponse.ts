@@ -21,7 +21,6 @@ export type PpudDetailsOffender = {
 
 export type PpudDetailsSentence = {
   id: string,
-  offenceDescription: string,
   sentenceExpiryDate: string,
   dateOfSentence: string,
   custodyType: string,
