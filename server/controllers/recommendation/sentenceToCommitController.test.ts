@@ -1,5 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import indexOffenceSelectedController from './indexOffenceSelectedController'
+import sentenceToCommitController from './sentenceToCommitController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -35,7 +35,7 @@ describe('get', () => {
     })
     const next = mockNext()
 
-    await indexOffenceSelectedController.get(mockReq(), res, next)
+    await sentenceToCommitController.get(mockReq(), res, next)
 
     expect(res.locals.page.id).toEqual('indexOffenceSelected')
     expect(res.locals.offence).toEqual({
@@ -77,7 +77,7 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    await indexOffenceSelectedController.post(req, res, next)
+    await sentenceToCommitController.post(req, res, next)
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/book-to-ppud`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.

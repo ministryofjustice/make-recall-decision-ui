@@ -71,7 +71,7 @@ describe('post', () => {
         },
       },
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/book-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sentence-to-commit`)
     expect(next).toHaveBeenCalled()
   })
   it('missing ppud sentence', async () => {
