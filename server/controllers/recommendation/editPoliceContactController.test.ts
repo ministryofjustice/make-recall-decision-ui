@@ -24,7 +24,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editPoliceContact' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editPoliceContact')
     expect(res.locals.policeForces).toEqual([
-      { text: 'Select police force area', value: '' },
+      { text: 'Select police force', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
