@@ -100,6 +100,7 @@ import spoRecordDeleteRationaleController from '../controllers/recommendation/sp
 import spoDeleteConfirmationController from '../controllers/recommendation/spoDeleteConfirmationController'
 import editCroController from '../controllers/recommendation/editCroController'
 import editLegislationReleasedUnderController from '../controllers/recommendation/editLegislationReleasedUnderController'
+import selectPpudSentenceController from '../controllers/recommendation/selectPpudSentenceController'
 
 const recommendations = Router()
 
@@ -446,6 +447,9 @@ ppcsRouteBuilder.post('edit-probation-area', editProbationAreaController.post)
 
 ppcsRouteBuilder.get('edit-legislation-released-under', editLegislationReleasedUnderController.get)
 ppcsRouteBuilder.post('edit-legislation-released-under', editLegislationReleasedUnderController.post)
+
+ppcsRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
+ppcsRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
 
 ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 
