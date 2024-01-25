@@ -3,6 +3,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { ppudDetails, searchPpud, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
+import logger from '../../../logger'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const pageUrlSlug = 'no-ppud-search-results'
@@ -66,6 +67,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const details = await ppudDetails(token, id)
+
+  logger.info(`ppud details - ${JSON.stringify(details)}`)
 
   await updateRecommendation({
     recommendationId: String(recommendationId),
