@@ -104,7 +104,7 @@ describe('post', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/index-offence-selected`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/sentence-to-commit`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with valid data - sentences', async () => {
