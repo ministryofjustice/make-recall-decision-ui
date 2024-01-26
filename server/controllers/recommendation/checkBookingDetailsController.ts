@@ -104,7 +104,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
         ? recommendation.hasContrabandRisk.details
         : '',
-      riskOfSeriousHarmLevel: currentHighestRosh(recommendation.currentRoshForPartA),
       receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
       releaseDate: null,
       sentenceDate: null,
@@ -356,19 +355,19 @@ export function currentHighestRosh(rosh?: Rosh | null) {
 
   function mapFromNumber(val: number) {
     if (val === 1) {
-      return 'VeryHigh'
+      return 'VERY_HIGH'
     }
     if (val === 2) {
-      return 'High'
+      return 'HIGH'
     }
     if (val === 3) {
-      return 'Medium'
+      return 'MEDIUM'
     }
     if (val === 4) {
-      return 'Low'
+      return 'LOW'
     }
     if (val === 5) {
-      return 'Not Applicable'
+      return 'NOT_APPLICABLE'
     }
   }
 
