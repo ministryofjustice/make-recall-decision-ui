@@ -39,7 +39,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        prisonBookingNumber,
+        prisonNumber: prisonBookingNumber,
       },
     },
     token,
