@@ -77,4 +77,45 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
+  it('post with invalid data', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      bookRecallToPpud: {
+        policeForce: 'Kent',
+      },
+    })
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+      body: {
+        prisonBookingNumber: '',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { token: 'token1' },
+        urlInfo: { basePath },
+        flags: { xyz: true },
+      },
+    })
+    const next = mockNext()
+
+    await editPrisonBookingNumberController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'missingPrisionBookingNumber',
+        invalidParts: undefined,
+        href: '#prisonBookingNumber',
+        name: 'prisonBookingNumber',
+        text: 'Enter prison booking number',
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, undefined)
+  })
 })

@@ -20,6 +20,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingFirstName: 'Enter a first name',
     missingFirstNames: 'Enter first name(s)',
     missingCrn: 'Enter a Case Reference Number (CRN)',
+    missingPrisionBookingNumber: 'Enter prison booking number',
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
     saveChanges: 'An error occurred saving your changes',
     noIndexOffenceSelected: 'You must select an index offence',
