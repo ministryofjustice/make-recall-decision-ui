@@ -1,0 +1,57 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+
+            {% if recommendation.prisonOffender.bookingNo %}
+                <dl class="govuk-text-list">
+                    <h3 class='govuk-heading-m'>From NOMIS</h3>
+                    <div class="govuk-text-list__row">
+                        <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.bookingNo }}</dd>
+                    </div>
+                </dl>
+            {% endif %}
+
+            {% if recommendation.ppudOffender.prisonNumber %}
+                <dl class="govuk-text-list">
+                    <h3 class='govuk-heading-m'>From PPUD</h3>
+                    <div class="govuk-text-list__row">
+                        <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.prisonNumber }}</dd>
+                    </div>
+                </dl>
+            {% endif %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukInput({
+                    label: {
+                        text: "Prison booking number",
+                        classes: "govuk-label--m"
+                    },
+                    hint: {
+                        text: 'Sometimes called the prison number. For example, A12345'
+                    },
+                    id: "prisonBookingNumber",
+                    name: "prisonBookingNumber",
+                    type: 'text',
+                    classes: "govuk-input--width-20",
+                    value: prisonNumber,
+                    errorMessage: errorMessage(errors.prisonNumber)
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

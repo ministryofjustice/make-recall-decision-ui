@@ -101,6 +101,7 @@ import spoDeleteConfirmationController from '../controllers/recommendation/spoDe
 import editCroController from '../controllers/recommendation/editCroController'
 import editLegislationReleasedUnderController from '../controllers/recommendation/editLegislationReleasedUnderController'
 import selectPpudSentenceController from '../controllers/recommendation/selectPpudSentenceController'
+import editPrisonBookingNumberController from '../controllers/recommendation/editPrisonBookingNumberController'
 
 const recommendations = Router()
 
@@ -408,6 +409,9 @@ ppcsRouteBuilder.post('edit-police-contact', editPoliceContactController.post)
 
 ppcsRouteBuilder.get('edit-recall-received-date-and-time', editRecallReceivedController.get)
 ppcsRouteBuilder.post('edit-recall-received-date-and-time', editRecallReceivedController.post)
+
+ppcsRouteBuilder.get('edit-prison-booking-number', editPrisonBookingNumberController.get)
+ppcsRouteBuilder.post('edit-prison-booking-number', editPrisonBookingNumberController.post)
 
 ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
