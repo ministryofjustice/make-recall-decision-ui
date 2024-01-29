@@ -65,7 +65,7 @@ describe('post', () => {
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          prisonBookingNumber: '123456',
+          prisonNumber: '123456',
         },
       },
       token: 'token1',
