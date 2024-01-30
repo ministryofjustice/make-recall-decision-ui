@@ -97,7 +97,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       firstNames: `${firstName} ${middleName}`.trim(),
       lastName,
       dateOfBirth,
-      prisonNumber: recommendation.prisonOffender.bookingNo,
+      prisonNumber: recommendation.prisonOffender?.bookingNo,
       cro: recommendation.prisonOffender?.cro,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
       isInCustody: recommendation?.custodyStatus?.selected !== 'NO',

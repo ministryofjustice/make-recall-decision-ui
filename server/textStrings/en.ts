@@ -96,6 +96,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingPPCSEmail: 'Enter an email address',
     invalidPPCSEmail: 'Enter an email address in the correct format, like name@example.com',
     noReleaseUnderECSLSelected: 'Select whether {{ fullName }} has been released on an ECSL',
+    ppudBookingError: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -192,7 +193,8 @@ export const strings: Record<string, Record<string, string>> = {
     editRecallReceived: 'Edit when PPCS received the recall',
     selectIndexOffence: 'Select the index offence for {{ fullName }}',
     indexOffenceSelected: 'Index offence selected for {{ fullName }}',
-    bookedToPpud: 'Booked onto PPUD',
+    bookToPpud: 'Book {{ fullName }} onto PPUD',
+    bookedToPpud: 'Case created and booked onto PPUD',
     editCustodyType: 'Edit custody type',
     editPoliceContact: 'Edit police local contact details',
     editMappaLevel: 'Edit MAPPA level',

@@ -287,7 +287,6 @@ describe('get', () => {
               level: '1',
             },
           },
-          bookRecallToPpud: {},
           whoCompletedPartA: {
             localDeliveryUnit: 'who-completed-delivery-unit',
             isPersonProbationPractitionerForOffender: true,
@@ -311,7 +310,7 @@ describe('get', () => {
     expect(res.locals.recommendation.prisonOffender).toEqual(undefined)
 
     expect(res.locals.errorMessage).toEqual('No NOMIS record found')
-    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(updateRecommendation).toHaveBeenCalled()
 
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
     expect(next).toHaveBeenCalled()

@@ -18,6 +18,8 @@ import { PrisonOffenderSearchResponse } from '../@types/make-recall-decision-api
 import { PrisonSentence } from '../@types/make-recall-decision-api/models/PrisonSentence'
 import { PpudReferenceListResponse } from '../@types/make-recall-decision-api/models/PpudReferenceListResponse'
 import { PpudDetailsResponse } from '../@types/make-recall-decision-api/models/PpudDetailsResponse'
+import { PpudCreateOffenderResponse } from '../@types/make-recall-decision-api/models/PpudCreateOffenderResponse'
+import { PpudCreateOffenderRequest } from '../@types/make-recall-decision-api/models/PpudCreateOffenderRequest'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -112,6 +114,16 @@ export const bookRecallToPpud = (
     path: `/ppud/book-recall/${nomisId}`,
     data: body,
   }) as Promise<PpudSearchResponse>
+}
+
+export const ppudCreateOffender = (
+  token: string,
+  body: PpudCreateOffenderRequest
+): Promise<PpudCreateOffenderResponse> => {
+  return restClient(token).put({
+    path: `/ppud/offender`,
+    data: body,
+  }) as Promise<PpudCreateOffenderResponse>
 }
 
 export const ppudReferenceList = (token: string, name: string): Promise<PpudReferenceListResponse> => {

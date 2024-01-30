@@ -452,6 +452,7 @@ ppcsRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
 ppcsRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
 
 ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
+ppcsRouteBuilder.post('book-to-ppud', bookToPpudController.post)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
