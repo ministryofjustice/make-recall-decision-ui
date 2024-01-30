@@ -20,7 +20,7 @@
                 <div class="govuk-inset-text" data-qa="reason">
                     <span class='govuk-body  govuk-!-font-weight-bold'> {{ offence.offenceDescription }} </span><br/>
                     <span class='govuk-body'> Start date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </span><br/>
-                    <span class='govuk-body'> Sentence end date: {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true})) }} </span>
+                    <span class='govuk-body'> Sentence expiry date: {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true})) }} </span>
                 </div>
 
                 {{ govukSelect({

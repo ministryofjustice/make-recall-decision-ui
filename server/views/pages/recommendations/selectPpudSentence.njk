@@ -12,7 +12,7 @@
     {% set sentenceDate = "" %}
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full-from-desktop">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Sentence end date
+                        Sentence expiry date
                     </dt>
                     <dd class="govuk-summary-list__value">
                         {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
@@ -59,7 +59,7 @@
                 </div>
             </dl>
 
-            <h3 class='govuk-heading-m'>Add your booking to PPUD</h3>
+            <h3 class='govuk-heading-m govuk-!-margin-top-6'>Add your booking to PPUD</h3>
 
             <p class='govuk-body'>This will update anything that's different in PPUD.</p>
 
@@ -106,7 +106,7 @@
                             </div>
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    Sentence end date
+                                    Sentence expiry date
                                 </dt>
                                 <dd class="govuk-summary-list__value">
                                     {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate }) ) }}

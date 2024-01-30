@@ -81,7 +81,7 @@
                         <p class="govuk-body-m govuk-!-margin-bottom-0">
                             These details are different in PPUD.  Edit anything that's wrong.
 
-                            <ul class="govuk-list">
+                            <ul class="govuk-list govuk-!-margin-bottom-0">
                             {% for key, val in warnings %}
                                   <li>
                                     <span class="govuk-body govuk-!-font-weight-bold">{{ key }}:</span>
@@ -95,7 +95,7 @@
                     {{ govukNotificationBanner({
                         titleText: 'Some NOMIS information is different to PPUD',
                         html: html,
-                        classes: "govuk-notification-banner--info"
+                        classes: "govuk-notification-banner--info govuk-!-margin-top-2 govuk-!-margin-bottom-2"
                     }) }}
                 {% endif %}
 
@@ -115,6 +115,8 @@
                 }) }}
             {% endif %}
 
+        </div>
+        <div class="govuk-grid-column-full-from-desktop">
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
