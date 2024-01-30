@@ -56,7 +56,7 @@ describe('get', () => {
       releasingPrison: 'Broad Moor',
     })
     expect(res.locals.errorMessage).toBeUndefined()
-    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/indexOffenceSelected`)
+    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/sentenceToCommit`)
     expect(next).toHaveBeenCalled()
   })
 })

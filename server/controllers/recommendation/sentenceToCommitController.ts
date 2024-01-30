@@ -17,7 +17,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     offence,
   }
 
-  res.render(`pages/recommendations/indexOffenceSelected`)
+  res.render(`pages/recommendations/sentenceToCommit`)
   next()
 }
 
