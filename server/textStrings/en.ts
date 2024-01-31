@@ -193,7 +193,7 @@ export const strings: Record<string, Record<string, string>> = {
     checkBookingDetails: 'Check booking details for {{ fullName }}',
     editRecallReceived: 'Edit when PPCS received the recall',
     selectIndexOffence: 'Select the index offence for {{ fullName }}',
-    indexOffenceSelected: 'Index offence selected for {{ fullName }}',
+    sentenceToCommit: 'Your recall booking - {{ fullName }}',
     bookToPpud: 'Book {{ fullName }} onto PPUD',
     bookedToPpud: 'Case created and booked onto PPUD',
     editCustodyType: 'Edit custody type',

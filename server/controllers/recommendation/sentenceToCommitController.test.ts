@@ -4,7 +4,7 @@ import sentenceToCommitController from './sentenceToCommitController'
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load', async () => {
+  it('load - with no ppud offender', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -37,7 +37,7 @@ describe('get', () => {
 
     await sentenceToCommitController.get(mockReq(), res, next)
 
-    expect(res.locals.page.id).toEqual('indexOffenceSelected')
+    expect(res.locals.page.id).toEqual('sentenceToCommit')
     expect(res.locals.offence).toEqual({
       bookingId: 13,
       courtDescription: 'Blackburn County Court',
@@ -56,8 +56,59 @@ describe('get', () => {
       releasingPrison: 'Broad Moor',
     })
     expect(res.locals.errorMessage).toBeUndefined()
+    expect(res.locals.addNewSentence).toBe(true)
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/sentenceToCommit`)
     expect(next).toHaveBeenCalled()
+  })
+  it('load - with add new sentence', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ppudOffender: {},
+          bookRecallToPpud: {
+            ppudSentenceId: 'ADD_NEW',
+          },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                offenderChargeId: 3934369,
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      },
+    })
+    const next = mockNext()
+
+    await sentenceToCommitController.get(mockReq(), res, next)
+
+    expect(res.locals.addNewSentence).toBe(true)
+  })
+  it('load - with existing ppud user and selected sentence', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ppudOffender: {},
+          bookRecallToPpud: {
+            ppudSentenceId: '1234',
+          },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                offenderChargeId: 3934369,
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      },
+    })
+    const next = mockNext()
+
+    await sentenceToCommitController.get(mockReq(), res, next)
+
+    expect(res.locals.addNewSentence).toBe(false)
   })
 })
 
