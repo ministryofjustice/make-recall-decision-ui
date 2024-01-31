@@ -168,6 +168,13 @@ export const getStatuses = ({ statusCode = 200, response }: { statusCode?; respo
     response,
   })
 
+export const getReferenceList = ({ name, statusCode = 200, response }: { name: string; statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/ppud/reference/${name}`,
+    statusCode,
+    response,
+  })
+
 export const updateStatuses = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockUpdate({
     urlPathPattern: `${routes.recommendations}/(.*)/status`,
