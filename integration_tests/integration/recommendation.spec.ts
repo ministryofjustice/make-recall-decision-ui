@@ -1837,6 +1837,330 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Check booking details for Paula Smith')
     })
 
+    it('edit name', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            firstName: 'Max',
+            middleName: 'Arthur',
+            lastName: 'Mull',
+          },
+          bookRecallToPpud: {
+            firstNames: 'Max Arthur',
+            lastName: 'Mull',
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/edit-name`)
+      cy.pageHeading().should('contain', 'Edit names')
+
+      cy.getText('nomisFirstName').should('contain', 'Max')
+      cy.getText('nomisMiddleName').should('contain', 'Arthur')
+      cy.getText('nomisLastName').should('contain', 'Mull')
+    })
+
+    it('edit gender', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            gender: 'Male',
+          },
+          bookRecallToPpud: {
+            gender: 'M',
+          },
+          ppudOffender: {
+            gender: 'M',
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', { name: 'genders', statusCode: 200, response: { values: ['M', 'F'] } })
+
+      cy.visit(`/recommendations/252523937/edit-gender`)
+      cy.pageHeading().should('contain', 'Edit gender')
+
+      cy.getText('nomisGender').should('contain', 'Male')
+      cy.getText('ppudGender').should('contain', 'M')
+    })
+
+    it('edit ethnicity', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            ethnicity: 'White/Caucasian',
+          },
+          bookRecallToPpud: {
+            ethnicity: 'Irish',
+          },
+          ppudOffender: {
+            ethnicity: 'Irish',
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'ethnicities',
+        statusCode: 200,
+        response: { values: ['Caucasian', 'Irish'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-ethnicity`)
+      cy.pageHeading().should('contain', 'Edit ethnicity')
+
+      cy.getText('nomisEthnicity').should('contain', 'White/Caucasian')
+      cy.getText('ppudEthnicity').should('contain', 'Irish')
+    })
+
+    it('edit date of birth', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            dateOfBirth: '1990-01-01',
+          },
+          bookRecallToPpud: {
+            dateOfBirth: '1990-01-02',
+          },
+          ppudOffender: {
+            dateOfBirth: '1990-01-03',
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/edit-date-of-birth`)
+      cy.pageHeading().should('contain', 'Edit date of birth')
+
+      cy.getText('nomisDateOfBirth').should('contain', '1 January 1990')
+      cy.getText('ppudDateOfBirth').should('contain', '3 January 1990')
+    })
+
+    it('edit CRO', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            cro: '64941/08C',
+          },
+          bookRecallToPpud: {
+            cro: '64941',
+          },
+          ppudOffender: {
+            croOtherNumber: '64941/08D',
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/edit-cro`)
+      cy.pageHeading().should('contain', 'Edit CRO')
+
+      cy.getText('nomisCro').should('contain', '64941/08C')
+      cy.getText('ppudCro').should('contain', '64941/08D')
+    })
+
+    it('edit Prison Number', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            bookingNo: '1234',
+          },
+          bookRecallToPpud: {
+            prisonNumber: '4567',
+          },
+          ppudOffender: {
+            prisonNumber: '9876',
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/edit-prison-booking-number`)
+      cy.pageHeading().should('contain', 'Edit prison booking number')
+
+      cy.getText('nomisPrisonNumber').should('contain', '1234')
+      cy.getText('ppudPrisonNumber').should('contain', '9876')
+    })
+
+    it('edit Releasing Prison', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            locationDescription: 'Outside - released from Moorland (HMP & YOI)',
+          },
+          bookRecallToPpud: {
+            releasingPrison: 'Saville Row',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'establishments',
+        statusCode: 200,
+        response: { values: ['Caucasian', 'Irish'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-releasing-prison`)
+      cy.pageHeading().should('contain', 'Edit releasing prison')
+
+      cy.getText('nomisReleasingPrison').should('contain', 'Outside - released from Moorland (HMP & YOI)')
+    })
+
+    it('edit Legislation Released Under', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {
+            legislationReleasedUnder: 'CJA1',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'released-unders',
+        statusCode: 200,
+        response: { values: ['CJA1', 'CJA2'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-legislation-released-under`)
+      cy.pageHeading().should('contain', 'Edit legislation released under')
+    })
+
+    it('edit Custody Type', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {
+            custodyType: 'Determinate',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'custody-types',
+        statusCode: 200,
+        response: { values: ['Determinate'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-custody-type`)
+      cy.pageHeading().should('contain', 'Edit custody type')
+    })
+
+    it('edit Received Date and Time', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {
+            receivedDateTime: '2024-01-31T15:17:58Z',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: 'SENT_TO_PPCS', active: true, created: '2024-01-31T15:17:58Z' }],
+      })
+
+      cy.visit(`/recommendations/252523937/edit-recall-received-date-and-time`)
+      cy.pageHeading().should('contain', 'Edit when PPCS received the recall')
+    })
+
+    it('edit Probation Area', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {
+            probationArea: 'Bedfordshire',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'probation-services',
+        statusCode: 200,
+        response: { values: ['Bedfordshire'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-probation-area`)
+      cy.pageHeading().should('contain', 'Edit probation area')
+    })
+
+    it('edit Police Contact', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {
+            policeForce: 'Bedfordshire Police',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'police-forces',
+        statusCode: 200,
+        response: { values: ['Bedfordshire Police'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-police-contact`)
+      cy.pageHeading().should('contain', 'Edit police local contact details')
+
+      cy.getText('localPoliceContact').should('contain', 'thomas.magnum@gmail.com')
+    })
+
+    it('edit MAPPA Level', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {},
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'mappa-levels',
+        statusCode: 200,
+        response: {
+          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPP'],
+        },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-mappa-level`)
+      cy.pageHeading().should('contain', 'Edit MAPPA level')
+
+      cy.getText('mappaLevel').should('contain', 'Level 0')
+    })
+
     it('select index offence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

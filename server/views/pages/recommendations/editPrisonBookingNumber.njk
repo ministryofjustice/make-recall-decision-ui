@@ -17,7 +17,7 @@
                 <dl class="govuk-text-list">
                     <h3 class='govuk-heading-m'>From NOMIS</h3>
                     <div class="govuk-text-list__row">
-                        <dd class="govuk-text-list__value">{{ recommendation.prisonOffender.bookingNo }}</dd>
+                        <dd class="govuk-text-list__value" data-qa="nomisPrisonNumber">{{ recommendation.prisonOffender.bookingNo }}</dd>
                     </div>
                 </dl>
             {% endif %}
@@ -26,7 +26,7 @@
                 <dl class="govuk-text-list">
                     <h3 class='govuk-heading-m'>From PPUD</h3>
                     <div class="govuk-text-list__row">
-                        <dd class="govuk-text-list__value">{{ recommendation.ppudOffender.prisonNumber }}</dd>
+                        <dd class="govuk-text-list__value" data-qa="ppudPrisonNumber">{{ recommendation.ppudOffender.prisonNumber }}</dd>
                     </div>
                 </dl>
             {% endif %}
