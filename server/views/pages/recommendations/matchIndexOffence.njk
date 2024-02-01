@@ -17,10 +17,18 @@
 
                 <p class='govuk-body'>You selected this index offence.  Now select the nearest match from the list in PPUD.</p>
 
-                <div class="govuk-inset-text" data-qa="reason">
-                    <span class='govuk-body  govuk-!-font-weight-bold'> {{ offence.offenceDescription }} </span><br/>
-                    <span class='govuk-body'> Start date: {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </span><br/>
-                    <span class='govuk-body'> Sentence expiry date: {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true})) }} </span>
+                <div class="govuk-inset-text">
+                    <dl class="govuk-text-list">
+                        <h5 class='govuk-heading-s' data-qa="offenceDescription">{{ offence.offenceDescription }}A</h5>
+                        <div class="govuk-text-list__row">
+                            <dt class="govuk-text-list__key">Start date</dt>
+                            <dd class="govuk-text-list__value" data-qa="sentenceStartDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </dd>
+                        </div>
+                        <div class="govuk-text-list__row">
+                            <dt class="govuk-text-list__key">Sentence expiry date</dt>
+                            <dd class="govuk-text-list__value" data-qa="sentenceEndDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </dd>
+                        </div>
+                    </dl>
                 </div>
 
                 {{ govukSelect({
