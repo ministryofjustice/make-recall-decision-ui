@@ -120,7 +120,7 @@ export const ppudCreateOffender = (
   token: string,
   body: PpudCreateOffenderRequest
 ): Promise<PpudCreateOffenderResponse> => {
-  return restClient(token).put({
+  return restClient(token).post({
     path: `/ppud/offender`,
     data: body,
   }) as Promise<PpudCreateOffenderResponse>
