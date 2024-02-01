@@ -2317,23 +2317,6 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {},
-          ppudOffender: {
-            id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Determinate',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-            ],
-          },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2372,7 +2355,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Index offence selected for Paula Smith')
+      cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
 
       cy.getText('sentenceTypeDescription').should('contain', 'sentence type description')
       cy.getText('offenceDescription').should('contain', 'offence description')
@@ -2396,23 +2379,6 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {},
-          ppudOffender: {
-            id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Determinate',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-            ],
-          },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2444,7 +2410,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Index offence selected for Paula Smith')
+      cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
 
       cy.getText('sentenceLength').should('contain', '4 years')
     })
