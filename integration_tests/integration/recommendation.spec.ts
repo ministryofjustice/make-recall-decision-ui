@@ -2203,5 +2203,273 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/select-index-offence`)
       cy.pageHeading().should('contain', 'Select the index offence for Paula Smith')
     })
+
+    it('match index offence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {},
+          ppudOffender: {},
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                bookingId: 13,
+                courtDescription: 'Blackburn County Court',
+                offenceCode: 'SA96036',
+                offenceDescription:
+                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceStatute: 'SA96',
+                offenderChargeId: 3934369,
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                sentenceStartDate: '2023-11-16',
+                sentenceTypeDescription: 'Adult Mandatory Life',
+                terms: [],
+                releaseDate: '2025-11-16',
+                licenceExpiryDate: '2025-11-17',
+                releasingPrison: 'Broad Moor',
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'index-offences',
+        statusCode: 200,
+        response: {
+          values: ['Abscond', 'Abstracting electricity'],
+        },
+      })
+
+      cy.visit(`/recommendations/252523937/match-index-offence`)
+      cy.pageHeading().should('contain', 'Select a matching index offence in PPUD')
+
+      cy.getText('offenceDescription').should(
+        'contain',
+        'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London'
+      )
+      cy.getText('sentenceStartDate').should('contain', '16 November 2023')
+      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
+    })
+
+    it('select ppud sentence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {},
+          ppudOffender: {
+            id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
+            sentences: [
+              {
+                id: '1',
+                dateOfSentence: '2003-06-12',
+                custodyType: 'Determinate',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+            ],
+          },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                offenceDescription:
+                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenderChargeId: 3934369,
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/select-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Add your booking to PPUD - Paula Smith')
+
+      cy.getText('offenceDescription').should(
+        'contain',
+        'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London'
+      )
+      cy.getText('sentenceDate').should('contain', '16 November 2023')
+      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
+
+      cy.getText('1-indexOffence').should('contain', 'some offence')
+      cy.getText('1-dateOfSentence').should('contain', '12 June 2003')
+      cy.getText('1-sentenceExpiryDate').should('contain', '2 March 1969')
+    })
+    it('sentence to commit - multiple terms', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {},
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                sentenceTypeDescription: 'sentence type description',
+                offenceDescription: 'offence description',
+                offenderChargeId: 3934369,
+                offenceDate: '2023-11-17',
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                releaseDate: '2025-01-01',
+                licenceExpiryDate: '2025-01-02',
+                releasingPrison: 'releasing prison',
+                courtDescription: 'court description',
+                terms: [
+                  {
+                    years: 4,
+                    months: 0,
+                    weeks: 0,
+                    days: 0,
+                    code: 'IMP',
+                  },
+                  {
+                    years: 2,
+                    months: 0,
+                    weeks: 0,
+                    days: 0,
+                    code: 'LIC',
+                  },
+                ],
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/sentence-to-commit`)
+      cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
+
+      cy.getText('sentenceTypeDescription').should('contain', 'sentence type description')
+      cy.getText('offenceDescription').should('contain', 'offence description')
+      cy.getText('offenceDate').should('contain', '17 November 2023')
+      cy.getText('releaseDate').should('contain', '1 January 2025')
+      cy.getText('releasingPrison').should('contain', 'releasing prison')
+      cy.getText('courtDescription').should('contain', 'court description')
+      cy.getText('sentenceDate').should('contain', '16 November 2023')
+      cy.getText('licenceExpiryDate').should('contain', '2 January 2025')
+      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
+
+      cy.getText('1-termType').should('contain', 'Custodial term')
+      cy.getText('1-term').should('contain', '4 years')
+      cy.getText('2-termType').should('contain', 'Extended term')
+      cy.getText('2-term').should('contain', '2 years')
+    })
+    it('sentence to commit - single term', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {},
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                sentenceTypeDescription: 'sentence type description',
+                offenceDescription: 'offence description',
+                offenderChargeId: 3934369,
+                offenceDate: '2023-11-17',
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                releaseDate: '2025-01-01',
+                licenceExpiryDate: '2025-01-02',
+                releasingPrison: 'releasing prison',
+                courtDescription: 'court description',
+                terms: [
+                  {
+                    years: 4,
+                    months: 0,
+                    weeks: 0,
+                    days: 0,
+                    code: 'IMP',
+                  },
+                ],
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/sentence-to-commit`)
+      cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
+
+      cy.getText('sentenceLength').should('contain', '4 years')
+    })
+    it('book to ppud', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {},
+          ppudOffender: {
+            id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
+            sentences: [
+              {
+                id: '1',
+                dateOfSentence: '2003-06-12',
+                custodyType: 'Determinate',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+            ],
+          },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                sentenceTypeDescription: 'sentence type description',
+                offenceDescription: 'offence description',
+                offenderChargeId: 3934369,
+                offenceDate: '2023-11-17',
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                releaseDate: '2025-01-01',
+                licenceExpiryDate: '2025-01-02',
+                releasingPrison: 'releasing prison',
+                courtDescription: 'court description',
+                terms: [
+                  {
+                    years: 4,
+                    months: 0,
+                    weeks: 0,
+                    days: 0,
+                    code: 'IMP',
+                  },
+                ],
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/book-to-ppud`)
+      cy.pageHeading().should('contain', 'Create new PPUD record for Paula Smith')
+    })
   })
 })

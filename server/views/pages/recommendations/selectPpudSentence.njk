@@ -34,7 +34,7 @@
                     <dt class="govuk-summary-list__key">
                         Offence
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-qa="offenceDescription">
                         {{ hyphenForBlank( offence.offenceDescription ) }}
                     </dd>
                 </div>
@@ -42,7 +42,7 @@
                     <dt class="govuk-summary-list__key">
                         Date of sentence
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-qa="sentenceDate">
                         {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceDate }) ) }}
                     </dd>
                 </div>
@@ -50,7 +50,7 @@
                     <dt class="govuk-summary-list__key">
                         Sentence expiry date
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-qa="sentenceEndDate">
                         {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
                     </dd>
                     <dd class="govuk-summary-list__actions">
@@ -92,7 +92,7 @@
                                 <dt class="govuk-summary-list__key govuk-body">
                                     Offence
                                 </dt>
-                                <dd class="govuk-summary-list__value">
+                                <dd class="govuk-summary-list__value" data-qa="{{ sentence.id }}-indexOffence">
                                     {{ hyphenForBlank(sentence.offence.indexOffence) }}
                                 </dd>
                             </div>
@@ -100,7 +100,7 @@
                                 <dt class="govuk-summary-list__key">
                                     Date of sentence
                                 </dt>
-                                <dd class="govuk-summary-list__value">
+                                <dd class="govuk-summary-list__value" data-qa="{{ sentence.id }}-dateOfSentence">
                                     {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.dateOfSentence }) ) }}
                                 </dd>
                             </div>
@@ -108,7 +108,7 @@
                                 <dt class="govuk-summary-list__key">
                                     Sentence expiry date
                                 </dt>
-                                <dd class="govuk-summary-list__value">
+                                <dd class="govuk-summary-list__value" data-qa="{{ sentence.id }}-sentenceExpiryDate">
                                     {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate }) ) }}
                                 </dd>
                             </div>
