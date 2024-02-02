@@ -82,7 +82,15 @@ describe('post', () => {
     await bookToPpudController.post(req, res, next)
 
     expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
-      additionalAddresses: [],
+      additionalAddresses: [
+        {
+          line1: '',
+          line2: '',
+          phoneNumber: '',
+          postcode: '',
+          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+        },
+      ],
       address: {
         line1: 'Newtown',
         line2: 'Northampton',
@@ -170,7 +178,15 @@ describe('post', () => {
     await bookToPpudController.post(req, res, mockNext())
 
     expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
-      additionalAddresses: [],
+      additionalAddresses: [
+        {
+          line1: '',
+          line2: '',
+          phoneNumber: '',
+          postcode: '',
+          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+        },
+      ],
       address: {
         line1: 'No Fixed Abode',
         line2: '',
@@ -259,7 +275,15 @@ describe('post', () => {
     )
 
     expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
-      additionalAddresses: [],
+      additionalAddresses: [
+        {
+          line1: '',
+          line2: '',
+          phoneNumber: '',
+          postcode: '',
+          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+        },
+      ],
       address: {
         line1: 'No Fixed Abode',
         line2: '',
