@@ -2316,7 +2316,10 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: {},
+          bookRecallToPpud: {
+            custodyType: 'custody type',
+            indexOffence: 'index offence',
+          },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2357,8 +2360,8 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
       cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
 
-      cy.getText('sentenceTypeDescription').should('contain', 'sentence type description')
-      cy.getText('offenceDescription').should('contain', 'offence description')
+      cy.getText('custodyType').should('contain', 'custody type')
+      cy.getText('offenceDescription').should('contain', 'index offence')
       cy.getText('offenceDate').should('contain', '17 November 2023')
       cy.getText('releaseDate').should('contain', '1 January 2025')
       cy.getText('releasingPrison').should('contain', 'releasing prison')
