@@ -51,10 +51,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
         }
       } else {
         address = {
-          premises: addr.line1,
-          line1: addr.line2,
-          line2: addr.town,
-          postcode: addr.postcode,
+          premises: addr.line1 || '',
+          line1: addr.line2 || '',
+          line2: addr.town || '',
+          postcode: addr.postcode || '',
           phoneNumber: '',
         }
       }
@@ -63,7 +63,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     const additionalAddresses: PpudAddress[] = []
     if (recommendation.isMainAddressWherePersonCanBeFound?.selected) {
       additionalAddresses.push({
-        premises: recommendation.isMainAddressWherePersonCanBeFound.details,
+        premises: recommendation.isMainAddressWherePersonCanBeFound.details || '',
         line1: '',
         line2: '',
         postcode: '',
