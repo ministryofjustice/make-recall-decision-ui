@@ -215,5 +215,6 @@ export const strings: Record<string, Record<string, string>> = {
     recordDeleteRecommendationRationale: 'Record the explanation in NDelius',
     spoDeleteConfirmation: 'Delete Confirmation',
     selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
+    supportingDocuments: 'Add supporting documents for {{ fullName }}',
   },
 }
