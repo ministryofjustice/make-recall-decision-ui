@@ -63,7 +63,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     const additionalAddresses: PpudAddress[] = []
     if (!recommendation.isMainAddressWherePersonCanBeFound?.selected) {
       additionalAddresses.push({
-        premises: recommendation.isMainAddressWherePersonCanBeFound.details || '',
+        premises: recommendation.isMainAddressWherePersonCanBeFound?.details || '',
         line1: '',
         line2: '',
         postcode: '',

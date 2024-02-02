@@ -4,6 +4,11 @@ import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
+  flagSupportingDocuments: {
+    label: 'Enable Supporting Documents',
+    description: 'Enables supporting documents',
+    default: false,
+  },
   flagPpcs: {
     label: 'Enable PPCS',
     description: 'Enables continuation in PPCS',
