@@ -44,6 +44,14 @@ export const logMessage = (info: any) => {
   console.log(info)
 }
 
+export function wait(time: number) {
+  return new Promise<void>(function (resolve) {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}
+
 export const hasData = (val: unknown, debug?: string): boolean => {
   if (debug) {
     // eslint-disable-next-line no-console

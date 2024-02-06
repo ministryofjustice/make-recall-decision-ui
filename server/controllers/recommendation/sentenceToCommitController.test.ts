@@ -56,7 +56,6 @@ describe('get', () => {
       releasingPrison: 'Broad Moor',
     })
     expect(res.locals.errorMessage).toBeUndefined()
-    expect(res.locals.addNewSentence).toBe(true)
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/sentenceToCommit`)
     expect(next).toHaveBeenCalled()
   })
@@ -82,8 +81,6 @@ describe('get', () => {
     const next = mockNext()
 
     await sentenceToCommitController.get(mockReq(), res, next)
-
-    expect(res.locals.addNewSentence).toBe(true)
   })
   it('load - with existing ppud user and selected sentence', async () => {
     const res = mockRes({
@@ -107,8 +104,6 @@ describe('get', () => {
     const next = mockNext()
 
     await sentenceToCommitController.get(mockReq(), res, next)
-
-    expect(res.locals.addNewSentence).toBe(false)
   })
 })
 

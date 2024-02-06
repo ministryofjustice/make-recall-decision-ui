@@ -41,3 +41,8 @@
         </div>
     </div>
 {% endblock %}
+
+{% block bodyEnd %}
+    {{ super() }}
+    <script src="/assets/disableSubmitButtonOnClick.js" defer></script>
+{% endblock %}
