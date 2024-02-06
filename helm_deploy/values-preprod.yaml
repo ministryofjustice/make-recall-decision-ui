@@ -143,6 +143,7 @@ generic-service:
     groups:
       - circleci
       - internal
+      - prisons
 
   scheduledDowntime:
     enabled: true
