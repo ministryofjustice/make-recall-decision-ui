@@ -1,0 +1,37 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+HI::{{recommendation.id}}
+HI::{{ppudMinute}}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="crn" value="{{ caseSummary.personalDetailsOverview.crn }}" />
+                <input type="hidden" name="recommendationId" value="{{ caseSummary.activeRecommendation.recommendationId }}" />
+                {{ govukTextarea({
+                    name: "ppudMinute",
+                    id: "ppudMinute",
+                    label: {
+                        text: "Edit PPUD minute",
+                        classes: "govuk-label--l",
+                        isPageHeading: true
+                    },
+                    hint: {
+                        html: "Explain any issues and action taken. This will go into a minute on PPUD."
+                    },
+                    value: ppudMinute,
+                    errorMessage: errorMessage(errors.recallConsideredDetail)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -201,6 +201,7 @@ export const strings: Record<string, Record<string, string>> = {
     editMappaLevel: 'Edit MAPPA level',
     editGender: 'Edit gender',
     editCro: 'Edit CRO',
+    editMinute: 'Edit PPUD minute',
     editPrisonBookingNumber: 'Edit prison booking number',
     editEthnicity: 'Edit ethnicity',
     editLegislationReleasedUnder: 'Edit legislation released under',

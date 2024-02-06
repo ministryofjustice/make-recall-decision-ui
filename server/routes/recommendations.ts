@@ -102,7 +102,7 @@ import editCroController from '../controllers/recommendation/editCroController'
 import editLegislationReleasedUnderController from '../controllers/recommendation/editLegislationReleasedUnderController'
 import selectPpudSentenceController from '../controllers/recommendation/selectPpudSentenceController'
 import editPrisonBookingNumberController from '../controllers/recommendation/editPrisonBookingNumberController'
-import supportingDocumentsController from '../controllers/recommendation/supportingDocumentsController'
+import editMinuteController from '../controllers/recommendation/editMinuteController'
 
 const recommendations = Router()
 
@@ -426,6 +426,9 @@ ppcsRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)
 
+ppcsRouteBuilder.get('edit-minute', editMinuteController.get)
+ppcsRouteBuilder.post('edit-minute', editMinuteController.post)
+
 ppcsRouteBuilder.get('edit-cro', editCroController.get)
 ppcsRouteBuilder.post('edit-cro', editCroController.post)
 
@@ -458,8 +461,6 @@ ppcsRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
 
 ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 ppcsRouteBuilder.post('book-to-ppud', bookToPpudController.post)
-
-ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
