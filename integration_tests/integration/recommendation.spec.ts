@@ -2362,6 +2362,7 @@ context('Make a recommendation', () => {
 
       cy.getText('custodyType').should('contain', 'custody type')
       cy.getText('offenceDescription').should('contain', 'index offence')
+      cy.getText('offenceDate').should('contain', '17 November 2023')
       cy.getText('releaseDate').should('contain', '1 January 2025')
       cy.getText('courtDescription').should('contain', 'court description')
       cy.getText('sentenceDate').should('contain', '16 November 2023')
