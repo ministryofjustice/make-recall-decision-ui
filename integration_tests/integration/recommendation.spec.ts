@@ -2164,7 +2164,11 @@ context('Make a recommendation', () => {
     it('select index offence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: {
+          ...completeRecommendationResponse,
+          recallConsideredList: null,
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+        },
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
       cy.task('prisonSentences', {
@@ -2201,7 +2205,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`/recommendations/252523937/select-index-offence`)
-      cy.pageHeading().should('contain', 'Select the index offence for Paula Smith')
+      cy.pageHeading().should('contain', 'Select the index offence for Pinky Pooh')
     })
 
     it('match index offence', () => {
@@ -2262,7 +2266,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: {},
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
           ppudOffender: {
             id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
             sentences: [
@@ -2297,7 +2301,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/select-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Add your booking to PPUD - Paula Smith')
+      cy.pageHeading().should('contain', 'Add your booking to PPUD - Pinky Pooh')
 
       cy.getText('offenceDescription').should(
         'contain',
@@ -2317,6 +2321,8 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {
+            firstNames: 'Pinky',
+            lastName: 'Pooh',
             custodyType: 'custody type',
             indexOffence: 'index offence',
           },
@@ -2358,7 +2364,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
+      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
 
       cy.getText('custodyType').should('contain', 'custody type')
       cy.getText('offenceDescription').should('contain', 'index offence')
@@ -2380,7 +2386,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: {},
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2412,7 +2418,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Paula Smith')
+      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
 
       cy.getText('sentenceLength').should('contain', '4 years')
     })
@@ -2422,7 +2428,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: {},
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
           ppudOffender: {
             id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
             sentences: [
@@ -2471,7 +2477,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Create new PPUD record for Paula Smith')
+      cy.pageHeading().should('contain', 'Create new PPUD record for Pinky Pooh')
     })
   })
 })
