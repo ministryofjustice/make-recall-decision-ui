@@ -142,6 +142,7 @@ generic-service:
     pingdom-116: 212.78.83.16/32
     groups:
       - internal
+      - prisons # do not remove, the prisons group also covers probation
 
 generic-prometheus-alerts:
   alertSeverity: make-recall-decision-prod
