@@ -6,9 +6,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <div class="govuk-panel govuk-panel--confirmation">
-              <h1 class="govuk-panel__title">
-                {{ pageHeadings[page.id] }}
-              </h1>
+              <h1 class='govuk-panel__title'>Your recall booking - {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
               <div class="govuk-panel__body" data-qa="fullName">
               {{ recommendation.personOnProbation.name }}
               </div>
