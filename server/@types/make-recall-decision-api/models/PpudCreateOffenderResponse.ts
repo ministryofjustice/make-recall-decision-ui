@@ -3,5 +3,10 @@ export type PpudCreateOffenderResponse = {
 };
 
 export type PpudCreateOffender = {
+  id?: string,
+  sentence?: PpudCreateSentence
+}
+
+export type PpudCreateSentence = {
   id?: string
 }

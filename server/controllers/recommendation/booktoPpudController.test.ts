@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import {
   getRecommendation,
   ppudCreateOffender,
+  ppudUpdateSentence,
   updateRecommendation,
   updateStatuses,
 } from '../../data/makeDecisionApiClient'
@@ -38,7 +39,7 @@ describe('post', () => {
       bookRecallToPpud: {
         decisionDateTime: '2024-01-29T16:15:39',
         isInCustody: false,
-        custodyType: 'indeterminate',
+        custodyType: 'Determinate',
         releasingPrison: 'here',
         indexOffence:
           'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
@@ -63,8 +64,29 @@ describe('post', () => {
         prisonNumber: '7878783',
         legislationReleasedUnder: 'CJA 2023',
       },
+      nomisIndexOffence: {
+        allOptions: [
+          {
+            offenderChargeId: 3934369,
+            sentenceDate: '2016-01-01',
+            licenceExpiryDate: '2018-02-02',
+            releaseDate: '2017-03-03',
+            sentenceEndDate: '2019-04-04',
+            courtDescription: 'court desc',
+            terms: [
+              {
+                days: 1,
+                months: 2,
+                years: 3,
+                code: 'IMP',
+              },
+            ],
+          },
+        ],
+        selected: 3934369,
+      },
     })
-    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767' } })
+    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
 
     const basePath = `/recommendations/1/`
     const req = mockReq({
@@ -99,7 +121,7 @@ describe('post', () => {
         premises: '41 Newport Pagnell Rd',
       },
       croNumber: '1234',
-      custodyType: 'indeterminate',
+      custodyType: 'Determinate',
       dateOfBirth: '1970-03-15',
       dateOfSentence: '2023-11-16',
       ethnicity: 'Irish',
@@ -112,6 +134,21 @@ describe('post', () => {
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
+    })
+
+    expect(ppudUpdateSentence).toHaveBeenCalledWith('token', '767', '444', {
+      custodyType: 'Determinate',
+      mappaLevel: 'Level 2 - local inter-agency management',
+      dateOfSentence: '2016-01-01',
+      licenceExpiryDate: '2018-02-02',
+      releaseDate: '2017-03-03',
+      sentenceExpiryDate: '2019-04-04',
+      sentencingCourt: 'court desc',
+      sentenceLength: {
+        partDays: 1,
+        partMonths: 2,
+        partYears: 3,
+      },
     })
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -258,8 +295,29 @@ describe('post', () => {
         ...recommendationApiResponse.personOnProbation,
         addresses: [{ noFixedAbode: true }],
       },
+      nomisIndexOffence: {
+        allOptions: [
+          {
+            offenderChargeId: 3934369,
+            sentenceDate: '2016-01-01',
+            licenceExpiryDate: '2018-02-02',
+            releaseDate: '2017-03-03',
+            sentenceEndDate: '2019-04-04',
+            courtDescription: 'court desc',
+            terms: [
+              {
+                days: 1,
+                months: 2,
+                years: 3,
+                code: 'IMP',
+              },
+            ],
+          },
+        ],
+        selected: 3934369,
+      },
     })
-    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767' } })
+    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
 
     await bookToPpudController.post(
       mockReq({
