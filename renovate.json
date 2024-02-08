@@ -9,5 +9,6 @@
       "automerge": true
     }
   ],
-  "rebaseWhen": "behind-base-branch"
+  "rebaseWhen": "behind-base-branch",
+  "ignoreDeps": ["govuk-frontend"]
 }
