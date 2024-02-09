@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import {
   getRecommendation,
   ppudCreateOffender,
+  ppudUpdateOffence,
   ppudUpdateSentence,
   updateRecommendation,
   updateStatuses,
@@ -130,6 +131,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
       sentenceLength: { partDays: offenceTerm.days, partMonths: offenceTerm.months, partYears: offenceTerm.years },
       sentenceExpiryDate: nomisOffence.sentenceEndDate,
       sentencingCourt: nomisOffence.courtDescription,
+    })
+
+    await ppudUpdateOffence(token, offenderId, sentenceId, {
+      indexOffence: recommendation.bookRecallToPpud?.indexOffence,
+      dateOfIndexOffence: nomisOffence.offenceDate,
     })
   } catch (err) {
     if (err.status !== undefined) {

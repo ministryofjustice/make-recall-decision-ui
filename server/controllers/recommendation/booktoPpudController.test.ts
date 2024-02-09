@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import {
   getRecommendation,
   ppudCreateOffender,
+  ppudUpdateOffence,
   ppudUpdateSentence,
   updateRecommendation,
   updateStatuses,
@@ -69,6 +70,7 @@ describe('post', () => {
           {
             offenderChargeId: 3934369,
             sentenceDate: '2016-01-01',
+            offenceDate: '2016-01-05',
             licenceExpiryDate: '2018-02-02',
             releaseDate: '2017-03-03',
             sentenceEndDate: '2019-04-04',
@@ -149,6 +151,12 @@ describe('post', () => {
         partMonths: 2,
         partYears: 3,
       },
+    })
+
+    expect(ppudUpdateOffence).toHaveBeenCalledWith('token', '767', '444', {
+      indexOffence:
+        'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
+      dateOfIndexOffence: '2016-01-05',
     })
 
     expect(updateStatuses).toHaveBeenCalledWith({
