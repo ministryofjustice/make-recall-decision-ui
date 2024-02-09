@@ -47,7 +47,7 @@ describe('post', () => {
         mappaLevel: 'Level 2 - local inter-agency management',
         policeForce: 'NCIS Los Angeles',
         probationArea: 'london',
-        recommendedToOwner: null,
+        recommendedTo: null,
         receivedDateTime: '2024-01-29T16:15:39',
         releaseDate: '2023-11-20',
         riskOfContrabandDetails: '',

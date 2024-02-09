@@ -156,7 +156,7 @@ export type BookRecallToPpud = {
   mappaLevel: string,
   policeForce: string,
   probationArea: string,
-  recommendedToOwner: string,
+  recommendedTo: PpudUser,
   receivedDateTime?: string,
   releaseDate: string,
   riskOfContrabandDetails: string,
@@ -237,3 +237,9 @@ export type PpudSentenceLength = {
   partMonths: number,
   partDays: number,
 }
+
+export type PpudUser = {
+  fullName: string,
+  teamName: string,
+}
+
