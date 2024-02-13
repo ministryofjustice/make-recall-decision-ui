@@ -134,13 +134,22 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const offenceTerm = nomisOffence.terms.find(term => term.code === 'IMP')
 
+    const sentenceLength =
+      offenceTerm != null
+        ? {
+            partDays: offenceTerm?.days || 0,
+            partMonths: offenceTerm?.months || 0,
+            partYears: offenceTerm?.years || 0,
+          }
+        : null
+
     await ppudUpdateSentence(token, offenderId, sentenceId, {
       custodyType: recommendation.bookRecallToPpud?.custodyType,
       mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
       dateOfSentence: nomisOffence.sentenceDate,
       licenceExpiryDate: nomisOffence.licenceExpiryDate,
       releaseDate: nomisOffence.releaseDate,
-      sentenceLength: { partDays: offenceTerm?.days, partMonths: offenceTerm?.months, partYears: offenceTerm?.years },
+      sentenceLength,
       sentenceExpiryDate: nomisOffence.sentenceEndDate,
       sentencingCourt: nomisOffence.courtDescription,
     })
