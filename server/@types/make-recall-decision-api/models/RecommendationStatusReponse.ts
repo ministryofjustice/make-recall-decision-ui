@@ -12,4 +12,5 @@ export type RecommendationStatusResponse = {
   modified: string;
   createdByUserFullName: string;
   modifiedByUserFullName : string;
+  emailAddress: string
 };

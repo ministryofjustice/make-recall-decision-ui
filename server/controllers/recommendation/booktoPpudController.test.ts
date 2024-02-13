@@ -1,14 +1,17 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import {
   getRecommendation,
+  getStatuses,
   ppudCreateOffender,
   ppudUpdateOffence,
+  ppudUpdateRelease,
   ppudUpdateSentence,
   updateRecommendation,
   updateStatuses,
 } from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -34,9 +37,17 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post to create offender', async () => {
+  it('post - happy path', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
+      whoCompletedPartA: {
+        name: 'dude',
+        email: 'dude@me.com',
+        telephone: '123456',
+        region: 'region A',
+        localDeliveryUnit: 'here',
+        isPersonProbationPractitionerForOffender: true,
+      },
       bookRecallToPpud: {
         decisionDateTime: '2024-01-29T16:15:39',
         isInCustody: false,
@@ -88,6 +99,14 @@ describe('post', () => {
         selected: 3934369,
       },
     })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.ACO_SIGNED,
+        createdByUserFullName: 'Mr Brightside',
+        emailAddress: 'email@me.com',
+        active: true,
+      },
+    ])
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
 
     const basePath = `/recommendations/1/`
@@ -159,6 +178,28 @@ describe('post', () => {
       dateOfIndexOffence: '2016-01-05',
     })
 
+    expect(ppudUpdateRelease).toHaveBeenCalledWith('token', '767', '444', {
+      dateOfRelease: '2017-03-03',
+      postRelease: {
+        assistantChiefOfficer: {
+          faxEmail: 'email@me.com',
+          name: 'Mr Brightside',
+        },
+        offenderManager: {
+          faxEmail: 'dude@me.com',
+          name: 'dude',
+          telephone: '123456',
+        },
+        probationService: 'london',
+        spoc: {
+          faxEmail: '',
+          name: 'NCIS Los Angeles',
+        },
+      },
+      releasedFrom: 'here',
+      releasedUnder: 'CJA 2023',
+    })
+
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
       deActivate: [],
@@ -195,6 +236,83 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
     expect(next).not.toHaveBeenCalled()
   })
+
+  it('post - person not probation practitioner', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      whoCompletedPartA: {
+        isPersonProbationPractitionerForOffender: false,
+      },
+      practitionerForPartA: {
+        name: 'dudette',
+        email: 'dudette@me.com',
+        telephone: '55555',
+      },
+      bookRecallToPpud: {
+        releasingPrison: 'here',
+        policeForce: 'NCIS Los Angeles',
+        probationArea: 'london',
+        legislationReleasedUnder: 'CJA 2023',
+      },
+      nomisIndexOffence: {
+        allOptions: [
+          {
+            offenderChargeId: 3934369,
+            releaseDate: '2017-03-03',
+            terms: [],
+          },
+        ],
+        selected: 3934369,
+      },
+    })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.ACO_SIGNED,
+        createdByUserFullName: 'Mr Brightside',
+        emailAddress: 'email@me.com',
+        active: true,
+      },
+    ])
+    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+    })
+
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath },
+        flags: { xyz: true },
+      },
+    })
+    const next = mockNext()
+
+    await bookToPpudController.post(req, res, next)
+
+    expect(ppudUpdateRelease).toHaveBeenCalledWith('token', '767', '444', {
+      dateOfRelease: '2017-03-03',
+      postRelease: {
+        assistantChiefOfficer: {
+          faxEmail: 'email@me.com',
+          name: 'Mr Brightside',
+        },
+        offenderManager: {
+          faxEmail: 'dudette@me.com',
+          name: 'dudette',
+          telephone: '55555',
+        },
+        probationService: 'london',
+        spoc: {
+          faxEmail: '',
+          name: 'NCIS Los Angeles',
+        },
+      },
+      releasedFrom: 'here',
+      releasedUnder: 'CJA 2023',
+    })
+  })
+
   it('post - validation error', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
@@ -203,6 +321,14 @@ describe('post', () => {
         addresses: [{ noFixedAbode: true }],
       },
     })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.ACO_SIGNED,
+        createdByUserFullName: 'Mr Brightside',
+        emailAddress: 'email@me.com',
+        active: true,
+      },
+    ])
     ;(ppudCreateOffender as jest.Mock).mockImplementation(() => {
       throw new HttpError(400)
     })
@@ -276,6 +402,14 @@ describe('post', () => {
         addresses: [{ noFixedAbode: true }],
       },
     })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.ACO_SIGNED,
+        createdByUserFullName: 'Mr Brightside',
+        emailAddress: 'email@me.com',
+        active: true,
+      },
+    ])
     ;(ppudCreateOffender as jest.Mock).mockImplementation(() => {
       throw new Error('I should fail')
     })
@@ -299,6 +433,20 @@ describe('post', () => {
   it('post - no fixed abode', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
+      whoCompletedPartA: {
+        isPersonProbationPractitionerForOffender: false,
+      },
+      practitionerForPartA: {
+        name: 'dudette',
+        email: 'dudette@me.com',
+        telephone: '55555',
+      },
+      bookRecallToPpud: {
+        releasingPrison: 'here',
+        policeForce: 'NCIS Los Angeles',
+        probationArea: 'london',
+        legislationReleasedUnder: 'CJA 2023',
+      },
       personOnProbation: {
         ...recommendationApiResponse.personOnProbation,
         addresses: [{ noFixedAbode: true }],
@@ -325,6 +473,14 @@ describe('post', () => {
         selected: 3934369,
       },
     })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.ACO_SIGNED,
+        createdByUserFullName: 'Mr Brightside',
+        emailAddress: 'email@me.com',
+        active: true,
+      },
+    ])
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
 
     await bookToPpudController.post(
