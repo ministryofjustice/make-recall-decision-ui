@@ -26,6 +26,7 @@ import {
 } from '../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
 import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
 import { PpudUpdateOffenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateOffenceRequest'
+import { PpudUpdateReleaseRequest } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseRequest'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -152,6 +153,18 @@ export const ppudUpdateOffence = (
 ): Promise<void> => {
   return restClient(token).put({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/offence`,
+    data: body,
+  }) as Promise<void>
+}
+
+export const ppudUpdateRelease = (
+  token: string,
+  offenderId: string,
+  sentenceId: string,
+  body: PpudUpdateReleaseRequest
+): Promise<void> => {
+  return restClient(token).post({
+    path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/release`,
     data: body,
   }) as Promise<void>
 }

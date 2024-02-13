@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import {
   getRecommendation,
+  getStatuses,
   ppudCreateOffender,
   ppudUpdateOffence,
+  ppudUpdateRelease,
   ppudUpdateSentence,
   updateRecommendation,
   updateStatuses,
@@ -13,6 +15,7 @@ import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { PpudAddress } from '../../@types/make-recall-decision-api/models/PpudCreateOffenderRequest'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -35,6 +38,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
+
+  const statuses = await getStatuses({
+    recommendationId: String(recommendation.id),
+    token,
+  })
+
+  const acoSigned = (statuses as RecommendationStatusResponse[])
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.ACO_SIGNED)
 
   let address
   if (recommendation.personOnProbation.addresses && recommendation.personOnProbation.addresses.length > 0) {
@@ -128,7 +140,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       dateOfSentence: nomisOffence.sentenceDate,
       licenceExpiryDate: nomisOffence.licenceExpiryDate,
       releaseDate: nomisOffence.releaseDate,
-      sentenceLength: { partDays: offenceTerm.days, partMonths: offenceTerm.months, partYears: offenceTerm.years },
+      sentenceLength: { partDays: offenceTerm?.days, partMonths: offenceTerm?.months, partYears: offenceTerm?.years },
       sentenceExpiryDate: nomisOffence.sentenceEndDate,
       sentencingCourt: nomisOffence.courtDescription,
     })
@@ -136,6 +148,37 @@ async function post(req: Request, res: Response, _: NextFunction) {
     await ppudUpdateOffence(token, offenderId, sentenceId, {
       indexOffence: recommendation.bookRecallToPpud?.indexOffence,
       dateOfIndexOffence: nomisOffence.offenceDate,
+    })
+
+    await ppudUpdateRelease(token, offenderId, sentenceId, {
+      dateOfRelease: nomisOffence.releaseDate,
+      postRelease: {
+        assistantChiefOfficer: {
+          name: acoSigned.createdByUserFullName,
+          faxEmail: acoSigned.emailAddress,
+        },
+        offenderManager: {
+          name:
+            (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender
+              ? recommendation.whoCompletedPartA?.name
+              : recommendation.practitionerForPartA?.name) || '',
+          faxEmail:
+            (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender
+              ? recommendation.whoCompletedPartA?.email
+              : recommendation.practitionerForPartA?.email) || '',
+          telephone:
+            (recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender
+              ? recommendation.whoCompletedPartA?.telephone
+              : recommendation.practitionerForPartA?.telephone) || '',
+        },
+        spoc: {
+          name: recommendation.bookRecallToPpud.policeForce,
+          faxEmail: '',
+        },
+        probationService: recommendation.bookRecallToPpud.probationArea,
+      },
+      releasedFrom: recommendation.bookRecallToPpud.releasingPrison,
+      releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
     })
   } catch (err) {
     if (err.status !== undefined) {
