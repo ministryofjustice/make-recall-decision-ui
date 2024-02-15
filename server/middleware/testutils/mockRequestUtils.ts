@@ -7,6 +7,7 @@ export const mockReq = ({
   query = {},
   params = {},
   body = {},
+  file = undefined,
   cookies = {},
   method = 'GET',
   headers = {},
@@ -16,6 +17,7 @@ export const mockReq = ({
   path = '/',
 }: {
   body?: Record<string, string | boolean | string[]>
+  file?: Record<string, string | boolean | number | string[] | Buffer>
   query?: ParsedQs
   params?: ParamsDictionary
   headers?: Record<string, string | boolean>
@@ -28,6 +30,7 @@ export const mockReq = ({
 } = {}): Request => {
   return {
     query,
+    file,
     params,
     body,
     headers,
@@ -37,7 +40,7 @@ export const mockReq = ({
     originalUrl,
     baseUrl,
     path,
-  } as Request
+  } as Request & { file: Record<string, string | boolean | string[]> }
 }
 
 export const mockRes = ({

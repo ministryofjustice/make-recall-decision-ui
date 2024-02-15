@@ -5,6 +5,7 @@ import path from 'path'
 import createError from 'http-errors'
 import cookieParser from 'cookie-parser'
 
+import multer from 'multer'
 import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -62,6 +63,10 @@ export default function createApp(userService: UserService): express.Application
   app.use(authorisationMiddleware)
   app.use(authorisationCheck(hasRole(HMPPS_AUTH_ROLE.PO)))
   app.use(setupRecommendationStatusCheck())
+
+  // setup mime multipart file support - before csrf
+  app.use(multer({ limits: { fileSize: 500 * 1024 } }).single('file'))
+
   app.use(setUpCsrf())
 
   app.use('/', indexRoutes(standardRouter(userService)))

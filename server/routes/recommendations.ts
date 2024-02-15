@@ -103,6 +103,7 @@ import editLegislationReleasedUnderController from '../controllers/recommendatio
 import selectPpudSentenceController from '../controllers/recommendation/selectPpudSentenceController'
 import editPrisonBookingNumberController from '../controllers/recommendation/editPrisonBookingNumberController'
 import supportingDocumentsController from '../controllers/recommendation/supportingDocumentsController'
+import supportingDocumentUploadController from '../controllers/recommendation/supportingDocumentUploadController'
 
 const recommendations = Router()
 
@@ -460,6 +461,9 @@ ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 ppcsRouteBuilder.post('book-to-ppud', bookToPpudController.post)
 
 ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
+
+ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
+ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUploadController.post)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 

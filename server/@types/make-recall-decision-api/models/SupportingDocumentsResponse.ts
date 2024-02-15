@@ -13,18 +13,7 @@ export enum SupportingDocumentType {
 
 export type SupportingDocument = {
   title: string,
-  type: SupportingDocumentType,
+  type: string,
   filename?: string,
   id?: string,
 }
-
-export type SupportingDocumentsResponse = {
-  PPUDPartA: SupportingDocument,
-  PPUDLicenceDocument: SupportingDocument,
-  PPUDProbationEmail: SupportingDocument,
-  PPUDOASys: SupportingDocument,
-  PPUDPrecons: SupportingDocument,
-  PPUDPSR: SupportingDocument,
-  PPUDChargeSheet: SupportingDocument,
-  PPUDOthers: SupportingDocument[]
-};

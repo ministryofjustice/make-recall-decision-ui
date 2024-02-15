@@ -1,0 +1,52 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% macro getTitle(document) %}
+
+{% endmacro %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            <h1 class='govuk-heading-l'>
+                {% if type == 'part-a' %}
+                    Upload part A
+                {% elif type == 'licence-document' %}
+                    Upload licence
+                {% elif type == 'probation-email' %}
+                    Upload email from probation
+                {% elif type == 'oasys' %}
+                    Upload OASys
+                {% elif type == 'precons' %}
+                    Upload previous convictions (MG16)
+                {% elif type == 'psr' %}
+                    Upload pre-sentence report
+                {% elif type == 'charge-sheet' %}
+                    Upload police charge sheet (MG4)
+                {% endif %}
+            </h1>
+
+            <form novalidate method="post" enctype='multipart/form-data'>
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="type" value="{{ type }}" />
+
+                <div class="govuk-form-group">
+                  <label class="govuk-label" for="file-upload-1">
+                    Upload a file
+                  </label>
+                  <input class="govuk-file-upload" id="file-upload-1" name="file" type="file">
+                </div>
+
+                <p class="govuk-body">You can upload a Word, PDF or plain text (txt) files.  The maximum file size is 500KB.</p>
+
+                {{ formSubmitButton({ label: 'Save' }) }}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

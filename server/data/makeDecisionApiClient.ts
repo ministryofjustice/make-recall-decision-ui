@@ -20,10 +20,7 @@ import { PpudReferenceListResponse } from '../@types/make-recall-decision-api/mo
 import { PpudDetailsResponse } from '../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { PpudCreateOffenderResponse } from '../@types/make-recall-decision-api/models/PpudCreateOffenderResponse'
 import { PpudCreateOffenderRequest } from '../@types/make-recall-decision-api/models/PpudCreateOffenderRequest'
-import {
-  SupportingDocumentsResponse,
-  SupportingDocumentType,
-} from '../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
+import { SupportingDocument } from '../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
 import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
 import { PpudUpdateOffenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateOffenceRequest'
 import { PpudUpdateReleaseRequest } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseRequest'
@@ -311,30 +308,40 @@ export const createDocument = (
   }) as Promise<DocumentResponse>
 
 export const getSupportingDocuments = ({
-  /* eslint-disable-next-line */
   recommendationId,
-  /* eslint-disable-next-line */
   token,
-  /* eslint-disable-next-line */
   featureFlags,
 }: {
   recommendationId: string
   token: string
   featureFlags?: FeatureFlags
-}): Promise<SupportingDocumentsResponse> => {
-  return Promise.resolve({
-    PPUDPartA: {
-      title: 'Part A',
-      type: SupportingDocumentType.PPUDPartA,
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-    },
-    PPUDLicenceDocument: { title: 'Licence', type: SupportingDocumentType.PPUDLicenceDocument },
-    PPUDProbationEmail: { title: 'Email from probation', type: SupportingDocumentType.PPUDProbationEmail },
-    PPUDOASys: { title: 'OASys', type: SupportingDocumentType.PPUDOASys },
-    PPUDPrecons: { title: 'Previous convictions (MG16)', type: SupportingDocumentType.PPUDPrecons },
-    PPUDPSR: { title: 'Pre-sentence report', type: SupportingDocumentType.PPUDPSR },
-    PPUDChargeSheet: { title: 'Police charge sheet (MG4)', type: SupportingDocumentType.PPUDChargeSheet },
-    PPUDOthers: [],
-  })
+}): Promise<SupportingDocument[]> => {
+  return restClient(token).get({
+    path: `${routes.recommendations}/${recommendationId}/documents`,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<SupportingDocument[]>
+}
+
+export const uploadSupportingDocument = ({
+  recommendationId,
+  token,
+  filename,
+  type,
+  mimetype,
+  data,
+  featureFlags,
+}: {
+  recommendationId: string
+  token: string
+  filename: string
+  type: string
+  mimetype: string
+  data: string
+  featureFlags?: FeatureFlags
+}): Promise<SupportingDocument[]> => {
+  return restClient(token).post({
+    path: `${routes.recommendations}/${recommendationId}/documents`,
+    data: { filename, type, mimetype, data },
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<SupportingDocument[]>
 }
