@@ -12,7 +12,6 @@ import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFla
 import { getFeatureFlags } from '../controllers/featureFlags'
 import { downloadDocument } from '../controllers/downloadDocument'
 import { routeUrls } from './routeUrls'
-import { setAnalyticsId } from '../middleware/setAnalyticsId'
 import { parseUrl } from '../middleware/parseUrl'
 import { getCreateRecommendationWarning } from '../controllers/recommendations/getCreateRecommendationWarning'
 import recommendations from './recommendations'
@@ -28,7 +27,7 @@ export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
-  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults), setAnalyticsId)
+  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
 
   router.use(`${routeUrls.recommendations}`, recommendations)
   get('/', startPage)

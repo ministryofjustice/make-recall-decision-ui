@@ -44,7 +44,7 @@
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/inset-text/macro.njk" import govukInsetText -%}
 {% block head %}
-  {% include "./analytics.njk" %} <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
   <script src="/assets/applicationinsights-web.min.js"></script>
   <script src="/assets/applicationinsights.js"></script>
   <script nonce="{{ cspNonce }}">
@@ -63,17 +63,6 @@
 {% block header %}
   {% include "./header.njk" %}
   {% include "./phaseBanner.njk" %}
-{% endblock %}
-{% block bodyStart %}
-  {% if googleTagManagerId %}
-    <noscript>
-      <iframe
-        src="https://www.googletagmanager.com/ns.html?id={{ googleTagManagerId }}"
-        height="0"
-        width="0"
-        style="display:none;visibility:hidden"></iframe>
-    </noscript>
-  {% endif %}
 {% endblock %}
 {% block footer %}
   {{ govukFooter({
