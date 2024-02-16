@@ -10,8 +10,6 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full-from-desktop">
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-
-
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
                 <thead class="govuk-table__head">
@@ -22,33 +20,153 @@
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                {% for document in documents %}
-                    <tr class="govuk-table__row"  data-qa='{{ loop.index }}' >
-                        <td class="govuk-table__cell govuk-!-font-weight-bold">
-                            {{ document.title }}
-                        </td>
-                        <td class="govuk-table__cell overflow-wrap-anywhere">
-                            {{ hyphenForBlank(document.filename) }}
-                        </td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> Part A </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDPartA.filename) }} </td>
                         <td class="govuk-table__cell">
-                            {% if document.id %}
-                                <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
+                            {% if PPUDPartA.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
                                     href='/recommendations/{{ recommendation.id }}/xyz'>
                                     Change
                                 </a>
-                                <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
                                     href='/recommendations/{{ recommendation.id }}/xyz'>
                                     Remove
                                 </a>
                             {% else %}
-                                <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
-                                    href='/recommendations/{{ recommendation.id }}/supporting-documents'>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/part-a'>
                                     Upload
                                 </a>
                             {% endif %}
                         </td>
                     </tr>
-                {% endfor %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> Licence </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDLicenceDocument.filename) }} </td>
+                        <td class="govuk-table__cell">
+                            {% if PPUDLicenceDocument.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Change
+                                </a>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Remove
+                                </a>
+                            {% else %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/licence-document'>
+                                    Upload
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> Email from probation </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDProbationEmail.filename) }} </td>
+                        <td class="govuk-table__cell">
+                            {% if PPUDProbationEmail.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Change
+                                </a>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Remove
+                                </a>
+                            {% else %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/probation-email'>
+                                    Upload
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> OASys </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDOASys.filename) }} </td>
+                        <td class="govuk-table__cell">
+                            {% if PPUDOASys.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Change
+                                </a>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Remove
+                                </a>
+                            {% else %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/oasys'>
+                                    Upload
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> Previous convictions (MG16) </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDPrecons.filename) }} </td>
+                        <td class="govuk-table__cell">
+                            {% if PPUDPrecons.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Change
+                                </a>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Remove
+                                </a>
+                            {% else %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/precons'>
+                                    Upload
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> Pre-sentence report </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDPSR.filename) }} </td>
+                        <td class="govuk-table__cell">
+                            {% if PPUDPSR.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Change
+                                </a>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Remove
+                                </a>
+                            {% else %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/psr'>
+                                    Upload
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold"> Police charge sheet (MG4) </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDChargeSheet.filename) }} </td>
+                        <td class="govuk-table__cell">
+                            {% if PPUDChargeSheet.id %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Change
+                                </a>
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    Remove
+                                </a>
+                            {% else %}
+                                <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-upload/charge-sheet'>
+                                    Upload
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 

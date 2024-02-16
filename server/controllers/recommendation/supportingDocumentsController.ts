@@ -11,17 +11,23 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
+  const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
+  const PPUDLicenceDocument = documents.find(doc => doc.type === 'PPUDLicenceDocument')
+  const PPUDProbationEmail = documents.find(doc => doc.type === 'PPUDProbationEmail')
+  const PPUDOASys = documents.find(doc => doc.type === 'PPUDOASys')
+  const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
+  const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
+  const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
+
   res.locals = {
     ...res.locals,
-    documents: [
-      documents.PPUDPartA,
-      documents.PPUDLicenceDocument,
-      documents.PPUDProbationEmail,
-      documents.PPUDOASys,
-      documents.PPUDPrecons,
-      documents.PPUDPSR,
-      documents.PPUDChargeSheet,
-    ],
+    PPUDPartA,
+    PPUDLicenceDocument,
+    PPUDProbationEmail,
+    PPUDOASys,
+    PPUDPrecons,
+    PPUDPSR,
+    PPUDChargeSheet,
     page: {
       id: 'supportingDocuments',
     },
