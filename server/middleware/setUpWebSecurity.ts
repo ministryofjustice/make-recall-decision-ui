@@ -20,7 +20,6 @@ export default function setUpWebSecurity(): Router {
           // Hash allows inline script pulled in from https://github.com/alphagov/govuk-frontend/blob/master/src/govuk/template.njk
           scriptSrc: [
             "'self'",
-            'www.googletagmanager.com',
             "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
             (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`,
           ],
