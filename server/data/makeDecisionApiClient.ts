@@ -24,6 +24,9 @@ import { SupportingDocument } from '../@types/make-recall-decision-api/models/Su
 import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
 import { PpudUpdateOffenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateOffenceRequest'
 import { PpudUpdateReleaseRequest } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseRequest'
+import { PpudCreateRecallRequest } from '../@types/make-recall-decision-api/models/PpudCreateRecallRequest'
+import { PpudCreateRecallResponse } from '../@types/make-recall-decision-api/models/PpudCreateRecallResponse'
+import { PpudUpdateReleaseResponse } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -159,11 +162,23 @@ export const ppudUpdateRelease = (
   offenderId: string,
   sentenceId: string,
   body: PpudUpdateReleaseRequest
-): Promise<void> => {
+): Promise<PpudUpdateReleaseResponse> => {
   return restClient(token).post({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/release`,
     data: body,
-  }) as Promise<void>
+  }) as Promise<PpudUpdateReleaseResponse>
+}
+
+export const ppudCreateRecall = (
+  token: string,
+  offenderId: string,
+  releaseId: string,
+  body: PpudCreateRecallRequest
+): Promise<PpudCreateRecallResponse> => {
+  return restClient(token).post({
+    path: `/ppud/offender/${offenderId}/release/${releaseId}/recall`,
+    data: body,
+  }) as Promise<PpudCreateRecallResponse>
 }
 
 export const ppudReferenceList = (token: string, name: string): Promise<PpudReferenceListResponse> => {

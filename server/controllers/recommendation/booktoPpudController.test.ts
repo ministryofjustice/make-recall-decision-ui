@@ -3,13 +3,14 @@ import {
   getRecommendation,
   getStatuses,
   ppudCreateOffender,
+  ppudCreateRecall,
   ppudUpdateOffence,
   ppudUpdateRelease,
   ppudUpdateSentence,
   updateRecommendation,
   updateStatuses,
 } from '../../data/makeDecisionApiClient'
-import bookToPpudController from './bookToPpudController'
+import bookToPpudController, { currentHighestRosh } from './bookToPpudController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
@@ -108,6 +109,7 @@ describe('post', () => {
       },
     ])
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
+    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
 
     const basePath = `/recommendations/1/`
     const req = mockReq({
@@ -200,6 +202,18 @@ describe('post', () => {
       releasedUnder: 'CJA 2023',
     })
 
+    expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
+      decisionDateTime: '2024-01-29T16:15:39',
+      isExtendedSentence: true,
+      isInCustody: false,
+      mappaLevel: 'Level 2 - local inter-agency management',
+      policeForce: 'NCIS Los Angeles',
+      probationArea: 'london',
+      receivedDateTime: '2024-01-29T16:15:39',
+      riskOfContrabandDetails: 'Contraband detail...',
+      riskOfSeriousHarmLevel: 'Very High',
+    })
+
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
       deActivate: [],
@@ -274,6 +288,7 @@ describe('post', () => {
       },
     ])
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
+    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
 
     const basePath = `/recommendations/1/`
     const req = mockReq({
@@ -482,6 +497,7 @@ describe('post', () => {
       },
     ])
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
+    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
 
     await bookToPpudController.post(
       mockReq({
@@ -537,3 +553,61 @@ class HttpError {
     this.status = status
   }
 }
+
+describe('rosh', () => {
+  it('mappings', async () => {
+    expect(currentHighestRosh(undefined)).toEqual(undefined)
+
+    expect(currentHighestRosh(null)).toEqual(undefined)
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'HIGH',
+        riskToPublic: 'LOW',
+        riskToStaff: 'MEDIUM',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'MEDIUM',
+      })
+    ).toEqual('High')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'LOW',
+        riskToPublic: 'LOW',
+        riskToStaff: 'VERY_HIGH',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'MEDIUM',
+      })
+    ).toEqual('Very High')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'LOW',
+        riskToPublic: 'MEDIUM',
+        riskToStaff: 'LOW',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'LOW',
+      })
+    ).toEqual('Medium')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'LOW',
+        riskToPublic: 'LOW',
+        riskToStaff: 'LOW',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'LOW',
+      })
+    ).toEqual('Low')
+
+    expect(
+      currentHighestRosh({
+        riskToPrisoners: 'NOT_APPLICABLE',
+        riskToPublic: 'NOT_APPLICABLE',
+        riskToStaff: 'NOT_APPLICABLE',
+        riskToKnownAdult: 'NOT_APPLICABLE',
+        riskToChildren: 'NOT_APPLICABLE',
+      })
+    ).toEqual('Not Applicable')
+  })
+})
