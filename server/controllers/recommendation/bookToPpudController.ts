@@ -3,6 +3,7 @@ import {
   getRecommendation,
   getStatuses,
   ppudCreateOffender,
+  ppudCreateRecall,
   ppudUpdateOffence,
   ppudUpdateRelease,
   ppudUpdateSentence,
@@ -159,7 +160,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       dateOfIndexOffence: nomisOffence.offenceDate,
     })
 
-    await ppudUpdateRelease(token, offenderId, sentenceId, {
+    const releaseResponse = await ppudUpdateRelease(token, offenderId, sentenceId, {
       dateOfRelease: nomisOffence.releaseDate,
       postRelease: {
         assistantChiefOfficer: {
@@ -189,6 +190,24 @@ async function post(req: Request, res: Response, _: NextFunction) {
       releasedFrom: recommendation.bookRecallToPpud.releasingPrison,
       releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
     })
+
+    await ppudCreateRecall(token, offenderId, releaseResponse.release.id, {
+      decisionDateTime: recommendation.bookRecallToPpud.decisionDateTime,
+      isExtendedSentence: recommendation.isExtendedSentence,
+      isInCustody: recommendation.bookRecallToPpud.isInCustody,
+      mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
+      policeForce: recommendation.bookRecallToPpud.policeForce,
+      probationArea: recommendation.bookRecallToPpud.probationArea,
+      receivedDateTime: recommendation.bookRecallToPpud.receivedDateTime,
+      riskOfContrabandDetails: recommendation.hasContrabandRisk?.details || '',
+      riskOfSeriousHarmLevel: currentHighestRosh({
+        riskToChildren: String(recommendation.currentRoshForPartA.riskToChildren),
+        riskToPublic: String(recommendation.currentRoshForPartA.riskToPublic),
+        riskToKnownAdult: String(recommendation.currentRoshForPartA.riskToKnownAdult),
+        riskToPrisoners: String(recommendation.currentRoshForPartA.riskToPrisoners),
+        riskToStaff: String(recommendation.currentRoshForPartA.riskToStaff),
+      }),
+    })
   } catch (err) {
     if (err.status !== undefined) {
       const errorId = 'ppudBookingError'
@@ -216,3 +235,65 @@ async function post(req: Request, res: Response, _: NextFunction) {
 }
 
 export default { get, post }
+
+type Rosh = {
+  riskToChildren: string
+  riskToPublic: string
+  riskToKnownAdult: string
+  riskToStaff: string
+  riskToPrisoners: string
+}
+
+export function currentHighestRosh(rosh?: Rosh | null) {
+  if (rosh === undefined || rosh === null) {
+    return undefined
+  }
+
+  const values = []
+
+  function mapToNumber(val: string) {
+    if (val === 'VERY_HIGH') {
+      return 1
+    }
+    if (val === 'HIGH') {
+      return 2
+    }
+    if (val === 'MEDIUM') {
+      return 3
+    }
+    if (val === 'LOW') {
+      return 4
+    }
+    if (val === 'NOT_APPLICABLE') {
+      return 5
+    }
+  }
+
+  function mapFromNumber(val: number) {
+    if (val === 1) {
+      return 'Very High'
+    }
+    if (val === 2) {
+      return 'High'
+    }
+    if (val === 3) {
+      return 'Medium'
+    }
+    if (val === 4) {
+      return 'Low'
+    }
+    if (val === 5) {
+      return 'Not Applicable'
+    }
+  }
+
+  values.push(mapToNumber(rosh.riskToChildren))
+  values.push(mapToNumber(rosh.riskToPublic))
+  values.push(mapToNumber(rosh.riskToKnownAdult))
+  values.push(mapToNumber(rosh.riskToStaff))
+  values.push(mapToNumber(rosh.riskToPrisoners))
+
+  values.sort()
+
+  return mapFromNumber(values[0])
+}
