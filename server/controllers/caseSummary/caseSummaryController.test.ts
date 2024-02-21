@@ -142,6 +142,44 @@ describe('get', () => {
     expect(getCaseSummary).toHaveBeenCalledWith('ABC', 'overview', token)
   })
 
+  it('should show out-of-hours recall button for Residential Worker (RW)', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_RW'],
+        },
+      },
+    })
+
+    const req = mockReq({ params: { crn: 'abc', sectionId: 'overview' } })
+    await caseSummaryController.get(req, res, next)
+    expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+  })
+
+  it('should show out-of-hours recall button for Off Duty Manager (ODM)', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_ODM'],
+        },
+      },
+    })
+
+    const req = mockReq({ params: { crn: 'abc', sectionId: 'overview' } })
+    await caseSummaryController.get(req, res, next)
+    expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+  })
+
   it('should return grouped by dates for contact history', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce({
       contactTypeGroups: [

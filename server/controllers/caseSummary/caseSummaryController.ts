@@ -63,6 +63,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
   let pageUrlBase = `/cases/${normalizedCrn}/`
   let backLink = '/search'
 
+  const showOutOfHoursRecallButton =
+    user.roles.includes('ROLE_MAKE_RECALL_DECISION_RW') || user.roles.includes('ROLE_MAKE_RECALL_DECISION_ODM')
   let recommendationButton: RecommendationButton = { display: false }
   const recommendationBanner: RecommendationBanner = { display: false }
 
@@ -202,6 +204,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
     crn: normalizedCrn,
     ...caseSection,
     notifications: strings.notifications,
+    showOutOfHoursRecallButton,
     recommendationButton,
     recommendationBanner,
     backLink,
