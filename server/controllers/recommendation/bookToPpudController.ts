@@ -271,7 +271,7 @@ export function currentHighestRosh(rosh?: Rosh | null) {
 
   function mapFromNumber(val: number) {
     if (val === 1) {
-      return 'Very High'
+      return 'VeryHigh'
     }
     if (val === 2) {
       return 'High'
@@ -283,7 +283,7 @@ export function currentHighestRosh(rosh?: Rosh | null) {
       return 'Low'
     }
     if (val === 5) {
-      return 'Not Applicable'
+      return 'NotApplicable'
     }
   }
 

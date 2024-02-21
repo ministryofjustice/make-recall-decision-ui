@@ -211,7 +211,7 @@ describe('post', () => {
       probationArea: 'london',
       receivedDateTime: '2024-01-29T16:15:39',
       riskOfContrabandDetails: 'Contraband detail...',
-      riskOfSeriousHarmLevel: 'Very High',
+      riskOfSeriousHarmLevel: 'VeryHigh',
     })
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -578,7 +578,7 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'MEDIUM',
       })
-    ).toEqual('Very High')
+    ).toEqual('VeryHigh')
 
     expect(
       currentHighestRosh({
@@ -608,6 +608,6 @@ describe('rosh', () => {
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'NOT_APPLICABLE',
       })
-    ).toEqual('Not Applicable')
+    ).toEqual('NotApplicable')
   })
 })
