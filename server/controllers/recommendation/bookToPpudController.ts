@@ -40,6 +40,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
 
+  const isInCustody = recommendation.prisonOffender?.status === 'ACTIVE IN'
+
   const statuses = await getStatuses({
     recommendationId: String(recommendation.id),
     token,
@@ -93,7 +95,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       firstNames: recommendation.bookRecallToPpud?.firstNames,
       familyName: recommendation.bookRecallToPpud?.lastName,
       gender: recommendation.bookRecallToPpud?.gender,
-      isInCustody: recommendation.bookRecallToPpud?.isInCustody,
+      isInCustody,
       indexOffence: recommendation.bookRecallToPpud?.indexOffence,
       mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
       prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
@@ -194,7 +196,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     await ppudCreateRecall(token, offenderId, releaseResponse.release.id, {
       decisionDateTime: recommendation.bookRecallToPpud.decisionDateTime,
       isExtendedSentence: recommendation.isExtendedSentence,
-      isInCustody: recommendation.bookRecallToPpud.isInCustody,
+      isInCustody,
       mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
       policeForce: recommendation.bookRecallToPpud.policeForce,
       probationArea: recommendation.bookRecallToPpud.probationArea,

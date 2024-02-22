@@ -49,6 +49,9 @@ describe('post', () => {
         localDeliveryUnit: 'here',
         isPersonProbationPractitionerForOffender: true,
       },
+      prisonOffender: {
+        status: 'INACTIVE OUT',
+      },
       bookRecallToPpud: {
         decisionDateTime: '2024-01-29T16:15:39',
         isInCustody: false,
@@ -254,6 +257,9 @@ describe('post', () => {
   it('post - person not probation practitioner', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
+      prisonOffender: {
+        status: 'INACTIVE OUT',
+      },
       whoCompletedPartA: {
         isPersonProbationPractitionerForOffender: false,
       },
@@ -331,6 +337,9 @@ describe('post', () => {
   it('post - validation error', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
+      prisonOffender: {
+        status: 'INACTIVE OUT',
+      },
       personOnProbation: {
         ...recommendationApiResponse.personOnProbation,
         addresses: [{ noFixedAbode: true }],
@@ -389,7 +398,7 @@ describe('post', () => {
       firstNames: undefined,
       gender: undefined,
       indexOffence: undefined,
-      isInCustody: undefined,
+      isInCustody: false,
       mappaLevel: undefined,
       nomsId: 'A12345',
       prisonNumber: undefined,
@@ -412,6 +421,9 @@ describe('post', () => {
   it('post - some other error', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
+      prisonOffender: {
+        status: 'INACTIVE OUT',
+      },
       personOnProbation: {
         ...recommendationApiResponse.personOnProbation,
         addresses: [{ noFixedAbode: true }],
@@ -538,7 +550,7 @@ describe('post', () => {
       firstNames: undefined,
       gender: undefined,
       indexOffence: undefined,
-      isInCustody: undefined,
+      isInCustody: false,
       mappaLevel: undefined,
       nomsId: 'A12345',
       prisonNumber: undefined,
