@@ -44,7 +44,8 @@ export const validateLicenceConditionsBreached = async ({
     })
 
   const invalidStandardCondition = selectedStandardConditions.some(id => !isValueValid(id, 'standardLicenceConditions'))
-  const hasAdditionalLicenceConditionsText: boolean = hasData(additionalLicenceConditionsText)
+  const hasAdditionalLicenceConditionsText: boolean =
+    hasData(additionalLicenceConditionsText) && additionalLicenceConditionsText.length > 0
   if (
     activeCustodialConvictionCountAsNumber === 1 &&
     ((allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) || invalidStandardCondition)
