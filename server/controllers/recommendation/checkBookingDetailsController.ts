@@ -100,7 +100,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       prisonNumber: recommendation.prisonOffender?.bookingNo,
       cro: recommendation.prisonOffender?.cro,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
-      isInCustody: recommendation?.custodyStatus?.selected !== 'NO',
       riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
         ? recommendation.hasContrabandRisk.details
         : '',
