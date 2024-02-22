@@ -1,0 +1,53 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: 'Important', hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {% include '../partials/error-summary.njk' %}
+            {% set infoHtml %}
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds-from-desktop">
+                        <div class='govuk-!-margin-bottom-8'>
+                            <p class='info-panel__body govuk-!-margin-bottom-8'>
+                                Only continue if you are considering recalling someone. You’ll record your decision in
+                                NDelius. Then probation will complete a Part A or decision not to recall letter.
+                            </p>
+                            <p class='info-panel__body govuk-!-margin-bottom-8'>
+                                You must contact PPCS if you decide to recall someone.
+                            </p>
+                        </div>
+                        <div class='flex-desktop'>
+                            <div class='govuk-!-margin-right-8'>
+                                <form method='post'>
+                                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                                    <input type="hidden" name="crn" value="{{ crn }}" />
+                                    <button class='govuk-button govuk-button--secondary'
+                                            data-analytics-event='click_cta'
+                                            data-analytics-event-category='make_recommendation_click'>Continue
+                                    </button>
+                                </form>
+                            </div>
+                            <div class='info-panel__body'>
+                                <a class='govuk-link govuk-!-font-size-19' href='/cases/{{ crn }}/overview'>Return to
+                                    overview</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endset %}
+            {{ infoPanel({
+                titleText: 'Important',
+                html: infoHtml
+            }) }}
+        </div>
+    </div>
+{% endblock %}
+
+
+

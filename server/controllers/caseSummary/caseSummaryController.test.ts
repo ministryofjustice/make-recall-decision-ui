@@ -122,6 +122,60 @@ describe('get', () => {
     })
   })
 
+  it('should show OutOfHours Recall Button for ODM', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_ODM'],
+        },
+      },
+    })
+    await caseSummaryController.get(req, res, next)
+    expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+  })
+
+  it('should show OutOfHours Recall Button for RW', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_RW'],
+        },
+      },
+    })
+    await caseSummaryController.get(req, res, next)
+    expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+  })
+
+  it('should not show OutOfHours Recall Button', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse, activeRecommendation: null })
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+      },
+    })
+    await caseSummaryController.get(req, res, next)
+    expect(res.locals.showOutOfHoursRecallButton).toEqual(false)
+  })
+
   it('should return case details for vulnerabilities', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseVulnerabilitiesResponse)
     const req = mockReq({ params: { crn, sectionId: 'vulnerabilities' } })
