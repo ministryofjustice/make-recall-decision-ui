@@ -2,7 +2,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList } from '../../../utils/lists'
-import { isCaseRestrictedOrExcluded, isDefined } from '../../../utils/utils'
+import { hasData, isCaseRestrictedOrExcluded, isDefined } from '../../../utils/utils'
 import { fetchAndTransformLicenceConditions } from './transform'
 import { TransformedLicenceConditionsResponse } from '../../caseSummary/licenceConditions/transformLicenceConditions'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
@@ -14,7 +14,8 @@ export const validateLicenceConditionsBreached = async ({
   requestBody,
   token,
 }: FormValidatorArgs): FormValidatorReturn => {
-  const { licenceConditionsBreached, crn, activeCustodialConvictionCount } = requestBody
+  const { licenceConditionsBreached, crn, activeCustodialConvictionCount, additionalLicenceConditionsText } =
+    requestBody
 
   const errors: NamedFormError[] = []
 
@@ -43,10 +44,10 @@ export const validateLicenceConditionsBreached = async ({
     })
 
   const invalidStandardCondition = selectedStandardConditions.some(id => !isValueValid(id, 'standardLicenceConditions'))
-
+  const hasAdditionalLicenceConditionsText: boolean = hasData(additionalLicenceConditionsText)
   if (
     activeCustodialConvictionCountAsNumber === 1 &&
-    (allSelectedConditions.length === 0 || invalidStandardCondition)
+    ((allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) || invalidStandardCondition)
   ) {
     errors.push(
       makeErrorObject({
@@ -118,6 +119,9 @@ export const validateLicenceConditionsBreached = async ({
       selectedOptions: selectedAdditionalLicenceConditions,
       allOptions: allAdditionalLicenceConditions,
     }
+  }
+  if (hasAdditionalLicenceConditionsText) {
+    valuesToSave.additionalLicenceConditionsText = additionalLicenceConditionsText as string
   }
   return { valuesToSave }
 }
