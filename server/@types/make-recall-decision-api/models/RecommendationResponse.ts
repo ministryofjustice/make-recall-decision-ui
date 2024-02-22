@@ -89,6 +89,7 @@ export type RecommendationResponse = {
   bookRecallToPpud?: BookRecallToPpud;
   prisonOffender?: PrisonOffender;
   ppudOffender?: PpudOffender;
+  additionalLicenceConditionsText?: string;
 };
 
 export namespace RecommendationResponse {
