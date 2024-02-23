@@ -49,7 +49,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
     if (!isPPDocumentCreated) {
-      res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/xyz`)
+      res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/licence-conditions-ap`)
       return
     }
   }
@@ -62,7 +62,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     deActivate: [],
   })
 
-  res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/xyz`)
+  res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/licence-conditions-ap`)
 
   appInsightsEvent(
     EVENTS.MRD_RECOMMENDATION_STARTED,

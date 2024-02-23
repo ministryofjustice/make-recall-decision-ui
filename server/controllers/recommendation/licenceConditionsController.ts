@@ -150,7 +150,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+  if (urlInfo.originalUrl?.endsWith('/licence-conditions-ap')) {
+    res.redirect(303, nextPageLinkUrl({ nextPageId: 'xyz', urlInfo }))
+  } else {
+    res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+  }
 }
 
 export default { get, post }
