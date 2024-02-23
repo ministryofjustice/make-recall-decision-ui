@@ -40,7 +40,7 @@ describe('Out of Hours Warning Controller', () => {
       next
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/xyz`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/licence-conditions-ap`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -84,7 +84,7 @@ describe('Out of Hours Warning Controller', () => {
       {}
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/456/xyz`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/456/licence-conditions-ap`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

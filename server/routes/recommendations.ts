@@ -467,6 +467,13 @@ ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUplo
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
+const apRouteBuilder = RouteBuilder.build(recommendations)
+  .withRoles(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.RW), hasRole(HMPPS_AUTH_ROLE.ODM)))
+  .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
+
+apRouteBuilder.get('licence-conditions-ap', licenceConditionsController.get)
+apRouteBuilder.post('licence-conditions-ap', licenceConditionsController.post)
+
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
 post('', createRecommendationController)
