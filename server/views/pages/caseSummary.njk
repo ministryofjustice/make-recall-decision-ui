@@ -61,6 +61,11 @@
                                                     </a>
                                                 {% endif %}
                                             {% endif %}
+                                            {% if showOutOfHoursRecallButton %}
+                                                <a class='govuk-button' href='out-of-hours-warning'>
+                                                    Start out-of-hours recall
+                                                </a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     {% if flags.flagDeleteRecommendationProcess and recommendationBanner.display %}

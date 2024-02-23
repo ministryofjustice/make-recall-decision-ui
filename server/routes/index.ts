@@ -22,9 +22,11 @@ import ppcsSearch from '../controllers/personSearch/ppcsSearchController'
 import { nothingMore } from './nothing-more'
 import ppcsSearchResultsController from '../controllers/personSearch/ppcsSearchResultsController'
 import noPpcsSearchResultsController from '../controllers/personSearch/noPpcsSearchResultsController'
+import outOfHoursWarningController from '../controllers/recommendations/outOfHoursWarningController'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler), nothingMore)
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
   router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
@@ -46,6 +48,8 @@ export default function routes(router: Router): Router {
 
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
   get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
+  get(`${routeUrls.cases}/:crn/out-of-hours-warning`, outOfHoursWarningController.get)
+  post(`${routeUrls.cases}/:crn/out-of-hours-warning`, outOfHoursWarningController.post)
   get(`${routeUrls.cases}/:crn/:sectionId`, caseSummaryController.get)
   get(`${routeUrls.cases}/:crn/replace-recommendation/:recommendationId`, replaceCurrentRecommendationController.get)
   return router
