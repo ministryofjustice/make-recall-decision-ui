@@ -104,6 +104,8 @@ import selectPpudSentenceController from '../controllers/recommendation/selectPp
 import editPrisonBookingNumberController from '../controllers/recommendation/editPrisonBookingNumberController'
 import supportingDocumentsController from '../controllers/recommendation/supportingDocumentsController'
 import supportingDocumentUploadController from '../controllers/recommendation/supportingDocumentUploadController'
+import apRecordDecisionController from '../controllers/recommendation/apRecordDecisionController'
+import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
 
 const recommendations = Router()
 
@@ -473,6 +475,13 @@ const apRouteBuilder = RouteBuilder.build(recommendations)
 
 apRouteBuilder.get('licence-conditions-ap', licenceConditionsController.get)
 apRouteBuilder.post('licence-conditions-ap', licenceConditionsController.post)
+
+apRouteBuilder.get('ap-record-decision', apRecordDecisionController.get)
+apRouteBuilder.post('ap-record-decision', apRecordDecisionController.post)
+
+apRouteBuilder
+  // .withCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))
+  .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
