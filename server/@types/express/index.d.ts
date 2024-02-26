@@ -1,15 +1,17 @@
 import { ConfirmationMessage, NamedFormError } from '../pagesForms'
+import { PpudSearchResult } from '../make-recall-decision-api/models/ppudSearchResult'
 
 export default {}
 
 declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
   interface SessionData {
-    returnTo: string
-    nowInMinutes: number
+    returnTo?: string
+    nowInMinutes?: number
     errors?: NamedFormError[]
     unsavedValues?: Record<string, unknown>
     confirmationMessage?: ConfirmationMessage
+    ppudSearchResults?: PpudSearchResult[]
   }
 }
 
