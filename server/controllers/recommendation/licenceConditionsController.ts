@@ -2,13 +2,14 @@ import { NextFunction, Request, Response } from 'express'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesLicenceConditions } from '../recommendations/licenceConditions/inputDisplayValues'
-import { validateLicenceConditionsBreached } from '../recommendations/licenceConditions/formValidator'
 import { CaseSummaryOverviewResponseV2 } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponseV2'
-import { formOptions } from '../recommendations/formOptions/formOptions'
-import { isDefined } from '../../utils/utils'
+import { formOptions, isValueValid } from '../recommendations/formOptions/formOptions'
+import { isCaseRestrictedOrExcluded, isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
+import { transformLicenceConditions } from '../caseSummary/licenceConditions/transformLicenceConditions'
+import { cleanseUiList } from '../../utils/lists'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
@@ -62,21 +63,29 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
+  const { licenceConditionsBreached, activeCustodialConvictionCount, additionalLicenceConditionsText } = req.body
   const {
     flags,
     user: { token },
     urlInfo,
   } = res.locals
 
-  const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(req.body.crn, 'licence-conditions', token)
+  const caseSummary = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(req.body.crn, 'licence-conditions', token)
+  if (isCaseRestrictedOrExcluded(caseSummary.userAccessResponse)) {
+    req.session.errors = [error('excludedRestrictedCrn')]
+    return res.redirect(303, req.originalUrl)
+  }
 
-  const cvlLicence = !!json?.cvlLicence
-  let errors = []
   let valuesToSave
-  let unsavedValues
-  if (cvlLicence) {
-    const { licenceConditionsBreached } = req.body
+  if (caseSummary?.cvlLicence) {
     const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
+
+    const hasAdditionalLicenceConditionsText: boolean = !!additionalLicenceConditionsText?.length
+
+    if (allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) {
+      req.session.errors = [error('noLicenceConditionsSelected')]
+      return res.redirect(303, req.originalUrl)
+    }
 
     const selectedStandardConditions = allSelectedConditions
       .filter(item => item.startsWith('standard|'))
@@ -90,59 +99,101 @@ async function post(req: Request, res: Response, _: NextFunction) {
       .filter(item => item.startsWith('bespoke|'))
       .map(item => item.replace('bespoke|', ''))
 
-    if (allSelectedConditions.length === 0) {
-      errors.push(
-        makeErrorObject({
-          id: 'licenceConditionsBreached',
-          text: strings.errors.noLicenceConditionsSelected,
-          errorId: 'noLicenceConditionsSelected',
-        })
-      )
-    } else {
-      valuesToSave = {
-        cvlLicenceConditionsBreached: {
-          standardLicenceConditions: {
-            selected: selectedStandardConditions,
-            allOptions: json.cvlLicence.standardLicenceConditions.map(condition => ({
-              code: condition.code,
-              text: condition.text,
-            })),
-          },
-          additionalLicenceConditions: {
-            selected: selectedAdditionalLicenceConditions,
-            allOptions: json.cvlLicence.additionalLicenceConditions.map(condition => ({
-              code: condition.code,
-              text: condition.text,
-            })),
-          },
-          bespokeLicenceConditions: {
-            selected: selectedBespokeLicenceConditions,
-            allOptions: json.cvlLicence.bespokeConditions.map(condition => ({
-              code: condition.code,
-              text: condition.text,
-            })),
-          },
+    valuesToSave = {
+      cvlLicenceConditionsBreached: {
+        standardLicenceConditions: {
+          selected: selectedStandardConditions,
+          allOptions: caseSummary.cvlLicence.standardLicenceConditions.map(condition => ({
+            code: condition.code,
+            text: condition.text,
+          })),
         },
-      }
+        additionalLicenceConditions: {
+          selected: selectedAdditionalLicenceConditions,
+          allOptions: caseSummary.cvlLicence.additionalLicenceConditions.map(condition => ({
+            code: condition.code,
+            text: condition.text,
+          })),
+        },
+        bespokeLicenceConditions: {
+          selected: selectedBespokeLicenceConditions,
+          allOptions: caseSummary.cvlLicence.bespokeConditions.map(condition => ({
+            code: condition.code,
+            text: condition.text,
+          })),
+        },
+      },
+      additionalLicenceConditionsText,
     }
   } else {
-    const response = await validateLicenceConditionsBreached({
-      requestBody: req.body,
-      recommendationId,
-      urlInfo,
-      token,
+    const activeCustodialConvictionCountAsNumber = Number(activeCustodialConvictionCount)
+    if (Number.isNaN(activeCustodialConvictionCountAsNumber)) {
+      req.session.errors = [error('invalidConvictionCount')]
+      return res.redirect(303, req.originalUrl)
+    }
+
+    const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
+
+    const selectedStandardConditions = allSelectedConditions
+      .filter(item => item.startsWith('standard|'))
+      .map(item => item.replace('standard|', ''))
+
+    const selectedAdditionalLicenceConditions = allSelectedConditions
+      .filter(item => item.startsWith('additional|'))
+      .map(item => {
+        const [, mainCatCode, subCatCode] = item.split('|')
+        return { mainCatCode, subCatCode }
+      })
+
+    const invalidStandardCondition = selectedStandardConditions.some(
+      id => !isValueValid(id, 'standardLicenceConditions')
+    )
+    const hasAdditionalLicenceConditionsText: boolean = !!additionalLicenceConditionsText?.length
+    if (
+      activeCustodialConvictionCountAsNumber === 1 &&
+      ((allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) || invalidStandardCondition)
+    ) {
+      req.session.errors = [error('noLicenceConditionsSelected')]
+      return res.redirect(303, req.originalUrl)
+    }
+
+    const { licenceConvictions } = transformLicenceConditions(caseSummary)
+    if (licenceConvictions.hasMultipleActiveCustodial) {
+      req.session.errors = [error('hasMultipleActiveCustodial')]
+      return res.redirect(303, req.originalUrl)
+    }
+    if (!licenceConvictions.activeCustodial[0]) {
+      req.session.errors = [error('noActiveCustodial')]
+      return res.redirect(303, req.originalUrl)
+    }
+
+    const conviction = licenceConvictions.activeCustodial[0]
+    const allAdditionalLicenceConditions = conviction.licenceConditions.map(condition => {
+      return {
+        mainCatCode: condition.mainCategory.code,
+        subCatCode: condition.subCategory.code,
+        title: condition.mainCategory.description,
+        details: condition.subCategory.description,
+        note: condition.notes,
+      }
     })
 
-    errors = response.errors
-    valuesToSave = response.valuesToSave
-    unsavedValues = response.unsavedValues
+    valuesToSave = {
+      activeCustodialConvictionCount: activeCustodialConvictionCountAsNumber,
+      licenceConditionsBreached: {
+        standardLicenceConditions: {
+          selected: selectedStandardConditions,
+          allOptions: cleanseUiList(formOptions.standardLicenceConditions),
+        },
+        additionalLicenceConditions: {
+          selectedOptions: selectedAdditionalLicenceConditions,
+          allOptions: allAdditionalLicenceConditions,
+        },
+      },
+      additionalLicenceConditionsText,
+    }
   }
 
-  if (errors && errors.length > 0) {
-    req.session.errors = errors
-    req.session.unsavedValues = unsavedValues
-    return res.redirect(303, req.originalUrl)
-  }
   await updateRecommendation({
     recommendationId,
     valuesToSave,
@@ -155,6 +206,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } else {
     res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
   }
+}
+
+function error(errorId: string) {
+  return makeErrorObject({
+    id: 'licenceConditionsBreached',
+    text: strings.errors[errorId],
+    errorId,
+  })
 }
 
 export default { get, post }

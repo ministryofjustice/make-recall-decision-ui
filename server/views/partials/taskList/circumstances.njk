@@ -2,8 +2,9 @@
 set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached.standardLicenceConditions.selected) or
       hasData(recommendation.licenceConditionsBreached.additionalLicenceConditions.selectedOptions) or
       hasData(recommendation.cvlLicenceConditionsBreached.standardLicenceConditions.selected) or
-      hasData(recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions.selectedOptions) or
-      hasData(recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions.selected)
+      hasData(recommendation.cvlLicenceConditionsBreached.additionalLicenceConditions.selected) or
+      hasData(recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions.selected) or
+      recommendation.additionalLicenceConditionsText.length > 0
 %}
 
 <li>
