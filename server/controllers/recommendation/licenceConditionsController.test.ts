@@ -66,6 +66,8 @@ const TEMPLATE = {
   },
 }
 
+const DELIUS_TEMPLATE = { ...TEMPLATE, cvlLicence: undefined as string | undefined }
+
 describe('get', () => {
   it('load with no data', async () => {
     ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
@@ -204,9 +206,143 @@ describe('get', () => {
 })
 
 describe('post', () => {
+  it('post with crn restricted', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue({
+      userAccessResponse: {
+        userRestricted: true,
+      },
+    })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: 'additional|NST30',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    await licenceConditionsController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'excludedRestrictedCrn',
+        href: '#licenceConditionsBreached',
+        name: 'licenceConditionsBreached',
+        text: 'This CRN is excluded or restricted',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with crn multiple active custodial convictions', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue({
+      activeConvictions: [
+        {
+          sentence: {
+            isCustodial: true,
+            licenceExpiryDate: '2023-06-16',
+            sentenceExpiryDate: '2021-11-23',
+          },
+        },
+        {
+          sentence: {
+            isCustodial: true,
+            licenceExpiryDate: '2021-03-24',
+          },
+        },
+      ],
+    })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: 'additional|NST30',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    await licenceConditionsController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'hasMultipleActiveCustodial',
+        href: '#licenceConditionsBreached',
+        name: 'licenceConditionsBreached',
+        text: 'This person has multiple active custodial convictions',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with crn no active custodial convictions', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue({ activeConvictions: [] })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: 'additional|NST30',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    await licenceConditionsController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'noActiveCustodial',
+        href: '#licenceConditionsBreached',
+        name: 'licenceConditionsBreached',
+        text: 'This person has no active custodial convictions',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
   it('post in ap journey', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
@@ -231,7 +367,7 @@ describe('post', () => {
   })
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
     const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
@@ -296,6 +432,10 @@ describe('post', () => {
                 text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
               },
             ],
+          },
+          additionalLicenceConditions: {
+            selectedOptions: [],
+            allOptions: [],
           },
         },
       },
@@ -376,9 +516,9 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('post with invalid data', async () => {
+  it('post with nothing selected and only 1 active conviction', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
 
     const req = mockReq({
       originalUrl: 'some-url',
@@ -412,5 +552,210 @@ describe('post', () => {
       },
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with invalid standard condition', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: 'standard|BANANA',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    await licenceConditionsController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'noLicenceConditionsSelected',
+        href: '#licenceConditionsBreached',
+        invalidParts: undefined,
+        name: 'licenceConditionsBreached',
+        text: 'You must select one or more licence conditions',
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with nothing selected but multiple active convictions', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '2',
+        licenceConditionsBreached: undefined,
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    const next = mockNext()
+
+    await licenceConditionsController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        activeCustodialConvictionCount: 2,
+        additionalLicenceConditionsText: undefined,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: [],
+            allOptions: [
+              {
+                value: 'GOOD_BEHAVIOUR',
+                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+              },
+              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
+              {
+                value: 'KEEP_IN_TOUCH',
+                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
+              },
+              {
+                value: 'SUPERVISING_OFFICER_VISIT',
+                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+              },
+              {
+                value: 'ADDRESS_APPROVED',
+                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
+              },
+              {
+                value: 'NO_WORK_UNDERTAKEN',
+                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
+              },
+              {
+                value: 'NO_TRAVEL_OUTSIDE_UK',
+                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
+              },
+              {
+                value: 'NAME_CHANGE',
+                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
+              },
+              {
+                value: 'CONTACT_DETAILS',
+                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
+              },
+            ],
+          },
+          additionalLicenceConditions: {
+            selectedOptions: [],
+            allOptions: [],
+          },
+        },
+      },
+      featureFlags: {},
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+  it('post with nothing selected but no active convictions', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '0',
+        licenceConditionsBreached: undefined,
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    const next = mockNext()
+
+    await licenceConditionsController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        activeCustodialConvictionCount: 0,
+        additionalLicenceConditionsText: undefined,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: [],
+            allOptions: [
+              {
+                value: 'GOOD_BEHAVIOUR',
+                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+              },
+              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
+              {
+                value: 'KEEP_IN_TOUCH',
+                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
+              },
+              {
+                value: 'SUPERVISING_OFFICER_VISIT',
+                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
+              },
+              {
+                value: 'ADDRESS_APPROVED',
+                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
+              },
+              {
+                value: 'NO_WORK_UNDERTAKEN',
+                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
+              },
+              {
+                value: 'NO_TRAVEL_OUTSIDE_UK',
+                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
+              },
+              {
+                value: 'NAME_CHANGE',
+                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
+              },
+              {
+                value: 'CONTACT_DETAILS',
+                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
+              },
+            ],
+          },
+          additionalLicenceConditions: {
+            selectedOptions: [],
+            allOptions: [],
+          },
+        },
+      },
+      featureFlags: {},
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

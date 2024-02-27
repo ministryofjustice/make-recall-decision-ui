@@ -1,24 +1,18 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <input type="hidden" name="activeCustodialConvictionCount"
-                       value="{{ caseSummary.licenceConvictions.activeCustodial.length }}" />
-
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
+                <input type="hidden" name="activeCustodialConvictionCount" value="{{ caseSummary.licenceConvictions.activeCustodial.length }}"/>
                 {% include '../../partials/notificationBanners/convictionsLicencesBanner.njk' %}
-
-                {% if caseSummary.licenceConvictions.activeCustodial.length > 0%}
+                {% if caseSummary.licenceConvictions.activeCustodial.length > 0 %}
                     {% if caseSummary.cvlLicence %}
                         {% include './licenceConditionsCVL.njk' %}
                     {% else %}
@@ -30,4 +24,3 @@
         </div>
     </div>
 {% endblock %}
-

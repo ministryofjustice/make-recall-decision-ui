@@ -11,7 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const licenceConditionsBreachedCompleted =
     hasData(recommendation.licenceConditionsBreached) ||
     hasData(recommendation.cvlLicenceConditionsBreached) ||
-    hasData(recommendation.additionalLicenceConditionsText)
+    !!recommendation.additionalLicenceConditionsText?.length
   const alternativesToRecallTriedCompleted = hasData(recommendation.alternativesToRecallTried)
   const isExtendedSentenceCompleted = hasData(recommendation.isExtendedSentence)
   const isIndeterminateSentenceCompleted = hasData(recommendation.isIndeterminateSentence)

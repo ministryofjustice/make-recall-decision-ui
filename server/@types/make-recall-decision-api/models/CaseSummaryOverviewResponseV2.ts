@@ -18,5 +18,5 @@ export type CaseSummaryOverviewResponseV2 = {
   lastRelease?: Release;
   risk?: Risk;
   activeRecommendation?: ActiveRecommendation;
-  cvlLicence: CVLLicence;
+  cvlLicence?: CVLLicence;
 };

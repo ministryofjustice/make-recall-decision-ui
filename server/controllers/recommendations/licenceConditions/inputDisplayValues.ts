@@ -7,6 +7,7 @@ export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: Input
     return {
       standardLicenceConditions: standardLicenceConditions?.selected,
       additionalLicenceConditions: additionalLicenceConditions?.selectedOptions,
+      additionalLicenceConditionsText: apiValues.additionalLicenceConditionsText,
     }
   }
   if (!isDefined(errors) && apiValues.cvlLicenceConditionsBreached) {
@@ -17,10 +18,19 @@ export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: Input
       standardLicenceConditions: standardLicenceConditions?.selected,
       additionalLicenceConditions: additionalLicenceConditions?.selected,
       bespokeLicenceConditions: bespokeLicenceConditions?.selected,
+      additionalLicenceConditionsText: apiValues.additionalLicenceConditionsText,
     }
   }
+  if (!isDefined(errors) && !!apiValues.additionalLicenceConditionsText?.length)
+    return {
+      standardLicenceConditions: undefined,
+      additionalLicenceConditions: undefined,
+      additionalLicenceConditionsText: apiValues.additionalLicenceConditionsText,
+    }
+
   return {
     standardLicenceConditions: undefined,
     additionalLicenceConditions: undefined,
+    additionalLicenceConditionsText: undefined,
   }
 }
