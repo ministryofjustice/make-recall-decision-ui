@@ -1,8 +1,8 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import searchPpudController from './searchPpudResultsController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { updateRecommendation, searchPpud, ppudDetails } from '../../data/makeDecisionApiClient'
-import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { ppudDetails, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { PpudSearchResult } from '../../@types/make-recall-decision-api/models/ppudSearchResult'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -34,36 +34,23 @@ const PPUD_DETAILS_TEMPLATE = {
 
 describe('get', () => {
   it('load', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    const results = [
+      {
+        id: '4F6666656E64657269643D313731383138G725H664',
+        croNumber: '123456/12A',
+        nomsId: 'JG123POE',
+        firstNames: 'John',
+        familyName: 'Teal',
+        dateOfBirth: '2000-01-01',
+      },
+    ]
+
     const req = mockReq({
       params: { recommendationId: '123' },
-    })
-    ;(searchPpud as jest.Mock).mockResolvedValue({
-      results: [
-        {
-          id: '4F6666656E64657269643D313731383138G725H664',
-          croNumber: '123456/12A',
-          nomsId: 'JG123POE',
-          firstNames: 'John',
-          familyName: 'Teal',
-          dateOfBirth: '2000-01-01',
-        },
-      ],
+      session: { ppudSearchResults: results as PpudSearchResult[], cookie: undefined },
     })
 
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: {
-            croNumber: '123X',
-            nomsNumber: '567Y',
-            surname: 'Mayer',
-            dateOfBirth: '2001-01-01',
-          },
-        },
-        token: 'token1',
-      },
-    })
+    const res = mockRes({})
     const next = mockNext()
     await searchPpudController.get(req, res, next)
 
@@ -79,46 +66,8 @@ describe('get', () => {
       },
     ])
 
+    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/searchPpudResults`)
     expect(next).toHaveBeenCalled()
-  })
-  it('load when no results', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(searchPpud as jest.Mock).mockResolvedValue({
-      results: [],
-    })
-    const req = mockReq({
-      params: { recommendationId: '123' },
-    })
-    const res = mockRes({
-      locals: {
-        user: { username: 'Bill', region: { code: 'N07', name: 'London' } },
-        recommendation: {
-          crn: 'abc',
-          personOnProbation: {
-            fullName: 'Mr McMacintosh',
-          },
-        },
-        token: 'token',
-      },
-    })
-    const next = mockNext()
-
-    await searchPpudController.get(req, res, next)
-
-    expect(res.locals.page).toEqual({ id: 'noSearchPpudResults' })
-    expect(res.locals.results).toEqual([])
-
-    expect(next).not.toHaveBeenCalled()
-    expect(appInsightsEvent).toHaveBeenCalledWith(
-      'mrdNoPpudSearchResultsPageView',
-      'Bill',
-      {
-        crn: 'abc',
-        pageUrlSlug: 'no-ppud-search-results',
-        region: { code: 'N07', name: 'London' },
-      },
-      {}
-    )
   })
 })
 

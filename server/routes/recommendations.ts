@@ -400,6 +400,8 @@ const ppcsRouteBuilder = ppRouteBuilder
   .withCheck(and(statusIsActive(STATUSES.SENT_TO_PPCS), not(statusIsActive(STATUSES.REC_CLOSED))))
 
 ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
+ppcsRouteBuilder.post('search-ppud', ppcsConsiderRecallController.post)
+
 ppcsRouteBuilder.get('no-search-ppud-results', noSearchPpudResults.get)
 
 ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)

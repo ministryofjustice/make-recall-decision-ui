@@ -59,7 +59,16 @@
                 </div>
             </dl>
             <div class='govuk-!-margin-top-6'>
-                <a class='govuk-button' href='{{ urlInfo.basePath }}search-ppud-results'>Continue</a>
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                    <input type="hidden" name="croNumber" value="{{ recommendation.personOnProbation.croNumber }}" />
+                    <input type="hidden" name="nomsNumber" value="{{ recommendation.personOnProbation.nomsNumber }}" />
+                    <input type="hidden" name="surname" value="{{ recommendation.personOnProbation.surname }}" />
+                    <input type="hidden" name="dateOfBirth" value="{{ recommendation.personOnProbation.dateOfBirth }}" />
+                    <input type="hidden" name="fullName" value="{{ recommendation.personOnProbation.fullName }}" />
+                    {{ formSubmitButton() }}
+                </form>
             </div>
         </div>
     </div>
