@@ -106,6 +106,7 @@ import supportingDocumentsController from '../controllers/recommendation/support
 import supportingDocumentUploadController from '../controllers/recommendation/supportingDocumentUploadController'
 import apRecordDecisionController from '../controllers/recommendation/apRecordDecisionController'
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
+import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
 
 const recommendations = Router()
 
@@ -427,6 +428,9 @@ ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
 
 ppcsRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
 ppcsRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
+
+ppcsRouteBuilder.get('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.get)
+ppcsRouteBuilder.post('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.post)
 
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)

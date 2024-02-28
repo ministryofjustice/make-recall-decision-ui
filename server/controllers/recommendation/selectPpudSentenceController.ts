@@ -67,7 +67,10 @@ async function post(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sentence-to-commit', urlInfo })
+  const nextPagePath = nextPageLinkUrl({
+    nextPageId: ppudSentenceId === 'ADD_NEW' ? 'sentence-to-commit' : 'sentence-to-commit-existing-offender',
+    urlInfo,
+  })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()
