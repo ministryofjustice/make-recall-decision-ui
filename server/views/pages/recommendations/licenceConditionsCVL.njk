@@ -52,7 +52,7 @@
                         {% endif %}
                         <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Add breached license conditions</h2>
                         <p class='govuk-body govuk-!-margin-bottom-0'></p>
-                        {% set hint = "Take the conditions from the license for " + recommendation.personOnProbation.name %}
+                        {% set hint = ["Take the conditions from the license for ", recommendation.personOnProbation.name, "."] | join %}
                         {{ govukTextarea({
                             name: "additionalLicenceConditionsText",
                             id: "additional-licence-conditions-text",
