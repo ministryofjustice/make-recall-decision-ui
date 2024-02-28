@@ -219,6 +219,12 @@ describe('taskCompleteness', () => {
     it('returns true if a standard cvl licence condition is selected', () => {
       const { statuses, areAllComplete } = taskCompleteness({
         ...recommendationResponse,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {},
+          additionalLicenceConditions: {
+            selectedOptions: [],
+          },
+        },
         cvlLicenceConditionsBreached: {
           standardLicenceConditions: {
             selected: ['1', '2'],
@@ -234,6 +240,12 @@ describe('taskCompleteness', () => {
     it('returns true if a additional cvl licence condition is selected', () => {
       const { statuses, areAllComplete } = taskCompleteness({
         ...recommendationResponse,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {},
+          additionalLicenceConditions: {
+            selectedOptions: [],
+          },
+        },
         cvlLicenceConditionsBreached: {
           additionalLicenceConditions: {
             selected: ['1', '2'],
@@ -249,6 +261,12 @@ describe('taskCompleteness', () => {
     it('returns true if a bespoke cvl licence condition is selected', () => {
       const { statuses, areAllComplete } = taskCompleteness({
         ...recommendationResponse,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {},
+          additionalLicenceConditions: {
+            selectedOptions: [],
+          },
+        },
         cvlLicenceConditionsBreached: {
           bespokeLicenceConditions: {
             selected: ['1', '2'],
@@ -256,6 +274,21 @@ describe('taskCompleteness', () => {
           },
         },
         bookRecallToPpud: null,
+      } as RecommendationResponse)
+      expect(statuses.licenceConditionsBreached).toEqual(true)
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns true if additional licence text is supplied', () => {
+      const { statuses, areAllComplete } = taskCompleteness({
+        ...recommendationResponse,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {},
+          additionalLicenceConditions: {
+            selectedOptions: [],
+          },
+        },
+        additionalLicenceConditionsText: 'test',
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
