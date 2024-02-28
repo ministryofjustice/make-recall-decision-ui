@@ -225,11 +225,11 @@ export type PpudOffence = {
 }
 
 export type PpudRelease = {
-  category: String,
-  dateOfRelease: String,
-  releasedFrom: String,
-  releasedUnder: String,
-  releaseType: String,
+  category: string,
+  dateOfRelease: string,
+  releasedFrom: string,
+  releasedUnder: string,
+  releaseType: string,
 }
 
 export type PpudSentenceLength = {

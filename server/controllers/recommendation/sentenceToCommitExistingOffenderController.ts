@@ -15,6 +15,14 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const sentences = recommendation.ppudOffender.sentences as PpudSentence[]
   const ppudSentence = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)
 
+  const latestReleaseDate = ppudSentence.releases
+    .map(release => Date.parse(release.dateOfRelease).valueOf())
+    .reduce((previousValue, currentValue) => Math.max(previousValue, currentValue), 0)
+
+  const latestRelease = ppudSentence.releases.find(
+    release => Date.parse(release.dateOfRelease).valueOf() === latestReleaseDate
+  )
+
   res.locals = {
     ...res.locals,
     page: {
@@ -22,6 +30,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     },
     offence,
     ppudSentence,
+    latestRelease,
   }
 
   res.render(`pages/recommendations/sentenceToCommitExistingOffender`)
