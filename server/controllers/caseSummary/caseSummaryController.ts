@@ -64,7 +64,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
   let backLink = '/search'
 
   let showOutOfHoursRecallButton =
-    user.roles.includes('ROLE_MAKE_RECALL_DECISION_RW') || user.roles.includes('ROLE_MAKE_RECALL_DECISION_ODM')
+    user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('ROLE_MARD_DUTY_MANAGER')
   let recommendationButton: RecommendationButton = { display: false }
   const recommendationBanner: RecommendationBanner = { display: false }
 

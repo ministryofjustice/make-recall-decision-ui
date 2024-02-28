@@ -132,7 +132,7 @@ describe('get', () => {
       locals: {
         user: {
           username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_ODM'],
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_DUTY_MANAGER'],
         },
       },
     })
@@ -150,7 +150,7 @@ describe('get', () => {
       locals: {
         user: {
           username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_RW'],
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
         },
       },
     })
