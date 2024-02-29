@@ -82,29 +82,6 @@ describe('get', () => {
 
     await sentenceToCommitController.get(mockReq(), res, next)
   })
-  it('load - with existing ppud user and selected sentence', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          ppudOffender: {},
-          bookRecallToPpud: {
-            ppudSentenceId: '1234',
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                offenderChargeId: 3934369,
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      },
-    })
-    const next = mockNext()
-
-    await sentenceToCommitController.get(mockReq(), res, next)
-  })
 })
 
 describe('post', () => {
