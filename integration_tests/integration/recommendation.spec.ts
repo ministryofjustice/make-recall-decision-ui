@@ -2422,7 +2422,47 @@ context('Make a recommendation', () => {
 
       cy.getText('sentenceLength').should('contain', '4 years')
     })
-    it('book to ppud', () => {
+    it('book to ppud - create offender', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                sentenceTypeDescription: 'sentence type description',
+                offenceDescription: 'offence description',
+                offenderChargeId: 3934369,
+                offenceDate: '2023-11-17',
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                releaseDate: '2025-01-01',
+                licenceExpiryDate: '2025-01-02',
+                releasingPrison: 'releasing prison',
+                courtDescription: 'court description',
+                terms: [
+                  {
+                    years: 4,
+                    months: 0,
+                    weeks: 0,
+                    days: 0,
+                    code: 'IMP',
+                  },
+                ],
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/book-to-ppud`)
+      cy.pageHeading().should('contain', 'Create new PPUD record for Pinky Pooh')
+    })
+    it('book to ppud - update offender', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
@@ -2477,7 +2517,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Create new PPUD record for Pinky Pooh')
+      cy.pageHeading().should('contain', 'Book  Pinky Pooh onto PPUD')
     })
   })
 })
