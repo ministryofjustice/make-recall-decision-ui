@@ -10,6 +10,8 @@ import { strings } from '../../textStrings/en'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { transformLicenceConditions } from '../caseSummary/licenceConditions/transformLicenceConditions'
 import { cleanseUiList } from '../../utils/lists'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { EVENTS } from '../../utils/constants'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
@@ -63,12 +65,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { licenceConditionsBreached, activeCustodialConvictionCount, additionalLicenceConditionsText } = req.body
+  const { licenceConditionsBreached, activeCustodialConvictionCount, additionalLicenceConditionsText, crn } = req.body
   const {
     flags,
-    user: { token },
+    user: { username, token, region },
     urlInfo,
   } = res.locals
+
+  const hasAdditionalLicenceConditionsText: boolean = !!additionalLicenceConditionsText?.length
 
   const caseSummary = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(req.body.crn, 'licence-conditions', token)
   if (isCaseRestrictedOrExcluded(caseSummary.userAccessResponse)) {
@@ -79,8 +83,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
   let valuesToSave
   if (caseSummary?.cvlLicence) {
     const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
-
-    const hasAdditionalLicenceConditionsText: boolean = !!additionalLicenceConditionsText?.length
 
     if (allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) {
       req.session.errors = [error('noLicenceConditionsSelected')]
@@ -148,7 +150,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     const invalidStandardCondition = selectedStandardConditions.some(
       id => !isValueValid(id, 'standardLicenceConditions')
     )
-    const hasAdditionalLicenceConditionsText: boolean = !!additionalLicenceConditionsText?.length
+
     if (
       activeCustodialConvictionCountAsNumber === 1 &&
       ((allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) || invalidStandardCondition)
@@ -192,6 +194,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
       },
       additionalLicenceConditionsText,
     }
+  }
+
+  if (hasAdditionalLicenceConditionsText) {
+    appInsightsEvent(EVENTS.MRD_DELETED_RECOMMENDATION, username, { crn, recommendationId, region }, flags)
   }
 
   await updateRecommendation({
