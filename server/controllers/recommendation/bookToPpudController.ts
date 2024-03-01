@@ -5,6 +5,7 @@ import {
   ppudCreateOffender,
   ppudCreateRecall,
   ppudUpdateOffence,
+  ppudUpdateOffender,
   ppudUpdateRelease,
   ppudUpdateSentence,
   updateRecommendation,
@@ -17,6 +18,7 @@ import { strings } from '../../textStrings/en'
 import { PpudAddress } from '../../@types/make-recall-decision-api/models/PpudCreateOffenderRequest'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { PpudSentence } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -46,10 +48,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId: String(recommendation.id),
     token,
   })
-
-  const acoSigned = (statuses as RecommendationStatusResponse[])
-    .filter(s => s.active)
-    .find(s => s.name === STATUSES.ACO_SIGNED)
 
   let address
   if (recommendation.personOnProbation.addresses && recommendation.personOnProbation.addresses.length > 0) {
@@ -83,53 +81,74 @@ async function post(req: Request, res: Response, _: NextFunction) {
       phoneNumber: '',
     })
   }
-
   try {
-    const createOffenderResponse = await ppudCreateOffender(token, {
-      nomsId: recommendation.personOnProbation.nomsNumber,
-      croNumber: recommendation.personOnProbation.croNumber,
-      custodyType: recommendation.bookRecallToPpud?.custodyType,
-      dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
-      dateOfSentence: recommendation.bookRecallToPpud?.sentenceDate,
-      ethnicity: recommendation.bookRecallToPpud?.ethnicity,
-      firstNames: recommendation.bookRecallToPpud?.firstNames,
-      familyName: recommendation.bookRecallToPpud?.lastName,
-      gender: recommendation.bookRecallToPpud?.gender,
-      isInCustody,
-      indexOffence: recommendation.bookRecallToPpud?.indexOffence,
-      mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
-      prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
-      address,
-      additionalAddresses,
-    })
+    let offenderId
+    let sentenceId
+    if (recommendation.ppudOffender) {
+      offenderId = recommendation.ppudOffender.id
+      const sentences = recommendation.ppudOffender.sentences as PpudSentence[]
+      sentenceId = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)?.id
 
-    // write ppudOffender details, so that create offender is never called again, but rather update offender.
-    await updateRecommendation({
-      recommendationId: String(recommendationId),
-      valuesToSave: {
-        ppudOffender: {
-          id: createOffenderResponse.offender.id,
-          croOtherNumber: recommendation.personOnProbation.croNumber,
-          dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
-          ethnicity: recommendation.bookRecallToPpud?.ethnicity,
-          familyName: recommendation.bookRecallToPpud?.lastName,
-          firstNames: recommendation.bookRecallToPpud?.firstNames,
-          gender: recommendation.bookRecallToPpud?.gender,
-          immigrationStatus: 'N/A',
-          nomsId: recommendation.personOnProbation?.nomsNumber,
-          prisonerCategory: 'N/A',
-          prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
-          sentences: [],
-          status: 'N/A',
-          youngOffender: 'N/A',
+      await ppudUpdateOffender(token, offenderId, {
+        nomsId: recommendation.personOnProbation.nomsNumber,
+        croNumber: recommendation.personOnProbation.croNumber,
+        dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
+        ethnicity: recommendation.bookRecallToPpud?.ethnicity,
+        firstNames: recommendation.bookRecallToPpud?.firstNames,
+        familyName: recommendation.bookRecallToPpud?.lastName,
+        gender: recommendation.bookRecallToPpud?.gender,
+        isInCustody,
+        prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
+        address,
+        additionalAddresses,
+      })
+    } else {
+      const createOffenderResponse = await ppudCreateOffender(token, {
+        nomsId: recommendation.personOnProbation.nomsNumber,
+        croNumber: recommendation.personOnProbation.croNumber,
+        custodyType: recommendation.bookRecallToPpud?.custodyType,
+        dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
+        dateOfSentence: recommendation.bookRecallToPpud?.sentenceDate,
+        ethnicity: recommendation.bookRecallToPpud?.ethnicity,
+        firstNames: recommendation.bookRecallToPpud?.firstNames,
+        familyName: recommendation.bookRecallToPpud?.lastName,
+        gender: recommendation.bookRecallToPpud?.gender,
+        isInCustody,
+        indexOffence: recommendation.bookRecallToPpud?.indexOffence,
+        mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
+        prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
+        address,
+        additionalAddresses,
+      })
+
+      offenderId = createOffenderResponse.offender.id
+      sentenceId = createOffenderResponse.offender.sentence.id
+
+      // write ppudOffender details, so that create offender is never called again, but rather update offender.
+      await updateRecommendation({
+        recommendationId: String(recommendationId),
+        valuesToSave: {
+          ppudOffender: {
+            id: createOffenderResponse.offender.id,
+            croOtherNumber: recommendation.personOnProbation.croNumber,
+            dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
+            ethnicity: recommendation.bookRecallToPpud?.ethnicity,
+            familyName: recommendation.bookRecallToPpud?.lastName,
+            firstNames: recommendation.bookRecallToPpud?.firstNames,
+            gender: recommendation.bookRecallToPpud?.gender,
+            immigrationStatus: 'N/A',
+            nomsId: recommendation.personOnProbation?.nomsNumber,
+            prisonerCategory: 'N/A',
+            prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
+            sentences: [],
+            status: 'N/A',
+            youngOffender: 'N/A',
+          },
         },
-      },
-      token,
-      featureFlags: flags,
-    })
-
-    const offenderId = createOffenderResponse.offender.id
-    const sentenceId = createOffenderResponse.offender.sentence.id
+        token,
+        featureFlags: flags,
+      })
+    }
 
     const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
       o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
@@ -161,6 +180,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
       indexOffence: recommendation.bookRecallToPpud?.indexOffence,
       dateOfIndexOffence: nomisOffence.offenceDate,
     })
+
+    const acoSigned = (statuses as RecommendationStatusResponse[])
+      .filter(s => s.active)
+      .find(s => s.name === STATUSES.ACO_SIGNED)
 
     const releaseResponse = await ppudUpdateRelease(token, offenderId, sentenceId, {
       dateOfRelease: nomisOffence.releaseDate,

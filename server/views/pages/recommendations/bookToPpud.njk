@@ -27,11 +27,23 @@
                 </div>
             {% endif %}
 
-            <h1 class='govuk-heading-l'>Create new PPUD record for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
+            {% if recommendation.ppudOffender %}
+                <h1 class='govuk-heading-l'>Book  {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }} onto PPUD</h1>
 
-            <p class='govuk-body'>You are creating a new PPUD record for {{ recommendation.personOnProbation.fullName }}. This will include all the information you've just checked.</p>
+                <p class='govuk-body'>
+                    You are creating a booking for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}.
+                    This will include all the information you've just checked.
+                </p>
+            {% else %}
+                <h1 class='govuk-heading-l'>Create new PPUD record for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
 
-            <p class='govuk-body'>It will  take a few minutes to process.</p>
+                <p class='govuk-body'>
+                    You are creating a new PPUD record for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}.
+                    This will include all the information you've just checked.
+                </p>
+            {% endif %}
+
+            <p class='govuk-body'>It may take a few minutes to process.</p>
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

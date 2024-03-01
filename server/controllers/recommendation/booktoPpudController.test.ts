@@ -5,6 +5,7 @@ import {
   ppudCreateOffender,
   ppudCreateRecall,
   ppudUpdateOffence,
+  ppudUpdateOffender,
   ppudUpdateRelease,
   ppudUpdateSentence,
   updateRecommendation,
@@ -38,7 +39,7 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post - happy path', async () => {
+  it('post - happy path - create offender', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
       whoCompletedPartA: {
@@ -252,6 +253,129 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
     expect(next).not.toHaveBeenCalled()
+  })
+
+  it('post - happy path - update offender', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      ppudOffender: {
+        id: '567',
+        sentences: [{ id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380' }],
+      },
+      whoCompletedPartA: {
+        name: 'dude',
+        email: 'dude@me.com',
+        telephone: '123456',
+        region: 'region A',
+        localDeliveryUnit: 'here',
+        isPersonProbationPractitionerForOffender: true,
+      },
+      prisonOffender: {
+        status: 'INACTIVE OUT',
+      },
+      bookRecallToPpud: {
+        decisionDateTime: '2024-01-29T16:15:39',
+        isInCustody: false,
+        custodyType: 'Determinate',
+        releasingPrison: 'here',
+        indexOffence:
+          'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
+        ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
+        mappaLevel: 'Level 2 - local inter-agency management',
+        policeForce: 'NCIS Los Angeles',
+        probationArea: 'london',
+        recommendedTo: null,
+        receivedDateTime: '2024-01-29T16:15:39',
+        releaseDate: '2023-11-20',
+        riskOfContrabandDetails: '',
+        riskOfSeriousHarmLevel: null,
+        sentenceDate: '2023-11-16',
+        gender: 'Male',
+        ethnicity: 'Irish',
+        firstNames: 'Johnny J',
+        firstName: null,
+        secondName: null,
+        lastName: 'Teale',
+        dateOfBirth: '1970-03-15',
+        cro: '123456/12A',
+        prisonNumber: '7878783',
+        legislationReleasedUnder: 'CJA 2023',
+      },
+      nomisIndexOffence: {
+        allOptions: [
+          {
+            offenderChargeId: 3934369,
+            sentenceDate: '2016-01-01',
+            offenceDate: '2016-01-05',
+            licenceExpiryDate: '2018-02-02',
+            releaseDate: '2017-03-03',
+            sentenceEndDate: '2019-04-04',
+            courtDescription: 'court desc',
+            terms: [
+              {
+                days: 1,
+                months: 2,
+                years: 3,
+                code: 'IMP',
+              },
+            ],
+          },
+        ],
+        selected: 3934369,
+      },
+    })
+    ;(getStatuses as jest.Mock).mockResolvedValue([
+      {
+        name: STATUSES.ACO_SIGNED,
+        createdByUserFullName: 'Mr Brightside',
+        emailAddress: 'email@me.com',
+        active: true,
+      },
+    ])
+    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+    })
+
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath },
+        flags: { xyz: true },
+      },
+    })
+    const next = mockNext()
+
+    await bookToPpudController.post(req, res, next)
+
+    expect(ppudUpdateOffender).toHaveBeenCalledWith('token', '567', {
+      additionalAddresses: [
+        {
+          line1: '',
+          line2: '',
+          phoneNumber: '',
+          postcode: '',
+          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+        },
+      ],
+      address: {
+        line1: 'Newtown',
+        line2: 'Northampton',
+        phoneNumber: '',
+        postcode: 'NN4 6HP',
+        premises: '41 Newport Pagnell Rd',
+      },
+      croNumber: '1234',
+      dateOfBirth: '1970-03-15',
+      ethnicity: 'Irish',
+      familyName: 'Teale',
+      firstNames: 'Johnny J',
+      gender: 'Male',
+      isInCustody: false,
+      nomsId: 'A12345',
+      prisonNumber: '7878783',
+    })
   })
 
   it('post - person not probation practitioner', async () => {
