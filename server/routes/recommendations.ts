@@ -106,6 +106,7 @@ import supportingDocumentsController from '../controllers/recommendation/support
 import supportingDocumentUploadController from '../controllers/recommendation/supportingDocumentUploadController'
 import apRecordDecisionController from '../controllers/recommendation/apRecordDecisionController'
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
+import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
 
 const recommendations = Router()
@@ -488,6 +489,9 @@ apRouteBuilder.post('ap-record-decision', apRecordDecisionController.post)
 apRouteBuilder
   // .withCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))
   .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
+
+apRouteBuilder.get('ap-recall-rationale', apRecallRationaleController.get)
+apRouteBuilder.post('ap-recall-rationale', apRecallRationaleController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
