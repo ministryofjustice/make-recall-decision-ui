@@ -28,25 +28,26 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-full">
                                     {% include '../partials/error-summary.njk' %}
-                                    <div class='flex-desktop flex--space-between flex--align-center'>
-                                        <div class='govuk-!-margin-bottom-8'>
-                                            <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
-                                                <li>CRN:
-                                                    <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span>
-                                                    <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
-                                                </li>
-                                                <li>Date of birth:
-                                                    <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span>
-                                                    (age
-                                                    <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
-                                                </li>
-                                                <li>Gender:
-                                                    <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
-                                                </li>
-                                            </ul>
-                                            <div class="govuk-heading-xl govuk-!-margin-bottom-0" data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
-                                        </div>
-                                        <div class='flex__item-no-shrink'>
+
+                                    <div class='govuk-!-margin-bottom-1'>
+                                        <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
+                                            <li>CRN:
+                                                <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span>
+                                                <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
+                                            </li>
+                                            <li>Date of birth:
+                                                <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span>
+                                                (age
+                                                <span data-qa='personalDetailsOverview-age'>{{ caseSummary.personalDetailsOverview.age }}</span>)<span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
+                                            </li>
+                                            <li>Gender:
+                                                <span data-qa='personalDetailsOverview-gender'>{{ caseSummary.personalDetailsOverview.gender }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class='flex-desktop flex--space-between flex--align-center govuk-!-margin-bottom-8'>
+                                        <div class="govuk-heading-xl govuk-!-margin-bottom-3" data-qa='sectionHeading'>{{ caseSummary.personalDetailsOverview.name }}</div>
+                                        <div class='flex__item-no-shrink govuk-button-group'>
                                             {% if recommendationButton.display and not user.hasPpcsRole %}
                                                 {% if recommendationButton.post %}
                                                     <form novalidate method="post">
