@@ -1,22 +1,26 @@
 import { NextFunction, Request, Response } from 'express'
-import { searchForPpcs } from '../../data/makeDecisionApiClient'
+import { getRecommendation, searchForPpcs } from '../../data/makeDecisionApiClient'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { crn } = req.query
-  const { user } = res.locals
+  const {
+    user: { token },
+  } = res.locals
 
   if (!isDefined(crn) || isEmptyStringOrWhitespace(crn as string)) {
     res.redirect(303, `no-ppcs-search-results?crn=`)
     return
   }
 
-  const { results } = await searchForPpcs(user.token, crn as string)
+  const { results } = await searchForPpcs(token, crn as string)
 
   if (results.length === 0) {
     res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
     return
   }
+
+  const recommendation = await getRecommendation(String(results[0].recommendationId), token)
 
   res.locals = {
     ...res.locals,
@@ -24,6 +28,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'ppcsSearchResults',
     },
     crn,
+    bookingOnStarted: !!recommendation.bookingMomento,
     result: results[0],
   }
 

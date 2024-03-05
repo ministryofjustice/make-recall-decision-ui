@@ -26,6 +26,7 @@ import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
 import { CvlLicenceConditionsBreached } from "./CvlLicenceConditionsBreached";
+import BookingMomento from "../../../booking/BookingMomento";
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -90,6 +91,7 @@ export type RecommendationResponse = {
   prisonOffender?: PrisonOffender;
   ppudOffender?: PpudOffender;
   additionalLicenceConditionsText?: string;
+  bookingMomento?: BookingMomento;
 };
 
 export namespace RecommendationResponse {
@@ -149,28 +151,24 @@ export type Term = {
 }
 
 export type BookRecallToPpud = {
-  decisionDateTime: string,
-  custodyType: string,
-  indexOffence: string,
-  ppudSentenceId?: string,
-  mappaLevel: string,
-  policeForce: string,
-  probationArea: string,
-  recommendedTo: PpudUser,
-  receivedDateTime?: string,
-  releaseDate: string,
-  riskOfContrabandDetails: string,
-  riskOfSeriousHarmLevel: string,
-  sentenceDate: string,
-  gender: string,
-  ethnicity: string,
   firstNames: string,
   lastName: string,
   dateOfBirth: string,
-  cro: string,
-  legislationReleasedUnder: string,
-  prisonNumber: string,
-  releasingPrison: string,
+  prisonNumber?: string,
+  cro?: string,
+  decisionDateTime?: string,
+  receivedDateTime?: string,
+  custodyType?: string,
+  indexOffence?: string,
+  ppudSentenceId?: string,
+  mappaLevel?: string,
+  policeForce?: string,
+  probationArea?: string,
+  sentenceDate?: string,
+  gender?: string,
+  ethnicity: string,
+  legislationReleasedUnder?: string,
+  releasingPrison?: string,
 }
 
 export type PrisonOffender = {

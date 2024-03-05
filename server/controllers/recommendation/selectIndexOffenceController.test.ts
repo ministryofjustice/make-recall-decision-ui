@@ -214,7 +214,6 @@ describe('post', () => {
         },
         bookRecallToPpud: {
           mappaLevel: 'Mappa Level 1',
-          releaseDate: '2039-12-01',
           sentenceDate: '2019-01-20',
         },
       },

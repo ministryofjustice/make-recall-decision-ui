@@ -100,12 +100,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       prisonNumber: recommendation.prisonOffender?.bookingNo,
       cro: recommendation.prisonOffender?.cro,
       decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
-      riskOfContrabandDetails: recommendation?.hasContrabandRisk?.selected
-        ? recommendation.hasContrabandRisk.details
-        : '',
       receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
-      releaseDate: null,
-      sentenceDate: null,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   } else {

@@ -1,21 +1,21 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import {
-  getRecommendation,
-  getStatuses,
-  ppudCreateOffender,
-  ppudCreateRecall,
-  ppudUpdateOffence,
-  ppudUpdateOffender,
-  ppudUpdateRelease,
-  ppudUpdateSentence,
-  updateRecommendation,
-  updateStatuses,
-} from '../../data/makeDecisionApiClient'
-import bookToPpudController, { currentHighestRosh } from './bookToPpudController'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { getRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
+import bookToPpudController from './bookToPpudController'
+import bookOffender from '../../booking/bookOffender'
+import updateSentence from '../../booking/updateSentence'
+import updateOffence from '../../booking/updateOffence'
+import updateRelease from '../../booking/updateRelease'
+import updateRecall from '../../booking/updateRecall'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { StageEnum } from '../../booking/StageEnum'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../booking/bookOffender')
+jest.mock('../../booking/updateRecall')
+jest.mock('../../booking/updateRelease')
+jest.mock('../../booking/updateSentence')
+jest.mock('../../booking/updateOffence')
+jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
   it('load', async () => {
@@ -39,81 +39,11 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post - happy path - create offender', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      whoCompletedPartA: {
-        name: 'dude',
-        email: 'dude@me.com',
-        telephone: '123456',
-        region: 'region A',
-        localDeliveryUnit: 'here',
-        isPersonProbationPractitionerForOffender: true,
-      },
-      prisonOffender: {
-        status: 'INACTIVE OUT',
-      },
-      bookRecallToPpud: {
-        decisionDateTime: '2024-01-29T16:15:39',
-        isInCustody: false,
-        custodyType: 'Determinate',
-        releasingPrison: 'here',
-        indexOffence:
-          'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
-        ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-        mappaLevel: 'Level 2 - local inter-agency management',
-        policeForce: 'NCIS Los Angeles',
-        probationArea: 'london',
-        recommendedTo: null,
-        receivedDateTime: '2024-01-29T16:15:39',
-        releaseDate: '2023-11-20',
-        riskOfContrabandDetails: '',
-        riskOfSeriousHarmLevel: null,
-        sentenceDate: '2023-11-16',
-        gender: 'Male',
-        ethnicity: 'Irish',
-        firstNames: 'Johnny J',
-        firstName: null,
-        secondName: null,
-        lastName: 'Teale',
-        dateOfBirth: '1970-03-15',
-        cro: '123456/12A',
-        prisonNumber: '7878783',
-        legislationReleasedUnder: 'CJA 2023',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            sentenceDate: '2016-01-01',
-            offenceDate: '2016-01-05',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            sentenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
-              {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
-              },
-            ],
-          },
-        ],
-        selected: 3934369,
-      },
-    })
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
-        emailAddress: 'email@me.com',
-        active: true,
-      },
-    ])
-    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
-    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
+  it('post - happy path', async () => {
+    const recommendation = { id: '12345' }
+    const flags = { xyz: true }
+
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
     const basePath = `/recommendations/1/`
     const req = mockReq({
@@ -123,100 +53,24 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         urlInfo: { basePath },
-        flags: { xyz: true },
+        flags,
       },
     })
     const next = mockNext()
 
+    ;(bookOffender as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENDER_BOOKED })
+    ;(updateSentence as jest.Mock).mockResolvedValue({ stage: StageEnum.SENTENCE_BOOKED })
+    ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
+    ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
+    ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
+
     await bookToPpudController.post(req, res, next)
 
-    expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
-      additionalAddresses: [
-        {
-          line1: '',
-          line2: '',
-          phoneNumber: '',
-          postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
-        },
-      ],
-      address: {
-        line1: 'Newtown',
-        line2: 'Northampton',
-        phoneNumber: '',
-        postcode: 'NN4 6HP',
-        premises: '41 Newport Pagnell Rd',
-      },
-      croNumber: '1234',
-      custodyType: 'Determinate',
-      dateOfBirth: '1970-03-15',
-      dateOfSentence: '2023-11-16',
-      ethnicity: 'Irish',
-      familyName: 'Teale',
-      firstNames: 'Johnny J',
-      gender: 'Male',
-      indexOffence:
-        'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
-      isInCustody: false,
-      mappaLevel: 'Level 2 - local inter-agency management',
-      nomsId: 'A12345',
-      prisonNumber: '7878783',
-    })
-
-    expect(ppudUpdateSentence).toHaveBeenCalledWith('token', '767', '444', {
-      custodyType: 'Determinate',
-      mappaLevel: 'Level 2 - local inter-agency management',
-      dateOfSentence: '2016-01-01',
-      licenceExpiryDate: '2018-02-02',
-      releaseDate: '2017-03-03',
-      sentenceExpiryDate: '2019-04-04',
-      sentencingCourt: 'court desc',
-      sentenceLength: {
-        partDays: 1,
-        partMonths: 2,
-        partYears: 3,
-      },
-    })
-
-    expect(ppudUpdateOffence).toHaveBeenCalledWith('token', '767', '444', {
-      indexOffence:
-        'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
-      dateOfIndexOffence: '2016-01-05',
-    })
-
-    expect(ppudUpdateRelease).toHaveBeenCalledWith('token', '767', '444', {
-      dateOfRelease: '2017-03-03',
-      postRelease: {
-        assistantChiefOfficer: {
-          faxEmail: 'email@me.com',
-          name: 'Mr Brightside',
-        },
-        offenderManager: {
-          faxEmail: 'dude@me.com',
-          name: 'dude',
-          telephone: '123456',
-        },
-        probationService: 'london',
-        spoc: {
-          faxEmail: '',
-          name: 'NCIS Los Angeles',
-        },
-      },
-      releasedFrom: 'here',
-      releasedUnder: 'CJA 2023',
-    })
-
-    expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
-      decisionDateTime: '2024-01-29T16:15:39',
-      isExtendedSentence: true,
-      isInCustody: false,
-      mappaLevel: 'Level 2 - local inter-agency management',
-      policeForce: 'NCIS Los Angeles',
-      probationArea: 'london',
-      receivedDateTime: '2024-01-29T16:15:39',
-      riskOfContrabandDetails: 'Contraband detail...',
-      riskOfSeriousHarmLevel: 'VeryHigh',
-    })
+    expect(bookOffender).toHaveBeenCalledWith({ stage: StageEnum.STARTED }, recommendation, 'token', flags)
+    expect(updateSentence).toHaveBeenCalledWith({ stage: StageEnum.OFFENDER_BOOKED }, recommendation, 'token', flags)
+    expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
@@ -225,525 +79,81 @@ describe('post', () => {
       token: 'token',
     })
 
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        ppudOffender: {
-          croOtherNumber: '1234',
-          dateOfBirth: '1970-03-15',
-          ethnicity: 'Irish',
-          familyName: 'Teale',
-          firstNames: 'Johnny J',
-          gender: 'Male',
-          id: '767',
-          immigrationStatus: 'N/A',
-          nomsId: 'A12345',
-          prisonNumber: '7878783',
-          prisonerCategory: 'N/A',
-          sentences: [],
-          status: 'N/A',
-          youngOffender: 'N/A',
-        },
-      },
-      token: 'token',
-      featureFlags: {
-        xyz: true,
-      },
-    })
-
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('post - happy path - update offender', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      ppudOffender: {
-        id: '567',
-        sentences: [{ id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380' }],
-      },
-      whoCompletedPartA: {
-        name: 'dude',
-        email: 'dude@me.com',
-        telephone: '123456',
-        region: 'region A',
-        localDeliveryUnit: 'here',
-        isPersonProbationPractitionerForOffender: true,
-      },
-      prisonOffender: {
-        status: 'INACTIVE OUT',
-      },
-      bookRecallToPpud: {
-        decisionDateTime: '2024-01-29T16:15:39',
-        isInCustody: false,
-        custodyType: 'Determinate',
-        releasingPrison: 'here',
-        indexOffence:
-          'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
-        ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-        mappaLevel: 'Level 2 - local inter-agency management',
-        policeForce: 'NCIS Los Angeles',
-        probationArea: 'london',
-        recommendedTo: null,
-        receivedDateTime: '2024-01-29T16:15:39',
-        releaseDate: '2023-11-20',
-        riskOfContrabandDetails: '',
-        riskOfSeriousHarmLevel: null,
-        sentenceDate: '2023-11-16',
-        gender: 'Male',
-        ethnicity: 'Irish',
-        firstNames: 'Johnny J',
-        firstName: null,
-        secondName: null,
-        lastName: 'Teale',
-        dateOfBirth: '1970-03-15',
-        cro: '123456/12A',
-        prisonNumber: '7878783',
-        legislationReleasedUnder: 'CJA 2023',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            sentenceDate: '2016-01-01',
-            offenceDate: '2016-01-05',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            sentenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
-              {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
-              },
-            ],
-          },
-        ],
-        selected: 3934369,
-      },
-    })
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
-        emailAddress: 'email@me.com',
-        active: true,
-      },
-    ])
-    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
+  it('post - exception', async () => {
+    const recommendation = { id: '12345', crn: 'X123' }
+    const flags = { xyz: true }
+
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
     const basePath = `/recommendations/1/`
     const req = mockReq({
+      originalUrl: 'some-url',
       params: { recommendationId: '1' },
     })
 
     const res = mockRes({
       locals: {
         urlInfo: { basePath },
-        flags: { xyz: true },
+        flags,
+        user: {
+          username: 'Dave',
+          token: 'token1',
+          region: { code: 'N07', name: 'London' },
+        },
       },
     })
     const next = mockNext()
 
-    await bookToPpudController.post(req, res, next)
-
-    expect(ppudUpdateOffender).toHaveBeenCalledWith('token', '567', {
-      additionalAddresses: [
-        {
-          line1: '',
-          line2: '',
-          phoneNumber: '',
-          postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
-        },
-      ],
-      address: {
-        line1: 'Newtown',
-        line2: 'Northampton',
-        phoneNumber: '',
-        postcode: 'NN4 6HP',
-        premises: '41 Newport Pagnell Rd',
-      },
-      croNumber: '1234',
-      dateOfBirth: '1970-03-15',
-      ethnicity: 'Irish',
-      familyName: 'Teale',
-      firstNames: 'Johnny J',
-      gender: 'Male',
-      isInCustody: false,
-      nomsId: 'A12345',
-      prisonNumber: '7878783',
+    ;(bookOffender as jest.Mock).mockImplementation(() => {
+      throw new PpudError(400, JSON.stringify({ something: 'text' }))
     })
-  })
-
-  it('post - person not probation practitioner', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      prisonOffender: {
-        status: 'INACTIVE OUT',
-      },
-      whoCompletedPartA: {
-        isPersonProbationPractitionerForOffender: false,
-      },
-      practitionerForPartA: {
-        name: 'dudette',
-        email: 'dudette@me.com',
-        telephone: '55555',
-      },
-      bookRecallToPpud: {
-        releasingPrison: 'here',
-        policeForce: 'NCIS Los Angeles',
-        probationArea: 'london',
-        legislationReleasedUnder: 'CJA 2023',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            releaseDate: '2017-03-03',
-            terms: [],
-          },
-        ],
-        selected: 3934369,
-      },
-    })
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
-        emailAddress: 'email@me.com',
-        active: true,
-      },
-    ])
-    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
-    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
-
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      params: { recommendationId: '1' },
-    })
-
-    const res = mockRes({
-      locals: {
-        urlInfo: { basePath },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
 
     await bookToPpudController.post(req, res, next)
 
-    expect(ppudUpdateRelease).toHaveBeenCalledWith('token', '767', '444', {
-      dateOfRelease: '2017-03-03',
-      postRelease: {
-        assistantChiefOfficer: {
-          faxEmail: 'email@me.com',
-          name: 'Mr Brightside',
-        },
-        offenderManager: {
-          faxEmail: 'dudette@me.com',
-          name: 'dudette',
-          telephone: '55555',
-        },
-        probationService: 'london',
-        spoc: {
-          faxEmail: '',
-          name: 'NCIS Los Angeles',
-        },
-      },
-      releasedFrom: 'here',
-      releasedUnder: 'CJA 2023',
-    })
-  })
-
-  it('post - validation error', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      prisonOffender: {
-        status: 'INACTIVE OUT',
-      },
-      personOnProbation: {
-        ...recommendationApiResponse.personOnProbation,
-        addresses: [{ noFixedAbode: true }],
-      },
-    })
-    ;(getStatuses as jest.Mock).mockResolvedValue([
+    expect(bookOffender).toHaveBeenCalledWith(
       {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
-        emailAddress: 'email@me.com',
-        active: true,
+        stage: StageEnum.STARTED,
+        failed: true,
+        failedMessage: '{"something":"text"}',
       },
-    ])
-    ;(ppudCreateOffender as jest.Mock).mockImplementation(() => {
-      throw new HttpError(400)
-    })
+      recommendation,
+      'token',
+      flags
+    )
+    expect(updateSentence).not.toHaveBeenCalled()
+    expect(updateOffence).not.toHaveBeenCalled()
+    expect(updateRelease).not.toHaveBeenCalled()
+    expect(updateRecall).not.toHaveBeenCalled()
 
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '1' },
-      body: {},
-    })
-
-    const res = mockRes({
-      locals: {
-        urlInfo: { basePath: `/recommendations/1/` },
-        flags: { xyz: true },
-      },
-    })
-
-    await bookToPpudController.post(req, res, mockNext())
-
-    expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
-      additionalAddresses: [
-        {
-          line1: '',
-          line2: '',
-          phoneNumber: '',
-          postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
-        },
-      ],
-      address: {
-        line1: 'No Fixed Abode',
-        line2: '',
-        postcode: '',
-        premises: '',
-        phoneNumber: '',
-      },
-      croNumber: '1234',
-      custodyType: undefined,
-      dateOfBirth: undefined,
-      dateOfSentence: undefined,
-      ethnicity: undefined,
-      familyName: undefined,
-      firstNames: undefined,
-      gender: undefined,
-      indexOffence: undefined,
-      isInCustody: false,
-      mappaLevel: undefined,
-      nomsId: 'A12345',
-      prisonNumber: undefined,
-    })
-
-    expect(req.session.errors).toStrictEqual([
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdBookingOnToPPUDError',
+      'Dave',
       {
-        errorId: 'ppudBookingError',
-        href: '#ppudBooking',
-        invalidParts: undefined,
-        name: 'ppudBooking',
-        text: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
-        values: undefined,
+        crn: 'X123',
+        recommendationId: '1',
+        region: { code: 'N07', name: 'London' },
       },
-    ])
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
-  })
-
-  it('post - some other error', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      prisonOffender: {
-        status: 'INACTIVE OUT',
-      },
-      personOnProbation: {
-        ...recommendationApiResponse.personOnProbation,
-        addresses: [{ noFixedAbode: true }],
-      },
-    })
-    ;(getStatuses as jest.Mock).mockResolvedValue([
       {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
-        emailAddress: 'email@me.com',
-        active: true,
-      },
-    ])
-    ;(ppudCreateOffender as jest.Mock).mockImplementation(() => {
-      throw new Error('I should fail')
-    })
-
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '1' },
-      body: {},
-    })
-
-    const res = mockRes({
-      locals: {
-        urlInfo: { basePath: `/recommendations/1/` },
-        flags: { xyz: true },
-      },
-    })
-
-    await expect(bookToPpudController.post(req, res, mockNext())).rejects.toThrow('I should fail')
-  })
-
-  it('post - no fixed abode', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      whoCompletedPartA: {
-        isPersonProbationPractitionerForOffender: false,
-      },
-      practitionerForPartA: {
-        name: 'dudette',
-        email: 'dudette@me.com',
-        telephone: '55555',
-      },
-      bookRecallToPpud: {
-        releasingPrison: 'here',
-        policeForce: 'NCIS Los Angeles',
-        probationArea: 'london',
-        legislationReleasedUnder: 'CJA 2023',
-      },
-      personOnProbation: {
-        ...recommendationApiResponse.personOnProbation,
-        addresses: [{ noFixedAbode: true }],
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            sentenceDate: '2016-01-01',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            sentenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
-              {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
-              },
-            ],
-          },
-        ],
-        selected: 3934369,
-      },
-    })
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
-        emailAddress: 'email@me.com',
-        active: true,
-      },
-    ])
-    ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
-    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
-
-    await bookToPpudController.post(
-      mockReq({
-        params: { recommendationId: '1' },
-      }),
-      mockRes({
-        locals: {
-          urlInfo: { basePath: `/recommendations/1/` },
-          flags: { xyz: true },
-        },
-      }),
-      mockNext()
+        xyz: true,
+      }
     )
 
-    expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
-      additionalAddresses: [
-        {
-          line1: '',
-          line2: '',
-          phoneNumber: '',
-          postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
-        },
-      ],
-      address: {
-        line1: 'No Fixed Abode',
-        line2: '',
-        postcode: '',
-        premises: '',
-        phoneNumber: '',
-      },
-      croNumber: '1234',
-      custodyType: undefined,
-      dateOfBirth: undefined,
-      dateOfSentence: undefined,
-      ethnicity: undefined,
-      familyName: undefined,
-      firstNames: undefined,
-      gender: undefined,
-      indexOffence: undefined,
-      isInCustody: false,
-      mappaLevel: undefined,
-      nomsId: 'A12345',
-      prisonNumber: undefined,
-    })
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+    expect(next).not.toHaveBeenCalled()
   })
 })
 
-class HttpError {
+class PpudError {
   public status: number
 
-  constructor(status: number) {
+  public text: string
+
+  constructor(status: number, text: string) {
     this.status = status
+    this.text = text
   }
 }
-
-describe('rosh', () => {
-  it('mappings', async () => {
-    expect(currentHighestRosh(undefined)).toEqual(undefined)
-
-    expect(currentHighestRosh(null)).toEqual(undefined)
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'HIGH',
-        riskToPublic: 'LOW',
-        riskToStaff: 'MEDIUM',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'MEDIUM',
-      })
-    ).toEqual('High')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'LOW',
-        riskToPublic: 'LOW',
-        riskToStaff: 'VERY_HIGH',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'MEDIUM',
-      })
-    ).toEqual('VeryHigh')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'LOW',
-        riskToPublic: 'MEDIUM',
-        riskToStaff: 'LOW',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'LOW',
-      })
-    ).toEqual('Medium')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'LOW',
-        riskToPublic: 'LOW',
-        riskToStaff: 'LOW',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'LOW',
-      })
-    ).toEqual('Low')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'NOT_APPLICABLE',
-        riskToPublic: 'NOT_APPLICABLE',
-        riskToStaff: 'NOT_APPLICABLE',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'NOT_APPLICABLE',
-      })
-    ).toEqual('NotApplicable')
-  })
-})
