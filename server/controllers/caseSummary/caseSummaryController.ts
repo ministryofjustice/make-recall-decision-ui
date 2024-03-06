@@ -13,7 +13,7 @@ import { AuditService } from '../../services/auditService'
 import { AppError } from '../../AppError'
 import { strings } from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
-import { getStatuses, getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { getRecommendation, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
@@ -63,8 +63,11 @@ async function get(req: Request, res: Response, _: NextFunction) {
   let pageUrlBase = `/cases/${normalizedCrn}/`
   let backLink = '/search'
 
-  let showOutOfHoursRecallButton =
+  let isOutOfHoursWorker =
     user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('ROLE_MARD_DUTY_MANAGER')
+  const isSpo = user.roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
+  // if not an SPO, and not an OOH worker, then the user has only the base role is and is therefore a PP because we haven't extended the role model properly.
+  const isProbationPractitioner = !isSpo && !isOutOfHoursWorker
   let recommendationButton: RecommendationButton = { display: false }
   const recommendationBanner: RecommendationBanner = { display: false }
 
@@ -78,12 +81,11 @@ async function get(req: Request, res: Response, _: NextFunction) {
       post: true,
       title: 'Continue',
     }
-    showOutOfHoursRecallButton = false
+    isOutOfHoursWorker = false
   } else {
-    const isSpo = user.roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
     const isRecommendationActive = !!caseSection.caseSummary.activeRecommendation?.recommendationId
     if (!isRecommendationActive) {
-      if (!isSpo) {
+      if (isProbationPractitioner) {
         recommendationButton = {
           display: true,
           post: false,
@@ -157,7 +159,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
         }
       }
-    } else {
+    } else if (isProbationPractitioner) {
       const statuses = (
         await getStatuses({
           recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
@@ -205,7 +207,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
     crn: normalizedCrn,
     ...caseSection,
     notifications: strings.notifications,
-    showOutOfHoursRecallButton,
+    showOutOfHoursRecallButton: isOutOfHoursWorker,
     recommendationButton,
     recommendationBanner,
     backLink,
