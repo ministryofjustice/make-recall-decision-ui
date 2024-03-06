@@ -138,6 +138,7 @@ describe('get', () => {
     })
     await caseSummaryController.get(req, res, next)
     expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+    expect(res.locals.recommendationButton).toEqual({ display: false })
   })
 
   it('should show OutOfHours Recall Button for RW', async () => {
@@ -156,6 +157,26 @@ describe('get', () => {
     })
     await caseSummaryController.get(req, res, next)
     expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+    expect(res.locals.recommendationButton).toEqual({ display: false })
+  })
+
+  it('should show OutOfHours Recall Button for RW for active recommendation', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce({ ...caseOverviewApiResponse })
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+        },
+      },
+    })
+    await caseSummaryController.get(req, res, next)
+    expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
+    expect(res.locals.recommendationButton).toEqual({ display: false })
   })
 
   it('should not show OutOfHours Recall Button', async () => {
