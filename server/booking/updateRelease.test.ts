@@ -8,14 +8,14 @@ jest.mock('../data/makeDecisionApiClient')
 
 describe('update release', () => {
   it('happy path - stage has passed', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.RELEASE_BOOKED,
     }
 
-    const result = await updateRelease(bookingMomento, {}, 'token', { xyz: true })
+    const result = await updateRelease(bookingMemento, {}, 'token', { xyz: true })
 
     expect(ppudUpdateRelease).not.toHaveBeenCalled()
-    expect(bookingMomento).toEqual(result)
+    expect(bookingMemento).toEqual(result)
   })
 
   it('happy path', async () => {
@@ -29,7 +29,7 @@ describe('update release', () => {
     ])
     ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
 
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.OFFENCE_BOOKED,
       offenderId: '767',
       sentenceId: '444',
@@ -76,7 +76,7 @@ describe('update release', () => {
       },
     } as unknown as RecommendationResponse
 
-    const result = await updateRelease(bookingMomento, recommendation, 'token', { xyz: true })
+    const result = await updateRelease(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(ppudUpdateRelease).toHaveBeenCalledWith('token', '767', '444', {
       dateOfRelease: '2017-03-03',
@@ -103,7 +103,7 @@ describe('update release', () => {
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
-        bookingMomento: {
+        bookingMemento: {
           offenderId: '767',
           sentenceId: '444',
           releaseId: '555',

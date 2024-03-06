@@ -1,19 +1,19 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { FeatureFlags } from '../@types/featureFlags'
 import { ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
-import BookingMomento from './BookingMomento'
+import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
 
 export default async function updateSentence(
-  bookingMomento: BookingMomento,
+  bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
   featureFlags: FeatureFlags
 ) {
-  const momento = { ...bookingMomento }
+  const memento = { ...bookingMemento }
 
-  if (momento.stage !== StageEnum.OFFENDER_BOOKED) {
-    return momento
+  if (memento.stage !== StageEnum.OFFENDER_BOOKED) {
+    return memento
   }
 
   const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
@@ -31,7 +31,7 @@ export default async function updateSentence(
         }
       : null
 
-  await ppudUpdateSentence(token, momento.offenderId, momento.sentenceId, {
+  await ppudUpdateSentence(token, memento.offenderId, memento.sentenceId, {
     custodyType: recommendation.bookRecallToPpud?.custodyType,
     mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
     dateOfSentence: nomisOffence.sentenceDate,
@@ -42,18 +42,18 @@ export default async function updateSentence(
     sentencingCourt: nomisOffence.courtDescription,
   })
 
-  momento.stage = StageEnum.SENTENCE_BOOKED
-  momento.failed = undefined
-  momento.failedMessage = undefined
+  memento.stage = StageEnum.SENTENCE_BOOKED
+  memento.failed = undefined
+  memento.failedMessage = undefined
 
   await updateRecommendation({
     recommendationId: String(recommendation.id),
     valuesToSave: {
-      bookingMomento: momento,
+      bookingMemento: memento,
     },
     token,
     featureFlags,
   })
 
-  return momento
+  return memento
 }

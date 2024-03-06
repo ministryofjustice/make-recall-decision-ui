@@ -7,18 +7,18 @@ jest.mock('../data/makeDecisionApiClient')
 
 describe('update sentence', () => {
   it('happy path - stage has passed', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.SENTENCE_BOOKED,
     }
 
-    const result = await updateSentence(bookingMomento, {}, 'token', { xyz: true })
+    const result = await updateSentence(bookingMemento, {}, 'token', { xyz: true })
 
     expect(ppudUpdateSentence).not.toHaveBeenCalled()
-    expect(bookingMomento).toEqual(result)
+    expect(bookingMemento).toEqual(result)
   })
 
   it('happy path', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.OFFENDER_BOOKED,
       offenderId: '767',
       sentenceId: '444',
@@ -56,7 +56,7 @@ describe('update sentence', () => {
       },
     } as unknown as RecommendationResponse
 
-    const result = await updateSentence(bookingMomento, recommendation, 'token', { xyz: true })
+    const result = await updateSentence(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(ppudUpdateSentence).toHaveBeenCalledWith('token', '767', '444', {
       custodyType: 'Determinate',
@@ -76,7 +76,7 @@ describe('update sentence', () => {
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
-        bookingMomento: {
+        bookingMemento: {
           offenderId: '767',
           sentenceId: '444',
           stage: 'SENTENCE_BOOKED',

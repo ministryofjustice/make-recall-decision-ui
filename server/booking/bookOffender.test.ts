@@ -7,20 +7,20 @@ jest.mock('../data/makeDecisionApiClient')
 
 describe('book offender', () => {
   it('happy path - stage has passed', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.OFFENDER_BOOKED,
     }
 
-    const result = await bookOffender(bookingMomento, {}, 'token', { xyz: true })
+    const result = await bookOffender(bookingMemento, {}, 'token', { xyz: true })
 
     expect(ppudCreateOffender).not.toHaveBeenCalled()
     expect(ppudUpdateOffender).not.toHaveBeenCalled()
     expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(bookingMomento).toEqual(result)
+    expect(bookingMemento).toEqual(result)
   })
 
   it('happy path - create offender', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.STARTED,
     }
 
@@ -63,7 +63,7 @@ describe('book offender', () => {
 
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
 
-    const result = await bookOffender(bookingMomento, recommendation, 'token', { xyz: true })
+    const result = await bookOffender(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
       additionalAddresses: [
@@ -127,7 +127,7 @@ describe('book offender', () => {
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
-        bookingMomento: {
+        bookingMemento: {
           offenderId: '767',
           sentenceId: '444',
           stage: 'OFFENDER_BOOKED',
@@ -146,7 +146,7 @@ describe('book offender', () => {
   })
 
   it('happy path - update offender', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.STARTED,
     }
 
@@ -187,7 +187,7 @@ describe('book offender', () => {
       },
     } as unknown as RecommendationResponse
 
-    const result = await bookOffender(bookingMomento, recommendation, 'token', { xyz: true })
+    const result = await bookOffender(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(ppudUpdateOffender).toHaveBeenCalledWith('token', '567', {
       additionalAddresses: [
@@ -220,7 +220,7 @@ describe('book offender', () => {
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
-        bookingMomento: {
+        bookingMemento: {
           offenderId: '567',
           sentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
           stage: 'OFFENDER_BOOKED',
@@ -239,7 +239,7 @@ describe('book offender', () => {
   })
 
   it('happy path - no fixed abode', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.STARTED,
     }
 
@@ -278,7 +278,7 @@ describe('book offender', () => {
 
     ;(ppudCreateOffender as jest.Mock).mockResolvedValue({ offender: { id: '767', sentence: { id: '444' } } })
 
-    const result = await bookOffender(bookingMomento, recommendation, 'token', { xyz: true })
+    const result = await bookOffender(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(ppudCreateOffender).toHaveBeenCalledWith('token', {
       additionalAddresses: [
@@ -320,7 +320,7 @@ describe('book offender', () => {
   })
 
   it('expect failed status to clear when subsequently successful', async () => {
-    const bookingMomento = {
+    const bookingMemento = {
       stage: StageEnum.STARTED,
       failed: true,
       failedMessage: '{}',
@@ -363,12 +363,12 @@ describe('book offender', () => {
       },
     } as unknown as RecommendationResponse
 
-    const result = await bookOffender(bookingMomento, recommendation, 'token', { xyz: true })
+    const result = await bookOffender(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
       valuesToSave: {
-        bookingMomento: {
+        bookingMemento: {
           offenderId: '567',
           sentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
           stage: 'OFFENDER_BOOKED',

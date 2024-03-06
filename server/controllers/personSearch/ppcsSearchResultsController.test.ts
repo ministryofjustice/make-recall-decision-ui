@@ -18,7 +18,7 @@ describe('get', () => {
       ],
     })
     ;(getRecommendation as jest.Mock).mockResolvedValue({
-      bookingMomento: undefined,
+      bookingMemento: undefined,
     })
 
     const res = mockRes()
@@ -50,7 +50,7 @@ describe('get', () => {
       ],
     })
     ;(getRecommendation as jest.Mock).mockResolvedValue({
-      bookingMomento: {
+      bookingMemento: {
         stage: StageEnum.STARTED,
       },
     })

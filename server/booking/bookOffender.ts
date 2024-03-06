@@ -2,19 +2,19 @@ import { PpudAddress } from '../@types/make-recall-decision-api/models/PpudCreat
 import { PpudSentence, RecommendationResponse } from '../@types/make-recall-decision-api/models/RecommendationResponse'
 import { ppudCreateOffender, ppudUpdateOffender, updateRecommendation } from '../data/makeDecisionApiClient'
 import { FeatureFlags } from '../@types/featureFlags'
-import BookingMomento from './BookingMomento'
+import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
 
 export default async function bookOffender(
-  bookingMomento: BookingMomento,
+  bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
   featureFlags: FeatureFlags
 ) {
-  const momento = { ...bookingMomento }
+  const memento = { ...bookingMemento }
 
-  if (momento.stage !== StageEnum.STARTED) {
-    return momento
+  if (memento.stage !== StageEnum.STARTED) {
+    return memento
   }
 
   const isInCustody = recommendation.prisonOffender?.status === 'ACTIVE IN'
@@ -53,11 +53,11 @@ export default async function bookOffender(
   }
 
   if (recommendation.ppudOffender) {
-    momento.offenderId = recommendation.ppudOffender.id
+    memento.offenderId = recommendation.ppudOffender.id
     const sentences = recommendation.ppudOffender.sentences as PpudSentence[]
-    momento.sentenceId = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)?.id
+    memento.sentenceId = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)?.id
 
-    await ppudUpdateOffender(token, momento.offenderId, {
+    await ppudUpdateOffender(token, memento.offenderId, {
       nomsId: recommendation.personOnProbation.nomsNumber,
       croNumber: recommendation.bookRecallToPpud.cro,
       dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
@@ -89,8 +89,8 @@ export default async function bookOffender(
       additionalAddresses,
     })
 
-    momento.offenderId = createOffenderResponse.offender.id
-    momento.sentenceId = createOffenderResponse.offender.sentence.id
+    memento.offenderId = createOffenderResponse.offender.id
+    memento.sentenceId = createOffenderResponse.offender.sentence.id
 
     // write ppudOffender details, so that create offender is never called again, but rather update offender.
     await updateRecommendation({
@@ -118,18 +118,18 @@ export default async function bookOffender(
     })
   }
 
-  momento.stage = StageEnum.OFFENDER_BOOKED
-  momento.failed = undefined
-  momento.failedMessage = undefined
+  memento.stage = StageEnum.OFFENDER_BOOKED
+  memento.failed = undefined
+  memento.failedMessage = undefined
 
   await updateRecommendation({
     recommendationId: String(recommendation.id),
     valuesToSave: {
-      bookingMomento: momento,
+      bookingMemento: memento,
     },
     token,
     featureFlags,
   })
 
-  return momento
+  return memento
 }

@@ -1,24 +1,24 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { FeatureFlags } from '../@types/featureFlags'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
-import BookingMomento from './BookingMomento'
+import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
 
 export default async function updateRecall(
-  bookingMomento: BookingMomento,
+  bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
   featureFlags: FeatureFlags
 ) {
-  const momento = { ...bookingMomento }
+  const memento = { ...bookingMemento }
 
-  if (momento.stage !== StageEnum.RELEASE_BOOKED) {
-    return momento
+  if (memento.stage !== StageEnum.RELEASE_BOOKED) {
+    return memento
   }
 
   const isInCustody = recommendation.prisonOffender?.status === 'ACTIVE IN'
 
-  await ppudCreateRecall(token, momento.offenderId, momento.releaseId, {
+  await ppudCreateRecall(token, memento.offenderId, memento.releaseId, {
     decisionDateTime: recommendation.bookRecallToPpud.decisionDateTime,
     isExtendedSentence: recommendation.isExtendedSentence,
     isInCustody,
@@ -36,20 +36,20 @@ export default async function updateRecall(
     }),
   })
 
-  momento.stage = StageEnum.RECALL_BOOKED
-  momento.failed = undefined
-  momento.failedMessage = undefined
+  memento.stage = StageEnum.RECALL_BOOKED
+  memento.failed = undefined
+  memento.failedMessage = undefined
 
   await updateRecommendation({
     recommendationId: String(recommendation.id),
     valuesToSave: {
-      bookingMomento: momento,
+      bookingMemento: memento,
     },
     token,
     featureFlags,
   })
 
-  return momento
+  return memento
 }
 
 type Rosh = {

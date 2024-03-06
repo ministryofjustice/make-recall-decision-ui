@@ -3,19 +3,19 @@ import { FeatureFlags } from '../@types/featureFlags'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../middleware/recommendationStatusCheck'
 import { getStatuses, ppudUpdateRelease, updateRecommendation } from '../data/makeDecisionApiClient'
-import BookingMomento from './BookingMomento'
+import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
 
 export default async function updateRelease(
-  bookingMomento: BookingMomento,
+  bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
   featureFlags: FeatureFlags
 ) {
-  const momento = { ...bookingMomento }
+  const memento = { ...bookingMemento }
 
-  if (momento.stage !== StageEnum.OFFENCE_BOOKED) {
-    return momento
+  if (memento.stage !== StageEnum.OFFENCE_BOOKED) {
+    return memento
   }
 
   const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
@@ -31,7 +31,7 @@ export default async function updateRelease(
     .filter(s => s.active)
     .find(s => s.name === STATUSES.ACO_SIGNED)
 
-  const releaseResponse = await ppudUpdateRelease(token, momento.offenderId, momento.sentenceId, {
+  const releaseResponse = await ppudUpdateRelease(token, memento.offenderId, memento.sentenceId, {
     dateOfRelease: nomisOffence.releaseDate,
     postRelease: {
       assistantChiefOfficer: {
@@ -62,19 +62,19 @@ export default async function updateRelease(
     releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
   })
 
-  momento.releaseId = releaseResponse.release.id
-  momento.stage = StageEnum.RELEASE_BOOKED
-  momento.failed = undefined
-  momento.failedMessage = undefined
+  memento.releaseId = releaseResponse.release.id
+  memento.stage = StageEnum.RELEASE_BOOKED
+  memento.failed = undefined
+  memento.failedMessage = undefined
 
   await updateRecommendation({
     recommendationId: String(recommendation.id),
     valuesToSave: {
-      bookingMomento: momento,
+      bookingMemento: memento,
     },
     token,
     featureFlags,
   })
 
-  return momento
+  return memento
 }

@@ -1,6 +1,6 @@
 import { StageEnum } from './StageEnum'
 
-export default interface BookingMomento {
+export default interface bookingMemento {
   stage: StageEnum
   offenderId?: string
   sentenceId?: string

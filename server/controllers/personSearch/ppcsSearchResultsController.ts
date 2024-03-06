@@ -28,7 +28,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'ppcsSearchResults',
     },
     crn,
-    bookingOnStarted: !!recommendation.bookingMomento,
+    bookingOnStarted: !!recommendation.bookingMemento,
     result: results[0],
   }
 

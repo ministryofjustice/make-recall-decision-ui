@@ -7,7 +7,7 @@ import updateSentence from '../../booking/updateSentence'
 import updateOffence from '../../booking/updateOffence'
 import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
-import BookingMomento from '../../booking/BookingMomento'
+import bookingMemento from '../../booking/BookingMemento'
 import { StageEnum } from '../../booking/StageEnum'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
@@ -35,20 +35,20 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
 
-  let momento: BookingMomento = recommendation.bookingMomento || {
+  let memento: bookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
   }
 
   try {
-    momento = await bookOffender(momento, recommendation, token, flags)
+    memento = await bookOffender(memento, recommendation, token, flags)
 
-    momento = await updateSentence(momento, recommendation, token, flags)
+    memento = await updateSentence(memento, recommendation, token, flags)
 
-    momento = await updateOffence(momento, recommendation, token, flags)
+    memento = await updateOffence(memento, recommendation, token, flags)
 
-    momento = await updateRelease(momento, recommendation, token, flags)
+    memento = await updateRelease(memento, recommendation, token, flags)
 
-    momento = await updateRecall(momento, recommendation, token, flags)
+    memento = await updateRecall(memento, recommendation, token, flags)
 
     await updateStatuses({
       recommendationId,
@@ -58,13 +58,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
     })
   } catch (err) {
     if (err.status !== undefined) {
-      momento.failed = true
-      momento.failedMessage = err.text
+      memento.failed = true
+      memento.failedMessage = err.text
 
       await updateRecommendation({
         recommendationId: String(recommendation.id),
         valuesToSave: {
-          bookingMomento: momento,
+          bookingMemento: memento,
         },
         token,
         featureFlags: flags,
