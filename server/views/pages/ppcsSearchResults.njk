@@ -36,5 +36,10 @@
         </tr>
         </tbody>
     </table>
-    <a href="/recommendations/{{result.recommendationId}}/search-ppud" class="govuk-body-l govuk-button">Continue</a>
+    {% if bookingOnStarted %}
+        <a href="/recommendations/{{result.recommendationId}}/book-to-ppud" class="govuk-body-l govuk-button">Continue</a>
+    {% else %}
+        <a href="/recommendations/{{result.recommendationId}}/search-ppud" class="govuk-body-l govuk-button">Continue</a>
+    {% endif %}
+
 {% endblock %}

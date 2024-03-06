@@ -125,7 +125,6 @@ async function post(req: Request, res: Response, next: NextFunction) {
       },
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        releaseDate: indexOffenceData.releaseDate,
         sentenceDate: indexOffenceData.sentenceDate,
       },
     },
