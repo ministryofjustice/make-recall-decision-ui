@@ -35,6 +35,12 @@
                                                 <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.crn }}</span>
                                                 <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
                                             </li>
+                                            {% if showOutOfHoursRecallButton %}
+                                            <li>NOMIS:
+                                                <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.nomsNumber }}</span>
+                                                <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
+                                            </li> 
+                                            {% endif %} 
                                             <li>Date of birth:
                                                 <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span>
                                                 (age

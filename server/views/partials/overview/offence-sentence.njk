@@ -16,6 +16,36 @@
                 </ul>
             {% endset %}
             <div {% if loop.index > 1 %} class='govuk-!-margin-top-2 govuk-!-padding-top-2 border-top'{% endif %}>
+                {% if showOutOfHoursRecallButton %}
+                {{ govukSummaryList({
+                    classes: 'govuk-summary-list--no-border',
+                    attributes: {
+                        'data-qa': 'conviction-' + loop.index
+                    },
+                    rows: [
+                        {                    
+                            key: { html: 'Prison booking number' },
+                            value: { text: prisonBookingNumber }
+                        },                   
+                        {
+                            key: { html: 'Main offence' },
+                            value: { html: mainOffencesHtml }
+                        },
+                        {
+                            key: { html: 'Additional offence(s)' },
+                            value: { html: additonalOffencesHtml }
+                        } if conviction.additionalOffences.length else undefined,
+                        {
+                            key: { html: 'Sentence type' },
+                            value: { text: conviction.sentence.description + " (" + conviction.sentence.length + " " + conviction.sentence.lengthUnits + ")" if conviction.sentence.description else 'Not available' }
+                        },
+                        {
+                            key: { html: 'Sentence expiry date' },
+                            value: { text: formatDateTimeFromIsoString({isoDate: conviction.sentence.sentenceExpiryDate if conviction.sentence.sentenceExpiryDate else 'Not available' }) }
+                        } if conviction.sentence.isCustodial else undefined
+                    ]
+                }) }}
+                {%  else %}
                 {{ govukSummaryList({
                     classes: 'govuk-summary-list--no-border',
                     attributes: {
@@ -40,6 +70,7 @@
                         } if conviction.sentence.isCustodial else undefined
                     ]
                 }) }}
+                {% endif %}
             </div>
         {% endfor %}
     {% endif %}
