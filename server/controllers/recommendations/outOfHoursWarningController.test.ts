@@ -10,11 +10,85 @@ jest.mock('../../data/makeDecisionApiClient')
 
 describe('Out of Hours Warning Controller', () => {
   describe('get', () => {
-    it('present', async () => {
-      const res = mockRes()
+    it('present - no inflight recommendation', async () => {
+      const req = mockReq({
+        params: { crn: 'A1234AB' },
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
+          statuses: [],
+          user: {
+            username: 'Dave',
+            roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+            id: '12345',
+          },
+          query: {},
+          flags: { xyz: true },
+        },
+      })
       const next = mockNext()
+      ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+        caseSummary: { activeRecommendation: { recommendationId: '123' } },
+      })
+      ;(getStatuses as jest.Mock).mockResolvedValue([])
+      await outOfHoursWarningController.get(req, res, next)
 
-      await outOfHoursWarningController.get(mockReq(), res, next)
+      expect(res.locals.page).toEqual({ id: 'outOfHoursWarning' })
+      expect(res.render).toHaveBeenCalledWith('pages/outOfHoursWarning')
+      expect(next).toHaveBeenCalled()
+    })
+    it('present - has in-flight recommendation with SPO_CONSIDER_RECALL', async () => {
+      const req = mockReq({
+        params: { crn: 'A1234AB' },
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
+          statuses: ['SPO_CONSIDER_RECALL'],
+          user: {
+            username: 'Dave',
+            roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+            id: '12345',
+          },
+          query: {},
+          flags: { xyz: true },
+        },
+      })
+      const next = mockNext()
+      ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+        caseSummary: { activeRecommendation: { recommendationId: '123' } },
+      })
+      ;(getStatuses as jest.Mock).mockResolvedValue([])
+      await outOfHoursWarningController.get(req, res, next)
+
+      expect(res.locals.page).toEqual({ id: 'outOfHoursWarning' })
+      expect(res.render).toHaveBeenCalledWith('pages/outOfHoursWarning')
+      expect(next).toHaveBeenCalled()
+    })
+    it('present - has in-flight recommendation with SPO_CONSIDER_RECALL SPO_RATIONALE_RECORDED', async () => {
+      const req = mockReq({
+        params: { crn: 'A1234AB' },
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
+          statuses: ['SPO_RATIONALE_RECORDED'],
+          user: {
+            username: 'Dave',
+            roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+            id: '12345',
+          },
+          query: {},
+          flags: { xyz: true },
+        },
+      })
+      const next = mockNext()
+      ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+        caseSummary: { activeRecommendation: { recommendationId: '123' } },
+      })
+      ;(getStatuses as jest.Mock).mockResolvedValue([])
+      await outOfHoursWarningController.get(req, res, next)
 
       expect(res.locals.page).toEqual({ id: 'outOfHoursWarning' })
       expect(res.render).toHaveBeenCalledWith('pages/outOfHoursWarning')

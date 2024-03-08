@@ -57,6 +57,14 @@ describe('authorisationMiddleware', () => {
     expect(res.locals.user.hasPpcsRole).toEqual(true)
   })
 
+  it('sets hasSpoRole to true if ODM role is present', () => {
+    const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.ODM] })
+
+    authorisationMiddleware(req, res, next)
+
+    expect(res.locals.user.hasOdmRole).toEqual(true)
+  })
+
   it('should set roles', () => {
     const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO] })
 

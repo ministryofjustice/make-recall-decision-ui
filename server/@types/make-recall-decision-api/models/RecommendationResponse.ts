@@ -92,6 +92,7 @@ export type RecommendationResponse = {
   ppudOffender?: PpudOffender;
   additionalLicenceConditionsText?: string;
   bookingMemento?: bookingMemento;
+  odmName?: string;
 };
 
 export namespace RecommendationResponse {
