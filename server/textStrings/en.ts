@@ -222,6 +222,5 @@ export const strings: Record<string, Record<string, string>> = {
     selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
     supportingDocuments: 'Add supporting documents for {{ fullName }}',
     supportingDocumentUpload: 'Upload supporting document',
-    bookingSummary: 'Your recall booking - {{ fullName }}',
   },
 }

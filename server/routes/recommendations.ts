@@ -108,7 +108,6 @@ import apRecordDecisionController from '../controllers/recommendation/apRecordDe
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
 import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
-import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 
 const recommendations = Router()
 
@@ -486,8 +485,6 @@ const ppcsBookingRouteBuilder = ppcsRouteBuilder.withCheck(
 
 ppcsBookingRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 ppcsBookingRouteBuilder.post('book-to-ppud', bookToPpudController.post)
-
-ppcsBookingRouteBuilder.get('booking-summary', bookingSummaryController.get)
 
 const apRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.RW), hasRole(HMPPS_AUTH_ROLE.ODM)))
