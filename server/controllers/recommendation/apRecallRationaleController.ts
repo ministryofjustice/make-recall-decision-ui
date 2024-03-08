@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { strings } from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
@@ -6,6 +7,7 @@ import { isMandatoryTextValue, stripHtmlTags } from '../../utils/utils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
   res.locals = {
     ...res.locals,
     page: {
@@ -20,6 +22,7 @@ function get(req: Request, res: Response, next: NextFunction) {
         res.locals.errors?.spoRecallRationale || recommendation.spoRecallType !== 'RECALL'
           ? ''
           : recommendation.spoRecallRationale,
+      odmName: res.locals.unsavedValues?.odmName ? res.locals.unsavedValues?.odmName : recommendation.odmName,
     },
   }
 
@@ -34,7 +37,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const {
     flags,
     user: { token },
-    //  urlInfo, this will be required in future as AP pages are wired up
+    urlInfo,
   } = res.locals
 
   const errors = []
@@ -59,16 +62,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
         })
       )
     }
-    if (!isMandatoryTextValue(odmName)) {
-      const errorId = 'missingOdmName'
-      errors.push(
-        makeErrorObject({
-          id: 'odmName',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
   }
 
   if (errors.length > 0) {
@@ -76,6 +69,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     req.session.unsavedValues = {
       spoRecallType,
       spoRecallRationale,
+      odmName,
     }
     return res.redirect(303, req.originalUrl)
   }
@@ -99,9 +93,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   if (spoRecallType === 'RECALL') {
-    // res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-task-list-consider-recall', urlInfo }))
+    res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-record-decision', urlInfo }))
   } else {
-    // res.redirect(303, `${urlInfo.basePath}spo-why-no-recall`)
+    res.redirect(303, nextPageLinkUrl({ nextPageId: 'xyz', urlInfo }))
   }
 }
 
