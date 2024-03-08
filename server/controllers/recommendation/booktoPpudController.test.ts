@@ -66,6 +66,13 @@ describe('post', () => {
 
     await bookToPpudController.post(req, res, next)
 
+    expect(updateStatuses).toHaveBeenCalledWith({
+      activate: ['BOOKING_ON_STARTED'],
+      deActivate: [],
+      recommendationId: '1',
+      token: 'token',
+    })
+
     expect(bookOffender).toHaveBeenCalledWith({ stage: StageEnum.STARTED }, recommendation, 'token', flags)
     expect(updateSentence).toHaveBeenCalledWith({ stage: StageEnum.OFFENDER_BOOKED }, recommendation, 'token', flags)
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)

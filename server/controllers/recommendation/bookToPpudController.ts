@@ -39,6 +39,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
     stage: StageEnum.STARTED,
   }
 
+  await updateStatuses({
+    recommendationId,
+    token,
+    activate: [STATUSES.BOOKING_ON_STARTED],
+    deActivate: [],
+  })
+
   try {
     memento = await bookOffender(memento, recommendation, token, flags)
 
