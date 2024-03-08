@@ -13,12 +13,18 @@ import { AuditService } from '../../services/auditService'
 import { AppError } from '../../AppError'
 import { strings } from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
-import { getRecommendation, getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
+import {
+  getRecommendation,
+  getStatuses,
+  searchForPrisonOffender,
+  updateRecommendation,
+} from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { RecommendationDecorated } from '../../@types/api'
+import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 
 interface RecommendationButton {
   display: boolean
@@ -65,6 +71,16 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   let isOutOfHoursWorker =
     user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('ROLE_MARD_DUTY_MANAGER')
+
+  let nomisPrisonOffender: PrisonOffenderSearchResponse | undefined
+  if (isOutOfHoursWorker) {
+    nomisPrisonOffender = (await searchForPrisonOffender(
+      res.locals.user.token,
+      caseSection.caseSummary.personalDetailsOverview?.nomsNumber
+    )) as PrisonOffenderSearchResponse
+  }
+
+  const prisonBookingNumber = nomisPrisonOffender?.bookingNo
   const isSpo = user.roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   // if not an SPO, and not an OOH worker, then the user has only the base role is and is therefore a PP because we haven't extended the role model properly.
   const isProbationPractitioner = !isSpo && !isOutOfHoursWorker
@@ -208,6 +224,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
     ...caseSection,
     notifications: strings.notifications,
     showOutOfHoursRecallButton: isOutOfHoursWorker,
+    prisonBookingNumber,
     recommendationButton,
     recommendationBanner,
     backLink,

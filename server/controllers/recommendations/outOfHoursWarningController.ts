@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import { validateCrn } from '../../utils/utils'
 
-import { createRecommendation, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import {
+  createRecommendation,
+  getStatuses,
+  updateRecommendation,
+  updateStatuses,
+} from '../../data/makeDecisionApiClient'
 import { routeUrls } from '../../routes/routeUrls'
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { CaseSectionId } from '../../@types/pagesForms'
@@ -11,7 +16,44 @@ import { EVENTS } from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { crn } = req.params
+  const normalizedCrn = validateCrn(crn)
 
+  const { user, flags } = res.locals
+  const caseSection = await getCaseSection(
+    'overview' as CaseSectionId,
+    normalizedCrn,
+    user.token,
+    user.userId,
+    req.query,
+    flags
+  )
+
+  const recommendationId = caseSection.caseSummary.activeRecommendation?.recommendationId
+  if (recommendationId) {
+    const statuses = (
+      await getStatuses({
+        recommendationId: String(recommendationId),
+        token: user.token,
+      })
+    ).filter(status => status.active)
+
+    // MRD-2357 - if an in-flight recommendation exists then clear the spoRecallRationale
+    if (
+      (user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('MARD_DUTY_MANAGER_USER')) &&
+      statuses.find(
+        status => status.name === STATUSES.SPO_CONSIDER_RECALL || status.name === STATUSES.SPO_RECORDED_RATIONALE
+      )
+    ) {
+      await updateRecommendation({
+        recommendationId: String(recommendationId),
+        valuesToSave: {
+          spoRecallRationale: '',
+        },
+        token: user.token,
+        featureFlags: flags,
+      })
+    }
+  }
   res.locals = {
     ...res.locals,
     crn,

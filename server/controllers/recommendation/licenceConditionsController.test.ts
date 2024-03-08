@@ -350,20 +350,21 @@ describe('post', () => {
         activeCustodialConvictionCount: '1',
         licenceConditionsBreached: 'standard|NAME_CHANGE',
       },
+      originalUrl: '/recommendation/123/licence-conditions-ap',
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath: `/recommendations/123/`, originalUrl: '/recommendation/123/licence-conditions-ap' },
+        urlInfo: { basePath: `/recommendations/123/` },
       },
     })
     const next = mockNext()
 
     await licenceConditionsController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/xyz`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-recall-rationale`)
   })
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
