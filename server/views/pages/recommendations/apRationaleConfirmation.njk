@@ -2,37 +2,39 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 {% block content %}
     <div class="govuk-grid-row">
-
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <div class="govuk-panel govuk-panel--confirmation">
-              <h1 class="govuk-panel__title">
-                Recall started
-              </h1>
-              <div class="govuk-panel__body" data-qa="fullName">
-              {{ personOnProbation }}
-              </div>
-              <div class="govuk-panel__body" data-qa="crn">
-                NOMIS number: {{ nomsNumber }}
-              </div>
+                <h1 class="govuk-panel__title">
+                    {{ page.title }}
+                </h1>
+                <div class="govuk-panel__body" data-qa="fullName">
+                    {{ personOnProbation }}
+                </div>
+                <div class="govuk-panel__body" data-qa="crn">
+                    CRN: {{ crn }}
+                </div>
             </div>
             <h1 class="govuk-heading-m">What happens next</h1>
-
             <p class="govuk-body">
-                Tell the probation practitioner to say you have started the recall. Give them the:
+                {{ page.bodyText1 }}
             </p>
-             <ul class='govuk-list govuk-list--bullet'>
+            <ul class='govuk-list govuk-list--bullet'>
                 <li>name - {{ personOnProbation }}</li>
                 <li>CRN - {{ crn }}</li>
-                <li>reasons for recall</li>
+                <li>reasons for recall
+                    <div class="govuk-inset-text" data-qa="reason">
+                        <pre class='govuk-body'>
+                    {{ spoRecallRationale }}
+                </pre>
+                    </div>
+                </li>
             </ul>
             <p class="govuk-body">
-                The practitioner will fill in the Part A.
+                {{ page.bodyText2 }}
             </p>
-
             <p class="govuk-body">
-                <a href="/cases/{{crn}}/overview" class="govuk-link">Return to overview</a>
+                <a href="/cases/{{ crn }}/overview" class="govuk-link">Return to overview</a>
             </p>
         </div>
-
     </div>
 {% endblock %}

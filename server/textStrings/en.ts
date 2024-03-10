@@ -129,6 +129,7 @@ export const strings: Record<string, Record<string, string>> = {
     spoSeniorManagementEndorsement: 'Senior manager endorsement',
     spoRecordDecision: 'Record the decision in NDelius',
     apRecordDecision: 'Record the explanation in NDelius',
+    apRecordDecisionDNTR: 'Record the decison in NDelius',
     reviewPractitionersConcerns: "Review practitioner's concerns",
     spoTaskListConsiderRecall: 'Consider a recall',
     taskListConsiderRecall: 'Consider a recall',
