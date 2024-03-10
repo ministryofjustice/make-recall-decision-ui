@@ -108,6 +108,7 @@ import apRecordDecisionController from '../controllers/recommendation/apRecordDe
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
 import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
+import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
 
 const recommendations = Router()
 
@@ -502,6 +503,9 @@ apRouteBuilder
 
 apRouteBuilder.get('ap-recall-rationale', apRecallRationaleController.get)
 apRouteBuilder.post('ap-recall-rationale', apRecallRationaleController.post)
+
+apRouteBuilder.get('ap-why-no-recall', apWhyNoRecallController.get)
+apRouteBuilder.post('ap-why-no-recall', apWhyNoRecallController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
