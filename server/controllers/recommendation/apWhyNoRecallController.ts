@@ -14,6 +14,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     inputDisplayValues: {
       errors: res.locals.errors,
       spoNoRecallRationale: res.locals.errors?.spoNoRecallRationale ? '' : recommendation.spoRecallRationale,
+      odmName: recommendation.odmName,
     },
   }
 
@@ -23,7 +24,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { spoNoRecallRationale } = req.body
+  const { spoNoRecallRationale, odmName } = req.body
 
   const {
     flags,
@@ -54,6 +55,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       spoRecallRationale: spoNoRecallRationale,
       explainTheDecision: true,
+      odmName,
     },
     token,
     featureFlags: flags,

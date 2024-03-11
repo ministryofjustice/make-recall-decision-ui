@@ -21,11 +21,14 @@
             <ul class='govuk-list govuk-list--bullet'>
                 <li>name - {{ personOnProbation }}</li>
                 <li>CRN - {{ crn }}</li>
-                <li>reasons for recall
+                <li>{{ reasonText }}
                     <div class="govuk-inset-text" data-qa="reason">
                         <pre class='govuk-body'>
-                    {{ spoRecallRationale }}
-                </pre>
+                            {{ spoRecallRationale }}
+                        </pre>
+                        {% if isResidentWorker %}
+                            <pre class='govuk-body'>Out-of-hours manager: {{ odmName }}</pre>
+                        {% endif %}
                     </div>
                 </li>
             </ul>

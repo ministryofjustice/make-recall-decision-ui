@@ -17,6 +17,13 @@ describe('get', () => {
           },
           spoRecallType: 'RECALL',
         },
+        user: {
+          username: 'MARD_RESIDENT_WORKER_USER',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+          hasSpoRole: false,
+          hasPpcsRole: false,
+          hasOdmRole: false,
+        },
       },
     })
     const next = mockNext()
@@ -47,6 +54,13 @@ describe('get', () => {
             name: 'Stiffy McBoveration',
           },
           spoRecallType: 'NO_RECALL',
+        },
+        user: {
+          username: 'MARD_RESIDENT_WORKER_USER',
+          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+          hasSpoRole: false,
+          hasPpcsRole: false,
+          hasOdmRole: false,
         },
       },
     })
