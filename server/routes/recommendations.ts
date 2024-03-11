@@ -108,6 +108,8 @@ import apRecordDecisionController from '../controllers/recommendation/apRecordDe
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
 import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
+import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
+import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 
 const recommendations = Router()
 
@@ -399,7 +401,13 @@ spoRationaleRouteBuilder
 
 const ppcsRouteBuilder = ppRouteBuilder
   .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
-  .withCheck(and(statusIsActive(STATUSES.SENT_TO_PPCS), not(statusIsActive(STATUSES.REC_CLOSED))))
+  .withCheck(
+    and(
+      statusIsActive(STATUSES.SENT_TO_PPCS),
+      not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
+      not(statusIsActive(STATUSES.REC_CLOSED))
+    )
+  )
 
 ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
 ppcsRouteBuilder.post('search-ppud', ppcsConsiderRecallController.post)
@@ -466,15 +474,21 @@ ppcsRouteBuilder.post('edit-legislation-released-under', editLegislationReleased
 ppcsRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
 ppcsRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
 
-ppcsRouteBuilder.get('book-to-ppud', bookToPpudController.get)
-ppcsRouteBuilder.post('book-to-ppud', bookToPpudController.post)
-
 ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
 ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUploadController.post)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
+
+const ppcsBookingRouteBuilder = ppcsRouteBuilder.withCheck(
+  and(statusIsActive(STATUSES.SENT_TO_PPCS), not(statusIsActive(STATUSES.REC_CLOSED)))
+)
+
+ppcsBookingRouteBuilder.get('book-to-ppud', bookToPpudController.get)
+ppcsBookingRouteBuilder.post('book-to-ppud', bookToPpudController.post)
+
+ppcsBookingRouteBuilder.get('booking-summary', bookingSummaryController.get)
 
 const apRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.RW), hasRole(HMPPS_AUTH_ROLE.ODM)))
@@ -492,6 +506,9 @@ apRouteBuilder
 
 apRouteBuilder.get('ap-recall-rationale', apRecallRationaleController.get)
 apRouteBuilder.post('ap-recall-rationale', apRecallRationaleController.post)
+
+apRouteBuilder.get('ap-why-no-recall', apWhyNoRecallController.get)
+apRouteBuilder.post('ap-why-no-recall', apWhyNoRecallController.post)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
