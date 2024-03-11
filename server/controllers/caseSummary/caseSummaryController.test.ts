@@ -134,6 +134,9 @@ describe('get', () => {
           username: 'Dave',
           roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_DUTY_MANAGER'],
         },
+        flags: {
+          flagOutOfHours: true,
+        },
       },
     })
     await caseSummaryController.get(req, res, next)
@@ -152,6 +155,9 @@ describe('get', () => {
         user: {
           username: 'Dave',
           roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
+        },
+        flags: {
+          flagOutOfHours: true,
         },
       },
     })
@@ -172,6 +178,9 @@ describe('get', () => {
           username: 'Dave',
           roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
         },
+        flags: {
+          flagOutOfHours: true,
+        },
       },
     })
     await caseSummaryController.get(req, res, next)
@@ -190,6 +199,9 @@ describe('get', () => {
         user: {
           username: 'Dave',
           roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+        },
+        flags: {
+          flagOutOfHours: true,
         },
       },
     })
