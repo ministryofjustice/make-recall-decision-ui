@@ -99,8 +99,7 @@ import editProbationAreaController from '../controllers/recommendation/editProba
 import spoRecordDeleteRationaleController from '../controllers/recommendation/spoRecordDeleteRationaleController'
 import spoDeleteConfirmationController from '../controllers/recommendation/spoDeleteConfirmationController'
 import editCroController from '../controllers/recommendation/editCroController'
-import editLegislationReleasedUnderController
-  from '../controllers/recommendation/editLegislationReleasedUnderController'
+import editLegislationReleasedUnderController from '../controllers/recommendation/editLegislationReleasedUnderController'
 import selectPpudSentenceController from '../controllers/recommendation/selectPpudSentenceController'
 import editPrisonBookingNumberController from '../controllers/recommendation/editPrisonBookingNumberController'
 import supportingDocumentsController from '../controllers/recommendation/supportingDocumentsController'
