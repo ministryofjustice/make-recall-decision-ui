@@ -34,6 +34,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     nomsNumber: recommendation.personOnProbation.nomsNumber,
     crn: recommendation.crn,
     isResidentWorker,
+    odmName: recommendation.odmName,
     personOnProbation: recommendation.personOnProbation.name,
     spoRecallRationale: recommendation.spoRecallRationale,
     reasonText,
