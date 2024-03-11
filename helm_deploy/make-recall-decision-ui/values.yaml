@@ -42,11 +42,11 @@ generic-service:
     SENTRY_DSN: https://5c9e4014e8064f8c846bfbeb1810a32f@o345774.ingest.sentry.io/6360608
     AUDIT_SERVICE_NAME: "make-recall-decision"
     AUDIT_SQS_REGION: "eu-west-2"
-    NOTIFICATION_HEADER: "Scheduled maintenance"
-    NOTIFICATION_BODY: "Consider a recall will be unavailable between 6pm and 6:30pm on Monday 11 March 2024. This is so we can update our database."
+    NOTIFICATION_HEADER: ""
+    NOTIFICATION_BODY: ""
     # dates must be written in ISO format eg/YYYY-MM-DD
-    NOTIFICATION_BANNER_START_DATE: "2024-03-08"
-    NOTIFICATION_BANNER_END_DATE: "2024-03-11"
+    NOTIFICATION_BANNER_START_DATE: ""
+    NOTIFICATION_BANNER_END_DATE: ""
     DISPLAY_MAINTENANCE_PAGE: false
     MAINTENANCE_PAGE_TEXT: ""
     HMPPS_SQS_USE_WEB_TOKEN: "true"
