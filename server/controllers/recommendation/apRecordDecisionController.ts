@@ -15,11 +15,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
   if (recommendation.spoRecallType === 'RECALL') {
     id = 'apRecordDecision'
     bodyText =
-      'This will be recorded as a contact in NDelius called ‘Management oversight- recall’. You cannot undo this.'
+      'This will be recorded as a contact in NDelius called ‘Management oversight - recall’. You cannot undo this.'
   } else {
     id = 'apRecordDecisionDNTR'
     bodyText =
-      'The decision will be recorded as a contact in NDelius called ‘Management oversight - recall’ with the outcome ‘decision to not recall’. You cannot undo this.'
+      'The decision will be recorded as a contact in NDelius called ‘Management oversight - no recall with the outcome ‘decision to not recall’. You cannot undo this.'
   }
 
   res.locals = {

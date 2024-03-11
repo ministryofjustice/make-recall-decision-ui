@@ -25,7 +25,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({
       id: 'apRecordDecision',
       bodyText:
-        'This will be recorded as a contact in NDelius called ‘Management oversight- recall’. You cannot undo this.',
+        'This will be recorded as a contact in NDelius called ‘Management oversight - recall’. You cannot undo this.',
     })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/apRecordDecision')
 
@@ -49,7 +49,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({
       id: 'apRecordDecisionDNTR',
       bodyText:
-        'The decision will be recorded as a contact in NDelius called ‘Management oversight - recall’ with the outcome ‘decision to not recall’. You cannot undo this.',
+        'The decision will be recorded as a contact in NDelius called ‘Management oversight - no recall with the outcome ‘decision to not recall’. You cannot undo this.',
     })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/apRecordDecision')
 
