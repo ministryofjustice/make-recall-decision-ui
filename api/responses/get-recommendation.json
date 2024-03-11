@@ -350,5 +350,6 @@
     }
   },
   "spoCancelRecommendationRationale": "some reason to delete",
-  "spoDeleteRecommendationRationale": "some reason to delete"
+  "spoDeleteRecommendationRationale": "some reason to delete",
+  "spoTypeRecall": ""
 }

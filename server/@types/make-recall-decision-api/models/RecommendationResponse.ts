@@ -93,6 +93,7 @@ export type RecommendationResponse = {
   additionalLicenceConditionsText?: string;
   bookingMemento?: bookingMemento;
   odmName?: string;
+  spoRecallType?: string;
 };
 
 export namespace RecommendationResponse {

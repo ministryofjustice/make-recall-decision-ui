@@ -1,17 +1,32 @@
 import { NextFunction, Request, Response } from 'express'
-import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
+import { getRecommendation, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
+  let id: string
+  let bodyText: string
+
+  if (recommendation.spoRecallType === 'RECALL') {
+    id = 'apRecordDecision'
+    bodyText =
+      'This will be recorded as a contact in NDelius called ‘Management oversight - recall’. You cannot undo this.'
+  } else {
+    id = 'apRecordDecisionDNTR'
+    bodyText =
+      'The decision will be recorded as a contact in NDelius called ‘Management oversight - no recall with the outcome ‘decision to not recall’. You cannot undo this.'
+  }
+
   res.locals = {
     ...res.locals,
     page: {
-      id: 'apRecordDecision',
+      id,
+      bodyText,
     },
     spoRecallRationale: recommendation.spoRecallRationale,
     inputDisplayValues: {
@@ -32,6 +47,18 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
+  const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
+  let event: string
+  let statuses: string[]
+
+  if (recommendation.spoRecallType === 'RECALL') {
+    event = EVENTS.MRD_SPO_RATIONALE_SENT
+    statuses = [STATUSES.SPO_RECORDED_RATIONALE]
+  } else {
+    event = EVENTS.MRD_SPO_RATIONALE_SENT
+    statuses = [STATUSES.NO_RECALL_DECIDED]
+  }
+
   await updateRecommendation({
     recommendationId,
     valuesToSave: {
@@ -42,12 +69,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  appInsightsEvent(EVENTS.MRD_SPO_RATIONALE_SENT, username, { crn, recommendationId, region }, flags)
+  appInsightsEvent(event, username, { crn, recommendationId, region }, flags)
 
   await updateStatuses({
     recommendationId,
     token,
-    activate: [STATUSES.SPO_RECORDED_RATIONALE],
+    activate: statuses,
     deActivate: [STATUSES.SPO_CONSIDER_RECALL],
   })
 
