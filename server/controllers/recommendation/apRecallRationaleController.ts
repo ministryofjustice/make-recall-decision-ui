@@ -41,6 +41,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const errors = []
+  let nextPage
 
   if (!isMandatoryTextValue(spoRecallType)) {
     const errorId = 'noSpoRecallTypeSelected'
@@ -83,6 +84,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave.spoRecallRationale = stripHtmlTags(spoRecallRationale)
     valuesToSave.explainTheDecision = true
     valuesToSave.odmName = stripHtmlTags(odmName)
+    nextPage = { nextPageId: 'ap-record-decision', urlInfo }
+  } else {
+    nextPage = { nextPageId: 'ap-why-no-recall', urlInfo }
   }
 
   await updateRecommendation({
@@ -92,11 +96,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  if (spoRecallType === 'RECALL') {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-record-decision', urlInfo }))
-  } else {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'xyz', urlInfo }))
-  }
+  res.redirect(303, nextPageLinkUrl(nextPage))
 }
 
 export default { get, post }
