@@ -99,7 +99,8 @@ import editProbationAreaController from '../controllers/recommendation/editProba
 import spoRecordDeleteRationaleController from '../controllers/recommendation/spoRecordDeleteRationaleController'
 import spoDeleteConfirmationController from '../controllers/recommendation/spoDeleteConfirmationController'
 import editCroController from '../controllers/recommendation/editCroController'
-import editLegislationReleasedUnderController from '../controllers/recommendation/editLegislationReleasedUnderController'
+import editLegislationReleasedUnderController
+  from '../controllers/recommendation/editLegislationReleasedUnderController'
 import selectPpudSentenceController from '../controllers/recommendation/selectPpudSentenceController'
 import editPrisonBookingNumberController from '../controllers/recommendation/editPrisonBookingNumberController'
 import supportingDocumentsController from '../controllers/recommendation/supportingDocumentsController'
@@ -109,6 +110,7 @@ import apRationaleConfirmationController from '../controllers/recommendation/apR
 import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
 import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
+import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 
 const recommendations = Router()
 
@@ -486,6 +488,8 @@ const ppcsBookingRouteBuilder = ppcsRouteBuilder.withCheck(
 
 ppcsBookingRouteBuilder.get('book-to-ppud', bookToPpudController.get)
 ppcsBookingRouteBuilder.post('book-to-ppud', bookToPpudController.post)
+
+ppcsBookingRouteBuilder.get('booking-summary', bookingSummaryController.get)
 
 const apRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.RW), hasRole(HMPPS_AUTH_ROLE.ODM)))
