@@ -17,6 +17,9 @@
           <pre class='govuk-body'>
             {{ spoRecallRationale }}
           </pre>
+          {% if isResidentWorker == true %}
+            <pre class='govuk-body'>Out-of-hours manager: {{ odmName }}</pre>
+          {% endif %}
         </div>
         {% endset %}
         {{ govukCheckboxes({

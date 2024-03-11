@@ -7,10 +7,12 @@ import { EVENTS } from '../../utils/constants'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 async function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, user } = res.locals
 
   let id: string
   let bodyText: string
+
+  const isResidentWorker: boolean = user.roles.some((role: string) => role === 'ROLE_MARD_RESIDENT_WORKER')
 
   if (recommendation.spoRecallType === 'RECALL') {
     id = 'apRecordDecision'
@@ -29,6 +31,8 @@ async function get(_: Request, res: Response, next: NextFunction) {
       bodyText,
     },
     spoRecallRationale: recommendation.spoRecallRationale,
+    isResidentWorker,
+    odmName: recommendation.odmName,
     inputDisplayValues: {
       errors: res.locals.errors,
     },

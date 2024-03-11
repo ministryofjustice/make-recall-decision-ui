@@ -36,7 +36,7 @@
                         hint: {
                             text: "The decision must be agreed by an out-of-hours manager. Also include the name of the senior manager (ACO) if you know it."
                         },
-                        value: inputDisplayValues.odmName if inputDisplayValues.spoRecallType === 'RECALL',
+                        value: inputDisplayValues.odmName,
                         errorMessage: errorMessage(errors.odmName)
                     }) }}
                 {% endif %}
