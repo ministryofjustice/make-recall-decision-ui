@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import isExtendedSentenceController from './isExtendedController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -104,6 +105,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
+        statuses: [],
       },
     })
     const next = mockNext()
@@ -146,6 +148,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
+        statuses: [],
       },
     })
     const next = mockNext()
@@ -184,6 +187,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
+        statuses: [],
       },
     })
     const next = mockNext()
@@ -224,6 +228,7 @@ describe('post', () => {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath: `/recommendations/123/` },
+        statuses: [],
       },
     })
 
@@ -241,5 +246,61 @@ describe('post', () => {
       },
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+  it('post with ap rationale recorded and extended sentence', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        currentSavedValue: 'NO',
+        isExtendedSentence: 'YES',
+        isIndeterminateSentence: '0',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+        statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
+      },
+    })
+    const next = mockNext()
+
+    await isExtendedSentenceController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type-extended`)
+  })
+  it('post with ap rationale recorded and standard sentence', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        currentSavedValue: 'YES',
+        isExtendedSentence: 'NO',
+        isIndeterminateSentence: '0',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+        statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
+      },
+    })
+    const next = mockNext()
+
+    await isExtendedSentenceController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type`)
   })
 })

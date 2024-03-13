@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { validateCrn } from '../../utils/utils'
-import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
+import { updateStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(req: Request, res: Response) {
@@ -8,26 +8,16 @@ async function get(req: Request, res: Response) {
   const { user } = res.locals
   const normalizedCrn = validateCrn(crn)
 
-  const statuses = (
-    await getStatuses({
-      recommendationId,
-      token: user.token,
-    })
-  ).filter(status => status.active)
-  const isClosed =
-    statuses.find(status => status.name === STATUSES.SENT_TO_PPCS) ||
-    statuses.find(status => status.name === STATUSES.REC_CLOSED)
-  const isDntr = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED)
-  const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+  // This controller is responsible for closing the rec doc when a PP needs to open a new one, and the SPO rationale has not been supplied (no ppcs flag)
 
-  if (!isClosed && !isDntr && isPPDocumentCreated) {
-    await updateStatuses({
-      recommendationId,
-      token: user.token,
-      activate: [STATUSES.SENT_TO_PPCS],
-      deActivate: [],
-    })
-  }
+  // This process is incompatible with sending to PPCS, case summary never routes here if active rec doc is with PPCS and we close rec docs at the end of booking on regardless of spo rationale.
+
+  await updateStatuses({
+    recommendationId,
+    token: user.token,
+    activate: [STATUSES.REC_CLOSED],
+    deActivate: [],
+  })
 
   const pageUrlBase = `/cases/${normalizedCrn}/`
   return res.redirect(303, `${pageUrlBase}create-recommendation-warning`)

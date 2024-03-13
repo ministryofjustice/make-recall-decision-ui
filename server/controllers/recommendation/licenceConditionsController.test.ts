@@ -350,7 +350,7 @@ describe('post', () => {
         activeCustodialConvictionCount: '1',
         licenceConditionsBreached: 'standard|NAME_CHANGE',
       },
-      originalUrl: '/recommendation/123/licence-conditions-ap',
+      originalUrl: '/recommendation/123/ap-licence-conditions',
     })
 
     const res = mockRes({

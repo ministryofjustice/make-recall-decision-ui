@@ -184,9 +184,15 @@ async function get(req: Request, res: Response, _: NextFunction) {
         })
       ).filter(status => status.active)
 
-      const isClosed = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
+      const isWithPpcs = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
-      if (isClosed) {
+      if (isWithPpcs) {
+        // Only part A is ever with PPCS.
+
+        // This looks wrongs as we know we have an open rec doc, and we are creating a new one.  Business want this.
+        // It's a problem for SPO rationale.  We currently don't enforce that the rationale has been supplied, so if
+        // there are two active docs, then the spo rationale can only be supplied on the most recent.  We can therefore
+        // never enforce that a rationale is supplied on the old one.
         recommendationButton = {
           display: true,
           post: false,

@@ -29,7 +29,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
-  const isSpoRationaleRecorded = !!statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
+  const isSpoRationaleRecorded =
+    !!statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE) ||
+    !!statuses.find(status => status.name === STATUSES.AP_RECORDED_RATIONALE)
   const completeness = taskCompleteness(recommendation, featureFlags)
 
   let lineManagerCountersignLink = false
