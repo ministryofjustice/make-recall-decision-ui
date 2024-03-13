@@ -5,6 +5,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { hasValue } from '../../utils/utils'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals
@@ -57,18 +58,25 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (recommendation.spoRecallType === 'RECALL') {
     event = EVENTS.MRD_SPO_RATIONALE_SENT
-    statuses = [STATUSES.SPO_RECORDED_RATIONALE]
+    statuses = [STATUSES.AP_RECORDED_RATIONALE]
   } else {
     event = EVENTS.MRD_SPO_RATIONALE_SENT
-    statuses = [STATUSES.NO_RECALL_DECIDED]
+    statuses = [STATUSES.AP_RECORDED_RATIONALE]
+  }
+
+  const valuesToSave = {
+    sensitive: !!sensitive,
+    sendSpoRationaleToDelius: true,
+  } as Record<string, boolean>
+
+  const recallType = recommendation?.recallType?.selected?.value
+  if (recommendation.spoRecallType === 'RECALL' && hasValue(recallType) && recallType === 'NO_RECALL') {
+    valuesToSave.recallType = null
   }
 
   await updateRecommendation({
     recommendationId,
-    valuesToSave: {
-      sensitive: !!sensitive,
-      sendSpoRationaleToDelius: true,
-    },
+    valuesToSave,
     token,
     featureFlags: flags,
   })
@@ -79,7 +87,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     token,
     activate: statuses,
-    deActivate: [STATUSES.SPO_CONSIDER_RECALL],
+    deActivate: [],
   })
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-rationale-confirmation', urlInfo }))

@@ -494,21 +494,21 @@ const apRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.RW), hasRole(HMPPS_AUTH_ROLE.ODM)))
   .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
 
-apRouteBuilder.get('licence-conditions-ap', licenceConditionsController.get)
-apRouteBuilder.post('licence-conditions-ap', licenceConditionsController.post)
-
-apRouteBuilder.get('ap-record-decision', apRecordDecisionController.get)
-apRouteBuilder.post('ap-record-decision', apRecordDecisionController.post)
-
-apRouteBuilder
-  // .withCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))
-  .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
+apRouteBuilder.get('ap-licence-conditions', licenceConditionsController.get)
+apRouteBuilder.post('ap-licence-conditions', licenceConditionsController.post)
 
 apRouteBuilder.get('ap-recall-rationale', apRecallRationaleController.get)
 apRouteBuilder.post('ap-recall-rationale', apRecallRationaleController.post)
 
+apRouteBuilder.get('ap-record-decision', apRecordDecisionController.get)
+apRouteBuilder.post('ap-record-decision', apRecordDecisionController.post)
+
 apRouteBuilder.get('ap-why-no-recall', apWhyNoRecallController.get)
 apRouteBuilder.post('ap-why-no-recall', apWhyNoRecallController.post)
+
+apRouteBuilder
+  .withCheck(or(statusIsActive(STATUSES.AP_RECORDED_RATIONALE), statusIsActive(STATUSES.NO_RECALL_DECIDED)))
+  .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

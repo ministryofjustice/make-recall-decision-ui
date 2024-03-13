@@ -1,7 +1,8 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import apWhyNoRecallController from './apWhyNoRecallController'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -89,6 +90,7 @@ describe('post', () => {
         token: 'token',
         hasOdmRole: true,
       },
+      statuses: [],
     },
   })
 
@@ -107,6 +109,13 @@ describe('post', () => {
     await apWhyNoRecallController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalled()
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.AP_COLLECTED_RATIONALE],
+      deActivate: [],
+    })
 
     const payload = (updateRecommendation as jest.Mock).mock.calls[0][0]
     expect(payload).toEqual({

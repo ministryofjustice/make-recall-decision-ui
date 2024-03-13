@@ -5,6 +5,8 @@ import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -47,6 +49,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     return res.redirect(303, req.originalUrl)
   }
 
+  // if the Out of Hours (Approved Premises) people have recorded a rationale.
+  const isApRationalRecorded = (res.locals.statuses as RecommendationStatusResponse[]).find(
+    status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active
+  )
+
   const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
   const isNo = isExtendedSentence === 'NO'
   const isYes = isExtendedSentence === 'YES'
@@ -76,7 +83,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = isIndeterminateSentence ? 'indeterminate-type' : 'task-list-consider-recall'
+  let nextPageId
+  if (isIndeterminateSentence) {
+    nextPageId = 'indeterminate-type'
+  } else if (isApRationalRecorded) {
+    if (isYes) {
+      nextPageId = 'recall-type-extended'
+    } else {
+      nextPageId = 'recall-type'
+    }
+  } else {
+    nextPageId = 'task-list-consider-recall'
+  }
+
   res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 

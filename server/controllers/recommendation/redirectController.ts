@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { isDefined } from '../../utils/utils'
+import { hasValue, isDefined } from '../../utils/utils'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
@@ -17,6 +17,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
       token,
     })
   ).filter(status => status.active)
+
+  // if the Out of Hours (Approved Premises) people have recorded a rationale.
+  const isAPRationalRecorded = statuses.find(status => status.name === STATUSES.AP_RECORDED_RATIONALE)
 
   const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
   const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
@@ -36,6 +39,26 @@ async function get(req: Request, res: Response, next: NextFunction) {
       nextPageId = 'task-list'
     } else {
       nextPageId = 'spo-task-list-consider-recall'
+    }
+  } else if (isAPRationalRecorded) {
+    // in the case of the OOH people raising a recall, when the PP enters, he should skip the trigger stuff as the decision has already been met.
+
+    if (!hasValue(recommendation.isIndeterminateSentence)) {
+      nextPageId = 'is-indeterminate'
+    } else if (!hasValue(recommendation.isExtendedSentence)) {
+      nextPageId = 'is-extended'
+    } else if (!hasValue(recallType)) {
+      if (recommendation?.isIndeterminateSentence) {
+        nextPageId = 'recall-type-indeterminate'
+      } else if (recommendation?.isExtendedSentence) {
+        nextPageId = 'recall-type-extended'
+      } else {
+        nextPageId = 'recall-type'
+      }
+    } else if (recallType === 'NO_RECALL') {
+      nextPageId = 'task-list-no-recall'
+    } else {
+      nextPageId = 'task-list'
     }
   } else if (!isDefined(recallType)) {
     if (isSpoRecordedRationale) {

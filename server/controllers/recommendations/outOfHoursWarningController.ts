@@ -19,6 +19,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const normalizedCrn = validateCrn(crn)
 
   const { user, flags } = res.locals
+
+  const isOutOfHoursWorker =
+    user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('ROLE_MARD_DUTY_MANAGER')
+
+  if (!isOutOfHoursWorker) {
+    return res.redirect('/inappropriate-error')
+  }
+
   const caseSection = await getCaseSection(
     'overview' as CaseSectionId,
     normalizedCrn,
@@ -37,13 +45,18 @@ async function get(req: Request, res: Response, next: NextFunction) {
       })
     ).filter(status => status.active)
 
-    // MRD-2357 - if an in-flight recommendation exists then clear the spoRecallRationale
-    if (
-      (user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('MARD_DUTY_MANAGER_USER')) &&
-      statuses.find(
-        status => status.name === STATUSES.SPO_CONSIDER_RECALL || status.name === STATUSES.SPO_RECORDED_RATIONALE
-      )
-    ) {
+    const activate = []
+
+    const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+    const isBookedToPpud = statuses.find(status => status.name === STATUSES.BOOKED_TO_PPUD)
+    const isApRationaleCollected = statuses.find(status => status.name === STATUSES.AP_COLLECTED_RATIONALE)
+
+    if (flags.flagPpcs ? isBookedToPpud : isPPDocumentCreated) {
+      // spo rationale has not been supplied, we auto close.
+      activate.push(STATUSES.REC_CLOSED)
+      // a new recommendation document will be created when the user clicks the button at the bottom of this page.
+    } else if (!isApRationaleCollected) {
+      // clear the spo recall rationale.
       await updateRecommendation({
         recommendationId: String(recommendationId),
         valuesToSave: {
@@ -51,6 +64,15 @@ async function get(req: Request, res: Response, next: NextFunction) {
         },
         token: user.token,
         featureFlags: flags,
+      })
+    }
+
+    if (activate.length > 0) {
+      await updateStatuses({
+        recommendationId: String(recommendationId),
+        token: user.token,
+        activate: [],
+        deActivate: [],
       })
     }
   }
@@ -91,7 +113,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
     if (!isPPDocumentCreated) {
-      res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/licence-conditions-ap`)
+      res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions`)
       return
     }
   }
@@ -104,7 +126,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     deActivate: [],
   })
 
-  res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/licence-conditions-ap`)
+  res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/ap-licence-conditions`)
 
   appInsightsEvent(
     EVENTS.MRD_RECOMMENDATION_STARTED,

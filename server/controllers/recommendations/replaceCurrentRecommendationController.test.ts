@@ -19,7 +19,7 @@ describe('replaceCurrentRecommendation', () => {
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId: '123',
       token: 'token',
-      activate: [STATUSES.SENT_TO_PPCS],
+      activate: [STATUSES.REC_CLOSED],
       deActivate: [],
     })
 

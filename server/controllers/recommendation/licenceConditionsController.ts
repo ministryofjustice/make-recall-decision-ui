@@ -207,7 +207,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  if (req.originalUrl?.endsWith('/licence-conditions-ap')) {
+  if (req.originalUrl?.endsWith('/ap-licence-conditions')) {
     res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
   } else {
     res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))

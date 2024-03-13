@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { hasData } from '../../utils/utils'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -59,7 +60,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     await updateStatuses({
       recommendationId,
       token,
-      activate: ['SPO_CONSIDER_RECALL', 'PO_RECALL_CONSULT_SPO'],
+      activate: [STATUSES.SPO_CONSIDER_RECALL, STATUSES.PO_RECALL_CONSULT_SPO],
       deActivate: [],
     })
   }

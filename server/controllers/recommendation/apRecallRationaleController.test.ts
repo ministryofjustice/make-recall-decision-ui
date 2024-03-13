@@ -1,7 +1,8 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import apRecallRationaleController from './apRecallRationaleController'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -110,6 +111,7 @@ describe('post', () => {
         token: 'token',
         hasOdmRole: true,
       },
+      statuses: [],
     },
   })
 
@@ -142,6 +144,13 @@ describe('post', () => {
         explainTheDecision: true,
       },
       featureFlags: {},
+    })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.AP_COLLECTED_RATIONALE],
+      deActivate: [],
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-record-decision`)

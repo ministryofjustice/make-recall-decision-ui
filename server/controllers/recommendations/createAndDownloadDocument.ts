@@ -59,7 +59,8 @@ export const createAndDownloadDocument =
       if (!isPPDocumentCreated) {
         activate.push(STATUSES.PP_DOCUMENT_CREATED)
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
-        if (!isSpo && isSpoRecordedRationale) {
+        const isApRecordedRationale = statuses.find(status => status.name === STATUSES.AP_RECORDED_RATIONALE)
+        if (!isSpo && (isSpoRecordedRationale || isApRecordedRationale)) {
           if (documentType === 'PART_A') {
             if (flags.flagPpcs) {
               activate.push(STATUSES.SENT_TO_PPCS)

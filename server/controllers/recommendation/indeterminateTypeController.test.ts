@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import indeterminateTypeController from './indeterminateTypeController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -115,6 +116,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
+        statuses: [],
       },
     })
     const next = mockNext()
@@ -178,5 +180,32 @@ describe('post', () => {
       },
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with AP rationale recorded', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        indeterminateSentenceType: 'IPP',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+        statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
+      },
+    })
+    const next = mockNext()
+
+    await indeterminateTypeController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type-indeterminate`)
   })
 })
