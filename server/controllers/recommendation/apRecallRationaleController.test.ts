@@ -25,7 +25,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'apRecallRationale' })
     expect(res.locals.inputDisplayValues).toEqual({
       errors: undefined,
-      spoRecallRationale: '',
+      spoRecallRationale: undefined,
       spoRecallType: undefined,
     })
     expect(next).toHaveBeenCalled()
@@ -68,7 +68,9 @@ describe('get', () => {
           },
         },
         unsavedValues: {
-          spoRecallType: 'NO_RECALL',
+          spoRecallType: 'RECALL',
+          spoRecallRationale: 'a rationale that belongs to recall',
+          odmName: 'mr sparky',
         },
         recommendation: { spoRecallType: 'NO_RECALL', spoRecallRationale: undefined },
         statuses: [],
@@ -95,8 +97,9 @@ describe('get', () => {
           errorId: 'missingSpoRecallRationale',
         },
       },
-      spoRecallRationale: '',
-      spoRecallType: 'NO_RECALL',
+      spoRecallType: 'RECALL',
+      spoRecallRationale: 'a rationale that belongs to recall',
+      odmName: 'mr sparky',
     })
   })
 })

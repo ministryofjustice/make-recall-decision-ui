@@ -55,6 +55,10 @@ describe('get', () => {
             errorId: 'missingSpoNoRecallRationale',
           },
         },
+        unsavedValues: {
+          spoNoRecallRationale: 'a rationale that belongs to no recall',
+          odmName: 'mr sparky',
+        },
         recommendation: { spoRecallRationale: undefined },
       },
     })
@@ -75,7 +79,8 @@ describe('get', () => {
           errorId: 'missingSpoNoRecallRationale',
         },
       },
-      spoNoRecallRationale: '',
+      odmName: 'mr sparky',
+      spoNoRecallRationale: 'a rationale that belongs to no recall',
     })
   })
 })

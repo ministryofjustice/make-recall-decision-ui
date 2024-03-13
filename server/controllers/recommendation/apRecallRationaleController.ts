@@ -10,6 +10,19 @@ import { RecommendationStatusResponse } from '../../@types/make-recall-decision-
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
+  let spoRecallType
+  let spoRecallRationale
+  let odmName
+  if (res.locals.errors) {
+    spoRecallType = res.locals.unsavedValues.spoRecallType
+    spoRecallRationale = res.locals.unsavedValues.spoRecallRationale
+    odmName = res.locals.unsavedValues.odmName
+  } else {
+    spoRecallType = recommendation.spoRecallType
+    spoRecallRationale = recommendation.spoRecallRationale
+    odmName = recommendation.odmName
+  }
+
   res.locals = {
     ...res.locals,
     page: {
@@ -17,14 +30,9 @@ function get(req: Request, res: Response, next: NextFunction) {
     },
     inputDisplayValues: {
       errors: res.locals.errors,
-      spoRecallType: res.locals.unsavedValues?.spoRecallType
-        ? res.locals.unsavedValues?.spoRecallType
-        : recommendation.spoRecallType,
-      spoRecallRationale:
-        res.locals.errors?.spoRecallRationale || recommendation.spoRecallType !== 'RECALL'
-          ? ''
-          : recommendation.spoRecallRationale,
-      odmName: res.locals.unsavedValues?.odmName ? res.locals.unsavedValues?.odmName : recommendation.odmName,
+      spoRecallType,
+      spoRecallRationale,
+      odmName,
     },
   }
 

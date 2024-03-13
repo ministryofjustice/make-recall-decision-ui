@@ -10,13 +10,23 @@ import { RecommendationStatusResponse } from '../../@types/make-recall-decision-
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
+  let spoNoRecallRationale
+  let odmName
+  if (res.locals.errors) {
+    spoNoRecallRationale = res.locals.unsavedValues.spoNoRecallRationale
+    odmName = res.locals.unsavedValues.odmName
+  } else {
+    spoNoRecallRationale = recommendation.spoRecallRationale
+    odmName = recommendation.odmName
+  }
+
   res.locals = {
     ...res.locals,
     page: { id: 'apWhyNoRecall' },
     inputDisplayValues: {
       errors: res.locals.errors,
-      spoNoRecallRationale: res.locals.errors?.spoNoRecallRationale ? '' : recommendation.spoRecallRationale,
-      odmName: recommendation.odmName,
+      spoNoRecallRationale,
+      odmName,
     },
   }
 
@@ -59,6 +69,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (errors.length > 0) {
     req.session.errors = errors
+    req.session.unsavedValues = {
+      spoNoRecallRationale,
+      odmName,
+    }
     return res.redirect(303, req.originalUrl)
   }
 
