@@ -106,6 +106,10 @@ describe('post', () => {
     locals: {
       recommendation: { personOnProbation: { name: 'Harry Smith' } },
       urlInfo: { basePath: `/recommendations/123/` },
+      user: {
+        token: 'token',
+        hasOdmRole: true,
+      },
     },
   })
 
@@ -229,6 +233,50 @@ describe('post', () => {
     expect(req.session.unsavedValues).toEqual({
       spoRecallType: 'RECALL',
       spoRecallRationale: '',
+    })
+  })
+
+  it('post with invalid data - no out of hours manager', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      originalUrl: '/recommendations/123/ap-recall-rationale',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        spoRecallType: 'RECALL',
+        spoRecallRationale: 'something',
+      },
+    })
+
+    const response = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+        user: {
+          token: 'token',
+          hasOdmRole: false,
+        },
+      },
+    })
+
+    await apRecallRationaleController.post(req, response, mockNext())
+
+    expect(response.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-recall-rationale`)
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'missingOdmName',
+        href: '#odmName',
+        invalidParts: undefined,
+        name: 'odmName',
+        text: 'You must provide an out-of-hours manager name',
+        values: undefined,
+      },
+    ])
+    expect(req.session.unsavedValues).toEqual({
+      spoRecallType: 'RECALL',
+      spoRecallRationale: 'something',
     })
   })
 })

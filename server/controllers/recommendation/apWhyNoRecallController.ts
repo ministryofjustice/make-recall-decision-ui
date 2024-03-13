@@ -28,7 +28,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const {
     flags,
-    user: { token },
+    user: { token, hasOdmRole },
     urlInfo,
   } = res.locals
 
@@ -39,6 +39,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
     errors.push(
       makeErrorObject({
         id: 'spoNoRecallRationale',
+        text: strings.errors[errorId],
+        errorId,
+      })
+    )
+  } else if (!isMandatoryTextValue(odmName) && !hasOdmRole) {
+    const errorId = 'missingOdmName'
+    errors.push(
+      makeErrorObject({
+        id: 'odmName',
         text: strings.errors[errorId],
         errorId,
       })
