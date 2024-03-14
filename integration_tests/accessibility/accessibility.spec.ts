@@ -100,6 +100,33 @@ const spoUrls = [
   recommendationEndpoint('countersign-confirmation', ['SPO_SIGNED']),
 ]
 
+const ppcsUrls = [
+  { url: '/ppcs-search', validationError: false, fullRecommendationData: false, statuses: [] },
+  { url: '/ppcs-search-results?crn=X098092', validationError: false, fullRecommendationData: false, statuses: [] },
+  recommendationEndpoint('search-ppud', ['SENT_TO_PPCS']),
+  recommendationEndpoint('search-ppud-results', ['SENT_TO_PPCS']),
+  recommendationEndpoint('check-booking-details', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-name', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-gender', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-ethnicity', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-date-of-birth', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-cro', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-prison-booking-number', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-releasing-prison', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-legislation-released-under', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-custody-type', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-recall-received-date-and-time', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-probation-area', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-mappa-level', ['SENT_TO_PPCS']),
+  recommendationEndpoint('select-index-offence', ['SENT_TO_PPCS']),
+  recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS']),
+  recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS']),
+  recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS']),
+  recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS']),
+  recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),
+  recommendationEndpoint('booked-to-ppud', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
+]
+
 function recommendationEndpoint(resource: string, statuses = []) {
   return {
     url: `${routeUrls.recommendations}/456/${resource}`,
@@ -189,6 +216,171 @@ context('Accessibility (a11y) SPO Checks', () => {
       if (item.validationError) {
         cy.clickButton('Continue')
       }
+      cy.injectAxe()
+      cy.checkA11y('body', {
+        rules: {
+          'aria-allowed-attr': { enabled: false },
+        },
+      })
+      cy.pageHeading().should('not.equal', 'You cannot access this page')
+    })
+  })
+})
+
+context('Accessibility (a11y) PPCS Checks', () => {
+  beforeEach(() => {
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+
+    cy.task('ppcsSearch', {
+      statusCode: 200,
+      response: {
+        results: [
+          {
+            name: 'Harry Smith',
+            crn: 'X098092',
+            dateOfBirth: '1980-05-06',
+            recommendationId: 799270715,
+          },
+        ],
+      },
+    })
+    cy.task('searchForPrisonOffender', {
+      statusCode: 200,
+      response: {
+        locationDescription: 'Graceland',
+        bookingNo: '1234',
+        firstName: 'Anne',
+        middleName: 'C',
+        lastName: 'McCaffrey',
+        facialImageId: 1234,
+        dateOfBirth: '1970-03-15',
+        status: 'ACTIVE IN',
+        physicalAttributes: {
+          gender: 'Male',
+          ethnicity: 'Caucasian',
+        },
+        identifiers: [
+          {
+            type: 'CRO',
+            value: '1234/2345',
+          },
+          {
+            type: 'PNC',
+            value: 'X234547',
+          },
+        ],
+      },
+    })
+  })
+
+  ppcsUrls.forEach(item => {
+    it(`${item.url}`, () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {
+            firstName: 'Max',
+            middleName: 'Arthur',
+            lastName: 'Mull',
+          },
+          bookRecallToPpud: {
+            firstNames: 'Pinky',
+            lastName: 'Pooh',
+            ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
+          },
+          ppudOffender: {
+            sentences: [
+              {
+                id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
+                releases: [
+                  {
+                    dateOfRelease: '2013-02-02',
+                  },
+                  {
+                    dateOfRelease: '2015-02-09',
+                  },
+                  {
+                    dateOfRelease: '2005-02-02',
+                  },
+                ],
+              },
+              {
+                id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313238393334G1375H1387',
+              },
+            ],
+          },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                bookingId: 13,
+                courtDescription: 'Blackburn County Court',
+                offenceCode: 'SA96036',
+                offenceDescription:
+                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceStatute: 'SA96',
+                offenderChargeId: 3934369,
+                sentenceDate: '2023-11-16',
+                sentenceEndDate: '3022-11-15',
+                sentenceStartDate: '2023-11-16',
+                sentenceTypeDescription: 'Adult Mandatory Life',
+                terms: [],
+                releaseDate: '2025-11-16',
+                licenceExpiryDate: '2025-11-17',
+                releasingPrison: 'Broad Moor',
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+      cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: item.statuses })
+      cy.task('updateStatuses', { statusCode: 200, response: item.statuses })
+
+      cy.task('getReferenceList', { name: 'genders', statusCode: 200, response: { values: ['one', 'two'] } })
+      cy.task('getReferenceList', { name: 'ethnicities', statusCode: 200, response: { values: ['one', 'two'] } })
+      cy.task('getReferenceList', { name: 'establishments', statusCode: 200, response: { values: ['one', 'two'] } })
+      cy.task('getReferenceList', { name: 'released-unders', statusCode: 200, response: { values: ['one', 'two'] } })
+      cy.task('getReferenceList', { name: 'police-forces', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', { name: 'mappa-levels', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', { name: 'index-offences', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', { name: 'custody-types', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', { name: 'probation-services', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', { name: 'index-offences', statusCode: 200, response: { values: ['val'] } })
+      cy.task('prisonSentences', {
+        statusCode: 200,
+        response: [
+          {
+            bookingId: 13,
+            sentenceSequence: 4,
+            lineSequence: 4,
+            caseSequence: 2,
+            courtDescription: 'Blackburn County Court',
+            sentenceStatus: 'A',
+            sentenceCategory: '2003',
+            sentenceCalculationType: 'MLP',
+            sentenceTypeDescription: 'Adult Mandatory Life',
+            sentenceDate: '2023-11-16',
+            sentenceStartDate: '2023-11-16',
+            sentenceEndDate: '3022-11-15',
+            terms: [],
+            offences: [
+              {
+                offenderChargeId: 3934369,
+                offenceStartDate: '1899-01-01',
+                offenceStatute: 'SA96',
+                offenceCode: 'SA96036',
+                offenceDescription:
+                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                indicators: [],
+              },
+            ],
+          },
+        ],
+      })
+
+      cy.visit(item.url)
       cy.injectAxe()
       cy.checkA11y('body', {
         rules: {
