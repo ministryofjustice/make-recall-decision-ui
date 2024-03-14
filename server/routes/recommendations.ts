@@ -507,7 +507,7 @@ apRouteBuilder.get('ap-why-no-recall', apWhyNoRecallController.get)
 apRouteBuilder.post('ap-why-no-recall', apWhyNoRecallController.post)
 
 apRouteBuilder
-  .withCheck(or(statusIsActive(STATUSES.AP_RECORDED_RATIONALE), statusIsActive(STATUSES.NO_RECALL_DECIDED)))
+  .withCheck(statusIsActive(STATUSES.AP_RECORDED_RATIONALE))
   .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
