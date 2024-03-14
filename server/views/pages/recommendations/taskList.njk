@@ -25,14 +25,11 @@
                     {{ recommendation.personOnProbation.name }} will see the Part A.  Use appropriate and
                     sensitive language in the form.
                 </p>
+                <div>
+                    <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
+                </div>
             {% endif %}
-            {% if flags.flagProbationAdmin == false %}
-              {% if taskCompleteness.areAllComplete %}
-              <div>
-                <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
-             </div>
-             {% endif %}
-           {% endif %}
+
             <ol class="moj-task-list govuk-!-margin-top-8">
                 {% if isSpo %}
                 <li>
@@ -99,9 +96,6 @@
                 {% include '../../partials/taskList/countersign.njk' %}
                 {% endif %}
             </ol>
-            {% if taskCompleteness.areAllComplete and flags.flagProbationAdmin %}
-                <a href='{{ urlInfo.basePath }}send-ppcs' class='govuk-button govuk-button--primary'>Send to PPCS</a>
-            {% endif %}
         </div>
 
         <div class="govuk-grid-column-one-third-from-desktop">
@@ -121,13 +115,6 @@
         </div>
 
     </div>
-{% if flags.flagProbationAdmin == true %}
-    {% if taskCompleteness.areAllComplete and user.hasSpoRole == false %}
-    <div>
-        <a href='{{ urlInfo.basePath }}confirmation-part-a' class='govuk-button govuk-button--primary'>Create Part A</a>
-    </div>
-    {% endif %}
-{% endif %}
 
 {% endblock %}
 
