@@ -14,23 +14,23 @@
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
             {% if recommendation.prisonOffender.ethnicity %}
-                <dl class="govuk-text-list">
-                    <h3 class='govuk-heading-m'>From NOMIS</h3>
+                <div class="govuk-text-list">
+                    <h2 class='govuk-heading-m'>From NOMIS</h2>
                     <div class="govuk-text-list__row">
-                        <dt class="govuk-text-list__key">Ethnicity</dt>
-                        <dd class="govuk-text-list__value" data-qa="nomisEthnicity">{{ recommendation.prisonOffender.ethnicity }}</dd>
+                        <div class="govuk-text-list__key">Ethnicity</div>
+                        <div class="govuk-text-list__value" data-qa="nomisEthnicity">{{ recommendation.prisonOffender.ethnicity }}</div>
                     </div>
-                </dl>
+                </div>
             {% endif %}
 
             {% if recommendation.ppudOffender %}
-                <dl class="govuk-text-list">
-                    <h3 class='govuk-heading-m'>From PPUD</h3>
+                <div class="govuk-text-list">
+                    <h2 class='govuk-heading-m'>From PPUD</h2>
                     <div class="govuk-text-list__row">
-                        <dt class="govuk-text-list__key">Ethnicity</dt>
-                        <dd class="govuk-text-list__value" data-qa="ppudEthnicity">{{ recommendation.ppudOffender.ethnicity }}</dd>
+                        <div class="govuk-text-list__key">Ethnicity</div>
+                        <div class="govuk-text-list__value" data-qa="ppudEthnicity">{{ recommendation.ppudOffender.ethnicity }}</div>
                     </div>
-                </dl>
+                </div>
             {% endif %}
 
             <form novalidate method="post">

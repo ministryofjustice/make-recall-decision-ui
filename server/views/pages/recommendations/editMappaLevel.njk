@@ -13,13 +13,13 @@
 
             <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
 
-            <dl class="govuk-text-list">
-                <h3 class='govuk-heading-m'>From Part A</h3>
+            <div class="govuk-text-list">
+                <h2 class='govuk-heading-m'>From Part A</h2>
                 <div class="govuk-text-list__row">
-                    <dt class="govuk-text-list__key">MAPPA Level</dt>
-                    <dd class="govuk-text-list__value" data-qa="mappaLevel"> Level {{ recommendation.personOnProbation.mappa.level }}</dd>
+                    <div class="govuk-text-list__key">MAPPA Level</div>
+                    <div class="govuk-text-list__value" data-qa="mappaLevel"> Level {{ recommendation.personOnProbation.mappa.level }}</div>
                 </div>
-            </dl>
+            </div>
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
