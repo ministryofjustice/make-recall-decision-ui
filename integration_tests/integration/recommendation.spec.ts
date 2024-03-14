@@ -2520,4 +2520,93 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Book  Pinky Pooh onto PPUD')
     })
   })
+  describe('Approved Premises Journey', () => {
+    beforeEach(() => {
+      cy.signIn({ roles: ['ROLE_MARD_RESIDENT_WORKER'] })
+    })
+
+    it('present Out of Hours Blue Page', () => {
+      cy.visit(`${routeUrls.cases}/${crn}/out-of-hours-warning?flagOutOfHours=1`)
+
+      cy.pageHeading().should('contain', 'Important')
+    })
+
+    it('present licence condition breaches page for AP', () => {
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions?flagOutOfHours=1`)
+
+      cy.pageHeading().should('contain', 'What licence conditions has Paula Smith breached?')
+    })
+    it('present AP Recall Rationale page', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          spoRecallType: 'RECALL',
+          spoRecallRationale: 'some lorem ipsum stuff',
+          odmName: 'Dankey Maus',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-recall-rationale?flagOutOfHours=1`)
+
+      cy.pageHeading().should('contain', 'Explain the decision')
+
+      cy.getText('reason').should('contain', 'some lorem ipsum stuff')
+      cy.getTextInputValue('Name of out-of-hours manager').should('contain', 'Dankey Maus')
+    })
+    it('present AP record decision page', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          spoRecallRationale: 'some lorem ipsum stuff',
+          odmName: 'Dankey Maus',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-record-decision?flagOutOfHours=1`)
+
+      cy.pageHeading().should('contain', 'Record the decison in NDelius')
+
+      cy.getText('reason').should('contain', 'some lorem ipsum stuff')
+      cy.getText('reason').should('contain', 'Manager(s) name: Dankey Maus')
+    })
+    it('present AP rationale confirmation', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          spoRecallRationale: 'some lorem ipsum stuff',
+          odmName: 'Dankey Maus',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'AP_RECORDED_RATIONALE', active: true }] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-rationale-confirmation?flagOutOfHours=1`)
+
+      cy.pageHeading().should('contain', 'Decision not to recall')
+
+      cy.getText('reason').should('contain', 'some lorem ipsum stuff')
+      cy.getText('reason').should('contain', 'Manager(s) name: Dankey Maus')
+    })
+    it('present AP why no recall', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          spoRecallRationale: 'some lorem ipsum stuff',
+          odmName: 'Dankey Maus',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-why-no-recall?flagOutOfHours=1`)
+
+      cy.pageHeading().should('contain', 'Why do you think Paula Smith should not be recalled?')
+
+      cy.getText('reason').should('contain', 'some lorem ipsum stuff')
+      cy.getTextInputValue('Name of out-of-hours manager').should('contain', 'Dankey Maus')
+    })
+  })
 })
