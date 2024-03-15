@@ -76,7 +76,7 @@ import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoReca
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 import alreadyExisting from '../controllers/recommendation/alreadyExisting'
-import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middleware/check'
+import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
@@ -281,13 +281,7 @@ ppRouteBuilder
   .get('request-aco-countersign', requestAcoCountersignController.get)
 
 ppRouteBuilder
-  .withRoles(
-    and(
-      hasRole(HMPPS_AUTH_ROLE.PO),
-      not(hasRole(HMPPS_AUTH_ROLE.PPCS)),
-      not(and(hasRole(HMPPS_AUTH_ROLE.SPO), flagIsActive('flagProbationAdmin')))
-    )
-  )
+  .withRoles(and(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.SPO)), not(hasRole(HMPPS_AUTH_ROLE.PPCS))))
   .get('confirmation-part-a', confirmationPartAController.get)
 
 ppRouteBuilder.get('preview-part-a', previewPartAController.get)
