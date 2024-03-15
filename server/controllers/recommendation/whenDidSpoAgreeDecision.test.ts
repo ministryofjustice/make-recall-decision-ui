@@ -135,7 +135,7 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/task-list`)
     expect(next).not.toHaveBeenCalled()
   })
-  it('post with invalid data', async () => {
+  it('post with invalid data - missing day and month', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
@@ -166,7 +166,7 @@ describe('post', () => {
       {
         errorId: 'missingDateParts',
         href: '#dateTime-day',
-        text: 'The date and time must include a day and month',
+        text: 'The date the SPO agreed the recall must include a day and month',
         name: 'dateTime',
         invalidParts: ['day', 'month'],
         values: { day: '', hour: '12', minute: '59', month: '', year: '2023' },
