@@ -18,6 +18,7 @@ describe('get', () => {
     recallType: {
       selected: { value: 'STANDARD' },
     },
+    decisionDateTime: '2021-01-01T12:00:00',
     responseToProbation: 'text',
     whatLedToRecall: 'text',
     isThisAnEmergencyRecall: false,
@@ -78,6 +79,7 @@ describe('get', () => {
       previousRecalls: true,
       previousReleases: true,
       recallType: true,
+      decisionDateTime: true,
       responseToProbation: true,
       vulnerabilities: true,
       whatLedToRecall: true,

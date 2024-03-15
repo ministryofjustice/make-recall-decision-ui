@@ -1,0 +1,139 @@
+{% extends "../../partials/layout.njk" %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                <p class="govuk-body">This is when the SPO agrees to the start of the recall process, and not when the ACO endorses the
+                    recall. You must do the following within 24 hours:
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>get endorsement from the ACO</li>
+                        <li>send the Part A and supporting documents to PPCS</li>
+                    </ul>
+                </p>
+                <fieldset
+                    class="govuk-fieldset"
+                    role="group"
+                    aria-describedby="appointment-date-hint appointment-time-hint{% if errors.dateTime %} dateTime-error{% endif %}">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">
+                            Date
+                        </h2>
+                    </legend>
+                    <div id="appointment-date-hint" class="govuk-hint">
+                        For example, 31 3 1980
+                    </div>
+                    <div class="govuk-form-group{% if errors.dateTime %} govuk-form-group--error{% endif %}">
+                        {% if errors.dateTime %}
+                            <p id="dateTime-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span>
+                                {{ errors.dateTime.text }}
+                            </p>
+                        {% endif %}
+                        <div class="govuk-date-input" id="appointment-date">
+                            <div class="govuk-date-input__item">
+                                {% from "govuk/components/input/macro.njk" import govukInput %}
+                                {{ govukInput({
+                                    label: {
+                                        text: "Day",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTime-day",
+                                    name: "dateTime-day",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('day', errors.dateTime)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTime.values.day
+                                }) }}
+                            </div>
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Month",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTime-month",
+                                    name: "dateTime-month",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('month', errors.dateTime)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTime.values.month
+                                }) }}
+                            </div>
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Year",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTime-year",
+                                    name: "dateTime-year",
+                                    classes: 'govuk-input--width-4' + (' govuk-input--error' if isDatePartInvalid('year', errors.dateTime)),
+                                    attributes: {
+                                        maxlength: 4,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTime.values.year
+                                }) }}
+                            </div>
+                        </div>
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                            <h2 class="govuk-fieldset__heading">
+                                Time
+                            </h2>
+                        </legend>
+                        <div id="appointment-time-hint" class="govuk-hint">
+                            Use the 24 hour clock, for example 16.45
+                        </div>
+                        <div class="govuk-date-input" id="appointment-date">
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Hours",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTime-hour",
+                                    name: "dateTime-hour",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('hour', errors.dateTime)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTime.values.hour
+                                }) }}
+                            </div>
+                            :
+                            <div class="govuk-date-input__item">
+                                {{ govukInput({
+                                    label: {
+                                        text: "Minutes",
+                                        classes: "govuk-label--s"
+                                    },
+                                    id: "dateTime-minute",
+                                    name: "dateTime-minute",
+                                    classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('minute', errors.dateTime)),
+                                    attributes: {
+                                        maxlength: 2,
+                                        inputmode: "numeric"
+                                    },
+                                    value: inputDisplayValues.dateTime.values.minute
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                {{ formSubmitButton() }}
+            </div>
+        </form>
+    </div>
+</div>{% endblock %}

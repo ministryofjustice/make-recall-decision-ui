@@ -20,6 +20,7 @@ const sharedProperties: RecommendationResponse = {
   isExtendedSentence: undefined,
   licenceConditionsBreached: undefined,
   recallType: undefined,
+  decisionDateTime: undefined,
   responseToProbation: undefined,
 }
 

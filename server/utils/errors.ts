@@ -81,6 +81,11 @@ export const invalidDateInputPart = (validationError: ValidationError, fieldLabe
   return `${fieldLabel}-${part}`
 }
 
+export const invalidTimeInputPart = (validationError: ValidationError, fieldLabel?: string): string => {
+  const part = validationError.invalidParts?.length ? validationError.invalidParts[0] : 'minute'
+  return `${fieldLabel}-${part}`
+}
+
 export const saveErrorWithDetails = ({ err, isProduction }: { err: SanitisedError; isProduction: boolean }) => {
   let text = isProduction ? strings.errors.saveChanges : err.text || err.stack
   if (err.data?.error) {

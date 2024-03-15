@@ -110,6 +110,7 @@ import apRecallRationaleController from '../controllers/recommendation/apRecallR
 import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
 import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
 import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
+import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAgreeDecision'
 
 const recommendations = Router()
 
@@ -167,6 +168,9 @@ ppRouteBuilder.get('discuss-with-manager', discussWithManagerController.get)
 
 ppRouteBuilder.get('recall-type', recallTypeController.get)
 ppRouteBuilder.post('recall-type', recallTypeController.post)
+
+ppRouteBuilder.get('spo-agree-to-recall', whenDidSproAgreeToRecall.get)
+ppRouteBuilder.post('spo-agree-to-recall', whenDidSproAgreeToRecall.post)
 
 ppRouteBuilder.get('emergency-recall', emergencyRecallController.get)
 ppRouteBuilder.post('emergency-recall', emergencyRecallController.post)
