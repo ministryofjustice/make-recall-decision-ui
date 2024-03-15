@@ -163,7 +163,7 @@ export const strings: Record<string, Record<string, string>> = {
     whoCompletedPartA: 'Who completed this Part A?',
     practitionerForPartA: 'Practitioner for {{ fullName }}?',
     revocationOrderRecipients: 'Where should the revocation order be sent?',
-    ppcsQueryEmails: 'Where should the PPCS respond with questions?',
+    ppcsQueryEmails: 'Where should PPCS respond with questions?',
     revocationContact: 'Where should the revocation order be sent?',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
     victimLiaisonOfficer: 'Victim Liaison Officer (VLO)',

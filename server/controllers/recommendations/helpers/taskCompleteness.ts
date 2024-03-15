@@ -65,6 +65,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         reasonsForNoRecall,
         nextAppointment,
       },
+      isReadyForCounterSignature: false,
       areAllComplete:
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
@@ -111,12 +112,44 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     didProbationPractitionerCompletePartA:
       !hasData(recommendation?.whoCompletedPartA) ||
       recommendation.whoCompletedPartA.isPersonProbationPractitionerForOffender,
+    revocationOrderRecipients:
+      hasValue(recommendation.revocationOrderRecipients) && recommendation.revocationOrderRecipients.length > 0,
+    ppcsQueryEmails: hasValue(recommendation.ppcsQueryEmails) && recommendation.ppcsQueryEmails.length > 0,
   }
 
   const flagProbationAdmin = _featureFlags?.flagProbationAdmin
 
   return {
     statuses,
+    isReadyForCounterSignature:
+      statuses.alternativesToRecallTried &&
+      statuses.recallType &&
+      statuses.responseToProbation &&
+      statuses.isIndeterminateSentence &&
+      statuses.isExtendedSentence &&
+      statuses.licenceConditionsBreached &&
+      statuses.custodyStatus &&
+      statuses.whatLedToRecall &&
+      statuses.isThisAnEmergencyRecall &&
+      statuses.vulnerabilities &&
+      statuses.hasVictimsInContactScheme &&
+      statuses.isUnderIntegratedOffenderManagement &&
+      statuses.hasContrabandRisk &&
+      statuses.personOnProbation &&
+      statuses.offenceAnalysis &&
+      statuses.convictionDetail &&
+      statuses.mappa &&
+      statuses.previousReleases &&
+      statuses.previousRecalls &&
+      statuses.currentRoshForPartA &&
+      statuses.hasArrestIssues &&
+      statuses.localPoliceContact &&
+      (!flagProbationAdmin || statuses.whoCompletedPartA) &&
+      (!flagProbationAdmin || statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
+      statuses.isMainAddressWherePersonCanBeFound &&
+      (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
+      (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
+      statuses.fixedTermAdditionalLicenceConditions,
     areAllComplete:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
@@ -140,11 +173,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
-      // when we implement the following stories, we can set these statuses.
       (!flagProbationAdmin || statuses.whoCompletedPartA) &&
       (!flagProbationAdmin || statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
-      // (!flagProbationAdmin || statuses.revocationContact) &&
-      // (!flagProbationAdmin || statuses.correspondenceEmail) &&
+      (!flagProbationAdmin || statuses.revocationOrderRecipients) &&
+      (!flagProbationAdmin || statuses.ppcsQueryEmails) &&
       statuses.isMainAddressWherePersonCanBeFound &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&

@@ -42,9 +42,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let seniorManagerCountersignStyle = 'grey'
 
   let isAcoSigned = false
-  if (completeness.areAllComplete) {
-    completeness.areAllComplete = false
-
+  if (completeness.isReadyForCounterSignature) {
     const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
     const isSpoSigned = !!statuses.find(status => status.name === STATUSES.SPO_SIGNED)
     const isAcoSignatureRequested = !!statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
@@ -58,7 +56,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
       seniorManagerCountersignStyle = 'blue'
       seniorManagerCountersignLabel = 'Completed'
       seniorManagerCountersignLink = false
-      completeness.areAllComplete = true
     } else if (isAcoSignatureRequested) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
@@ -98,7 +95,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
     seniorManagerCountersignLabel,
     lineManagerCountersignStyle,
     seniorManagerCountersignStyle,
-    taskCompleteness: completeness,
+    taskCompleteness: {
+      statuses: completeness.statuses,
+      isReadyForCounterSignature: completeness.isReadyForCounterSignature,
+      areAllComplete: completeness.areAllComplete && isAcoSigned,
+    },
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
     countersignSpoExposition: recommendation.countersignSpoExposition,
   }

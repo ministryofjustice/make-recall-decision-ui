@@ -1664,7 +1664,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/?flagProbationAdmin=1`)
 
-      cy.pageHeading().should('contain', 'Where should the PPCS respond with questions?')
+      cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
 
       cy.fillInput('Enter email address', 'gadget@me.com')
 

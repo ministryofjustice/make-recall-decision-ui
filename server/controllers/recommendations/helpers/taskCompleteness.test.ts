@@ -66,7 +66,9 @@ const emptyRecall: RecommendationResponse = {
 describe('taskCompleteness', () => {
   describe('Recall', () => {
     it('all complete', () => {
-      const { statuses, areAllComplete } = taskCompleteness(recommendationResponse as RecommendationResponse)
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+        recommendationResponse as RecommendationResponse
+      )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(recallProperties, true),
@@ -74,12 +76,15 @@ describe('taskCompleteness', () => {
         didProbationPractitionerCompletePartA: true,
         whoCompletedPartA: false,
         practitionerForPartA: false,
+        revocationOrderRecipients: false,
+        ppcsQueryEmails: false,
       })
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('indeterminate sentence - partly complete', () => {
-      const { statuses, areAllComplete } = taskCompleteness(emptyRecall)
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(emptyRecall)
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(recallProperties, false),
@@ -93,14 +98,19 @@ describe('taskCompleteness', () => {
         didProbationPractitionerCompletePartA: true,
         whoCompletedPartA: false,
         practitionerForPartA: false,
+        revocationOrderRecipients: false,
+        ppcsQueryEmails: false,
       })
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
   })
 
   describe('No recall', () => {
     it('all complete', () => {
-      const { statuses, areAllComplete } = taskCompleteness(noRecallResponse as RecommendationResponse)
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+        noRecallResponse as RecommendationResponse
+      )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(indeterminateSentenceProperties, true),
@@ -109,10 +119,11 @@ describe('taskCompleteness', () => {
         previousReleases: false,
       })
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('all complete - sentence type not required if indeterminate is false', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...noRecallResponse,
         isIndeterminateSentence: false,
         indeterminateSentenceType: undefined,
@@ -125,6 +136,7 @@ describe('taskCompleteness', () => {
         indeterminateSentenceType: false,
       })
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     const emptyNoRecall: RecommendationResponse = {
@@ -135,7 +147,9 @@ describe('taskCompleteness', () => {
     }
 
     it('all incomplete', () => {
-      const { statuses, areAllComplete } = taskCompleteness(emptyNoRecall as RecommendationResponse)
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+        emptyNoRecall as RecommendationResponse
+      )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(noRecallProperties, false),
@@ -145,42 +159,46 @@ describe('taskCompleteness', () => {
         indeterminateSentenceType: false,
       })
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('whyConsideredRecall incomplete', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...emptyNoRecall,
         reasonsForNoRecall: {},
         nextAppointment: {},
       } as RecommendationResponse)
       expect(statuses.whyConsideredRecall).toEqual(false)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('nextAppointment incomplete', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...emptyNoRecall,
         reasonsForNoRecall: {},
         whyConsideredRecall: {},
       } as RecommendationResponse)
       expect(statuses.nextAppointment).toEqual(false)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('reasonsForNoRecall incomplete', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...emptyNoRecall,
         nextAppointment: {},
         whyConsideredRecall: {},
       } as RecommendationResponse)
       expect(statuses.reasonsForNoRecall).toEqual(false)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
   })
 
   describe('Licence conditions', () => {
     it('returns true if a standard licence condition is selected', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...recommendationResponse,
         licenceConditionsBreached: {
           standardLicenceConditions: {
@@ -192,12 +210,14 @@ describe('taskCompleteness', () => {
         },
         bookRecallToPpud: null,
       } as RecommendationResponse)
+
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if an additional licence condition is selected', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...recommendationResponse,
         licenceConditionsBreached: {
           standardLicenceConditions: {},
@@ -214,10 +234,11 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if a standard cvl licence condition is selected', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...recommendationResponse,
         licenceConditionsBreached: {
           standardLicenceConditions: {},
@@ -235,10 +256,11 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if a additional cvl licence condition is selected', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...recommendationResponse,
         licenceConditionsBreached: {
           standardLicenceConditions: {},
@@ -256,10 +278,11 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if a bespoke cvl licence condition is selected', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...recommendationResponse,
         licenceConditionsBreached: {
           standardLicenceConditions: {},
@@ -277,10 +300,11 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if additional licence text is supplied', () => {
-      const { statuses, areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...recommendationResponse,
         licenceConditionsBreached: {
           standardLicenceConditions: {},
@@ -292,12 +316,13 @@ describe('taskCompleteness', () => {
       } as RecommendationResponse)
       expect(statuses.licenceConditionsBreached).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
   })
 
   describe('Custody status', () => {
     it('returns false for areAllComplete if not in custody, and related properties are null', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: null,
@@ -306,10 +331,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('returns false for areAllComplete if not in custody, and others not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: null,
@@ -318,10 +344,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('returns false for areAllComplete if not in custody, and localPoliceContact not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: { selected: true, details: 'details' },
@@ -330,10 +357,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('returns true for areAllComplete if not in custody, and related properties are all set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'NO' },
         hasArrestIssues: { selected: false },
@@ -344,10 +372,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true for areAllComplete if in police custody, and related properties are null', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'YES_POLICE' },
         hasArrestIssues: null,
@@ -356,10 +385,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true for areAllComplete if in prison custody, and related properties are null', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'YES_PRISON' },
         hasArrestIssues: null,
@@ -368,6 +398,7 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
   })
 
@@ -463,7 +494,7 @@ describe('taskCompleteness', () => {
 
   describe('Indeterminate sentence type', () => {
     it('returns true if isIndeterminateSentence is true and indeterminateSentenceType set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: true,
         indeterminateSentenceType: {
@@ -472,10 +503,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if isIndeterminateSentence is false and indeterminateSentenceType not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: false,
         indeterminateSentenceType: null,
@@ -483,22 +515,24 @@ describe('taskCompleteness', () => {
         fixedTermAdditionalLicenceConditions: {}, // the default recommendation doesn't have this set
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns false if isIndeterminateSentence is true and indeterminateSentenceType is not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: true,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
   })
 
   describe('Indeterminate or extended details', () => {
     it('returns true if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: true,
         indeterminateOrExtendedSentenceDetails: {
@@ -507,32 +541,35 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns false if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails is not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: true,
         indeterminateOrExtendedSentenceDetails: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('returns true if isIndeterminateSentence is false and indeterminateOrExtendedSentenceDetails is not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: false,
         indeterminateOrExtendedSentenceDetails: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
   })
 
   describe('Fixed term licence conditions', () => {
     it('returns true if isIndeterminateSentence is false and fixedTermAdditionalLicenceConditions set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: false,
         fixedTermAdditionalLicenceConditions: {
@@ -541,30 +578,33 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if isIndeterminateSentence is true and fixedTermAdditionalLicenceConditions not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: true,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns true if isIndeterminateSentence is false, recall type is standard and fixedTermAdditionalLicenceConditions not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: false,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
 
     it('returns false if isIndeterminateSentence is false, recall type is fixed and fixedTermAdditionalLicenceConditions not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         recallType: { selected: { value: 'FIXED_TERM' } },
         isIndeterminateSentence: false,
@@ -572,10 +612,11 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
     it('returns true if isIndeterminateSentence is false, extended sentence is true and indeterminate sentence type not set', () => {
-      const { areAllComplete } = taskCompleteness({
+      const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         isIndeterminateSentence: false,
         isExtendedSentence: true,
@@ -583,11 +624,12 @@ describe('taskCompleteness', () => {
         bookRecallToPpud: null,
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
   })
   describe('Contact Information', () => {
     it('returns false if who has completed Part A has not been supplied', () => {
-      const { areAllComplete, statuses } = taskCompleteness(
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
         {
           ...recommendationResponse,
           bookRecallToPpud: null,
@@ -598,14 +640,17 @@ describe('taskCompleteness', () => {
       expect(statuses.whoCompletedPartA).toEqual(false)
       expect(statuses.didProbationPractitionerCompletePartA).toEqual(true)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
     it('returns true if the person who completed the part A is the probation practitioner', () => {
-      const { areAllComplete, statuses } = taskCompleteness(
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
         {
           ...recommendationResponse,
           whoCompletedPartA: {
             isPersonProbationPractitionerForOffender: true,
           },
+          revocationOrderRecipients: ['here@me.com'],
+          ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
         { flagProbationAdmin: true }
@@ -614,15 +659,18 @@ describe('taskCompleteness', () => {
       expect(statuses.whoCompletedPartA).toEqual(true)
       expect(statuses.didProbationPractitionerCompletePartA).toEqual(true)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
     it('returns true if the person who completed the part A is not the probation practitioner and that section has been supplied', () => {
-      const { areAllComplete, statuses } = taskCompleteness(
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
         {
           ...recommendationResponse,
           whoCompletedPartA: {
             isPersonProbationPractitionerForOffender: false,
           },
           practitionerForPartA: {},
+          revocationOrderRecipients: ['here@me.com'],
+          ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
         { flagProbationAdmin: true }
@@ -632,9 +680,10 @@ describe('taskCompleteness', () => {
       expect(statuses.practitionerForPartA).toEqual(true)
       expect(statuses.didProbationPractitionerCompletePartA).toEqual(false)
       expect(areAllComplete).toEqual(true)
+      expect(isReadyForCounterSignature).toEqual(true)
     })
     it('returns false if the person who completed the part A is not the probation practitioner and that section has not been supplied', () => {
-      const { areAllComplete, statuses } = taskCompleteness(
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
         {
           ...recommendationResponse,
           whoCompletedPartA: {
@@ -649,6 +698,7 @@ describe('taskCompleteness', () => {
       expect(statuses.practitionerForPartA).toEqual(false)
       expect(statuses.didProbationPractitionerCompletePartA).toEqual(false)
       expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
   })
 })
