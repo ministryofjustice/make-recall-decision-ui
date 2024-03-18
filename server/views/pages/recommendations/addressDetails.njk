@@ -36,7 +36,7 @@
                             NDelius.</p>
                         {% for address in recommendation.personOnProbation.addresses %}
                             <div class='govuk-!-margin-bottom-3'>
-                                <h3 class='govuk-visually-hidden'>Address {{ loop.index }}</h3>
+                                <h2 class='govuk-visually-hidden'>Address {{ loop.index }}</h2>
                                 <div data-qa='address-{{ loop.index }}'>
                                     {% if address.noFixedAbode %}
                                         <div class="govuk-body govuk-!-margin-bottom-0">No fixed abode</div>

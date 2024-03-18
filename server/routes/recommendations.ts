@@ -43,7 +43,6 @@ import emergencyRecallController from '../controllers/recommendation/emergencyRe
 import personalDetailsController from '../controllers/recommendation/personalDetailsController'
 import offenceDetailsController from '../controllers/recommendation/offenceDetailsController'
 import mappaController from '../controllers/recommendation/mappaController'
-import managerViewDecisionController from '../controllers/recommendation/managerViewDecisionController'
 import managerDecisionConfirmationController from '../controllers/recommendation/managerDecisionConfirmationController'
 import countersigningTelephoneController from '../controllers/recommendation/countersigningTelephoneController'
 import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
@@ -234,8 +233,6 @@ ppRouteBuilder.get('personal-details', personalDetailsController.get)
 ppRouteBuilder.get('offence-details', offenceDetailsController.get)
 
 ppRouteBuilder.get('mappa', mappaController.get)
-
-ppRouteBuilder.get('manager-view-decision', managerViewDecisionController.get)
 
 ppRouteBuilder.get('who-completed-part-a', whoCompletedPartAController.get)
 ppRouteBuilder.post('who-completed-part-a', whoCompletedPartAController.post)
