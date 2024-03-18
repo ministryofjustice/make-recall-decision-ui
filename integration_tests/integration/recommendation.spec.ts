@@ -120,7 +120,7 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/`)
       cy.pageHeading().should('equal', 'Consider a recall')
 
-      cy.getElement('What has made you think about recalling Paula Smith? To do').should('exist')
+      cy.getElement('What has made you consider recalling Paula Smith? To do').should('exist')
       cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
       cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
@@ -137,9 +137,9 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
-      cy.clickLink('What has made you think about recalling Paula Smith?')
+      cy.clickLink('What has made you consider recalling Paula Smith?')
 
-      cy.pageHeading().should('equal', 'What has made you think about recalling Paula Smith?')
+      cy.pageHeading().should('equal', 'What has made you consider recalling Paula Smith?')
 
       cy.get('textarea').type('Some details')
       cy.get('button').click()
