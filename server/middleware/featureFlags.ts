@@ -17,7 +17,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagProbationAdmin: {
     label: 'Enable Probation Admin',
     description: 'Enables Probation Admin',
-    default: false,
+    default: true,
   },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
