@@ -34,7 +34,7 @@ context('Recommendation - task list consider recall', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
-    cy.getElement('What has made you think about recalling Paula Smith? Completed').should('exist')
+    cy.getElement('What has made you consider recalling Paula Smith? Completed').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Paula Smith breached? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
