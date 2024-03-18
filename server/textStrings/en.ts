@@ -225,6 +225,6 @@ export const strings: Record<string, Record<string, string>> = {
     supportingDocuments: 'Add supporting documents for {{ fullName }}',
     supportingDocumentUpload: 'Upload supporting document',
     bookingSummary: 'Your recall booking - {{ fullName }}',
-    whenSpoAgreedRecallDate: 'When did the SPO agree to this recall',
+    whenSpoAgreedRecallDate: 'When did the SPO agree to this recall?',
   },
 }

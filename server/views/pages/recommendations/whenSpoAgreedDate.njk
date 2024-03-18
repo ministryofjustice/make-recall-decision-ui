@@ -10,7 +10,7 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-                <p class="govuk-body">This is when the SPO agrees to the start of the recall process, and not when the ACO endorses the
+                <p class="govuk-body">This is when the SPO agrees to the start of the recall process, not when the ACO endorses the
                     recall. You must do the following within 24 hours:
                     <ul class="govuk-list govuk-list--bullet">
                         <li>get endorsement from the ACO</li>
@@ -23,7 +23,7 @@
                     aria-describedby="appointment-date-hint appointment-time-hint{% if errors.dateTime %} dateTime-error{% endif %}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h2 class="govuk-fieldset__heading">
-                            Date
+                            Enter date
                         </h2>
                     </legend>
                     <div id="appointment-date-hint" class="govuk-hint">
@@ -89,7 +89,7 @@
                         </div>
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
                             <h2 class="govuk-fieldset__heading">
-                                Time
+                                Enter time
                             </h2>
                         </legend>
                         <div id="appointment-time-hint" class="govuk-hint">
