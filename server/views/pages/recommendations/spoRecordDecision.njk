@@ -1,34 +1,28 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
-    {{ backLink() }}
+  {{ backLink() }}
 {% endblock %}
-
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
-
-            {% if recallType === 'NO_RECALL' %}
-            {% if editable %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-
-                {% set hintHtml %}
-                <p class="govuk-body">
-                    The decision will be recorded as a contact in NDelius called 'Management oversight - no recall' with
-                    the outcome 'decision not to recall'. You cannot undo this.
-                </p>
-                <div class="govuk-inset-text" data-qa="reason">
-                    <pre class='govuk-body'>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% include '../../partials/error-summary.njk' %}
+      {% if recallType === 'NO_RECALL' %}
+        {% if editable %}
+          <form novalidate method="post">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+            <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> {% set hintHtml %}
+            <p class="govuk-body">
+              The decision will be recorded as a contact in NDelius called 'Management oversight - no recall' with the outcome
+              'decision to not recall'. You cannot undo this.
+            </p>
+            <div class="govuk-inset-text" data-qa="reason">
+              <pre class='govuk-body'>
                     {{ spoRecallRationale }}
                     </pre>
-                </div>
-                {% endset %}
-                {{ govukCheckboxes({
+            </div>
+            {% endset %}
+            {{ govukCheckboxes({
                     name: "sensitive",
                     fieldset: {
                       legend: {
@@ -47,51 +41,48 @@
                       }
                     ]
                 }) }}
-                {{ formSubmitButton({
+            {{ formSubmitButton({
                         label: 'Send to NDelius'
                     }) }}
-            </form>
-            {% else %}
-
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
-                          Decision recorded in NDelius
-                        </h1>
-                    </legend>
-                    <div id="sensitive-hint" class="govuk-hint">
-                        <p class="govuk-body">
-                            The decision has been recorded as a contact in NDelius called 'Management oversight - no
-                            recall' with the outcome 'Decision not to recall'. You cannot undo this.
-                        </p>
-                        <div class="govuk-inset-text" data-qa="reason">
-                            <pre class='govuk-body'>
-                            {{ spoRecallRationale }}
-                            </pre>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            {% endif %}
-            {% elseif recallType === 'RECALL' %}
-            {% if editable %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-
-                {% set hintHtml %}
+          </form>
+        {% else %}
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                  Decision recorded in NDelius
+                </h1>
+              </legend>
+              <div id="sensitive-hint" class="govuk-hint">
                 <p class="govuk-body">
-                The decision will be recorded as a contact in NDelius called 'Management oversight - recall' with the
-                outcome 'decision to recall'. You cannot undo this.
+                  The decision has been recorded as a contact in NDelius called 'Management oversight - no recall' with the outcome
+                  'Decision not to recall'. You cannot undo this.
                 </p>
                 <div class="govuk-inset-text" data-qa="reason">
-                    <pre class='govuk-body'>
+                  <pre class='govuk-body'>
+                            {{ spoRecallRationale }}
+                            </pre>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        {% endif %}
+      {% elseif recallType === 'RECALL' %}
+        {% if editable %}
+          <form novalidate method="post">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+            <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> {% set hintHtml %}
+            <p class="govuk-body">
+              The decision will be recorded as a contact in NDelius called 'Management oversight - recall' with the outcome 'decision
+              to recall'. You cannot undo this.
+            </p>
+            <div class="govuk-inset-text" data-qa="reason">
+              <pre class='govuk-body'>
                     {{ spoRecallRationale }}
                     </pre>
-                </div>
-                {% endset %}
-                {{ govukCheckboxes({
+            </div>
+            {% endset %}
+            {{ govukCheckboxes({
                     name: "sensitive",
                     fieldset: {
                       legend: {
@@ -110,35 +101,32 @@
                       }
                     ]
                 }) }}
-                  {{ formSubmitButton({
+            {{ formSubmitButton({
                         label: 'Send to NDelius'
                     }) }}
-            </form>
-            {% else %}
-
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
-                          Decision recorded in NDelius
-                        </h1>
-                    </legend>
-                    <div id="sensitive-hint" class="govuk-hint">
-                        <p class="govuk-body">
-                              The decision has been recorded as a contact in NDelius called 'Management oversight -
-                              recall'. You cannot undo this.
-                        </p>
-                        <div class="govuk-inset-text" data-qa="reason">
-                            <pre class='govuk-body'>
+          </form>
+        {% else %}
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="sensitive-hint">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                  Decision recorded in NDelius
+                </h1>
+              </legend>
+              <div id="sensitive-hint" class="govuk-hint">
+                <p class="govuk-body">
+                  The decision has been recorded as a contact in NDelius called 'Management oversight - recall'. You cannot undo this.
+                </p>
+                <div class="govuk-inset-text" data-qa="reason">
+                  <pre class='govuk-body'>
                             {{ spoRecallRationale }}
                             </pre>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            {% endif %}
-            {% endif %}
-        </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        {% endif %}
+      {% endif %}
     </div>
+  </div>
 {% endblock %}
-
