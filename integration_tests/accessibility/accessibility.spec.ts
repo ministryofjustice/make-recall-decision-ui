@@ -1,6 +1,9 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
+import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
+import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
+import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -33,7 +36,7 @@ const urls = [
   recommendationEndpoint('task-list-consider-recall'),
   recommendationEndpoint('trigger-leading-to-recall'),
   recommendationEndpoint('response-to-probation'),
-  // recommendationEndpoint('licence-conditions'),
+  recommendationEndpoint('licence-conditions'),
   recommendationEndpoint('alternatives-tried'),
   recommendationEndpoint('indeterminate-type'),
   recommendationEndpoint('is-indeterminate'),
@@ -53,18 +56,17 @@ const urls = [
   recommendationEndpoint('task-list-no-recall'),
   recommendationEndpoint('why-considered-recall'),
   recommendationEndpoint('reasons-no-recall'),
-  // recommendationEndpoint('appointment-no-recall'),
+  recommendationEndpoint('appointment-no-recall'),
   recommendationEndpoint('contraband'),
-  // recommendationEndpoint('address-details'),
+  recommendationEndpoint('address-details'),
   recommendationEndpoint('iom'),
   recommendationEndpoint('police-details'),
   recommendationEndpoint('victim-contact-scheme'),
   recommendationEndpoint('victim-liaison-officer'),
   recommendationEndpoint('confirmation-no-recall'),
   recommendationEndpoint('manager-review'),
-  // recommendationEndpoint('offence-details'),
-  // recommendationEndpoint('mappa'),
-  // recommendationEndpoint('manager-view-decision'),
+  recommendationEndpoint('offence-details'),
+  recommendationEndpoint('mappa'),
   recommendationEndpoint('who-completed-part-a'),
   recommendationEndpoint('practitioner-for-part-a'),
   recommendationEndpoint('revocation-order-recipients'),
@@ -72,12 +74,12 @@ const urls = [
   recommendationEndpoint('arrest-issues'),
   recommendationEndpoint('add-previous-release'),
   recommendationEndpoint('add-previous-recall'),
-  // recommendationEndpoint('previous-recalls'),
-  // recommendationEndpoint('previous-releases'),
-  // recommendationEndpoint('offence-analysis'),
-  // recommendationEndpoint('rosh'),
+  recommendationEndpoint('previous-recalls'),
+  recommendationEndpoint('previous-releases'),
+  recommendationEndpoint('offence-analysis'),
+  recommendationEndpoint('rosh'),
   recommendationEndpoint('manager-decision-confirmation'),
-  // recommendationEndpoint('request-spo-countersign'),
+  recommendationEndpoint('request-spo-countersign'),
   recommendationEndpoint('request-aco-countersign'),
   recommendationEndpoint('confirmation-part-a'),
   recommendationEndpoint('preview-part-a'),
@@ -92,8 +94,8 @@ const spoUrls = [
   recommendationEndpoint('review-practitioners-concerns', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('spo-rationale', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('rationale-check', ['SPO_SIGNATURE_REQUESTED']),
-  // recommendationEndpoint('spo-record-decision',['SPO_CONSIDER_RECALL']),
-  // recommendationEndpoint('spo-rationale-confirmation', ['SPO_RECORDED_RATIONALE']),
+  recommendationEndpoint('spo-record-decision', ['SPO_CONSIDER_RECALL'], true),
+  recommendationEndpoint('spo-rationale-confirmation', ['SPO_RECORDED_RATIONALE'], true),
   recommendationEndpoint('countersigning-telephone', ['SPO_SIGNATURE_REQUESTED']),
   recommendationEndpoint('spo-countersignature', ['SPO_SIGNATURE_REQUESTED']),
   recommendationEndpoint('aco-countersignature', ['ACO_SIGNATURE_REQUESTED']),
@@ -127,10 +129,10 @@ const ppcsUrls = [
   recommendationEndpoint('booked-to-ppud', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
 ]
 
-function recommendationEndpoint(resource: string, statuses = []) {
+function recommendationEndpoint(resource: string, statuses = [], fullRecommendationData: boolean = false) {
   return {
     url: `${routeUrls.recommendations}/456/${resource}`,
-    fullRecommendationData: true,
+    fullRecommendationData,
     validationError: false,
     noRecallData: false,
     statuses: statuses.map(name => ({ name, active: true })),
@@ -163,6 +165,19 @@ context('Accessibility (a11y) Checks', () => {
     cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.task(
+      'getCase',
+      caseTemplate()
+        .withActiveConviction(
+          standardActiveConvictionTemplate()
+            .withDescription('Robbery - 05714')
+            .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+        )
+        .withAllConvictionsReleasedOnLicence()
+        .build()
+    )
+    cy.task('updateStatuses', { statusCode: 200, response: [] })
     cy.mockCaseSummaryData()
     cy.mockRecommendationData()
   })
@@ -204,7 +219,10 @@ context('Accessibility (a11y) SPO Checks', () => {
   spoUrls.forEach(item => {
     it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
       if (item.fullRecommendationData) {
-        cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, spoRecallType: 'RECALL', spoRecallRationale: 'something' },
+        })
       }
       if (item.noRecallData) {
         cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
