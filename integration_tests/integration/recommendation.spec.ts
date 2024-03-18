@@ -275,7 +275,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.getElement("Request line manager's countersignature To do").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -291,7 +291,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.getElement("Request line manager's countersignature Requested").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -304,7 +304,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.getElement("Request line manager's countersignature Completed").should('exist')
       cy.getElement("Request senior manager's countersignature To do").should('exist')
@@ -326,7 +326,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.getElement("Request line manager's countersignature Completed").should('exist')
       cy.getElement("Request senior manager's countersignature Requested").should('exist')
@@ -345,7 +345,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.getElement("Request line manager's countersignature Completed").should('exist')
       cy.getElement("Request senior manager's countersignature Completed").should('exist')
@@ -920,7 +920,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -944,7 +944,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -969,7 +969,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -995,7 +995,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -1276,7 +1276,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1369,7 +1369,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1386,7 +1386,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1490,7 +1490,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.clickLink('Senior manager countersignature')
 
@@ -1509,7 +1509,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.clickLink('Senior manager countersignature')
 
@@ -1527,7 +1527,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'ACO_SIGNED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
 
       cy.clickLink('Create Part A')
 
