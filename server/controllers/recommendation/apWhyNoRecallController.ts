@@ -1,20 +1,32 @@
 import { NextFunction, Request, Response } from 'express'
 import { strings } from '../../textStrings/en'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { isMandatoryTextValue } from '../../utils/utils'
+import { isMandatoryTextValue, stripHtmlTags } from '../../utils/utils'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
+  let spoNoRecallRationale
+  let odmName
+  if (res.locals.errors) {
+    spoNoRecallRationale = res.locals.unsavedValues.spoNoRecallRationale
+    odmName = res.locals.unsavedValues.odmName
+  } else {
+    spoNoRecallRationale = recommendation.spoRecallRationale
+    odmName = recommendation.odmName
+  }
 
   res.locals = {
     ...res.locals,
     page: { id: 'apWhyNoRecall' },
     inputDisplayValues: {
       errors: res.locals.errors,
-      spoNoRecallRationale: res.locals.errors?.spoNoRecallRationale ? '' : recommendation.spoRecallRationale,
-      odmName: recommendation.odmName,
+      spoNoRecallRationale,
+      odmName,
     },
   }
 
@@ -28,8 +40,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const {
     flags,
-    user: { token },
+    user: { token, hasOdmRole },
     urlInfo,
+    statuses,
   } = res.locals
 
   const errors = []
@@ -43,23 +56,46 @@ async function post(req: Request, res: Response, _: NextFunction) {
         errorId,
       })
     )
+  } else if (!isMandatoryTextValue(odmName) && !hasOdmRole) {
+    const errorId = 'missingOdmName'
+    errors.push(
+      makeErrorObject({
+        id: 'odmName',
+        text: strings.errors[errorId],
+        errorId,
+      })
+    )
   }
 
   if (errors.length > 0) {
     req.session.errors = errors
+    req.session.unsavedValues = {
+      spoNoRecallRationale,
+      odmName,
+    }
     return res.redirect(303, req.originalUrl)
   }
 
   await updateRecommendation({
     recommendationId,
     valuesToSave: {
-      spoRecallRationale: spoNoRecallRationale,
+      // strip html tags on this value as it is written to delius and it's just possible that they are not hardened to XSS.
+      spoRecallRationale: stripHtmlTags(spoNoRecallRationale),
       explainTheDecision: true,
       odmName,
     },
     token,
     featureFlags: flags,
   })
+
+  if (!(statuses as RecommendationStatusResponse[]).find(s => s.name === STATUSES.AP_COLLECTED_RATIONALE && s.active)) {
+    await updateStatuses({
+      recommendationId: String(recommendationId),
+      token,
+      activate: [STATUSES.AP_COLLECTED_RATIONALE],
+      deActivate: [],
+    })
+  }
 
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-record-decision', urlInfo }))
 }

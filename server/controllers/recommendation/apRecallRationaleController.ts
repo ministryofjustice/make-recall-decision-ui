@@ -1,12 +1,27 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { strings } from '../../textStrings/en'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { isMandatoryTextValue, stripHtmlTags } from '../../utils/utils'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
+  let spoRecallType
+  let spoRecallRationale
+  let odmName
+  if (res.locals.errors) {
+    spoRecallType = res.locals.unsavedValues.spoRecallType
+    spoRecallRationale = res.locals.unsavedValues.spoRecallRationale
+    odmName = res.locals.unsavedValues.odmName
+  } else {
+    spoRecallType = recommendation.spoRecallType
+    spoRecallRationale = recommendation.spoRecallRationale
+    odmName = recommendation.odmName
+  }
 
   res.locals = {
     ...res.locals,
@@ -15,14 +30,9 @@ function get(req: Request, res: Response, next: NextFunction) {
     },
     inputDisplayValues: {
       errors: res.locals.errors,
-      spoRecallType: res.locals.unsavedValues?.spoRecallType
-        ? res.locals.unsavedValues?.spoRecallType
-        : recommendation.spoRecallType,
-      spoRecallRationale:
-        res.locals.errors?.spoRecallRationale || recommendation.spoRecallType !== 'RECALL'
-          ? ''
-          : recommendation.spoRecallRationale,
-      odmName: res.locals.unsavedValues?.odmName ? res.locals.unsavedValues?.odmName : recommendation.odmName,
+      spoRecallType,
+      spoRecallRationale,
+      odmName,
     },
   }
 
@@ -36,8 +46,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const {
     flags,
-    user: { token },
+    user: { token, hasOdmRole },
     urlInfo,
+    statuses,
   } = res.locals
 
   const errors = []
@@ -58,6 +69,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
       errors.push(
         makeErrorObject({
           id: 'spoRecallRationale',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+
+    if (!isMandatoryTextValue(odmName) && !hasOdmRole) {
+      const errorId = 'missingOdmName'
+      errors.push(
+        makeErrorObject({
+          id: 'odmName',
           text: strings.errors[errorId],
           errorId,
         })
@@ -95,6 +117,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
+
+  if (!(statuses as RecommendationStatusResponse[]).find(s => s.name === STATUSES.AP_COLLECTED_RATIONALE && s.active)) {
+    await updateStatuses({
+      recommendationId: String(recommendationId),
+      token,
+      activate: [STATUSES.AP_COLLECTED_RATIONALE],
+      deActivate: [],
+    })
+  }
 
   res.redirect(303, nextPageLinkUrl(nextPage))
 }

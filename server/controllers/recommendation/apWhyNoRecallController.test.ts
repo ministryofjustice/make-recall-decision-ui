@@ -1,7 +1,8 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import apWhyNoRecallController from './apWhyNoRecallController'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -54,6 +55,10 @@ describe('get', () => {
             errorId: 'missingSpoNoRecallRationale',
           },
         },
+        unsavedValues: {
+          spoNoRecallRationale: 'a rationale that belongs to no recall',
+          odmName: 'mr sparky',
+        },
         recommendation: { spoRecallRationale: undefined },
       },
     })
@@ -74,7 +79,8 @@ describe('get', () => {
           errorId: 'missingSpoNoRecallRationale',
         },
       },
-      spoNoRecallRationale: '',
+      odmName: 'mr sparky',
+      spoNoRecallRationale: 'a rationale that belongs to no recall',
     })
   })
 })
@@ -85,6 +91,11 @@ describe('post', () => {
     locals: {
       recommendation: { personOnProbation: { name: 'Harry Smith' } },
       urlInfo: { basePath: `/recommendations/123/` },
+      user: {
+        token: 'token',
+        hasOdmRole: true,
+      },
+      statuses: [],
     },
   })
 
@@ -103,6 +114,13 @@ describe('post', () => {
     await apWhyNoRecallController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalled()
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.AP_COLLECTED_RATIONALE],
+      deActivate: [],
+    })
 
     const payload = (updateRecommendation as jest.Mock).mock.calls[0][0]
     expect(payload).toEqual({
@@ -140,6 +158,43 @@ describe('post', () => {
         invalidParts: undefined,
         name: 'spoNoRecallRationale',
         text: 'You must explain your decision',
+        values: undefined,
+      },
+    ])
+  })
+  it('post with invalid data - no out of hours manager', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      originalUrl: '/recommendations/123/ap-why-no-recall',
+      params: { recommendationId: '123' },
+      body: {
+        spoNoRecallRationale: 'something',
+      },
+    })
+
+    const response = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+        user: {
+          token: 'token',
+          hasOdmRole: false,
+        },
+      },
+    })
+
+    await apWhyNoRecallController.post(req, response, mockNext())
+
+    expect(response.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-why-no-recall`)
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'missingOdmName',
+        href: '#odmName',
+        invalidParts: undefined,
+        name: 'odmName',
+        text: 'You must provide an out-of-hours manager name',
         values: undefined,
       },
     ])

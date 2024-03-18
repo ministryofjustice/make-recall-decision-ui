@@ -16,11 +16,14 @@
                         classes: "govuk-label--s"
                     },
                     value: inputDisplayValues.spoRecallRationale if inputDisplayValues.spoRecallType === 'RECALL',
-                    errorMessage: errorMessage(errors.spoRecallRationale)
+                    errorMessage: errorMessage(errors.spoRecallRationale),
+                    attributes: {
+                        "data-qa": "reason"
+                    }
                 }) }}
             {% if user.hasOdmRole == false %}
                 {{ govukInput({
-                        id: "odm-name",
+                        id: "odmName",
                         name: "odmName",
                         label: {
                             text: "Name of out-of-hours manager",

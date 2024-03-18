@@ -33,7 +33,7 @@ context('Recommendation - task list', () => {
   it('task list - Completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
@@ -68,7 +68,7 @@ context('Recommendation - task list', () => {
       response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
     cy.getElement('Is Paula Smith in custody now? Completed').should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? Completed').should('exist')
@@ -249,7 +249,7 @@ context('Recommendation - task list', () => {
 
     cy.getElement('Who completed this Part A?').should('exist')
     cy.getElement('Where should the revocation order be sent?').should('exist')
-    cy.getElement('Where should the PPCS respond with questions?').should('exist')
+    cy.getElement('Where should PPCS respond with questions?').should('exist')
   })
 
   it('task list - user can create Part A even if they have multiple active custodial convictions', () => {

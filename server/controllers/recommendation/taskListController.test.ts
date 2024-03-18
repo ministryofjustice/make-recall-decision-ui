@@ -89,6 +89,8 @@ describe('get', () => {
       didProbationPractitionerCompletePartA: true,
       practitionerForPartA: false,
       whoCompletedPartA: false,
+      ppcsQueryEmails: false,
+      revocationOrderRecipients: false,
     },
   }
 
@@ -109,6 +111,7 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
+      isReadyForCounterSignature: false,
       areAllComplete: false,
       statuses: { ...taskCompleteness.statuses, offenceAnalysis: false },
     })
@@ -189,7 +192,11 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.taskCompleteness).toEqual({ ...taskCompleteness, areAllComplete: false })
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      isReadyForCounterSignature: true,
+      areAllComplete: false,
+    })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(true)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
@@ -214,7 +221,11 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.taskCompleteness).toEqual({ ...taskCompleteness, areAllComplete: false })
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      isReadyForCounterSignature: true,
+      areAllComplete: false,
+    })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(true)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
@@ -241,7 +252,11 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.taskCompleteness).toEqual({ ...taskCompleteness, areAllComplete: false })
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      isReadyForCounterSignature: true,
+      areAllComplete: false,
+    })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
@@ -272,7 +287,11 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.taskCompleteness).toEqual({ ...taskCompleteness, areAllComplete: false })
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      isReadyForCounterSignature: true,
+      areAllComplete: false,
+    })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
@@ -303,7 +322,11 @@ describe('get', () => {
     expect(res.locals.isAcoSigned).toEqual(true)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.taskCompleteness).toEqual(taskCompleteness)
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      isReadyForCounterSignature: true,
+      areAllComplete: true,
+    })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')

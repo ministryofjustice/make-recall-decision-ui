@@ -23,11 +23,14 @@
                     name: "spoNoRecallRationale",
                     id: "spoNoRecallRationale",
                     value: inputDisplayValues.spoNoRecallRationale,
-                    errorMessage: errorMessage(errors.spoNoRecallRationale)
+                    errorMessage: errorMessage(errors.spoNoRecallRationale),
+                    attributes: {
+                        "data-qa": "reason"
+                    }
                 }) }}
                 {% if user.hasOdmRole == false %}
                     {{ govukInput({
-                        id: "odm-name",
+                        id: "odmName",
                         name: "odmName",
                         label: {
                             text: "Name of out-of-hours manager",

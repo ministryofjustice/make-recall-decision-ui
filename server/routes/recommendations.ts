@@ -43,7 +43,6 @@ import emergencyRecallController from '../controllers/recommendation/emergencyRe
 import personalDetailsController from '../controllers/recommendation/personalDetailsController'
 import offenceDetailsController from '../controllers/recommendation/offenceDetailsController'
 import mappaController from '../controllers/recommendation/mappaController'
-import managerViewDecisionController from '../controllers/recommendation/managerViewDecisionController'
 import managerDecisionConfirmationController from '../controllers/recommendation/managerDecisionConfirmationController'
 import countersigningTelephoneController from '../controllers/recommendation/countersigningTelephoneController'
 import managerCountersignatureController from '../controllers/recommendation/managerCountersignatureController'
@@ -76,7 +75,7 @@ import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoReca
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 import alreadyExisting from '../controllers/recommendation/alreadyExisting'
-import { and, flagIsActive, hasRole, not, or, statusIsActive } from '../middleware/check'
+import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
@@ -239,8 +238,6 @@ ppRouteBuilder.get('offence-details', offenceDetailsController.get)
 
 ppRouteBuilder.get('mappa', mappaController.get)
 
-ppRouteBuilder.get('manager-view-decision', managerViewDecisionController.get)
-
 ppRouteBuilder.get('who-completed-part-a', whoCompletedPartAController.get)
 ppRouteBuilder.post('who-completed-part-a', whoCompletedPartAController.post)
 
@@ -285,13 +282,7 @@ ppRouteBuilder
   .get('request-aco-countersign', requestAcoCountersignController.get)
 
 ppRouteBuilder
-  .withRoles(
-    and(
-      hasRole(HMPPS_AUTH_ROLE.PO),
-      not(hasRole(HMPPS_AUTH_ROLE.PPCS)),
-      not(and(hasRole(HMPPS_AUTH_ROLE.SPO), flagIsActive('flagProbationAdmin')))
-    )
-  )
+  .withRoles(and(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.SPO)), not(hasRole(HMPPS_AUTH_ROLE.PPCS))))
   .get('confirmation-part-a', confirmationPartAController.get)
 
 ppRouteBuilder.get('preview-part-a', previewPartAController.get)
@@ -498,21 +489,21 @@ const apRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles(or(hasRole(HMPPS_AUTH_ROLE.PO), hasRole(HMPPS_AUTH_ROLE.RW), hasRole(HMPPS_AUTH_ROLE.ODM)))
   .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
 
-apRouteBuilder.get('licence-conditions-ap', licenceConditionsController.get)
-apRouteBuilder.post('licence-conditions-ap', licenceConditionsController.post)
-
-apRouteBuilder.get('ap-record-decision', apRecordDecisionController.get)
-apRouteBuilder.post('ap-record-decision', apRecordDecisionController.post)
-
-apRouteBuilder
-  // .withCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))
-  .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
+apRouteBuilder.get('ap-licence-conditions', licenceConditionsController.get)
+apRouteBuilder.post('ap-licence-conditions', licenceConditionsController.post)
 
 apRouteBuilder.get('ap-recall-rationale', apRecallRationaleController.get)
 apRouteBuilder.post('ap-recall-rationale', apRecallRationaleController.post)
 
+apRouteBuilder.get('ap-record-decision', apRecordDecisionController.get)
+apRouteBuilder.post('ap-record-decision', apRecordDecisionController.post)
+
 apRouteBuilder.get('ap-why-no-recall', apWhyNoRecallController.get)
 apRouteBuilder.post('ap-why-no-recall', apWhyNoRecallController.post)
+
+apRouteBuilder
+  .withCheck(statusIsActive(STATUSES.AP_RECORDED_RATIONALE))
+  .get('ap-rationale-confirmation', apRationaleConfirmationController.get)
 
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))

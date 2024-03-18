@@ -29,7 +29,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
-  const isSpoRationaleRecorded = !!statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
+  const isSpoRationaleRecorded =
+    !!statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE) ||
+    !!statuses.find(status => status.name === STATUSES.AP_RECORDED_RATIONALE)
   const completeness = taskCompleteness(recommendation, featureFlags)
 
   let lineManagerCountersignLink = false
@@ -40,9 +42,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   let seniorManagerCountersignStyle = 'grey'
 
   let isAcoSigned = false
-  if (completeness.areAllComplete) {
-    completeness.areAllComplete = false
-
+  if (completeness.isReadyForCounterSignature) {
     const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
     const isSpoSigned = !!statuses.find(status => status.name === STATUSES.SPO_SIGNED)
     const isAcoSignatureRequested = !!statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
@@ -56,7 +56,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
       seniorManagerCountersignStyle = 'blue'
       seniorManagerCountersignLabel = 'Completed'
       seniorManagerCountersignLink = false
-      completeness.areAllComplete = true
     } else if (isAcoSignatureRequested) {
       lineManagerCountersignStyle = 'blue'
       lineManagerCountersignLabel = 'Completed'
@@ -96,7 +95,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
     seniorManagerCountersignLabel,
     lineManagerCountersignStyle,
     seniorManagerCountersignStyle,
-    taskCompleteness: completeness,
+    taskCompleteness: {
+      statuses: completeness.statuses,
+      isReadyForCounterSignature: completeness.isReadyForCounterSignature,
+      areAllComplete: completeness.areAllComplete && isAcoSigned,
+    },
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
     countersignSpoExposition: recommendation.countersignSpoExposition,
   }

@@ -73,31 +73,31 @@
                 These details will go into a PPUD record.  You should:
             </p>
 
-            <ul class='govuk-list govuk-list--number'>
+            <div class='govuk-list govuk-list--number'>
 
                 {% if flags.flagSupportingDocuments %}
-                    <li>Uploading supporting documents.</li>
+                    <div>Uploading supporting documents.</div>
 
                     <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
                                                href='/recommendations/{{ recommendation.id }}/supporting-documents'>Upload documents</a>
                 {% endif %}
 
-                <li>Double-check everything is correct.</li>
-                <li>Edit anything that's wrong.</li>
+                <div>Double-check everything is correct.</div>
+                <div>Edit anything that's wrong.</div>
 
                 {% if warnings|length %}
                     {% set html %}
                         <p class="govuk-body-m govuk-!-margin-bottom-0">
                             These details are different in PPUD.  Edit anything that's wrong.
 
-                            <ul class="govuk-list govuk-!-margin-bottom-0">
+                            <div class="govuk-list govuk-!-margin-bottom-0">
                             {% for key, val in warnings %}
-                                  <li>
+                                  <div>
                                     <span class="govuk-body govuk-!-font-weight-bold">{{ key }}:</span>
                                     <span class="govuk-body">{{ blankSafe(val) }}</span>
-                                  </li>
+                                  </div>
                             {% endfor %}
-                            </ul>
+                            </div>
                         </p>
                     {% endset %}
 
@@ -108,8 +108,8 @@
                     }) }}
                 {% endif %}
 
-                <li>Continue to the next page and select the index offence.</li>
-            </ul>
+                <div>Continue to the next page and select the index offence.</div>
+            </div>
 
             {% if errorMessage %}
                 {% set html %}
@@ -132,145 +132,145 @@
 
                 <h2 class='govuk-heading-m'>Personal details from NOMIS</h2>
 
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                <div class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
+                        <div class="govuk-summary-list__key">
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Image
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {% if recommendation.prisonOffender.image %}
                             <img src="{{ recommendation.prisonOffender.image }}"/>
                             {% else %}
                             - <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             NOMIS number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.personOnProbation.nomsNumber) }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             First names
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ editedBadge(edited.firstNames) }}
                             {{ blankSafe(recommendation.bookRecallToPpud.firstNames) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-name'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Last name
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ editedBadge(edited.lastName) }}
                             {{ blankSafe(recommendation.bookRecallToPpud.lastName) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-name'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.gender) }}
                             Gender
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.gender, true, 'You must enter a gender') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-gender'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.ethnicity) }}
                             Ethnicity
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'You must enter a ethnicity') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-ethnicity'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Date of birth
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ editedBadge(edited.dateOfBirth) }}
                             {{ blankSafe(
                             formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-date-of-birth'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             CRO
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.cro) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-cro'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.prisonNumber) }}
                             Prison booking number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ editedBadge(edited.prisonNumber) }}
                             {{ blankSafe(recommendation.bookRecallToPpud.prisonNumber) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-prison-booking-number'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.releasingPrison) }}
                             Releasing prison
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'You must enter releasing prison') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-releasing-prison'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.legislationReleasedUnder) }}
                             Legislation released under
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'You must enter legislation') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-legislation-released-under'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Custody status
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {% if recommendation.prisonOffender.status == "ACTIVE IN" %}
                                 In custody
                             {% elseif recommendation.prisonOffender.status == "INACTIVE OUT" %}
@@ -280,26 +280,26 @@
                             {% else %}
                                 - <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.custodyType) }}
                             Custody type
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.custodyType, true, 'You must enter a custody type') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-custody-type'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {% for address in recommendation.personOnProbation.addresses %}
                                 {{ formatAddress(address) }}
                             {% endfor %}
@@ -312,144 +312,144 @@
                             <span class="govuk-body">
                                 {{ blankSafe(recommendation.isMainAddressWherePersonCanBeFound.details) }}
                             </span>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='xyz'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
-                </dl>
+                </div>
 
 
                 <h2 class='govuk-heading-m'>Probation details from the Part A</h2>
 
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                <div class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                        </dt>
+                        <div class="govuk-summary-list__key">
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Recall received date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ formatDateTimeFromIsoString({ isoDate: recallReceived, dateOnly: true }) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-recall-received-date-and-time'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Recall received time
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ formatDateTimeFromIsoString({ isoDate: recallReceived, timeOnly: true }) }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-recall-received-date-and-time'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Recall decision date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, dateOnly: true }) }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Recall decision time
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, timeOnly: true }) }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.probationArea) }}
                             Probation area
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'You must enter probation area') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-probation-area'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Probation practitioner
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(practitioner.name) }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Probation practitioner email
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(practitioner.email) }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Probation practitioner phone number
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(practitioner.telephone) }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.policeForce) }}
                             Local police contact
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'You must enter local police force') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-police-contact'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Senior manager (ACO)
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ acoSigned.createdByUserFullName }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Senior manager (ACO) email
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ acoSigned.emailAddress }}
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             {{ errorDisplay(errors.mappaLevel) }}
                             MAPPA level
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.mappaLevel, true, 'You must enter MAPPA level') }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
+                        </div>
+                        <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-mappa-level'>Edit</a>
-                        </dd>
+                        </div>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <div class="govuk-summary-list__key">
                             Current risk of serious harm
-                        </dt>
-                        <dd class="govuk-summary-list__value">
+                        </div>
+                        <div class="govuk-summary-list__value">
                             {{ getRiskLevelText(currentHighestRosh) }}
-                        </dd>
+                        </div>
                     </div>
-                </dl>
+                </div>
                 {{ formSubmitButton({ label: 'Accept and continue' }) }}
             </form>
         </div>

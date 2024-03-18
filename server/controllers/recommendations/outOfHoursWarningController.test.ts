@@ -10,6 +10,29 @@ jest.mock('../../data/makeDecisionApiClient')
 
 describe('Out of Hours Warning Controller', () => {
   describe('get', () => {
+    it('present - invalid role', async () => {
+      const req = mockReq({
+        params: { crn: 'A1234AB' },
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: { spoRecallType: undefined, spoRecallRationale: undefined },
+          statuses: [],
+          user: {
+            username: 'Dave',
+            roles: ['ROLE_MAKE_RECALL_DECISION'],
+            id: '12345',
+          },
+          query: {},
+          flags: { xyz: true },
+        },
+      })
+      const next = mockNext()
+      await outOfHoursWarningController.get(req, res, next)
+
+      expect(res.redirect).toHaveBeenCalledWith('/inappropriate-error')
+      expect(next).not.toHaveBeenCalled()
+    })
     it('present - no inflight recommendation', async () => {
       const req = mockReq({
         params: { crn: 'A1234AB' },
@@ -114,7 +137,7 @@ describe('Out of Hours Warning Controller', () => {
       next
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/licence-conditions-ap`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-licence-conditions`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -158,7 +181,7 @@ describe('Out of Hours Warning Controller', () => {
       {}
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/456/licence-conditions-ap`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/456/ap-licence-conditions`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })
