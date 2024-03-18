@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateDateTime } from '../recommendations/dateValidation/formValidator'
-import { inputDisplayValuesDecisionDateTime } from '../recommendations/dateValidation/inputDisplayValues'
+import { validateDateTime } from '../recommendations/validateSpoDecisionDate/formValidator'
+import { inputDisplayValuesDecisionDateTime } from '../recommendations/validateSpoDecisionDate/inputDisplayValues'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
