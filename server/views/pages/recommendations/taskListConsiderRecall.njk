@@ -1,35 +1,31 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>
-                You're thinking about whether {{ recommendation.personOnProbation.name }} should be recalled or not.
-                Answer these questions and discuss the case with your manager.
+                You're thinking about whether
+                {{ recommendation.personOnProbation.name }} should be recalled or not. Answer these questions and discuss the case with
+                your manager.
             </p>
             <ol class="moj-task-list govuk-!-margin-top-8">
                 <li>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-whatLedToRecall'
-                                    href="{{ changeLinkUrl({ pageUrlSlug: 'trigger-leading-to-recall', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
-                                    What has made you think about recalling {{ recommendation.personOnProbation.name }}?
+                                <a aria-describedby='task-list-status-whatLedToRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'trigger-leading-to-recall', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                    What has made you consider recalling {{ recommendation.personOnProbation.name }}?
                                 </a>
                             </span>
                             <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: triggerLeadingToRecallCompleted }) }}</span>
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-responseToProbation'
-                                    href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-responseToProbation' href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                     How has {{ recommendation.personOnProbation.name }} responded to probation so far?
                                 </a>
                             </span>
@@ -37,8 +33,7 @@
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-licenceConditionsBreached'
-                                    href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-licenceConditionsBreached' href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                     What licence conditions has {{ recommendation.personOnProbation.name }} breached?
                                 </a>
                             </span>
@@ -46,8 +41,7 @@
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-alternativesToRecallTried'
-                                    href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-alternativesToRecallTried' href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                     What alternatives to recall have been tried already?
                                 </a>
                             </span>
@@ -55,8 +49,7 @@
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-indeterminateSentence'
-                                    href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-indeterminateSentence' href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                     Is {{ recommendation.personOnProbation.name }} on an indeterminate sentence?
                                 </a>
                             </span>
@@ -64,8 +57,7 @@
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-extendedSentence'
-                                    href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-extendedSentence' href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
                                     Is {{ recommendation.personOnProbation.name }} on an extended sentence?
                                 </a>
                             </span>
@@ -77,13 +69,10 @@
             {% if allTasksCompleted == true %}
                 <div>
                     <form novalidate method="post">
-                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                        {{ formSubmitButton() }}
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ formSubmitButton() }}
                     </form>
                 </div>
             {% endif %}
         </div>
     </div>
-
 {% endblock %}
-

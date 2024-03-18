@@ -419,7 +419,7 @@ context('Make a recommendation - form validation', () => {
       errorText: 'Select a RoSH level for the risk to prisoners',
     })
   })
-  it('Trigger leadnig to recall', () => {
+  it('Trigger leading to recall', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -427,7 +427,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'triggerLeadingToRecall',
-      errorText: 'You must explain what has made you think about recalling Paula Smith',
+      errorText: 'You must explain what has made you consider recalling Paula Smith',
     })
   })
   it('Rationale Check', () => {

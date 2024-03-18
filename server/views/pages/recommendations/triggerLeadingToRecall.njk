@@ -1,18 +1,24 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
+            {% set hintText %}
+            <p class="govuk-body">You're thinking about whether
+                {{ recommendation.personOnProbation.name }} should be recalled or not. Explain your concerns. Include details of:
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>what you're worried about</li>
+                    <li>protective factors that are still in place</li>
+                    <li>protective factors that have broken down</li>
+                </ul>
+            </p>
+            {% endset %}
             <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                {{ govukTextarea({
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukTextarea({
                     name: "triggerLeadingToRecall",
                     id: "triggerLeadingToRecall",
                     label: {
@@ -21,7 +27,7 @@
                         isPageHeading: true
                     },
                     hint: {
-                        html: "<p class='govuk-body'>Explain what has made you consider whether " + recommendation.personOnProbation.name + " should be recalled or not.</p>"
+                        html: hintText
                     },
                     value: inputDisplayValues.value,
                     errorMessage: errorMessage(errors.triggerLeadingToRecall)
@@ -31,4 +37,3 @@
         </div>
     </div>
 {% endblock %}
-
