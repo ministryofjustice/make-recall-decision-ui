@@ -2,7 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
 import bookOffender from '../../booking/bookOffender'
-import updateSentence from '../../booking/updateSentence'
+import createOrUpdateSentence from '../../booking/createOrUpdateSentence'
 import updateOffence from '../../booking/updateOffence'
 import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
@@ -13,7 +13,7 @@ jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
 jest.mock('../../booking/updateRecall')
 jest.mock('../../booking/updateRelease')
-jest.mock('../../booking/updateSentence')
+jest.mock('../../booking/createOrUpdateSentence')
 jest.mock('../../booking/updateOffence')
 jest.mock('../../monitoring/azureAppInsights')
 
@@ -59,7 +59,7 @@ describe('post', () => {
     const next = mockNext()
 
     ;(bookOffender as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENDER_BOOKED })
-    ;(updateSentence as jest.Mock).mockResolvedValue({ stage: StageEnum.SENTENCE_BOOKED })
+    ;(createOrUpdateSentence as jest.Mock).mockResolvedValue({ stage: StageEnum.SENTENCE_BOOKED })
     ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
     ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
     ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
@@ -74,7 +74,12 @@ describe('post', () => {
     })
 
     expect(bookOffender).toHaveBeenCalledWith({ stage: StageEnum.STARTED }, recommendation, 'token', flags)
-    expect(updateSentence).toHaveBeenCalledWith({ stage: StageEnum.OFFENDER_BOOKED }, recommendation, 'token', flags)
+    expect(createOrUpdateSentence).toHaveBeenCalledWith(
+      { stage: StageEnum.OFFENDER_BOOKED },
+      recommendation,
+      'token',
+      flags
+    )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
@@ -131,7 +136,7 @@ describe('post', () => {
       'token',
       flags
     )
-    expect(updateSentence).not.toHaveBeenCalled()
+    expect(createOrUpdateSentence).not.toHaveBeenCalled()
     expect(updateOffence).not.toHaveBeenCalled()
     expect(updateRelease).not.toHaveBeenCalled()
     expect(updateRecall).not.toHaveBeenCalled()

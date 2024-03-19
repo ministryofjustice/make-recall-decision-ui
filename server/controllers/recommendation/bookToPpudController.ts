@@ -3,7 +3,7 @@ import { getRecommendation, updateRecommendation, updateStatuses } from '../../d
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import bookOffender from '../../booking/bookOffender'
-import updateSentence from '../../booking/updateSentence'
+import createOrUpdateSentence from '../../booking/createOrUpdateSentence'
 import updateOffence from '../../booking/updateOffence'
 import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
@@ -49,7 +49,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   try {
     memento = await bookOffender(memento, recommendation, token, flags)
 
-    memento = await updateSentence(memento, recommendation, token, flags)
+    memento = await createOrUpdateSentence(memento, recommendation, token, flags)
 
     memento = await updateOffence(memento, recommendation, token, flags)
 
