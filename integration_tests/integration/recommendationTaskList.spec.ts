@@ -35,6 +35,7 @@ context('Recommendation - task list', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
     cy.getElement('What you recommend Completed').should('exist')
+    cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
     cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Paula Smith breached? Completed').should('exist')
@@ -151,6 +152,7 @@ context('Recommendation - task list', () => {
     cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
     cy.clickButton('Continue')
     cy.pageHeading().should('equal', 'Create a Part A form')
+    cy.clickLink('When did the SPO agree this recall?')
   })
 
   it('task list - check links to forms', () => {
@@ -160,6 +162,7 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('When did the SPO agree this recall?').should('contain', '/recommendations/123/spo-agree-to-recall')
     cy.getLinkHref('What alternatives to recall have been tried already?').should(
       'contain',
       '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'

@@ -37,6 +37,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
   let statuses: Record<string, boolean> = {
     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
     recallType: hasValue(recommendation.recallType?.selected),
+    decisionDateTime: hasValue(recommendation.decisionDateTime),
     responseToProbation: hasValue(recommendation.responseToProbation),
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
@@ -153,6 +154,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     areAllComplete:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
+      statuses.decisionDateTime &&
       statuses.responseToProbation &&
       statuses.isIndeterminateSentence &&
       statuses.isExtendedSentence &&

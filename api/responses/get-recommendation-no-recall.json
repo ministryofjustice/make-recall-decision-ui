@@ -22,6 +22,7 @@
       }
     ]
   },
+  "decisionDateTime": "2022-04-24T20:39:00.000Z",
   "responseToProbation": "Missed appointments\nRe-offending ",
   "isIndeterminateSentence": true,
   "isExtendedSentence": true,
@@ -103,10 +104,7 @@
   },
   "licenceConditionsBreached": {
     "standardLicenceConditions": {
-      "selected": [
-        "GOOD_BEHAVIOUR",
-        "NO_OFFENCE"
-      ],
+      "selected": ["GOOD_BEHAVIOUR", "NO_OFFENCE"],
       "allOptions": [
         {
           "value": "GOOD_BEHAVIOUR",
@@ -119,9 +117,7 @@
       ]
     },
     "additionalLicenceConditions": {
-      "selected": [
-        "NST14"
-      ],
+      "selected": ["NST14"],
       "allOptions": [
         {
           "mainCatCode": "NLC5",

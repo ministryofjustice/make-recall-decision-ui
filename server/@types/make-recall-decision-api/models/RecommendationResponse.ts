@@ -41,6 +41,7 @@ export type RecommendationResponse = {
   crn?: string;
   managerRecallDecision?: ManagerRecallDecision;
   recallType?: RecallType;
+  decisionDateTime?: string;
   responseToProbation?: string;
   whatLedToRecall?: string;
   isThisAnEmergencyRecall?: boolean;
