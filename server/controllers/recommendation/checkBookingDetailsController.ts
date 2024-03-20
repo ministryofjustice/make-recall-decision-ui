@@ -22,10 +22,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
     flags,
   } = res.locals
 
-  const sentToPpcs = (statuses as RecommendationStatusResponse[])
-    .filter(s => s.active)
-    .find(s => s.name === STATUSES.SENT_TO_PPCS)
-  const recallReceived = recommendation.bookRecallToPpud?.receivedDateTime ?? sentToPpcs?.created
   const spoSigned = (statuses as RecommendationStatusResponse[])
     .filter(s => s.active)
     .find(s => s.name === STATUSES.SPO_SIGNED)
@@ -33,10 +29,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const acoSigned = (statuses as RecommendationStatusResponse[])
     .filter(s => s.active)
     .find(s => s.name === STATUSES.ACO_SIGNED)
-
-  const poRecallConsultSpo = (statuses as RecommendationStatusResponse[])
-    .filter(s => s.active)
-    .find(s => s.name === STATUSES.PO_RECALL_CONSULT_SPO)
 
   let errorMessage
   const valuesToSave = {
@@ -93,14 +85,17 @@ async function get(_: Request, res: Response, next: NextFunction) {
       dateOfBirth = recommendation.prisonOffender.dateOfBirth
     }
 
+    const sentToPpcs = (statuses as RecommendationStatusResponse[])
+      .filter(s => s.active)
+      .find(s => s.name === STATUSES.SENT_TO_PPCS)
+
     valuesToSave.bookRecallToPpud = {
       firstNames: `${firstName} ${middleName}`.trim(),
       lastName,
       dateOfBirth,
       prisonNumber: recommendation.prisonOffender?.bookingNo,
       cro: recommendation.prisonOffender?.cro,
-      decisionDateTime: poRecallConsultSpo?.created.substring(0, 19),
-      receivedDateTime: poRecallConsultSpo?.created.substring(0, 19),
+      receivedDateTime: sentToPpcs?.created,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   } else {
@@ -170,12 +165,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
     errorMessage,
     spoSigned,
     acoSigned,
-    poRecallConsultSpo,
     practitioner: recommendation.practitionerForPartA
       ? recommendation.practitionerForPartA
       : recommendation.whoCompletedPartA,
     currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
-    recallReceived,
     warnings,
     edited,
   }

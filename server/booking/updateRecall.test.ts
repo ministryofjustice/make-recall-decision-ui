@@ -29,8 +29,8 @@ describe('update recall', () => {
 
     const recommendation: RecommendationResponse = {
       id: '1',
+      decisionDateTime: '2024-01-29T16:15:39',
       bookRecallToPpud: {
-        decisionDateTime: '2024-01-29T16:15:39',
         mappaLevel: 'Level 2 - local inter-agency management',
         policeForce: 'NCIS Los Angeles',
         probationArea: 'london',
