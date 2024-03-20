@@ -104,8 +104,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       recommendation.isIndeterminateSentence === false ||
       hasValue(recommendation.indeterminateOrExtendedSentenceDetails),
     hasArrestIssues: recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.hasArrestIssues),
-    localPoliceContact:
-      recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.localPoliceContact?.contactName),
+    localPoliceContact: hasValue(recommendation.localPoliceContact?.contactName),
     isMainAddressWherePersonCanBeFound:
       recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.isMainAddressWherePersonCanBeFound),
     whoCompletedPartA: hasValue(recommendation.whoCompletedPartA),
