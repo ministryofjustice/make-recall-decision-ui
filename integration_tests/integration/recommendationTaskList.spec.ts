@@ -52,8 +52,8 @@ context('Recommendation - task list', () => {
     cy.getElement('Offence analysis Completed').should('exist')
     cy.getElement('MAPPA for Paula Smith Reviewed').should('exist')
     cy.getElement('Previous releases Completed').should('exist')
-    // the following 2 links should not be present, as person is in custody
-    cy.getElement('Local police contact details').should('not.exist')
+    cy.getElement('Local police contact details').should('exist')
+    // the following link should not be present, as person is in custody
     cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
     cy.getElement('Address').should('not.exist')
     // should not exist
