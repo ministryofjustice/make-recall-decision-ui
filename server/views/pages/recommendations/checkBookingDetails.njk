@@ -332,7 +332,7 @@
                             Recall received date
                         </div>
                         <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: recallReceived, dateOnly: true }) }}
+                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }) }}
                         </div>
                         <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-recall-received-date-and-time'>Edit</a>
@@ -343,7 +343,7 @@
                             Recall received time
                         </div>
                         <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: recallReceived, timeOnly: true }) }}
+                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }) }}
                         </div>
                         <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-recall-received-date-and-time'>Edit</a>
@@ -354,7 +354,7 @@
                             Recall decision date
                         </div>
                         <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, dateOnly: true }) }}
+                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) }}
                         </div>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -362,7 +362,7 @@
                             Recall decision time
                         </div>
                         <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: poRecallConsultSpo.created, timeOnly: true }) }}
+                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) }}
                         </div>
                     </div>
                     <div class="govuk-summary-list__row">

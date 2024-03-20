@@ -19,7 +19,7 @@ export default async function updateRecall(
   const isInCustody = recommendation.prisonOffender?.status === 'ACTIVE IN'
 
   await ppudCreateRecall(token, memento.offenderId, memento.releaseId, {
-    decisionDateTime: recommendation.bookRecallToPpud.decisionDateTime,
+    decisionDateTime: recommendation.decisionDateTime,
     isExtendedSentence: recommendation.isExtendedSentence,
     isInCustody,
     mappaLevel: recommendation.bookRecallToPpud.mappaLevel,

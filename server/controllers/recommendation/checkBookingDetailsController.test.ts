@@ -74,6 +74,11 @@ const STATUSES_TEMPLATE = [
     active: true,
     created: '2023-11-13T09:49:31.361Z',
   },
+  {
+    name: 'SENT_TO_PPCS',
+    active: true,
+    created: '2023-11-13T09:49:31.371Z',
+  },
 ]
 
 describe('get', () => {
@@ -116,12 +121,11 @@ describe('get', () => {
         },
         bookRecallToPpud: {
           dateOfBirth: '1970-03-15',
-          decisionDateTime: '2023-11-13T09:49:31',
           firstNames: 'Anne C',
           lastName: 'McCaffrey',
           cro: '1234/2345',
           prisonNumber: '1234',
-          receivedDateTime: '2023-11-13T09:49:31',
+          receivedDateTime: '2023-11-13T09:49:31.371Z',
           image: undefined,
         },
       },
@@ -149,11 +153,6 @@ describe('get', () => {
     })
     expect(res.locals.acoSigned).toEqual({
       name: 'ACO_SIGNED',
-      active: true,
-      created: '2023-11-13T09:49:31.361Z',
-    })
-    expect(res.locals.poRecallConsultSpo).toEqual({
-      name: 'PO_RECALL_CONSULT_SPO',
       active: true,
       created: '2023-11-13T09:49:31.361Z',
     })
