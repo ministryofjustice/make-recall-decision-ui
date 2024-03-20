@@ -95,7 +95,7 @@ describe('taskCompleteness', () => {
         fixedTermAdditionalLicenceConditions: true,
         hasArrestIssues: true,
         isMainAddressWherePersonCanBeFound: true,
-        localPoliceContact: true,
+        localPoliceContact: false,
         didProbationPractitionerCompletePartA: true,
         whoCompletedPartA: false,
         practitionerForPartA: false,
@@ -376,7 +376,7 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true for areAllComplete if in police custody, and related properties are null', () => {
+    it('returns false for areAllComplete if in police custody, and related properties are null', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'YES_POLICE' },
@@ -385,11 +385,11 @@ describe('taskCompleteness', () => {
         isMainAddressWherePersonCanBeFound: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
-      expect(areAllComplete).toEqual(true)
-      expect(isReadyForCounterSignature).toEqual(true)
+      expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('returns true for areAllComplete if in prison custody, and related properties are null', () => {
+    it('returns false for areAllComplete if in prison custody, and related properties are null', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         custodyStatus: { selected: 'YES_PRISON' },
@@ -398,8 +398,8 @@ describe('taskCompleteness', () => {
         isMainAddressWherePersonCanBeFound: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
-      expect(areAllComplete).toEqual(true)
-      expect(isReadyForCounterSignature).toEqual(true)
+      expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
     })
   })
 

@@ -10,14 +10,12 @@
             </span>
             <span id='task-list-status-custodyStatus'>{{ taskStatus({ hasData: hasData(recommendation.custodyStatus) }) }}</span>
         </li>
-        {% if recommendation.isInCustody == false %}
-            <li class="moj-task-list__item">
-                <span class="moj-task-list__task-name">
-                    <a aria-describedby='task-list-status-localPoliceContact' href="{{ urlInfo.basePath }}police-details">{{ pageHeadings.localPoliceContactDetails }}</a>
-                </span>
-                <span id='task-list-status-localPoliceContact'>{{ taskStatus({ hasData: hasData(recommendation.localPoliceContact.contactName) }) }}</span>
-            </li>
-        {% endif %}
+        <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-localPoliceContact' href="{{ urlInfo.basePath }}police-details">{{ pageHeadings.localPoliceContactDetails }}</a>
+            </span>
+            <span id='task-list-status-localPoliceContact'>{{ taskStatus({ hasData: hasData(recommendation.localPoliceContact.contactName) }) }}</span>
+        </li>
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
                 <a aria-describedby='task-list-status-isUnderIntegratedOffenderManagement' href="{{ urlInfo.basePath }}iom">{{ pageHeadings.integratedOffenderManagement }}</a>
