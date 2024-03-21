@@ -38,6 +38,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     personOnProbation: recommendation.personOnProbation.name,
     spoRecallRationale: recommendation.spoRecallRationale,
     reasonText,
+    licenceConditionsBreached: recommendation.licenceConditionsBreached,
   }
 
   res.render(`pages/recommendations/apRationaleConfirmation`)

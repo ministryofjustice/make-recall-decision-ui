@@ -2571,6 +2571,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Record the decison in NDelius')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
+      cy.getText('reason').should('contain', 'Be of good behaviour')
       cy.getText('reason').should('contain', 'Manager(s) name: Dankey Maus')
     })
     it('present AP rationale confirmation', () => {
@@ -2589,6 +2590,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Decision not to recall')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
+      cy.getText('reason').should('contain', 'Be of good behaviour')
       cy.getText('reason').should('contain', 'Manager(s) name: Dankey Maus')
     })
     it('present AP why no recall', () => {

@@ -6,7 +6,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-      {% include '../../partials/error-summary.njk' %}
+      {% include "../../partials/error-summary.njk" %}
       <form novalidate method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> {% set hintHtml %}
@@ -14,11 +14,13 @@
           {{ page.bodyText }}
         </p>
         <div class="govuk-inset-text" data-qa="reason">
-          <pre class='govuk-body'>
+          <pre class="govuk-body">
             {{ spoRecallRationale }}
           </pre>
+          {% include "../../partials/recommendation/licenceConditions.njk" %} 
+          <pre class="govuk-body">{{ recommendation.additionalLicenceConditionsText }}</pre>
           {% if isResidentWorker == true %}
-            <pre class='govuk-body'>Manager(s) name: {{ odmName }}</pre>
+            <pre class="govuk-body">Manager(s) name: {{ odmName }}</pre>
           {% endif %}
         </div>
         {% endset %}
@@ -42,7 +44,7 @@
             ]
           }) }}
         {{ formSubmitButton({
-              label: 'Send to NDelius'
+              label: "Send to NDelius"
           }) }}
       </form>
     </div>
