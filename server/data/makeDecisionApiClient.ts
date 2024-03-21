@@ -4,6 +4,7 @@ import config from '../config'
 import { routes } from '../../api/routes'
 
 import {
+  ActiveRecommendation,
   CreateRecommendationRequest,
   DocumentResponse,
   PersonDetails,
@@ -271,6 +272,13 @@ export const createRecommendation = (
 
 export const getRecommendation = (recommendationId: string, token: string): Promise<RecommendationResponse> =>
   restClient(token).get({ path: `${routes.recommendations}/${recommendationId}` }) as Promise<RecommendationResponse>
+
+export async function getActiveRecommendation(crn: string, token: string, featureFlags?: FeatureFlags) {
+  return (await restClient(token).get({
+    path: `${routes.getCaseSummary}/${crn}/active`,
+    headers: featureFlagHeaders(featureFlags),
+  })) as ActiveRecommendation
+}
 
 export const updateRecommendation = ({
   recommendationId,
