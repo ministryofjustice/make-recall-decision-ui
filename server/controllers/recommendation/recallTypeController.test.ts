@@ -35,7 +35,7 @@ describe('get', () => {
             allOptions: [
               { value: 'STANDARD', text: 'Standard recall' },
               { value: 'FIXED_TERM', text: 'Fixed term recall' },
-              { value: 'NO_RECALL', text: 'No recall' },
+              { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
             ],
           },
         },
@@ -136,7 +136,7 @@ describe('post', () => {
           allOptions: [
             { value: 'STANDARD', text: 'Standard recall' },
             { value: 'FIXED_TERM', text: 'Fixed term recall' },
-            { value: 'NO_RECALL', text: 'No recall' },
+            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
           ],
         },
         isThisAnEmergencyRecall: null,
@@ -199,7 +199,7 @@ describe('post', () => {
           allOptions: [
             { value: 'STANDARD', text: 'Standard recall' },
             { value: 'FIXED_TERM', text: 'Fixed term recall' },
-            { value: 'NO_RECALL', text: 'No recall' },
+            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
           ],
         },
         isThisAnEmergencyRecall: null,

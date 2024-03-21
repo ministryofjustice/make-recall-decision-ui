@@ -95,7 +95,7 @@ describe('List utilities', () => {
           value: 'FIXED_TERM',
         },
         {
-          text: 'No recall',
+          text: 'No recall - send a decision not to recall letter',
           value: 'NO_RECALL',
         },
       ]
@@ -113,7 +113,7 @@ describe('List utilities', () => {
         },
         {
           checked: false,
-          text: 'No recall',
+          text: 'No recall - send a decision not to recall letter',
           value: 'NO_RECALL',
         },
       ])
@@ -144,7 +144,7 @@ describe('List utilities', () => {
         },
         {
           checked: false,
-          text: 'No recall',
+          text: 'No recall - send a decision not to recall letter',
           value: 'NO_RECALL',
         },
       ])
