@@ -398,6 +398,24 @@ describe('get', () => {
     expect(res.locals.backLink)
   })
 
+  it('show recommendation button for outstanding spo rationale', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'PP_DOCUMENT_CREATED', active: true }])
+    const req = mockReq({ params: { crn, sectionId: 'overview' } })
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.backLink).toEqual('/search')
+    expect(res.locals.pageUrlBase).toEqual('/cases/A1234AB/')
+    expect(res.locals.recommendationButton).toEqual({
+      display: true,
+      post: false,
+      title: 'Make a recommendation',
+      dataAnalyticsEventCategory: 'make_recommendation_click',
+      link: '/cases/A1234AB/replace-recommendation/1/',
+    })
+    expect(res.locals.backLink)
+  })
+
   it('show recommendation button for existing recommendation that is not closed', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.SENT_TO_PPCS, active: true }])
