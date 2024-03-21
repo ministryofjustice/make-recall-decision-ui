@@ -37,7 +37,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
     inputDisplayValues: {
       errors: res.locals.errors,
     },
+    licenceConditionsBreached: recommendation.licenceConditionsBreached,
   }
+
   res.render(`pages/recommendations/apRecordDecision`)
   next()
 }

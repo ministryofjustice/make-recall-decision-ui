@@ -1,0 +1,13 @@
+<p class="govuk-body">Licence condition(s):</p>
+{% for option in licenceConditionsBreached.standardLicenceConditions.allOptions %}
+    {% if option.value in licenceConditionsBreached.standardLicenceConditions.selected %}
+        <p class="govuk-body">{{ option.text }}</p>
+    {% endif %}
+{% endfor %}
+{% for selected in licenceConditionsBreached.additionalLicenceConditions.selectedOptions %}
+    {% for option in licenceConditionsBreached.additionalLicenceConditions.allOptions %}
+        {% if selected.mainCatCode ==  option.mainCatCode %}
+            <p class="govuk-body">{{ option.title }}</p>
+        {% endif %}
+    {% endfor %}
+{% endfor %}

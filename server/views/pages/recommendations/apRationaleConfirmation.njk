@@ -26,6 +26,7 @@
                         <pre class='govuk-body'>
                             {{ spoRecallRationale }}
                         </pre>
+                        {% include "../../partials/recommendation/licenceConditions.njk" %}
                         {% if isResidentWorker %}
                             <pre class='govuk-body'>Manager(s) name: {{ odmName }}</pre>
                         {% endif %}
