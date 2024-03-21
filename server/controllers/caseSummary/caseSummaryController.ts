@@ -204,7 +204,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
         recommendationButton = {
           display: true,
           post: false,
-          title: 'Consider a recall',
+          title: 'Make a recommendation',
           dataAnalyticsEventCategory: 'make_recommendation_click',
           link: `${pageUrlBase}replace-recommendation/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
         }
