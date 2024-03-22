@@ -1,11 +1,11 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { createRecommendationController } from './createRecommendation'
-import { createRecommendation, getStatuses } from '../../data/makeDecisionApiClient'
+import { createRecommendation, getActiveRecommendation, getStatuses } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { getCaseSection } from '../caseSummary/getCaseSection'
-import { CaseSectionId } from '../../@types/pagesForms'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import activeRecommendation from '../../../api/responses/get-active-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -26,15 +26,13 @@ describe('createRecommendationController', () => {
 
   it('should redirect to already-existing if recommendation exists', async () => {
     ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
-    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: { activeRecommendation: { recommendationId: '123' } },
-    })
+    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
     ;(getStatuses as jest.Mock).mockResolvedValue([])
 
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
 
-    expect(getCaseSection).toHaveBeenCalledWith('overview' as CaseSectionId, 'A1234AB', 'token', undefined, req.query, {
+    expect(getActiveRecommendation).toHaveBeenCalledWith('A1234AB', 'token', {
       flagDomainEventRecommendationStarted: true,
     })
 
@@ -45,9 +43,7 @@ describe('createRecommendationController', () => {
 
   it('should not redirect to already-existing if recommendation is awaiting spo rationale', async () => {
     ;(createRecommendation as jest.Mock).mockReturnValueOnce({ id: '123' })
-    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: { activeRecommendation: { recommendationId: '123' } },
-    })
+    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
     ;(getStatuses as jest.Mock).mockResolvedValue([
       {
         name: STATUSES.PP_DOCUMENT_CREATED,
@@ -58,7 +54,7 @@ describe('createRecommendationController', () => {
     const req = mockReq({ body: { crn } })
     await createRecommendationController(req, res)
 
-    expect(getCaseSection).toHaveBeenCalledWith('overview' as CaseSectionId, 'A1234AB', 'token', undefined, req.query, {
+    expect(getActiveRecommendation).toHaveBeenCalledWith('A1234AB', 'token', {
       flagDomainEventRecommendationStarted: true,
     })
 

@@ -10,6 +10,7 @@ context('Excluded and restricted cases', () => {
 
   context('Excluded', () => {
     it('overview page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
@@ -18,6 +19,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('risk page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
@@ -26,6 +28,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('personal details page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
@@ -34,6 +37,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('licence conditions page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
@@ -42,6 +46,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('contact history page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
@@ -52,6 +57,7 @@ context('Excluded and restricted cases', () => {
 
   context('Restricted', () => {
     it('overview page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
@@ -60,6 +66,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('risk page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
@@ -68,6 +75,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('personal details page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
@@ -76,6 +84,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('licence conditions page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
@@ -84,6 +93,7 @@ context('Excluded and restricted cases', () => {
     })
 
     it('contact history page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
@@ -94,6 +104,7 @@ context('Excluded and restricted cases', () => {
 
   context('User not found', () => {
     it('overview page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', {
         sectionId: 'overview',
         statusCode: 200,

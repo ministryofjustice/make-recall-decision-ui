@@ -11,6 +11,7 @@ context('Overview', () => {
   })
 
   it('shows licence and offence information', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Paula Smith')
@@ -61,6 +62,7 @@ context('Overview', () => {
       statusCode: 200,
       response: { ...getCaseOverviewResponse, risk: { ...getCaseOverviewResponse.risk, flags: [] } },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     cy.getElement('No risks').should('exist')
@@ -84,6 +86,7 @@ context('Overview', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
@@ -106,6 +109,7 @@ context('Overview', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
@@ -128,6 +132,7 @@ context('Overview', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
@@ -161,6 +166,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       const opts = { parent: '[data-qa="conviction-1"]' }
@@ -188,6 +194,7 @@ context('Overview', () => {
           lastRelease: null,
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
@@ -208,6 +215,7 @@ context('Overview', () => {
           ],
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement(
@@ -231,6 +239,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
@@ -254,6 +263,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
 
@@ -276,6 +286,7 @@ context('Overview', () => {
           activeConvictions,
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement('This person has no active offences or convictions.').should('exist')
@@ -296,6 +307,7 @@ context('Overview', () => {
           risk: { ...getCaseOverviewResponse.risk, assessments: { offenceDataFromLatestCompleteAssessment: false } },
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('banner-latest-complete-assessment').should(
@@ -313,6 +325,7 @@ context('Overview', () => {
           risk: { ...getCaseOverviewResponse.risk, assessments: { offencesMatch: false } },
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('banner-offence-mismatch').should(
@@ -330,6 +343,7 @@ context('Overview', () => {
           risk: { ...getCaseOverviewResponse.risk, assessments: { error: 'NOT_FOUND' } },
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('offence-analysis-error').should(
@@ -355,6 +369,7 @@ context('Overview', () => {
           },
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement('Started on: 1 September 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
@@ -377,6 +392,7 @@ context('Overview', () => {
           },
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
@@ -399,6 +415,7 @@ context('Overview', () => {
           },
         },
       })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(

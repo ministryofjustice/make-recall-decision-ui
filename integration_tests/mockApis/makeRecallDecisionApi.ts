@@ -94,6 +94,13 @@ export const getCase = ({ sectionId, statusCode, response }: { sectionId: CaseSe
     response,
   })
 
+export const getActiveRecommendation = ({ statusCode, response }: { statusCode; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.getCaseSummary}/(.*)/active`,
+    statusCode,
+    response,
+  })
+
 export const getCaseV2 = ({ sectionId, statusCode, response }: { sectionId: CaseSectionId; statusCode; response }) =>
   mockGet({
     urlPathPattern: `${routes.getCaseSummary}/(.*)/${sectionId}/v2`,

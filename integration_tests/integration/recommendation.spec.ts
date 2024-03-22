@@ -43,6 +43,7 @@ context('Make a recommendation', () => {
         ...getCaseOverviewResponse,
         activeRecommendation: undefined,
       }
+      cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
       cy.task('createRecommendation', { statusCode: 201, response: recommendationResponse })
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -52,11 +53,7 @@ context('Make a recommendation', () => {
     })
 
     it('shows an error if "Make a recommendation" creation fails', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-        activeRecommendation: undefined,
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
       cy.task('createRecommendation', { statusCode: 500, response: 'API save error' })
       cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
       cy.clickButton('Continue')
@@ -64,10 +61,7 @@ context('Make a recommendation', () => {
     })
 
     it('shows a warning page if "Make a recommendation" is submitted while another recommendation exists', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
 
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -84,6 +78,7 @@ context('Make a recommendation', () => {
     })
 
     it('update button links to Part A task list if recall is set', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -96,6 +91,7 @@ context('Make a recommendation', () => {
     })
 
     it('update button links to no recall task list if no recall is set', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -358,11 +354,7 @@ context('Make a recommendation', () => {
     })
 
     it('prevents creating a recommendation if CRN is excluded', () => {
-      const caseResponse = {
-        ...getCaseOverviewResponse,
-        activeRecommendation: undefined,
-      }
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseResponse })
+      cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
       cy.task('createRecommendation', { statusCode: 403, response: excludedResponse })
       cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
       cy.clickButton('Continue')

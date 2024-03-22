@@ -10,6 +10,7 @@ context('Personal details', () => {
   it('can view the personal details page', () => {
     const crn = 'X34983'
     const { personalDetailsOverview } = getCasePersonalDetailsResponse
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
     cy.pageHeading().should('equal', 'Personal details for Paula Smith')
@@ -43,6 +44,7 @@ context('Personal details', () => {
       statusCode: 200,
       response: { ...getCasePersonalDetailsResponse, addresses: [] },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
     cy.getDefinitionListValue('Main address').should('contain', 'None')

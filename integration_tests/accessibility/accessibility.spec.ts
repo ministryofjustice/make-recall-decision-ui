@@ -166,6 +166,7 @@ context('Accessibility (a11y) Checks', () => {
     cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task(
       'getCase',
       caseTemplate()

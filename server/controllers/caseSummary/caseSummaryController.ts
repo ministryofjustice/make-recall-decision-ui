@@ -14,6 +14,7 @@ import { AppError } from '../../AppError'
 import { strings } from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
 import {
+  getActiveRecommendation,
   getRecommendation,
   getStatuses,
   searchForPrisonOffender,
@@ -50,6 +51,7 @@ const auditService = new AuditService()
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
   const { user, flags } = res.locals
+  const { token, userId, roles } = user
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
@@ -57,8 +59,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
   const { errors, ...caseSection } = await getCaseSection(
     sectionId as CaseSectionId,
     normalizedCrn,
-    res.locals.user.token,
-    res.locals.user.userId,
+    token,
+    userId,
     req.query,
     flags
   )
@@ -76,13 +78,13 @@ async function get(req: Request, res: Response, _: NextFunction) {
   let nomisPrisonOffender: PrisonOffenderSearchResponse | undefined
   if (isOutOfHoursWorker) {
     nomisPrisonOffender = (await searchForPrisonOffender(
-      res.locals.user.token,
+      token,
       caseSection.caseSummary.personalDetailsOverview?.nomsNumber
     )) as PrisonOffenderSearchResponse
   }
 
   const prisonBookingNumber = nomisPrisonOffender?.bookingNo
-  const isSpo = user.roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
+  const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
   // if not an SPO, and not an OOH worker, then the user has only the base role is and is therefore a PP because we haven't extended the role model properly.
   const isProbationPractitioner = !isSpo && !isOutOfHoursWorker
   let recommendationButton: RecommendationButton = { display: false }
@@ -100,8 +102,9 @@ async function get(req: Request, res: Response, _: NextFunction) {
     }
     isOutOfHoursWorker = false
   } else {
-    const isRecommendationActive = !!caseSection.caseSummary.activeRecommendation?.recommendationId
-    if (!isRecommendationActive) {
+    const activeRecommendation = await getActiveRecommendation(normalizedCrn, token, flags)
+
+    if (!activeRecommendation) {
       if (isProbationPractitioner) {
         recommendationButton = {
           display: true,
@@ -113,14 +116,14 @@ async function get(req: Request, res: Response, _: NextFunction) {
       }
     } else if (isSpo) {
       const recommendation: RecommendationDecorated = await getRecommendation(
-        String(caseSection.caseSummary.activeRecommendation?.recommendationId),
+        String(activeRecommendation.recommendationId),
         user.token
       )
 
       const statuses = (
         await getStatuses({
-          recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
-          token: user.token,
+          recommendationId: String(activeRecommendation.recommendationId),
+          token,
         })
       ).filter(status => status.active)
 
@@ -135,28 +138,26 @@ async function get(req: Request, res: Response, _: NextFunction) {
       const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED)
       const isRecallStarted = statuses.find(status => status.name === STATUSES.PO_START_RECALL)
 
-      if (isRecommendationActive) {
-        recommendationBanner.display = true
-        recommendationBanner.createdByUserFullName = recommendation.createdByUserFullName
-        recommendationBanner.createdDate = recommendation.createdDate
-        recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
-        recommendationBanner.recommendationId = String(caseSection.caseSummary.activeRecommendation?.recommendationId)
+      recommendationBanner.display = true
+      recommendationBanner.createdByUserFullName = recommendation.createdByUserFullName
+      recommendationBanner.createdDate = recommendation.createdDate
+      recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
+      recommendationBanner.recommendationId = String(activeRecommendation.recommendationId)
 
-        if (isDoNotRecall) {
-          recommendationBanner.text = 'started a decision not to recall letter for'
-          recommendationBanner.linkText = 'Delete the decision not to recall'
-          recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
-        } else if (isRecallDecided) {
-          recommendationBanner.text = 'started a Part A for'
-          recommendationBanner.linkText = 'Delete the Part A'
-          recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
-        } else if (isRecallStarted) {
-          recommendationBanner.text = 'started a recommendation for'
-          recommendationBanner.linkText = 'Delete the recommendation'
-          recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
-        } else {
-          recommendationBanner.display = false
-        }
+      if (isDoNotRecall) {
+        recommendationBanner.text = 'started a decision not to recall letter for'
+        recommendationBanner.linkText = 'Delete the decision not to recall'
+        recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
+      } else if (isRecallDecided) {
+        recommendationBanner.text = 'started a Part A for'
+        recommendationBanner.linkText = 'Delete the Part A'
+        recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
+      } else if (isRecallStarted) {
+        recommendationBanner.text = 'started a recommendation for'
+        recommendationBanner.linkText = 'Delete the recommendation'
+        recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
+      } else {
+        recommendationBanner.display = false
       }
 
       if (isSpoSignatureRequested || isAcoSignatureRequested) {
@@ -165,7 +166,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           post: false,
           title: 'Countersign',
           dataAnalyticsEventCategory: 'spo_countersign_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/task-list`,
+          link: `/recommendations/${activeRecommendation.recommendationId}/task-list`,
         }
       } else if (isSpoConsiderRecall) {
         recommendationButton = {
@@ -173,14 +174,14 @@ async function get(req: Request, res: Response, _: NextFunction) {
           post: false,
           title: 'Consider a recall',
           dataAnalyticsEventCategory: 'spo_consider_recall_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+          link: `/recommendations/${activeRecommendation.recommendationId}/`,
         }
       }
     } else if (isProbationPractitioner) {
       const statuses = (
         await getStatuses({
-          recommendationId: String(caseSection.caseSummary.activeRecommendation?.recommendationId),
-          token: user.token,
+          recommendationId: String(activeRecommendation.recommendationId),
+          token,
         })
       ).filter(status => status.active)
 
@@ -206,7 +207,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           post: false,
           title: 'Make a recommendation',
           dataAnalyticsEventCategory: 'make_recommendation_click',
-          link: `${pageUrlBase}replace-recommendation/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+          link: `${pageUrlBase}replace-recommendation/${activeRecommendation.recommendationId}/`,
         }
       } else {
         recommendationButton = {
@@ -214,7 +215,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           post: false,
           title: 'Update recommendation',
           dataAnalyticsEventCategory: 'update_recommendation_click',
-          link: `/recommendations/${caseSection.caseSummary.activeRecommendation.recommendationId}/`,
+          link: `/recommendations/${activeRecommendation.recommendationId}/`,
         }
       }
     }

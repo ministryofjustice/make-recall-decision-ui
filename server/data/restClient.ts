@@ -3,9 +3,9 @@ import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
 
 import logger from '../../logger'
+import type { UnsanitisedError } from '../sanitisedError'
 import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
-import type { UnsanitisedError } from '../sanitisedError'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 interface GetRequest {
@@ -62,7 +62,17 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
       logger.info(`Response status from: ${path} ${query} - ${result.statusCode}`)
-      return raw ? result : result.body
+
+      if (raw) {
+        return result
+      }
+
+      const { body } = result
+      if (!Array.isArray(body) && Object.keys(body).length === 0) {
+        return null
+      }
+
+      return body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError, query }, `Error calling ${this.name}, path: '${path}', verb: 'GET'`)
