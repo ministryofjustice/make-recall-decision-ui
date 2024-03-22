@@ -9,6 +9,11 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description: 'Enables supporting documents',
     default: false,
   },
+  flagFTR: {
+    label: 'Enable FTR',
+    description: 'Enables FTR support',
+    default: false,
+  },
   flagPpcs: {
     label: 'Enable PPCS',
     description: 'Enables continuation in PPCS',
