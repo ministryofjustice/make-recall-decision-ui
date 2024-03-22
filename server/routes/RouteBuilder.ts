@@ -38,9 +38,9 @@ export class RouteBuilder {
       `/:recommendationId/${endpoint}`,
       feedErrorsToExpress(retrieveStatuses),
       authorisationCheck(this.rolesCheck),
+      feedErrorsToExpress(retrieveRecommendation),
       recommendationStatusCheck(this.statusCheck),
       parseRecommendationUrl,
-      feedErrorsToExpress(retrieveRecommendation),
       guardAgainstModifyingClosedRecommendation,
       customizeMessages,
       feedErrorsToExpress(routerCallback), // necessary for async functions
