@@ -10,6 +10,7 @@ context('Risk page', () => {
   })
 
   it('shows RoSH, MAPPA and predictor scores', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Paula Smith')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
@@ -69,6 +70,7 @@ context('Risk page', () => {
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
@@ -129,6 +131,7 @@ context('Risk page', () => {
   })
 
   it('shows messages if an error occurs fetching RoSH / MAPPA / predictor score data', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
@@ -171,6 +174,7 @@ context('Risk page', () => {
   })
 
   it('shows messages if RoSH data empty', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
@@ -193,6 +197,7 @@ context('Risk page', () => {
 
   describe('Timeline', () => {
     it('Predictor scores and RoSH history available', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', {
         sectionId: 'risk',
         statusCode: 200,
@@ -246,6 +251,7 @@ context('Risk page', () => {
     })
 
     it('errors fetching both predictor and RoSH history', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', {
         sectionId: 'risk',
         statusCode: 200,
@@ -259,6 +265,7 @@ context('Risk page', () => {
     })
 
     it('error fetching predictor scores', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', {
         sectionId: 'risk',
         statusCode: 200,
@@ -279,6 +286,7 @@ context('Risk page', () => {
     })
 
     it('error fetching RoSH history', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', {
         sectionId: 'risk',
         statusCode: 200,
@@ -299,6 +307,7 @@ context('Risk page', () => {
     })
 
     it('score timeline - hide individual scores if missing', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getCase', {
         sectionId: 'risk',
         statusCode: 200,
@@ -330,6 +339,7 @@ context('Risk page', () => {
   })
 
   it('shows a message if the assessment is incomplete', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,

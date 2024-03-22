@@ -14,6 +14,7 @@ context('Vulnerabilities page', () => {
       statusCode: 200,
       response: getCaseVulnerabilitiesResponse,
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.pageHeading().should('equal', 'Vulnerabilities for Paula Smith')
@@ -77,6 +78,7 @@ context('Vulnerabilities page', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
@@ -121,6 +123,7 @@ context('Vulnerabilities page', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
@@ -152,6 +155,7 @@ context('Vulnerabilities page', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-SERVER_ERROR' }).should('exist')
@@ -168,6 +172,7 @@ context('Vulnerabilities page', () => {
         },
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND_LATEST_COMPLETE' }).should('exist')

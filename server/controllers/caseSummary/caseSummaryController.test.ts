@@ -396,7 +396,7 @@ describe('get', () => {
       post: false,
       title: 'Update recommendation',
       dataAnalyticsEventCategory: 'update_recommendation_click',
-      link: '/recommendations/1/',
+      link: '/recommendations/123/',
     })
     expect(res.locals.backLink)
   })
@@ -415,7 +415,7 @@ describe('get', () => {
       post: false,
       title: 'Make a recommendation',
       dataAnalyticsEventCategory: 'make_recommendation_click',
-      link: '/cases/A1234AB/replace-recommendation/1/',
+      link: '/cases/A1234AB/replace-recommendation/123/',
     })
     expect(res.locals.backLink)
   })
@@ -549,7 +549,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_consider_recall_click',
-      link: '/recommendations/1/',
+      link: '/recommendations/123/',
       post: false,
       title: 'Consider a recall',
     })
@@ -579,7 +579,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/task-list',
+      link: '/recommendations/123/task-list',
       post: false,
       title: 'Countersign',
     })
@@ -607,7 +607,7 @@ describe('get', () => {
     expect(res.locals.recommendationButton).toEqual({
       display: true,
       dataAnalyticsEventCategory: 'spo_countersign_click',
-      link: '/recommendations/1/task-list',
+      link: '/recommendations/123/task-list',
       post: false,
       title: 'Countersign',
     })

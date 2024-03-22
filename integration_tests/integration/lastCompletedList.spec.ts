@@ -21,6 +21,7 @@ context('Recommendations tab in case summary', () => {
         ...getLastCompletedRecommendationsResponse,
       },
     })
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/last-completed`)
     cy.pageHeading().should('equal', 'Completed for Harry Smith')
@@ -30,6 +31,7 @@ context('Recommendations tab in case summary', () => {
 
   it('shows a message if no last completed', () => {
     cy.signIn()
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getCase', {
       sectionId: 'last-completed',
       statusCode: 200,

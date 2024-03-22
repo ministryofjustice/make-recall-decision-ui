@@ -68,7 +68,7 @@ export default class RestClient {
       }
 
       const { body } = result
-      if (Object.keys(body).length === 0) {
+      if (!Array.isArray(body) && Object.keys(body).length === 0) {
         return null
       }
 
