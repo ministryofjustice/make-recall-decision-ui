@@ -44,7 +44,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagOutOfHours: {
     label: 'Allow process workflow for out of hours recall',
     description: 'Enables an out of hours recall to proceed',
-    default: false,
+    default: true,
   },
 }
 
