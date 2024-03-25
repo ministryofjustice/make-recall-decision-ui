@@ -1,17 +1,15 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
+            <h1 class="govuk-heading-l">{{ pageTitles[page.id] }}</h1>
             {% set standardDetailHtml %}
-                {{ govukTextarea({
+            {{ govukTextarea({
                     name: "recallTypeDetailsStandard",
                     id: "recallTypeDetailsStandard",
                     label: {
@@ -23,7 +21,7 @@
                 }) }}
             {% endset %}
             {% set fixedTermDetailHtml %}
-                {{ govukTextarea({
+            {{ govukTextarea({
                     name: "recallTypeDetailsFixedTerm",
                     id: "recallTypeDetailsFixedTerm",
                     label: {
@@ -35,36 +33,17 @@
                 }) }}
             {% endset %}
             <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                <input type="hidden" name="originalRecallType" value="{{ inputDisplayValues.value }}" />
-
-                {{ govukRadios({
-                    idPrefix: "recallType",
-                    name: "recallType",
-                    fieldset: {
-                        legend: {
-                            text: pageHeadings[page.id],
-                            classes: "govuk-fieldset__legend--l",
-                            isPageHeading: true
-                        }
-                    },
-                    hint: {
-                        html: '<p class="govuk-body">You’ll complete a Part A or write a decision not to recall letter after you’ve confirmed your recommendation.</p><p class="govuk-body">You can only recommend a fixed term recall if ' + recommendation.personOnProbation.name + ' can be safely managed in the community after the fixed term period.</p>'
-                    },
-                    items: radioCheckboxItems({
-                        items: formOptions.recallType,
-                        currentValues: inputDisplayValues.value,
-                        conditionalContent: {
-                            STANDARD: standardDetailHtml,
-                            FIXED_TERM: fixedTermDetailHtml
-                        }
-                    }),
-                    errorMessage: errorMessage(errors.recallType)
-                }) }}
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
+                <input type="hidden" name="originalRecallType" value="{{ inputDisplayValues.value }}"/>
+                {% if flags.flagFTR %}
+                    {# new FTR flow #}
+                    {% include "../../partials/recommendation/recallTypeFTR.njk" %}
+                {% else %}
+                    {% include "../../partials/recommendation/recallType.njk" %}
+                {% endif %}
                 {{ formSubmitButton() }}
             </form>
         </div>
     </div>
 {% endblock %}
-

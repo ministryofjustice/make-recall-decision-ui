@@ -1,0 +1,17 @@
+{{ govukRadios({
+    idPrefix: "recallType",
+    name: "recallType",
+    
+    hint: {
+        html: '<p class="govuk-body">You’ll complete a Part A or write a decision not to recall letter after you’ve confirmed your recommendation.</p><p class="govuk-body">You can only recommend a fixed term recall if ' + recommendation.personOnProbation.name + ' can be safely managed in the community after the fixed term period.</p>'
+    },
+    items: radioCheckboxItems({
+        items: formOptions.recallType,
+        currentValues: inputDisplayValues.value,
+        conditionalContent: {
+            STANDARD: standardDetailHtml,
+            FIXED_TERM: fixedTermDetailHtml
+        }
+    }),
+    errorMessage: errorMessage(errors.recallType)
+}) }}
