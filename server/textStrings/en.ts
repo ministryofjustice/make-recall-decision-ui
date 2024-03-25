@@ -162,7 +162,7 @@ export const strings: Record<string, Record<string, string>> = {
     custodyStatus: 'Is {{ fullName }} in custody now?',
     vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
     taskList: 'Create a Part A form',
-    fixedTermLicenceConditions: 'Fixed term recall',
+    fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
