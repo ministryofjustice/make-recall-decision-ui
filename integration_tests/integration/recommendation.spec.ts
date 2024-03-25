@@ -723,6 +723,16 @@ context('Make a recommendation', () => {
       cy.getElement({ qaAttr: 'indexOffenceDetails' }).should('not.exist')
     })
 
+    it('suitability for recall', () => {
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, indexOffenceDetails: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`)
+      cy.getElement('Suitability for fixed term recall').should('exist')
+    })
+
     it('lists multiple addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,

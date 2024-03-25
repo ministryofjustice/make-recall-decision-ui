@@ -6,6 +6,13 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
       hasData(recommendation.cvlLicenceConditionsBreached.bespokeLicenceConditions.selected) or
       recommendation.additionalLicenceConditionsText.length > 0
 %}
+{%
+set suitabilityForFixedTermRecall = hasData(recommendation.isOver18) or
+       hasData(recommendation.licenceConditionsBreached.isMappaLevelAbove1) or
+       hasData(recommendation.cvlLicenceConditionsBreached.isSentenceUnder12Months) or
+       hasData(recommendation.cvlLicenceConditionsBreached.hasBeenConvictedOfSeriousOffence)
+
+%}
 
 <li>
     <h2 class="moj-task-list__section" id='heading-circumstances'>
@@ -73,6 +80,16 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
                 </span>
                 <span id='task-list-status-fixedTermAdditionalLicenceConditions'>{{ taskStatus({ hasData: hasData(recommendation.fixedTermAdditionalLicenceConditions) }) }}</span>
             </li>
+        {% endif %}
+        {% if flags.flagFTR == true %}
+        {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false and recommendation.recallType.selected.value === 'FIXED_TERM' %}
+            <li class="moj-task-list__item">
+                <span class="moj-task-list__task-name">
+                    <a aria-describedby='task-list-status-suitabilityForFixedTermRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'suitability-for-fixed-term-recall', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Suitability for fixed term recall</a>
+                </span>
+                <span id='task-list-status-suitabilityForFixedTermRecall'>{{ taskStatus({ hasData: suitabilityForFixedTermRecall }) }}</span>
+            </li>
+        {% endif %}
         {% endif %}
         {% if (recommendation.isIndeterminateSentence or recommendation.isExtendedSentence) == true and recommendation.recallType.selected.value != 'NO_RECALL' %}
             <li class="moj-task-list__item">

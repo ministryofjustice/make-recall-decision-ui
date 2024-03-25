@@ -110,6 +110,7 @@ import sentenceToCommitExistingOffender from '../controllers/recommendation/sent
 import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
 import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAgreeDecision'
+import suitabilityForFixedTermRecallController from '../controllers/recommendation/suitabilityForFixedTermRecallController'
 
 const recommendations = Router()
 
@@ -173,6 +174,9 @@ ppRouteBuilder.post('spo-agree-to-recall', whenDidSproAgreeToRecall.post)
 
 ppRouteBuilder.get('emergency-recall', emergencyRecallController.get)
 ppRouteBuilder.post('emergency-recall', emergencyRecallController.post)
+
+ppRouteBuilder.get('suitability-for-fixed-term-recall', suitabilityForFixedTermRecallController.get)
+ppRouteBuilder.post('suitability-for-fixed-term-recall', suitabilityForFixedTermRecallController.post)
 
 ppRouteBuilder.get('sensitive-info', sensitiveInfoController.get)
 
