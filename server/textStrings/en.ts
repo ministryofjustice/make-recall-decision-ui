@@ -36,6 +36,10 @@ export const strings: Record<string, Record<string, string>> = {
     noEmergencyRecallSelected: 'You must select whether this is an emergency recall or not',
     noIsIndeterminateSelected: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
     noIsExtendedSelected: 'Select whether {{ fullName }} is on an extended sentence or not',
+    noIsOver18: 'Select whether {{ fullName }} is 18 or over',
+    noIsSentenceUnder12Months: 'Select whether the sentence is under 12 months',
+    noIsMappaLevelAbove1: 'Select whether the MAPPA level is above 1',
+    noHasBeenConvictedOfSeriousOffence: 'Select whether {{ fullName }} has been charged with a serious offence',
     noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
     noVictimContactSchemeSelected: 'You must select whether there are any victims in the victim contact scheme',
     noIntegratedOffenderManagementSelected:
@@ -149,6 +153,7 @@ export const strings: Record<string, Record<string, string>> = {
     managerReview: 'Stop and think',
     isIndeterminateSentence: 'Is {{ fullName }} on an indeterminate sentence?',
     isExtendedSentence: 'Is {{ fullName }} on an extended sentence?',
+    suitabilityForFixedTermRecall: 'Suitability for fixed term recall',
     indeterminateSentenceType: 'What type of sentence is {{ fullName }} on?',
     indeterminateOrExtendedSentenceDetails: 'Indeterminate and extended sentences',
     recallType: 'What do you recommend?',

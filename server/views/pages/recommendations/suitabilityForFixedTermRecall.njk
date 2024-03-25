@@ -1,0 +1,101 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+                <p class="govuk-body">For sentences under 12 months, recalls must be fixed term unless either:</p>
+                <ul class='govuk-list govuk-list--bullet'>
+                    <li>the person has been charged with a serious offence (murder or an offence listed in
+                        <a href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18" target="_blank" rel="noopener noreferrer" class="govuk-link"/>
+                        Schedule 18 of the Sentencing Act 2020</a>)</li>
+                    <li>the MAPPA level is 2 or 3 at the point of recall</li>
+                </ul>
+
+                <p class="govuk-body">This applies to people aged 18 and over only.</p>
+
+                {{ govukRadios({
+                    classes: "govuk-radios--inline",
+                    idPrefix: "isOver18",
+                    name: "isOver18",
+                    fieldset: {
+                        legend: {
+                            text: 'Is ' + recommendation.personOnProbation.name + ' 18 or older?',
+                            classes: "govuk-fieldset__legend--m",
+                            isPageHeading: true
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: inputDisplayValues.isOver18
+                    }),
+                    errorMessage: errorMessage(errors.isOver18)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline",
+                    idPrefix: "isSentenceUnder12Months",
+                    name: "isSentenceUnder12Months",
+                    fieldset: {
+                        legend: {
+                            text: 'Is the sentence under 12 months?',
+                            classes: "govuk-fieldset__legend--m",
+                            isPageHeading: true
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: inputDisplayValues.isSentenceUnder12Months
+                    }),
+                    errorMessage: errorMessage(errors.isSentenceUnder12Months)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline",
+                    idPrefix: "isMappaLevelAbove1",
+                    name: "isMappaLevelAbove1",
+                    fieldset: {
+                        legend: {
+                            text: 'Is the MAPPA level above 1?',
+                            classes: "govuk-fieldset__legend--m",
+                            isPageHeading: true
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: inputDisplayValues.isMappaLevelAbove1
+                    }),
+                    errorMessage: errorMessage(errors.isMappaLevelAbove1)
+                }) }}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline",
+                    idPrefix: "hasBeenConvictedOfSeriousOffence",
+                    name: "hasBeenConvictedOfSeriousOffence",
+                    fieldset: {
+                        legend: {
+                            text: 'Has ' + recommendation.personOnProbation.name + ' been charged with a serious offence?',
+                            classes: "govuk-fieldset__legend--m",
+                            isPageHeading: true
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: inputDisplayValues.hasBeenConvictedOfSeriousOffence
+                    }),
+                    errorMessage: errorMessage(errors.hasBeenConvictedOfSeriousOffence)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

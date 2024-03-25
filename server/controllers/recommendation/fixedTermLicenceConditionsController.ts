@@ -45,13 +45,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
     return res.redirect(303, req.originalUrl)
   }
 
-  await updateRecommendation({
+  const recommendation = await updateRecommendation({
     recommendationId,
     valuesToSave,
     token,
     featureFlags: flags,
   })
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
+
+  const nextPageId =
+    flags.flagFTR && recommendation.recallType?.selected?.value === 'FIXED_TERM'
+      ? 'suitability-for-fixed-term-recall'
+      : 'sensitive-info'
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

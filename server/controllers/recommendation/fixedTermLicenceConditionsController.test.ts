@@ -159,4 +159,40 @@ describe('post', () => {
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
+
+  it('post for Fixed Term and  FTR', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      recallType: {
+        ...recommendationApiResponse.recallType,
+        selected: {
+          value: 'FIXED_TERM',
+          details: 'Details...',
+        },
+      },
+    })
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        hasFixedTermLicenceConditions: 'YES',
+        hasFixedTermLicenceConditionsDetails: 'test',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath },
+        flags: { flagFTR: true },
+      },
+    })
+    const next = mockNext()
+
+    await fixedTermLicenceConditionsController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/suitability-for-fixed-term-recall`)
+  })
 })

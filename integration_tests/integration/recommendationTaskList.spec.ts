@@ -324,6 +324,36 @@ context('Recommendation - task list', () => {
     )
   })
 
+  it('task list - determinate, not extended, fixed term recall and FTR flag', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...completeRecommendationResponse,
+        isIndeterminateSentence: false,
+        isExtendedSentence: false,
+        recallType: { selected: { value: 'FIXED_TERM' } },
+      },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR=1`)
+    cy.getElement('Suitability for fixed term recall To do').should('exist')
+  })
+  it('task list - determinate, not extended, fixed term recall and FTR flag and suitability completed', () => {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...completeRecommendationResponse,
+        isIndeterminateSentence: false,
+        isExtendedSentence: false,
+        recallType: { selected: { value: 'FIXED_TERM' } },
+        isOver18: true,
+      },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR=1`)
+    cy.getElement('Suitability for fixed term recall Completed').should('exist')
+  })
+
   describe('Routing', () => {
     it('redirect recall task list to no recall task list if no recall is set', () => {
       cy.task('getRecommendation', {
