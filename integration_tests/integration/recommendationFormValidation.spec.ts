@@ -180,7 +180,7 @@ context('Make a recommendation - form validation', () => {
       fieldName: 'hasFixedTermLicenceConditions',
       errorText: 'Select whether there are additional licence conditions',
     })
-    cy.selectRadio('Fixed term recall', 'Yes')
+    cy.selectRadio('Licence conditions - fixed term recall', 'Yes')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasFixedTermLicenceConditionsDetails',
