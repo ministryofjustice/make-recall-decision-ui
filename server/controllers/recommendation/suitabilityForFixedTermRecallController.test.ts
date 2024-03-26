@@ -2,11 +2,17 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import suitabilityForFixedTermRecallController from './suitabilityForFixedTermRecallController'
+import { getCaseSection } from '../caseSummary/getCaseSection'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../caseSummary/getCaseSection')
 
 describe('get', () => {
   it('load with no data', async () => {
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: 'case summary data',
+    })
+
     const res = mockRes({
       locals: {
         recommendation: {},
@@ -18,6 +24,7 @@ describe('get', () => {
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
+    expect(res.locals.caseSummary).toEqual('case summary data')
     expect(res.locals.inputDisplayValues.isOver18).not.toBeDefined()
     expect(res.locals.inputDisplayValues.isSentenceUnder12Months).not.toBeDefined()
     expect(res.locals.inputDisplayValues.isMappaLevelAbove1).not.toBeDefined()
@@ -28,6 +35,9 @@ describe('get', () => {
   })
 
   it('load with existing data', async () => {
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: 'case summary data',
+    })
     const res = mockRes({
       locals: {
         recommendation: {
@@ -49,6 +59,9 @@ describe('get', () => {
   })
 
   it('initial load with error data', async () => {
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: 'case summary data',
+    })
     const res = mockRes({
       locals: {
         errors: {
