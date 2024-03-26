@@ -398,20 +398,20 @@ spoRationaleRouteBuilder
   .withCheck(or(statusIsActive(STATUSES.REC_DELETED), statusIsActive(STATUSES.REC_CLOSED)))
   .get('spo-delete-confirmation', spoDeleteConfirmationController.get)
 
-const ppcsRouteBuilder = ppRouteBuilder
-  .withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS))
-  .withCheck(
-    and(
-      statusIsActive(STATUSES.SENT_TO_PPCS),
-      not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-      not(statusIsActive(STATUSES.REC_CLOSED))
-    )
+const ppcsBeforeSearchRouteBuilder = ppRouteBuilder.withRoles(hasRole(HMPPS_AUTH_ROLE.PPCS)).withCheck(undefined)
+
+ppcsBeforeSearchRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
+ppcsBeforeSearchRouteBuilder.post('search-ppud', ppcsConsiderRecallController.post)
+
+ppcsBeforeSearchRouteBuilder.get('no-search-ppud-results', noSearchPpudResults.get)
+
+const ppcsRouteBuilder = ppcsBeforeSearchRouteBuilder.withCheck(
+  and(
+    statusIsActive(STATUSES.SENT_TO_PPCS),
+    not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
+    not(statusIsActive(STATUSES.REC_CLOSED))
   )
-
-ppcsRouteBuilder.get('search-ppud', ppcsConsiderRecallController.get)
-ppcsRouteBuilder.post('search-ppud', ppcsConsiderRecallController.post)
-
-ppcsRouteBuilder.get('no-search-ppud-results', noSearchPpudResults.get)
+)
 
 ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
 ppcsRouteBuilder.post('search-ppud-results', searchPpudResultsController.post)
