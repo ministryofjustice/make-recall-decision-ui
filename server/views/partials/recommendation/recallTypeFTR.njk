@@ -1,0 +1,35 @@
+<h1 class="govuk-heading-l">{{ pageTitles[page.id] }}</h1>
+{% set notificationBannerHtml %}
+<p class="govuk-body ">
+    For sentences under 12 months, recalls must be fixed term unless either:
+    <ul>
+        <li>the person has been charged with a serious offence (murder or an offence listed in
+            <a href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18">Schedule 18 of the Sentencing Act 2020</a>)
+        </li>
+        <li>the MAPPA level is 2 or 3 at the point of recall</li>
+    </ul>
+    This applies to people aged 18 and over only.
+</p>
+{% endset %}
+{{ govukNotificationBanner({
+    html: notificationBannerHtml,
+    titleText: "Criminal Justice Act 2003 (Suitability for Fixed Term Recall) Order 2024"
+}) }}
+{{ govukRadios({
+    idPrefix: "recallType",
+    name: "recallType",
+    fieldset: {
+        legend: {
+            text: "Select your recommendation"
+        }
+    },
+    items: radioCheckboxItems({
+        items: formOptions.recallType,
+        currentValues: inputDisplayValues.value,
+        conditionalContent: {
+            STANDARD: standardDetailHtml,
+            FIXED_TERM: fixedTermDetailHtml
+        }
+    }),
+    errorMessage: errorMessage(errors.recallType)
+}) }}
