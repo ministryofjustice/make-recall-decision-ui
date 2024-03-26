@@ -27,6 +27,13 @@ const router = Router()
 
 export function setupRecommendationStatusCheck(): Router {
   router.get('/inappropriate-error', (req, res) => {
+    const { crn } = req.query
+
+    res.locals = {
+      ...res.locals,
+      crn,
+    }
+
     return res.render('inappropriateError')
   })
 
@@ -36,6 +43,10 @@ export function setupRecommendationStatusCheck(): Router {
 export default function recommendationStatusCheck(statusCheck?: Check): RequestHandler {
   return (req, res, next) => {
     if (statusCheck && !statusCheck(res.locals)) {
+      const { recommendation } = res.locals
+      if (recommendation && recommendation.crn) {
+        return res.redirect(`/inappropriate-error?crn=${recommendation.crn}`)
+      }
       return res.redirect('/inappropriate-error')
     }
     next()

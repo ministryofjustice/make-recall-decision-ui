@@ -6,10 +6,16 @@
   <p>
     This might be because you're trying to view information that's already been submitted.
   </p>
+  {% if crn %}
   <p>
     If you work for the Probation Service, you can check the <a href="/cases/{{ crn }}/last-completed">last completed document</a> to find something in a Part A or
     decision not to recall letter.
   </p>
+  {% else %}
+  <p>
+    If you work for the Probation Service, you can <a href="/search-by-crn">search for the CRN</a> and look up the last completed document.
+  </p>
+  {% endif %}
   <p>
     If you work for PPCS, you can check PPUD to find information in a recall booking.
   </p>
