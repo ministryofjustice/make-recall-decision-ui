@@ -5,12 +5,20 @@ import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { getCaseSection } from '../caseSummary/getCaseSection'
 
-function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+async function get(req: Request, res: Response, next: NextFunction) {
+  const {
+    recommendation,
+    user: { token, userId },
+    flags,
+  } = res.locals
+
+  const { caseSummary } = await getCaseSection('overview', recommendation.crn, token, userId, req.query, flags)
 
   res.locals = {
     ...res.locals,
+    caseSummary,
     page: {
       id: 'suitabilityForFixedTermRecall',
     },

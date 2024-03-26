@@ -13,7 +13,9 @@ $mappa-colour: #4c2c92;
   border: 2px solid govuk-colour("black");
   padding: govuk-spacing(4);
   margin-bottom: govuk-spacing(4);
-  max-width: 400px;
+  max-width: 570px;
+  min-width: 250px;
+
   & h2 {
     margin-bottom: govuk-spacing(1);
     font-weight: 400;
@@ -94,12 +96,17 @@ $mappa-colour: #4c2c92;
 .mappa-widget {
   border: 2px solid $mappa-colour;
   padding: govuk-spacing(4);
-  margin-bottom: govuk-spacing(4);
 
   & h2 {
     color: $mappa-colour;
     margin-bottom: govuk-spacing(1);
     font-weight: 400;
+  }
+}
+
+.side-bar {
+  .mappa-widget {
+    min-width: 250px;
   }
 }
 
