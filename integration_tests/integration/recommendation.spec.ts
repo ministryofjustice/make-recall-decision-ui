@@ -461,6 +461,29 @@ context('Make a recommendation', () => {
       ).should('be.checked')
     })
 
+    it('licence conditions - display CVL licence conditions - missing data', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
+      })
+
+      cy.task(
+        'getCaseV2',
+        caseTemplate()
+          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+          .withAllConvictionsNotReleasedOnLicence()
+          .withCvlLicenceMissingData()
+          .build()
+      )
+
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
+
+      cy.getElement('There are no standard licence conditions in CVL. Check the licence document.').should('exist')
+      cy.getElement('There are no additional licence conditions in CVL. Check the licence document.').should('exist')
+      cy.getElement('There are no bespoke licence conditions in CVL. Check the licence document.').should('exist')
+    })
+
     it('licence conditions - display Delius licence conditions', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
 
