@@ -58,6 +58,66 @@ describe('get', () => {
     expect(res.locals.inputDisplayValues.hasBeenConvictedOfSeriousOffence).toEqual('YES')
   })
 
+  it('load with errors', async () => {
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: 'case summary data',
+    })
+    const res = mockRes({
+      locals: {
+        unsavedValues: {
+          isOver18: false,
+          isSentenceUnder12Months: false,
+          isMappaLevelAbove1: false,
+          hasBeenConvictedOfSeriousOffence: false,
+        },
+        recommendation: {
+          isOver18: true,
+          isSentenceUnder12Months: true,
+          isMappaLevelAbove1: true,
+          hasBeenConvictedOfSeriousOffence: true,
+        },
+        token: 'token1',
+        errors: {
+          isOver18: {
+            text: 'Select whether {{ fullName }} is 18 or over',
+            href: '#isOver18',
+            errorId: 'noIsOver18',
+          },
+          list: [
+            {
+              name: 'isOver18',
+              text: 'Select whether {{ fullName }} is 18 or over',
+              href: '#isOver18',
+              errorId: 'noIsOver18',
+            },
+          ],
+        },
+      },
+    })
+    const next = mockNext()
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues.errors).toEqual({
+      isOver18: {
+        text: 'Select whether {{ fullName }} is 18 or over',
+        href: '#isOver18',
+        errorId: 'noIsOver18',
+      },
+      list: [
+        {
+          name: 'isOver18',
+          text: 'Select whether {{ fullName }} is 18 or over',
+          href: '#isOver18',
+          errorId: 'noIsOver18',
+        },
+      ],
+    })
+    expect(res.locals.inputDisplayValues.isOver18).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isSentenceUnder12Months).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isMappaLevelAbove1).toEqual('YES')
+    expect(res.locals.inputDisplayValues.hasBeenConvictedOfSeriousOffence).toEqual('YES')
+  })
+
   it('initial load with error data', async () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
       caseSummary: 'case summary data',
@@ -209,6 +269,12 @@ describe('post', () => {
         values: undefined,
       },
     ])
+    expect(req.session.unsavedValues).toEqual({
+      hasBeenConvictedOfSeriousOffence: '',
+      isMappaLevelAbove1: '',
+      isOver18: '',
+      isSentenceUnder12Months: '',
+    })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 })
