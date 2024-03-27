@@ -12,9 +12,21 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
     user: { token, userId },
     flags,
+    unsavedValues,
   } = res.locals
 
   const { caseSummary } = await getCaseSection('overview', recommendation.crn, token, userId, req.query, flags)
+
+  const inputDisplayValues = {
+    errors: res.locals.errors,
+    isOver18: unsavedValues?.isOver18 || booleanToYesNo(recommendation.isOver18),
+    isSentenceUnder12Months:
+      unsavedValues?.isSentenceUnder12Months || booleanToYesNo(recommendation.isSentenceUnder12Months),
+    isMappaLevelAbove1: unsavedValues?.isMappaLevelAbove1 || booleanToYesNo(recommendation.isMappaLevelAbove1),
+    hasBeenConvictedOfSeriousOffence:
+      unsavedValues?.hasBeenConvictedOfSeriousOffence ||
+      booleanToYesNo(recommendation.hasBeenConvictedOfSeriousOffence),
+  }
 
   res.locals = {
     ...res.locals,
@@ -22,19 +34,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'suitabilityForFixedTermRecall',
     },
-    inputDisplayValues: {
-      errors: res.locals.errors,
-      isOver18: res.locals.errors?.isOver18 ? '' : booleanToYesNo(recommendation.isOver18),
-      isSentenceUnder12Months: res.locals.errors?.isSentenceUnder12Months
-        ? ''
-        : booleanToYesNo(recommendation.isSentenceUnder12Months),
-      isMappaLevelAbove1: res.locals.errors?.isMappaLevelAbove1
-        ? ''
-        : booleanToYesNo(recommendation.isMappaLevelAbove1),
-      hasBeenConvictedOfSeriousOffence: res.locals.errors?.hasBeenConvictedOfSeriousOffence
-        ? ''
-        : booleanToYesNo(recommendation.hasBeenConvictedOfSeriousOffence),
-    },
+    inputDisplayValues,
   }
 
   res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
@@ -53,6 +53,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const { isOver18, isSentenceUnder12Months, isMappaLevelAbove1, hasBeenConvictedOfSeriousOffence } = req.body
 
   const errors = []
+  const unsavedValues = {
+    isOver18,
+    isSentenceUnder12Months,
+    isMappaLevelAbove1,
+    hasBeenConvictedOfSeriousOffence,
+  }
 
   if (!isOver18 || !isValueValid(isOver18 as string, 'yesNo')) {
     const errorId = 'noIsOver18'
@@ -100,6 +106,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (errors.length > 0) {
     req.session.errors = errors
+    req.session.unsavedValues = unsavedValues
     return res.redirect(303, req.originalUrl)
   }
 
