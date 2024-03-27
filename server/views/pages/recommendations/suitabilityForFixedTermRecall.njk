@@ -58,7 +58,7 @@
                         },
                         {
                             key: { html: 'Sentence length' },
-                            value: { text: conviction.sentence.length + " " + conviction.sentence.lengthUnits }
+                            value: { text: conviction.sentence.length + " " + conviction.sentence.lengthUnits if conviction.sentence.length and conviction.sentence.lengthUnits else 'Not available' }
                         }
                     ]
                 }) }}
@@ -100,37 +100,37 @@
 
                 {{ govukRadios({
                     classes: "govuk-radios--inline",
-                    idPrefix: "isOver18",
-                    name: "isOver18",
+                    idPrefix: "isUnder18",
+                    name: "isUnder18",
                     fieldset: {
                         legend: {
-                            text: 'Is ' + recommendation.personOnProbation.name + ' 18 or older?',
+                            text: 'Is ' + recommendation.personOnProbation.name + ' under 18?',
                             classes: "govuk-fieldset__legend--m",
                             isPageHeading: true
                         }
                     },
                     items: radioCheckboxItems({
                         items: formOptions.yesNo,
-                        currentValues: inputDisplayValues.isOver18
+                        currentValues: inputDisplayValues.isUnder18
                     }),
-                    errorMessage: errorMessage(errors.isOver18)
+                    errorMessage: errorMessage(errors.isUnder18)
                 }) }}
                 {{ govukRadios({
                     classes: "govuk-radios--inline",
-                    idPrefix: "isSentenceUnder12Months",
-                    name: "isSentenceUnder12Months",
+                    idPrefix: "isSentence12MonthsOrOver",
+                    name: "isSentence12MonthsOrOver",
                     fieldset: {
                         legend: {
-                            text: 'Is the sentence under 12 months?',
+                            text: 'Is the sentence 12 months or over?',
                             classes: "govuk-fieldset__legend--m",
                             isPageHeading: true
                         }
                     },
                     items: radioCheckboxItems({
                         items: formOptions.yesNo,
-                        currentValues: inputDisplayValues.isSentenceUnder12Months
+                        currentValues: inputDisplayValues.isSentence12MonthsOrOver
                     }),
-                    errorMessage: errorMessage(errors.isSentenceUnder12Months)
+                    errorMessage: errorMessage(errors.isSentence12MonthsOrOver)
                 }) }}
                 {{ govukRadios({
                     classes: "govuk-radios--inline",

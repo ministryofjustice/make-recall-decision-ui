@@ -25,8 +25,8 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
     expect(res.locals.caseSummary).toEqual('case summary data')
-    expect(res.locals.inputDisplayValues.isOver18).not.toBeDefined()
-    expect(res.locals.inputDisplayValues.isSentenceUnder12Months).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.isUnder18).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.isSentence12MonthsOrOver).not.toBeDefined()
     expect(res.locals.inputDisplayValues.isMappaLevelAbove1).not.toBeDefined()
     expect(res.locals.inputDisplayValues.hasBeenConvictedOfSeriousOffence).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
@@ -41,6 +41,30 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          isOver18: false,
+          isSentenceUnder12Months: false,
+          isMappaLevelAbove1: true,
+          hasBeenConvictedOfSeriousOffence: true,
+        },
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues.isUnder18).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isSentence12MonthsOrOver).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isMappaLevelAbove1).toEqual('YES')
+    expect(res.locals.inputDisplayValues.hasBeenConvictedOfSeriousOffence).toEqual('YES')
+  })
+
+  it('load with existing data inverted', async () => {
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: 'case summary data',
+    })
+    const res = mockRes({
+      locals: {
+        recommendation: {
           isOver18: true,
           isSentenceUnder12Months: true,
           isMappaLevelAbove1: true,
@@ -52,10 +76,8 @@ describe('get', () => {
     const next = mockNext()
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues.isOver18).toEqual('YES')
-    expect(res.locals.inputDisplayValues.isSentenceUnder12Months).toEqual('YES')
-    expect(res.locals.inputDisplayValues.isMappaLevelAbove1).toEqual('YES')
-    expect(res.locals.inputDisplayValues.hasBeenConvictedOfSeriousOffence).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isUnder18).toEqual('NO')
+    expect(res.locals.inputDisplayValues.isSentence12MonthsOrOver).toEqual('NO')
   })
 
   it('load with errors', async () => {
@@ -65,30 +87,30 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         unsavedValues: {
-          isOver18: false,
-          isSentenceUnder12Months: false,
+          isUnder18: false,
+          isSentence12MonthsOrOver: false,
           isMappaLevelAbove1: false,
           hasBeenConvictedOfSeriousOffence: false,
         },
         recommendation: {
-          isOver18: true,
-          isSentenceUnder12Months: true,
+          isOver18: false,
+          isSentenceUnder12Months: false,
           isMappaLevelAbove1: true,
           hasBeenConvictedOfSeriousOffence: true,
         },
         token: 'token1',
         errors: {
-          isOver18: {
+          isUnder18: {
             text: 'Select whether {{ fullName }} is 18 or over',
-            href: '#isOver18',
-            errorId: 'noIsOver18',
+            href: '#isUnder18',
+            errorId: 'noisUnder18',
           },
           list: [
             {
-              name: 'isOver18',
+              name: 'isUnder18',
               text: 'Select whether {{ fullName }} is 18 or over',
-              href: '#isOver18',
-              errorId: 'noIsOver18',
+              href: '#isUnder18',
+              errorId: 'noisUnder18',
             },
           ],
         },
@@ -98,22 +120,22 @@ describe('get', () => {
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
     expect(res.locals.inputDisplayValues.errors).toEqual({
-      isOver18: {
+      isUnder18: {
         text: 'Select whether {{ fullName }} is 18 or over',
-        href: '#isOver18',
-        errorId: 'noIsOver18',
+        href: '#isUnder18',
+        errorId: 'noisUnder18',
       },
       list: [
         {
-          name: 'isOver18',
+          name: 'isUnder18',
           text: 'Select whether {{ fullName }} is 18 or over',
-          href: '#isOver18',
-          errorId: 'noIsOver18',
+          href: '#isUnder18',
+          errorId: 'noisUnder18',
         },
       ],
     })
-    expect(res.locals.inputDisplayValues.isOver18).toEqual('YES')
-    expect(res.locals.inputDisplayValues.isSentenceUnder12Months).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isUnder18).toEqual('YES')
+    expect(res.locals.inputDisplayValues.isSentence12MonthsOrOver).toEqual('YES')
     expect(res.locals.inputDisplayValues.isMappaLevelAbove1).toEqual('YES')
     expect(res.locals.inputDisplayValues.hasBeenConvictedOfSeriousOffence).toEqual('YES')
   })
@@ -127,16 +149,16 @@ describe('get', () => {
         errors: {
           list: [
             {
-              name: 'isOver18',
+              name: 'isUnder18',
               text: 'Select whether {{ fullName }} is 18 or over',
-              href: '#isOver18',
-              errorId: 'noIsOver18',
+              href: '#isUnder18',
+              errorId: 'noisUnder18',
             },
           ],
-          isOver18: {
+          isUnder18: {
             text: 'Select whether {{ fullName }} is 18 or over',
-            href: '#isOver18',
-            errorId: 'noIsOver18',
+            href: '#isUnder18',
+            errorId: 'noisUnder18',
           },
         },
         recommendation: {
@@ -149,17 +171,17 @@ describe('get', () => {
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
     expect(res.locals.errors).toEqual({
-      isOver18: {
+      isUnder18: {
         text: 'Select whether {{ fullName }} is 18 or over',
-        href: '#isOver18',
-        errorId: 'noIsOver18',
+        href: '#isUnder18',
+        errorId: 'noisUnder18',
       },
       list: [
         {
-          name: 'isOver18',
+          name: 'isUnder18',
           text: 'Select whether {{ fullName }} is 18 or over',
-          href: '#isOver18',
-          errorId: 'noIsOver18',
+          href: '#isUnder18',
+          errorId: 'noisUnder18',
         },
       ],
     })
@@ -174,8 +196,8 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        isOver18: 'YES',
-        isSentenceUnder12Months: 'YES',
+        isUnder18: 'YES',
+        isSentence12MonthsOrOver: 'YES',
         isMappaLevelAbove1: 'YES',
         hasBeenConvictedOfSeriousOffence: 'YES',
       },
@@ -197,8 +219,8 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
-        isOver18: true,
-        isSentenceUnder12Months: true,
+        isOver18: false,
+        isSentenceUnder12Months: false,
         isMappaLevelAbove1: true,
         hasBeenConvictedOfSeriousOffence: true,
       },
@@ -216,8 +238,8 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
-        isOver18: '',
-        isSentenceUnder12Months: '',
+        isUnder18: '',
+        isSentence12MonthsOrOver: '',
         isMappaLevelAbove1: '',
         hasBeenConvictedOfSeriousOffence: '',
       },
@@ -237,18 +259,18 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        name: 'isOver18',
-        text: 'Select whether {{ fullName }} is 18 or over',
-        href: '#isOver18',
-        errorId: 'noIsOver18',
+        name: 'isUnder18',
+        text: 'Select whether {{ fullName }} is under 18',
+        href: '#isUnder18',
+        errorId: 'noIsUnder18',
         invalidParts: undefined,
         values: undefined,
       },
       {
-        name: 'isSentenceUnder12Months',
-        text: 'Select whether the sentence is under 12 months',
-        href: '#isSentenceUnder12Months',
-        errorId: 'noIsSentenceUnder12Months',
+        name: 'isSentence12MonthsOrOver',
+        text: 'Select whether the sentence is 12 months or over',
+        href: '#isSentence12MonthsOrOver',
+        errorId: 'noIsSentence12MonthsOrOver',
         invalidParts: undefined,
         values: undefined,
       },
@@ -272,8 +294,8 @@ describe('post', () => {
     expect(req.session.unsavedValues).toEqual({
       hasBeenConvictedOfSeriousOffence: '',
       isMappaLevelAbove1: '',
-      isOver18: '',
-      isSentenceUnder12Months: '',
+      isUnder18: '',
+      isSentence12MonthsOrOver: '',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })

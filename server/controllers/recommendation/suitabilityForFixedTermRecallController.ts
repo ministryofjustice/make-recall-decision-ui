@@ -19,9 +19,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const inputDisplayValues = {
     errors: res.locals.errors,
-    isOver18: unsavedValues?.isOver18 || booleanToYesNo(recommendation.isOver18),
-    isSentenceUnder12Months:
-      unsavedValues?.isSentenceUnder12Months || booleanToYesNo(recommendation.isSentenceUnder12Months),
+    isUnder18: unsavedValues?.isUnder18 || booleanToInvertedYesNo(recommendation.isOver18),
+    isSentence12MonthsOrOver:
+      unsavedValues?.isSentence12MonthsOrOver || booleanToInvertedYesNo(recommendation.isSentenceUnder12Months),
     isMappaLevelAbove1: unsavedValues?.isMappaLevelAbove1 || booleanToYesNo(recommendation.isMappaLevelAbove1),
     hasBeenConvictedOfSeriousOffence:
       unsavedValues?.hasBeenConvictedOfSeriousOffence ||
@@ -50,32 +50,32 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { isOver18, isSentenceUnder12Months, isMappaLevelAbove1, hasBeenConvictedOfSeriousOffence } = req.body
+  const { isUnder18, isSentence12MonthsOrOver, isMappaLevelAbove1, hasBeenConvictedOfSeriousOffence } = req.body
 
   const errors = []
   const unsavedValues = {
-    isOver18,
-    isSentenceUnder12Months,
+    isUnder18,
+    isSentence12MonthsOrOver,
     isMappaLevelAbove1,
     hasBeenConvictedOfSeriousOffence,
   }
 
-  if (!isOver18 || !isValueValid(isOver18 as string, 'yesNo')) {
-    const errorId = 'noIsOver18'
+  if (!isUnder18 || !isValueValid(isUnder18 as string, 'yesNo')) {
+    const errorId = 'noIsUnder18'
     errors.push(
       makeErrorObject({
-        id: 'isOver18',
+        id: 'isUnder18',
         text: strings.errors[errorId],
         errorId,
       })
     )
   }
 
-  if (!isSentenceUnder12Months || !isValueValid(isSentenceUnder12Months as string, 'yesNo')) {
-    const errorId = 'noIsSentenceUnder12Months'
+  if (!isSentence12MonthsOrOver || !isValueValid(isSentence12MonthsOrOver as string, 'yesNo')) {
+    const errorId = 'noIsSentence12MonthsOrOver'
     errors.push(
       makeErrorObject({
-        id: 'isSentenceUnder12Months',
+        id: 'isSentence12MonthsOrOver',
         text: strings.errors[errorId],
         errorId,
       })
@@ -111,9 +111,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   }
 
   const valuesToSave = {
-    isOver18: isOver18 === 'YES',
+    isOver18: isUnder18 === 'NO',
     isMappaLevelAbove1: isMappaLevelAbove1 === 'YES',
-    isSentenceUnder12Months: isSentenceUnder12Months === 'YES',
+    isSentenceUnder12Months: isSentence12MonthsOrOver === 'NO',
     hasBeenConvictedOfSeriousOffence: hasBeenConvictedOfSeriousOffence === 'YES',
   }
 
@@ -128,3 +128,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
 }
 
 export default { get, post }
+
+export const booleanToInvertedYesNo = (val: boolean) => {
+  if (val === true) return 'NO'
+  if (val === false) return 'YES'
+  return undefined
+}
