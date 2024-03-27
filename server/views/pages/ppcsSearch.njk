@@ -5,24 +5,27 @@
 {% block content %}
     {% include '../partials/error-summary.njk' %}
 
-    <h1 class="govuk-heading-xl-no-bottom-margin">Find a person to book on</h1>
-    <p class='govuk-body'>Search by case reference number (CRN). This is the number probation staff use.</p>
-
-    {{ govukDetails({
-      summaryText: "How to find the CRN",
-      text: "You can find the CRN at the end of the filename of the Part A.  It's always a letter followed by 6 numbers.  It might have a '.docx' after it."
-    }) }}
-
     <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Find a person to book on</h1>
+            <p class='govuk-body'>Search by case reference number (CRN). This is the number probation staff use.</p>
+
+            {{ govukDetails({
+                summaryText: "How to find the CRN",
+                text: "You can find the CRN at the end of the filename of the Part A.  It's always a letter followed by 6 numbers.  It might have a '.docx' after it."
+            }) }}
+        </div>
         <div class="govuk-grid-column-one-half-from-desktop">
+
             <form action="/ppcs-search-results" method="get" novalidate>
                 {{ govukInput({
                     id: "crn",
                     name: "crn",
                      label: {
-                        text: "Enter CRN number",
+                        text: "Enter CRN",
                         classes: "govuk-label--m"
                     },
+                    classes: "govuk-input--width-10",
                     errorMessage: errorMessage(errors.crn)
                 }) }}
                 <button class="govuk-button" data-module="govuk-button">
