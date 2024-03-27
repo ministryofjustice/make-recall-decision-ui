@@ -59,6 +59,24 @@ export class CaseTemplateBuilder {
     return this
   }
 
+  withCvlLicenceMissingData() {
+    this.cvlLicence = {
+      licenceStatus: 'ACTIVE',
+      conditionalReleaseDate: '2022-06-10',
+      actualReleaseDate: '2022-06-11',
+      sentenceStartDate: '2022-06-12',
+      sentenceEndDate: '2022-06-13',
+      licenceStartDate: '2022-06-14',
+      licenceExpiryDate: '2022-06-15',
+      topupSupervisionStartDate: '2022-06-16',
+      topupSupervisionExpiryDate: '2022-06-17',
+      standardLicenceConditions: [],
+      additionalLicenceConditions: [],
+      bespokeConditions: [],
+    }
+    return this
+  }
+
   withNoCvlLicence() {
     this.cvlLicence = null
     return this
