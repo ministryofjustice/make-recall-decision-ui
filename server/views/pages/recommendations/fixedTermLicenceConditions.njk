@@ -1,32 +1,25 @@
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
-            {% set yesDetailHtml %}
-                {{ govukTextarea({
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% include '../../partials/error-summary.njk' %}
+        {% set yesDetailHtml %}
+        {{ govukTextarea({
                     name: "hasFixedTermLicenceConditionsDetails",
                     id: "hasFixedTermLicenceConditionsDetails",
                     label: {
-                        html: "Give details <span class='govuk-visually-hidden'>on fixed term recall</span>",
-                        classes: "govuk-label--s"
+                        html: "Give details <span class='govuk-visually-hidden'>on fixed term recall</span>"
                     },
                     value: inputDisplayValues.details,
                     errorMessage: errorMessage(errors.hasFixedTermLicenceConditionsDetails)
                 }) }}
-            {% endset %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-
-                {{ govukRadios({
+        {% endset %}
+        <form novalidate method="post">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukRadios({
                     idPrefix: "hasFixedTermLicenceConditions",
                     name: "hasFixedTermLicenceConditions",
                     fieldset: {
@@ -55,4 +48,3 @@
         </div>
     </div>
 {% endblock %}
-
