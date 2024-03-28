@@ -16,6 +16,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } = res.locals
 
   const { caseSummary } = await getCaseSection('overview', recommendation.crn, token, userId, req.query, flags)
+  const { mappa } = await getCaseSection('risk', recommendation.crn, token, userId, req.query, flags)
 
   const inputDisplayValues = {
     errors: res.locals.errors,
@@ -31,6 +32,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
     ...res.locals,
     caseSummary,
+    mappa,
     page: {
       id: 'suitabilityForFixedTermRecall',
     },
