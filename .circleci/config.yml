@@ -4,7 +4,7 @@ orbs:
   browser-tools: circleci/browser-tools@1.4.8
   hmpps: ministryofjustice/hmpps@8
   node: circleci/node@5.2.0
-  slack: circleci/slack@4.13.1
+  slack: circleci/slack@4.13.2
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
 parameters:
