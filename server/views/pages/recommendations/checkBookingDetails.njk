@@ -93,7 +93,7 @@
                             <div class="govuk-list govuk-!-margin-bottom-0">
                             {% for key, val in warnings %}
                                   <div>
-                                    <span class="govuk-body govuk-!-font-weight-bold">{{ key }}:</span>
+                                    <span class="govuk-body govuk-!-font-weight-bold">{{ key | replace("-", " - ") }}:</span>
                                     <span class="govuk-body">{{ blankSafe(val) }}</span>
                                   </div>
                             {% endfor %}
