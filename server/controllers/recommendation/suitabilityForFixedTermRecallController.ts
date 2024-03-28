@@ -15,7 +15,22 @@ async function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues,
   } = res.locals
 
-  const { caseSummary } = await getCaseSection('overview', recommendation.crn, token, userId, req.query, flags)
+  const { caseSummary: caseSummaryOverview } = await getCaseSection(
+    'overview',
+    recommendation.crn,
+    token,
+    userId,
+    req.query,
+    flags
+  )
+  const { caseSummary: caseSummaryRisk } = await getCaseSection(
+    'risk',
+    recommendation.crn,
+    token,
+    userId,
+    req.query,
+    flags
+  )
 
   const inputDisplayValues = {
     errors: res.locals.errors,
@@ -26,6 +41,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
     hasBeenConvictedOfSeriousOffence:
       unsavedValues?.hasBeenConvictedOfSeriousOffence ||
       booleanToYesNo(recommendation.hasBeenConvictedOfSeriousOffence),
+  }
+
+  const caseSummary = {
+    ...caseSummaryOverview,
+    ...caseSummaryRisk,
   }
 
   res.locals = {

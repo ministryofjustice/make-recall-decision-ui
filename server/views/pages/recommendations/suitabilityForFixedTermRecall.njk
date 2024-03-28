@@ -66,8 +66,8 @@
         {% endfor %}
         <div class="govuk-!-padding-top-4">
             {{ mappaWidget({
-                mappa: recommendation.personOnProbation.mappa,
-                lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: recommendation.personOnProbation.mappa.lastUpdatedDate, dateOnly: true })
+                mappa: caseSummary.mappa,
+                lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true })
             }) }}
         </div>
     {% endif %}

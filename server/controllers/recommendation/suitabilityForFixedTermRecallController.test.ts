@@ -10,7 +10,10 @@ jest.mock('../caseSummary/getCaseSection')
 describe('get', () => {
   it('load with no data', async () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: 'case summary data',
+      caseSummary: { licence: 'case summary data' },
+    })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { mappa: 'mappa summary data' },
     })
 
     const res = mockRes({
@@ -24,7 +27,7 @@ describe('get', () => {
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
-    expect(res.locals.caseSummary).toEqual('case summary data')
+    expect(res.locals.caseSummary).toEqual({ licence: 'case summary data', mappa: 'mappa summary data' })
     expect(res.locals.inputDisplayValues.isUnder18).not.toBeDefined()
     expect(res.locals.inputDisplayValues.isSentence12MonthsOrOver).not.toBeDefined()
     expect(res.locals.inputDisplayValues.isMappaLevelAbove1).not.toBeDefined()
@@ -36,7 +39,10 @@ describe('get', () => {
 
   it('load with existing data', async () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: 'case summary data',
+      caseSummary: { licence: 'case summary data' },
+    })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { mappa: 'mappa summary data' },
     })
     const res = mockRes({
       locals: {
@@ -60,7 +66,10 @@ describe('get', () => {
 
   it('load with existing data inverted', async () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: 'case summary data',
+      caseSummary: { licence: 'case summary data' },
+    })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { mappa: 'mappa summary data' },
     })
     const res = mockRes({
       locals: {
@@ -82,7 +91,10 @@ describe('get', () => {
 
   it('load with errors', async () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: 'case summary data',
+      caseSummary: { licence: 'case summary data' },
+    })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { mappa: 'mappa summary data' },
     })
     const res = mockRes({
       locals: {
@@ -142,7 +154,10 @@ describe('get', () => {
 
   it('initial load with error data', async () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: 'case summary data',
+      caseSummary: { licence: 'case summary data' },
+    })
+    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+      caseSummary: { mappa: 'mappa summary data' },
     })
     const res = mockRes({
       locals: {
