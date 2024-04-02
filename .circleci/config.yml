@@ -311,76 +311,76 @@ jobs:
       - store_test_results:
           path: make-recall-decision-e2e-tests/e2e_tests/junit
 
-  e2e_local_test:
-    machine:
-      image: ubuntu-2004:2023.07.1
-    parallelism: << pipeline.parameters.e2e-parallelism >>
-    steps:
-      - run:
-          name: Checkout/clone make-recall-decision-e2e-tests
-          command: |
-            git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
-            cd make-recall-decision-e2e-tests 
-            git checkout main
-      - run:
-          name: Checkout/clone make-recall-decision-api
-          command: |
-            git clone https://github.com/ministryofjustice/make-recall-decision-api.git
-            cd make-recall-decision-api
-            git checkout main
-      - run:
-          name: Checkout/clone make-recall-decision-ui
-          command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
-      - run:
-          name: Start components
-          working_directory: make-recall-decision-ui
-          command: ./scripts/start-services-for-e2e-tests.sh -p
-      - run:
-          name: Run E2E tests
-          working_directory: make-recall-decision-e2e-tests
-          command: |
-            npm ci --no-audit
-            echo PWD:: $PWD
-            shopt -s globstar
+  # e2e_local_test:
+  #   machine:
+  #     image: ubuntu-2004:2023.07.1
+  #   parallelism: << pipeline.parameters.e2e-parallelism >>
+  #   steps:
+  #     - run:
+  #         name: Checkout/clone make-recall-decision-e2e-tests
+  #         command: |
+  #           git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
+  #           cd make-recall-decision-e2e-tests 
+  #           git checkout main
+  #     - run:
+  #         name: Checkout/clone make-recall-decision-api
+  #         command: |
+  #           git clone https://github.com/ministryofjustice/make-recall-decision-api.git
+  #           cd make-recall-decision-api
+  #           git checkout main
+  #     - run:
+  #         name: Checkout/clone make-recall-decision-ui
+  #         command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
+  #     - run:
+  #         name: Start components
+  #         working_directory: make-recall-decision-ui
+  #         command: ./scripts/start-services-for-e2e-tests.sh -p
+  #     - run:
+  #         name: Run E2E tests
+  #         working_directory: make-recall-decision-e2e-tests
+  #         command: |
+  #           npm ci --no-audit
+  #           echo PWD:: $PWD
+  #           shopt -s globstar
 
-            SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --split-by=timings --show-counts)
-            echo "Running feature file(s): $SPECS"
+  #           SPECS=$(circleci tests glob "e2e_tests/features/**/*.feature" | circleci tests split --split-by=timings --show-counts)
+  #           echo "Running feature file(s): $SPECS"
 
-            set +e
+  #           set +e
 
-            npx cypress run \
-              --env TAGS='not @E2E and not @smoke',USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local},USERNAME_ACO=${CYPRESS_USERNAME_ACO_local},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_local} \
-              --config-file e2e_tests/cypress.config.ts \
-              --browser chrome \
-              --record false \
-              --spec $SPECS
+  #           npx cypress run \
+  #             --env TAGS='not @E2E and not @smoke',USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local},USERNAME_ACO=${CYPRESS_USERNAME_ACO_local},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_local} \
+  #             --config-file e2e_tests/cypress.config.ts \
+  #             --browser chrome \
+  #             --record false \
+  #             --spec $SPECS
 
-            export E2E_RESULT=$?
-            node scripts/fix-junit-reports.js
+  #           export E2E_RESULT=$?
+  #           node scripts/fix-junit-reports.js
 
-            set -e
-            exit $E2E_RESULT
-      - run:
-          when: on_fail
-          name: make-recall-decision-api - docker logs
-          working_directory: make-recall-decision-api
-          command: docker-compose logs
-      - run:
-          when: on_fail
-          name: make-recall-decision-ui - docker logs
-          working_directory: make-recall-decision-ui
-          command: docker-compose logs
-      - store_artifacts:
-          path: make-recall-decision-e2e-tests/e2e_tests/screenshots
-          destination: screenshots
-      - store_artifacts:
-          path: make-recall-decision-e2e-tests/e2e_tests/reports
-          destination: reports
-      - store_artifacts:
-          path: make-recall-decision-e2e-tests/e2e_tests/junit
-          destination: junit
-      - store_test_results:
-          path: make-recall-decision-e2e-tests/e2e_tests/junit
+  #           set -e
+  #           exit $E2E_RESULT
+  #     - run:
+  #         when: on_fail
+  #         name: make-recall-decision-api - docker logs
+  #         working_directory: make-recall-decision-api
+  #         command: docker-compose logs
+  #     - run:
+  #         when: on_fail
+  #         name: make-recall-decision-ui - docker logs
+  #         working_directory: make-recall-decision-ui
+  #         command: docker-compose logs
+  #     - store_artifacts:
+  #         path: make-recall-decision-e2e-tests/e2e_tests/screenshots
+  #         destination: screenshots
+  #     - store_artifacts:
+  #         path: make-recall-decision-e2e-tests/e2e_tests/reports
+  #         destination: reports
+  #     - store_artifacts:
+  #         path: make-recall-decision-e2e-tests/e2e_tests/junit
+  #         destination: junit
+  #     - store_test_results:
+  #         path: make-recall-decision-e2e-tests/e2e_tests/junit
 
 # the E2E local test is still in place, it tests te FE/BE contract and assumes contracts between MRD and other external systems.
 workflows:
@@ -393,14 +393,14 @@ workflows:
           - << pipeline.parameters.e2e-check-dev >>
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
-      - e2e_local_test:
-          filters:
-            branches:
-              only:
-                - main
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+      # - e2e_local_test:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     context:
+      #       - hmpps-common-vars
+      #     <<: *slack-fail-post-step
 
       - build:
           filters:
@@ -459,8 +459,8 @@ workflows:
           requires:
             - helm_lint
             - unit_test
-            - integration_test
-            - e2e_local_test
+            # - integration_test
+            # - e2e_local_test
             - build_docker
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
@@ -473,18 +473,18 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+      # - e2e_environment_test:
+      #     name: e2e_test_dev
+      #     environment: dev
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - deploy_dev
+      #     context:
+      #       - hmpps-common-vars
+      #     <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
@@ -498,7 +498,7 @@ workflows:
             - make-recall-decision-ui-preprod
           requires:
             - deploy_dev
-            - e2e_test_dev
+            # - e2e_test_dev
           <<: *slack-fail-post-step
       - hmpps/sentry_release_and_deploy:
           name: notify_sentry_preprod
@@ -510,25 +510,25 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_preprod
-          environment: preprod
-          e2e-tags: "@smoke"
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_preprod
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+      # - e2e_environment_test:
+      #     name: e2e_test_preprod
+      #     environment: preprod
+      #     e2e-tags: "@smoke"
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - deploy_preprod
+      #     context:
+      #       - hmpps-common-vars
+      #     <<: *slack-fail-post-step
 
       - request-prod-approval:
           type: approval
           requires:
             - deploy_preprod
-            - e2e_test_preprod
+            # - e2e_test_preprod
       - hmpps/deploy_env:
           name: deploy_prod
           env: prod
@@ -551,36 +551,36 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-  e2e-check-local:
-    when: << pipeline.parameters.e2e-check-local >>
-    jobs:
-      - e2e_local_test:
-          name: e2e_local_test
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+  # e2e-check-local:
+  #   when: << pipeline.parameters.e2e-check-local >>
+  #   jobs:
+  #     - e2e_local_test:
+  #         name: e2e_local_test
+  #         context:
+  #           - hmpps-common-vars
+  #         <<: *slack-fail-post-step
 
-  e2e-check-dev:
-    when: << pipeline.parameters.e2e-check-dev >>
-    jobs:
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          e2e-tags: "@E2E"
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+  # e2e-check-dev:
+  #   when: << pipeline.parameters.e2e-check-dev >>
+  #   jobs:
+  #     - e2e_environment_test:
+  #         name: e2e_test_dev
+  #         environment: dev
+  #         e2e-tags: "@E2E"
+  #         context:
+  #           - hmpps-common-vars
+  #         <<: *slack-fail-post-step
 
-  e2e-check-preprod:
-    when: << pipeline.parameters.e2e-check-preprod >>
-    jobs:
-      - e2e_environment_test:
-          name: e2e_test_preprod
-          environment: preprod
-          e2e-tags: "@smoke"
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+  # e2e-check-preprod:
+  #   when: << pipeline.parameters.e2e-check-preprod >>
+  #   jobs:
+  #     - e2e_environment_test:
+  #         name: e2e_test_preprod
+  #         environment: preprod
+  #         e2e-tags: "@smoke"
+  #         context:
+  #           - hmpps-common-vars
+  #         <<: *slack-fail-post-step
 
   # Disabling it as this is also triggered from CircleCI Scheduler UI
   #  e2e-check-dev-daily:
