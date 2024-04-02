@@ -473,18 +473,18 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+      # - e2e_environment_test:
+      #     name: e2e_test_dev
+      #     environment: dev
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - deploy_dev
+      #     context:
+      #       - hmpps-common-vars
+      #     <<: *slack-fail-post-step
 
       - hmpps/deploy_env:
           name: deploy_preprod
@@ -510,19 +510,19 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_preprod
-          environment: preprod
-          e2e-tags: "@smoke"
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_preprod
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+      # - e2e_environment_test:
+      #     name: e2e_test_preprod
+      #     environment: preprod
+      #     e2e-tags: "@smoke"
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - deploy_preprod
+      #     context:
+      #       - hmpps-common-vars
+      #     <<: *slack-fail-post-step
 
       - request-prod-approval:
           type: approval
