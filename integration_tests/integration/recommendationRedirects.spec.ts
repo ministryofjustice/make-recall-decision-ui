@@ -31,7 +31,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
-    cy.selectRadio('What do you recommend?', 'No recall')
+    cy.selectRadio('Select your recommendation', 'No recall')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
@@ -43,7 +43,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.visit(
       `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`
     )
-    cy.selectRadio('What do you recommend?', 'No recall')
+    cy.selectRadio('Select your recommendation', 'No recall')
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
