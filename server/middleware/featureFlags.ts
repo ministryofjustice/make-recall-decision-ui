@@ -12,12 +12,12 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagFTR: {
     label: 'Enable FTR',
     description: 'Enables FTR support',
-    default: false,
+    default: true,
   },
   flagPpcs: {
     label: 'Enable PPCS',
     description: 'Enables continuation in PPCS',
-    default: true,
+    default: false,
   },
   flagProbationAdmin: {
     label: 'Enable Probation Admin',
