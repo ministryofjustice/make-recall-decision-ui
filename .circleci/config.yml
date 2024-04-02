@@ -143,107 +143,107 @@ jobs:
       - store_artifacts:
           path: coverage
 
-  # integration_test:
-  #   executor:
-  #     name: hmpps/node_redis
-  #     node_tag: << pipeline.parameters.node-version >>
-  #     redis_tag: << pipeline.parameters.redis-version >>
-  #   steps:
-  #     - checkout
-  #     - run: sudo apt-get update
-  #     - browser-tools/install-chrome:
-  #         chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
-  #     - browser-tools/install-chromedriver
-  #     - node/install-packages
-  #     - attach_workspace:
-  #         at: ~/app
-  #     - run:
-  #         name: Install missing OS dependency
-  #         command: sudo apt-get install libxss1
-  #     - run:
-  #         name: Get wiremock
-  #         command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
-  #     - run:
-  #         name: Run wiremock
-  #         command: java -jar wiremock.jar --port 9999
-  #         background: true
-  #     - run:
-  #         name: Build the node app.
-  #         command: npm run build
-  #     - run:
-  #         name: Run the node app.
-  #         command: npm run start-feature
-  #         background: true
-  #     - run:
-  #         name: Wait for node app to start
-  #         command: |
-  #           until curl -s --fail "http://localhost:3007/ping"; do
-  #             printf "."
-  #             sleep 2
-  #           done
-  #     - run:
-  #         name: integration tests
-  #         command: npm run int-test
-  #     - store_test_results:
-  #         path: test_results
-  #     - store_artifacts:
-  #         path: integration_tests/videos
-  #     - store_artifacts:
-  #         path: integration_tests/screenshots
+  integration_test:
+    executor:
+      name: hmpps/node_redis
+      node_tag: << pipeline.parameters.node-version >>
+      redis_tag: << pipeline.parameters.redis-version >>
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - browser-tools/install-chrome:
+          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
+      - browser-tools/install-chromedriver
+      - node/install-packages
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Install missing OS dependency
+          command: sudo apt-get install libxss1
+      - run:
+          name: Get wiremock
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
+      - run:
+          name: Run wiremock
+          command: java -jar wiremock.jar --port 9999
+          background: true
+      - run:
+          name: Build the node app.
+          command: npm run build
+      - run:
+          name: Run the node app.
+          command: npm run start-feature
+          background: true
+      - run:
+          name: Wait for node app to start
+          command: |
+            until curl -s --fail "http://localhost:3007/ping"; do
+              printf "."
+              sleep 2
+            done
+      - run:
+          name: integration tests
+          command: npm run int-test
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: integration_tests/videos
+      - store_artifacts:
+          path: integration_tests/screenshots
 
-  # accessibility_test:
-  #   executor:
-  #     name: hmpps/node_redis
-  #     node_tag: << pipeline.parameters.node-version >>
-  #     redis_tag: << pipeline.parameters.redis-version >>
-  #   steps:
-  #     - checkout
-  #     - run: sudo apt-get update
-  #     - browser-tools/install-chrome:
-  #         chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
-  #     - browser-tools/install-chromedriver
-  #     - node/install-packages
-  #     - attach_workspace:
-  #         at: ~/app
-  #     - run:
-  #         name: Install missing OS dependency
-  #         command: sudo apt-get install libxss1
-  #     - run:
-  #         name: Get wiremock
-  #         command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
-  #     - run:
-  #         name: Run wiremock
-  #         command: java -jar wiremock.jar --port 9999 --root-dir fake-manage-recalls-api/stubs
-  #         background: true
-  #     - run:
-  #         name: Build the node app.
-  #         command: npm run build
-  #     - run:
-  #         name: Run the node app.
-  #         command: npm run start-feature
-  #         background: true
-  #     - run:
-  #         name: Wait for node app to start
-  #         command: |
-  #           until curl -s --fail "http://localhost:3007/ping"; do
-  #             printf "."
-  #             sleep 2
-  #           done
-  #     - run:
-  #         name: accessibility tests
-  #         command: |
-  #           npx cypress run \
-  #             --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
-  #             --config-file integration_tests/cypress.config.ts \
-  #             --config specPattern=integration_tests/accessibility/*.spec.ts \
-  #             --browser chrome \
-  #             --record false
-  #     - store_test_results:
-  #         path: test_results
-  #     - store_artifacts:
-  #         path: integration_tests/videos
-  #     - store_artifacts:
-  #         path: integration_tests/screenshots
+  accessibility_test:
+    executor:
+      name: hmpps/node_redis
+      node_tag: << pipeline.parameters.node-version >>
+      redis_tag: << pipeline.parameters.redis-version >>
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - browser-tools/install-chrome:
+          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
+      - browser-tools/install-chromedriver
+      - node/install-packages
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Install missing OS dependency
+          command: sudo apt-get install libxss1
+      - run:
+          name: Get wiremock
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
+      - run:
+          name: Run wiremock
+          command: java -jar wiremock.jar --port 9999 --root-dir fake-manage-recalls-api/stubs
+          background: true
+      - run:
+          name: Build the node app.
+          command: npm run build
+      - run:
+          name: Run the node app.
+          command: npm run start-feature
+          background: true
+      - run:
+          name: Wait for node app to start
+          command: |
+            until curl -s --fail "http://localhost:3007/ping"; do
+              printf "."
+              sleep 2
+            done
+      - run:
+          name: accessibility tests
+          command: |
+            npx cypress run \
+              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
+              --config-file integration_tests/cypress.config.ts \
+              --config specPattern=integration_tests/accessibility/*.spec.ts \
+              --browser chrome \
+              --record false
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: integration_tests/videos
+      - store_artifacts:
+          path: integration_tests/screenshots
 
   e2e_environment_test:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
@@ -417,19 +417,19 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-      # - integration_test:
-      #     requires:
-      #       - build
-      #     context:
-      #       - hmpps-common-vars
-      #     <<: *slack-fail-post-step
+      - integration_test:
+          requires:
+            - build
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
-      # - accessibility_test:
-      #     requires:
-      #       - build
-      #     context:
-      #       - hmpps-common-vars
-      #     <<: *slack-fail-post-step
+      - accessibility_test:
+          requires:
+            - build
+          context:
+            - hmpps-common-vars
+          <<: *slack-fail-post-step
 
       - hmpps/helm_lint:
           name: helm_lint
