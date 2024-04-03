@@ -47,8 +47,8 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          isOver18: false,
-          isSentenceUnder12Months: false,
+          isUnder18: true,
+          isSentence12MonthsOrOver: true,
           isMappaLevelAbove1: true,
           hasBeenConvictedOfSeriousOffence: true,
         },
@@ -74,8 +74,8 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          isOver18: true,
-          isSentenceUnder12Months: true,
+          isUnder18: false,
+          isSentence12MonthsOrOver: false,
           isMappaLevelAbove1: true,
           hasBeenConvictedOfSeriousOffence: true,
         },
@@ -105,8 +105,8 @@ describe('get', () => {
           hasBeenConvictedOfSeriousOffence: false,
         },
         recommendation: {
-          isOver18: false,
-          isSentenceUnder12Months: false,
+          isUnder18: true,
+          isSentence12MonthsOrOver: true,
           isMappaLevelAbove1: true,
           hasBeenConvictedOfSeriousOffence: true,
         },
@@ -234,8 +234,8 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
-        isOver18: false,
-        isSentenceUnder12Months: false,
+        isUnder18: true,
+        isSentence12MonthsOrOver: true,
         isMappaLevelAbove1: true,
         hasBeenConvictedOfSeriousOffence: true,
       },
