@@ -34,9 +34,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const inputDisplayValues = {
     errors: res.locals.errors,
-    isUnder18: unsavedValues?.isUnder18 || booleanToInvertedYesNo(recommendation.isOver18),
+    isUnder18: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
     isSentence12MonthsOrOver:
-      unsavedValues?.isSentence12MonthsOrOver || booleanToInvertedYesNo(recommendation.isSentenceUnder12Months),
+      unsavedValues?.isSentence12MonthsOrOver || booleanToYesNo(recommendation.isSentence12MonthsOrOver),
     isMappaLevelAbove1: unsavedValues?.isMappaLevelAbove1 || booleanToYesNo(recommendation.isMappaLevelAbove1),
     hasBeenConvictedOfSeriousOffence:
       unsavedValues?.hasBeenConvictedOfSeriousOffence ||
@@ -131,9 +131,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   }
 
   const valuesToSave = {
-    isOver18: isUnder18 === 'NO',
+    isUnder18: isUnder18 === 'YES',
     isMappaLevelAbove1: isMappaLevelAbove1 === 'YES',
-    isSentenceUnder12Months: isSentence12MonthsOrOver === 'NO',
+    isSentence12MonthsOrOver: isSentence12MonthsOrOver === 'YES',
     hasBeenConvictedOfSeriousOffence: hasBeenConvictedOfSeriousOffence === 'YES',
   }
 
@@ -148,9 +148,3 @@ async function post(req: Request, res: Response, _: NextFunction) {
 }
 
 export default { get, post }
-
-export const booleanToInvertedYesNo = (val: boolean) => {
-  if (val === true) return 'NO'
-  if (val === false) return 'YES'
-  return undefined
-}
