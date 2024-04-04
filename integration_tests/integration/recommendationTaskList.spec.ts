@@ -346,7 +346,7 @@ context('Recommendation - task list', () => {
         isIndeterminateSentence: false,
         isExtendedSentence: false,
         recallType: { selected: { value: 'FIXED_TERM' } },
-        isOver18: true,
+        isUnder18: false,
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })

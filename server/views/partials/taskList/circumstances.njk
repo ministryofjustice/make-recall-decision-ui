@@ -7,9 +7,9 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
       recommendation.additionalLicenceConditionsText.length > 0
 %}
 {%
-set suitabilityForFixedTermRecall = hasData(recommendation.isOver18) or
+set suitabilityForFixedTermRecall = hasData(recommendation.isUnder18) or
        hasData(recommendation.licenceConditionsBreached.isMappaLevelAbove1) or
-       hasData(recommendation.cvlLicenceConditionsBreached.isSentenceUnder12Months) or
+       hasData(recommendation.cvlLicenceConditionsBreached.isSentence12MonthsOrOver) or
        hasData(recommendation.cvlLicenceConditionsBreached.hasBeenConvictedOfSeriousOffence)
 
 %}

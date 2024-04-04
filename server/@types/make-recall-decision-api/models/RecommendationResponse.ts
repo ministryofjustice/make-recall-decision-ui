@@ -95,9 +95,9 @@ export type RecommendationResponse = {
   bookingMemento?: bookingMemento;
   odmName?: string;
   spoRecallType?: string;
-  isOver18?: boolean,
+  isUnder18?: boolean,
   isMappaLevelAbove1?: boolean,
-  isSentenceUnder12Months?: boolean,
+  isSentence12MonthsOrOver?: boolean,
   hasBeenConvictedOfSeriousOffence?: boolean,
 };
 
