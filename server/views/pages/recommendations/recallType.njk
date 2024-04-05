@@ -36,7 +36,6 @@
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
                 <input type="hidden" name="originalRecallType" value="{{ inputDisplayValues.value }}"/>
                 {% if flags.flagFTR %}
-                    {# new FTR flow #}
                     {% include "../../partials/recommendation/recallTypeFTR.njk" %}
                 {% else %}
                     {% include "../../partials/recommendation/recallType.njk" %}
