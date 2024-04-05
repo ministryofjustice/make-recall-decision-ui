@@ -1,8 +1,9 @@
 import { performance } from 'perf_hooks'
 import convertToTitleCase from '../utils/utils'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
-import { appInsightsTimingMetric } from '../monitoring/azureAppInsights'
 import { getUserFromDeliusFacade, HomeArea } from '../data/deliusFacadeClient'
+import { getUser, getUserEmail } from '../data/hmppsManageUsersApiClient'
+import { appInsightsTimingMetric } from '../monitoring/azureAppInsights'
 
 export interface UserDetails {
   name: string
@@ -17,22 +18,16 @@ export default class UserService {
   }
 
   async getUser(token: string): Promise<UserDetails> {
-    const startTime = performance.now()
-    const [userResponse, emailResponse] = await Promise.allSettled([
-      this.hmppsAuthClient.getUser(token),
-      this.hmppsAuthClient.getUserEmail(token),
-    ])
+    let startTime = performance.now()
+    const results = await Promise.all([getUser(token), getUserEmail(token)])
+    const user = Object.assign(...results)
     appInsightsTimingMetric({ name: 'getUser', startTime })
-    if (userResponse.status === 'rejected') {
-      throw userResponse.reason
-    }
+
+    startTime = performance.now()
     const clientToken = await this.hmppsAuthClient.getSystemClientToken()
-    const region = (await getUserFromDeliusFacade(userResponse.value.username, clientToken)).homeArea
-    const user = userResponse.value
-    let email = ''
-    if (emailResponse.status === 'fulfilled') {
-      email = emailResponse.value.email
-    }
-    return { ...user, email, region, displayName: convertToTitleCase(user.name as string) }
+    const region = (await getUserFromDeliusFacade(user.username, clientToken)).homeArea
+    appInsightsTimingMetric({ name: 'getUserFromDeliusFacade', startTime })
+
+    return { name: user.name, email: user.email, region, displayName: convertToTitleCase(user.name) }
   }
 }

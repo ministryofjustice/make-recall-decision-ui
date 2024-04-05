@@ -64,6 +64,7 @@ docker compose up -d --scale=${API_NAME}=0
 SYSTEM_CLIENT_ID=make-recall-decision-api \
 SYSTEM_CLIENT_SECRET=clientsecret \
 HMPPS_AUTH_URL=http://localhost:9090/auth \
+MANAGE_USERS_API_URL=http://localhost:7080 \
 OFFENDER_SEARCH_ENDPOINT_URL=http://localhost:9080 \
 CVL_API_ENDPOINT_URL=http://localhost:9070 \
 PPUD_AUTOMATION_API_ENDPOINT_URL=http://localhost:9370 \
