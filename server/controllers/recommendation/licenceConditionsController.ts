@@ -105,24 +105,30 @@ async function post(req: Request, res: Response, _: NextFunction) {
       cvlLicenceConditionsBreached: {
         standardLicenceConditions: {
           selected: selectedStandardConditions,
-          allOptions: caseSummary.cvlLicence.standardLicenceConditions.map(condition => ({
-            code: condition.code,
-            text: condition.text,
-          })),
+          allOptions: caseSummary.cvlLicence.standardLicenceConditions
+            .filter(condition => !!condition)
+            .map(condition => ({
+              code: condition.code,
+              text: condition.text,
+            })),
         },
         additionalLicenceConditions: {
           selected: selectedAdditionalLicenceConditions,
-          allOptions: caseSummary.cvlLicence.additionalLicenceConditions.map(condition => ({
-            code: condition.code,
-            text: condition.text,
-          })),
+          allOptions: caseSummary.cvlLicence.additionalLicenceConditions
+            .filter(condition => !!condition)
+            .map(condition => ({
+              code: condition.code,
+              text: condition.text,
+            })),
         },
         bespokeLicenceConditions: {
           selected: selectedBespokeLicenceConditions,
-          allOptions: caseSummary.cvlLicence.bespokeConditions.map(condition => ({
-            code: condition.code,
-            text: condition.text,
-          })),
+          allOptions: caseSummary.cvlLicence.bespokeConditions
+            .filter(condition => !!condition)
+            .map(condition => ({
+              code: condition.code,
+              text: condition.text,
+            })),
         },
       },
       additionalLicenceConditionsText,
