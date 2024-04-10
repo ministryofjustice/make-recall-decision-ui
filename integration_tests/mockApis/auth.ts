@@ -131,7 +131,7 @@ const stubUser = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/auth/api/user/me',
+      urlPattern: '/users/me',
     },
     response: {
       status: 200,
@@ -139,10 +139,12 @@ const stubUser = () =>
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: {
-        staffId: 231232,
         username: 'USER1',
         active: true,
         name: 'john smith',
+        authSource: 'delius',
+        userId: '2500485109',
+        uuid: 'a0701e84-71a6-4a20-95a7-59082cc57b00',
       },
     },
   })
@@ -151,7 +153,7 @@ const stubUserEmail = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/auth/api/me/email',
+      urlPattern: '/users/me/email',
     },
     response: {
       status: 200,

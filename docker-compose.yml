@@ -26,6 +26,19 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
+  hmpps-manage-users-api:
+    image: wiremock/wiremock
+    networks:
+      - hmpps
+    container_name: fake-manage-users-api
+    ports:
+      - "7080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ping" ]
+    command: --verbose --local-response-templating
+    volumes:
+      - ./fake-manage-users-api:/home/wiremock
+
   make-recall-decision-ui:
     build:
       context: .
@@ -45,6 +58,7 @@ services:
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       - MAKE_RECALL_DECISION_API_URL=http://make-recall-decision-api:8080
+      - MANAGE_USERS_API_URL=http://fake-manage-users-api:8080
       - MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL=http://fake-delius-integration-api:8080
       - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:9090/verification
       # These will need to match new creds in the seed auth service auth
