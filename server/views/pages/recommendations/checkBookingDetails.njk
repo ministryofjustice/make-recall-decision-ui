@@ -1,5 +1,4 @@
 {% extends "../../partials/layout.njk" %}
-
 {% macro getRiskLevelText(level) %}
     {% if level == 'VERY_HIGH' %}
         Very high
@@ -13,41 +12,48 @@
         Not applicable
     {% endif %}
 {% endmacro %}
-
 {% macro formatAddress(address) %}
     {% if not address.noFixedAbode %}
-     <p class="govuk-body">
-        {% if address.line1 %}
-            {{ address.line1 }},
-        {% endif %}
-        {% if address.line2 %}
-            {{ address.line2 }},
-        {% endif %}
-        {% if address.town %}
-            {{ address.town }},
-        {% endif %}
-        {% if address.postcode %}
-            {{ address.postcode }}
-        {% endif %}
-    </p>
+        <p class="govuk-body">
+            {% if address.line1 %}
+                {{ address.line1 }},
+            {% endif %}
+            {% if address.line2 %}
+                {{ address.line2 }},
+            {% endif %}
+            {% if address.town %}
+                {{ address.town }},
+            {% endif %}
+            {% if address.postcode %}
+                {{ address.postcode }}
+            {% endif %}
+        </p>
     {% endif %}
 {% endmacro %}
-
 {% macro blankSafe(value, mandatory, message) %}
     {% if value %}
         {{ value }}
     {% else %}
         {% if mandatory %}
-            <svg class="govuk-icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-                <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8 C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"></path>
+            <svg
+                class="govuk-icon"
+                fill="currentColor"
+                role="presentation"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 25 25"
+                height="25"
+                width="25">
+                <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8
+                    C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"></path>
             </svg>
             {{ message }}
         {% else %}
-            - <span class="govuk-visually-hidden">no value</span>
+            -
+            <span class="govuk-visually-hidden">no value</span>
         {% endif %}
     {% endif %}
 {% endmacro %}
-
 {% macro editedBadge(display) %}
     {% if display %}
         <strong class="govuk-tag">
@@ -55,87 +61,70 @@
         </strong>
     {% endif %}
 {% endmacro %}
-
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
-
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
-
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include '../../partials/error-summary.njk' %}
-
+            {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-
             <p class="govuk-body">
-                These details will go into a PPUD record.  You should:
+                These details will go into a PPUD record. You should:
             </p>
-
             <div class='govuk-list govuk-list--number'>
-
                 {% if flags.flagSupportingDocuments %}
                     <div>Uploading supporting documents.</div>
-
-                    <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
-                                               href='/recommendations/{{ recommendation.id }}/supporting-documents'>Upload documents</a>
+                    <a
+                        class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
+                        href='/recommendations/{{ recommendation.id }}/supporting-documents'>Upload documents</a>
                 {% endif %}
-
                 <div>Double-check everything is correct.</div>
                 <div>Edit anything that's wrong.</div>
-
                 {% if warnings|length %}
                     {% set html %}
-                        <p class="govuk-body-m govuk-!-margin-bottom-0">
-                            These details are different in PPUD.  Edit anything that's wrong.
-
-                            <div class="govuk-list govuk-!-margin-bottom-0">
+                    <p class="govuk-body-m govuk-!-margin-bottom-0">
+                        These details are different in PPUD. Edit anything that's wrong.
+                        <div class="govuk-list govuk-!-margin-bottom-0">
                             {% for key, val in warnings %}
-                                  <div>
+                                <div>
                                     <span class="govuk-body govuk-!-font-weight-bold">{{ key | replace("-", " - ") }}:</span>
                                     <span class="govuk-body">{{ blankSafe(val) }}</span>
-                                  </div>
+                                </div>
                             {% endfor %}
-                            </div>
-                        </p>
+                        </div>
+                    </p>
                     {% endset %}
-
                     {{ govukNotificationBanner({
                         titleText: 'Some NOMIS information is different to PPUD',
                         html: html,
                         classes: "govuk-notification-banner--info govuk-!-margin-top-2 govuk-!-margin-bottom-2"
                     }) }}
                 {% endif %}
-
                 <div>Continue to the next page and select the index offence.</div>
             </div>
-
             {% if errorMessage %}
                 {% set html %}
-                    <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
-                    <span> {{errorMessage}}</span>
+                <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
+                <span>
+                    {{ errorMessage }}</span>
                 {% endset %}
-
                 {{ mojBanner({
                     type: 'warning',
                     html: html,
                     iconFallbackText: 'none'
                 }) }}
             {% endif %}
-
         </div>
         <div class="govuk-grid-column-full-from-desktop">
             <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
-
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}"/>
                 <h2 class='govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-0'>Personal details from NOMIS</h2>
-
                 <div class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                        </div>
+                        <div class="govuk-summary-list__key"></div>
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
@@ -143,9 +132,10 @@
                         </div>
                         <div class="govuk-summary-list__value">
                             {% if recommendation.prisonOffender.image %}
-                            <img src="{{ recommendation.prisonOffender.image }}"/>
+                                <img src="{{ recommendation.prisonOffender.image }}"/>
                             {% else %}
-                            - <span class="govuk-visually-hidden">no value</span>
+                                -
+                                <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
                         </div>
                     </div>
@@ -183,8 +173,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.gender) }}
-                            Gender
+                            {{ errorDisplay(errors.gender) }} Gender
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.gender, true, 'Enter a gender') }}
@@ -195,8 +184,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.ethnicity) }}
-                            Ethnicity
+                            {{ errorDisplay(errors.ethnicity) }} Ethnicity
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'Enter an ethnicity') }}
@@ -231,8 +219,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.prisonNumber) }}
-                            Prison booking number
+                            {{ errorDisplay(errors.prisonNumber) }} Prison booking number
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ editedBadge(edited.prisonNumber) }}
@@ -244,11 +231,10 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.releasingPrison) }}
-                            Releasing prison
+                            {{ errorDisplay(errors.releasingPrison) }} Releasing prison
                         </div>
                         <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter releasing prison') }}
+                            {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison') }}
                         </div>
                         <div class="govuk-summary-list__actions">
                             <a class='govuk-link' href='edit-releasing-prison'>Edit</a>
@@ -256,8 +242,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.legislationReleasedUnder) }}
-                            Legislation released under
+                            {{ errorDisplay(errors.legislationReleasedUnder) }} Legislation released under
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under') }}
@@ -278,14 +263,14 @@
                             {% elseif recommendation.prisonOffender.status == "INACTIVE TRN" %}
                                 In transit - Unlawfully at large (UAL)
                             {% else %}
-                                - <span class="govuk-visually-hidden">no value</span>
+                                -
+                                <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
                         </div>
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.custodyType) }}
-                            Custody type
+                            {{ errorDisplay(errors.custodyType) }} Custody type
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.custodyType, true, 'Enter a custody type') }}
@@ -304,7 +289,8 @@
                                 {{ formatAddress(address) }}
                             {% endfor %}
                             {% if not recommendation.personOnProbation.addresses %}
-                                - <span class="govuk-visually-hidden">no value</span>
+                                -
+                                <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
                             <p class="govuk-body govuk-!-font-weight-bold">
                                 Additional address
@@ -318,14 +304,10 @@
                         </div>
                     </div>
                 </div>
-
-
                 <h2 class='govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0'>Probation details from the Part A</h2>
-
                 <div class="govuk-summary-list govuk-!-margin-bottom-4">
                     <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                        </div>
+                        <div class="govuk-summary-list__key"></div>
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
@@ -367,8 +349,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.probationArea) }}
-                            Probation area
+                            {{ errorDisplay(errors.probationArea) }} Probation area
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'Enter a probation area') }}
@@ -403,8 +384,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.policeForce) }}
-                            Local police contact
+                            {{ errorDisplay(errors.policeForce) }} Local police contact
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'Enter a local police force') }}
@@ -431,8 +411,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.mappaLevel) }}
-                            MAPPA level
+                            {{ errorDisplay(errors.mappaLevel) }} MAPPA level
                         </div>
                         <div class="govuk-summary-list__value">
                             {{ blankSafe(recommendation.bookRecallToPpud.mappaLevel, true, 'Enter a MAPPA level') }}
