@@ -46,6 +46,7 @@ const TEMPLATE = {
         expandedText: null as string,
         category: null as string,
       },
+      null,
     ],
     additionalLicenceConditions: [
       {
@@ -54,6 +55,7 @@ const TEMPLATE = {
         expandedText: 'Expanded additional licence condition',
         category: 'Freedom of movement',
       },
+      null,
     ],
     bespokeConditions: [
       {
@@ -62,6 +64,7 @@ const TEMPLATE = {
         expandedText: null as string,
         category: null as string,
       },
+      null,
     ],
   },
 }
