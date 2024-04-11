@@ -201,7 +201,7 @@
     "sass": "^1.74.1",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.4",
+    "typescript": "^5.4.5",
     "wait-for-expect": "^3.0.2",
     "xml2js": "^0.6.0"
   },
