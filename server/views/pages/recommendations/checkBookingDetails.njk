@@ -16,23 +16,23 @@
 
 {% macro formatAddress(address) %}
     {% if not address.noFixedAbode %}
-     <p class="govuk-body">
-        {% if address.line1 %}
-            {{ address.line1 }},
-        {% endif %}
-        {% if address.line2 %}
-            {{ address.line2 }},
-        {% endif %}
-        {% if address.town %}
-            {{ address.town }},
-        {% endif %}
-        {% if address.postcode %}
-            {{ address.postcode }}
-        {% endif %}
-    </p>
+        {% set addr = [] %}
+        <p class="govuk-body">
+            {% if address.line1 %}
+                {{ address.line1 }}<br/>
+            {% endif %}
+            {% if address.line2 %}
+                {{ address.line2 }}<br/>
+            {% endif %}
+            {% if address.town %}
+                {{ address.town }}<br/>
+            {% endif %}
+            {% if address.postcode %}
+                {{ address.postcode }}<br/>
+            {% endif %}
+        </p>
     {% endif %}
 {% endmacro %}
-
 {% macro blankSafe(value, mandatory, message) %}
     {% if value %}
         {{ value }}
@@ -65,7 +65,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include '../../partials/error-summary.njk' %}
+            {% include '../../partials/error-summary.njk' %}
 
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
@@ -79,7 +79,7 @@
                     <div>Uploading supporting documents.</div>
 
                     <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
-                                               href='/recommendations/{{ recommendation.id }}/supporting-documents'>Upload documents</a>
+                        href='/recommendations/{{ recommendation.id }}/supporting-documents'>Upload documents</a>
                 {% endif %}
 
                 <div>Double-check everything is correct.</div>
@@ -87,18 +87,18 @@
 
                 {% if warnings|length %}
                     {% set html %}
-                        <p class="govuk-body-m govuk-!-margin-bottom-0">
+                    <p class="govuk-body-m govuk-!-margin-bottom-0">
                             These details are different in PPUD.  Edit anything that's wrong.
 
-                            <div class="govuk-list govuk-!-margin-bottom-0">
+                        <div class="govuk-list govuk-!-margin-bottom-0">
                             {% for key, val in warnings %}
-                                  <div>
+                                <div>
                                     <span class="govuk-body govuk-!-font-weight-bold">{{ key | replace("-", " - ") }}:</span>
                                     <span class="govuk-body">{{ blankSafe(val) }}</span>
-                                  </div>
+                                </div>
                             {% endfor %}
-                            </div>
-                        </p>
+                        </div>
+                    </p>
                     {% endset %}
 
                     {{ govukNotificationBanner({
@@ -113,7 +113,7 @@
 
             {% if errorMessage %}
                 {% set html %}
-                    <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
+                <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
                     <span> {{errorMessage}}</span>
                 {% endset %}
 
@@ -143,7 +143,7 @@
                         </div>
                         <div class="govuk-summary-list__value">
                             {% if recommendation.prisonOffender.image %}
-                            <img src="{{ recommendation.prisonOffender.image }}"/>
+                                <img src="{{ recommendation.prisonOffender.image }}"/>
                             {% else %}
                             - <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
@@ -306,15 +306,16 @@
                             {% if not recommendation.personOnProbation.addresses %}
                                 - <span class="govuk-visually-hidden">no value</span>
                             {% endif %}
-                            <p class="govuk-body govuk-!-font-weight-bold">
-                                Additional address
-                            </p>
-                            <span class="govuk-body">
-                                {{ blankSafe(recommendation.isMainAddressWherePersonCanBeFound.details) }}
-                            </span>
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='xyz'>Edit</a>
+                            {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
+                                <p class="govuk-body govuk-!-font-weight-bold">
+                                    Additional address
+                                </p>
+                                <span class="govuk-body">
+                                    <pre class="govuk-body">
+                                    {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
+                                    </pre>
+                                </span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
