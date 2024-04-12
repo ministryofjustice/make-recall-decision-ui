@@ -54,10 +54,12 @@ export const searchForPpcs = (token: string, crn: string): Promise<PpcsSearchRes
 
 export const searchForPrisonOffender = async (token: string, nomsId: string): Promise<PrisonOffenderSearchResponse> => {
   const body: Record<string, unknown> = {}
-  if (nomsId) {
-    body.nomsId = nomsId
+
+  if (!nomsId) {
+    return
   }
 
+  body.nomsId = nomsId
   try {
     return (await restClient(token).post({
       path: `${routes.prisonOffenderSearch}`,
@@ -113,17 +115,6 @@ export const ppudDetails = (token: string, id: string): Promise<PpudDetailsRespo
   return restClient(token).post({
     path: `${routes.ppudDetails}${id}`,
   }) as Promise<PpudDetailsResponse>
-}
-
-export const bookRecallToPpud = (
-  token: string,
-  nomisId: string,
-  body: Record<string, string | boolean>
-): Promise<PpudSearchResponse> => {
-  return restClient(token).post({
-    path: `/ppud/book-recall/${nomisId}`,
-    data: body,
-  }) as Promise<PpudSearchResponse>
 }
 
 export const ppudCreateOffender = (
