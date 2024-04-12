@@ -17,7 +17,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagPpcs: {
     label: 'Enable PPCS',
     description: 'Enables continuation in PPCS',
-    default: false,
+    default: true,
   },
   flagProbationAdmin: {
     label: 'Enable Probation Admin',
