@@ -103,6 +103,8 @@ export const strings: Record<string, Record<string, string>> = {
     invalidPPCSEmail: 'Enter an email address in the correct format, like name@example.com',
     noReleaseUnderECSLSelected: 'Select whether {{ fullName }} has been released on an ECSL',
     ppudBookingError: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
+    fileSizeExceeded: 'The file must be smaller than 500KB',
+    invalidFilename: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',

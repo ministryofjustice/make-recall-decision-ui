@@ -88,4 +88,55 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1234/supporting-documents`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
+
+  it('post with invalid data', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+      },
+      body: {
+        type: 'part-a',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'NAT_Recall?Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512001,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+    await supportingDocumentUploadController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'file',
+        text: 'The file must be smaller than 500KB',
+        href: '#file',
+        errorId: 'fileSizeExceeded',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        name: 'file',
+        text: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
+        href: '#file',
+        errorId: 'invalidFilename',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
 })

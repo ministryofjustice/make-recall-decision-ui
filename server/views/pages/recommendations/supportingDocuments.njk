@@ -22,11 +22,19 @@
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-font-weight-bold"> Part A </td>
-                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ hyphenForBlank(PPUDPartA.filename) }} </td>
+                        {% if PPUDPartA.filename %}
+                            <td class="govuk-table__cell overflow-wrap-anywhere">
+                                <a href="/recommendations/{{ recommendation.id }}/supporting-document-download/{{ PPUDPartA.id }}">
+                                    {{ PPUDPartA.filename }}
+                                </a>
+                            </td>
+                        {% else %}
+                            <td class="govuk-table__cell overflow-wrap-anywhere"> - </td>
+                        {% endif %}
                         <td class="govuk-table__cell">
                             {% if PPUDPartA.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/part-a/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
@@ -47,7 +55,7 @@
                         <td class="govuk-table__cell">
                             {% if PPUDLicenceDocument.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/licence-document/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
@@ -68,7 +76,7 @@
                         <td class="govuk-table__cell">
                             {% if PPUDProbationEmail.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/probation-email/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
@@ -89,7 +97,7 @@
                         <td class="govuk-table__cell">
                             {% if PPUDOASys.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/oasys/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
@@ -110,7 +118,7 @@
                         <td class="govuk-table__cell">
                             {% if PPUDPrecons.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/precons/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
@@ -131,7 +139,7 @@
                         <td class="govuk-table__cell">
                             {% if PPUDPSR.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/psr/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
@@ -152,7 +160,7 @@
                         <td class="govuk-table__cell">
                             {% if PPUDChargeSheet.id %}
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                    href='/recommendations/{{ recommendation.id }}/xyz'>
+                                    href='/recommendations/{{ recommendation.id }}/supporting-document-replace/charge-sheet/{{ PPUDPartA.id }}'>
                                     Change
                                 </a>
                                 <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'

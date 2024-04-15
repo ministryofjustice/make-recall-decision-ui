@@ -30,6 +30,7 @@ import { PpudCreateRecallResponse } from '../@types/make-recall-decision-api/mod
 import { PpudUpdateReleaseResponse } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseResponse'
 import { PpudUpdateOffenderRequest } from '../@types/make-recall-decision-api/models/PpudUpdateOffenderRequest'
 import { PpudCreateSentenceResponse } from '../@types/make-recall-decision-api/models/PpudCreateSentenceResponse'
+import { SupportingDocumentResponse } from '../@types/make-recall-decision-api/models/SupportingDocumentResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -382,4 +383,21 @@ export const uploadSupportingDocument = ({
     data: { filename, type, mimetype, data },
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<SupportingDocument[]>
+}
+
+export const downloadSupportingDocument = ({
+  recommendationId,
+  token,
+  id,
+  featureFlags,
+}: {
+  recommendationId: string
+  token: string
+  id: string
+  featureFlags?: FeatureFlags
+}): Promise<SupportingDocumentResponse> => {
+  return restClient(token).get({
+    path: `${routes.recommendations}/${recommendationId}/documents/${id}`,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<SupportingDocumentResponse>
 }

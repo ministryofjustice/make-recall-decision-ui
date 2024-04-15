@@ -65,7 +65,7 @@ export default function createApp(userService: UserService): express.Application
   app.use(setupRecommendationStatusCheck())
 
   // setup mime multipart file support - before csrf
-  app.use(multer({ limits: { fileSize: 500 * 1024 } }).single('file'))
+  app.use(multer().single('file'))
 
   app.use(setUpCsrf())
 

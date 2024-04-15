@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 import { SupportingDocumentType } from '../../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
+import { makeErrorObject } from '../../utils/errors'
+import { strings } from '../../textStrings/en'
 
 const typeLookup: Record<string, SupportingDocumentType> = {
   'part-a': SupportingDocumentType.PPUDPartA,
@@ -38,6 +40,35 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   if (req.file) {
+    const errors = []
+
+    if (req.file.size > 500 * 1024) {
+      const errorId = 'fileSizeExceeded'
+      errors.push(
+        makeErrorObject({
+          id: 'file',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+
+    if (!req.file.originalname.match(/^[.A-Za-z0-9!_-]+$/)) {
+      const errorId = 'invalidFilename'
+      errors.push(
+        makeErrorObject({
+          id: 'file',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+
+    if (errors.length > 0) {
+      req.session.errors = errors
+      return res.redirect(303, req.originalUrl)
+    }
+
     const data = req.file.buffer.toString('base64')
 
     await uploadSupportingDocument({
