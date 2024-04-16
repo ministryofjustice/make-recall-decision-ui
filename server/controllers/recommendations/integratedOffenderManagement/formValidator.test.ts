@@ -71,7 +71,7 @@ describe('validateIntegratedOffenderManagement', () => {
       {
         href: '#isUnderIntegratedOffenderManagement',
         name: 'isUnderIntegratedOffenderManagement',
-        text: 'You must select whether {{ fullName }} is under Integrated Offender Management',
+        text: 'Select whether {{ fullName }} is under Integrated Offender Management',
         errorId: 'noIntegratedOffenderManagementSelected',
       },
     ])
@@ -88,7 +88,7 @@ describe('validateIntegratedOffenderManagement', () => {
       {
         href: '#isUnderIntegratedOffenderManagement',
         name: 'isUnderIntegratedOffenderManagement',
-        text: 'You must select whether {{ fullName }} is under Integrated Offender Management',
+        text: 'Select whether {{ fullName }} is under Integrated Offender Management',
         errorId: 'noIntegratedOffenderManagementSelected',
       },
     ])

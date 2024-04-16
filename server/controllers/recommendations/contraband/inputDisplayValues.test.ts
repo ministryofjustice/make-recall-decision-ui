@@ -26,7 +26,7 @@ describe('inputDisplayValuesContraband', () => {
   it("should use unsavedValue over apiValue for value, and reset details, if there's an error for missing details", () => {
     const errors = {
       hasContrabandRiskDetailsYes: {
-        text: 'You must enter details of the arrest issues',
+        text: 'Enter details of the arrest issues',
         href: '#hasContrabandRiskDetailsYes',
       },
     }

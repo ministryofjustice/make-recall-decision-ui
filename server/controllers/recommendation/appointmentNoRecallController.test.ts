@@ -212,7 +212,7 @@ describe('post', () => {
       {
         errorId: 'missingProbationPhoneNumber',
         href: '#probationPhoneNumber',
-        text: 'You must give a telephone number for probation',
+        text: 'Give a telephone number for probation',
         name: 'probationPhoneNumber',
         invalidParts: undefined,
         values: undefined,

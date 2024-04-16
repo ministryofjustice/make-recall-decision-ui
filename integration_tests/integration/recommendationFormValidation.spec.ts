@@ -36,7 +36,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'responseToProbation',
-      errorText: 'You must explain how Paula Smith has responded to probation',
+      errorText: 'Explain how Paula Smith has responded to probation',
     })
   })
 
@@ -56,7 +56,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'licenceConditionsBreached',
-      errorText: 'You must select one or more licence conditions',
+      errorText: 'Select one or more licence conditions',
     })
   })
 
@@ -68,7 +68,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'alternativesToRecallTried',
-      errorText: 'You must select which alternatives to recall have been tried already',
+      errorText: 'Select which alternatives to recall have been tried already',
     })
     cy.selectCheckboxes('What alternatives to recall have been tried already?', [
       'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
@@ -154,7 +154,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: 'You must select a recommendation',
+      errorText: 'Select a recommendation',
     })
   })
 
@@ -229,7 +229,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isUnderIntegratedOffenderManagement',
-      errorText: 'You must select whether Paula Smith is under Integrated Offender Management',
+      errorText: 'Select whether Paula Smith is under Integrated Offender Management',
     })
   })
 
@@ -258,7 +258,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasVictimsInContactScheme',
-      errorText: 'You must select whether there are any victims in the victim contact scheme',
+      errorText: 'Select whether there are any victims in the victim contact scheme',
     })
   })
 
@@ -301,7 +301,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasArrestIssuesDetailsYes',
-      errorText: 'You must enter details of the arrest issues',
+      errorText: 'Enter details of the arrest issues',
     })
   })
 
@@ -319,7 +319,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasContrabandRiskDetailsYes',
-      errorText: 'You must enter details of the contraband concerns',
+      errorText: 'Enter details of the contraband concerns',
     })
   })
 
@@ -337,7 +337,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isMainAddressWherePersonCanBeFoundDetailsNo',
-      errorText: 'You must enter the correct location',
+      errorText: 'Enter the correct location',
     })
   })
 
@@ -427,7 +427,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'triggerLeadingToRecall',
-      errorText: 'You must explain what has made you consider recalling Paula Smith',
+      errorText: 'Explain what has made you consider recalling Paula Smith',
     })
   })
   it('Rationale Check', () => {
@@ -462,7 +462,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoRecallRationale',
-      errorText: 'You must explain your decision',
+      errorText: 'Explain your decision',
     })
   })
   it('SPO rationale - No', () => {
@@ -473,7 +473,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoNoRecallRationale',
-      errorText: 'You must explain your decision',
+      errorText: 'Explain your decision',
     })
   })
   it('SPO countersignature', () => {
@@ -484,7 +484,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Countersign')
     cy.assertErrorMessage({
       fieldName: 'managerCountersignatureExposition',
-      errorText: 'You must add a comment to confirm your countersignature',
+      errorText: 'Add a comment to confirm your countersignature',
     })
   })
   it('ACO countersignature', () => {
@@ -495,7 +495,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Countersign')
     cy.assertErrorMessage({
       fieldName: 'managerCountersignatureExposition',
-      errorText: 'You must add a comment to confirm your countersignature',
+      errorText: 'Add a comment to confirm your countersignature',
     })
   })
 })

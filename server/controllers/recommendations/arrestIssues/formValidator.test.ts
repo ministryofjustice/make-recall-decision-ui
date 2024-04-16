@@ -81,7 +81,7 @@ describe('validateArrestIssues', () => {
         {
           href: '#hasArrestIssuesDetailsYes',
           name: 'hasArrestIssuesDetailsYes',
-          text: 'You must enter details of the arrest issues',
+          text: 'Enter details of the arrest issues',
           errorId: 'missingArrestIssuesDetail',
         },
       ])

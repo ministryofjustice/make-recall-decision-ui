@@ -104,7 +104,7 @@ describe('validateAddress', () => {
         {
           href: '#isMainAddressWherePersonCanBeFoundDetailsNo',
           name: 'isMainAddressWherePersonCanBeFoundDetailsNo',
-          text: 'You must enter the correct location',
+          text: 'Enter the correct location',
           errorId: 'missingLocationDetail',
         },
       ])
@@ -126,7 +126,7 @@ describe('validateAddress', () => {
         {
           href: '#isMainAddressWherePersonCanBeFoundDetailsNo',
           name: 'isMainAddressWherePersonCanBeFoundDetailsNo',
-          text: 'You must enter the correct location',
+          text: 'Enter the correct location',
           errorId: 'missingLocationDetail',
         },
       ])

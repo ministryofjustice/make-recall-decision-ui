@@ -15,7 +15,7 @@ describe('inputDisplayValuesRecallTypeIndeterminate', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       recallType: {
-        text: 'You must select a recommendation',
+        text: 'Select a recommendation',
         href: '#recallType',
       },
     }

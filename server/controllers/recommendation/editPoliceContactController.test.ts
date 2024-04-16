@@ -24,7 +24,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editPoliceContact' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editPoliceContact')
     expect(res.locals.policeForces).toEqual([
-      { text: 'Select police force', value: '' },
+      { text: 'Enter police force', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -105,7 +105,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#policeForce',
         name: 'policeForce',
-        text: 'Select police force',
+        text: 'Enter police force',
         values: undefined,
       },
     ])

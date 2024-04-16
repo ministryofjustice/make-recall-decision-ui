@@ -8,7 +8,7 @@ describe('inputDisplayValuesEmergencyRecall', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       isThisAnEmergencyRecall: {
-        text: 'You must select whether this is an emergency recall or not',
+        text: 'Select whether this is an emergency recall or not',
         href: '#isThisAnEmergencyRecall',
       },
     }

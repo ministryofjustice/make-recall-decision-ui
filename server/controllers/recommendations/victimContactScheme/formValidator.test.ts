@@ -64,7 +64,7 @@ describe('validateVictimContactScheme', () => {
       {
         href: '#hasVictimsInContactScheme',
         name: 'hasVictimsInContactScheme',
-        text: 'You must select whether there are any victims in the victim contact scheme',
+        text: 'Select whether there are any victims in the victim contact scheme',
         errorId: 'noVictimContactSchemeSelected',
       },
     ])
@@ -81,7 +81,7 @@ describe('validateVictimContactScheme', () => {
       {
         href: '#hasVictimsInContactScheme',
         name: 'hasVictimsInContactScheme',
-        text: 'You must select whether there are any victims in the victim contact scheme',
+        text: 'Select whether there are any victims in the victim contact scheme',
         errorId: 'noVictimContactSchemeSelected',
       },
     ])

@@ -24,7 +24,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editReleasingPrison' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editReleasingPrison')
     expect(res.locals.releasingPrisons).toEqual([
-      { text: 'Select releasing prison', value: '' },
+      { text: 'Enter releasing prison', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -106,7 +106,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#releasingPrison',
         name: 'releasingPrison',
-        text: 'Select releasing prison',
+        text: 'Enter releasing prison',
         values: undefined,
       },
     ])

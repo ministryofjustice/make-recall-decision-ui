@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   })
   legislations.unshift({
-    text: 'Select legislation',
+    text: 'Enter legislation',
     value: '',
   })
 

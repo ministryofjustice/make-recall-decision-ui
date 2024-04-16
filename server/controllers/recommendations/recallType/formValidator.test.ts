@@ -237,7 +237,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsFixedTerm',
           name: 'recallTypeDetailsFixedTerm',
-          text: 'You must explain why you recommend this recall type',
+          text: 'Explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -262,7 +262,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsFixedTerm',
           name: 'recallTypeDetailsFixedTerm',
-          text: 'You must explain why you recommend this recall type',
+          text: 'Explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -287,7 +287,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsStandard',
           name: 'recallTypeDetailsStandard',
-          text: 'You must explain why you recommend this recall type',
+          text: 'Explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -312,7 +312,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallTypeDetailsStandard',
           name: 'recallTypeDetailsStandard',
-          text: 'You must explain why you recommend this recall type',
+          text: 'Explain why you recommend this recall type',
           errorId: 'missingRecallTypeDetail',
         },
       ])
@@ -329,7 +329,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'You must select a recommendation',
+          text: 'Select a recommendation',
           errorId: 'noRecallTypeSelected',
         },
       ])
@@ -346,7 +346,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'You must select a recommendation',
+          text: 'Select a recommendation',
           errorId: 'noRecallTypeSelected',
         },
       ])

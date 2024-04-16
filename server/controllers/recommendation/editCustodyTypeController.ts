@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   })
   custodyTypes.unshift({
-    text: 'Select custody type',
+    text: 'Enter custody type',
     value: '',
   })
 

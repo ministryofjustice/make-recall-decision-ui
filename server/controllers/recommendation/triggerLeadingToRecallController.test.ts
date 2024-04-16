@@ -107,7 +107,7 @@ describe('post', () => {
         href: '#triggerLeadingToRecall',
         invalidParts: undefined,
         name: 'triggerLeadingToRecall',
-        text: 'You must explain what has made you consider recalling {{ fullName }}',
+        text: 'Explain what has made you consider recalling {{ fullName }}',
         values: undefined,
       },
     ])

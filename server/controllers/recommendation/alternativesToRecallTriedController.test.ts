@@ -64,13 +64,13 @@ describe('get', () => {
           list: [
             {
               name: 'licenceConditionsBreached',
-              text: 'You must select one or more licence conditions',
+              text: 'Select one or more licence conditions',
               href: '#licenceConditionsBreached',
               errorId: 'noLicenceConditionsSelected',
             },
           ],
           licenceConditionsBreached: {
-            text: 'You must select one or more licence conditions',
+            text: 'Select one or more licence conditions',
             href: '#licenceConditionsBreached',
             errorId: 'noLicenceConditionsSelected',
           },
@@ -88,13 +88,13 @@ describe('get', () => {
       licenceConditionsBreached: {
         errorId: 'noLicenceConditionsSelected',
         href: '#licenceConditionsBreached',
-        text: 'You must select one or more licence conditions',
+        text: 'Select one or more licence conditions',
       },
       list: [
         {
           href: '#licenceConditionsBreached',
           errorId: 'noLicenceConditionsSelected',
-          text: 'You must select one or more licence conditions',
+          text: 'Select one or more licence conditions',
           name: 'licenceConditionsBreached',
         },
       ],
@@ -170,7 +170,7 @@ describe('post', () => {
         href: '#alternativesToRecallTried',
         invalidParts: undefined,
         name: 'alternativesToRecallTried',
-        text: 'You must select which alternatives to recall have been tried already',
+        text: 'Select which alternatives to recall have been tried already',
         values: undefined,
       },
     ])

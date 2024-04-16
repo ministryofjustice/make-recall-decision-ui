@@ -8,7 +8,7 @@ describe('inputDisplayValuesResponseToProbation', () => {
   it("should use empty string for value if there's an error for value", () => {
     const errors = {
       responseToProbation: {
-        text: 'You must explain how Paula Smith has responded to probation',
+        text: 'Explain how Paula Smith has responded to probation',
         href: '#responseToProbation',
       },
     }
