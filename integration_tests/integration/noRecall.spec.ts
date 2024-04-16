@@ -39,19 +39,19 @@ context('No recall', () => {
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'licenceBreach',
-        errorText: 'You must tell Paula Smith why the licence breach is a problem',
+        errorText: 'Tell Paula Smith why the licence breach is a problem',
       })
       cy.assertErrorMessage({
         fieldName: 'noRecallRationale',
-        errorText: 'You must tell Paula Smith why they are not being recalled',
+        errorText: 'Tell Paula Smith why they are not being recalled',
       })
       cy.assertErrorMessage({
         fieldName: 'popProgressMade',
-        errorText: 'You must remind Paula Smith about their progress',
+        errorText: 'Remind Paula Smith about their progress',
       })
       cy.assertErrorMessage({
         fieldName: 'futureExpectations',
-        errorText: "You must tell Paula Smith what you've agreed for the future",
+        errorText: "Tell Paula Smith what you've agreed for the future",
       })
     })
 

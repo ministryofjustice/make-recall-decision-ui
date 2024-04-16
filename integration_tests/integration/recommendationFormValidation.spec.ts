@@ -36,7 +36,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'responseToProbation',
-      errorText: 'You must explain how Paula Smith has responded to probation',
+      errorText: 'Explain how Paula Smith has responded to probation',
     })
   })
 
@@ -229,7 +229,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isUnderIntegratedOffenderManagement',
-      errorText: 'You must select whether Paula Smith is under Integrated Offender Management',
+      errorText: 'Select whether Paula Smith is under Integrated Offender Management',
     })
   })
 
@@ -427,7 +427,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'triggerLeadingToRecall',
-      errorText: 'You must explain what has made you consider recalling Paula Smith',
+      errorText: 'Explain what has made you consider recalling Paula Smith',
     })
   })
   it('Rationale Check', () => {
