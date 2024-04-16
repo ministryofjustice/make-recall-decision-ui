@@ -24,7 +24,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editCustodyType' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editCustodyType')
     expect(res.locals.custodyTypes).toEqual([
-      { text: 'Select custody type', value: '' },
+      { text: 'Enter custody type', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -106,7 +106,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#custodyType',
         name: 'custodyType',
-        text: 'Select custody type',
+        text: 'Enter custody type',
         values: undefined,
       },
     ])

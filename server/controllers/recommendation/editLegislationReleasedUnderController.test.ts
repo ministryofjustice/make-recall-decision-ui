@@ -24,7 +24,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editLegislationReleasedUnder' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editLegislationReleasedUnder')
     expect(res.locals.legislations).toEqual([
-      { text: 'Select legislation', value: '' },
+      { text: 'Enter legislation', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -106,7 +106,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#legislationReleasedUnder',
         name: 'legislationReleasedUnder',
-        text: 'Select legislation',
+        text: 'Enter legislation',
         values: undefined,
       },
     ])

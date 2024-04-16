@@ -32,7 +32,7 @@ describe('validateResponseToProbation', () => {
       {
         href: '#responseToProbation',
         name: 'responseToProbation',
-        text: 'You must explain how {{ fullName }} has responded to probation',
+        text: 'Explain how {{ fullName }} has responded to probation',
         errorId: 'missingResponseToProbation',
       },
     ])

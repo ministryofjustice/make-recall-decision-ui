@@ -47,7 +47,7 @@ describe('validateEmergencyRecall', () => {
       {
         href: '#isThisAnEmergencyRecall',
         name: 'isThisAnEmergencyRecall',
-        text: 'You must select whether this is an emergency recall or not',
+        text: 'Select whether this is an emergency recall or not',
         errorId: 'noEmergencyRecallSelected',
       },
     ])
@@ -64,7 +64,7 @@ describe('validateEmergencyRecall', () => {
       {
         href: '#isThisAnEmergencyRecall',
         name: 'isThisAnEmergencyRecall',
-        text: 'You must select whether this is an emergency recall or not',
+        text: 'Select whether this is an emergency recall or not',
         errorId: 'noEmergencyRecallSelected',
       },
     ])

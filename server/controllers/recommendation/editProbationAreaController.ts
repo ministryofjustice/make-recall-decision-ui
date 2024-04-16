@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   })
   ppudProbationAreas.unshift({
-    text: 'Select probation area',
+    text: 'Enter probation area',
     value: '',
   })
 

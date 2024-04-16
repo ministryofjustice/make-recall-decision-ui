@@ -105,7 +105,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#gender',
         name: 'gender',
-        text: 'Select gender',
+        text: 'Enter gender',
         values: undefined,
       },
     ])

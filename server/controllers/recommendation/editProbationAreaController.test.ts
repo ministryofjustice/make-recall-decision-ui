@@ -30,7 +30,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editProbationArea' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editProbationArea')
     expect(res.locals.ppudProbationAreas).toEqual([
-      { text: 'Select probation area', value: '' },
+      { text: 'Enter probation area', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
@@ -112,7 +112,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#probationArea',
         name: 'probationArea',
-        text: 'Select probation area',
+        text: 'Enter probation area',
         values: undefined,
       },
     ])

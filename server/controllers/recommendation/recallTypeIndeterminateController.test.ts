@@ -57,11 +57,11 @@ describe('get', () => {
               name: 'recallTypeDetailsStandard',
               href: '#recallTypeDetailsStandard',
               errorId: 'missingRecallTypeDetail',
-              html: 'You must explain why you recommend this recall type',
+              html: 'Explain why you recommend this recall type',
             },
           ],
           recallTypeDetailsStandard: {
-            text: 'You must explain why you recommend this recall type',
+            text: 'Explain why you recommend this recall type',
             href: '#recallTypeDetailsStandard',
             errorId: 'missingRecallTypeDetail',
           },
@@ -79,13 +79,13 @@ describe('get', () => {
       recallTypeDetailsStandard: {
         errorId: 'missingRecallTypeDetail',
         href: '#recallTypeDetailsStandard',
-        text: 'You must explain why you recommend this recall type',
+        text: 'Explain why you recommend this recall type',
       },
       list: [
         {
           href: '#recallTypeDetailsStandard',
           errorId: 'missingRecallTypeDetail',
-          html: 'You must explain why you recommend this recall type',
+          html: 'Explain why you recommend this recall type',
           name: 'recallTypeDetailsStandard',
         },
       ],

@@ -108,7 +108,7 @@ describe('validateNextAppointment', () => {
         errorId: 'noAppointmentTypeSelected',
         href: '#howWillAppointmentHappen',
         name: 'howWillAppointmentHappen',
-        text: 'You must select how the appointment will happen',
+        text: 'Select how the appointment will happen',
       },
       {
         errorId: 'blankDateTime',
@@ -128,7 +128,7 @@ describe('validateNextAppointment', () => {
         errorId: 'missingProbationPhoneNumber',
         href: '#probationPhoneNumber',
         name: 'probationPhoneNumber',
-        text: 'You must give a telephone number for probation',
+        text: 'Give a telephone number for probation',
       },
     ])
   })

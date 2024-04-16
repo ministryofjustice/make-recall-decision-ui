@@ -63,7 +63,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallLicenceBreachDetails',
         href: '#licenceBreach',
         name: 'licenceBreach',
-        text: 'You must tell {{ fullName }} why the licence breach is a problem',
+        text: 'Tell {{ fullName }} why the licence breach is a problem',
       },
     ])
   })
@@ -83,7 +83,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallRationale',
         href: '#noRecallRationale',
         name: 'noRecallRationale',
-        text: 'You must tell {{ fullName }} why they are not being recalled',
+        text: 'Tell {{ fullName }} why they are not being recalled',
       },
     ])
   })
@@ -103,7 +103,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallPopProgressMade',
         href: '#popProgressMade',
         name: 'popProgressMade',
-        text: 'You must remind {{ fullName }} about their progress',
+        text: 'Remind {{ fullName }} about their progress',
       },
     ])
   })
@@ -123,7 +123,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',
         name: 'futureExpectations',
-        text: "You must tell {{ fullName }} what you've agreed for the future",
+        text: "Tell {{ fullName }} what you've agreed for the future",
       },
     ])
   })
@@ -145,7 +145,7 @@ describe('validateReasonsForNoRecall', () => {
         errorId: 'noRecallFutureExpectations',
         href: '#futureExpectations',
         name: 'futureExpectations',
-        text: "You must tell {{ fullName }} what you've agreed for the future",
+        text: "Tell {{ fullName }} what you've agreed for the future",
       },
     ])
     expect(unsavedValues).toEqual(requestBody)

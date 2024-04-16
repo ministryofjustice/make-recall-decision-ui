@@ -16,7 +16,7 @@ describe('inputDisplayValuesRecallType', () => {
   it("should use empty string for value and details if there's an error for value", () => {
     const errors = {
       recallType: {
-        text: 'You must select a recommendation',
+        text: 'Select a recommendation',
         href: '#recallType',
       },
     }
@@ -31,7 +31,7 @@ describe('inputDisplayValuesRecallType', () => {
   it("should use unsavedValue over apiValue for value, and reset details, if there's an error for fixed term details", () => {
     const errors = {
       recallTypeDetailsFixedTerm: {
-        text: 'You must explain why you recommend this recall type',
+        text: 'Explain why you recommend this recall type',
         href: '#recallTypeDetailsFixedTerm',
       },
     }
@@ -48,7 +48,7 @@ describe('inputDisplayValuesRecallType', () => {
   it("should use unsavedValue over apiValue for value, and reset details, if there's an error for standard details", () => {
     const errors = {
       recallTypeDetailsStandard: {
-        text: 'You must explain why you recommend this recall type',
+        text: 'Explain why you recommend this recall type',
         href: '#recallTypeDetailsStandard',
       },
     }

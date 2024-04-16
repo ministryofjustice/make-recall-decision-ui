@@ -106,7 +106,7 @@ describe('post', () => {
         href: '#responseToProbation',
         invalidParts: undefined,
         name: 'responseToProbation',
-        text: 'You must explain how {{ fullName }} has responded to probation',
+        text: 'Explain how {{ fullName }} has responded to probation',
         values: undefined,
       },
     ])

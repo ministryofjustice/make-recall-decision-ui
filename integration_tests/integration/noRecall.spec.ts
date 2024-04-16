@@ -62,7 +62,7 @@ context('No recall', () => {
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'howWillAppointmentHappen',
-        errorText: 'You must select how the appointment will happen',
+        errorText: 'Select how the appointment will happen',
       })
       cy.assertErrorMessage({
         fieldName: 'dateTimeOfAppointment',
@@ -71,7 +71,7 @@ context('No recall', () => {
       })
       cy.assertErrorMessage({
         fieldName: 'probationPhoneNumber',
-        errorText: 'You must give a telephone number for probation',
+        errorText: 'Give a telephone number for probation',
       })
     })
   })

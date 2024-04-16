@@ -81,7 +81,7 @@ describe('validateContraband', () => {
         {
           href: '#hasContrabandRiskDetailsYes',
           name: 'hasContrabandRiskDetailsYes',
-          text: 'You must enter details of the contraband concerns',
+          text: 'Enter details of the contraband concerns',
           errorId: 'missingContrabandDetail',
         },
       ])

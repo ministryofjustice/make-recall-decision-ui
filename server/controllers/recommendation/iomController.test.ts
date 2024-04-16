@@ -157,7 +157,7 @@ describe('post', () => {
       {
         errorId: 'noIntegratedOffenderManagementSelected',
         href: '#isUnderIntegratedOffenderManagement',
-        text: 'You must select whether {{ fullName }} is under Integrated Offender Management',
+        text: 'Select whether {{ fullName }} is under Integrated Offender Management',
         name: 'isUnderIntegratedOffenderManagement',
         invalidParts: undefined,
         values: undefined,

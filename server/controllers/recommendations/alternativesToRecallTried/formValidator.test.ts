@@ -64,7 +64,7 @@ describe('validateAlternativesTried', () => {
       {
         href: '#alternativesToRecallTried',
         name: 'alternativesToRecallTried',
-        text: 'You must select which alternatives to recall have been tried already',
+        text: 'Select which alternatives to recall have been tried already',
         errorId: 'noAlternativesTriedSelected',
       },
     ])

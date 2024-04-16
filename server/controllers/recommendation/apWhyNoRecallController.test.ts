@@ -157,7 +157,7 @@ describe('post', () => {
         href: '#spoNoRecallRationale',
         invalidParts: undefined,
         name: 'spoNoRecallRationale',
-        text: 'You must explain your decision',
+        text: 'Explain your decision',
         values: undefined,
       },
     ])
@@ -194,7 +194,7 @@ describe('post', () => {
         href: '#odmName',
         invalidParts: undefined,
         name: 'odmName',
-        text: 'You must provide an out-of-hours manager name',
+        text: 'Provide an out-of-hours manager name',
         values: undefined,
       },
     ])

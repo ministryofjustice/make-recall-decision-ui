@@ -170,13 +170,13 @@ describe('get', () => {
           list: [
             {
               name: 'licenceConditionsBreached',
-              text: 'You must select one or more licence conditions',
+              text: 'Select one or more licence conditions',
               href: '#licenceConditionsBreached',
               errorId: 'noLicenceConditionsSelected',
             },
           ],
           licenceConditionsBreached: {
-            text: 'You must select one or more licence conditions',
+            text: 'Select one or more licence conditions',
             href: '#licenceConditionsBreached',
             errorId: 'noLicenceConditionsSelected',
           },
@@ -194,13 +194,13 @@ describe('get', () => {
       licenceConditionsBreached: {
         errorId: 'noLicenceConditionsSelected',
         href: '#licenceConditionsBreached',
-        text: 'You must select one or more licence conditions',
+        text: 'Select one or more licence conditions',
       },
       list: [
         {
           href: '#licenceConditionsBreached',
           errorId: 'noLicenceConditionsSelected',
-          text: 'You must select one or more licence conditions',
+          text: 'Select one or more licence conditions',
           name: 'licenceConditionsBreached',
         },
       ],
@@ -551,7 +551,7 @@ describe('post', () => {
         href: '#licenceConditionsBreached',
         invalidParts: undefined,
         name: 'licenceConditionsBreached',
-        text: 'You must select one or more licence conditions',
+        text: 'Select one or more licence conditions',
         values: undefined,
       },
     ])
@@ -589,7 +589,7 @@ describe('post', () => {
         href: '#licenceConditionsBreached',
         invalidParts: undefined,
         name: 'licenceConditionsBreached',
-        text: 'You must select one or more licence conditions',
+        text: 'Select one or more licence conditions',
         values: undefined,
       },
     ])

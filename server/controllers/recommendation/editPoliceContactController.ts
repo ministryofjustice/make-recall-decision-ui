@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   })
   policeForces.unshift({
-    text: 'Select police force',
+    text: 'Enter police force',
     value: '',
   })
 

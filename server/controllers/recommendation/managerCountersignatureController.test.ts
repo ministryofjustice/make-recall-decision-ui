@@ -74,11 +74,11 @@ describe('get', () => {
           name: 'managerCountersignatureExposition',
           href: '#managerCountersignatureExposition',
           errorId: 'missingManagerCountersignatureExposition',
-          html: 'You must add a comment to confirm your countersignature',
+          html: 'Add a comment to confirm your countersignature',
         },
       ],
       managerCountersignatureExposition: {
-        text: 'You must add a comment to confirm your countersignature',
+        text: 'Add a comment to confirm your countersignature',
         href: '#managerCountersignatureExposition',
         errorId: 'missingManagerCountersignatureExposition',
       },
@@ -233,7 +233,7 @@ describe('post', () => {
         href: '#managerCountersignatureExposition',
         invalidParts: undefined,
         name: 'managerCountersignatureExposition',
-        text: 'You must add a comment to confirm your countersignature',
+        text: 'Add a comment to confirm your countersignature',
         values: undefined,
       },
     ])
