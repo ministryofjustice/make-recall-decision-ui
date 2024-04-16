@@ -54,6 +54,8 @@ export const mockRes = ({
   header = jest.fn(),
   send = jest.fn(),
   set = jest.fn(),
+  writeHead = jest.fn(),
+  end = jest.fn(),
 }: {
   locals?: Record<string, unknown>
   token?: string
@@ -65,6 +67,8 @@ export const mockRes = ({
   header?: jest.Mock
   send?: jest.Mock
   set?: jest.Mock
+  writeHead?: jest.Mock
+  end?: jest.Mock
 } = {}): Response => {
   return {
     locals: {
@@ -85,6 +89,8 @@ export const mockRes = ({
     header,
     send,
     set,
+    writeHead,
+    end,
   } as unknown as Response
 }
 

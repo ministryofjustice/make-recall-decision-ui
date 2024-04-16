@@ -111,6 +111,7 @@ import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecall
 import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAgreeDecision'
 import suitabilityForFixedTermRecallController from '../controllers/recommendation/suitabilityForFixedTermRecallController'
+import supportingDocumentDownloadController from '../controllers/recommendation/supportingDocumentDownloadController'
 
 const recommendations = Router()
 
@@ -477,6 +478,8 @@ ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
 ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUploadController.post)
+
+ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
