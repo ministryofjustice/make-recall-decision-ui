@@ -104,6 +104,7 @@ export const strings: Record<string, Record<string, string>> = {
     ppudBookingError: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
     fileSizeExceeded: 'The file must be smaller than 500KB',
     invalidFilename: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
+    uploadFileFailure: 'The selected file could not be uploaded - try again',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
