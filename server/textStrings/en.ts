@@ -230,6 +230,7 @@ export const strings: Record<string, Record<string, string>> = {
     selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
     supportingDocuments: 'Add supporting documents for {{ fullName }}',
     supportingDocumentUpload: 'Upload supporting document',
+    supportingDocumentReplace: 'Replace supporting document',
     bookingSummary: 'Your recall booking - {{ fullName }}',
     whenSpoAgreedRecallDate: 'When did the SPO agree to this recall?',
   },

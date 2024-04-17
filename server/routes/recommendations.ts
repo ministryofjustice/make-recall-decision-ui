@@ -112,6 +112,7 @@ import bookingSummaryController from '../controllers/recommendation/bookingSumma
 import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAgreeDecision'
 import suitabilityForFixedTermRecallController from '../controllers/recommendation/suitabilityForFixedTermRecallController'
 import supportingDocumentDownloadController from '../controllers/recommendation/supportingDocumentDownloadController'
+import supportingDocumentReplaceController from '../controllers/recommendation/supportingDocumentReplaceController'
 
 const recommendations = Router()
 
@@ -478,6 +479,9 @@ ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
 ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUploadController.post)
+
+ppcsRouteBuilder.get('supporting-document-replace/:type/:id', supportingDocumentReplaceController.get)
+ppcsRouteBuilder.post('supporting-document-replace/:type/:id', supportingDocumentReplaceController.post)
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 

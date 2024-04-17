@@ -401,3 +401,27 @@ export const downloadSupportingDocument = ({
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<SupportingDocumentResponse>
 }
+
+export const replaceSupportingDocument = ({
+  recommendationId,
+  id,
+  token,
+  filename,
+  mimetype,
+  data,
+  featureFlags,
+}: {
+  recommendationId: string
+  id: string
+  token: string
+  filename: string
+  mimetype: string
+  data: string
+  featureFlags?: FeatureFlags
+}): Promise<SupportingDocument[]> => {
+  return restClient(token).patch({
+    path: `${routes.recommendations}/${recommendationId}/documents/${id}`,
+    data: { filename, mimetype, data },
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<SupportingDocument[]>
+}

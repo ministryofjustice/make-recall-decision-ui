@@ -7,7 +7,6 @@ export const routeUrls = isPreprodOrProd(process.env.ENVIRONMENT)
       searchByName: '/search-by-name',
       searchResultsByCRN: '/search-results-by-crn',
       searchResultsByName: '/search-results-by-name',
-      searchInPpud: '/search-in-ppud',
       cases: '/cases',
       recommendations: '/recommendations',
       accessibility: '/accessibility',

@@ -4,7 +4,6 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import { personSearchByCRN } from '../controllers/personSearch/personSearchByCRN'
 import { personSearchByName } from '../controllers/personSearch/personSearchByName'
 import { personSearchResults } from '../controllers/personSearch/personSearchResults'
-import { personSearchInPpud } from '../controllers/personSearch/personSearchInPpud'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
 import { startPage } from '../controllers/startPage/startPage'
@@ -41,7 +40,6 @@ export default function routes(router: Router): Router {
   get(routeUrls.searchByName, personSearchByName)
   get(routeUrls.searchResultsByCRN, personSearchResults)
   get(routeUrls.searchResultsByName, personSearchResultsByName)
-  get(routeUrls.searchInPpud, personSearchInPpud)
   get('/ppcs-search', ppcsSearch.get)
   get('/ppcs-search-results', ppcsSearchResultsController.get)
   get('/no-ppcs-search-results', noPpcsSearchResultsController.get)
