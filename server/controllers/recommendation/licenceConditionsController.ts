@@ -178,10 +178,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     const conviction = licenceConvictions.activeCustodial[0]
     const allAdditionalLicenceConditions = conviction.licenceConditions.map(condition => {
       return {
-        mainCatCode: condition.mainCategory.code,
-        subCatCode: condition.subCategory.code,
-        title: condition.mainCategory.description,
-        details: condition.subCategory.description,
+        mainCatCode: condition.mainCategory?.code,
+        subCatCode: condition.subCategory?.code,
+        title: condition.mainCategory?.description,
+        details: condition.subCategory?.description,
         note: condition.notes,
       }
     })

@@ -26,7 +26,24 @@ const TEMPLATE = {
         code: '1234',
         description: 'Buggery and attempted buggery',
       },
-      licenceConditions: [] as string[],
+      licenceConditions: [
+        {
+          mainCategory: {
+            code: 'NLC5',
+            description: 'Poss, own, control, inspect specified items /docs',
+          },
+          subCategory: {
+            code: 'NST30',
+            description: 'On release to be escorted by police to Approved Premises',
+          },
+        },
+        {
+          mainCategory: {
+            code: 'BB4',
+            description: 'Freedom of movement',
+          },
+        },
+      ],
     },
   ],
   cvlLicence: {
@@ -439,7 +456,22 @@ describe('post', () => {
           },
           additionalLicenceConditions: {
             selectedOptions: [],
-            allOptions: [],
+            allOptions: [
+              {
+                details: undefined,
+                mainCatCode: 'BB4',
+                note: undefined,
+                subCatCode: undefined,
+                title: 'Freedom of movement',
+              },
+              {
+                details: 'On release to be escorted by police to Approved Premises',
+                mainCatCode: 'NLC5',
+                note: undefined,
+                subCatCode: 'NST30',
+                title: 'Poss, own, control, inspect specified items /docs',
+              },
+            ],
           },
         },
       },
@@ -669,7 +701,22 @@ describe('post', () => {
           },
           additionalLicenceConditions: {
             selectedOptions: [],
-            allOptions: [],
+            allOptions: [
+              {
+                details: undefined,
+                mainCatCode: 'BB4',
+                note: undefined,
+                subCatCode: undefined,
+                title: 'Freedom of movement',
+              },
+              {
+                details: 'On release to be escorted by police to Approved Premises',
+                mainCatCode: 'NLC5',
+                note: undefined,
+                subCatCode: 'NST30',
+                title: 'Poss, own, control, inspect specified items /docs',
+              },
+            ],
           },
         },
       },
@@ -752,7 +799,22 @@ describe('post', () => {
           },
           additionalLicenceConditions: {
             selectedOptions: [],
-            allOptions: [],
+            allOptions: [
+              {
+                details: undefined,
+                mainCatCode: 'BB4',
+                note: undefined,
+                subCatCode: undefined,
+                title: 'Freedom of movement',
+              },
+              {
+                details: 'On release to be escorted by police to Approved Premises',
+                mainCatCode: 'NLC5',
+                note: undefined,
+                subCatCode: 'NST30',
+                title: 'Poss, own, control, inspect specified items /docs',
+              },
+            ],
           },
         },
       },
