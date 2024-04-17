@@ -302,24 +302,29 @@
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
                         </div>
-                        <div class="govuk-summary-list__value">
-                            {% for address in recommendation.personOnProbation.addresses %}
-                                {{ formatAddress(address) }}
-                            {% endfor %}
-                            {% if not recommendation.personOnProbation.addresses %}
-                                - <span class="govuk-visually-hidden">no value</span>
-                            {% endif %}
-                            {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
-                                <p class="govuk-body govuk-!-font-weight-bold">
-                                    Additional address
-                                </p>
-                                <span class="govuk-body">
-                                    <pre class="govuk-body">
-                                    {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
-                                    </pre>
-                                </span>
-                            {% endif %}
-                        </div>
+                        {% set addrtest = null%}
+                        {% if not recommendation.personOnProbation.addresses and not recommendation.isMainAddressWherePersonCanBeFound.details %}
+                            <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span></div>
+                        {% else %}
+                            <div class="govuk-summary-list__value">
+                                {% for address in recommendation.personOnProbation.addresses %}
+                                    {{ formatAddress(address) }}
+                                {% endfor %}
+                                {% if not recommendation.personOnProbation.addresses %}
+                                    - <span class="govuk-visually-hidden">no value</span>
+                                {% endif %}
+                                {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
+                                    <p class="govuk-body govuk-!-font-weight-bold">
+                                        Additional address
+                                    </p>
+                                    <span class="govuk-body">
+                                        <pre class="govuk-body">
+                                        {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
+                                        </pre>
+                                    </span>
+                                {% endif %}                            
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
