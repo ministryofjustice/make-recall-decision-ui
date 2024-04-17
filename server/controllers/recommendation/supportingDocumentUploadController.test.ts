@@ -139,4 +139,51 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
+  it('post with upload fail', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+      },
+      body: {
+        type: 'part-a',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512000,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+
+    ;(uploadSupportingDocument as jest.Mock).mockImplementation(() => {
+      throw new Error('somethings up')
+    })
+
+    await supportingDocumentUploadController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'file',
+        text: 'The selected file could not be uploaded - try again',
+        href: '#file',
+        errorId: 'uploadFileFailure',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
 })

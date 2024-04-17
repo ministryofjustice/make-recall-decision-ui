@@ -71,15 +71,27 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const data = req.file.buffer.toString('base64')
 
-    await uploadSupportingDocument({
-      recommendationId,
-      token,
-      filename: req.file.originalname,
-      mimetype: req.file.mimetype,
-      type: SupportingDocumentType[typeLookup[type].valueOf()],
-      data,
-      featureFlags: flags,
-    })
+    try {
+      await uploadSupportingDocument({
+        recommendationId,
+        token,
+        filename: req.file.originalname,
+        mimetype: req.file.mimetype,
+        type: SupportingDocumentType[typeLookup[type].valueOf()],
+        data,
+        featureFlags: flags,
+      })
+    } catch (err) {
+      const errorId = 'uploadFileFailure'
+      req.session.errors = [
+        makeErrorObject({
+          id: 'file',
+          text: strings.errors[errorId],
+          errorId,
+        }),
+      ]
+      return res.redirect(303, req.originalUrl)
+    }
   }
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
 }

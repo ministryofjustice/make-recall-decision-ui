@@ -1,9 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import {
-  getSupportingDocuments,
-  replaceSupportingDocument,
-  uploadSupportingDocument,
-} from '../../data/makeDecisionApiClient'
+import { getSupportingDocuments, replaceSupportingDocument } from '../../data/makeDecisionApiClient'
 import supportingDocumentReplaceController from './supportingDocumentReplaceController'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -105,7 +101,7 @@ describe('post', () => {
     const next = mockNext()
     await supportingDocumentReplaceController.post(req, res, next)
 
-    expect(uploadSupportingDocument).not.toHaveBeenCalled()
+    expect(replaceSupportingDocument).not.toHaveBeenCalled()
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1234/supporting-documents`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
@@ -154,6 +150,53 @@ describe('post', () => {
         text: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
         href: '#file',
         errorId: 'invalidFilename',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+  it('post with upload fail', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+      },
+      body: {
+        type: 'part-a',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512000,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+
+    ;(replaceSupportingDocument as jest.Mock).mockImplementation(() => {
+      throw new Error('somethings up')
+    })
+
+    await supportingDocumentReplaceController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'file',
+        text: 'The selected file could not be uploaded - try again',
+        href: '#file',
+        errorId: 'uploadFileFailure',
         invalidParts: undefined,
         values: undefined,
       },
