@@ -77,41 +77,7 @@ describe('getCaseSection', () => {
               createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
               createdByUserFullName: 'Making Recall Decisions SPO User',
               created: '2023-07-31T08:18:53.361Z',
-              name: 'REC_CLOSED',
-              active: true,
-            },
-          ],
-          recallType: {
-            selected: { value: 'STANDARD', details: 'test' },
-          },
-        },
-      ],
-    }
-
-    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
-    const { caseSummary } = await getCaseSection('last-completed', crn, token, userId, {}, {})
-
-    const recs = caseSummary as LastCompletedRecommendationsResponse
-    expect(recs.recommendations[0].recallType).toBe('STANDARD')
-    expect(recs.recommendations[0].completedDate).toBe('2023-07-31T08:18:53.361Z')
-  })
-
-  it('returns last completed section when doc status is SENT_TO_PPCS', async () => {
-    const apiResponse = {
-      recommendations: [
-        {
-          recommendationId: 427954240,
-          lastModifiedByName: 'Making Recall Decisions SPO User',
-          createdDate: '2023-07-31T08:16:11.345Z',
-          lastModifiedDate: '2023-07-31T08:18:53.182Z',
-          status: 'DRAFT',
-          statuses: [
-            {
-              recommendationId: 427954240,
-              createdBy: 'MAKE_RECALL_DECISION_SPO_USER',
-              createdByUserFullName: 'Making Recall Decisions SPO User',
-              created: '2023-07-31T08:18:53.361Z',
-              name: 'SENT_TO_PPCS',
+              name: 'PP_DOCUMENT_CREATED',
               active: true,
             },
           ],

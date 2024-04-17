@@ -124,6 +124,20 @@
           "emailAddress": null
         },
         {
+          "id": 1444777158,
+          "recommendationId": 427954240,
+          "createdBy": "MAKE_RECALL_DECISION_SPO_USER",
+          "createdByUserFullName": "Making Recall Decisions SPO User",
+          "created": "2023-07-31T08:18:53.361Z",
+          "modifiedBy": null,
+          "modifiedByUserFullName": null,
+          "modified": null,
+          "name": "PP_DOCUMENT_CREATED",
+          "recommendationHistoryId": 221797812,
+          "active": true,
+          "emailAddress": null
+        },
+        {
           "id": 1346911775,
           "recommendationId": 427954240,
           "createdBy": "MAKE_RECALL_DECISION_SPO_USER",
