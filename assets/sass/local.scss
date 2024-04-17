@@ -237,6 +237,11 @@ pre {
   vertical-align:bottom;
 }
 
+// added as an override class
+.govuk-summary-list__value_middle {
+  vertical-align:middle;
+}
+
 .govuk-summary-list__actions {
   width: 4em;
   vertical-align:bottom;
