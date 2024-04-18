@@ -234,19 +234,23 @@ pre {
 }
 
 .govuk-summary-list__value {
-  vertical-align:bottom;
+  vertical-align: bottom;
 }
 
 // added as an override class
 .govuk-summary-list__value_middle {
-  vertical-align:middle;
+  vertical-align: middle;
 }
 
 .govuk-summary-list__actions {
   width: 4em;
-  vertical-align:bottom;
+  vertical-align: bottom;
 }
 
 .overflow-wrap-anywhere {
   overflow-wrap: anywhere;
+}
+
+.width-15-em {
+  width: 15em;
 }
