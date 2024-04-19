@@ -134,6 +134,27 @@ export default class RestClient {
     }
   }
 
+  async delete({ path = null, headers = {}, responseType = '', raw = false }: PostRequest = {}): Promise<unknown> {
+    logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
+    try {
+      const result = await superagent
+        .delete(`${this.apiUrl()}${path}`)
+        .send()
+        .agent(this.agent)
+        .use(restClientMetricsMiddleware)
+        .auth(this.token, { type: 'bearer' })
+        .set(headers)
+        .responseType(responseType)
+        .timeout(this.timeoutConfig())
+
+      return raw ? result : result.body
+    } catch (error) {
+      const sanitisedError = sanitiseError(error)
+      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'POST'`)
+      throw sanitisedError
+    }
+  }
+
   async patch<T>({
     path = null,
     headers = {},
