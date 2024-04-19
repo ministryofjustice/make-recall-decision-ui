@@ -85,8 +85,10 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   const prisonBookingNumber = nomisPrisonOffender?.bookingNo
   const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
+  // disabling this rule temporarily until we elaborate on the role model so that people can be explicitly out of hours and probation practitioners.
   // if not an SPO, and not an OOH worker, then the user has only the base role is and is therefore a PP because we haven't extended the role model properly.
-  const isProbationPractitioner = !isSpo && !isOutOfHoursWorker
+  // const isProbationPractitioner = !isSpo && !isOutOfHoursWorker
+  const isProbationPractitioner = !isSpo
   let recommendationButton: RecommendationButton = { display: false }
   const recommendationBanner: RecommendationBanner = { display: false }
 

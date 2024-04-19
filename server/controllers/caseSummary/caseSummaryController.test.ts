@@ -143,7 +143,13 @@ describe('get', () => {
     })
     await caseSummaryController.get(req, res, next)
     expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
-    expect(res.locals.recommendationButton).toEqual({ display: false })
+    expect(res.locals.recommendationButton).toEqual({
+      dataAnalyticsEventCategory: 'make_recommendation_click',
+      display: true,
+      link: '/cases/A1234AB/create-recommendation-warning',
+      post: false,
+      title: 'Make a recommendation',
+    })
   })
 
   it('should show OutOfHours Recall Button for RW', async () => {
@@ -165,7 +171,13 @@ describe('get', () => {
     })
     await caseSummaryController.get(req, res, next)
     expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
-    expect(res.locals.recommendationButton).toEqual({ display: false })
+    expect(res.locals.recommendationButton).toEqual({
+      dataAnalyticsEventCategory: 'make_recommendation_click',
+      display: true,
+      link: '/cases/A1234AB/create-recommendation-warning',
+      post: false,
+      title: 'Make a recommendation',
+    })
   })
 
   it('should show OutOfHours Recall Button for RW for active recommendation', async () => {
@@ -187,7 +199,13 @@ describe('get', () => {
     })
     await caseSummaryController.get(req, res, next)
     expect(res.locals.showOutOfHoursRecallButton).toEqual(true)
-    expect(res.locals.recommendationButton).toEqual({ display: false })
+    expect(res.locals.recommendationButton).toEqual({
+      dataAnalyticsEventCategory: 'make_recommendation_click',
+      display: true,
+      link: '/cases/A1234AB/create-recommendation-warning',
+      post: false,
+      title: 'Make a recommendation',
+    })
   })
 
   it('should not show OutOfHours Recall Button', async () => {
