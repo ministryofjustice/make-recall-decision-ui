@@ -2546,6 +2546,95 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/book-to-ppud`)
       cy.pageHeading().should('contain', 'Book  Pinky Pooh onto PPUD')
     })
+
+    it('supporting documents', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.task('getSupportingDocuments', {
+        statusCode: 200,
+        response: [
+          {
+            title: 'Part A',
+            type: 'PPUDPartA',
+            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+          },
+        ],
+      })
+
+      cy.visit(`/recommendations/252523937/supporting-documents`)
+      cy.pageHeading().should('contain', 'Add supporting documents for Paula Smith')
+      cy.getText('filename').should('contain', 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx')
+    })
+
+    it('uploading supporting documents', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.visit(`/recommendations/252523937/supporting-document-upload/part-a`)
+      cy.pageHeading().should('contain', 'Upload Part A')
+    })
+
+    it('replace supporting documents', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.task('getSupportingDocuments', {
+        statusCode: 200,
+        response: [
+          {
+            title: 'Part A',
+            type: 'PPUDPartA',
+            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+          },
+        ],
+      })
+
+      cy.visit(`/recommendations/252523937/supporting-document-replace/part-a/1234`)
+      cy.pageHeading().should('contain', 'Upload Part A')
+    })
+
+    it('remove supporting documents', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+
+      cy.task('getSupportingDocuments', {
+        statusCode: 200,
+        response: [
+          {
+            title: 'Part A',
+            type: 'PPUDPartA',
+            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+          },
+        ],
+      })
+
+      cy.visit(`/recommendations/252523937/supporting-document-remove/1234`)
+      cy.pageHeading().should('contain', 'Remove document')
+    })
   })
   describe('Approved Premises Journey', () => {
     beforeEach(() => {

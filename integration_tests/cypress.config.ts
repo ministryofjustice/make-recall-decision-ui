@@ -20,6 +20,7 @@ import {
   searchPpud,
   updateRecommendation,
   updateStatuses,
+  getSupportingDocuments,
 } from './mockApis/makeRecallDecisionApi'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import { readDocX } from '../cypress_shared/plugins'
@@ -72,6 +73,7 @@ export default defineConfig({
         prisonSentences,
         getReferenceList,
         getActiveRecommendation,
+        getSupportingDocuments,
       })
     },
     baseUrl: 'http://localhost:3007',
