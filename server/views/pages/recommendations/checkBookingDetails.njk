@@ -302,15 +302,14 @@
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
                         </div>
-                        {% set addrtest = null%}
-                        {% if not recommendation.personOnProbation.addresses and not recommendation.isMainAddressWherePersonCanBeFound.details %}
+                        {% if recommendation.personOnProbation.addresses | length == 0 and not recommendation.isMainAddressWherePersonCanBeFound.details %}
                             <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span></div>
                         {% else %}
                             <div class="govuk-summary-list__value">
                                 {% for address in recommendation.personOnProbation.addresses %}
                                     {{ formatAddress(address) }}
                                 {% endfor %}
-                                {% if not recommendation.personOnProbation.addresses %}
+                                {% if recommendation.personOnProbation.addresses | length == 0 %}
                                     - <span class="govuk-visually-hidden">no value</span>
                                 {% endif %}
                                 {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
