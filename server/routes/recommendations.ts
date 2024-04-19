@@ -113,6 +113,7 @@ import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAg
 import suitabilityForFixedTermRecallController from '../controllers/recommendation/suitabilityForFixedTermRecallController'
 import supportingDocumentDownloadController from '../controllers/recommendation/supportingDocumentDownloadController'
 import supportingDocumentReplaceController from '../controllers/recommendation/supportingDocumentReplaceController'
+import supportingDocumentRemoveController from '../controllers/recommendation/supportingDocumentRemoveController'
 
 const recommendations = Router()
 
@@ -482,6 +483,9 @@ ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUplo
 
 ppcsRouteBuilder.get('supporting-document-replace/:type/:id', supportingDocumentReplaceController.get)
 ppcsRouteBuilder.post('supporting-document-replace/:type/:id', supportingDocumentReplaceController.post)
+
+ppcsRouteBuilder.get('supporting-document-remove/:id', supportingDocumentRemoveController.get)
+ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemoveController.post)
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 

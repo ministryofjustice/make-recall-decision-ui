@@ -425,3 +425,20 @@ export const replaceSupportingDocument = ({
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<SupportingDocument[]>
 }
+
+export const deleteSupportingDocument = ({
+  recommendationId,
+  id,
+  token,
+  featureFlags,
+}: {
+  recommendationId: string
+  id: string
+  token: string
+  featureFlags?: FeatureFlags
+}): Promise<SupportingDocument[]> => {
+  return restClient(token).delete({
+    path: `${routes.recommendations}/${recommendationId}/documents/${id}`,
+    headers: featureFlagHeaders(featureFlags),
+  }) as Promise<SupportingDocument[]>
+}
