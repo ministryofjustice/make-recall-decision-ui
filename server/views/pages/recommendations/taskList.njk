@@ -89,9 +89,7 @@
                 {% include '../../partials/taskList/vulnerabilitiesVictimLiaison.njk' %}
                 {% include '../../partials/taskList/custody.njk' %}
                 {% include '../../partials/taskList/riskProfile.njk' %}
-                {% if flags.flagProbationAdmin %}
                 {% include '../../partials/taskList/contactInformation.njk' %}
-                {% endif %}
                 {% if not isSpo %}
                 {% include '../../partials/taskList/countersign.njk' %}
                 {% endif %}
@@ -99,14 +97,12 @@
         </div>
 
         <div class="govuk-grid-column-one-third-from-desktop">
-            {% if flags.flagProbationAdmin %}
             <span class="govuk-heading-m govuk-!-margin-top-2">Share this Part A</span>
 
             <div class='govuk-body '>Share this page with the case admin so they can check the details.</div>
 
             <div class="govuk-visually-hidden" data-js='copy-to-clipboard-text' data-qa='case-link'>{{ shareLink }}</div>
             <button class='govuk-button govuk-button--secondary govuk-!-margin-top-2' data-js='copy-to-clipboard-btn'>Copy link to share</button>
-            {% endif %}
             <span class="govuk-heading-m govuk-!-margin-top-2">Preview this Part A</span>
 
             <div class='govuk-body '>You cannot send the preview to PPCS.</div>

@@ -117,8 +117,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     ppcsQueryEmails: hasValue(recommendation.ppcsQueryEmails) && recommendation.ppcsQueryEmails.length > 0,
   }
 
-  const flagProbationAdmin = _featureFlags?.flagProbationAdmin
-
   return {
     statuses,
     isReadyForCounterSignature:
@@ -144,8 +142,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
-      (!flagProbationAdmin || statuses.whoCompletedPartA) &&
-      (!flagProbationAdmin || statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
+      statuses.whoCompletedPartA &&
+      (statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
       statuses.isMainAddressWherePersonCanBeFound &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
@@ -174,10 +172,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
-      (!flagProbationAdmin || statuses.whoCompletedPartA) &&
-      (!flagProbationAdmin || statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
-      (!flagProbationAdmin || statuses.revocationOrderRecipients) &&
-      (!flagProbationAdmin || statuses.ppcsQueryEmails) &&
+      statuses.whoCompletedPartA &&
+      (statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
+      statuses.revocationOrderRecipients &&
+      statuses.ppcsQueryEmails &&
       statuses.isMainAddressWherePersonCanBeFound &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
       (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&

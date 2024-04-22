@@ -52,8 +52,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = flags.flagProbationAdmin ? 'share-case-with-admin' : 'task-list'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'share-case-with-admin', urlInfo }))
 }
 
 export default { get, post }

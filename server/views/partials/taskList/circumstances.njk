@@ -81,7 +81,6 @@ set suitabilityForFixedTermRecall = hasData(recommendation.isUnder18) or
                 <span id='task-list-status-fixedTermAdditionalLicenceConditions'>{{ taskStatus({ hasData: hasData(recommendation.fixedTermAdditionalLicenceConditions) }) }}</span>
             </li>
         {% endif %}
-        {% if flags.flagFTR == true %}
         {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false and recommendation.recallType.selected.value === 'FIXED_TERM' %}
             <li class="moj-task-list__item">
                 <span class="moj-task-list__task-name">
@@ -89,7 +88,6 @@ set suitabilityForFixedTermRecall = hasData(recommendation.isUnder18) or
                 </span>
                 <span id='task-list-status-suitabilityForFixedTermRecall'>{{ taskStatus({ hasData: suitabilityForFixedTermRecall }) }}</span>
             </li>
-        {% endif %}
         {% endif %}
         {% if (recommendation.isIndeterminateSentence or recommendation.isExtendedSentence) == true and recommendation.recallType.selected.value != 'NO_RECALL' %}
             <li class="moj-task-list__item">

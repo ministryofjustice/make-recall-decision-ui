@@ -47,11 +47,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
     const activate = []
 
-    const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
     const isBookedToPpud = statuses.find(status => status.name === STATUSES.BOOKED_TO_PPUD)
     const isApRationaleCollected = statuses.find(status => status.name === STATUSES.AP_COLLECTED_RATIONALE)
 
-    if (flags.flagPpcs ? isBookedToPpud : isPPDocumentCreated) {
+    if (isBookedToPpud) {
       // spo rationale has not been supplied, we auto close.
       activate.push(STATUSES.REC_CLOSED)
       // a new recommendation document will be created when the user clicks the button at the bottom of this page.

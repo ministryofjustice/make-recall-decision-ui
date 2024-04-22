@@ -75,10 +75,10 @@ describe('taskCompleteness', () => {
         ...setAllProperties(recallProperties, true),
         ...setAllProperties(indeterminateSentenceProperties, true),
         didProbationPractitionerCompletePartA: true,
-        whoCompletedPartA: false,
-        practitionerForPartA: false,
-        revocationOrderRecipients: false,
-        ppcsQueryEmails: false,
+        whoCompletedPartA: true,
+        practitionerForPartA: true,
+        revocationOrderRecipients: true,
+        ppcsQueryEmails: true,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(true)
@@ -634,8 +634,9 @@ describe('taskCompleteness', () => {
         {
           ...recommendationResponse,
           bookRecallToPpud: null,
+          whoCompletedPartA: null,
         } as RecommendationResponse,
-        { flagProbationAdmin: true }
+        {}
       )
 
       expect(statuses.whoCompletedPartA).toEqual(false)
@@ -654,7 +655,7 @@ describe('taskCompleteness', () => {
           ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
-        { flagProbationAdmin: true }
+        {}
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -674,7 +675,7 @@ describe('taskCompleteness', () => {
           ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
-        { flagProbationAdmin: true }
+        {}
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -691,8 +692,9 @@ describe('taskCompleteness', () => {
             isPersonProbationPractitionerForOffender: false,
           },
           bookRecallToPpud: null,
+          practitionerForPartA: null,
         } as RecommendationResponse,
-        { flagProbationAdmin: true }
+        {}
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)

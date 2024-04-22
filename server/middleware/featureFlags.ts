@@ -9,21 +9,6 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description: 'Enables supporting documents',
     default: false,
   },
-  flagFTR: {
-    label: 'Enable FTR',
-    description: 'Enables FTR support',
-    default: true,
-  },
-  flagPpcs: {
-    label: 'Enable PPCS',
-    description: 'Enables continuation in PPCS',
-    default: true,
-  },
-  flagProbationAdmin: {
-    label: 'Enable Probation Admin',
-    description: 'Enables Probation Admin',
-    default: true,
-  },
   flagRecommendationsPage: {
     label: 'Recommendations tab',
     description:
@@ -35,16 +20,6 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description:
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
-  },
-  flagDeleteRecommendationProcess: {
-    label: 'Allow process workflow for deleting a recommendation',
-    description: 'Shows banner for deleting a recommedation for SPO/ACO users',
-    default: true,
-  },
-  flagOutOfHours: {
-    label: 'Allow process workflow for out of hours recall',
-    description: 'Enables an out of hours recall to proceed',
-    default: true,
   },
 }
 

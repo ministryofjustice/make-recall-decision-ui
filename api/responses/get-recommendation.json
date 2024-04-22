@@ -352,5 +352,23 @@
   },
   "spoCancelRecommendationRationale": "some reason to delete",
   "spoDeleteRecommendationRationale": "some reason to delete",
-  "spoTypeRecall": ""
+  "spoTypeRecall": "",
+  "whoCompletedPartA": {
+    "name": "dude",
+    "email": "dude@me.com",
+    "telephone": "123456",
+    "region": "region A",
+    "localDeliveryUnit": "here",
+    "isPersonProbationPractitionerForOffender": true
+  },
+  "practitionerForPartA": {
+    "name": "dudette",
+    "email": "dudette@me.com",
+    "telephone": "55555",
+    "region": "region A",
+    "localDeliveryUnit": "here",
+    "isPersonProbationPractitionerForOffender": true
+  },
+  "revocationOrderRecipients": ["here@me.com"],
+  "ppcsQueryEmails": ["bob@me.com"]
 }
