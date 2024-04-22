@@ -23,7 +23,7 @@
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-font-weight-bold width-15-em"> Part A </td>
                         {% if PPUDPartA.filename %}
-                            <td class="govuk-table__cell overflow-wrap-anywhere">
+                            <td data-qa="filename" class="govuk-table__cell overflow-wrap-anywhere">
                                 <a href="/recommendations/{{ recommendation.id }}/supporting-document-download/{{ PPUDPartA.id }}">
                                     {{ PPUDPartA.filename }}
                                 </a>
