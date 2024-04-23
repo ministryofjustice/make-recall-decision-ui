@@ -139,7 +139,7 @@
     "prom-client": "^15.1.1",
     "redis": "^4.6.13",
     "striptags": "3.2.0",
-    "superagent": "^8.0.8",
+    "superagent": "^9.0.0",
     "ts-loader": "^9.5.1",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0",
