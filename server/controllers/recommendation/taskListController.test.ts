@@ -54,6 +54,24 @@ describe('get', () => {
     previousReleases: { hasBeenReleasedPreviously: false },
     previousRecalls: { hasBeenRecalledPreviously: false },
     currentRoshForPartA: {},
+    whoCompletedPartA: {
+      name: 'dude',
+      email: 'dude@me.com',
+      telephone: '123456',
+      region: 'region A',
+      localDeliveryUnit: 'here',
+      isPersonProbationPractitionerForOffender: true,
+    },
+    practitionerForPartA: {
+      name: 'dudette',
+      email: 'dudette@me.com',
+      telephone: '55555',
+      region: 'region A',
+      localDeliveryUnit: 'here',
+      isPersonProbationPractitionerForOffender: true,
+    },
+    revocationOrderRecipients: ['here@me.com'],
+    ppcsQueryEmails: ['bob@me.com'],
   }
 
   const taskCompleteness = {
@@ -87,10 +105,10 @@ describe('get', () => {
       indeterminateOrExtendedSentenceDetails: true,
       indeterminateSentenceType: false,
       didProbationPractitionerCompletePartA: true,
-      practitionerForPartA: false,
-      whoCompletedPartA: false,
-      ppcsQueryEmails: false,
-      revocationOrderRecipients: false,
+      practitionerForPartA: true,
+      whoCompletedPartA: true,
+      ppcsQueryEmails: true,
+      revocationOrderRecipients: true,
     },
   }
 

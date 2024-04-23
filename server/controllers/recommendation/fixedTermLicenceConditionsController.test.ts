@@ -186,7 +186,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
         urlInfo: { basePath },
-        flags: { flagFTR: true },
       },
     })
     const next = mockNext()

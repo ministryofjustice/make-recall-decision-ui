@@ -271,7 +271,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.getElement("Request line manager's countersignature To do").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -287,7 +287,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.getElement("Request line manager's countersignature Requested").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -300,7 +300,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.getElement("Request line manager's countersignature Completed").should('exist')
       cy.getElement("Request senior manager's countersignature To do").should('exist')
@@ -322,7 +322,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.getElement("Request line manager's countersignature Completed").should('exist')
       cy.getElement("Request senior manager's countersignature Requested").should('exist')
@@ -341,7 +341,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.getElement("Request line manager's countersignature Completed").should('exist')
       cy.getElement("Request senior manager's countersignature Completed").should('exist')
@@ -947,7 +947,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -971,7 +971,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -996,7 +996,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -1022,7 +1022,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.pageHeading().should('contain', 'Part A for Paula Smith')
 
@@ -1303,7 +1303,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1396,7 +1396,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1413,7 +1413,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Line manager countersignature')
 
@@ -1517,7 +1517,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Senior manager countersignature')
 
@@ -1536,7 +1536,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Senior manager countersignature')
 
@@ -1554,7 +1554,7 @@ context('Make a recommendation', () => {
         response: [{ name: 'ACO_SIGNED', active: true }],
       })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('Create Part A')
 
@@ -1625,13 +1625,13 @@ context('Make a recommendation', () => {
     it('present Who Completed Part A page', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/`)
 
       cy.pageHeading().should('contain', 'Who completed this Part A?')
 
@@ -1645,13 +1645,13 @@ context('Make a recommendation', () => {
     it('present Practitioner For Part A page', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/`)
 
       cy.pageHeading().should('contain', 'Practitioner for Paula Smith?')
 
@@ -1665,13 +1665,13 @@ context('Make a recommendation', () => {
     it('present Revocation Order Recipients', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: { ...completeRecommendationResponse, recallConsideredList: null, revocationOrderRecipients: null },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients/`)
 
       cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
 
@@ -1683,13 +1683,13 @@ context('Make a recommendation', () => {
     it('present PPCS Query Emails', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: { ...completeRecommendationResponse, recallConsideredList: null, ppcsQueryEmails: null },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/`)
 
       cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
 
@@ -1707,7 +1707,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-part-a/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-part-a/`)
 
       cy.pageHeading().should('contain', 'Preview Part A')
 
@@ -2642,13 +2642,13 @@ context('Make a recommendation', () => {
     })
 
     it('present Out of Hours Blue Page', () => {
-      cy.visit(`${routeUrls.cases}/${crn}/out-of-hours-warning?flagOutOfHours=1`)
+      cy.visit(`${routeUrls.cases}/${crn}/out-of-hours-warning`)
 
       cy.pageHeading().should('contain', 'Important')
     })
 
     it('present licence condition breaches page for AP', () => {
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions?flagOutOfHours=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions`)
 
       cy.pageHeading().should('contain', 'What licence conditions has Paula Smith breached?')
     })
@@ -2664,7 +2664,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-recall-rationale?flagOutOfHours=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-recall-rationale`)
 
       cy.pageHeading().should('contain', 'Explain the decision')
 
@@ -2682,7 +2682,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-record-decision?flagOutOfHours=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-record-decision`)
 
       cy.pageHeading().should('contain', 'Record the decison in NDelius')
 
@@ -2701,7 +2701,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'AP_RECORDED_RATIONALE', active: true }] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-rationale-confirmation?flagOutOfHours=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-rationale-confirmation`)
 
       cy.pageHeading().should('contain', 'Decision not to recall')
 
@@ -2719,7 +2719,7 @@ context('Make a recommendation', () => {
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-why-no-recall?flagOutOfHours=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-why-no-recall`)
 
       cy.pageHeading().should('contain', 'Why do you think Paula Smith should not be recalled?')
 

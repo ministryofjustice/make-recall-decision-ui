@@ -33,7 +33,7 @@ context('Recommendation - task list', () => {
   it('task list - Completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
@@ -68,7 +68,7 @@ context('Recommendation - task list', () => {
       response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=0`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Is Paula Smith in custody now? Completed').should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Paula Smith? Completed').should('exist')
@@ -245,7 +245,7 @@ context('Recommendation - task list', () => {
       response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagProbationAdmin=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
     cy.getElement('Who completed this Part A?').should('exist')
     cy.getElement('Where should the revocation order be sent?').should('exist')
@@ -335,7 +335,7 @@ context('Recommendation - task list', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Suitability for fixed term recall To do').should('exist')
   })
   it('task list - determinate, not extended, fixed term recall and FTR flag and suitability completed', () => {
@@ -350,7 +350,7 @@ context('Recommendation - task list', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Suitability for fixed term recall Completed').should('exist')
   })
 
@@ -388,7 +388,7 @@ context('Recommendation - task list', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagProbationAdmin=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
 
       cy.getElement('Share this Part A').should('exist')
     })

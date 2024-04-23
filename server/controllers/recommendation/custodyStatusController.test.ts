@@ -141,64 +141,7 @@ describe('post', () => {
       featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-
-  it('post with valid data and probationAdmin flag switched on redirects to share case with admin', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/123/`
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        custodyStatus: 'YES_POLICE',
-        custodyStatusDetailsYesPolice: 'test',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath },
-        flags: { flagProbationAdmin: true },
-      },
-    })
-    const next = mockNext()
-
-    await custodyStatusController.post(req, res, next)
-
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/share-case-with-admin`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-
-  it('post with valid data data and probationAdmin flag switched on after navigating from the task list redirects back to the task list', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/123/`
-    const fromPageId = 'task-list'
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        custodyStatus: 'YES_POLICE',
-        custodyStatusDetailsYesPolice: 'test',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath, fromPageId },
-        flags: { flagProbationAdmin: true },
-      },
-    })
-    const next = mockNext()
-
-    await custodyStatusController.post(req, res, next)
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 

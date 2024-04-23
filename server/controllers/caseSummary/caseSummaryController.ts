@@ -71,9 +71,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
   let pageUrlBase = `/cases/${normalizedCrn}/`
   let backLink = '/search'
 
-  const oohFlag = flags?.flagOutOfHours
   let isOutOfHoursWorker =
-    oohFlag && (user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('ROLE_MARD_DUTY_MANAGER'))
+    user.roles.includes('ROLE_MARD_RESIDENT_WORKER') || user.roles.includes('ROLE_MARD_DUTY_MANAGER')
 
   let nomisPrisonOffender: PrisonOffenderSearchResponse | undefined
   if (isOutOfHoursWorker) {

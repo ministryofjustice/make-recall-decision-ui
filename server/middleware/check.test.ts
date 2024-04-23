@@ -64,16 +64,16 @@ describe('hasRole', () => {
 
 describe('flagIsActive', () => {
   it('has flag', async () => {
-    const result = flagIsActive('flagProbationAdmin')({
-      flags: { flagProbationAdmin: true },
+    const result = flagIsActive('flagRecommendationsPage')({
+      flags: { flagRecommendationsPage: true },
     })
 
     expect(result).toBe(true)
   })
 
   it('flag is not active', async () => {
-    const result = flagIsActive('flagProbationAdmin')({
-      flags: { flagProbationAdmin: false },
+    const result = flagIsActive('flagRecommendationsPage')({
+      flags: { flagRecommendationsPage: false },
     })
 
     expect(result).toBe(false)
