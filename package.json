@@ -199,7 +199,7 @@
     "pdf-parse": "^1.1.1",
     "prettier": "^3.2.5",
     "sass": "^1.74.1",
-    "supertest": "^6.3.4",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5",
     "wait-for-expect": "^3.0.2",
