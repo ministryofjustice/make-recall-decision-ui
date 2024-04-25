@@ -15,13 +15,34 @@ describe('get', () => {
 
     ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA])
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          bookRecallToPpud: {
+            minutes: [
+              {
+                id: '1',
+                text: 'some text',
+              },
+            ],
+          },
+        },
+        token: 'token1',
+      },
+    })
+
     const next = mockNext()
     await supportingDocumentsController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'supportingDocuments' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
     expect(res.locals.PPUDPartA).toEqual(PPUDPartA)
+    expect(res.locals.minutes).toEqual([
+      {
+        id: '1',
+        text: 'some text',
+      },
+    ])
     expect(next).toHaveBeenCalled()
   })
 })

@@ -234,5 +234,6 @@ export const strings: Record<string, Record<string, string>> = {
     supportingDocumentReplace: 'Replace supporting document',
     bookingSummary: 'Your recall booking - {{ fullName }}',
     whenSpoAgreedRecallDate: 'When did the SPO agree to this recall?',
+    addPpudMinute: 'Add a minute to PPUD',
   },
 }

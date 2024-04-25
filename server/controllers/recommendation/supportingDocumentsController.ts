@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { getSupportingDocuments } from '../../data/makeDecisionApiClient'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -7,6 +8,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const {
     user: { token },
     flags,
+    recommendation,
   } = res.locals
 
   const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
@@ -28,6 +30,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     PPUDPrecons,
     PPUDPSR,
     PPUDChargeSheet,
+    minutes: (recommendation as RecommendationResponse)?.bookRecallToPpud?.minutes,
     page: {
       id: 'supportingDocuments',
     },
