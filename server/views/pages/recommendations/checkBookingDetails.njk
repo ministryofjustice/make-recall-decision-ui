@@ -16,7 +16,6 @@
 
 {% macro formatAddress(address) %}
     {% if not address.noFixedAbode %}
-        {% set addr = [] %}
         <p class="govuk-body">
             {% if address.line1 %}
                 {{ address.line1 }}<br/>
@@ -302,16 +301,17 @@
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
                         </div>
-                        {% if recommendation.personOnProbation.addresses | length == 0 and not recommendation.isMainAddressWherePersonCanBeFound.details %}
+                        {% if hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
                             <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span></div>
                         {% else %}
                             <div class="govuk-summary-list__value">
+                                {% if hasLastKnownAddress %}
+                                    - <span class="govuk-visually-hidden">no value</span>
+                                {% endif %}
                                 {% for address in recommendation.personOnProbation.addresses %}
                                     {{ formatAddress(address) }}
                                 {% endfor %}
-                                {% if recommendation.personOnProbation.addresses | length == 0 %}
-                                    - <span class="govuk-visually-hidden">no value</span>
-                                {% endif %}
+                                
                                 {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
                                     <p class="govuk-body govuk-!-font-weight-bold">
                                         Additional address

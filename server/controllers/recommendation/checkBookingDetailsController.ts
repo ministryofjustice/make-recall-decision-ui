@@ -157,6 +157,22 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   }
 
+  // Checks if all addresses are effectively empty,
+  // defined as a single-item array with all key attributes set to empty strings and `noFixedAbode` set to false.
+
+  const { addresses } = res.locals.recommendation.personOnProbation
+  let hasLastKnownAddress: boolean = false
+  if (addresses) {
+    hasLastKnownAddress = addresses.every(
+      (address: { line1: string; line2: string; town: string; postcode: string; noFixedAbode: boolean }) =>
+        address.line1 === '' &&
+        address.line2 === '' &&
+        address.town === '' &&
+        address.postcode === '' &&
+        !address.noFixedAbode
+    )
+  }
+
   res.locals = {
     ...res.locals,
     page: {
@@ -171,6 +187,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     currentHighestRosh: currentHighestRosh(recommendation.currentRoshForPartA),
     warnings,
     edited,
+    hasLastKnownAddress,
   }
 
   res.render(`pages/recommendations/checkBookingDetails`)
