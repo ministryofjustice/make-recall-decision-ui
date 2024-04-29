@@ -114,6 +114,7 @@ import suitabilityForFixedTermRecallController from '../controllers/recommendati
 import supportingDocumentDownloadController from '../controllers/recommendation/supportingDocumentDownloadController'
 import supportingDocumentReplaceController from '../controllers/recommendation/supportingDocumentReplaceController'
 import supportingDocumentRemoveController from '../controllers/recommendation/supportingDocumentRemoveController'
+import addPpudMinuteController from '../controllers/recommendation/addPpudMinuteController'
 
 const recommendations = Router()
 
@@ -480,6 +481,9 @@ ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
 ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUploadController.post)
+
+ppcsRouteBuilder.get('add-ppud-minute', addPpudMinuteController.get)
+ppcsRouteBuilder.post('add-ppud-minute', addPpudMinuteController.post)
 
 ppcsRouteBuilder.get('supporting-document-replace/:type/:id', supportingDocumentReplaceController.get)
 ppcsRouteBuilder.post('supporting-document-replace/:type/:id', supportingDocumentReplaceController.post)

@@ -1,0 +1,34 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% include '../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <p class="govuk-body">Explain any issues and action taken.  This will go into a minute on PPUD.</p>
+
+            <form novalidate method="post" enctype='multipart/form-data'>
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="type" value="{{ type }}" />
+
+                {{ govukTextarea({
+                    name: "minute",
+                    id: "minute",
+                    value: inputDisplayValues.minute,
+                    errorMessage: errorMessage(errors.minute)
+                }) }}
+
+                {{ formSubmitButton({ label: 'Save' }) }}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
