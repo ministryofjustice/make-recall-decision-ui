@@ -162,21 +162,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
   // Checks if all addresses are effectively empty,
   // defined as a single-item array with all key attributes set to empty strings and `noFixedAbode` set to false.
 
-  // recommendation.isMainAddressWherePersonCanBeFound = {
-  //   details: 'Address line 1 \r\n Address line 2',
-  // }
-
-  res.locals.recommendation.personOnProbation.addresses = []
-  res.locals.recommendation.personOnProbation.addresses = [
-    {
-      line1: '',
-      line2: '',
-      town: '',
-      postcode: '',
-      noFixedAbode: false,
-    },
-  ]
-
   const { addresses } = res.locals.recommendation.personOnProbation
   let hasLastKnownAddress: boolean = false
 
