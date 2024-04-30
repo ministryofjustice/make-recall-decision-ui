@@ -13,7 +13,8 @@ import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-
 import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { checkAddresses as checkIfAddressesAreEmpty } from '../../utils/addressChecker'
+
+import { checkIfAddressesAreEmpty } from '../../utils/addressChecker'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
