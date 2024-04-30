@@ -19,12 +19,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: {
-            minutes: [
-              {
-                id: '1',
-                text: 'some text',
-              },
-            ],
+            minute: 'some text',
           },
         },
         token: 'token1',
@@ -37,10 +32,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'supportingDocuments' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
     expect(res.locals.PPUDPartA).toEqual(PPUDPartA)
-    expect(res.locals.minute).toEqual({
-      id: '1',
-      text: 'some text',
-    })
+    expect(res.locals.minute).toEqual('some text')
     expect(next).toHaveBeenCalled()
   })
   it('load with no minute', async () => {
@@ -57,7 +49,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: {
-            minute: [],
+            minute: '',
           },
         },
         token: 'token1',
@@ -70,7 +62,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'supportingDocuments' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
     expect(res.locals.PPUDPartA).toEqual(PPUDPartA)
-    expect(res.locals.minute).toBeUndefined()
+    expect(res.locals.minute).toEqual('')
     expect(next).toHaveBeenCalled()
   })
 })

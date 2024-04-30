@@ -176,12 +176,7 @@ export type BookRecallToPpud = {
   ethnicity: string,
   legislationReleasedUnder?: string,
   releasingPrison?: string,
-  minutes?: PpudMinute[],
-}
-
-export type PpudMinute = {
-  id?: string,
-  text?: string,
+  minute?: string,
 }
 
 export type PrisonOffender = {
