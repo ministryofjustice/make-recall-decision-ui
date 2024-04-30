@@ -301,11 +301,11 @@
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
                         </div>
-                        {% if hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
+                        {% if not hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
                             <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span></div>
                         {% else %}
                             <div class="govuk-summary-list__value">
-                                {% if hasLastKnownAddress %}
+                                {% if not hasLastKnownAddress %}
                                     - <span class="govuk-visually-hidden">no value</span>
                                 {% endif %}
                                 {% for address in recommendation.personOnProbation.addresses %}

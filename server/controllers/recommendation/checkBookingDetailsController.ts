@@ -13,6 +13,7 @@ import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-
 import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { checkAddresses as checkIfAddressesAreEmpty } from '../../utils/addressChecker'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -160,17 +161,26 @@ async function get(_: Request, res: Response, next: NextFunction) {
   // Checks if all addresses are effectively empty,
   // defined as a single-item array with all key attributes set to empty strings and `noFixedAbode` set to false.
 
+  // recommendation.isMainAddressWherePersonCanBeFound = {
+  //   details: 'Address line 1 \r\n Address line 2',
+  // }
+
+  res.locals.recommendation.personOnProbation.addresses = []
+  res.locals.recommendation.personOnProbation.addresses = [
+    {
+      line1: '',
+      line2: '',
+      town: '',
+      postcode: '',
+      noFixedAbode: false,
+    },
+  ]
+
   const { addresses } = res.locals.recommendation.personOnProbation
   let hasLastKnownAddress: boolean = false
+
   if (addresses) {
-    hasLastKnownAddress = addresses.every(
-      (address: { line1: string; line2: string; town: string; postcode: string; noFixedAbode: boolean }) =>
-        address.line1 === '' &&
-        address.line2 === '' &&
-        address.town === '' &&
-        address.postcode === '' &&
-        !address.noFixedAbode
-    )
+    hasLastKnownAddress = !checkIfAddressesAreEmpty(addresses)
   }
 
   res.locals = {
