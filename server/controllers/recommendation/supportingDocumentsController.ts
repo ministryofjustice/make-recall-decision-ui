@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { getSupportingDocuments } from '../../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import logger from '../../../logger'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -21,6 +22,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
   const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
   const minute = (recommendation as RecommendationResponse)?.bookRecallToPpud?.minute
+
+  logger.info(`temp log minute ${minute}`)
 
   res.locals = {
     ...res.locals,
