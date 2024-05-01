@@ -224,22 +224,23 @@
                         </td>
                     </tr>
 
-                    {% for minute in minutes %}
+
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-font-weight-bold width-15-em"> Minute </td>
-                        <td class="govuk-table__cell overflow-wrap-anywhere"> {{ minute.text }} </td>
-                        <td class="govuk-table__cell">
-                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                href='/recommendations/{{ recommendation.id }}/edit-minute/{{ minute.id }}'>
-                                Change
-                            </a>
-                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
-                                href='/recommendations/{{ recommendation.id }}/delete-minute/{{ minute.id }}'>
-                                Remove
+                        <td class="govuk-table__cell govuk-!-font-weight-bold width-15-em"> Additional details </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere width-34-em">
+                            {{ hyphenForBlank(minute) }}
+                         </td>
+                        <td class="govuk-table__cell ">
+                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0' href='/recommendations/{{ recommendation.id }}/edit-ppud-minute'>
+                                {% if minute %}
+                                        Edit a note
+                                {% else %}
+                                        Add a note
+                                {% endif %}
                             </a>
                         </td>
                     </tr>
-                    {% endfor %}
+
                 </tbody>
             </table>
 
@@ -247,10 +248,6 @@
                 <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
                    href='/recommendations/{{ recommendation.id }}/check-booking-details'>
                     Add another document
-                </a>
-                <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
-                   href='/recommendations/{{ recommendation.id }}/add-ppud-minute'>
-                    Add a minute
                 </a>
             </div>
             <div class="govuk-grid-row">

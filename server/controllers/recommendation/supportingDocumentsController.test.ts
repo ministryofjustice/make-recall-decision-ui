@@ -19,12 +19,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: {
-            minutes: [
-              {
-                id: '1',
-                text: 'some text',
-              },
-            ],
+            minute: 'some text',
           },
         },
         token: 'token1',
@@ -37,12 +32,37 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'supportingDocuments' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
     expect(res.locals.PPUDPartA).toEqual(PPUDPartA)
-    expect(res.locals.minutes).toEqual([
-      {
-        id: '1',
-        text: 'some text',
+    expect(res.locals.minute).toEqual('some text')
+    expect(next).toHaveBeenCalled()
+  })
+  it('load with no minute', async () => {
+    const PPUDPartA = {
+      title: 'Part A',
+      type: 'PPUDPartA',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA])
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          bookRecallToPpud: {
+            minute: '',
+          },
+        },
+        token: 'token1',
       },
-    ])
+    })
+
+    const next = mockNext()
+    await supportingDocumentsController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'supportingDocuments' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
+    expect(res.locals.PPUDPartA).toEqual(PPUDPartA)
+    expect(res.locals.minute).toEqual('')
     expect(next).toHaveBeenCalled()
   })
 })

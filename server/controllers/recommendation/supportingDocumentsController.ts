@@ -20,6 +20,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
   const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
   const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
+  const minute = (recommendation as RecommendationResponse)?.bookRecallToPpud?.minute
 
   res.locals = {
     ...res.locals,
@@ -30,7 +31,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     PPUDPrecons,
     PPUDPSR,
     PPUDChargeSheet,
-    minutes: (recommendation as RecommendationResponse)?.bookRecallToPpud?.minutes,
+    minute,
     page: {
       id: 'supportingDocuments',
     },

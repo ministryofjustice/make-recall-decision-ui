@@ -11,9 +11,15 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
         {% include '../../partials/error-summary.njk' %}
 
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <h1 class='govuk-heading-l'>
+                {% if minute %}
+                    Edit note about supporting documents
+                {% else %}
+                    Add note about supporting documents
+                {% endif %}
+            </h1>
 
-            <p class="govuk-body">Explain any issues and action taken.  This will go into a minute on PPUD.</p>
+            <p class="govuk-body">Write down any issues with the supporting documents here.  This will go into a minute on PPUD.</p>
 
             <form novalidate method="post" enctype='multipart/form-data'>
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -22,11 +28,12 @@
                 {{ govukTextarea({
                     name: "minute",
                     id: "minute",
-                    value: inputDisplayValues.minute,
+                    rows: "12",
+                    value: minute,
                     errorMessage: errorMessage(errors.minute)
                 }) }}
 
-                {{ formSubmitButton({ label: 'Save' }) }}
+                {{ formSubmitButton() }}
             </form>
 
         </div>
