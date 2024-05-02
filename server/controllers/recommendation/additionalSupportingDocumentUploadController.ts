@@ -1,19 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
-import { SupportingDocumentType } from '../../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-
-const typeLookup: Record<string, SupportingDocumentType> = {
-  'part-a': SupportingDocumentType.PPUDPartA,
-  'licence-document': SupportingDocumentType.PPUDLicenceDocument,
-  'probation-email': SupportingDocumentType.PPUDProbationEmail,
-  oasys: SupportingDocumentType.PPUDOASys,
-  precons: SupportingDocumentType.PPUDPrecons,
-  psr: SupportingDocumentType.PPUDPSR,
-  'charge-sheet': SupportingDocumentType.PPUDChargeSheet,
-}
+import { isMandatoryTextValue } from '../../utils/utils'
+import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { type } = req.params
@@ -22,17 +12,17 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     type,
     page: {
-      id: 'supportingDocumentUpload',
+      id: 'additionalSupportingDocumentUpload',
     },
   }
 
-  res.render(`pages/recommendations/supportingDocumentUpload`)
+  res.render(`pages/recommendations/additionalSupportingDocumentUpload`)
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { type } = req.body
+  const { title } = req.body
   const {
     flags,
     user: { token },
@@ -41,6 +31,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (req.file) {
     const errors = []
+
+    if (!isMandatoryTextValue(title)) {
+      const errorId = 'missingTitle'
+      errors.push(
+        makeErrorObject({
+          id: 'title',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
 
     if (req.file.size > 500 * 1024) {
       const errorId = 'fileSizeExceeded'
@@ -75,10 +76,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
       await uploadSupportingDocument({
         recommendationId,
         token,
-        title: '',
+        title,
         filename: req.file.originalname,
         mimetype: req.file.mimetype,
-        type: SupportingDocumentType[typeLookup[type].valueOf()],
+        type: 'OtherDocument',
         data,
         featureFlags: flags,
       })

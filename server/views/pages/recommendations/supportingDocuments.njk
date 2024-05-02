@@ -223,7 +223,26 @@
                             {% endif %}
                         </td>
                     </tr>
-
+                    {% for additional in additionalDocuments %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold width-15-em"> {{ additional.title }} </td>
+                        <td class="govuk-table__cell overflow-wrap-anywhere">
+                            <a href="/recommendations/{{ recommendation.id }}/supporting-document-download/{{ additional.id }}">
+                                {{ additional.filename }}
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                href='/recommendations/{{ recommendation.id }}/xyz'>
+                                Change
+                            </a>
+                            <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0'
+                                href='/recommendations/{{ recommendation.id }}/xyz'>
+                                Remove
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
 
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-font-weight-bold width-15-em"> Additional details </td>
@@ -233,7 +252,7 @@
                         <td class="govuk-table__cell ">
                             <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0' href='/recommendations/{{ recommendation.id }}/edit-ppud-minute'>
                                 {% if minute %}
-                                        Edit a note
+                                        Edit note
                                 {% else %}
                                         Add a note
                                 {% endif %}
@@ -246,7 +265,7 @@
 
             <div class="govuk-grid-row">
                 <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
-                   href='/recommendations/{{ recommendation.id }}/check-booking-details'>
+                   href='/recommendations/{{ recommendation.id }}/additional-supporting-document-upload'>
                     Add another document
                 </a>
             </div>

@@ -13,7 +13,14 @@ describe('get', () => {
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
     }
 
-    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA])
+    const OtherDocument = {
+      title: 'Some Document',
+      type: 'OtherDocument',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098044.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9f',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA, OtherDocument])
 
     const res = mockRes({
       locals: {
@@ -33,6 +40,7 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
     expect(res.locals.PPUDPartA).toEqual(PPUDPartA)
     expect(res.locals.minute).toEqual('some text')
+    expect(res.locals.additionalDocuments).toEqual([OtherDocument])
     expect(next).toHaveBeenCalled()
   })
   it('load with no minute', async () => {
