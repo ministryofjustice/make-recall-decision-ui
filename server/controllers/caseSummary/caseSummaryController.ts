@@ -26,6 +26,7 @@ import config from '../../config'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { RecommendationDecorated } from '../../@types/api'
 import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
+import { createRecommendationBanner } from '../../utils/bannerUtils'
 
 interface RecommendationButton {
   display: boolean
@@ -35,16 +36,16 @@ interface RecommendationButton {
   link?: string
 }
 
-interface RecommendationBanner {
-  display: boolean
-  createdByUserFullName?: string
-  createdDate?: string
-  personOnProbationName?: string
-  dataAnalyticsEventCategory?: string
-  recommendationId?: string
-  linkText?: string
-  text?: string
+// Helper function to determine if a user is an SPO
+function isSeniorProbationOfficer(roles: string[]): boolean {
+  return roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
 }
+
+// Helper function to determine if a user is a Probation Practitioner
+// Uncomment once role model elaborated on
+// function isProbationPractitioner(roles: string[], isSpo: boolean, isOutOfHoursWorker: boolean): boolean {
+//   return !isSpo && !isOutOfHoursWorker
+// }
 
 const auditService = new AuditService()
 
@@ -55,6 +56,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
   if (!isString(sectionId)) {
     throw new AppError('Invalid section ID', { status: 404 })
   }
+
   const normalizedCrn = validateCrn(crn)
   const { errors, ...caseSection } = await getCaseSection(
     sectionId as CaseSectionId,
@@ -83,13 +85,14 @@ async function get(req: Request, res: Response, _: NextFunction) {
   }
 
   const prisonBookingNumber = nomisPrisonOffender?.bookingNo
-  const isSpo = roles.includes('ROLE_MAKE_RECALL_DECISION_SPO')
+  const isSpo = isSeniorProbationOfficer(roles)
   // disabling this rule temporarily until we elaborate on the role model so that people can be explicitly out of hours and probation practitioners.
   // if not an SPO, and not an OOH worker, then the user has only the base role is and is therefore a PP because we haven't extended the role model properly.
-  // const isProbationPractitioner = !isSpo && !isOutOfHoursWorker
+  // const isProbationPractitioner = !isSpo && !isOutOfHoursWorker Note: use helper function `isProbationPractitioner` for this
+
   const isProbationPractitioner = !isSpo
+
   let recommendationButton: RecommendationButton = { display: false }
-  const recommendationBanner: RecommendationBanner = { display: false }
 
   if (recommendationId) {
     // this will be true when the SPO is reviewing the case during the SPO consider recall flow.
@@ -115,7 +118,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
           link: `${pageUrlBase}create-recommendation-warning`,
         }
       }
-    } else if (isSpo) {
+    } else {
       const recommendation: RecommendationDecorated = await getRecommendation(
         String(activeRecommendation.recommendationId),
         user.token
@@ -128,95 +131,79 @@ async function get(req: Request, res: Response, _: NextFunction) {
         })
       ).filter(status => status.active)
 
-      const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
+      const recommendationBanner = createRecommendationBanner(
+        statuses,
+        {
+          createdByUserFullName: recommendation.createdByUserFullName,
+          createdDate: recommendation.createdDate,
+          personOnProbation: { name: recommendation.personOnProbation.name },
+        },
+        String(activeRecommendation.recommendationId),
+        isSpo,
+        isProbationPractitioner
+      )
 
-      const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+      res.locals.recommendationBanner = recommendationBanner
 
-      const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
+      if (isSpo) {
+        const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
-      // Recommendation banner should only be visible for the following statuses
-      const isDoNotRecall = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED)
-      const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED)
-      const isRecallStarted = statuses.find(status => status.name === STATUSES.PO_START_RECALL)
+        const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
-      recommendationBanner.display = true
-      recommendationBanner.createdByUserFullName = recommendation.createdByUserFullName
-      recommendationBanner.createdDate = recommendation.createdDate
-      recommendationBanner.personOnProbationName = recommendation.personOnProbation.name
-      recommendationBanner.recommendationId = String(activeRecommendation.recommendationId)
+        const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
-      if (isDoNotRecall) {
-        recommendationBanner.text = 'started a decision not to recall letter for'
-        recommendationBanner.linkText = 'Delete the decision not to recall'
-        recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
-      } else if (isRecallDecided) {
-        recommendationBanner.text = 'started a Part A for'
-        recommendationBanner.linkText = 'Delete the Part A'
-        recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
-      } else if (isRecallStarted) {
-        recommendationBanner.text = 'started a recommendation for'
-        recommendationBanner.linkText = 'Delete the recommendation'
-        recommendationBanner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
-      } else {
-        recommendationBanner.display = false
-      }
-
-      if (isSpoSignatureRequested || isAcoSignatureRequested) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Countersign',
-          dataAnalyticsEventCategory: 'spo_countersign_click',
-          link: `/recommendations/${activeRecommendation.recommendationId}/task-list`,
-        }
-      } else if (isSpoConsiderRecall) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Consider a recall',
-          dataAnalyticsEventCategory: 'spo_consider_recall_click',
-          link: `/recommendations/${activeRecommendation.recommendationId}/`,
+        if (isSpoSignatureRequested || isAcoSignatureRequested) {
+          recommendationButton = {
+            display: true,
+            post: false,
+            title: 'Countersign',
+            dataAnalyticsEventCategory: 'spo_countersign_click',
+            link: `/recommendations/${activeRecommendation.recommendationId}/task-list`,
+          }
+        } else if (isSpoConsiderRecall) {
+          recommendationButton = {
+            display: true,
+            post: false,
+            title: 'Consider a recall',
+            dataAnalyticsEventCategory: 'spo_consider_recall_click',
+            link: `/recommendations/${activeRecommendation.recommendationId}/`,
+          }
         }
       }
-    } else if (isProbationPractitioner) {
-      const statuses = (
-        await getStatuses({
-          recommendationId: String(activeRecommendation.recommendationId),
-          token,
-        })
-      ).filter(status => status.active)
 
-      const isWithPpcs = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
-      const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
-      if (isWithPpcs) {
-        // Only part A is ever with PPCS.
+      if (isProbationPractitioner) {
+        const isWithPpcs = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
+        const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+        if (isWithPpcs) {
+          // Only part A is ever with PPCS.
 
-        // This looks wrongs as we know we have an open rec doc, and we are creating a new one.  Business want this.
-        // It's a problem for SPO rationale.  We currently don't enforce that the rationale has been supplied, so if
-        // there are two active docs, then the spo rationale can only be supplied on the most recent.  We can therefore
-        // never enforce that a rationale is supplied on the old one.
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Make a recommendation',
-          dataAnalyticsEventCategory: 'make_recommendation_click',
-          link: `${pageUrlBase}create-recommendation-warning`,
-        }
-      } else if (isPPDocumentCreated) {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Make a recommendation',
-          dataAnalyticsEventCategory: 'make_recommendation_click',
-          link: `${pageUrlBase}replace-recommendation/${activeRecommendation.recommendationId}/`,
-        }
-      } else {
-        recommendationButton = {
-          display: true,
-          post: false,
-          title: 'Update recommendation',
-          dataAnalyticsEventCategory: 'update_recommendation_click',
-          link: `/recommendations/${activeRecommendation.recommendationId}/`,
+          // This looks wrongs as we know we have an open rec doc, and we are creating a new one.  Business want this.
+          // It's a problem for SPO rationale.  We currently don't enforce that the rationale has been supplied, so if
+          // there are two active docs, then the spo rationale can only be supplied on the most recent.  We can therefore
+          // never enforce that a rationale is supplied on the old one.
+          recommendationButton = {
+            display: true,
+            post: false,
+            title: 'Make a recommendation',
+            dataAnalyticsEventCategory: 'make_recommendation_click',
+            link: `${pageUrlBase}create-recommendation-warning`,
+          }
+        } else if (isPPDocumentCreated) {
+          recommendationButton = {
+            display: true,
+            post: false,
+            title: 'Make a recommendation',
+            dataAnalyticsEventCategory: 'make_recommendation_click',
+            link: `${pageUrlBase}replace-recommendation/${activeRecommendation.recommendationId}/`,
+          }
+        } else {
+          recommendationButton = {
+            display: true,
+            post: false,
+            title: 'Update recommendation',
+            dataAnalyticsEventCategory: 'update_recommendation_click',
+            link: `/recommendations/${activeRecommendation.recommendationId}/`,
+          }
         }
       }
     }
@@ -235,7 +222,6 @@ async function get(req: Request, res: Response, _: NextFunction) {
     showOutOfHoursRecallButton: isOutOfHoursWorker,
     prisonBookingNumber,
     recommendationButton,
-    recommendationBanner,
     backLink,
     pageUrlBase,
   }

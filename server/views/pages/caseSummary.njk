@@ -76,67 +76,82 @@
                                         </div>
                                     </div>
                                     {% if recommendationBanner.display %}
-                                        {% set bannerHtml %}
-                                        <p>{{ recommendationBanner.createdByUserFullName }}
-                                            {{ recommendationBanner.text }}
-                                            {{ recommendationBanner.personOnProbationName }} on
-                                            {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
-                                        <p>
-                                            <a class="govuk-link govuk-link--no-visited-state" href="/recommendations/{{ recommendationBanner.recommendationId }}/spo-delete-recommendation-rationale" data-analytics-event='click_cta' data-analytics-event-category='{{ recommendationBanner.dataAnalyticsEventCategory }}'>{{ recommendationBanner.linkText }}</a>
-                                            if you need to stop it. You'll have to explain why.
-                                        </p>
-                                        {% endset %}
+                                        {% if isSpo %}
+                                            {% set bannerHtml %}
+                                            <p>{{ recommendationBanner.createdByUserFullName }}
+                                                {{ recommendationBanner.text }}
+                                                {{ recommendationBanner.personOnProbationName }} on
+                                                {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
+                                            <p>
+                                                <a class="govuk-link govuk-link--no-visited-state" href="/recommendations/{{ recommendationBanner.recommendationId }}/spo-delete-recommendation-rationale" data-analytics-event='click_cta' data-analytics-event-category='{{ recommendationBanner.dataAnalyticsEventCategory }}'>{{ recommendationBanner.linkText }}</a>
+                                                if you need to stop it. You'll have to explain why.
+                                            </p>
+                                            {% endset %}
+                                        {% endif %}
+                                        {% if isProbationPractitioner %}
+
+                                            {% set bannerHtml %}
+                                            <p>{{ recommendationBanner.createdByUserFullName }}
+                                                {{ recommendationBanner.text }}
+                                                {{ recommendationBanner.personOnProbationName }} on
+                                                {{ formatDateTimeFromIsoString({ isoDate: recommendationBanner.createdDate, dateOnly: true }) }}.</p>
+                                            <p>
+                                                The consideration is open and needs finishing. If the consideration is not needed a manager can delete it.
+                                            </p>
+                                            {% endset %}
+                                        {% endif %}
                                         {{ mojBanner({
-                    type: 'information',
-                    html: bannerHtml,
-                    iconFallbackText: 'information'
-                }) }}
+                                            type: 'information',
+                                            html: bannerHtml,
+                                            iconFallbackText: 'information'
+                                        }) }}
                                     {% endif %}
+
                                     {{ mojSubNavigation({
-                label: 'Case summary sections',
-                items: removeUndefinedListItems([
-                    {
-                        text: 'Overview',
-                        href: pageUrlBase + 'overview',
-                        active: section.id == 'overview'
-                    },
-                    {
-                        text: 'Risk',
-                        href: pageUrlBase + 'risk',
-                        active: section.id == 'risk'
-                    },
-                    {
-                        text: 'Vulnerabilities',
-                        href: pageUrlBase + 'vulnerabilities',
-                        active: section.id == 'vulnerabilities'
-                    },
-                    {
-                        text: 'Personal details',
-                        href: pageUrlBase + 'personal-details',
-                        active: section.id == 'personal-details'
-                    },
-                    {
-                        text: 'Licence conditions',
-                        href: pageUrlBase + 'licence-conditions',
-                        active: section.id == 'licence-conditions'
-                    },
-                    {
-                        text: 'Contact history',
-                        href: pageUrlBase + 'contact-history',
-                        active: section.id == 'contact-history'
-                    },
-                    {
-                        text: 'Recommendations',
-                        href: pageUrlBase + 'recommendations',
-                        active: section.id == 'recommendations'
-                    } if flags.flagRecommendationsPage else undefined,
-                    {
-                        text: 'Last completed document',
-                        href: pageUrlBase + 'last-completed',
-                        active: section.id == 'last-completed'
-                    }
-                ])
-            }) }}
+                                    label: 'Case summary sections',
+                                    items: removeUndefinedListItems([
+                                        {
+                                            text: 'Overview',
+                                            href: pageUrlBase + 'overview',
+                                            active: section.id == 'overview'
+                                        },
+                                        {
+                                            text: 'Risk',
+                                            href: pageUrlBase + 'risk',
+                                            active: section.id == 'risk'
+                                        },
+                                        {
+                                            text: 'Vulnerabilities',
+                                            href: pageUrlBase + 'vulnerabilities',
+                                            active: section.id == 'vulnerabilities'
+                                        },
+                                        {
+                                            text: 'Personal details',
+                                            href: pageUrlBase + 'personal-details',
+                                            active: section.id == 'personal-details'
+                                        },
+                                        {
+                                            text: 'Licence conditions',
+                                            href: pageUrlBase + 'licence-conditions',
+                                            active: section.id == 'licence-conditions'
+                                        },
+                                        {
+                                            text: 'Contact history',
+                                            href: pageUrlBase + 'contact-history',
+                                            active: section.id == 'contact-history'
+                                        },
+                                        {
+                                            text: 'Recommendations',
+                                            href: pageUrlBase + 'recommendations',
+                                            active: section.id == 'recommendations'
+                                        } if flags.flagRecommendationsPage else undefined,
+                                        {
+                                            text: 'Last completed document',
+                                            href: pageUrlBase + 'last-completed',
+                                            active: section.id == 'last-completed'
+                                        }
+                                    ])
+                                }) }}
                                     {% if section.id == 'overview' %}
                                         {% include '../partials/caseOverview.njk' %}
                                     {% elseif section.id =='risk' %}
