@@ -105,7 +105,9 @@ export const strings: Record<string, Record<string, string>> = {
     fileSizeExceeded: 'The file must be smaller than 500KB',
     invalidFilename: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
     uploadFileFailure: 'The selected file could not be uploaded - try again',
-    missingTitle: 'Enter the title',
+    missingTitle: 'Enter a document title',
+    missingFile: 'Upload a document',
+    duplicateTitle: 'Enter a unique document title',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',

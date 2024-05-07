@@ -2,17 +2,19 @@ import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { isMandatoryTextValue } from '../../utils/utils'
-import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
+import { isDefined, isMandatoryTextValue } from '../../utils/utils'
+import { getSupportingDocuments, uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { type } = req.params
+  const { errors, unsavedValues } = res.locals
 
   res.locals = {
     ...res.locals,
-    type,
     page: {
       id: 'additionalSupportingDocumentUpload',
+    },
+    inputDisplayValues: {
+      title: isDefined(errors) ? unsavedValues?.title : '',
     },
   }
 
@@ -29,7 +31,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  if (req.file) {
+  if (req.file || title) {
     const errors = []
 
     if (!isMandatoryTextValue(title)) {
@@ -41,21 +43,46 @@ async function post(req: Request, res: Response, _: NextFunction) {
           errorId,
         })
       )
+    } else {
+      const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
+
+      const isTitleTaken = !!documents.find(doc => doc.title === title)
+      if (isTitleTaken) {
+        const errorId = 'duplicateTitle'
+        errors.push(
+          makeErrorObject({
+            id: 'title',
+            text: strings.errors[errorId],
+            errorId,
+          })
+        )
+      }
     }
 
-    if (req.file.size > 500 * 1024) {
-      const errorId = 'fileSizeExceeded'
-      errors.push(
-        makeErrorObject({
-          id: 'file',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
+    if (req.file) {
+      if (req.file.size > 500 * 1024) {
+        const errorId = 'fileSizeExceeded'
+        errors.push(
+          makeErrorObject({
+            id: 'file',
+            text: strings.errors[errorId],
+            errorId,
+          })
+        )
+      }
 
-    if (!req.file.originalname.match(/^[.A-Za-z0-9!_-]+$/)) {
-      const errorId = 'invalidFilename'
+      if (!req.file.originalname.match(/^[.A-Za-z0-9!_-]+$/)) {
+        const errorId = 'invalidFilename'
+        errors.push(
+          makeErrorObject({
+            id: 'file',
+            text: strings.errors[errorId],
+            errorId,
+          })
+        )
+      }
+    } else {
+      const errorId = 'missingFile'
       errors.push(
         makeErrorObject({
           id: 'file',
@@ -67,6 +94,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     if (errors.length > 0) {
       req.session.errors = errors
+      req.session.unsavedValues = {
+        title,
+      }
       return res.redirect(303, req.originalUrl)
     }
 
