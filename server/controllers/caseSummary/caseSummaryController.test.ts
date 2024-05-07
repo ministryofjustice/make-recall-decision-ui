@@ -25,11 +25,13 @@ import recommendationApiResponse from '../../../api/responses/get-recommendation
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
+import { createRecommendationBanner } from '../../utils/bannerUtils'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/redisClient')
 jest.mock('../raiseWarningBannerEvents')
+jest.mock('../../utils/bannerUtils')
 
 describe('get', () => {
   beforeEach(() => {
@@ -396,7 +398,27 @@ describe('get', () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+      display: true,
+      createdByUserFullName: 'Madison Bayer',
+      createdDate: '2020-01-01',
+      personOnProbationName: 'John Dodo',
+      recommendationId: '12345',
+      linkText: 'Mock Link',
+      text: 'Mock Text',
+      dataAnalyticsEventCategory: 'mock_category',
+    })
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Madison',
+          roles: ['ROLE_MAKE_RECALL_DECISION'],
+        },
+      },
+    })
     await caseSummaryController.get(req, res, next)
 
     expect(res.locals.backLink).toEqual('/search')
@@ -415,7 +437,27 @@ describe('get', () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: 'PP_DOCUMENT_CREATED', active: true }])
     ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+      display: true,
+      createdByUserFullName: 'Madison Bayer',
+      createdDate: '2020-01-01',
+      personOnProbationName: 'John Dodo',
+      recommendationId: '12345',
+      linkText: 'Mock Link',
+      text: 'Mock Text',
+      dataAnalyticsEventCategory: 'mock_category',
+    })
     const req = mockReq({ params: { crn, sectionId: 'overview' } })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Madison',
+          roles: ['ROLE_MAKE_RECALL_DECISION'],
+        },
+      },
+    })
     await caseSummaryController.get(req, res, next)
 
     expect(res.locals.backLink).toEqual('/search')
@@ -622,87 +664,236 @@ describe('get', () => {
       title: 'Countersign',
     })
   })
-  it('do not show recommendation banner for a PO when PO_START_RECALL state', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.PO_START_RECALL, active: true }])
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+  describe('recommendation banner tests', () => {
+    describe('when there is no active recommendation', () => {})
+    describe('when PO_START_RECALL', () => {
+      it('show recommendation banner for SPO', async () => {
+        ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+        ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.PO_START_RECALL, active: true }])
+        ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+        ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+        ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+          display: true,
+          createdByUserFullName: 'Madison Bayer',
+          createdDate: '2020-01-01',
+          personOnProbationName: 'John Dodo',
+          recommendationId: '12345',
+          linkText: 'Mock Link',
+          text: 'Mock Text',
+          dataAnalyticsEventCategory: 'mock_category',
+        })
 
-    const req = mockReq({
-      params: { crn, sectionId: 'overview' },
-    })
-    res = mockRes({
-      token,
-      locals: {
-        user: {
-          username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
-        },
-      },
-    })
+        const req = mockReq({
+          params: { crn, sectionId: 'overview' },
+        })
+        res = mockRes({
+          token,
+          locals: {
+            user: {
+              username: 'Dave',
+              roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+            },
+          },
+        })
 
-    await caseSummaryController.get(req, res, next)
+        await caseSummaryController.get(req, res, next)
 
-    expect(res.locals.recommendationBanner).toEqual({
-      display: false,
-    })
-  })
-  it('do show recommendation banner for SPO when NO_RECALL_DECIDED state', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.NO_RECALL_DECIDED, active: true }])
-    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
-    const req = mockReq({
-      params: { crn, sectionId: 'overview' },
-    })
-    res = mockRes({
-      token,
-      locals: {
-        user: {
-          username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
-        },
-      },
-    })
-
-    await caseSummaryController.get(req, res, next)
-
-    expect(res.locals.recommendationBanner).toEqual(
-      expect.objectContaining({
-        display: true,
-        dataAnalyticsEventCategory: 'spo_delete_dntr_click',
-        linkText: 'Delete the decision not to recall',
-        text: 'started a decision not to recall letter for',
+        expect(res.locals.recommendationBanner.display).toEqual(true)
       })
-    )
-  })
-  it('do show recommendation banner for SPO when RECALL_DECIDED state', async () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.RECALL_DECIDED, active: true }])
-    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
-    const req = mockReq({
-      params: { crn, sectionId: 'overview' },
-    })
-    res = mockRes({
-      token,
-      locals: {
-        user: {
-          username: 'Dave',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
-        },
-      },
-    })
+      it('show recommendation banner for PO', async () => {
+        ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+        ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.PO_START_RECALL, active: true }])
+        ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+        ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+        ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+          display: true,
+          createdByUserFullName: 'Madison Bayer',
+          createdDate: '2020-01-01',
+          personOnProbationName: 'John Dodo',
+          recommendationId: '12345',
+          text: 'Mock Text',
+        })
 
-    await caseSummaryController.get(req, res, next)
+        const req = mockReq({
+          params: { crn, sectionId: 'overview' },
+        })
+        res = mockRes({
+          token,
+          locals: {
+            user: {
+              username: 'Dave',
+              roles: ['ROLE_MAKE_RECALL_DECISION'],
+            },
+          },
+        })
 
-    expect(res.locals.recommendationBanner).toEqual(
-      expect.objectContaining({
-        display: true,
-        dataAnalyticsEventCategory: 'spo_delete_part_a_click',
-        linkText: 'Delete the Part A',
-        text: 'started a Part A for',
+        await caseSummaryController.get(req, res, next)
+
+        expect(res.locals.recommendationBanner.display).toEqual(true)
       })
-    )
+    })
+
+    describe('when RECALL_DECIDED', () => {
+      it('do show recommendation banner for SPO when RECALL_DECIDED state', async () => {
+        ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+        ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.RECALL_DECIDED, active: true }])
+        ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+        ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+        ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+          display: true,
+          createdByUserFullName: 'Madison Bayer',
+          createdDate: '2020-01-01',
+          personOnProbationName: 'John Dodo',
+          recommendationId: '12345',
+          dataAnalyticsEventCategory: 'spo_delete_part_a_click',
+          linkText: 'Delete the Part A',
+          text: 'started a Part A for',
+        })
+
+        const req = mockReq({
+          params: { crn, sectionId: 'overview' },
+        })
+        res = mockRes({
+          token,
+          locals: {
+            user: {
+              username: 'Dave',
+              roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+            },
+          },
+        })
+
+        await caseSummaryController.get(req, res, next)
+
+        expect(res.locals.recommendationBanner).toEqual(
+          expect.objectContaining({
+            display: true,
+            dataAnalyticsEventCategory: 'spo_delete_part_a_click',
+            linkText: 'Delete the Part A',
+            text: 'started a Part A for',
+          })
+        )
+      })
+      it('do show recommendation banner for PO when RECALL_DECIDED state', async () => {
+        ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+        ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.RECALL_DECIDED, active: true }])
+        ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+        ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+        ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+          display: true,
+          createdByUserFullName: 'Madison Bayer',
+          createdDate: '2020-01-01',
+          personOnProbationName: 'John Dodo',
+          recommendationId: '12345',
+          linkText: '',
+          text: 'started a Part A for',
+        })
+
+        const req = mockReq({
+          params: { crn, sectionId: 'overview' },
+        })
+        res = mockRes({
+          token,
+          locals: {
+            user: {
+              username: 'Dave',
+              roles: ['ROLE_MAKE_RECALL_DECISION'],
+            },
+          },
+        })
+
+        await caseSummaryController.get(req, res, next)
+
+        expect(res.locals.recommendationBanner).toEqual(
+          expect.objectContaining({
+            display: true,
+            linkText: '',
+            text: 'started a Part A for',
+          })
+        )
+      })
+    })
+
+    describe('when NO_RECALL_DECIDED', () => {
+      it('do show recommendation banner for SPO when NO_RECALL_DECIDED state', async () => {
+        ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+        ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.NO_RECALL_DECIDED, active: true }])
+        ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+        ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+        ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+          display: true,
+          createdByUserFullName: 'Madison Bayer',
+          createdDate: '2020-01-01',
+          personOnProbationName: 'John Dodo',
+          recommendationId: '12345',
+          dataAnalyticsEventCategory: 'spo_delete_dntr_click',
+          linkText: 'Delete the decision not to recall',
+          text: 'started a decision not to recall letter for',
+        })
+
+        const req = mockReq({
+          params: { crn, sectionId: 'overview' },
+        })
+        res = mockRes({
+          token,
+          locals: {
+            user: {
+              username: 'Dave',
+              roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+            },
+          },
+        })
+
+        await caseSummaryController.get(req, res, next)
+
+        expect(res.locals.recommendationBanner).toEqual(
+          expect.objectContaining({
+            display: true,
+            dataAnalyticsEventCategory: 'spo_delete_dntr_click',
+            linkText: 'Delete the decision not to recall',
+            text: 'started a decision not to recall letter for',
+          })
+        )
+      })
+      it('do show recommendation banner for PO when NO_RECALL_DECIDED state', async () => {
+        ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+        ;(getStatuses as jest.Mock).mockReturnValueOnce([{ name: STATUSES.NO_RECALL_DECIDED, active: true }])
+        ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+        ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+        ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
+          display: true,
+          createdByUserFullName: 'Madison Bayer',
+          createdDate: '2020-01-01',
+          personOnProbationName: 'John Dodo',
+          recommendationId: '12345',
+          dataAnalyticsEventCategory: 'spo_delete_dntr_click',
+          text: 'started a decision not to recall letter for',
+        })
+
+        const req = mockReq({
+          params: { crn, sectionId: 'overview' },
+        })
+        res = mockRes({
+          token,
+          locals: {
+            user: {
+              username: 'Dave',
+              roles: ['ROLE_MAKE_RECALL_DECISION'],
+            },
+          },
+        })
+
+        await caseSummaryController.get(req, res, next)
+
+        expect(res.locals.recommendationBanner).toEqual(
+          expect.objectContaining({
+            display: true,
+            dataAnalyticsEventCategory: 'spo_delete_dntr_click',
+            text: 'started a decision not to recall letter for',
+          })
+        )
+      })
+    })
   })
 })
 

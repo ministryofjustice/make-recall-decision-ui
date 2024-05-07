@@ -11,6 +11,8 @@ import {
   deliusLicenceConditionParticipateOrCoOperate,
 } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
+
 context('Licence conditions', () => {
   beforeEach(() => {
     cy.task('reset')
@@ -38,6 +40,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     // Additional licence conditions
@@ -65,6 +71,14 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
@@ -85,6 +99,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
@@ -107,6 +125,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
@@ -126,6 +148,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
@@ -150,6 +176,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
@@ -173,6 +203,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
@@ -198,6 +232,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
@@ -214,6 +252,10 @@ context('Licence conditions', () => {
         .build()
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
