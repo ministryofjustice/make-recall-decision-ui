@@ -139,18 +139,17 @@ async function get(req: Request, res: Response, _: NextFunction) {
           personOnProbation: { name: recommendation.personOnProbation.name },
         },
         String(activeRecommendation.recommendationId),
-        isSpo,
-        isProbationPractitioner
+        isSpo
       )
 
       res.locals.recommendationBanner = recommendationBanner
 
       if (isSpo) {
-        const isSpoConsiderRecall = statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
+        const isSpoConsiderRecall = !!statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)
 
-        const isSpoSignatureRequested = statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
+        const isSpoSignatureRequested = !!statuses.find(status => status.name === STATUSES.SPO_SIGNATURE_REQUESTED)
 
-        const isAcoSignatureRequested = statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
+        const isAcoSignatureRequested = !!statuses.find(status => status.name === STATUSES.ACO_SIGNATURE_REQUESTED)
 
         if (isSpoSignatureRequested || isAcoSignatureRequested) {
           recommendationButton = {
@@ -172,8 +171,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
       }
 
       if (isProbationPractitioner) {
-        const isWithPpcs = statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
-        const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+        const isWithPpcs = !!statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
+        const isPPDocumentCreated = !!statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
         if (isWithPpcs) {
           // Only part A is ever with PPCS.
 
@@ -224,6 +223,8 @@ async function get(req: Request, res: Response, _: NextFunction) {
     recommendationButton,
     backLink,
     pageUrlBase,
+    isSpo,
+    isProbationPractitioner,
   }
   const page = isCaseRestrictedOrExcluded(caseSection.caseSummary.userAccessResponse)
     ? 'pages/excludedRestrictedCrn'

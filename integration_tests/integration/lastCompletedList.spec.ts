@@ -1,8 +1,16 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import getLastCompletedRecommendationsResponse from '../../api/responses/get-case-last-completed.json'
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
 context('Recommendations tab in case summary', () => {
   const crn = 'X34983'
+
+  beforeEach(() => {
+    cy.task('reset')
+    cy.window().then(win => win.sessionStorage.clear())
+    cy.task('getUser', { user: 'USER1', statusCode: 200, response: { homeArea: { code: 'N07', name: 'London' } } })
+    cy.signIn()
+  })
 
   const checkValuesInTable = expectedTableRows => {
     for (let i = 0; i < expectedTableRows.length; i += 1) {
@@ -13,7 +21,6 @@ context('Recommendations tab in case summary', () => {
   }
 
   it('list last completed', () => {
-    cy.signIn()
     cy.task('getCase', {
       sectionId: 'last-completed',
       statusCode: 200,
@@ -22,6 +29,10 @@ context('Recommendations tab in case summary', () => {
       },
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/last-completed`)
     cy.pageHeading().should('equal', 'Completed for Harry Smith')
@@ -30,8 +41,12 @@ context('Recommendations tab in case summary', () => {
   })
 
   it('shows a message if no last completed', () => {
-    cy.signIn()
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.task('getCase', {
       sectionId: 'last-completed',
       statusCode: 200,

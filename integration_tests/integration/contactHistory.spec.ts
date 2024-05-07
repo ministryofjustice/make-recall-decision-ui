@@ -5,17 +5,25 @@ import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 import { dedupeList } from '../../server/utils/lists'
 import { removeSystemGenerated } from '../../server/controllers/caseSummary/contactHistory/filterContactsBySystemGenerated'
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
 context('Contact history', () => {
   const crn = 'X34983'
 
   beforeEach(() => {
+    cy.task('reset')
+    cy.window().then(win => win.sessionStorage.clear())
+    cy.task('getUser', { user: 'USER1', statusCode: 200, response: { homeArea: { code: 'N07', name: 'London' } } })
     cy.signIn()
   })
 
   describe('List of contacts', () => {
     it('shows all contacts, sorted by date', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
@@ -61,6 +69,10 @@ context('Contact history', () => {
         ],
       }
       cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: responseWithFutureContact })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
@@ -69,6 +81,10 @@ context('Contact history', () => {
 
     it('can view collapsible notes on the contact history page', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
@@ -96,6 +112,11 @@ context('Contact history', () => {
 
     it('can download contact documents', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
       cy.log('Documents sorted by last modified date (newest first)')
@@ -132,6 +153,10 @@ context('Contact history', () => {
   describe('Filter contacts', () => {
     it('by date range', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
 
@@ -191,6 +216,10 @@ context('Contact history', () => {
 
     it('by free text search', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.fillInput('Search term', 'letter')
@@ -213,6 +242,10 @@ context('Contact history', () => {
 
     it('by contact type group', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.contains('Appointments (5 contacts)').click()
@@ -223,6 +256,10 @@ context('Contact history', () => {
 
     it('by system generated contacts', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
@@ -236,6 +273,10 @@ context('Contact history', () => {
 
     it('by multiple filters combined', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
+      })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')

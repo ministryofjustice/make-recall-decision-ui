@@ -18,7 +18,7 @@ describe('create recommendation banner', () => {
   describe('when NO_RECALL_DECIDED', () => {
     it('should create a banner with correct text and link for an SPO', () => {
       const statuses: Status[] = [{ ...baseStatuses[0], active: true }]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true, false)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true)
 
       expect(banner.display).toBe(true)
       expect(banner.text).toBe('started a decision not to recall letter for')
@@ -28,7 +28,7 @@ describe('create recommendation banner', () => {
 
     it('should create a banner with correct text and no link text for a Probation Practitioner', () => {
       const statuses: Status[] = [{ ...baseStatuses[0], active: true }]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false, true)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false)
 
       expect(banner.display).toBe(true)
       expect(banner.text).toBe('started a decision not to recall letter for')
@@ -39,7 +39,7 @@ describe('create recommendation banner', () => {
   describe('when RECALL_DECIDED', () => {
     it('should create a banner with correct text and link for an SPO', () => {
       const statuses: Status[] = [{ ...baseStatuses[1], active: true }]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true, false)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true)
 
       expect(banner.display).toBe(true)
       expect(banner.text).toBe('started a Part A for')
@@ -49,7 +49,7 @@ describe('create recommendation banner', () => {
 
     it('should create a banner with correct text and no link text for a Probation Practitioner', () => {
       const statuses: Status[] = [{ ...baseStatuses[1], active: true }]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false, true)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false)
 
       expect(banner.display).toBe(true)
       expect(banner.text).toBe('started a Part A for')
@@ -60,7 +60,7 @@ describe('create recommendation banner', () => {
   describe('when PO_START_RECALL', () => {
     it('should create a banner with correct text and link for an SPO', () => {
       const statuses: Status[] = [{ ...baseStatuses[2], active: true }]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true, false)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true)
 
       expect(banner.display).toBe(true)
       expect(banner.text).toBe('started a recommendation for')
@@ -70,7 +70,7 @@ describe('create recommendation banner', () => {
 
     it('should create a banner with correct text and no link text for a Probation Practitioner', () => {
       const statuses: Status[] = [{ ...baseStatuses[2], active: true }]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false, true)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false)
 
       expect(banner.display).toBe(true)
       expect(banner.text).toBe('started a recommendation for')
@@ -84,7 +84,7 @@ describe('create recommendation banner', () => {
         { name: 'RECALL_DECIDED', active: false },
         { name: 'PO_START_RECALL', active: false },
       ]
-      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true, false)
+      const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true)
 
       expect(banner.display).toBe(false)
     })

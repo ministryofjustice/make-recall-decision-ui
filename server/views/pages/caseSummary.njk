@@ -28,7 +28,6 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-full">
                                     {% include '../partials/error-summary.njk' %}
-
                                     <div class='govuk-!-margin-bottom-1'>
                                         <ul class="govuk-list govuk-caption-m inline-list-from-tablet">
                                             <li>CRN:
@@ -36,11 +35,11 @@
                                                 <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
                                             </li>
                                             {% if showOutOfHoursRecallButton %}
-                                            <li>NOMIS:
-                                                <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.nomsNumber }}</span>
-                                                <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
-                                            </li> 
-                                            {% endif %} 
+                                                <li>NOMIS:
+                                                    <span data-qa='personalDetailsOverview-crn'>{{ caseSummary.personalDetailsOverview.nomsNumber }}</span>
+                                                    <span class='govuk-!-padding-left-3 govuk-!-padding-right-3 hide-mobile'>|</span>
+                                                </li>
+                                            {% endif %}
                                             <li>Date of birth:
                                                 <span data-qa='personalDetailsOverview-dateOfBirth'>{{ formatDateTimeFromIsoString({isoDate: caseSummary.personalDetailsOverview.dateOfBirth}) }}</span>
                                                 (age
@@ -87,9 +86,7 @@
                                                 if you need to stop it. You'll have to explain why.
                                             </p>
                                             {% endset %}
-                                        {% endif %}
-                                        {% if isProbationPractitioner %}
-
+                                        {% else %}
                                             {% set bannerHtml %}
                                             <p>{{ recommendationBanner.createdByUserFullName }}
                                                 {{ recommendationBanner.text }}
@@ -106,7 +103,6 @@
                                             iconFallbackText: 'information'
                                         }) }}
                                     {% endif %}
-
                                     {{ mojSubNavigation({
                                     label: 'Case summary sections',
                                     items: removeUndefinedListItems([

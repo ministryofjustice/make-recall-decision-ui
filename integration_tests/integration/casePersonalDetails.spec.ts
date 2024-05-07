@@ -1,9 +1,13 @@
 import { routeUrls } from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
+import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
 context('Personal details', () => {
   beforeEach(() => {
+    cy.task('reset')
+    cy.window().then(win => win.sessionStorage.clear())
+    cy.task('getUser', { user: 'USER1', statusCode: 200, response: { homeArea: { code: 'N07', name: 'London' } } })
     cy.signIn()
   })
 
@@ -11,6 +15,10 @@ context('Personal details', () => {
     const crn = 'X34983'
     const { personalDetailsOverview } = getCasePersonalDetailsResponse
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
     cy.pageHeading().should('equal', 'Personal details for Paula Smith')
@@ -45,6 +53,10 @@ context('Personal details', () => {
       response: { ...getCasePersonalDetailsResponse, addresses: [] },
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
     cy.getDefinitionListValue('Main address').should('contain', 'None')
