@@ -1,23 +1,58 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
+import { getSupportingDocuments, uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 import additionalSupportingDocumentUploadController from './additionalSupportingDocumentUploadController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load', async () => {
-    const req = mockReq({
-      params: {
-        type: 'part-a',
-      },
-    })
+    const req = mockReq()
     const res = mockRes()
     const next = mockNext()
     await additionalSupportingDocumentUploadController.get(req, res, next)
 
     expect(res.locals.page).toEqual({ id: 'additionalSupportingDocumentUpload' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/additionalSupportingDocumentUpload')
-    expect(res.locals.type).toEqual('part-a')
+    expect(next).toHaveBeenCalled()
+  })
+  it('load with error', async () => {
+    const req = mockReq()
+
+    const res = mockRes({
+      locals: {
+        unsavedValues: {
+          title: 'a title',
+        },
+        errors: {
+          list: [
+            {
+              name: 'title',
+              href: '#title',
+              errorId: 'title',
+              html: 'Enter a document title',
+            },
+          ],
+        },
+        token: 'token1',
+      },
+    })
+
+    const next = mockNext()
+    await additionalSupportingDocumentUploadController.get(req, res, next)
+
+    expect(res.locals.page).toEqual({ id: 'additionalSupportingDocumentUpload' })
+    expect(res.locals.errors).toEqual({
+      list: [
+        {
+          name: 'title',
+          href: '#title',
+          errorId: 'title',
+          html: 'Enter a document title',
+        },
+      ],
+    })
+    expect(res.locals.inputDisplayValues).toEqual({ title: 'a title' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/additionalSupportingDocumentUpload')
     expect(next).toHaveBeenCalled()
   })
 })
@@ -48,6 +83,9 @@ describe('post', () => {
       },
     })
     const next = mockNext()
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([])
+
     await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(uploadSupportingDocument).toHaveBeenCalledWith({
@@ -122,7 +160,7 @@ describe('post', () => {
     expect(req.session.errors).toEqual([
       {
         name: 'title',
-        text: 'Enter the title',
+        text: 'Enter a document title',
         href: '#title',
         errorId: 'missingTitle',
         invalidParts: undefined,
@@ -141,6 +179,104 @@ describe('post', () => {
         text: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
         href: '#file',
         errorId: 'invalidFilename',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+  it('post with invalid file', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+      },
+      body: {
+        title: 'a file',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+
+    const next = mockNext()
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([])
+
+    await additionalSupportingDocumentUploadController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'file',
+        text: 'Upload a document',
+        href: '#file',
+        errorId: 'missingFile',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+  it('post with duplicate title', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+      },
+      body: {
+        title: 'title',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512000,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([
+      {
+        id: 2052116145,
+        recommendationId: 573594083,
+        createdBy: 'MAKE_RECALL_DECISION_PPCS_USER',
+        createdByUserFullName: 'Making Recall Decisions PPCS User',
+        created: '2024-05-07T15:15:32.636Z',
+        filename: 'NAT_Recall_Part_A_01052024_Smith_H_X098092.docx',
+        type: 'OtherDocument',
+        uploadedBy: 'MAKE_RECALL_DECISION_PPCS_USER',
+        uploadedByUserFullName: 'Making Recall Decisions PPCS User',
+        uploaded: '2024-05-07T15:15:32.636Z',
+        documentUuid: 'de5f7359-e144-4c63-9645-a5186f879f21',
+        title: 'title',
+      },
+    ])
+
+    await additionalSupportingDocumentUploadController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'title',
+        text: 'Enter a unique document title',
+        href: '#title',
+        errorId: 'duplicateTitle',
         invalidParts: undefined,
         values: undefined,
       },
@@ -176,6 +312,7 @@ describe('post', () => {
     })
     const next = mockNext()
 
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([])
     ;(uploadSupportingDocument as jest.Mock).mockImplementation(() => {
       throw new Error('somethings up')
     })
