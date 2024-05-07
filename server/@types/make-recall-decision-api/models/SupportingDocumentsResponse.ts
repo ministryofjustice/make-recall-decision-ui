@@ -8,7 +8,7 @@ export enum SupportingDocumentType {
   PPUDPrecons,
   PPUDPSR,
   PPUDChargeSheet,
-  PPUDOther
+  OtherDocument
 }
 
 export type SupportingDocument = {

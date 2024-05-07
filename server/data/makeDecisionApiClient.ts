@@ -365,6 +365,7 @@ export const uploadSupportingDocument = ({
   recommendationId,
   token,
   filename,
+  title,
   type,
   mimetype,
   data,
@@ -373,6 +374,7 @@ export const uploadSupportingDocument = ({
   recommendationId: string
   token: string
   filename: string
+  title: string
   type: string
   mimetype: string
   data: string
@@ -380,7 +382,7 @@ export const uploadSupportingDocument = ({
 }): Promise<SupportingDocument[]> => {
   return restClient(token).post({
     path: `${routes.recommendations}/${recommendationId}/documents`,
-    data: { filename, type, mimetype, data },
+    data: { filename, type, title, mimetype, data },
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<SupportingDocument[]>
 }

@@ -115,6 +115,7 @@ import supportingDocumentDownloadController from '../controllers/recommendation/
 import supportingDocumentReplaceController from '../controllers/recommendation/supportingDocumentReplaceController'
 import supportingDocumentRemoveController from '../controllers/recommendation/supportingDocumentRemoveController'
 import editPpudMinuteController from '../controllers/recommendation/editPpudMinuteController'
+import additionalSupportingDocumentUploadController from '../controllers/recommendation/additionalSupportingDocumentUploadController'
 
 const recommendations = Router()
 
@@ -481,6 +482,9 @@ ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
 ppcsRouteBuilder.post('supporting-document-upload/:type', supportingDocumentUploadController.post)
+
+ppcsRouteBuilder.get('additional-supporting-document-upload', additionalSupportingDocumentUploadController.get)
+ppcsRouteBuilder.post('additional-supporting-document-upload', additionalSupportingDocumentUploadController.post)
 
 ppcsRouteBuilder.get('edit-ppud-minute', editPpudMinuteController.get)
 ppcsRouteBuilder.post('edit-ppud-minute', editPpudMinuteController.post)

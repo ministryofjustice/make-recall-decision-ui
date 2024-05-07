@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
-import supportingDocumentUploadController from './supportingDocumentUploadController'
+import additionalSupportingDocumentUploadController from './additionalSupportingDocumentUploadController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -13,10 +13,10 @@ describe('get', () => {
     })
     const res = mockRes()
     const next = mockNext()
-    await supportingDocumentUploadController.get(req, res, next)
+    await additionalSupportingDocumentUploadController.get(req, res, next)
 
-    expect(res.locals.page).toEqual({ id: 'supportingDocumentUpload' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocumentUpload')
+    expect(res.locals.page).toEqual({ id: 'additionalSupportingDocumentUpload' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/additionalSupportingDocumentUpload')
     expect(res.locals.type).toEqual('part-a')
     expect(next).toHaveBeenCalled()
   })
@@ -29,7 +29,7 @@ describe('post', () => {
         recommendationId: '1234',
       },
       body: {
-        type: 'part-a',
+        title: 'My Title',
       },
       file: {
         fieldname: 'file',
@@ -48,7 +48,7 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentUploadController.post(req, res, next)
+    await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(uploadSupportingDocument).toHaveBeenCalledWith({
       data: 'T25jZSB1cG9uIGEgbWlkbmlnaHQgZHJlYXJ5',
@@ -57,8 +57,8 @@ describe('post', () => {
       mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       recommendationId: '1234',
       token: 'token1',
-      type: 'PPUDPartA',
-      title: '',
+      type: 'OtherDocument',
+      title: 'My Title',
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1234/supporting-documents`)
@@ -82,7 +82,7 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentUploadController.post(req, res, next)
+    await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(uploadSupportingDocument).not.toHaveBeenCalled()
 
@@ -117,9 +117,17 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentUploadController.post(req, res, next)
+    await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
+      {
+        name: 'title',
+        text: 'Enter the title',
+        href: '#title',
+        errorId: 'missingTitle',
+        invalidParts: undefined,
+        values: undefined,
+      },
       {
         name: 'file',
         text: 'The file must be smaller than 500KB',
@@ -147,7 +155,7 @@ describe('post', () => {
         recommendationId: '1234',
       },
       body: {
-        type: 'part-a',
+        title: 'My Title',
       },
       file: {
         fieldname: 'file',
@@ -172,7 +180,7 @@ describe('post', () => {
       throw new Error('somethings up')
     })
 
-    await supportingDocumentUploadController.post(req, res, next)
+    await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {
