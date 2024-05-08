@@ -1,30 +1,29 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getSupportingDocuments, replaceSupportingDocument } from '../../data/makeDecisionApiClient'
-import supportingDocumentReplaceController from './supportingDocumentReplaceController'
+import additionalSupportingDocumentReplaceController from './additionalSupportingDocumentReplaceController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load', async () => {
-    const PPUDPartA = {
-      title: 'Part A',
-      type: 'PPUDPartA',
+    const additionalDocument = {
+      title: 'Some Title',
+      type: 'OtherDocument',
       filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
     }
 
-    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA])
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([additionalDocument])
 
     const req = mockReq({
       params: {
-        type: 'part-a',
         id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
         recommendationId: '123',
       },
     })
     const res = mockRes()
     const next = mockNext()
-    await supportingDocumentReplaceController.get(req, res, next)
+    await additionalSupportingDocumentReplaceController.get(req, res, next)
 
     expect(getSupportingDocuments).toHaveBeenCalledWith({
       recommendationId: '123',
@@ -32,9 +31,9 @@ describe('get', () => {
       featureFlags: {},
     })
 
-    expect(res.locals.page).toEqual({ id: 'supportingDocumentReplace' })
-    expect(res.locals.document).toEqual(PPUDPartA)
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocumentReplace')
+    expect(res.locals.page).toEqual({ id: 'additionalSupportingDocumentReplace' })
+    expect(res.locals.document).toEqual(additionalDocument)
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/additionalSupportingDocumentReplace')
     expect(next).toHaveBeenCalled()
   })
 })
@@ -47,7 +46,7 @@ describe('post', () => {
         id: '456',
       },
       body: {
-        type: 'part-a',
+        title: 'some title',
       },
       file: {
         fieldname: 'file',
@@ -66,12 +65,15 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentReplaceController.post(req, res, next)
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([])
+
+    await additionalSupportingDocumentReplaceController.post(req, res, next)
 
     expect(replaceSupportingDocument).toHaveBeenCalledWith({
       data: 'T25jZSB1cG9uIGEgbWlkbmlnaHQgZHJlYXJ5',
       featureFlags: {},
-      title: '',
+      title: 'some title',
       filename: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
       mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       recommendationId: '1234',
@@ -82,13 +84,14 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1234/supporting-documents`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
-  it('post without file', async () => {
+  it('post with only a new title', async () => {
     const req = mockReq({
       params: {
         recommendationId: '1234',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
       },
       body: {
-        type: 'part-a',
+        title: 'some new title',
       },
       file: undefined,
     })
@@ -100,9 +103,25 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentReplaceController.post(req, res, next)
 
-    expect(replaceSupportingDocument).not.toHaveBeenCalled()
+    const OtherDocument = {
+      title: 'some title',
+      type: 'OtherDocument',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
+
+    await additionalSupportingDocumentReplaceController.post(req, res, next)
+
+    expect(replaceSupportingDocument).toHaveBeenCalledWith({
+      featureFlags: {},
+      title: 'some new title',
+      recommendationId: '1234',
+      token: 'token1',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+    })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1234/supporting-documents`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
@@ -113,9 +132,10 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: {
         recommendationId: '1234',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
       },
       body: {
-        type: 'part-a',
+        title: '',
       },
       file: {
         fieldname: 'file',
@@ -135,9 +155,25 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentReplaceController.post(req, res, next)
+
+    const OtherDocument = {
+      title: 'some title',
+      type: 'OtherDocument',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
+
+    await additionalSupportingDocumentReplaceController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
+      {
+        errorId: 'missingTitle',
+        href: '#title',
+        name: 'title',
+        text: 'Enter a document title',
+      },
       {
         name: 'file',
         text: 'The file must be smaller than 500KB',
@@ -158,14 +194,15 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
-  it('post with upload fail', async () => {
+  it('post with invalid title', async () => {
     const req = mockReq({
       originalUrl: 'some-url',
       params: {
         recommendationId: '1234',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
       },
       body: {
-        type: 'part-a',
+        title: 'some new title',
       },
       file: {
         fieldname: 'file',
@@ -186,11 +223,72 @@ describe('post', () => {
     })
     const next = mockNext()
 
+    const OtherDocument = {
+      title: 'some new title',
+      type: 'OtherDocument',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-1111-4c2f-984f-4bc7b5491d9d',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
+
+    await additionalSupportingDocumentReplaceController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'title',
+        text: 'Enter a unique document title',
+        href: '#title',
+        errorId: 'duplicateTitle',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+  it('post with upload fail', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+      },
+      body: {
+        title: 'some title',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512000,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+
+    const OtherDocument = {
+      title: 'some title',
+      type: 'OtherDocument',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
     ;(replaceSupportingDocument as jest.Mock).mockImplementation(() => {
       throw new Error('somethings up')
     })
 
-    await supportingDocumentReplaceController.post(req, res, next)
+    await additionalSupportingDocumentReplaceController.post(req, res, next)
 
     expect(req.session.errors).toEqual([
       {

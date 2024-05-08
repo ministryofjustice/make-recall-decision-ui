@@ -74,6 +74,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       await replaceSupportingDocument({
         recommendationId,
         token,
+        title: '',
         filename: req.file.originalname,
         mimetype: req.file.mimetype,
         id,
