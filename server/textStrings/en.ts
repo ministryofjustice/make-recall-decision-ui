@@ -239,5 +239,6 @@ export const strings: Record<string, Record<string, string>> = {
     whenSpoAgreedRecallDate: 'When did the SPO agree to this recall?',
     editPpudMinute: 'Edit Ppud Note',
     additionalSupportingDocumentUpload: 'Add another document',
+    additionalSupportingDocumentReplace: 'Add another document',
   },
 }

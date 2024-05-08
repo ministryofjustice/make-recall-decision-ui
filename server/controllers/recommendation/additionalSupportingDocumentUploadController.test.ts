@@ -108,7 +108,7 @@ describe('post', () => {
         recommendationId: '1234',
       },
       body: {
-        type: 'part-a',
+        title: '',
       },
       file: undefined,
     })
@@ -120,6 +120,9 @@ describe('post', () => {
       },
     })
     const next = mockNext()
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([])
+
     await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(uploadSupportingDocument).not.toHaveBeenCalled()
@@ -135,7 +138,7 @@ describe('post', () => {
         recommendationId: '1234',
       },
       body: {
-        type: 'part-a',
+        title: '',
       },
       file: {
         fieldname: 'file',

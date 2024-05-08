@@ -408,6 +408,7 @@ export const replaceSupportingDocument = ({
   recommendationId,
   id,
   token,
+  title,
   filename,
   mimetype,
   data,
@@ -415,15 +416,16 @@ export const replaceSupportingDocument = ({
 }: {
   recommendationId: string
   id: string
+  title: string
   token: string
   filename: string
   mimetype: string
-  data: string
+  data?: string
   featureFlags?: FeatureFlags
 }): Promise<SupportingDocument[]> => {
   return restClient(token).patch({
     path: `${routes.recommendations}/${recommendationId}/documents/${id}`,
-    data: { filename, mimetype, data },
+    data: { filename, title, mimetype, data },
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<SupportingDocument[]>
 }
