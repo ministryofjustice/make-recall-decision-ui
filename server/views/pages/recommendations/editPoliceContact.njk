@@ -10,12 +10,14 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-                <div class='govuk-body'>Email address on the Part A</div>
-                  <span class='mid-grey-panel'>
-                    <a class='govuk-body-not-underlined' data-qa="localPoliceContact">{{ recommendation.localPoliceContact.emailAddress }}</a>
-                </span>
+                {% if recommendation.localPoliceContact.emailAddress.length > 0 %}
+                    <div class='govuk-body'>Email address on the Part A</div>
+                    <span class='mid-grey-panel'>
+                        <a class='govuk-body-not-underlined' data-qa="localPoliceContact">{{ recommendation.localPoliceContact.emailAddress }}</a>
+                    </span>
                 </br>
                 </br>
+                {% endif %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
