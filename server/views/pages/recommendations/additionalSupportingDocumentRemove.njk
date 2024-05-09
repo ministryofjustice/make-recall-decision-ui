@@ -11,21 +11,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
         {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l govuk-word-break-all'>
-                {% if document.type == 'PPUDPartA' %}
-                    Remove Part A
-                {% elif document.type == 'PPUDLicenceDocument' %}
-                    Remove licence
-                {% elif document.type == 'PPUDProbationEmail' %}
-                    Remove email from probation
-                {% elif document.type == 'PPUDOASys' %}
-                    Remove OASys
-                {% elif document.type == 'PPUDPrecons' %}
-                    Remove previous convictions (MG16)
-                {% elif document.type == 'PPUDPSR' %}
-                    Remove pre-sentence report
-                {% elif document.type == 'PPUDChargeSheet' %}
-                    Remove police charge sheet (MG4)
-                {% endif %}
+                Remove the additional document titled '{{document.title}}'
             </h1>
 
             <p class="govuk-body-m">
