@@ -27,41 +27,37 @@ export function createRecommendationBanner(
     dataAnalyticsEventCategory: '',
   }
 
-  const status = statuses.find(s => ['NO_RECALL_DECIDED', 'RECALL_DECIDED', 'PO_START_RECALL'].includes(s.name))
-  if (status && status.active) {
-    banner.display = true
-    banner.createdByUserFullName = recommendation.createdByUserFullName
-    banner.createdDate = recommendation.createdDate
-    banner.personOnProbationName = recommendation.personOnProbation.name
-    banner.recommendationId = recommendationId
+  // Recommendation banner should only be visible for the following statuses
+  const isDoNotRecall = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED && status.active)
+  const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED && status.active)
+  const isRecallStarted = statuses.find(status => status.name === STATUSES.PO_START_RECALL && status.active)
 
-    switch (status.name) {
-      case STATUSES.NO_RECALL_DECIDED:
-        banner.text = 'started a decision not to recall letter for'
-        if (isSpo) {
-          banner.linkText = 'Delete the decision not to recall'
-          banner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
-        }
-        break
-      case STATUSES.RECALL_DECIDED:
-        banner.text = 'started a Part A for'
-        if (isSpo) {
-          banner.linkText = 'Delete the Part A'
-          banner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
-        }
-        break
-      case STATUSES.PO_START_RECALL:
-        banner.text = 'started a recommendation for'
-        if (isSpo) {
-          banner.linkText = 'Delete the recommendation'
-          banner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
-        }
-        break
-      default:
-        // Explicitly set display to false if no relevant status is active
-        banner.display = false
-        break
+  banner.display = true
+  banner.createdByUserFullName = recommendation.createdByUserFullName
+  banner.createdDate = recommendation.createdDate
+  banner.personOnProbationName = recommendation.personOnProbation.name
+  banner.recommendationId = recommendationId
+
+  if (isDoNotRecall) {
+    banner.text = 'started a decision not to recall letter for'
+    if (isSpo) {
+      banner.linkText = 'Delete the decision not to recall'
+      banner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
     }
+  } else if (isRecallDecided) {
+    banner.text = 'started a Part A for'
+    if (isSpo) {
+      banner.linkText = 'Delete the Part A'
+      banner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
+    }
+  } else if (isRecallStarted) {
+    banner.text = 'started a recommendation for'
+    if (isSpo) {
+      banner.linkText = 'Delete the recommendation'
+      banner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
+    }
+  } else {
+    banner.display = false
   }
 
   return banner
