@@ -2627,13 +2627,13 @@ context('Make a recommendation', () => {
             title: 'Part A',
             type: 'PPUDPartA',
             filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-            id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+            id: '1234',
           },
         ],
       })
 
       cy.visit(`/recommendations/252523937/supporting-document-remove/1234`)
-      cy.pageHeading().should('contain', 'Remove document')
+      cy.pageHeading().should('contain', 'Remove Part A')
     })
   })
   describe('Approved Premises Journey', () => {
