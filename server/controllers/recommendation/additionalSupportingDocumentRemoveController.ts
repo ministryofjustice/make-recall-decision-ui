@@ -3,7 +3,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { deleteSupportingDocument, getSupportingDocuments } from '../../data/makeDecisionApiClient'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendationId, id } = req.params
+  const { recommendationId, type, id } = req.params
 
   const {
     user: { token },
@@ -16,13 +16,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
+    type,
     document,
     page: {
-      id: 'supportingDocumentRemove',
+      id: 'additionalSupportingDocumentRemove',
     },
   }
 
-  res.render(`pages/recommendations/supportingDocumentRemove`)
+  res.render(`pages/recommendations/additionalSupportingDocumentRemove`)
   next()
 }
 

@@ -1,19 +1,19 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { deleteSupportingDocument, getSupportingDocuments } from '../../data/makeDecisionApiClient'
-import supportingDocumentRemoveController from './supportingDocumentRemoveController'
+import additionalSupportingDocumentRemoveController from './additionalSupportingDocumentRemoveController'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load', async () => {
-    const PPUDPartA = {
-      title: '',
-      type: 'PPUDPartA',
+    const OtherDocument = {
+      title: 'some title',
+      type: 'OtherDocument',
       filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
     }
 
-    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA])
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([OtherDocument])
 
     const req = mockReq({
       params: {
@@ -23,7 +23,7 @@ describe('get', () => {
     })
     const res = mockRes()
     const next = mockNext()
-    await supportingDocumentRemoveController.get(req, res, next)
+    await additionalSupportingDocumentRemoveController.get(req, res, next)
 
     expect(getSupportingDocuments).toHaveBeenCalledWith({
       recommendationId: '123',
@@ -31,9 +31,9 @@ describe('get', () => {
       featureFlags: {},
     })
 
-    expect(res.locals.page).toEqual({ id: 'supportingDocumentRemove' })
-    expect(res.locals.document).toEqual(PPUDPartA)
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocumentRemove')
+    expect(res.locals.page).toEqual({ id: 'additionalSupportingDocumentRemove' })
+    expect(res.locals.document).toEqual(OtherDocument)
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/additionalSupportingDocumentRemove')
     expect(next).toHaveBeenCalled()
   })
 })
@@ -54,7 +54,7 @@ describe('post', () => {
       },
     })
     const next = mockNext()
-    await supportingDocumentRemoveController.post(req, res, next)
+    await additionalSupportingDocumentRemoveController.post(req, res, next)
 
     expect(deleteSupportingDocument).toHaveBeenCalledWith({
       featureFlags: {},
