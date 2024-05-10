@@ -246,9 +246,7 @@
 
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-font-weight-bold width-15-em"> Additional details </td>
-                        <td class="govuk-table__cell overflow-wrap-anywhere width-34-em">
-                            {{ hyphenForBlank(minute) }}
-                         </td>
+                        <td class="govuk-table__cell white-space-pre width-34-em">{{ hyphenForBlank(minute) }}</td>
                         <td class="govuk-table__cell ">
                             <a class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0' href='/recommendations/{{ recommendation.id }}/edit-ppud-minute'>
                                 {% if minute %}
