@@ -26,7 +26,7 @@ import type { VictimsInContactScheme } from './VictimsInContactScheme';
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
 import type { WhyConsideredRecall } from './WhyConsideredRecall';
 import { CvlLicenceConditionsBreached } from "./CvlLicenceConditionsBreached";
-import bookingMemento from "../../../booking/BookingMemento";
+import BookingMemento from "../../../booking/BookingMemento";
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -92,7 +92,7 @@ export type RecommendationResponse = {
   prisonOffender?: PrisonOffender;
   ppudOffender?: PpudOffender;
   additionalLicenceConditionsText?: string;
-  bookingMemento?: bookingMemento;
+  bookingMemento?: BookingMemento;
   odmName?: string;
   spoRecallType?: string;
   isUnder18?: boolean,

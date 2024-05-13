@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRecommendation, updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
+import {
+  getRecommendation,
+  getSupportingDocuments,
+  updateRecommendation,
+  updateStatuses,
+} from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import bookOffender from '../../booking/bookOffender'
@@ -7,11 +12,12 @@ import createOrUpdateSentence from '../../booking/createOrUpdateSentence'
 import updateOffence from '../../booking/updateOffence'
 import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
-import bookingMemento from '../../booking/BookingMemento'
+import BookingMemento from '../../booking/BookingMemento'
 import { StageEnum } from '../../booking/StageEnum'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -35,7 +41,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
 
-  let memento: bookingMemento = recommendation.bookingMemento || {
+  let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
   }
 
@@ -56,6 +62,95 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await updateRelease(memento, recommendation, token, flags)
 
     memento = await updateRecall(memento, recommendation, token, flags)
+
+    if (flags.flagSupportingDocuments) {
+      const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
+
+      const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
+      const PPUDLicenceDocument = documents.find(doc => doc.type === 'PPUDLicenceDocument')
+      const PPUDProbationEmail = documents.find(doc => doc.type === 'PPUDProbationEmail')
+      const PPUDOASys = documents.find(doc => doc.type === 'PPUDOASys')
+      const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
+      const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
+      const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.RECALL_BOOKED,
+        StageEnum.PART_A_UPLOADED,
+        PPUDPartA?.id,
+        'PPUDPartA',
+        token,
+        flags
+      )
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.PART_A_UPLOADED,
+        StageEnum.LICENCE_DOCUMENT_UPLOADED,
+        PPUDLicenceDocument?.id,
+        'PPUDLicenceDocument',
+        token,
+        flags
+      )
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.LICENCE_DOCUMENT_UPLOADED,
+        StageEnum.PROBATION_EMAIL_UPLOADED,
+        PPUDProbationEmail?.id,
+        'PPUDProbationEmail',
+        token,
+        flags
+      )
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.PROBATION_EMAIL_UPLOADED,
+        StageEnum.OASYS_UPLOADED,
+        PPUDOASys?.id,
+        'PPUDOASys',
+        token,
+        flags
+      )
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.OASYS_UPLOADED,
+        StageEnum.PRECONS_UPLOADED,
+        PPUDPrecons?.id,
+        'PPUDPrecons',
+        token,
+        flags
+      )
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.PRECONS_UPLOADED,
+        StageEnum.PSR_UPLOADED,
+        PPUDPSR?.id,
+        'PPUDPSR',
+        token,
+        flags
+      )
+
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        StageEnum.PSR_UPLOADED,
+        StageEnum.CHARGE_SHEET_UPLOADED,
+        PPUDChargeSheet?.id,
+        'PPUDChargeSheet',
+        token,
+        flags
+      )
+    }
 
     await updateStatuses({
       recommendationId,
