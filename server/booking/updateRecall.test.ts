@@ -50,6 +50,8 @@ describe('update recall', () => {
       },
     } as unknown as RecommendationResponse
 
+    ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
+
     const result = await updateRecall(bookingMemento, recommendation, 'token', { xyz: true })
 
     expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
@@ -70,6 +72,7 @@ describe('update recall', () => {
         bookingMemento: {
           offenderId: '767',
           sentenceId: '444',
+          recallId: '898',
           releaseId: '555',
           stage: 'RECALL_BOOKED',
         },
@@ -82,6 +85,7 @@ describe('update recall', () => {
     expect(result).toEqual({
       offenderId: '767',
       sentenceId: '444',
+      recallId: '898',
       releaseId: '555',
       stage: 'RECALL_BOOKED',
     })

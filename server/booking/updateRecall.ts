@@ -18,7 +18,7 @@ export default async function updateRecall(
 
   const isInCustody = recommendation.prisonOffender?.status === 'ACTIVE IN'
 
-  await ppudCreateRecall(token, memento.offenderId, memento.releaseId, {
+  const createRecallResponse = await ppudCreateRecall(token, memento.offenderId, memento.releaseId, {
     decisionDateTime: recommendation.decisionDateTime,
     isExtendedSentence: recommendation.isExtendedSentence,
     isInCustody,
@@ -37,6 +37,7 @@ export default async function updateRecall(
   })
 
   memento.stage = StageEnum.RECALL_BOOKED
+  memento.recallId = createRecallResponse.recall.id
   memento.failed = undefined
   memento.failedMessage = undefined
 
