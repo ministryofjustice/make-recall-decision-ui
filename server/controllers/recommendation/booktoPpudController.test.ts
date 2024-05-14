@@ -97,6 +97,63 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
+  it('post - happy path with no files', async () => {
+    const recommendation = { id: '12345' }
+    const flags = { flagSupportingDocuments: true }
+
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+    })
+
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath },
+        flags,
+      },
+    })
+    const next = mockNext()
+
+    ;(bookOffender as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENDER_BOOKED })
+    ;(createOrUpdateSentence as jest.Mock).mockResolvedValue({ stage: StageEnum.SENTENCE_BOOKED })
+    ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
+    ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
+    ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([])
+
+    await bookToPpudController.post(req, res, next)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      activate: ['BOOKING_ON_STARTED'],
+      deActivate: [],
+      recommendationId: '1',
+      token: 'token',
+    })
+
+    expect(bookOffender).toHaveBeenCalledWith({ stage: StageEnum.STARTED }, recommendation, 'token', flags)
+    expect(createOrUpdateSentence).toHaveBeenCalledWith(
+      { stage: StageEnum.OFFENDER_BOOKED },
+      recommendation,
+      'token',
+      flags
+    )
+    expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
+      deActivate: [],
+      recommendationId: '1',
+      token: 'token',
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
+    expect(next).not.toHaveBeenCalled()
+  })
+
   it('post - happy path - flagSupportingDocuments', async () => {
     const recommendation = { id: '12345' }
     const flags = { flagSupportingDocuments: true }
