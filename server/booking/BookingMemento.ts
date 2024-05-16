@@ -8,4 +8,5 @@ export default interface BookingMemento {
   recallId?: string
   failed?: boolean
   failedMessage?: string
+  uploadedAdditional?: string[]
 }

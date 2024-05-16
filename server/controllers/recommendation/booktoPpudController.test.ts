@@ -9,6 +9,7 @@ import updateRecall from '../../booking/updateRecall'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { StageEnum } from '../../booking/StageEnum'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
+import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -17,6 +18,7 @@ jest.mock('../../booking/updateRelease')
 jest.mock('../../booking/createOrUpdateSentence')
 jest.mock('../../booking/updateOffence')
 jest.mock('../../booking/uploadMandatoryDocument')
+jest.mock('../../booking/uploadAdditionalDocument')
 jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
@@ -228,6 +230,20 @@ describe('post', () => {
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
     }
 
+    const OtherDocument = {
+      title: 'some title 1',
+      type: 'OtherDocument',
+      filename: 'licence.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
+    }
+
+    const OtherDocument2 = {
+      title: 'some title 2',
+      type: 'OtherDocument',
+      filename: 'licence.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
+    }
+
     ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([
       PPUDPartA,
       PPUDLicenceDocument,
@@ -236,6 +252,8 @@ describe('post', () => {
       PPUDPrecons,
       PPUDPSR,
       PPUDChargeSheet,
+      OtherDocument,
+      OtherDocument2,
     ])
     ;(uploadMandatoryDocument as jest.Mock)
       .mockReturnValueOnce({ stage: StageEnum.PART_A_UPLOADED })
@@ -245,6 +263,10 @@ describe('post', () => {
       .mockReturnValueOnce({ stage: StageEnum.PRECONS_UPLOADED })
       .mockReturnValueOnce({ stage: StageEnum.PSR_UPLOADED })
       .mockReturnValueOnce({ stage: StageEnum.CHARGE_SHEET_UPLOADED })
+    ;(uploadAdditionalDocument as jest.Mock).mockReturnValueOnce({
+      stage: StageEnum.CHARGE_SHEET_UPLOADED,
+      uploadedAdditional: ['e0cc157d-5c31-4c2f-984f-4bc7b5491d11'],
+    })
 
     await bookToPpudController.post(req, res, next)
 
@@ -333,6 +355,22 @@ describe('post', () => {
       StageEnum.CHARGE_SHEET_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
       'PPUDChargeSheet',
+      'token',
+      flags
+    )
+    expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
+      1,
+      { stage: StageEnum.CHARGE_SHEET_UPLOADED },
+      '1',
+      'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
+      'token',
+      flags
+    )
+    expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
+      2,
+      { stage: StageEnum.CHARGE_SHEET_UPLOADED, uploadedAdditional: ['e0cc157d-5c31-4c2f-984f-4bc7b5491d11'] },
+      '1',
+      'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
       'token',
       flags
     )
