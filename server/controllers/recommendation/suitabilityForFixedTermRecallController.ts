@@ -144,7 +144,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo }))
 }
 
 export default { get, post }

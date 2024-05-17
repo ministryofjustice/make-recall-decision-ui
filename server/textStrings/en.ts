@@ -158,7 +158,7 @@ export const strings: Record<string, Record<string, string>> = {
     managerReview: 'Stop and think',
     isIndeterminateSentence: 'Is {{ fullName }} on an indeterminate sentence?',
     isExtendedSentence: 'Is {{ fullName }} on an extended sentence?',
-    suitabilityForFixedTermRecall: 'Suitability for fixed term recall',
+    suitabilityForFixedTermRecall: 'Suitability for standard or fixed term recall',
     indeterminateSentenceType: 'What type of sentence is {{ fullName }} on?',
     indeterminateOrExtendedSentenceDetails: 'Indeterminate and extended sentences',
     recallType: 'What do you recommend?',

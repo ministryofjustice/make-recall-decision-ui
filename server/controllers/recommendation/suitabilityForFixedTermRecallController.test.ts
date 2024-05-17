@@ -242,7 +242,7 @@ describe('post', () => {
       featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 

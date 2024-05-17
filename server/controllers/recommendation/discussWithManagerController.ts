@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  let nextPageId = 'recall-type'
+  let nextPageId = 'suitability-for-fixed-term-recall'
 
   if (recommendation.isIndeterminateSentence) {
     nextPageId = 'recall-type-indeterminate'
