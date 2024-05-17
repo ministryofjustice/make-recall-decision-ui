@@ -28,6 +28,7 @@
     "test:coverage": "jest --coverage --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.config.ts",
+    "int-test-fx": "cypress run --browser firefox --config-file integration_tests/cypress.config.ts",
     "int-test-ui": "cypress open --config-file integration_tests/cypress.config.ts",
     "accessibility-test": "cypress run --browser chrome --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "accessibility-test-ui": "cypress open --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",

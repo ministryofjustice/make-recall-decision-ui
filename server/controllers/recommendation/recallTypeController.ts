@@ -10,6 +10,35 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
+  // TODO: remove when MRD-2501 is complete. This is to allow testing MRD-2502 in solation
+  const f = req.query.f as string | undefined
+
+  if (f) {
+    switch (f.toLowerCase()) {
+      case 'no':
+        recommendation.isUnder18 = false
+        recommendation.isSentence12MonthsOrOver = false
+        recommendation.isMappaLevelAbove1 = false
+        recommendation.hasBeenConvictedOfSeriousOffence = false
+        break
+      case 'yes':
+        recommendation.isUnder18 = true
+        recommendation.isSentence12MonthsOrOver = true
+        recommendation.isMappaLevelAbove1 = true
+        recommendation.hasBeenConvictedOfSeriousOffence = true
+        break
+      case 'mixed':
+        recommendation.isUnder18 = false
+        recommendation.isSentence12MonthsOrOver = true
+        recommendation.isMappaLevelAbove1 = true
+        recommendation.hasBeenConvictedOfSeriousOffence = false
+        break
+      default:
+        break
+    }
+  }
+  // TODO: remove above block when 2501 is completed
+
   res.locals = {
     ...res.locals,
     page: {
