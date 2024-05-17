@@ -7,19 +7,11 @@ jest.mock('../data/makeDecisionApiClient')
 describe('update release', () => {
   it('happy path - stage has passed', async () => {
     const bookingMemento = {
-      stage: StageEnum.PART_A_UPLOADED,
+      stage: StageEnum.RECALL_BOOKED,
+      uploaded: ['123'],
     }
 
-    const result = await uploadMandatoryDocument(
-      bookingMemento,
-      '1',
-      StageEnum.RECALL_BOOKED,
-      StageEnum.PART_A_UPLOADED,
-      '123',
-      'PpudPartA',
-      'token',
-      { xyz: true }
-    )
+    const result = await uploadMandatoryDocument(bookingMemento, '1', '123', 'PpudPartA', 'token', { xyz: true })
 
     expect(ppudUploadMandatoryDocument).not.toHaveBeenCalled()
     expect(bookingMemento).toEqual(result)
@@ -35,16 +27,7 @@ describe('update release', () => {
       failedMessage: '{}',
     }
 
-    const result = await uploadMandatoryDocument(
-      bookingMemento,
-      '1',
-      StageEnum.RECALL_BOOKED,
-      StageEnum.PART_A_UPLOADED,
-      '123',
-      'PpudPartA',
-      'token',
-      { xyz: true }
-    )
+    const result = await uploadMandatoryDocument(bookingMemento, '1', '123', 'PpudPartA', 'token', { xyz: true })
 
     expect(ppudUploadMandatoryDocument).toHaveBeenCalledWith('token', '888', { category: 'PpudPartA', id: '123' })
 
@@ -55,7 +38,8 @@ describe('update release', () => {
           offenderId: '767',
           sentenceId: '444',
           recallId: '888',
-          stage: 'PART_A_UPLOADED',
+          stage: 'RECALL_BOOKED',
+          uploaded: ['123'],
         },
       },
       token: 'token',
@@ -67,7 +51,8 @@ describe('update release', () => {
       offenderId: '767',
       recallId: '888',
       sentenceId: '444',
-      stage: 'PART_A_UPLOADED',
+      stage: 'RECALL_BOOKED',
+      uploaded: ['123'],
     })
   })
 })
