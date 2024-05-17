@@ -32,6 +32,7 @@ import { PpudUpdateOffenderRequest } from '../@types/make-recall-decision-api/mo
 import { PpudCreateSentenceResponse } from '../@types/make-recall-decision-api/models/PpudCreateSentenceResponse'
 import { SupportingDocumentResponse } from '../@types/make-recall-decision-api/models/SupportingDocumentResponse'
 import { PpudUploadMandatoryDocument } from '../@types/make-recall-decision-api/models/PpudUploadMandatoryDocument'
+import { PpudUploadAdditionalDocument } from '../@types/make-recall-decision-api/models/PpudUploadAdditionalDocument'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -203,11 +204,22 @@ export const ppudUploadMandatoryDocument = (
   token: string,
   recallId: string,
   body: PpudUploadMandatoryDocument
-): Promise<PpudCreateRecallResponse> => {
+): Promise<void> => {
   return restClient(token).put({
     path: `/ppud/recall/${recallId}/upload-mandatory-document`,
     data: body,
-  }) as Promise<PpudCreateRecallResponse>
+  }) as Promise<void>
+}
+
+export const ppudUploadAdditionalDocument = (
+  token: string,
+  recallId: string,
+  body: PpudUploadAdditionalDocument
+): Promise<void> => {
+  return restClient(token).put({
+    path: `/ppud/recall/${recallId}/upload-additional-document`,
+    data: body,
+  }) as Promise<void>
 }
 
 export const ppudReferenceList = (token: string, name: string): Promise<PpudReferenceListResponse> => {

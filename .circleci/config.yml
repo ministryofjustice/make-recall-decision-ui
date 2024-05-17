@@ -151,8 +151,7 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update
-      - browser-tools/install-chrome:
-          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
+      - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - node/install-packages
       - attach_workspace:
@@ -199,8 +198,7 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update
-      - browser-tools/install-chrome:
-          chrome-version: "114.0.5735.90" # TODO - workaround for circle ci/chromedriver issue, remove when fixed
+      - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - node/install-packages
       - attach_workspace:

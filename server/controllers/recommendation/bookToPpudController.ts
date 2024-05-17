@@ -18,6 +18,7 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
+import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -162,6 +163,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
           token,
           flags
         )
+      }
+
+      const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
+
+      for (const id of additional) {
+        memento = await uploadAdditionalDocument(memento, recommendationId, id, token, flags)
       }
     }
 

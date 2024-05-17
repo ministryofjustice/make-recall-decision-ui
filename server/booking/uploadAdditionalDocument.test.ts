@@ -1,6 +1,10 @@
 import { StageEnum } from './StageEnum'
-import { ppudUploadMandatoryDocument, updateRecommendation } from '../data/makeDecisionApiClient'
-import uploadMandatoryDocument from './uploadMandatoryDocument'
+import {
+  ppudUploadAdditionalDocument,
+  ppudUploadMandatoryDocument,
+  updateRecommendation,
+} from '../data/makeDecisionApiClient'
+import uploadAdditionalDocument from './uploadAdditionalDocument'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -8,18 +12,10 @@ describe('update release', () => {
   it('happy path - stage has passed', async () => {
     const bookingMemento = {
       stage: StageEnum.PART_A_UPLOADED,
+      uploadedAdditional: ['123'],
     }
 
-    const result = await uploadMandatoryDocument(
-      bookingMemento,
-      '1',
-      StageEnum.RECALL_BOOKED,
-      StageEnum.PART_A_UPLOADED,
-      '123',
-      'PpudPartA',
-      'token',
-      { xyz: true }
-    )
+    const result = await uploadAdditionalDocument(bookingMemento, '1', '123', 'token', { xyz: true })
 
     expect(ppudUploadMandatoryDocument).not.toHaveBeenCalled()
     expect(bookingMemento).toEqual(result)
@@ -27,7 +23,7 @@ describe('update release', () => {
 
   it('happy path', async () => {
     const bookingMemento = {
-      stage: StageEnum.RECALL_BOOKED,
+      stage: StageEnum.PART_A_UPLOADED,
       offenderId: '767',
       sentenceId: '444',
       recallId: '888',
@@ -35,18 +31,9 @@ describe('update release', () => {
       failedMessage: '{}',
     }
 
-    const result = await uploadMandatoryDocument(
-      bookingMemento,
-      '1',
-      StageEnum.RECALL_BOOKED,
-      StageEnum.PART_A_UPLOADED,
-      '123',
-      'PpudPartA',
-      'token',
-      { xyz: true }
-    )
+    const result = await uploadAdditionalDocument(bookingMemento, '1', '123', 'token', { xyz: true })
 
-    expect(ppudUploadMandatoryDocument).toHaveBeenCalledWith('token', '888', { category: 'PpudPartA', id: '123' })
+    expect(ppudUploadAdditionalDocument).toHaveBeenCalledWith('token', '888', { id: '123' })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
@@ -56,6 +43,7 @@ describe('update release', () => {
           sentenceId: '444',
           recallId: '888',
           stage: 'PART_A_UPLOADED',
+          uploadedAdditional: ['123'],
         },
       },
       token: 'token',
@@ -68,6 +56,7 @@ describe('update release', () => {
       recallId: '888',
       sentenceId: '444',
       stage: 'PART_A_UPLOADED',
+      uploadedAdditional: ['123'],
     })
   })
 })
