@@ -2,7 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import discussWithManagerController from './discussWithManagerController'
 
 describe('get', () => {
-  it('present with non-indeterminate and non-extended', async () => {
+  it('present with suitability for standard or fixed term recall ', async () => {
     const res = mockRes({
       locals: {
         recommendation: { isIndeterminateSentence: false, isExtendedSentence: false },
@@ -13,7 +13,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'discussWithManager' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/discussWithManager')
-    expect(res.locals.nextPageId).toEqual('recall-type')
+    expect(res.locals.nextPageId).toEqual('suitability-for-fixed-term-recall')
     expect(next).toHaveBeenCalled()
   })
   it('present with indeterminate', async () => {
