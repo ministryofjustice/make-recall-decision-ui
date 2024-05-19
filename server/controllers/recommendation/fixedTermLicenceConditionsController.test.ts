@@ -192,6 +192,6 @@ describe('post', () => {
 
     await fixedTermLicenceConditionsController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/suitability-for-fixed-term-recall`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
   })
 })
