@@ -13,7 +13,6 @@ describe('create recommendation banner', () => {
     { name: 'NO_RECALL_DECIDED', active: true },
     { name: 'RECALL_DECIDED', active: false },
     { name: 'PO_START_RECALL', active: false },
-    { name: 'SENT_TO_PPCS', active: false },
   ]
 
   describe('when NO_RECALL_DECIDED', () => {

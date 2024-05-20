@@ -26,7 +26,9 @@ import config from '../../config'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { RecommendationDecorated } from '../../@types/api'
 import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
+import { Status } from '../../@types/caseSummary'
 import { createRecommendationBanner } from '../../utils/bannerUtils'
+import { ActiveRecommendation } from '../../@types/make-recall-decision-api'
 
 interface RecommendationButton {
   display: boolean
@@ -48,6 +50,27 @@ function isSeniorProbationOfficer(roles: string[]): boolean {
 // }
 
 const auditService = new AuditService()
+
+// Helper function to determine if the current active recommendation is open from the perspective of probation services
+// Example: can be an active recommendation but has been sent to ppcs
+function isOpenForProbationServices(statuses: Status[]): boolean {
+  const isWithPpcs = !!statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
+  const isPPDocumentCreated = !!statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
+  let isOpen = false
+  if (isWithPpcs || isPPDocumentCreated) isOpen = true
+
+  return isOpen
+}
+
+// Helper function to return only active statuses for the currect active recommendation
+async function getActiveStatuses(activeRecommendation: ActiveRecommendation, token: string) {
+  return (
+    await getStatuses({
+      recommendationId: String(activeRecommendation.recommendationId),
+      token,
+    })
+  ).filter(status => status.active)
+}
 
 async function get(req: Request, res: Response, _: NextFunction) {
   const { crn, sectionId, recommendationId } = req.params
@@ -124,25 +147,22 @@ async function get(req: Request, res: Response, _: NextFunction) {
         user.token
       )
 
-      const statuses = (
-        await getStatuses({
-          recommendationId: String(activeRecommendation.recommendationId),
-          token,
-        })
-      ).filter(status => status.active)
+      const statuses = await getActiveStatuses(activeRecommendation, token)
 
-      const recommendationBanner = createRecommendationBanner(
-        statuses,
-        {
-          createdByUserFullName: recommendation.createdByUserFullName,
-          createdDate: recommendation.createdDate,
-          personOnProbation: { name: recommendation.personOnProbation.name },
-        },
-        String(activeRecommendation.recommendationId),
-        isSpo
-      )
-
-      res.locals.recommendationBanner = recommendationBanner
+      // The banner should only be displayed if the recommendation is still open
+      // from the probation services point of view.
+      if (!isOpenForProbationServices(statuses)) {
+        res.locals.recommendationBanner = createRecommendationBanner(
+          statuses,
+          {
+            createdByUserFullName: recommendation.createdByUserFullName,
+            createdDate: recommendation.createdDate,
+            personOnProbation: { name: recommendation.personOnProbation.name },
+          },
+          String(activeRecommendation.recommendationId),
+          isSpo
+        )
+      }
 
       if (isSpo) {
         const isSpoConsiderRecall = !!statuses.find(status => status.name === STATUSES.SPO_CONSIDER_RECALL)

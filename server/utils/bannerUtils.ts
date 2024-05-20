@@ -31,7 +31,6 @@ export function createRecommendationBanner(
   const isDoNotRecall = !!statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED && status.active)
   const isRecallDecided = !!statuses.find(status => status.name === STATUSES.RECALL_DECIDED && status.active)
   const isRecallStarted = !!statuses.find(status => status.name === STATUSES.PO_START_RECALL && status.active)
-  const isSentToPpcs = !!statuses.find(status => status.name === STATUSES.SENT_TO_PPCS && status.active)
 
   banner.display = false
   banner.createdByUserFullName = recommendation.createdByUserFullName
@@ -39,29 +38,28 @@ export function createRecommendationBanner(
   banner.personOnProbationName = recommendation.personOnProbation.name
   banner.recommendationId = recommendationId
 
-  if (!isSentToPpcs) {
-    if (isDoNotRecall) {
-      if (isSpo) {
-        banner.linkText = 'Delete the decision not to recall'
-        banner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
-      }
-      banner.display = true
-      banner.text = 'started a decision not to recall letter for'
-    } else if (isRecallDecided) {
-      if (isSpo) {
-        banner.linkText = 'Delete the Part A'
-        banner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
-      }
-      banner.display = true
-      banner.text = 'started a Part A for'
-    } else if (isRecallStarted) {
-      if (isSpo) {
-        banner.linkText = 'Delete the recommendation'
-        banner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
-      }
-      banner.display = true
-      banner.text = 'started a recommendation for'
+  if (isDoNotRecall) {
+    if (isSpo) {
+      banner.linkText = 'Delete the decision not to recall'
+      banner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
     }
+    banner.display = true
+    banner.text = 'started a decision not to recall letter for'
+  } else if (isRecallDecided) {
+    if (isSpo) {
+      banner.linkText = 'Delete the Part A'
+      banner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
+    }
+    banner.display = true
+    banner.text = 'started a Part A for'
+  } else if (isRecallStarted) {
+    if (isSpo) {
+      banner.linkText = 'Delete the recommendation'
+      banner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
+    }
+    banner.display = true
+    banner.text = 'started a recommendation for'
   }
+
   return banner
 }
