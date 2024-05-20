@@ -4,7 +4,8 @@
     For sentences under 12 months, recalls must be fixed term unless either:
     <ul>
         <li>the person has been charged with a serious offence (murder or an offence listed in
-            <a target="_blank" rel="noopener noreferrer" href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18">Schedule 18 of the Sentencing Act 2020</a>)
+            <a target="_blank" rel="noopener noreferrer" href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18">Schedule 18
+                of the Sentencing Act 2020</a>)
         </li>
         <li>the MAPPA level is 2 or 3 at the point of recall</li>
     </ul>
@@ -13,15 +14,35 @@
 <p>
     You have said that:
     <ul>
-        <li>{{ recommendation.personOnProbation.name }} <strong>is</strong> {% if recommendation.isUnder18 == false or recommendation.isUnder18 == 'NO' %}<strong>not</strong>{% endif %} under 18</li>
-        <li>the sentence <strong>is</strong> {% if recommendation.isSentence12MonthsOrOver == false or recommendation.isSentence12MonthsOrOver == 'NO' %}<strong>not</strong>{% endif %} 12 months or over</li>
-        <li>the MAPPA level <strong>is</strong> {% if recommendation.isMappaLevelAbove1 == false or recommendation.isMappaLevelAbove1 == 'NO' %}<strong>not</strong>{% endif %} above 1</li>
-        <li>{{ recommendation.personOnProbation.name }} <strong>has</strong> {% if recommendation.hasBeenConvictedOfSeriousOffence == false or recommendation.hasBeenConvictedOfSeriousOffence == 'NO' %}<strong>not</strong>{% endif %} been charged with a serious offence.</li>
+        <li>{{ recommendation.personOnProbation.name }}
+            <strong>is</strong>
+            {% if recommendation.isUnder18 == false or recommendation.isUnder18 == 'NO' %}
+                <strong>not</strong>
+            {% endif %}
+            under 18</li>
+        <li>the sentence
+            <strong>is</strong>
+            {% if recommendation.isSentence12MonthsOrOver == false or recommendation.isSentence12MonthsOrOver == 'NO' %}
+                <strong>not</strong>
+            {% endif %}
+            12 months or over</li>
+        <li>the MAPPA level
+            <strong>is</strong>
+            {% if recommendation.isMappaLevelAbove1 == false or recommendation.isMappaLevelAbove1 == 'NO' %}
+                <strong>not</strong>
+            {% endif %}
+            above 1</li>
+        <li>{{ recommendation.personOnProbation.name }}
+            <strong>has</strong>
+            {% if recommendation.hasBeenConvictedOfSeriousOffence == false or recommendation.hasBeenConvictedOfSeriousOffence == 'NO' %}
+                <strong>not</strong>
+            {% endif %}
+            been charged with a serious offence.</li>
     </ul>
-    {% if recommendation.isUnder18 %}
-        {% set warningText = "If you decide to recall Duncann Cardours, it should be an automatic fixed term recall." %}
-    {% else %}
+    {% if recommendation.isUnder18 or recommendation.isSentence12MonthsOrOver or isMappaLevelAbove1 or hasBeenConvictedOfSeriousOffence %}
         {% set warningText = "If you decide to recall Duncann Cardours, it does not have to be a fixed term recall. Explain why you have chosen the recall type." %}
+    {% else %}
+        {% set warningText = "If you decide to recall Duncann Cardours, it should be an automatic fixed term recall." %}
     {% endif %}
     {{ govukWarningText({
         text: warningText,
