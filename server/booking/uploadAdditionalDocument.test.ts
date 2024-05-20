@@ -11,8 +11,8 @@ jest.mock('../data/makeDecisionApiClient')
 describe('update release', () => {
   it('happy path - stage has passed', async () => {
     const bookingMemento = {
-      stage: StageEnum.PART_A_UPLOADED,
-      uploadedAdditional: ['123'],
+      stage: StageEnum.RECALL_BOOKED,
+      uploaded: ['123'],
     }
 
     const result = await uploadAdditionalDocument(bookingMemento, '1', '123', 'token', { xyz: true })
@@ -23,7 +23,7 @@ describe('update release', () => {
 
   it('happy path', async () => {
     const bookingMemento = {
-      stage: StageEnum.PART_A_UPLOADED,
+      stage: StageEnum.RECALL_BOOKED,
       offenderId: '767',
       sentenceId: '444',
       recallId: '888',
@@ -42,8 +42,8 @@ describe('update release', () => {
           offenderId: '767',
           sentenceId: '444',
           recallId: '888',
-          stage: 'PART_A_UPLOADED',
-          uploadedAdditional: ['123'],
+          stage: 'RECALL_BOOKED',
+          uploaded: ['123'],
         },
       },
       token: 'token',
@@ -55,8 +55,8 @@ describe('update release', () => {
       offenderId: '767',
       recallId: '888',
       sentenceId: '444',
-      stage: 'PART_A_UPLOADED',
-      uploadedAdditional: ['123'],
+      stage: 'RECALL_BOOKED',
+      uploaded: ['123'],
     })
   })
 })

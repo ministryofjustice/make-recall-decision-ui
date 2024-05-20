@@ -10,6 +10,7 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { StageEnum } from '../../booking/StageEnum'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
+import createMinute from '../../booking/createMinute'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -19,6 +20,7 @@ jest.mock('../../booking/createOrUpdateSentence')
 jest.mock('../../booking/updateOffence')
 jest.mock('../../booking/uploadMandatoryDocument')
 jest.mock('../../booking/uploadAdditionalDocument')
+jest.mock('../../booking/createMinute')
 jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
@@ -256,17 +258,20 @@ describe('post', () => {
       OtherDocument2,
     ])
     ;(uploadMandatoryDocument as jest.Mock)
-      .mockReturnValueOnce({ stage: StageEnum.PART_A_UPLOADED })
-      .mockReturnValueOnce({ stage: StageEnum.LICENCE_DOCUMENT_UPLOADED })
-      .mockReturnValueOnce({ stage: StageEnum.PROBATION_EMAIL_UPLOADED })
-      .mockReturnValueOnce({ stage: StageEnum.OASYS_UPLOADED })
-      .mockReturnValueOnce({ stage: StageEnum.PRECONS_UPLOADED })
-      .mockReturnValueOnce({ stage: StageEnum.PSR_UPLOADED })
-      .mockReturnValueOnce({ stage: StageEnum.CHARGE_SHEET_UPLOADED })
-    ;(uploadAdditionalDocument as jest.Mock).mockReturnValueOnce({
-      stage: StageEnum.CHARGE_SHEET_UPLOADED,
-      uploadedAdditional: ['e0cc157d-5c31-4c2f-984f-4bc7b5491d11'],
-    })
+      .mockReturnValueOnce({ uploaded: ['1'] })
+      .mockReturnValueOnce({ uploaded: ['1', '2'] })
+      .mockReturnValueOnce({ uploaded: ['1', '2', '3'] })
+      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4'] })
+      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4', '5'] })
+      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4', '5', '6'] })
+      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4', '5', '6', '7'] })
+    ;(uploadAdditionalDocument as jest.Mock)
+      .mockReturnValueOnce({
+        uploaded: ['8'],
+      })
+      .mockReturnValueOnce({
+        uploaded: ['9'],
+      })
 
     await bookToPpudController.post(req, res, next)
 
@@ -289,70 +294,56 @@ describe('post', () => {
     expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
 
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.RECALL_BOOKED },
+      { stage: 'RECALL_BOOKED' },
       '1',
-      StageEnum.RECALL_BOOKED,
-      StageEnum.PART_A_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
       'PPUDPartA',
       'token',
       flags
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.PART_A_UPLOADED },
+      { uploaded: ['1'] },
       '1',
-      StageEnum.PART_A_UPLOADED,
-      StageEnum.LICENCE_DOCUMENT_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dff',
       'PPUDLicenceDocument',
       'token',
       flags
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.LICENCE_DOCUMENT_UPLOADED },
+      { uploaded: ['1', '2'] },
       '1',
-      StageEnum.LICENCE_DOCUMENT_UPLOADED,
-      StageEnum.PROBATION_EMAIL_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
       'PPUDProbationEmail',
       'token',
       flags
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.PROBATION_EMAIL_UPLOADED },
+      { uploaded: ['1', '2', '3'] },
       '1',
-      StageEnum.PROBATION_EMAIL_UPLOADED,
-      StageEnum.OASYS_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
       'PPUDOASys',
       'token',
       flags
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.OASYS_UPLOADED },
+      { uploaded: ['1', '2', '3', '4'] },
       '1',
-      StageEnum.OASYS_UPLOADED,
-      StageEnum.PRECONS_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dbb',
       'PPUDPrecons',
       'token',
       flags
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.PRECONS_UPLOADED },
+      { uploaded: ['1', '2', '3', '4', '5'] },
       '1',
-      StageEnum.PRECONS_UPLOADED,
-      StageEnum.PSR_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dcc',
       'PPUDPSR',
       'token',
       flags
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: StageEnum.PSR_UPLOADED },
+      { uploaded: ['1', '2', '3', '4', '5', '6'] },
       '1',
-      StageEnum.PSR_UPLOADED,
-      StageEnum.CHARGE_SHEET_UPLOADED,
       'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
       'PPUDChargeSheet',
       'token',
@@ -360,7 +351,7 @@ describe('post', () => {
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       1,
-      { stage: StageEnum.CHARGE_SHEET_UPLOADED },
+      { uploaded: ['1', '2', '3', '4', '5', '6', '7'] },
       '1',
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
       'token',
@@ -368,9 +359,18 @@ describe('post', () => {
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       2,
-      { stage: StageEnum.CHARGE_SHEET_UPLOADED, uploadedAdditional: ['e0cc157d-5c31-4c2f-984f-4bc7b5491d11'] },
+      { uploaded: ['8'] },
       '1',
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
+      'token',
+      flags
+    )
+
+    expect(createMinute).toHaveBeenCalledWith(
+      { uploaded: ['9'] },
+      '1',
+      'Notes regarding documents added from Consider a Recall',
+      'text',
       'token',
       flags
     )

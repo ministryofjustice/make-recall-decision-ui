@@ -9,15 +9,15 @@ export default async function uploadAdditionalDocument(
   token: string,
   featureFlags: FeatureFlags
 ) {
-  const memento = { uploadedAdditional: [] as string[], ...bookingMemento }
+  const memento = { uploaded: [] as string[], ...bookingMemento }
 
-  if (memento.uploadedAdditional && memento.uploadedAdditional.includes(id)) {
+  if (memento.uploaded && memento.uploaded.includes(id)) {
     return memento
   }
 
   await ppudUploadAdditionalDocument(token, memento.recallId, { id })
 
-  memento.uploadedAdditional.push(id)
+  memento.uploaded.push(id)
   memento.failed = undefined
   memento.failedMessage = undefined
 

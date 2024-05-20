@@ -33,6 +33,7 @@ import { PpudCreateSentenceResponse } from '../@types/make-recall-decision-api/m
 import { SupportingDocumentResponse } from '../@types/make-recall-decision-api/models/SupportingDocumentResponse'
 import { PpudUploadMandatoryDocument } from '../@types/make-recall-decision-api/models/PpudUploadMandatoryDocument'
 import { PpudUploadAdditionalDocument } from '../@types/make-recall-decision-api/models/PpudUploadAdditionalDocument'
+import { PpudCreateMinuteRequest } from '../@types/make-recall-decision-api/models/PpudCreateMinuteRequest'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -207,6 +208,13 @@ export const ppudUploadMandatoryDocument = (
 ): Promise<void> => {
   return restClient(token).put({
     path: `/ppud/recall/${recallId}/upload-mandatory-document`,
+    data: body,
+  }) as Promise<void>
+}
+
+export const ppudCreateMinute = (token: string, recallId: string, body: PpudCreateMinuteRequest): Promise<void> => {
+  return restClient(token).put({
+    path: `/ppud/recall/${recallId}/minutes`,
     data: body,
   }) as Promise<void>
 }
