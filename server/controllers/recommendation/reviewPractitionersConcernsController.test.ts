@@ -42,6 +42,7 @@ describe('get', () => {
               ],
             },
           },
+          additionalLicenceConditionsText: 'test 1 2 3',
           alternativesToRecallTried: {
             selected: [
               {
@@ -100,6 +101,7 @@ describe('get', () => {
         value: 'EXTRA_LICENCE_CONDITIONS',
       },
     ])
+    expect(res.locals.additionalLicenceConditionsText).toEqual('test 1 2 3')
     expect(res.locals.isIndeterminateSentence).toEqual('No')
     expect(res.locals.isExtendedSentence).toEqual('No')
 

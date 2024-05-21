@@ -150,6 +150,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     additionalLicenceConditions,
     bespokeLicenceConditions,
     alternativesToRecallTried,
+    additionalLicenceConditionsText: recommendation.additionalLicenceConditionsText,
     isIndeterminateSentence: recommendation.isIndeterminateSentence ? 'Yes' : 'No',
     isExtendedSentence: recommendation.isExtendedSentence ? 'Yes' : 'No',
   }

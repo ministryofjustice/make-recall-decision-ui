@@ -74,6 +74,12 @@
                                     {% endfor %}
                                 </div>
                                 {% endif %}
+
+                                {% if additionalLicenceConditionsText %}
+                                <div class="govuk-!-margin-top-6">
+                                    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-2">{{additionalLicenceConditionsText}}</p>
+                                </div>
+                                {% endif %}
                               </div>
                             </details>
                         </li>
