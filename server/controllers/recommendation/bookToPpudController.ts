@@ -134,7 +134,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         memento,
         recommendationId,
         'Notes regarding documents added from Consider a Recall',
-        'text',
+        recommendation.bookRecallToPpud?.minute,
         token,
         flags
       )
