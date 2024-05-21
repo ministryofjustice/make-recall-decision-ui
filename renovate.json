@@ -10,5 +10,5 @@
     }
   ],
   "rebaseWhen": "behind-base-branch",
-  "ignoreDeps": ["govuk-frontend", "eslint"]
+  "ignoreDeps": ["govuk-frontend", "eslint", "@sentry/node"]
 }
