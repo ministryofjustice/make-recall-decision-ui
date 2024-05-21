@@ -180,7 +180,7 @@ describe('get', () => {
 
     expect(updateStatuses).not.toHaveBeenCalled()
 
-    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type')
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
     expect(next).toHaveBeenCalled()
   })
 
