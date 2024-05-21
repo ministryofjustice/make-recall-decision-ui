@@ -40,9 +40,9 @@
             been charged with a serious offence.</li>
     </ul>
     {% if recommendation.isUnder18 or recommendation.isSentence12MonthsOrOver or recommendation.isMappaLevelAbove1 or recommendation.hasBeenConvictedOfSeriousOffence %}
-        {% set warningText = "If you decide to recall Duncann Cardours, it does not have to be a fixed term recall. Explain why you have chosen the recall type." %}
+        {% set warningText = ["If you decide to recall ", recommendation.personOnProbation.name, " it does not have to be a fixed term recall. Explain why you have chosen the recall type."] | join %}
     {% else %}
-        {% set warningText = "If you decide to recall Duncann Cardours, it should be an automatic fixed term recall." %}
+        {% set warningText = ["If you decide to recall ", recommendation.personOnProbation.name, " it should be an automatic fixed term recall."] | join %}
     {% endif %}
     {{ govukWarningText({
         text: warningText,
