@@ -17,7 +17,10 @@ describe('create recommendation banner', () => {
 
   describe('when NO_RECALL_DECIDED', () => {
     it('should create a banner with correct text and link for an SPO', () => {
-      const statuses: Status[] = [{ ...baseStatuses[0], active: true }]
+      const statuses: Status[] = [
+        { ...baseStatuses[0], active: true },
+        { ...baseStatuses[3], active: false },
+      ]
       const banner = createRecommendationBanner(statuses, recommendation, recommendationId, true)
 
       expect(banner.display).toBe(true)
@@ -27,7 +30,10 @@ describe('create recommendation banner', () => {
     })
 
     it('should create a banner with correct text and no link text for a Probation Practitioner', () => {
-      const statuses: Status[] = [{ ...baseStatuses[0], active: true }]
+      const statuses: Status[] = [
+        { ...baseStatuses[0], active: true },
+        { ...baseStatuses[3], active: false },
+      ]
       const banner = createRecommendationBanner(statuses, recommendation, recommendationId, false)
 
       expect(banner.display).toBe(true)

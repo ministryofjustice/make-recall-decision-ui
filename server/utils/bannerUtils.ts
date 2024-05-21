@@ -28,36 +28,37 @@ export function createRecommendationBanner(
   }
 
   // Recommendation banner should only be visible for the following statuses
-  const isDoNotRecall = statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED && status.active)
-  const isRecallDecided = statuses.find(status => status.name === STATUSES.RECALL_DECIDED && status.active)
-  const isRecallStarted = statuses.find(status => status.name === STATUSES.PO_START_RECALL && status.active)
+  const isDoNotRecall = !!statuses.find(status => status.name === STATUSES.NO_RECALL_DECIDED && status.active)
+  const isRecallDecided = !!statuses.find(status => status.name === STATUSES.RECALL_DECIDED && status.active)
+  const isRecallStarted = !!statuses.find(status => status.name === STATUSES.PO_START_RECALL && status.active)
 
-  banner.display = true
+  banner.display = false
   banner.createdByUserFullName = recommendation.createdByUserFullName
   banner.createdDate = recommendation.createdDate
   banner.personOnProbationName = recommendation.personOnProbation.name
   banner.recommendationId = recommendationId
 
   if (isDoNotRecall) {
-    banner.text = 'started a decision not to recall letter for'
     if (isSpo) {
       banner.linkText = 'Delete the decision not to recall'
       banner.dataAnalyticsEventCategory = 'spo_delete_dntr_click'
     }
+    banner.display = true
+    banner.text = 'started a decision not to recall letter for'
   } else if (isRecallDecided) {
-    banner.text = 'started a Part A for'
     if (isSpo) {
       banner.linkText = 'Delete the Part A'
       banner.dataAnalyticsEventCategory = 'spo_delete_part_a_click'
     }
+    banner.display = true
+    banner.text = 'started a Part A for'
   } else if (isRecallStarted) {
-    banner.text = 'started a recommendation for'
     if (isSpo) {
       banner.linkText = 'Delete the recommendation'
       banner.dataAnalyticsEventCategory = 'spo_delete_recommendation_click'
     }
-  } else {
-    banner.display = false
+    banner.display = true
+    banner.text = 'started a recommendation for'
   }
 
   return banner
