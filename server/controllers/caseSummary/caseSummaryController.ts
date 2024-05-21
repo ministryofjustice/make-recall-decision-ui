@@ -53,13 +53,11 @@ const auditService = new AuditService()
 
 // Helper function to determine if the current active recommendation is open from the perspective of probation services
 // Example: can be an active recommendation but has been sent to ppcs
-function isOpenForProbationServices(statuses: Status[]): boolean {
+function isClosedForProbationServices(statuses: Status[]): boolean {
   const isWithPpcs = !!statuses.find(status => status.name === STATUSES.SENT_TO_PPCS)
   const isPPDocumentCreated = !!statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
-  let isOpen = false
-  if (isWithPpcs || isPPDocumentCreated) isOpen = true
 
-  return isOpen
+  return isWithPpcs || isPPDocumentCreated
 }
 
 // Helper function to return only active statuses for the currect active recommendation
@@ -151,7 +149,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
       // The banner should only be displayed if the recommendation is still open
       // from the probation services point of view.
-      if (!isOpenForProbationServices(statuses)) {
+      if (!isClosedForProbationServices(statuses)) {
         res.locals.recommendationBanner = createRecommendationBanner(
           statuses,
           {
