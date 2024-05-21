@@ -159,7 +159,7 @@ describe('post', () => {
   })
 
   it('post - happy path - flagSupportingDocuments', async () => {
-    const recommendation = { id: '12345' }
+    const recommendation = { id: '12345', bookRecallToPpud: { minute: 'a minute' } }
     const flags = { flagSupportingDocuments: true }
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
@@ -370,7 +370,7 @@ describe('post', () => {
       { uploaded: ['9'] },
       '1',
       'Notes regarding documents added from Consider a Recall',
-      'text',
+      'a minute',
       'token',
       flags
     )
