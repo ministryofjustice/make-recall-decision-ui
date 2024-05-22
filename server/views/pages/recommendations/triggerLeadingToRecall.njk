@@ -18,7 +18,8 @@
             </p>
             {% endset %}
             <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukTextarea({
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {{ govukTextarea({
                     name: "triggerLeadingToRecall",
                     id: "triggerLeadingToRecall",
                     label: {

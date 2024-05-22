@@ -146,7 +146,14 @@ export const createRecommendation = ({
 
 export const getSupportingDocuments = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockGet({
-    urlPathPattern: `${routes.recommendations}/(.*)/documents`,
+    urlPathPattern: `${routes.recommendations}/(.*)/documents$`,
+    statusCode,
+    response,
+  })
+
+export const downloadSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `${routes.recommendations}/(.*)/documents/(.*)`,
     statusCode,
     response,
   })

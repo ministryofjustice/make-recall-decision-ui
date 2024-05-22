@@ -33,6 +33,7 @@ const urls = [
     url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
   },
   // recommendation flow
+  recommendationEndpoint('already-existing', [], true),
   recommendationEndpoint('task-list-consider-recall'),
   recommendationEndpoint('trigger-leading-to-recall'),
   recommendationEndpoint('response-to-probation'),
@@ -45,11 +46,14 @@ const urls = [
   recommendationEndpoint('share-case-with-admin'),
   recommendationEndpoint('discuss-with-manager'),
   recommendationEndpoint('recall-type'),
+  recommendationEndpoint('spo-agree-to-recall'),
   recommendationEndpoint('emergency-recall'),
+  recommendationEndpoint('suitability-for-fixed-term-recall'),
   recommendationEndpoint('sensitive-info'),
   recommendationEndpoint('custody-status'),
   recommendationEndpoint('what-led'),
   recommendationEndpoint('recall-type-indeterminate'),
+  recommendationEndpoint('recall-type-extended'),
   recommendationEndpoint('fixed-licence'),
   recommendationEndpoint('indeterminate-details'),
   recommendationEndpoint('vulnerabilities'),
@@ -100,6 +104,12 @@ const spoUrls = [
   recommendationEndpoint('spo-countersignature', ['SPO_SIGNATURE_REQUESTED']),
   recommendationEndpoint('aco-countersignature', ['ACO_SIGNATURE_REQUESTED']),
   recommendationEndpoint('countersign-confirmation', ['SPO_SIGNED']),
+  recommendationEndpoint('spo-why-no-recall', ['SPO_CONSIDER_RECALL']),
+  recommendationEndpoint('spo-senior-manager-endorsement', ['SPO_CONSIDER_RECALL']),
+  recommendationEndpoint('spo-record-decision', ['SPO_CONSIDER_RECALL'], true),
+  recommendationEndpoint('spo-delete-recommendation-rationale', ['SPO_CONSIDER_RECALL']),
+  recommendationEndpoint('record-delete-rationale', ['SPO_CONSIDER_RECALL']),
+  recommendationEndpoint('spo-delete-confirmation', ['REC_DELETED', 'SPO_CONSIDER_RECALL']),
 ]
 
 const ppcsUrls = [
@@ -114,6 +124,7 @@ const ppcsUrls = [
   recommendationEndpoint('edit-date-of-birth', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-cro', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-prison-booking-number', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-police-contact', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-releasing-prison', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-legislation-released-under', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-custody-type', ['SENT_TO_PPCS']),
@@ -124,9 +135,26 @@ const ppcsUrls = [
   recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS']),
   recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS']),
   recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS']),
+  recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
+  recommendationEndpoint('supporting-document-upload/part-a', ['SENT_TO_PPCS']),
+  recommendationEndpoint('additional-supporting-document-upload', ['SENT_TO_PPCS']),
+  recommendationEndpoint('additional-supporting-document-replace/12356', ['SENT_TO_PPCS']),
+  recommendationEndpoint('additional-supporting-document-remove/12356', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-ppud-minute', ['SENT_TO_PPCS']),
+  recommendationEndpoint('supporting-document-replace/part-a/11111', ['SENT_TO_PPCS']),
+  recommendationEndpoint('supporting-document-remove/11111', ['SENT_TO_PPCS']),
   recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS']),
   recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),
   recommendationEndpoint('booked-to-ppud', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
+  recommendationEndpoint('booking-summary', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
+]
+
+const apUrls = [
+  recommendationEndpoint('ap-licence-conditions', []),
+  recommendationEndpoint('ap-recall-rationale', []),
+  recommendationEndpoint('ap-record-decision', []),
+  recommendationEndpoint('ap-why-no-recall', []),
+  recommendationEndpoint('ap-rationale-confirmation', ['AP_RECORDED_RATIONALE']),
 ]
 
 function recommendationEndpoint(resource: string, statuses = [], fullRecommendationData: boolean = false) {
@@ -218,6 +246,45 @@ context('Accessibility (a11y) SPO Checks', () => {
   })
 
   spoUrls.forEach(item => {
+    it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
+      if (item.fullRecommendationData) {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, spoRecallType: 'RECALL', spoRecallRationale: 'something' },
+        })
+      }
+      if (item.noRecallData) {
+        cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
+        cy.createNoRecallLetter()
+      }
+      cy.task('getStatuses', { statusCode: 200, response: item.statuses })
+      cy.task('updateStatuses', { statusCode: 200, response: item.statuses })
+      cy.visit(item.url)
+      if (item.validationError) {
+        cy.clickButton('Continue')
+      }
+      cy.injectAxe()
+      cy.checkA11y('body', {
+        rules: {
+          'aria-allowed-attr': { enabled: false },
+        },
+      })
+      cy.pageHeading().should('not.equal', 'You cannot access this page')
+    })
+  })
+})
+
+context('Accessibility (a11y) AP Checks', () => {
+  beforeEach(() => {
+    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
+    cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
+    cy.task('getPersonsByCrn', { statusCode: 200, response: getPersonSearchResponse })
+
+    cy.mockCaseSummaryData()
+    cy.mockRecommendationData()
+  })
+
+  apUrls.forEach(item => {
     it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
       if (item.fullRecommendationData) {
         cy.task('getRecommendation', {
@@ -395,6 +462,23 @@ context('Accessibility (a11y) PPCS Checks', () => {
                 indicators: [],
               },
             ],
+          },
+        ],
+      })
+      cy.task('getSupportingDocuments', {
+        statusCode: 200,
+        response: [
+          {
+            title: 'Part A',
+            type: 'PPUDPartA',
+            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            id: '11111',
+          },
+          {
+            title: 'some  title',
+            type: 'OtherDocument',
+            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            id: '12356',
           },
         ],
       })

@@ -1,5 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import alreadyExisting from './alreadyExisting'
+import alreadyExisting from './alreadyExistingController'
 
 describe('get', () => {
   it('present', async () => {

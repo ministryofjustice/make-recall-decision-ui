@@ -74,7 +74,7 @@ import previewPartAController from '../controllers/recommendation/previewPartACo
 import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoRecallController'
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
-import alreadyExisting from '../controllers/recommendation/alreadyExisting'
+import alreadyExistingController from '../controllers/recommendation/alreadyExistingController'
 import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
@@ -141,7 +141,7 @@ const ppRouteBuilder = RouteBuilder.build(recommendations)
   .withRoles(and(hasRole(HMPPS_AUTH_ROLE.PO), not(hasRole(HMPPS_AUTH_ROLE.PPCS))))
   .withCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))
 
-ppRouteBuilder.get('already-existing', alreadyExisting.get)
+ppRouteBuilder.get('already-existing', alreadyExistingController.get)
 
 ppRouteBuilder.get('task-list-consider-recall', taskListConsiderRecallController.get)
 ppRouteBuilder.post('task-list-consider-recall', taskListConsiderRecallController.post)

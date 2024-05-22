@@ -21,6 +21,7 @@ import {
   updateRecommendation,
   updateStatuses,
   getSupportingDocuments,
+  downloadSupportingDocument,
 } from './mockApis/makeRecallDecisionApi'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import { readDocX } from '../cypress_shared/plugins'
@@ -74,6 +75,7 @@ export default defineConfig({
         getReferenceList,
         getActiveRecommendation,
         getSupportingDocuments,
+        downloadSupportingDocument,
       })
     },
     baseUrl: 'http://localhost:3007',
