@@ -56,14 +56,20 @@
             {% else %}
                 <p class='govuk-body'>There are no bespoke licence conditions in CVL. Check the licence document.</p>
             {% endif %}
-            <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Add breached licence conditions</h2>
-            <p class='govuk-body govuk-!-margin-bottom-0'></p>
+
+            {% set html %}
+                <h2 class='govuk-heading-m govuk-!-margin-top-6' tabindex="0">Add breached licence conditions</h2>
+                <p class='govuk-body govuk-!-margin-bottom-0'></p>
+            {% endset %}
             {% set hint = ["Take the conditions from the licence for ", recommendation.personOnProbation.name, "."] | join %}
             {{ govukTextarea({
                 name: "additionalLicenceConditionsText",
                 id: "additional-licence-conditions-text",
                 hint: {
                     text: hint
+                },
+                label: {
+                    html: html
                 },
                 value: inputDisplayValues.additionalLicenceConditionsText
             }) }}
