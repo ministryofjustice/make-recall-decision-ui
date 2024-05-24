@@ -158,7 +158,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Record the consideration in NDelius')
 
-      cy.clickButton('Continue')
+      cy.clickButton('Send to NDelius')
 
       cy.pageHeading().should('equal', 'Share this case with your manager')
     })
@@ -172,9 +172,9 @@ context('Make a recommendation', () => {
 
       cy.task('updateStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-consideration-rationale`)
 
-      cy.clickButton('Continue')
+      cy.clickButton('Send to NDelius')
 
       cy.pageHeading().should('equal', 'Share this case with your manager')
 
@@ -192,9 +192,9 @@ context('Make a recommendation', () => {
 
       cy.task('updateStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-consideration-rationale`)
 
-      cy.clickButton('Continue')
+      cy.clickButton('Send to NDelius')
 
       cy.pageHeading().should('equal', 'Share this case with your manager')
 
