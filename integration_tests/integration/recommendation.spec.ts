@@ -143,6 +143,26 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Consider a recall')
     })
 
+    it('present record consideration rationale', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Record the consideration in NDelius')
+
+      cy.clickButton('Continue')
+
+      cy.pageHeading().should('equal', 'Share this case with your manager')
+    })
+
     it('present share-case-with-manager', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
