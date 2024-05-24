@@ -129,6 +129,7 @@ export const strings: Record<string, Record<string, string>> = {
     lineManagerCountersignature: 'Line manager countersignature',
     seniorManagerCountersignature: 'Senior manager countersignature',
     countersigningTelephone: 'Enter your telephone number',
+    recordConsideration: 'Record the consideration in NDelius',
     spoRecallRationale: 'Explain the decision',
     apRecallRationale: 'Explain the decision',
     spoRecallRationaleRecallDecided: 'Explain the decision to recall {{ fullName }}',
