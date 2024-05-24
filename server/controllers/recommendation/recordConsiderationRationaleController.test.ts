@@ -1,8 +1,8 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-// import { updateRecommendation } from '../../data/makeDecisionApiClient'
-// import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import recordConsiderationController from './recordConsiderationRationaleController'
-// import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -32,40 +32,95 @@ describe('get', () => {
   })
 })
 
-// describe('post', () => {
-//   it('test goes here', async () => {
-//     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+describe('post', () => {
+  it('post with sensitive checked', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-//     const res = mockRes({
-//       token: 'token1',
-//       locals: {
-//         user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
-//         urlInfo: { basePath: '/recommendation/123/' },
-//       },
-//     })
-//     const next = mockNext()
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        sensitive: 'sensitive',
+        crn: 'X098092',
+      },
+    })
 
-//     expect(updateRecommendation).toHaveBeenCalledWith({
-//       recommendationId: '123',
-//       token: 'token1',
-//       valuesToSave: {
-//         considerationSensitive: true,
-//         sendConsiderationRationaleToDelius: true,
-//       },
-//       featureFlags: {},
-//     })
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
 
-//     expect(appInsightsEvent).toHaveBeenCalledWith(
-//       'mrdSendConsiderationRationaleToDelius',
-//       'Dave',
-//       {
-//         crn: 'X098092',
-//         recommendationId: '123',
-//         region: { code: 'N07', name: 'London' },
-//       },
-//       {}
-//     )
-//     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
-//     expect(next).not.toHaveBeenCalled()
-//   })
-// })
+    await recordConsiderationController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        considerationSensitive: true,
+        sendConsiderationRationaleToDelius: true,
+      },
+      featureFlags: {},
+    })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdSendConsiderationRationaleToDelius',
+      'Dave',
+      {
+        crn: 'X098092',
+        recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
+      },
+      {}
+    )
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('post with sensitive unchecked', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await recordConsiderationController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        considerationSensitive: false,
+        sendConsiderationRationaleToDelius: true,
+      },
+      featureFlags: {},
+    })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdSendConsiderationRationaleToDelius',
+      'Dave',
+      {
+        crn: 'X098092',
+        recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
+      },
+      {}
+    )
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
+    expect(next).not.toHaveBeenCalled()
+  })
+})
