@@ -163,6 +163,46 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Share this case with your manager')
     })
 
+    it('sent to NDelius attempt to present trigger-leading-to-recall', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...recommendationResponse,
+          recallConsideredList: null,
+          triggerLeadingToRecall: 'the reasons for recall',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+      cy.clickLink('What has made you consider recalling Paula Smith?')
+
+      cy.pageHeading().should('equal', 'What has made you consider recalling Paula Smith?')
+
+      cy.contains('p.govuk-body', 'This information has been recorded as an NDelius contact')
+    })
+
+    it('sent to NDelius attempt to present response-to-probation', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...recommendationResponse,
+          recallConsideredList: null,
+          responseToProbation: 'the response to probation so far',
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+      cy.clickLink('How has Paula Smith responded to probation so far?')
+
+      cy.pageHeading().should('equal', 'How has Paula Smith responded to probation so far?')
+
+      cy.contains('p.govuk-body', 'This information has been recorded as an NDelius contact')
+    })
+
     it('present share-case-with-manager', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
