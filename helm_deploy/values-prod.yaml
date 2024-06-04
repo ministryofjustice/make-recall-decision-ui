@@ -139,6 +139,7 @@ generic-service:
     groups:
       - internal
       - prisons # do not remove, the prisons group also covers probation
+      - probation
 
 generic-prometheus-alerts:
   alertSeverity: make-recall-decision-prod
