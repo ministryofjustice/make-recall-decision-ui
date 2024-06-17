@@ -124,18 +124,6 @@ context('Make a recommendation', () => {
       cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
     })
 
-    it('show already existing page', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse },
-      })
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/already-existing`)
-      cy.pageHeading().should('equal', 'There is already a recommendation for Paula Smith')
-    })
-
     it('present trigger-leading-to-recall', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -155,7 +143,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Consider a recall')
     })
 
-    it('present record consideration rationale', () => {
+    it('present share-case-with-manager', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
@@ -167,26 +155,6 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
 
       cy.clickButton('Continue')
-
-      cy.pageHeading().should('equal', 'Record the consideration in NDelius')
-
-      cy.clickButton('Send to NDelius')
-
-      cy.pageHeading().should('equal', 'Share this case with your manager')
-    })
-
-    it('present share-case-with-manager', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-consideration-rationale`)
-
-      cy.clickButton('Send to NDelius')
 
       cy.pageHeading().should('equal', 'Share this case with your manager')
 
@@ -204,9 +172,9 @@ context('Make a recommendation', () => {
 
       cy.task('updateStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-consideration-rationale`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
 
-      cy.clickButton('Send to NDelius')
+      cy.clickButton('Continue')
 
       cy.pageHeading().should('equal', 'Share this case with your manager')
 
@@ -778,62 +746,6 @@ context('Make a recommendation', () => {
       cy.getElement({ qaAttr: 'indexOffenceDetails' }).should('not.exist')
     })
 
-    it('sensitive information', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/sensitive-info`)
-      cy.pageHeading().should('equal', 'Sensitive information')
-    })
-
-    it('manager review', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-review`)
-      cy.pageHeading().should('equal', 'Stop and think')
-    })
-
-    it('manager decision confirmation', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/manager-decision-confirmation`)
-      cy.pageHeading().should('equal', 'Decision not to recall')
-    })
-
-    it('emergency recall', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/emergency-recall`)
-      cy.pageHeading().should('equal', 'Is this an emergency recall?')
-    })
-
-    it('When did SPO agree to recall', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-agree-to-recall`)
-      cy.pageHeading().should('equal', 'When did the SPO agree to this recall?')
-    })
-
-    it('Previous recalls', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-recalls`)
-      cy.pageHeading().should('equal', 'Previous recalls')
-    })
-
-    it('Previous releases', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-releases`)
-      cy.pageHeading().should('equal', 'Previous releases')
-    })
-
-    it('Confirmation part a', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/confirmation-part-a`)
-      cy.pageHeading().should('equal', 'Part A created')
-    })
-
     it('suitability for recall', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -1117,54 +1029,6 @@ context('Make a recommendation', () => {
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Completed').should('exist')
     })
-
-    it('Decision not to recall letter created', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/confirmation-no-recall`)
-      cy.pageHeading().should('equal', 'Decision not to recall letter created')
-    })
-
-    it('request SPO countersign', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/request-spo-countersign`)
-      cy.pageHeading().should('equal', 'Request countersignature')
-    })
-
-    it('request ACO countersign', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/request-aco-countersign`)
-      cy.pageHeading().should('equal', 'Request countersignature')
-    })
-  })
-
-  describe('SPO Delete', () => {
-    beforeEach(() => {
-      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
-    })
-
-    it('spo delete recommendation rationale', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-delete-recommendation-rationale`)
-      cy.pageHeading().should('equal', 'Delete recommendation for Paula Smith')
-    })
-
-    it('record delete rationale', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-delete-rationale`)
-      cy.pageHeading().should('equal', 'Record the explanation in NDelius')
-    })
-
-    it('SPO delete confirmation', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'REC_DELETED', active: true }] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-delete-confirmation`)
-      cy.pageHeading().should('contains', 'Recommendation deleted')
-    })
   })
 
   describe('SPO Rationale Journey', () => {
@@ -1373,26 +1237,6 @@ context('Make a recommendation', () => {
 
       cy.getText('fullName').should('contain', 'Paula Smith')
       cy.getText('crn').should('contain', 'X12345')
-    })
-
-    it('SPO record decision', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, spoRecallType: 'RECALL' },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-record-decision`)
-      cy.pageHeading().should('contains', 'Record the decision in NDelius')
-    })
-
-    it('SPO rationale confirmation', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, spoRecallType: 'RECALL' },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_RECORDED_RATIONALE', active: true }] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale-confirmation`)
-      cy.pageHeading().should('contains', 'Decision to recall')
     })
 
     it('present record decision (no recall) and confirm', () => {
@@ -1868,18 +1712,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Preview Part A')
 
       cy.getElement('Download preview of Part A').should('exist')
-    })
-
-    it('present share-case-with-admin', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-admin`)
-
-      cy.pageHeading().should('equal', 'Share with a case admin')
     })
   })
   describe('PPCS Journey', () => {
@@ -2617,77 +2449,6 @@ context('Make a recommendation', () => {
 
       cy.getText('sentenceLength').should('contain', '4 years')
     })
-    it('sentence to commit existing offender', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          ppudOffender: {
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Determinate',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-                releases: [
-                  {
-                    dateOfRelease: '2013-02-02',
-                  },
-                  {
-                    dateOfRelease: '2015-02-09',
-                  },
-                  {
-                    dateOfRelease: '2005-02-02',
-                  },
-                ],
-              },
-            ],
-          },
-          bookRecallToPpud: {
-            firstNames: 'Pinky',
-            lastName: 'Pooh',
-            ppudSentenceId: '1',
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
-
-      cy.visit(`/recommendations/252523937/sentence-to-commit-existing-offender`)
-      cy.pageHeading().should('contain', 'Double check your booking')
-    })
     it('book to ppud - create offender', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -2786,71 +2547,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Book  Pinky Pooh onto PPUD')
     })
 
-    it('booked to ppud', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: 'BOOKED_TO_PPUD', active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/booked-to-ppud`)
-      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
-    })
-
-    it('booking summary', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [
-          { name: 'SENT_TO_PPCS', active: true },
-          { name: 'BOOKED_TO_PPUD', active: true },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/booking-summary`)
-      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
-    })
-
     it('supporting documents', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -2938,94 +2634,6 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/supporting-document-remove/1234`)
       cy.pageHeading().should('contain', 'Remove Part A')
-    })
-
-    it('uploading additional supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
-
-      cy.visit(`/recommendations/252523937/additional-supporting-document-upload`)
-      cy.pageHeading().should('contain', 'Add additional document')
-    })
-
-    it('replace additional supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/additional-supporting-document-replace/1234`)
-      cy.pageHeading().should('contain', 'Replace additional document')
-    })
-
-    it('remove additional supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/additional-supporting-document-remove/1234`)
-      cy.pageHeading().should('contain', "Remove the additional document 'some title'")
-    })
-
-    it('edit minute', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/edit-ppud-minute`)
-      cy.pageHeading().should('contain', 'Add note about supporting documents')
     })
   })
   describe('Approved Premises Journey', () => {

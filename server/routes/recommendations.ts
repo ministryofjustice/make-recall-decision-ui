@@ -118,7 +118,6 @@ import editPpudMinuteController from '../controllers/recommendation/editPpudMinu
 import additionalSupportingDocumentUploadController from '../controllers/recommendation/additionalSupportingDocumentUploadController'
 import additionalSupportingDocumentReplaceController from '../controllers/recommendation/additionalSupportingDocumentReplaceController'
 import additionalSupportingDocumentRemoveController from '../controllers/recommendation/additionalSupportingDocumentRemoveController'
-import recordConsiderationRationaleController from '../controllers/recommendation/recordConsiderationRationaleController'
 
 const recommendations = Router()
 
@@ -167,9 +166,6 @@ ppRouteBuilder.post('is-indeterminate', isIndeterminateController.post)
 
 ppRouteBuilder.get('is-extended', isExtendedController.get)
 ppRouteBuilder.post('is-extended', isExtendedController.post)
-
-ppRouteBuilder.get('record-consideration-rationale', recordConsiderationRationaleController.get)
-ppRouteBuilder.post('record-consideration-rationale', recordConsiderationRationaleController.post)
 
 ppRouteBuilder.get('share-case-with-manager', shareCaseWithManagerController.get)
 

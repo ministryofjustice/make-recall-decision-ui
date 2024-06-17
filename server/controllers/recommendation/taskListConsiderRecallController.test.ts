@@ -123,7 +123,41 @@ describe('post', () => {
 
     expect(updateStatuses).not.toHaveBeenCalled()
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/record-consideration-rationale`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with no statuses', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    ;(updateStatuses as jest.Mock).mockResolvedValue([])
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        urlInfo: { basePath: '/recommendation/123/' },
+      },
+    })
+    const next = mockNext()
+
+    await taskListConsiderRecallController.post(req, res, next)
+
+    expect(getStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+    })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.SPO_CONSIDER_RECALL, STATUSES.PO_RECALL_CONSULT_SPO],
+      deActivate: [],
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })
