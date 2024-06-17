@@ -106,6 +106,7 @@ const spoUrls = [
   recommendationEndpoint('countersign-confirmation', ['SPO_SIGNED']),
   recommendationEndpoint('spo-why-no-recall', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('spo-senior-manager-endorsement', ['SPO_CONSIDER_RECALL']),
+  recommendationEndpoint('spo-record-decision', ['SPO_CONSIDER_RECALL'], true),
   recommendationEndpoint('spo-delete-recommendation-rationale', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('record-delete-rationale', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('spo-delete-confirmation', ['REC_DELETED', 'SPO_CONSIDER_RECALL']),

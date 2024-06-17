@@ -144,7 +144,7 @@
     "ts-loader": "^9.5.1",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0",
-    "web-vitals": "^4.0.0"
+    "web-vitals": "^3.5.2"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.226.0",

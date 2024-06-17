@@ -65,7 +65,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     })
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'record-consideration-rationale', urlInfo }))
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'share-case-with-manager', urlInfo }))
 }
 
 export default { get, post }

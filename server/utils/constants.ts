@@ -15,6 +15,5 @@ export enum EVENTS {
   TWO_ACTIVE_CONVICTIONS = 'mrdTwoActiveConvictions',
   MRD_DELETED_RECOMMENDATION = 'mrdDeletedRecommendation',
   MRD_ADDITIONAL_LICENCE_CONDITIONS_TEXT = 'mrdAdditionalLicenceConditionsText',
-  MRD_SEND_CONSIDERATION_RATIONALE_TO_DELIUS = 'mrdSendConsiderationRationaleToDelius',
   BOOKING_ERROR = 'mrdBookingOnToPPUDError',
 }
