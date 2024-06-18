@@ -6,35 +6,42 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
-            {% set hintText %}
-            <p class="govuk-body">You're thinking about whether
-                {{ recommendation.personOnProbation.name }} should be recalled or not. Explain your concerns. Include details of:
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>what you're worried about</li>
-                    <li>protective factors that are still in place</li>
-                    <li>protective factors that have broken down</li>
-                </ul>
-            </p>
-            {% endset %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                {{ govukTextarea({
-                    name: "triggerLeadingToRecall",
-                    id: "triggerLeadingToRecall",
-                    label: {
-                        text: pageHeadings[page.id],
-                        classes: "govuk-label--l",
-                        isPageHeading: true
-                    },
-                    hint: {
-                        html: hintText
-                    },
-                    value: inputDisplayValues.value,
-                    errorMessage: errorMessage(errors.triggerLeadingToRecall)
-                }) }}
-                {{ formSubmitButton() }}
-            </form>
+            {% if recommendation.triggerLeadingToRecall %}
+                <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+                <p class="govuk-body">
+                    This information has been recorded as an NDelius contact. You can view it in the NDelius contact list.
+                </p>
+            {% else %}
+                {% include '../../partials/error-summary.njk' %}
+                {% set hintText %}
+                <p class="govuk-body">You're thinking about whether
+                    {{ recommendation.personOnProbation.name }} should be recalled or not. Explain your concerns. Include details of:
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>what you're worried about</li>
+                        <li>protective factors that are still in place</li>
+                        <li>protective factors that have broken down</li>
+                    </ul>
+                </p>
+                {% endset %}
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                    {{ govukTextarea({
+                        name: "triggerLeadingToRecall",
+                        id: "triggerLeadingToRecall",
+                        label: {
+                            text: pageHeadings[page.id],
+                            classes: "govuk-label--l",
+                            isPageHeading: true
+                        },
+                        hint: {
+                            html: hintText
+                        },
+                        value: inputDisplayValues.value,
+                        errorMessage: errorMessage(errors.triggerLeadingToRecall)
+                    }) }}
+                    {{ formSubmitButton() }}
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
