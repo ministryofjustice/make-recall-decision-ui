@@ -6,31 +6,24 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% if recommendation.responseToProbation %}
-                <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
-                <p class="govuk-body">
-                    This information has been recorded as an NDelius contact. You can view it in the NDelius contact list.
-                </p>
-            {% else %}
-                {% include '../../partials/error-summary.njk' %}
-                <form novalidate method="post">
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukTextarea({
-                        name: "responseToProbation",
-                        id: "responseToProbation",
-                        label: {
-                            text: pageHeadings[page.id],
-                            classes: "govuk-label--l",
-                            isPageHeading: true
-                        },
-                        hint: {
-                            html: "<p class='govuk-body'>Give details of overall compliance. This includes good behaviour.</p><p class='govuk-body'>Your answer will be recorded in NDelius.</p>"
-                        },
-                        value: inputDisplayValues.value,
-                        errorMessage: errorMessage(errors.responseToProbation)
-                    }) }}
-                    {{ formSubmitButton() }}
-                </form>
-            {% endif %}
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukTextarea({
+                    name: "responseToProbation",
+                    id: "responseToProbation",
+                    label: {
+                        text: pageHeadings[page.id],
+                        classes: "govuk-label--l",
+                        isPageHeading: true
+                    },
+                    hint: {
+                        html: "<p class='govuk-body'>Give details of overall compliance. This includes good behaviour.</p><p class='govuk-body'>Your answer will be recorded in NDelius.</p>"
+                    },
+                    value: inputDisplayValues.value,
+                    errorMessage: errorMessage(errors.responseToProbation)
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
         </div>
     </div>
 {% endblock %}
