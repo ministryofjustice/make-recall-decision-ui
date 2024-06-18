@@ -140,6 +140,7 @@ generic-service:
       - circleci
       - internal
       - prisons # do not remove, the prisons group also covers probation
+      - probation
 
   scheduledDowntime:
     enabled: true
