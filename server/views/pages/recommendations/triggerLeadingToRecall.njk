@@ -16,11 +16,14 @@
                 {% set hintText %}
                 <p class="govuk-body">You're thinking about whether
                     {{ recommendation.personOnProbation.name }} should be recalled or not. Explain your concerns. Include details of:
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>what you're worried about</li>
-                        <li>protective factors that are still in place</li>
-                        <li>protective factors that have broken down</li>
-                    </ul>
+                </p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>what you're worried about</li>
+                    <li>protective factors that are still in place</li>
+                    <li>protective factors that have broken down</li>
+                </ul>
+                <p class="govuk-body">
+                    This explanation will be recorded in NDelius.
                 </p>
                 {% endset %}
                 <form novalidate method="post">
