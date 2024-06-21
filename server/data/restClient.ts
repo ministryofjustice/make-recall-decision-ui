@@ -35,7 +35,7 @@ export default class RestClient {
 
   constructor(
     private readonly name: string,
-    private readonly config: ApiConfig,
+    protected readonly config: ApiConfig,
     private readonly token: string
   ) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
@@ -45,7 +45,10 @@ export default class RestClient {
     return this.config.url
   }
 
-  private timeoutConfig() {
+  protected timeoutConfig(): {
+    response: number
+    deadline: number
+  } {
     return this.config.timeout
   }
 
