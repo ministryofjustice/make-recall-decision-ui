@@ -1,0 +1,52 @@
+{% extends "../../partials/layout.njk" %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> 
+                {% set hintHtml %}
+                    <p class="govuk-body">
+                        This will be recorded as a contact in NDelius called ‘Recall being considered’. You cannot undo this.
+                    </p>
+                    <div class="govuk-inset-text" data-qa="reason">
+                        <pre class="govuk-body">
+                            Reason for considering recall: <br />
+                            {{ recommendation.triggerLeadingToRecall }} <br />
+                            Behaviour on probation so far: <br />
+                            {{ recommendation.responseToProbation }} <br />
+                        </pre>
+                    </div>
+                {% endset %}
+                {{ govukCheckboxes({
+                    name: "sensitive",
+                    fieldset: {
+                    legend: {
+                        text: pageTitles[page.id],
+                        isPageHeading: true,
+                        classes: "govuk-fieldset__legend--l"
+                    }
+                    },
+                    hint: {
+                    html: hintHtml
+                    },
+                    items: [
+                    {
+                        value: "sensitive",
+                        text: "Contains sensitive information - do not show to the person on probation"
+                    }
+                    ]
+                }) }}
+                {{ formSubmitButton({
+                    label: "Send to NDelius"
+                }) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

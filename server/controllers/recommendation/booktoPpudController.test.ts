@@ -386,6 +386,44 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
+  it('post - create minute should not be called when no minute is supplied', async () => {
+    const recommendation = { id: '12345', bookRecallToPpud: { minute: 'a minute' } }
+    const flags = { flagSupportingDocuments: true }
+
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+
+    const basePath = `/recommendations/1/`
+    const req = mockReq({
+      params: { recommendationId: '1' },
+    })
+
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath },
+        flags,
+      },
+    })
+    const next = mockNext()
+
+    ;(bookOffender as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENDER_BOOKED })
+    ;(createOrUpdateSentence as jest.Mock).mockResolvedValue({ stage: StageEnum.SENTENCE_BOOKED })
+    ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
+    ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
+    ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([])
+
+    await bookToPpudController.post(req, res, next)
+
+    expect(createMinute).not.toHaveBeenCalledWith(
+      { uploaded: ['9'] },
+      '1',
+      'Notes regarding documents added from Consider a Recall',
+      'a minute',
+      'token',
+      flags
+    )
+  })
+
   it('post - exception', async () => {
     const recommendation = { id: '12345', crn: 'X123' }
     const flags = { xyz: true }
