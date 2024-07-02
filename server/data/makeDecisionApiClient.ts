@@ -1,5 +1,6 @@
 import { Response } from 'superagent'
 import RestClient from './restClient'
+import PpudRestClient from './ppudRestClient'
 import config from '../config'
 import { routes } from '../../api/routes'
 
@@ -37,6 +38,10 @@ import { PpudCreateMinuteRequest } from '../@types/make-recall-decision-api/mode
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
+}
+
+function ppudRestClient(token?: string): PpudRestClient {
+  return new PpudRestClient('Make recall decision API Client (PPUD)', config.apis.makeRecallDecisionApi, token)
 }
 
 const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
@@ -109,14 +114,14 @@ export const searchPpud = (
     familyName,
     dateOfBirth,
   }
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `${routes.ppudSearch}`,
     data: body,
   }) as Promise<PpudSearchResponse>
 }
 
 export const ppudDetails = (token: string, id: string): Promise<PpudDetailsResponse> => {
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `${routes.ppudDetails}${id}`,
   }) as Promise<PpudDetailsResponse>
 }
@@ -125,7 +130,7 @@ export const ppudCreateOffender = (
   token: string,
   body: PpudCreateOffenderRequest
 ): Promise<PpudCreateOffenderResponse> => {
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `/ppud/offender`,
     data: body,
   }) as Promise<PpudCreateOffenderResponse>
@@ -136,7 +141,7 @@ export const ppudUpdateOffender = (
   offenderId: string,
   body: PpudUpdateOffenderRequest
 ): Promise<void> => {
-  return restClient(token).put({
+  return ppudRestClient(token).put({
     path: `/ppud/offender/${offenderId}`,
     data: body,
   }) as Promise<void>
@@ -147,7 +152,7 @@ export const ppudCreateSentence = (
   offenderId: string,
   body: PpudUpdateSentenceRequest
 ): Promise<PpudCreateSentenceResponse> => {
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `/ppud/offender/${offenderId}/sentence`,
     data: body,
   }) as Promise<PpudCreateSentenceResponse>
@@ -159,7 +164,7 @@ export const ppudUpdateSentence = (
   sentenceId: string,
   body: PpudUpdateSentenceRequest
 ): Promise<void> => {
-  return restClient(token).put({
+  return ppudRestClient(token).put({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}`,
     data: body,
   }) as Promise<void>
@@ -171,7 +176,7 @@ export const ppudUpdateOffence = (
   sentenceId: string,
   body: PpudUpdateOffenceRequest
 ): Promise<void> => {
-  return restClient(token).put({
+  return ppudRestClient(token).put({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/offence`,
     data: body,
   }) as Promise<void>
@@ -183,7 +188,7 @@ export const ppudUpdateRelease = (
   sentenceId: string,
   body: PpudUpdateReleaseRequest
 ): Promise<PpudUpdateReleaseResponse> => {
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/release`,
     data: body,
   }) as Promise<PpudUpdateReleaseResponse>
@@ -195,7 +200,7 @@ export const ppudCreateRecall = (
   releaseId: string,
   body: PpudCreateRecallRequest
 ): Promise<PpudCreateRecallResponse> => {
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `/ppud/offender/${offenderId}/release/${releaseId}/recall`,
     data: body,
   }) as Promise<PpudCreateRecallResponse>
@@ -206,14 +211,14 @@ export const ppudUploadMandatoryDocument = (
   recallId: string,
   body: PpudUploadMandatoryDocument
 ): Promise<void> => {
-  return restClient(token).put({
+  return ppudRestClient(token).put({
     path: `/ppud/recall/${recallId}/upload-mandatory-document`,
     data: body,
   }) as Promise<void>
 }
 
 export const ppudCreateMinute = (token: string, recallId: string, body: PpudCreateMinuteRequest): Promise<void> => {
-  return restClient(token).put({
+  return ppudRestClient(token).put({
     path: `/ppud/recall/${recallId}/minutes`,
     data: body,
   }) as Promise<void>
@@ -224,14 +229,14 @@ export const ppudUploadAdditionalDocument = (
   recallId: string,
   body: PpudUploadAdditionalDocument
 ): Promise<void> => {
-  return restClient(token).put({
+  return ppudRestClient(token).put({
     path: `/ppud/recall/${recallId}/upload-additional-document`,
     data: body,
   }) as Promise<void>
 }
 
 export const ppudReferenceList = (token: string, name: string): Promise<PpudReferenceListResponse> => {
-  return restClient(token).post({
+  return ppudRestClient(token).post({
     path: `/ppud/reference/${name}`,
   }) as Promise<PpudReferenceListResponse>
 }
