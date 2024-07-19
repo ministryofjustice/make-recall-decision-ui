@@ -143,7 +143,7 @@
     "superagent": "^9.0.0",
     "ts-loader": "^9.5.1",
     "url-value-parser": "^2.2.0",
-    "uuid": "^9.0.0",
+    "uuid": "^10.0.0",
     "web-vitals": "^4.0.0"
   },
   "devDependencies": {
@@ -168,7 +168,7 @@
     "@types/passport-oauth2": "^1.4.15",
     "@types/superagent": "^8.1.6",
     "@types/supertest": "^6.0.2",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "audit-ci": "^7.0.0",
