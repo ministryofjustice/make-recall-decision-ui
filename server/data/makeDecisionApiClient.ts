@@ -75,7 +75,7 @@ export const searchForPrisonOffender = async (token: string, nomsId: string): Pr
       data: body,
     })) as Promise<PrisonOffenderSearchResponse>
   } catch (err) {
-    if (err.data.status === 404) {
+    if (err.data?.status === 404) {
       return
     }
     throw err
