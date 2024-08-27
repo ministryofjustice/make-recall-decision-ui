@@ -52,7 +52,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
     )
   }
   if (status === 'DELETED') {
-    auditService.recommendationDeleted({
+    await auditService.recommendationDeleted({
       crn: normalizedCrn,
       recommendationId,
       username,

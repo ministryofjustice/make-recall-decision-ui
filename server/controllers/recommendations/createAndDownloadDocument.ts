@@ -89,7 +89,7 @@ export const createAndDownloadDocument =
       logErrors: isPreprodOrProd(res.locals.env) && process.env.NODE_ENV !== 'test',
     }
     if (documentType === 'PART_A') {
-      auditService.createPartA(auditData)
+      await auditService.createPartA(auditData)
       appInsightsEvent(
         EVENTS.PART_A_DOCUMENT_DOWNLOADED,
         user.username,
@@ -97,7 +97,7 @@ export const createAndDownloadDocument =
         flags
       )
     } else if (documentType === 'NO_RECALL_LETTER') {
-      auditService.createNoRecallLetter(auditData)
+      await auditService.createNoRecallLetter(auditData)
       appInsightsEvent(
         EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED,
         user.username,
