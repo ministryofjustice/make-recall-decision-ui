@@ -101,7 +101,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.363.0",
+    "@aws-sdk/client-sqs": "^3.637.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "^1.8.1",
     "@sentry/node": "^7.109.0",
