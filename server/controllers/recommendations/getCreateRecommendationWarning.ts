@@ -27,7 +27,7 @@ export const getCreateRecommendationWarning = async (req: Request, res: Response
     },
     flags
   )
-  auditService.recommendationView({
+  await auditService.recommendationView({
     crn: normalizedCrn,
     pageUrlSlug,
     username,

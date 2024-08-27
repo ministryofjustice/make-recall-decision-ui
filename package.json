@@ -25,7 +25,7 @@
     "swagger-to-ts": "node ./scripts/swagger-to-ts.js",
     "typecheck": "tsc --noEmit && tsc --noEmit -p integration_tests",
     "test": "jest --forceExit",
-    "test:coverage": "jest --coverage --maxWorkers=2",
+    "test:coverage": "jest --coverage --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --browser chrome --config-file integration_tests/cypress.config.ts",
     "int-test-fx": "cypress run --browser firefox --config-file integration_tests/cypress.config.ts",
