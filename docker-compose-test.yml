@@ -2,7 +2,7 @@ version: '3.1'
 services:
 
   redis:
-    image: 'bitnami/redis:7.2'
+    image: 'bitnami/redis:7.4'
     networks:
       - hmpps_int
     environment:
