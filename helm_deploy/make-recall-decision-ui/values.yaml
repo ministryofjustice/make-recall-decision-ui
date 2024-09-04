@@ -18,9 +18,7 @@ generic-service:
     v0_47_enabled: false
     annotations:
       nginx.ingress.kubernetes.io/limit-rpm: "200"
-      nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
-      nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
-      nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "240"
 
   livenessProbe:
     httpGet:
