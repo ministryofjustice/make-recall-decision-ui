@@ -172,7 +172,7 @@
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "audit-ci": "^7.0.0",
-    "axe-core": "4.9.1",
+    "axe-core": "4.10.0",
     "concurrently": "^8.2.2",
     "cypress": "^13.7.2",
     "cypress-axe": "^1.5.0",
