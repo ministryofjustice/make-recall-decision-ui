@@ -69,6 +69,7 @@ describe('post', () => {
     ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
     ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
     ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([])
 
     await bookToPpudController.post(req, res, next)
 
@@ -103,7 +104,7 @@ describe('post', () => {
 
   it('post - happy path with no files', async () => {
     const recommendation = { id: '12345' }
-    const flags = { flagSupportingDocuments: true }
+    const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -158,9 +159,9 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('post - happy path - flagSupportingDocuments', async () => {
+  it('post - happy path - with SupportingDocuments', async () => {
     const recommendation = { id: '12345', bookRecallToPpud: { minute: 'a minute' } }
-    const flags = { flagSupportingDocuments: true }
+    const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -388,7 +389,7 @@ describe('post', () => {
 
   it('post - create minute should not be called when no minute is supplied', async () => {
     const recommendation = { id: '12345', bookRecallToPpud: { minute: 'a minute' } }
-    const flags = { flagSupportingDocuments: true }
+    const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
