@@ -65,81 +65,79 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     memento = await updateRecall(memento, recommendation, token, flags)
 
-    if (flags.flagSupportingDocuments) {
-      const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
+    const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
-      const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
-      if (PPUDPartA) {
-        memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPartA?.id, 'PPUDPartA', token, flags)
-      }
+    const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
+    if (PPUDPartA) {
+      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPartA?.id, 'PPUDPartA', token, flags)
+    }
 
-      const PPUDLicenceDocument = documents.find(doc => doc.type === 'PPUDLicenceDocument')
-      if (PPUDLicenceDocument) {
-        memento = await uploadMandatoryDocument(
-          memento,
-          recommendationId,
-          PPUDLicenceDocument?.id,
-          'PPUDLicenceDocument',
-          token,
-          flags
-        )
-      }
+    const PPUDLicenceDocument = documents.find(doc => doc.type === 'PPUDLicenceDocument')
+    if (PPUDLicenceDocument) {
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        PPUDLicenceDocument?.id,
+        'PPUDLicenceDocument',
+        token,
+        flags
+      )
+    }
 
-      const PPUDProbationEmail = documents.find(doc => doc.type === 'PPUDProbationEmail')
-      if (PPUDProbationEmail) {
-        memento = await uploadMandatoryDocument(
-          memento,
-          recommendationId,
-          PPUDProbationEmail?.id,
-          'PPUDProbationEmail',
-          token,
-          flags
-        )
-      }
+    const PPUDProbationEmail = documents.find(doc => doc.type === 'PPUDProbationEmail')
+    if (PPUDProbationEmail) {
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        PPUDProbationEmail?.id,
+        'PPUDProbationEmail',
+        token,
+        flags
+      )
+    }
 
-      const PPUDOASys = documents.find(doc => doc.type === 'PPUDOASys')
-      if (PPUDOASys) {
-        memento = await uploadMandatoryDocument(memento, recommendationId, PPUDOASys?.id, 'PPUDOASys', token, flags)
-      }
+    const PPUDOASys = documents.find(doc => doc.type === 'PPUDOASys')
+    if (PPUDOASys) {
+      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDOASys?.id, 'PPUDOASys', token, flags)
+    }
 
-      const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
-      if (PPUDPrecons) {
-        memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPrecons?.id, 'PPUDPrecons', token, flags)
-      }
+    const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
+    if (PPUDPrecons) {
+      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPrecons?.id, 'PPUDPrecons', token, flags)
+    }
 
-      const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
-      if (PPUDPSR) {
-        memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPSR?.id, 'PPUDPSR', token, flags)
-      }
+    const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
+    if (PPUDPSR) {
+      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPSR?.id, 'PPUDPSR', token, flags)
+    }
 
-      const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
-      if (PPUDChargeSheet) {
-        memento = await uploadMandatoryDocument(
-          memento,
-          recommendationId,
-          PPUDChargeSheet?.id,
-          'PPUDChargeSheet',
-          token,
-          flags
-        )
-      }
+    const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
+    if (PPUDChargeSheet) {
+      memento = await uploadMandatoryDocument(
+        memento,
+        recommendationId,
+        PPUDChargeSheet?.id,
+        'PPUDChargeSheet',
+        token,
+        flags
+      )
+    }
 
-      const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
+    const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
 
-      for (const id of additional) {
-        memento = await uploadAdditionalDocument(memento, recommendationId, id, token, flags)
-      }
+    for (const id of additional) {
+      memento = await uploadAdditionalDocument(memento, recommendationId, id, token, flags)
+    }
 
-      if (recommendation.bookRecallToPpud?.minute) {
-        memento = await createMinute(
-          memento,
-          recommendationId,
-          'Notes regarding documents added from Consider a Recall',
-          recommendation.bookRecallToPpud?.minute,
-          token,
-          flags
-        )
-      }
+    if (recommendation.bookRecallToPpud?.minute) {
+      memento = await createMinute(
+        memento,
+        recommendationId,
+        'Notes regarding documents added from Consider a Recall',
+        recommendation.bookRecallToPpud?.minute,
+        token,
+        flags
+      )
     }
 
     await updateStatuses({
