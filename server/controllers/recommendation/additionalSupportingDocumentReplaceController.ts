@@ -70,7 +70,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             errorId,
           })
         )
-      } else if (isString(title) && title.toString().length > 250) {
+      } else if (isString(title) && title.length > 250) {
         const errorId = 'titleLengthExceeded'
         errors.push(
           makeErrorObject({
