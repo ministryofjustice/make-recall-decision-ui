@@ -9,20 +9,22 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include '../../partials/error-summary.njk' %}
+            {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
             <form novalidate method="post" enctype='multipart/form-data'>
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 <div class="govuk-form-group">
-                  <label class="govuk-label" for="file-upload-1">
-                    Upload a file
-                  </label>
-                  <input class="govuk-file-upload" id="file-upload-1" accept=".pdf,.doc,.docx,.txt" name="file" type="file">
+                    <label class="govuk-label" for="file-upload-1">
+                        Upload a file
+                    </label>
+                    <input class="govuk-file-upload" id="file-upload-1" accept=".pdf,.doc,.docx,.txt" name="file"
+                           type="file">
                 </div>
 
-                <p class="govuk-body">You can upload Word, PDF or plain text (txt) files.  The maximum file size is 500KB.</p>
+                <p class="govuk-body">You can upload Word, PDF or plain text (txt) files. The maximum file size is
+                    500KB.</p>
 
                 {{ govukInput({
                     id: "title",
@@ -32,7 +34,10 @@
                         classes: "govuk-label--s"
                     },
                     value: inputDisplayValues.title,
-                    errorMessage: errorMessage(errors.title)
+                    errorMessage: errorMessage(errors.title),
+                    hint:{
+                        text: "The maximum length is 250 characters"
+                    }
                 }) }}
 
                 {{ formSubmitButton({ label: 'Save' }) }}

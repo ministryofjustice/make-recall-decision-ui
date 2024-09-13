@@ -303,4 +303,58 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
+  it('post with title exceeding max len', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+      },
+      body: {
+        title:
+          '251 chars zwzwdgmdkvcshxsmonafmpnsaekvicktazfaolepnvpxlkbvmwfrpgvgwnslcbreqnxdlhwbyfvdkmzemotvujtgrfrmgsrqgucfhfayejwbrxztxkbydzhstcbrcvsxfobkdhvavjkahvxlomuellmmjcdfrhfnbjqshoyndylrqrapgfcublrbilydljqgvishdcidlzngpmzarfvrowrrwbkhebdpoaiivlhpbhiqyqlmx',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512000,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+
+    const OtherDocument = {
+      title: 'some new title',
+      type: 'OtherDocument',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-1111-4c2f-984f-4bc7b5491d9d',
+    }
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
+
+    await additionalSupportingDocumentReplaceController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'title',
+        text: 'The title must be less than 250 characters',
+        href: '#title',
+        errorId: 'titleLengthExceeded',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
 })
