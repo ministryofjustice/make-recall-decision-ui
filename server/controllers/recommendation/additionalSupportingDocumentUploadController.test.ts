@@ -335,4 +335,65 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
+  it('post with title exceeding max len', async () => {
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: {
+        recommendationId: '1234',
+      },
+      body: {
+        title:
+          '251 chars zwzwdgmdkvcshxsmonafmpnsaekvicktazfaolepnvpxlkbvmwfrpgvgwnslcbreqnxdlhwbyfvdkmzemotvujtgrfrmgsrqgucfhfayejwbrxztxkbydzhstcbrcvsxfobkdhvavjkahvxlomuellmmjcdfrhfnbjqshoyndylrqrapgfcublrbilydljqgvishdcidlzngpmzarfvrowrrwbkhebdpoaiivlhpbhiqyqlmz',
+      },
+      file: {
+        fieldname: 'file',
+        originalname: 'Part_A_01022024_Smith_H_X098092.docx',
+        encoding: '7bit',
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        size: 512000,
+        buffer: Buffer.from('Once upon a midnight dreary'),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        urlInfo: { basePath: `/recommendations/1234/` },
+      },
+    })
+    const next = mockNext()
+
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([
+      {
+        id: 2052116145,
+        recommendationId: 573594083,
+        createdBy: 'MAKE_RECALL_DECISION_PPCS_USER',
+        createdByUserFullName: 'Making Recall Decisions PPCS User',
+        created: '2024-05-07T15:15:32.636Z',
+        filename: 'NAT_Recall_Part_A_01052024_Smith_H_X098092.docx',
+        type: 'OtherDocument',
+        uploadedBy: 'MAKE_RECALL_DECISION_PPCS_USER',
+        uploadedByUserFullName: 'Making Recall Decisions PPCS User',
+        uploaded: '2024-05-07T15:15:32.636Z',
+        documentUuid: 'de5f7359-e144-4c63-9645-a5186f879f21',
+        title: 'title',
+      },
+    ])
+
+    await additionalSupportingDocumentUploadController.post(req, res, next)
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'title',
+        text: 'The title must be less than 250 characters',
+        href: '#title',
+        errorId: 'titleLengthExceeded',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
 })

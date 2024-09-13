@@ -108,6 +108,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingTitle: 'Enter a document title',
     missingFile: 'Upload a document',
     duplicateTitle: 'Enter a unique document title',
+    titleLengthExceeded: 'The title must be less than 250 characters',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',

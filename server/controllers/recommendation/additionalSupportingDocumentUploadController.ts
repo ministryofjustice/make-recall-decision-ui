@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { isDefined, isMandatoryTextValue } from '../../utils/utils'
+import { isDefined, isMandatoryTextValue, isString } from '../../utils/utils'
 import { getSupportingDocuments, uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -49,6 +49,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
       const isTitleTaken = !!documents.find(doc => doc.title === title)
       if (isTitleTaken) {
         const errorId = 'duplicateTitle'
+        errors.push(
+          makeErrorObject({
+            id: 'title',
+            text: strings.errors[errorId],
+            errorId,
+          })
+        )
+      } else if (isString(title) && title.toString().length > 250) {
+        const errorId = 'titleLengthExceeded'
         errors.push(
           makeErrorObject({
             id: 'title',
