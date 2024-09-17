@@ -98,7 +98,7 @@ export default async function bookOffender(
       valuesToSave: {
         ppudOffender: {
           id: createOffenderResponse.offender.id,
-          croOtherNumber: recommendation.bookRecallToPpud?.cro,
+          croOtherNumber: recommendation.bookRecallToPpud?.cro ?? '',
           dateOfBirth: recommendation.bookRecallToPpud?.dateOfBirth,
           ethnicity: recommendation.bookRecallToPpud?.ethnicity,
           familyName: recommendation.bookRecallToPpud?.lastName,
