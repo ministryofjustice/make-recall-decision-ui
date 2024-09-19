@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   browser-tools: circleci/browser-tools@1.4.8
-  hmpps: ministryofjustice/hmpps@9
+  hmpps: ministryofjustice/hmpps@10
   node: circleci/node@5.3.0
   slack: circleci/slack@4.13.3
   sonarcloud: sonarsource/sonarcloud@2.0.0
