@@ -146,6 +146,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
       activate: [STATUSES.BOOKED_TO_PPUD, STATUSES.REC_CLOSED],
       deActivate: [],
     })
+
+    appInsightsEvent(
+      EVENTS.BOOKED_ONTO_PPUD,
+      username,
+      {
+        crn: recommendation.crn,
+        recommendationId,
+        region,
+      },
+      flags
+    )
   } catch (err) {
     if (err.status !== undefined) {
       memento.failed = true

@@ -23,6 +23,20 @@ jest.mock('../../booking/uploadAdditionalDocument')
 jest.mock('../../booking/createMinute')
 jest.mock('../../monitoring/azureAppInsights')
 
+const LOCALS_PAGE_TEMPLATE = {
+  user: {
+    username: 'Dave',
+    region: {
+      code: 'N07',
+      name: 'London',
+    },
+    token: 'token',
+  },
+  urlInfo: { basePath: `/recommendations/1/` },
+  flags: { xyz: true },
+  env: 'PRODUCTION',
+}
+
 describe('get', () => {
   it('load', async () => {
     const recommendation = {
@@ -46,7 +60,7 @@ describe('get', () => {
 
 describe('post', () => {
   it('post - happy path', async () => {
-    const recommendation = { id: '12345' }
+    const recommendation = { id: '12345', crn: 'X123', region: { code: 'N07', name: 'London' } }
     const flags = { xyz: true }
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
@@ -58,6 +72,8 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
+        env: 'PRODUCTION',
+        user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
         urlInfo: { basePath },
         flags,
       },
@@ -90,6 +106,7 @@ describe('post', () => {
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(res.locals).toEqual(LOCALS_PAGE_TEMPLATE)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
@@ -97,6 +114,19 @@ describe('post', () => {
       recommendationId: '1',
       token: 'token',
     })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdBookedOntoPPUD',
+      'Dave',
+      {
+        crn: 'X123',
+        recommendationId: '1',
+        region: { code: 'N07', name: 'London' },
+      },
+      {
+        xyz: true,
+      }
+    )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
     expect(next).not.toHaveBeenCalled()

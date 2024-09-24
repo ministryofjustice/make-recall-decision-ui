@@ -17,4 +17,5 @@ export enum EVENTS {
   MRD_ADDITIONAL_LICENCE_CONDITIONS_TEXT = 'mrdAdditionalLicenceConditionsText',
   MRD_SEND_CONSIDERATION_RATIONALE_TO_DELIUS = 'mrdSendConsiderationRationaleToDelius',
   BOOKING_ERROR = 'mrdBookingOnToPPUDError',
+  BOOKED_ONTO_PPUD = 'mrdBookedOntoPPUD',
 }
