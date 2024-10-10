@@ -121,9 +121,9 @@
     "cookie-session": "^2.1.0",
     "csurf": "^1.11.0",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
     "express-prom-bundle": "^7.0.0",
-    "express-session": "^1.18.0",
+    "express-session": "^1.18.1",
     "google-libphonenumber": "^3.2.34",
     "govuk-frontend": "^4.8.0",
     "helmet": "^7.1.0",
@@ -147,7 +147,7 @@
     "web-vitals": "^4.0.0"
   },
   "devDependencies": {
-    "@aws-sdk/types": "^3.226.0",
+    "@aws-sdk/types": "^3.667.0",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
@@ -162,15 +162,15 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20.12.5",
+    "@types/node": "^20.16.11",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.16",
     "@types/passport-oauth2": "^1.4.15",
     "@types/superagent": "^8.1.6",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "audit-ci": "^7.0.0",
     "axe-core": "4.10.0",
     "concurrently": "^9.0.0",
@@ -207,6 +207,9 @@
     "xml2js": "^0.6.0"
   },
   "overrides": {
-    "json5": "2.2.3"
+    "json5": "2.2.3",
+    "csurf": {
+      "cookie": "0.7.2"
+    }
   }
 }
