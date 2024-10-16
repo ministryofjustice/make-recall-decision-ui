@@ -32,7 +32,7 @@
                 </thead>
                 <tbody class="govuk-table__body">
                 {% for ppud in results %}
-                    <tr class="govuk-table__row"  data-qa='row-{{ ppud.nomsId }}' >
+                    <tr class="govuk-table__row" data-qa='row-{{ ppud.nomsId }}'>
                         <td class="govuk-table__cell">
                             {{ hyphenForBlank(ppud.nomsId) }}
                         </td>
@@ -40,7 +40,8 @@
                             <form novalidate method="post">
                                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                                 <input type="hidden" name="id" value="{{ ppud.id }}" />
-                                <button class="govuk-button-as-link" type="submit" >{{ ppud.firstNames }} {{ ppud.familyName }}</button>
+                                <button class="govuk-button-as-link"
+                                        type="submit">{{ ppud.firstNames }} {{ ppud.familyName }}</button>
                             </form>
                         </td>
                         <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: ppud.dateOfBirth}) }}</td>
@@ -51,6 +52,22 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <br><br>
+            <h1 class='govuk-heading-m'>What to do if you cannot find the right PPUD record</h1>
+
+            <p class="govuk-body-m govuk-!-margin-bottom-0">
+                You can either <a href="/ppcs-search" class="govuk-body govuk-link">start a new search</a> or use this
+                service to:<br><br>
+            </p>
+            <ol class="govuk-list">
+                <li>1. Check the details from NOMIS and the Part A.</li>
+                <li>2. Use these details to create a new PPUD record.</li>
+                <li>3. Book the recall on to the new PPUD record.</li>
+            </ol>
+
+            <span>
+                <a href='{{ urlInfo.basePath }}check-booking-details' class='govuk-button govuk'>Continue and create PPUD record</a>
+            </span>
         </div>
     </div>
 {% endblock %}
