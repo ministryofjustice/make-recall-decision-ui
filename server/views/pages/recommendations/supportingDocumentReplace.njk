@@ -9,34 +9,34 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include '../../partials/error-summary.njk' %}
+            {% include '../../partials/error-summary.njk' %}
             <h1 class='govuk-heading-l'>
                 {% if type == 'part-a' %}
                     Upload Part A
-                {% elif type == 'licence-document' %}
+                    {% elif type == 'licence-document' %}
                     Upload licence
-                {% elif type == 'probation-email' %}
+                    {% elif type == 'probation-email' %}
                     Upload email from probation
-                {% elif type == 'oasys' %}
+                    {% elif type == 'oasys' %}
                     Upload OASys
-                {% elif type == 'precons' %}
+                    {% elif type == 'precons' %}
                     Upload previous convictions (MG16)
-                {% elif type == 'psr' %}
+                    {% elif type == 'psr' %}
                     Upload pre-sentence report
-                {% elif type == 'charge-sheet' %}
+                    {% elif type == 'charge-sheet' %}
                     Upload police charge sheet (MG4)
                 {% endif %}
             </h1>
 
             {% set html %}
-            <p class="govuk-body-m govuk-!-margin-bottom-0">
-                If you upload a new document, it will replace this one.
+                <p class="govuk-body-m govuk-!-margin-bottom-0">
+                    If you upload a new document, it will replace this one.
                 <p class="govuk-body-m govuk-!-margin-bottom-0">
                     <a href="/recommendations/{{ recommendation.id }}/supporting-document-download/{{ document.id }}">
                         {{ document.filename }}
                     </a>
                 </p>
-            </p>
+                </p>
             {% endset %}
             {{ govukNotificationBanner({
                 titleText: 'Warning',
@@ -49,13 +49,15 @@
                 <input type="hidden" name="type" value="{{ type }}" />
 
                 <div class="govuk-form-group">
-                  <label class="govuk-label" for="file-upload-1">
-                    Upload a file
-                  </label>
-                  <input class="govuk-file-upload" id="file-upload-1" accept=".pdf,.doc,.docx,.txt" name="file" type="file">
+                    <label class="govuk-label" for="file-upload-1">
+                        Upload a file
+                    </label>
+                    <input class="govuk-file-upload" id="file-upload-1" accept=".pdf,.doc,.docx,.txt" name="file"
+                           type="file">
                 </div>
 
-                <p class="govuk-body">You can upload Word, PDF or plain text (txt) files.  The maximum file size is 500KB.</p>
+                <p class="govuk-body">You can upload Word, PDF or plain text (txt) files. The maximum file size is
+                    2.5MB.</p>
 
                 {{ formSubmitButton({ label: 'Save' }) }}
             </form>
