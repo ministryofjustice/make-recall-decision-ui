@@ -203,7 +203,7 @@ describe('post', () => {
     ['file|name.doc', false],
     ['file?name.doc', false],
     ['file*name.doc', false],
-  ])('when the filename is \'%s\' then permitted = \'%s\'', (fileName, allowed) => {
+  ])("when the filename is '%s' then permitted = '%s'", (fileName, allowed) => {
     /* eslint-disable prettier/prettier */
     expect(fileName.match(/^[^"<>|:*?/\\]+.[a-zA-Z]{3,4}$/) != null).toEqual(allowed)
   })

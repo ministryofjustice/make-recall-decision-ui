@@ -41,7 +41,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'title',
           text: strings.errors[errorId],
           errorId,
-        }),
+        })
       )
     } else {
       const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'title',
             text: strings.errors[errorId],
             errorId,
-          }),
+          })
         )
       } else if (isString(title) && title.length > 250) {
         const errorId = 'titleLengthExceeded'
@@ -63,7 +63,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'title',
             text: strings.errors[errorId],
             errorId,
-          }),
+          })
         )
       }
     }
@@ -76,7 +76,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'file',
             text: strings.errors[errorId],
             errorId,
-          }),
+          })
         )
       }
 
@@ -87,7 +87,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'file',
             text: strings.errors[errorId],
             errorId,
-          }),
+          })
         )
       }
     } else {
@@ -97,7 +97,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        }),
+        })
       )
     }
 

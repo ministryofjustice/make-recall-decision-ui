@@ -49,7 +49,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        }),
+        })
       )
     }
 
@@ -60,7 +60,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        }),
+        })
       )
     }
 
