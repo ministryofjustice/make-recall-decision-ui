@@ -42,7 +42,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (req.file) {
     const errors = []
 
-    if (req.file.size > 2500 * 1024) {
+    if (req.file.size > 25000 * 1024) {
       const errorId = 'fileSizeExceeded'
       errors.push(
         makeErrorObject({

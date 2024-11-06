@@ -102,7 +102,7 @@ export const strings: Record<string, Record<string, string>> = {
     invalidPPCSEmail: 'Enter an email address in the correct format, like name@example.com',
     noReleaseUnderECSLSelected: 'Select whether {{ fullName }} has been released on an ECSL',
     ppudBookingError: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
-    fileSizeExceeded: 'The file must be smaller than 2.5MB',
+    fileSizeExceeded: 'The file must be smaller than 25MB',
     invalidFilename: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
     uploadFileFailure: 'The selected file could not be uploaded - try again',
     missingTitle: 'Enter a document title',

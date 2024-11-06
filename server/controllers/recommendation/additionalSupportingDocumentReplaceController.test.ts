@@ -142,7 +142,7 @@ describe('post', () => {
         originalname: 'NAT_Recall?Part_A_01022024_Smith_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 2560001,
+        size: 25600001,
         buffer: Buffer.from('Once upon a midnight dreary'),
       },
     })
@@ -176,7 +176,7 @@ describe('post', () => {
       },
       {
         name: 'file',
-        text: 'The file must be smaller than 2.5MB',
+        text: 'The file must be smaller than 25MB',
         href: '#file',
         errorId: 'fileSizeExceeded',
         invalidParts: undefined,
@@ -209,7 +209,7 @@ describe('post', () => {
         originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 2560000,
+        size: 25600000,
         buffer: Buffer.from('Once upon a midnight dreary'),
       },
     })
