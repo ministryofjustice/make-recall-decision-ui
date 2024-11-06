@@ -103,7 +103,7 @@ export const strings: Record<string, Record<string, string>> = {
     noReleaseUnderECSLSelected: 'Select whether {{ fullName }} has been released on an ECSL',
     ppudBookingError: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
     fileSizeExceeded: 'The file must be smaller than 25MB',
-    invalidFilename: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
+    invalidFilename: 'The filename should not contain the following characters: < > : " / \\ | ? *',
     uploadFileFailure: 'The selected file could not be uploaded - try again',
     missingTitle: 'Enter a document title',
     missingFile: 'Upload a document',

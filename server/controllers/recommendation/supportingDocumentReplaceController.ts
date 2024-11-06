@@ -52,7 +52,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       )
     }
 
-    if (!req.file.originalname.match(/^[.A-Za-z0-9!_-]+$/)) {
+    if (!req.file.originalname.match(/^[^"<>|:*?/\\]+.[a-zA-Z]{3,4}$/)) {
       const errorId = 'invalidFilename'
       errors.push(
         makeErrorObject({

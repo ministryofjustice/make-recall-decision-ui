@@ -130,7 +130,7 @@ describe('post', () => {
       },
       {
         name: 'file',
-        text: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
+        text: 'The filename should not contain the following characters: < > : " / \\ | ? *',
         href: '#file',
         errorId: 'invalidFilename',
         invalidParts: undefined,
@@ -186,5 +186,25 @@ describe('post', () => {
     ])
 
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it.each([
+    ['filename.doc', true],
+    ['filename.docx', true],
+    ['Preview NAT Recall Part A London Template - obtained 231114.docx', true],
+    ['Preview (NAT) Recall_Part - A London Template - obtained 231114.docx', true],
+    ['filename.doc', true],
+    ['filename.do', false],
+    ['file<name.doc', false],
+    ['file>name.doc', false],
+    ['file:name.doc', false],
+    ['file/name.doc', false],
+    ['file\\name.doc', false],
+    ['file|name.doc', false],
+    ['file?name.doc', false],
+    ['file*name.doc', false],
+  ])("when the filename is '%s' then permitted = '%s'", (fileName, allowed) => {
+    /* eslint-disable prettier/prettier */
+    expect(fileName.match(/^[^"<>|:*?/\\]+.[a-zA-Z]{3,4}$/) != null).toEqual(allowed)
   })
 })

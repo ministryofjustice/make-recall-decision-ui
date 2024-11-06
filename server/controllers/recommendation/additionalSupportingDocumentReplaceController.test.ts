@@ -184,7 +184,7 @@ describe('post', () => {
       },
       {
         name: 'file',
-        text: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
+        text: 'The filename should not contain the following characters: < > : " / \\ | ? *',
         href: '#file',
         errorId: 'invalidFilename',
         invalidParts: undefined,
