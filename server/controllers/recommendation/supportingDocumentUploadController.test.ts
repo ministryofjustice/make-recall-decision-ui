@@ -204,6 +204,7 @@ describe('post', () => {
     ['file?name.doc', false],
     ['file*name.doc', false],
   ])('when the filename is \'%s\' then permitted = \'%s\'', (fileName, allowed) => {
-    expect(fileName.match(/^[^"<>\|:*?\/\\]+.[a-zA-Z]{3,4}$/) != null).toEqual(allowed)
+    /* eslint-disable prettier/prettier */
+    expect(fileName.match(/^[^"<>|:*?/\\]+.[a-zA-Z]{3,4}$/) != null).toEqual(allowed)
   })
 })

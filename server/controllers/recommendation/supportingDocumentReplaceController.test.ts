@@ -7,11 +7,11 @@ jest.mock('../../data/makeDecisionApiClient')
 describe('get', () => {
   it('load', async () => {
     const PPUDPartA = {
-        title: 'Part A',
-        type: 'PPUDPartA',
-        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-      }
+      title: 'Part A',
+      type: 'PPUDPartA',
+      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+    }
 
     ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([PPUDPartA])
 
