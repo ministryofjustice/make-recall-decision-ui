@@ -49,18 +49,18 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
-    if (!req.file.originalname.match(/^[.A-Za-z0-9!_-]+$/)) {
+    if (!req.file.originalname.match(/^[^"<>\|:*?\/\\]+.[a-zA-Z]{3,4}$/)) {
       const errorId = 'invalidFilename'
       errors.push(
         makeErrorObject({
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 

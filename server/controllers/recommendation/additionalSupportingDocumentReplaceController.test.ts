@@ -7,11 +7,11 @@ jest.mock('../../data/makeDecisionApiClient')
 describe('get', () => {
   it('load', async () => {
     const additionalDocument = {
-      title: 'Some Title',
-      type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-    }
+        title: 'Some Title',
+        type: 'OtherDocument',
+        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+      }
 
     ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([additionalDocument])
 
@@ -105,11 +105,11 @@ describe('post', () => {
     const next = mockNext()
 
     const OtherDocument = {
-      title: 'some title',
-      type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-    }
+        title: 'some title',
+        type: 'OtherDocument',
+        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+      }
 
     ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
 
@@ -157,11 +157,11 @@ describe('post', () => {
     const next = mockNext()
 
     const OtherDocument = {
-      title: 'some title',
-      type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-    }
+        title: 'some title',
+        type: 'OtherDocument',
+        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+      }
 
     ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
 
@@ -184,7 +184,7 @@ describe('post', () => {
       },
       {
         name: 'file',
-        text: 'The filename should only contain letters, numbers, apostrophes, hyphens and underscores',
+        text: 'The filename should not contain the following characters: < > : " / \\ | ? *',
         href: '#file',
         errorId: 'invalidFilename',
         invalidParts: undefined,
@@ -224,11 +224,11 @@ describe('post', () => {
     const next = mockNext()
 
     const OtherDocument = {
-      title: 'some new title',
-      type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-1111-4c2f-984f-4bc7b5491d9d',
-    }
+        title: 'some new title',
+        type: 'OtherDocument',
+        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+        id: 'e0cc157d-1111-4c2f-984f-4bc7b5491d9d',
+      }
 
     ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
 
@@ -277,11 +277,11 @@ describe('post', () => {
     const next = mockNext()
 
     const OtherDocument = {
-      title: 'some title',
-      type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-    }
+        title: 'some title',
+        type: 'OtherDocument',
+        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+        id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
+      }
 
     ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
     ;(replaceSupportingDocument as jest.Mock).mockImplementation(() => {
@@ -334,11 +334,11 @@ describe('post', () => {
     const next = mockNext()
 
     const OtherDocument = {
-      title: 'some new title',
-      type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
-      id: 'e0cc157d-1111-4c2f-984f-4bc7b5491d9d',
-    }
+        title: 'some new title',
+        type: 'OtherDocument',
+        filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+        id: 'e0cc157d-1111-4c2f-984f-4bc7b5491d9d',
+      }
 
     ;(getSupportingDocuments as jest.Mock).mockResolvedValue([OtherDocument])
 

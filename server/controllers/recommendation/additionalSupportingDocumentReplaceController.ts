@@ -57,7 +57,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'title',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     } else {
       const isTitleTaken = !!documents.filter(doc => String(doc.id) !== id).find(doc => doc.title === title)
@@ -68,7 +68,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'title',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       } else if (isString(title) && title.length > 250) {
         const errorId = 'titleLengthExceeded'
@@ -77,7 +77,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'title',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       }
     }
@@ -90,18 +90,18 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'file',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       }
 
-      if (!req.file.originalname.match(/^[.A-Za-z0-9!_-]+$/)) {
+      if (!req.file.originalname.match(/^[^"<>|:*?/\\]+.[a-zA-Z]{3,4}$/)) {
         const errorId = 'invalidFilename'
         errors.push(
           makeErrorObject({
             id: 'file',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       }
     }
