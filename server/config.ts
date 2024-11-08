@@ -84,8 +84,8 @@ export default {
         deadline: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_DEADLINE', 30000)),
       },
       ppudTimeout: {
-        response: Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_RESPONSE', 120000)),
-        deadline: Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_DEADLINE', 120000)),
+        response: Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_RESPONSE', 300000)),
+        deadline: Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_DEADLINE', 300000)),
       },
       agent: new AgentConfig(Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 90000))),
     },
