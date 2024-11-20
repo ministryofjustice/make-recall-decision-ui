@@ -8,6 +8,7 @@
 {% endmacro %}
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% set croIdentifier = recommendation.personOnProbation.croNumber if recommendation.personOnProbation.croNumber else recommendation.prisonOffender.cro %}
 
 {% block beforeContent %}
     {{ backLink() }}
@@ -18,7 +19,9 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
-            <div class="govuk-body">These details are from the 'Consider a recall' service. Check them against the licence before you search PPUD.  </div>
+            <div class="govuk-body">These details are from the 'Consider a recall' service. Check them against the
+                licence before you search PPUD.
+            </div>
 
             <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                 <div class="govuk-summary-list__row">
@@ -30,7 +33,7 @@
                         Name
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {{ hyphenForBlank(recommendation.personOnProbation.fullName) }}
+                        {{ hyphenForBlank(recommendation.personOnProbation.fullName) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -38,7 +41,7 @@
                         Date of birth
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth})) }}
+                        {{ hyphenForBlank(formatDateTimeFromIsoString({isoDate: recommendation.personOnProbation.dateOfBirth})) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -46,7 +49,7 @@
                         NOMIS ID
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
+                        {{ hyphenForBlank(recommendation.personOnProbation.nomsNumber) }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -54,7 +57,11 @@
                         CRO
                     </dt>
                     <dd class="govuk-summary-list__value">
-                    {{ hyphenForBlank(recommendation.personOnProbation.croNumber) }}
+                        {% if croIdentifier %}
+                            {{ croIdentifier }}
+                        {% else %}
+                            - <span class="govuk-visually-hidden">no value</span>
+                        {% endif %}
                     </dd>
                 </div>
             </dl>
@@ -62,10 +69,11 @@
                 <form novalidate method="post">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                     <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                    <input type="hidden" name="croNumber" value="{{ recommendation.personOnProbation.croNumber }}" />
+                    <input type="hidden" name="croNumber" value="{{ croIdentifier }}" />
                     <input type="hidden" name="nomsNumber" value="{{ recommendation.personOnProbation.nomsNumber }}" />
                     <input type="hidden" name="surname" value="{{ recommendation.personOnProbation.surname }}" />
-                    <input type="hidden" name="dateOfBirth" value="{{ recommendation.personOnProbation.dateOfBirth }}" />
+                    <input type="hidden" name="dateOfBirth"
+                           value="{{ recommendation.personOnProbation.dateOfBirth }}" />
                     <input type="hidden" name="fullName" value="{{ recommendation.personOnProbation.fullName }}" />
                     {{ formSubmitButton() }}
                 </form>
