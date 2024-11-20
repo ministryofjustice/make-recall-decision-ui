@@ -8,6 +8,7 @@
 {% endmacro %}
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% set croIdentifier = recommendation.personOnProbation.croNumber if recommendation.personOnProbation.croNumber else recommendation.prisonOffender.cro %}
 
 {% block beforeContent %}
     {{ backLink() }}
@@ -56,10 +57,8 @@
                         CRO
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        {% if recommendation.personOnProbation.croNumber %}
-                            {{ recommendation.personOnProbation.croNumber }}
-                            {% elif recommendation.prisonOffender.cro %}
-                            {{ recommendation.prisonOffender.cro }}
+                        {% if croIdentifier %}
+                            {{ croIdentifier }}
                         {% else %}
                             - <span class="govuk-visually-hidden">no value</span>
                         {% endif %}
@@ -70,8 +69,7 @@
                 <form novalidate method="post">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                     <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-                    <input type="hidden" name="croNumber"
-                           value="{{ recommendation.personOnProbation.croNumber or recommendation.prisonOffender.cro }}" />
+                    <input type="hidden" name="croNumber" value="{{ croIdentifier }}" />
                     <input type="hidden" name="nomsNumber" value="{{ recommendation.personOnProbation.nomsNumber }}" />
                     <input type="hidden" name="surname" value="{{ recommendation.personOnProbation.surname }}" />
                     <input type="hidden" name="dateOfBirth"
