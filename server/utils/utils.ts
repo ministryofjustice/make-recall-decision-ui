@@ -20,10 +20,8 @@ const isBlank = (str: string): boolean => !str || /^\s*$/.test(str)
  */
 const properCaseName = (name: string): string => (isBlank(name) ? '' : name.split('-').map(properCase).join('-'))
 
-const convertToTitleCase = (sentence: string): string =>
+export const convertToTitleCase = (sentence: string): string =>
   isBlank(sentence) ? '' : sentence.split(' ').map(properCaseName).join(' ')
-
-export default convertToTitleCase
 
 export const makePageTitle = ({ pageHeading, hasErrors }: { pageHeading: string; hasErrors: boolean }) =>
   `${hasErrors ? 'Error: ' : ''}${pageHeading} - ${config.applicationName}`

@@ -1,5 +1,5 @@
 import { performance } from 'perf_hooks'
-import convertToTitleCase from '../utils/utils'
+import { convertToTitleCase } from '../utils/utils'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { getUserFromDeliusFacade, HomeArea } from '../data/deliusFacadeClient'
 import { getUser, getUserEmail } from '../data/hmppsManageUsersApiClient'
