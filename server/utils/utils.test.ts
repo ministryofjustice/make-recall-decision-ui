@@ -1,5 +1,6 @@
 import config from '../config'
-import convertToTitleCase, {
+import {
+  convertToTitleCase,
   getProperty,
   hasData,
   isBannerDisplayDateRangeValid,

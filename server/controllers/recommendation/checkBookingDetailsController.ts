@@ -8,7 +8,7 @@ import {
   PpudOffender,
   PrisonOffender,
 } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { hasValue, isDefined } from '../../utils/utils'
+import { convertToTitleCase, hasValue, isDefined } from '../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 import { makeErrorObject } from '../../utils/errors'
@@ -81,9 +81,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
     let dateOfBirth = ''
 
     if (recommendation.prisonOffender) {
-      firstName = recommendation.prisonOffender.firstName
-      middleName = recommendation.prisonOffender.middleName
-      lastName = recommendation.prisonOffender.lastName
+      firstName = convertToTitleCaseIfRequired(recommendation.prisonOffender.firstName)
+      middleName = convertToTitleCaseIfRequired(recommendation.prisonOffender.middleName)
+      lastName = convertToTitleCaseIfRequired(recommendation.prisonOffender.lastName)
       dateOfBirth = recommendation.prisonOffender.dateOfBirth
     }
 
@@ -103,12 +103,14 @@ async function get(_: Request, res: Response, next: NextFunction) {
   } else {
     if (
       recommendation.bookRecallToPpud.firstNames !==
-      `${recommendation.prisonOffender?.firstName} ${recommendation.prisonOffender?.middleName}`.trim()
+      `${convertToTitleCaseIfRequired(recommendation.prisonOffender?.firstName)} ${convertToTitleCaseIfRequired(recommendation.prisonOffender?.middleName)}`.trim()
     ) {
       edited.firstNames = true
     }
 
-    if (recommendation.bookRecallToPpud.lastName !== recommendation.prisonOffender?.lastName) {
+    if (
+      recommendation.bookRecallToPpud.lastName !== convertToTitleCaseIfRequired(recommendation.prisonOffender?.lastName)
+    ) {
       edited.lastName = true
     }
 
@@ -188,6 +190,12 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   res.render(`pages/recommendations/checkBookingDetails`)
   next()
+  function convertToTitleCaseIfRequired(name: string): string {
+    return requiresTitleCaseConversion(name) ? convertToTitleCase(name) : name
+  }
+  function requiresTitleCaseConversion(name: string): boolean {
+    return name && name.toUpperCase() === name
+  }
 }
 
 async function post(req: Request, res: Response, next: NextFunction) {

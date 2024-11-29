@@ -1,6 +1,6 @@
 # Unit & integration tests
 
-See also, [E2E tests](./e2e_tests.md)
+See also, [E2E tests](./e2e-tests.md)
 
 ## Run unit tests
 

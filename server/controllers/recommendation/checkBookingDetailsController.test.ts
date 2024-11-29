@@ -5,12 +5,21 @@ import recommendationApiResponse from '../../../api/responses/get-recommendation
 
 jest.mock('../../data/makeDecisionApiClient')
 
+const prisonOffenderFirstName = 'ANNE'
+const prisonOffenderMiddleName = 'C'
+const prisonOffenderLastName = 'McCaffrey'
+
+// We only want to convert if the name is in all caps for now
+const convertedFirstName = 'Anne'
+const convertedMiddleName = prisonOffenderMiddleName
+const convertedLastName = prisonOffenderLastName
+
 const PRISON_OFFENDER_TEMPLATE = {
   locationDescription: 'Graceland',
   bookingNo: '1234',
-  firstName: 'Anne',
-  middleName: 'C',
-  lastName: 'McCaffrey',
+  firstName: prisonOffenderFirstName,
+  middleName: prisonOffenderMiddleName,
+  lastName: prisonOffenderLastName,
   facialImageId: 1234,
   dateOfBirth: '1970-03-15',
   status: 'ACTIVE IN',
@@ -82,6 +91,21 @@ const STATUSES_TEMPLATE = [
 ]
 
 describe('get', () => {
+  beforeEach(() => {
+    jest.mock('../../utils/utils', () => ({
+      ...jest.requireActual('../../utils/utils'),
+      convertToTitleCase: (name: string) => {
+        switch (name) {
+          case prisonOffenderFirstName:
+            return convertedFirstName
+          case prisonOffenderMiddleName:
+            return convertedMiddleName
+          default:
+            throw new Error(`convertToTitleCase called with unexpected value: ${name}`)
+        }
+      },
+    }))
+  })
   it('load', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
 
@@ -109,9 +133,9 @@ describe('get', () => {
           cro: '1234/2345',
           pnc: 'X234547',
           bookingNo: '1234',
-          firstName: 'Anne',
-          middleName: 'C',
-          lastName: 'McCaffrey',
+          firstName: prisonOffenderFirstName,
+          middleName: prisonOffenderMiddleName,
+          lastName: prisonOffenderLastName,
           dateOfBirth: '1970-03-15',
           ethnicity: 'Caucasian',
           facialImageId: 1234,
@@ -121,8 +145,8 @@ describe('get', () => {
         },
         bookRecallToPpud: {
           dateOfBirth: '1970-03-15',
-          firstNames: 'Anne C',
-          lastName: 'McCaffrey',
+          firstNames: `${convertedFirstName} ${convertedMiddleName}`,
+          lastName: convertedLastName,
           cro: '1234/2345',
           prisonNumber: '1234',
           receivedDateTime: '2023-11-13T09:49:31.371Z',
@@ -136,9 +160,9 @@ describe('get', () => {
       cro: '1234/2345',
       pnc: 'X234547',
       bookingNo: '1234',
-      firstName: 'Anne',
-      middleName: 'C',
-      lastName: 'McCaffrey',
+      firstName: prisonOffenderFirstName,
+      middleName: prisonOffenderMiddleName,
+      lastName: prisonOffenderLastName,
       dateOfBirth: '1970-03-15',
       ethnicity: 'Caucasian',
       facialImageId: 1234,
