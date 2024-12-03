@@ -5,14 +5,12 @@ import { EVENTS } from '../../utils/constants'
 import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { AuditService } from '../../services/auditService'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
+import { DOCUMENT_TYPE } from '../../@types/make-recall-decision-api/models/DocumentType'
 
 const auditService = new AuditService()
 
-type DocumentType = 'PART_A' | 'NO_RECALL_LETTER' | 'PREVIEW_PART_A'
-
 export const createAndDownloadDocument =
-  (documentType: DocumentType) =>
+  (documentType: DOCUMENT_TYPE) =>
   async (req: Request, res: Response): Promise<Response | void> => {
     const { recommendationId } = req.params
     const { crn } = req.query
@@ -23,11 +21,11 @@ export const createAndDownloadDocument =
     const requestBody: Record<string, unknown> = {
       format: 'download-docx',
     }
-    if (documentType === 'PART_A') {
+    if (documentType === DOCUMENT_TYPE.PART_A) {
       pathSuffix = 'part-a'
       requestBody.userEmail = user.email
     }
-    if (documentType === 'PREVIEW_PART_A') {
+    if (documentType === DOCUMENT_TYPE.PREVIEW_PART_A) {
       pathSuffix = 'part-a'
       requestBody.userEmail = user.email
       preview = true
@@ -52,22 +50,21 @@ export const createAndDownloadDocument =
       })
     ).filter(status => status.active)
 
-    const isSpo = user.roles.includes(HMPPS_AUTH_ROLE.SPO)
-    if (!isSpo && (documentType === 'PART_A' || documentType === 'NO_RECALL_LETTER')) {
+    if ([DOCUMENT_TYPE.PART_A, DOCUMENT_TYPE.NO_RECALL_LETTER].includes(documentType)) {
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
 
       if (!isPPDocumentCreated) {
         activate.push(STATUSES.PP_DOCUMENT_CREATED)
         const isSpoRecordedRationale = statuses.find(status => status.name === STATUSES.SPO_RECORDED_RATIONALE)
         const isApRecordedRationale = statuses.find(status => status.name === STATUSES.AP_RECORDED_RATIONALE)
-        if (!isSpo && (isSpoRecordedRationale || isApRecordedRationale)) {
-          if (documentType === 'PART_A') {
+        if (isSpoRecordedRationale || isApRecordedRationale) {
+          if (documentType === DOCUMENT_TYPE.PART_A) {
             activate.push(STATUSES.SENT_TO_PPCS)
           }
         }
       }
     }
-    if (documentType === 'NO_RECALL_LETTER') {
+    if (documentType === DOCUMENT_TYPE.NO_RECALL_LETTER) {
       const isRecClosed = statuses.find(status => status.name === STATUSES.REC_CLOSED)
       if (!isRecClosed) {
         activate.push(STATUSES.REC_CLOSED)
@@ -88,7 +85,7 @@ export const createAndDownloadDocument =
       username: user.username,
       logErrors: isPreprodOrProd(res.locals.env) && process.env.NODE_ENV !== 'test',
     }
-    if (documentType === 'PART_A') {
+    if (documentType === DOCUMENT_TYPE.PART_A) {
       await auditService.createPartA(auditData)
       appInsightsEvent(
         EVENTS.PART_A_DOCUMENT_DOWNLOADED,
@@ -96,7 +93,7 @@ export const createAndDownloadDocument =
         { crn: normalizedCrn, recommendationId, region: user.region },
         flags
       )
-    } else if (documentType === 'NO_RECALL_LETTER') {
+    } else if (documentType === DOCUMENT_TYPE.NO_RECALL_LETTER) {
       await auditService.createNoRecallLetter(auditData)
       appInsightsEvent(
         EVENTS.DECISION_NOT_TO_RECALL_LETTER_DOWNLOADED,

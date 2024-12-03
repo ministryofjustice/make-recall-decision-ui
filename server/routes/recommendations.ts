@@ -119,6 +119,7 @@ import additionalSupportingDocumentUploadController from '../controllers/recomme
 import additionalSupportingDocumentReplaceController from '../controllers/recommendation/additionalSupportingDocumentReplaceController'
 import additionalSupportingDocumentRemoveController from '../controllers/recommendation/additionalSupportingDocumentRemoveController'
 import recordConsiderationRationaleController from '../controllers/recommendation/recordConsiderationRationaleController'
+import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/DocumentType'
 
 const recommendations = Router()
 
@@ -543,9 +544,9 @@ apRouteBuilder
 const get = (path: string, handler: RequestHandler) => recommendations.get(path, asyncMiddleware(handler))
 const post = (path: string, handler: RequestHandler) => recommendations.post(path, asyncMiddleware(handler))
 post('', createRecommendationController)
-get(`/:recommendationId/documents/part-a`, createAndDownloadDocument('PART_A'))
-get(`/:recommendationId/documents/preview-part-a`, createAndDownloadDocument('PREVIEW_PART_A'))
-get(`/:recommendationId/documents/no-recall-letter`, createAndDownloadDocument('NO_RECALL_LETTER'))
+get(`/:recommendationId/documents/part-a`, createAndDownloadDocument(DOCUMENT_TYPE.PART_A))
+get(`/:recommendationId/documents/preview-part-a`, createAndDownloadDocument(DOCUMENT_TYPE.PREVIEW_PART_A))
+get(`/:recommendationId/documents/no-recall-letter`, createAndDownloadDocument(DOCUMENT_TYPE.NO_RECALL_LETTER))
 post(`/:recommendationId/status`, updateRecommendationStatus)
 
 export default recommendations

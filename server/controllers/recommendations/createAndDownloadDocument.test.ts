@@ -5,6 +5,7 @@ import { AuditService } from '../../services/auditService'
 import { createDocument, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { DOCUMENT_TYPE } from '../../@types/make-recall-decision-api/models/DocumentType'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -18,8 +19,11 @@ const token = 'token'
 const featureFlags = {}
 const fileContents = '123'
 
+const poRoleArray = [HMPPS_AUTH_ROLE.PO]
+const spoRoleArray = [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO]
+
 describe('createAndDownloadDocument', () => {
-  it('requests a Part A', async () => {
+  it.each([[poRoleArray], [spoRoleArray]])('requests a Part A', async userRoles => {
     const fileName = 'Part-A.docx'
     ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName })
     ;(getStatuses as jest.Mock).mockResolvedValue([])
@@ -33,14 +37,14 @@ describe('createAndDownloadDocument', () => {
         user: {
           username: userName,
           email: userEmail,
-          roles: [HMPPS_AUTH_ROLE.PO],
+          roles: userRoles,
           region: userRegion,
         },
         flags: featureFlags,
       },
     })
 
-    await createAndDownloadDocument('PART_A')(req, res)
+    await createAndDownloadDocument(DOCUMENT_TYPE.PART_A)(req, res)
 
     expect(createDocument).toHaveBeenCalledWith(
       recommendationId,
@@ -95,14 +99,14 @@ describe('createAndDownloadDocument', () => {
         user: {
           username: userName,
           email: userEmail,
-          roles: [HMPPS_AUTH_ROLE.PO],
+          roles: poRoleArray,
           region: userRegion,
         },
         flags: featureFlags,
       },
     })
 
-    await createAndDownloadDocument('PREVIEW_PART_A')(req, res)
+    await createAndDownloadDocument(DOCUMENT_TYPE.PREVIEW_PART_A)(req, res)
 
     expect(createDocument).toHaveBeenCalledWith(
       recommendationId,
@@ -124,7 +128,7 @@ describe('createAndDownloadDocument', () => {
     expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
   })
 
-  it('sent to ppcs', async () => {
+  it.each([[poRoleArray], [spoRoleArray]])('sent to ppcs', async userRoles => {
     ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName: 'Part-A.docx' })
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
 
@@ -136,13 +140,13 @@ describe('createAndDownloadDocument', () => {
         user: {
           username: userName,
           email: userEmail,
-          roles: [HMPPS_AUTH_ROLE.PO],
+          roles: userRoles,
         },
         flags: {},
       },
     })
 
-    await createAndDownloadDocument('PART_A')(req, res)
+    await createAndDownloadDocument(DOCUMENT_TYPE.PART_A)(req, res)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId,
@@ -150,29 +154,6 @@ describe('createAndDownloadDocument', () => {
       activate: [STATUSES.PP_DOCUMENT_CREATED, STATUSES.SENT_TO_PPCS],
       deActivate: [],
     })
-  })
-
-  it('do not close document if SPO', async () => {
-    ;(createDocument as jest.Mock).mockResolvedValue({ fileContents, fileName: 'Part-A.docx' })
-    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
-
-    const req = mockReq({ params: { recommendationId }, query: { crn } })
-
-    const res = mockRes({
-      token,
-      locals: {
-        user: {
-          username: userName,
-          email: userEmail,
-          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-        },
-        flags: featureFlags,
-      },
-    })
-
-    await createAndDownloadDocument('PART_A')(req, res)
-
-    expect(updateStatuses).not.toHaveBeenCalled()
   })
 
   it('do not mark DNTR as completed or downloaded, if already set', async () => {
@@ -190,10 +171,10 @@ describe('createAndDownloadDocument', () => {
 
     const res = mockRes({
       token,
-      locals: { user: { username: userName, email: userEmail, roles: [HMPPS_AUTH_ROLE.PO] }, flags: featureFlags },
+      locals: { user: { username: userName, email: userEmail, roles: poRoleArray }, flags: featureFlags },
     })
 
-    await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
+    await createAndDownloadDocument(DOCUMENT_TYPE.NO_RECALL_LETTER)(req, res)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       recommendationId,
@@ -213,10 +194,10 @@ describe('createAndDownloadDocument', () => {
 
     const res = mockRes({
       token,
-      locals: { user: { username: userName, email: userEmail, roles: [HMPPS_AUTH_ROLE.PO] }, flags: featureFlags },
+      locals: { user: { username: userName, email: userEmail, roles: poRoleArray }, flags: featureFlags },
     })
 
-    await createAndDownloadDocument('NO_RECALL_LETTER')(req, res)
+    await createAndDownloadDocument(DOCUMENT_TYPE.NO_RECALL_LETTER)(req, res)
 
     expect(createDocument).toHaveBeenCalledWith(
       recommendationId,
