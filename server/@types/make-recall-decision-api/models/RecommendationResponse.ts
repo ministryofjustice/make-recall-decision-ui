@@ -2,31 +2,31 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { AlternativesToRecallTried } from './AlternativesToRecallTried';
-import type { ConvictionDetail } from './ConvictionDetail';
-import type { CustodyStatus } from './CustodyStatus';
-import type { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails';
-import type { IndeterminateSentenceType } from './IndeterminateSentenceType';
-import type { LicenceConditionsBreached } from './LicenceConditionsBreached';
-import type { LocalPoliceContact } from './LocalPoliceContact';
-import type { ManagerRecallDecision } from './ManagerRecallDecision';
-import type { NextAppointment } from './NextAppointment';
-import type { PersonOnProbationDto } from './PersonOnProbationDto';
-import type { PreviousRecalls } from './PreviousRecalls';
-import type { PreviousReleases } from './PreviousReleases';
-import type { ReasonsForNoRecall } from './ReasonsForNoRecall';
-import type { RecallConsidered } from './RecallConsidered';
-import type { RecallType } from './RecallType';
-import type { RoshData } from './RoshData';
-import type { RoshSummary } from './RoshSummary';
-import type { SelectedWithDetails } from './SelectedWithDetails';
-import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement';
-import type { UserAccessResponse } from './UserAccessResponse';
-import type { VictimsInContactScheme } from './VictimsInContactScheme';
-import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation';
-import type { WhyConsideredRecall } from './WhyConsideredRecall';
-import { CvlLicenceConditionsBreached } from "./CvlLicenceConditionsBreached";
-import BookingMemento from "../../../booking/BookingMemento";
+import type { AlternativesToRecallTried } from './AlternativesToRecallTried'
+import type { ConvictionDetail } from './ConvictionDetail'
+import type { CustodyStatus } from './CustodyStatus'
+import type { IndeterminateOrExtendedSentenceDetails } from './IndeterminateOrExtendedSentenceDetails'
+import type { IndeterminateSentenceType } from './IndeterminateSentenceType'
+import type { LicenceConditionsBreached } from './LicenceConditionsBreached'
+import type { LocalPoliceContact } from './LocalPoliceContact'
+import type { ManagerRecallDecision } from './ManagerRecallDecision'
+import type { NextAppointment } from './NextAppointment'
+import type { PersonOnProbationDto } from './PersonOnProbationDto'
+import type { PreviousRecalls } from './PreviousRecalls'
+import type { PreviousReleases } from './PreviousReleases'
+import type { ReasonsForNoRecall } from './ReasonsForNoRecall'
+import type { RecallConsidered } from './RecallConsidered'
+import type { RecallType } from './RecallType'
+import type { RoshData } from './RoshData'
+import type { RoshSummary } from './RoshSummary'
+import type { SelectedWithDetails } from './SelectedWithDetails'
+import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement'
+import type { UserAccessResponse } from './UserAccessResponse'
+import type { VictimsInContactScheme } from './VictimsInContactScheme'
+import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation'
+import type { WhyConsideredRecall } from './WhyConsideredRecall'
+import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
+import BookingMemento from '../../../booking/BookingMemento'
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -220,7 +220,7 @@ export type PpudSentence = {
   mappaLevel: string,
   licenceExpiryDate: string,
   offence: PpudOffence,
-  releases: PpudRelease[],
+  releaseDate: string,
   sentenceLength: PpudSentenceLength,
   sentencingCourt: string,
 }
@@ -228,14 +228,6 @@ export type PpudSentence = {
 export type PpudOffence = {
   indexOffence: string,
   dateOfIndexOffence: string,
-}
-
-export type PpudRelease = {
-  category: string,
-  dateOfRelease: string,
-  releasedFrom: string,
-  releasedUnder: string,
-  releaseType: string,
 }
 
 export type PpudSentenceLength = {

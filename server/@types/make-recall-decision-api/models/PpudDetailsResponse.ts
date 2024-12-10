@@ -27,7 +27,7 @@ export type PpudDetailsSentence = {
   mappaLevel: string,
   licenceExpiryDate: string,
   offence: PpudDetailsOffence,
-  releases: PpudDetailsRelease[],
+  releaseDate: string,
   sentenceLength: PpudDetailsSentenceLength,
   sentencingCourt: string,
 }
@@ -35,14 +35,6 @@ export type PpudDetailsSentence = {
 export type PpudDetailsOffence = {
   indexOffence: string,
   dateOfIndexOffence: string,
-}
-
-export type PpudDetailsRelease = {
-  category: string,
-  dateOfRelease: string,
-  releasedFrom: string,
-  releasedUnder: string,
-  releaseType: string,
 }
 
 export type PpudDetailsSentenceLength = {
