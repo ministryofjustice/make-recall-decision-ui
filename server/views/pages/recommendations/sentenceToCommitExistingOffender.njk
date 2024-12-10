@@ -91,7 +91,7 @@
                             {% else %}
                                 {% for term in offence.terms %}
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key" data-qa="{{loop.index}}-termType">
+                                        <dt class="govuk-summary-list__key" data-qa="{{ loop.index }}-termType">
                                             {% if term.code === "IMP" %}
                                                 Custodial term
                                             {% endif %}
@@ -99,8 +99,8 @@
                                                 Extended term
                                             {% endif %}
                                         </dt>
-                                        <dd class="govuk-summary-list__value" data-qa="{{loop.index}}-term">
-                                            <div>{{ hyphenForBlank(formatTerm(term))}}</div>
+                                        <dd class="govuk-summary-list__value" data-qa="{{ loop.index }}-term">
+                                            <div>{{ hyphenForBlank(formatTerm(term)) }}</div>
                                         </dd>
                                     </div>
                                 {% endfor %}
@@ -157,7 +157,7 @@
                                     Release date
                                 </dt>
                                 <dd class="govuk-summary-list__value" data-qa="releaseDate">
-                                    {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: latestRelease.dateOfRelease }) ) }}
+                                    {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: ppudSentence.releaseDate }) ) }}
                                 </dd>
                             </div>
                             <div class="govuk-summary-list__row">
@@ -182,13 +182,11 @@
                                     Sentence length
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {{
-                                        hyphenForBlank( formatTerm({
-                                            years: ppudSentence.sentenceLength.partYears,
-                                            months: ppudSentence.sentenceLength.partMonths,
-                                            days: ppudSentence.sentenceLength.partDays
-                                        }) )
-                                    }}
+                                    {{ hyphenForBlank( formatTerm({
+                                        years: ppudSentence.sentenceLength.partYears,
+                                        months: ppudSentence.sentenceLength.partMonths,
+                                        days: ppudSentence.sentenceLength.partDays
+                                    }) ) }}
                                 </dd>
                             </div>
                             <div class="govuk-summary-list__row">

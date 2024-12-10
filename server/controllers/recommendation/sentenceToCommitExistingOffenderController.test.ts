@@ -23,20 +23,11 @@ describe('get', () => {
             sentences: [
               {
                 id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-                releases: [
-                  {
-                    dateOfRelease: '2013-02-02',
-                  },
-                  {
-                    dateOfRelease: '2015-02-09',
-                  },
-                  {
-                    dateOfRelease: '2005-02-02',
-                  },
-                ],
+                releaseDate: '2024-01-01',
               },
               {
                 id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313238393334G1375H1387',
+                releaseDate: '2028-01-01',
               },
             ],
           },
@@ -53,20 +44,7 @@ describe('get', () => {
     })
     expect(res.locals.ppudSentence).toEqual({
       id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-      releases: [
-        {
-          dateOfRelease: '2013-02-02',
-        },
-        {
-          dateOfRelease: '2015-02-09',
-        },
-        {
-          dateOfRelease: '2005-02-02',
-        },
-      ],
-    })
-    expect(res.locals.latestRelease).toEqual({
-      dateOfRelease: '2015-02-09',
+      releaseDate: '2024-01-01',
     })
     expect(res.locals.errorMessage).toBeUndefined()
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/sentenceToCommitExistingOffender`)
