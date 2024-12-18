@@ -1,6 +1,7 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
+import { riskLevelLabel } from '../../server/utils/nunjucks'
 
 context('Risk page', () => {
   const crn = 'X34983'
@@ -33,18 +34,21 @@ context('Risk page', () => {
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
     // predictor scores
-    cy.getElement('RSR (risk of serious recidivism) score - 18%').should('exist')
-    cy.getText('scale-ospc').should('contain', 'LOW')
-    cy.getText('scale-ospi').should('contain', 'MEDIUM')
-    cy.getText('ogrs-1yr').should('equal', '10%')
-    cy.getText('ogrs-2yr').should('equal', '20%')
-    cy.getText('ogrs-level').should('equal', 'Medium')
-    cy.getText('ogp-1yr').should('equal', '1%')
-    cy.getText('ogp-2yr').should('equal', '22%')
-    cy.getText('ogp-level').should('equal', 'High')
-    cy.getText('ovp-1yr').should('equal', '34%')
-    cy.getText('ovp-2yr').should('equal', '64%')
-    cy.getText('ovp-level').should('equal', 'Very high')
+    const currentScores = getCaseRiskResponse.predictorScores.current.scores
+    cy.getElement(`RSR (risk of serious recidivism) score - ${currentScores.RSR.score}%`).should('exist')
+    cy.getElement('scale-ospc').should('not.exist')
+    cy.getElement('scale-ospi').should('not.exist')
+    cy.getText('scale-ospdc').should('contain', currentScores.OSPDC.level)
+    cy.getText('scale-ospiic').should('contain', currentScores.OSPIIC.level)
+    cy.getText('ogrs-1yr').should('equal', `${currentScores.OGRS.oneYear}%`)
+    cy.getText('ogrs-2yr').should('equal', `${currentScores.OGRS.twoYears}%`)
+    cy.getText('ogrs-level').should('equal', riskLevelLabel(currentScores.OGRS.level))
+    cy.getText('ogp-1yr').should('equal', `${currentScores.OGP.oneYear}%`)
+    cy.getText('ogp-2yr').should('equal', `${currentScores.OGP.twoYears}%`)
+    cy.getText('ogp-level').should('equal', riskLevelLabel(currentScores.OGP.level))
+    cy.getText('ovp-1yr').should('equal', `${currentScores.OVP.oneYear}%`)
+    cy.getText('ovp-2yr').should('equal', `${currentScores.OVP.twoYears}%`)
+    cy.getText('ovp-level').should('equal', riskLevelLabel(currentScores.OVP.level))
 
     // RoSH table
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
@@ -69,6 +73,42 @@ context('Risk page', () => {
     cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="mappa"]' }).should('exist')
   })
 
+  it('shows predictor scores with old OSP values', () => {
+    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    const currentScore = {
+      date: '2021-10-24',
+      scores: {
+        OSPC: {
+          level: 'LOW',
+          type: 'OSP/C',
+        },
+        OSPI: {
+          level: 'MEDIUM',
+          type: 'OSP/I',
+        },
+      },
+    }
+    const predictorScores = {
+      current: currentScore,
+      historical: [currentScore],
+    }
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+        predictorScores,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+
+    // predictor scores
+    cy.getText('scale-ospc').should('contain', currentScore.scores.OSPC.level)
+    cy.getText('scale-ospi').should('contain', currentScore.scores.OSPI.level)
+    cy.getElement('scale-ospdc').should('not.exist')
+    cy.getElement('scale-ospiic').should('not.exist')
+  })
+
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getCase', {
@@ -84,8 +124,10 @@ context('Risk page', () => {
 
     // predictor scores
     cy.getText('rsr-missing').should('contain', 'Data not available.')
-    cy.getText('ospc-missing').should('contain', 'Data not available.')
-    cy.getText('ospi-missing').should('contain', 'Data not available.')
+    cy.getText('ospdc-missing').should('contain', 'Data not available.')
+    cy.getText('ospiic-missing').should('contain', 'Data not available.')
+    cy.getElement('ospc-missing').should('not.exist')
+    cy.getElement('ospi-missing').should('not.exist')
     cy.getText('ogrs-missing').should('contain', 'Data not available.')
     cy.getText('ogp-missing').should('contain', 'Data not available.')
     cy.getText('ovp-missing').should('contain', 'Data not available.')
