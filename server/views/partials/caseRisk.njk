@@ -91,8 +91,9 @@
         {% endif %}
 
         <div class="govuk-grid-row">
-            {# If we don't have OSP/DC or OSP/IIC values, but also don't have OSP/C or OSP/I ones, we want
-               the labels for the former to show above the "Data not avilable" messages.#}
+            {# If no OSP values of any kind are available, we want the labels for the new type of OSP values (i.e.
+               OSP/DC and OSP/IIC) to show above the "Data not avilable" messages. This is why we check old and new values
+               at this point. #}
             {% if caseSummary.predictorScores.current.scores.OSPDC or caseSummary.predictorScores.current.scores.OSPIIC
                 or not (caseSummary.predictorScores.current.scores.OSPC or caseSummary.predictorScores.current.scores.OSPI) %}
                 <div class="govuk-grid-column-one-half-from-desktop">

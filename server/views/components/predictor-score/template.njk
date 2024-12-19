@@ -1,4 +1,5 @@
 {% from "components/predictor-indicator/macro.njk" import predictorIndicator %}
+
 {% set scoreLabelClass = '' %}
 
 {% if predictorScore.level === 'LOW' and (predictorScore.type  === 'RSR' or predictorScore.type  === 'OSP/I' or predictorScore.type === 'OSP/IIC')%}
@@ -16,7 +17,9 @@
 {% elif predictorScore.level === 'VERY HIGH' and (predictorScore.type  === 'OSP/C'  or predictorScore.type === 'OSP/DC') %}
     {% set scoreLabelClass = 'score-label-wrapper--very-high score-label-wrapper--position-four-of-four' %}
 {% endif %}
+
 {% set barTypeClass = '' %}
+
 {% switch predictorScore.type %}
     {% case 'RSR' %}
         {% set barTypeClass = 'score-bar' %}
@@ -27,8 +30,8 @@
     {% case 'OSP/C' %}{% case 'OSP/DC' %}
         {% set barTypeClass = 'score-bar--small score-bar--small-fourths' %}
         {% set showScore = false %}
-    {% endswitch %}
-{% if predictorScore.level === 'NOT APPLICABLE' %}
+{% endswitch %}
+{% if predictorScore.level === 'NOT_APPLICABLE' %}
 <div class="predictor-score govuk-body">
     <p class="govuk-body">No relevant sexual offences</p>
 </div>
@@ -50,9 +53,9 @@
             <span></span>
         </div>
         {% if predictorScore.type === 'OSP/C' or predictorScore.type === 'OSP/DC' %}
-            <div>
-                <span></span>
-            </div>
+        <div>
+            <span></span>
+        </div>
         {% endif %}
     </div>
 </div>
