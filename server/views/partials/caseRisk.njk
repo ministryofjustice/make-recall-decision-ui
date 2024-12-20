@@ -91,41 +91,86 @@
         {% endif %}
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half-from-desktop">
-                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/C score">
-                    OSP/C
-                </h2>
-                <div data-qa='scale-ospc'>
-                    {% if caseSummary.predictorScores.current.scores.OSPC %}
-                        <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-                        </div>
-                    <div aria-hidden="true">
-                        {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
+            {# If no OSP values of any kind are available, we want the labels for the new type of OSP values (i.e.
+               OSP/DC and OSP/IIC) to show above the "Data not avilable" messages. This is why we check old and new values
+               at this point. #}
+            {% if caseSummary.predictorScores.current.scores.OSPDC or caseSummary.predictorScores.current.scores.OSPIIC
+                or not (caseSummary.predictorScores.current.scores.OSPC or caseSummary.predictorScores.current.scores.OSPI) %}
+                <div class="govuk-grid-column-one-half-from-desktop">
+                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0"
+                        data-analytics-event-scroll="OSP/DC score">
+                        OSP/DC
+                    </h2>
+                    <div data-qa='scale-ospdc'>
+                        {% if caseSummary.predictorScores.current.scores.OSPDC %}
+                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+                            </div>
+                            <div aria-hidden="true">
+                                {{ predictorScore(caseSummary.predictorScores.current.scores.OSPDC) }}
+                            </div>
+                            <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPDC.level }}</div>
+                        {% else %}
+                            <p class='govuk-body' data-qa='ospdc-missing'>Data not available.</p>
+                        {% endif %}
                     </div>
-                    <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPC.level }}</div>
-                    {% else %}
-                        <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
-                    {% endif %}
                 </div>
-            </div>
-            <div class="govuk-grid-column-one-half-from-desktop">
-                <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/I score">
-                    OSP/I
-                </h2>
-                <div data-qa='scale-ospi'>
-                    {% if caseSummary.predictorScores.current.scores.OSPI %}
-                        <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-                        </div>
-                    <div aria-hidden="true">
-                        {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
+                <div class="govuk-grid-column-one-half-from-desktop">
+                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0"
+                        data-analytics-event-scroll="OSP/IIC score">
+                        OSP/IIC
+                    </h2>
+                    <div data-qa='scale-ospiic'>
+                        {% if caseSummary.predictorScores.current.scores.OSPIIC %}
+                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+                            </div>
+                            <div aria-hidden="true">
+                                {{ predictorScore(caseSummary.predictorScores.current.scores.OSPIIC) }}
+                            </div>
+                            <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPIIC.level }}</div>
+                        {% else %}
+                            <p class='govuk-body' data-qa='ospiic-missing'>Data not available.</p>
+                        {% endif %}
                     </div>
-                        <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPI.level }}</div>
-                    {% else %}
-                        <p class='govuk-body' data-qa='ospi-missing'>Data not available.</p>
-                    {% endif %}</div>
-            </div>
+                </div>
+            {% else %}
+                <div class="govuk-grid-column-one-half-from-desktop">
+                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/C score">
+                        OSP/C
+                    </h2>
+                    <div data-qa='scale-ospc'>
+                        {% if caseSummary.predictorScores.current.scores.OSPC %}
+                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+                            </div>
+                        <div aria-hidden="true">
+                            {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
+                        </div>
+                        <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPC.level }}</div>
+                        {% else %}
+                            <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="govuk-grid-column-one-half-from-desktop">
+                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/I score">
+                        OSP/I
+                    </h2>
+                    <div data-qa='scale-ospi'>
+                        {% if caseSummary.predictorScores.current.scores.OSPI %}
+                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
+                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
+                            </div>
+                        <div aria-hidden="true">
+                            {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
+                        </div>
+                            <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPI.level }}</div>
+                        {% else %}
+                            <p class='govuk-body' data-qa='ospi-missing'>Data not available.</p>
+                        {% endif %}</div>
+                </div>
+            {% endif %}
         </div>
         </div>
 

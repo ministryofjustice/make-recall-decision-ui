@@ -44,6 +44,13 @@ To get debug output when running cypress:
 
 `DEBUG=cypress:* npm run int-test-ui`
 
+If you want to run a specific test, rather than all the tests, append `-- --spec=<path-to-test>` to the call (only works
+for `int-test` script):
+
+```
+npm run int-test -- --spec=integration_tests/integration/risk.spec.ts
+```
+
 ## Accessibility tests
 
 These run in Cypress and test a selection of pages against accessibility standards using Axe.
@@ -52,7 +59,7 @@ These run in Cypress and test a selection of pages against accessibility standar
 docker compose -f docker-compose-test.yml up -d
 ```
 
-then 
+then
 
 ```
 npm run start-feature

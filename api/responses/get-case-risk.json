@@ -77,13 +77,13 @@
           "score": 18,
           "type": "RSR"
         },
-        "OSPC": {
+        "OSPDC": {
           "level": "LOW",
-          "type": "OSP/C"
+          "type": "OSP/DC"
         },
-        "OSPI": {
+        "OSPIIC": {
           "level": "MEDIUM",
-          "type": "OSP/I"
+          "type": "OSP/IIC"
         },
         "OGRS": {
           "level": "MEDIUM",
@@ -114,13 +114,13 @@
             "score": 18,
             "type": "RSR"
           },
-          "OSPC": {
+          "OSPDC": {
             "level": "LOW",
-            "type": "OSP/C"
+            "type": "OSP/DC"
           },
-          "OSPI": {
+          "OSPIIC": {
             "level": "MEDIUM",
-            "type": "OSP/I"
+            "type": "OSP/IIC"
           },
           "OGRS": {
             "level": "MEDIUM",

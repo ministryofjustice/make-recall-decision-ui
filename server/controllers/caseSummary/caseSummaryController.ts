@@ -60,7 +60,7 @@ function isClosedForProbationServices(statuses: Status[]): boolean {
   return isWithPpcs || isPPDocumentCreated
 }
 
-// Helper function to return only active statuses for the currect active recommendation
+// Helper function to return only active statuses for the current active recommendation
 async function getActiveStatuses(activeRecommendation: ActiveRecommendation, token: string) {
   return (
     await getStatuses({
