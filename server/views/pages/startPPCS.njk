@@ -2,19 +2,33 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: "Start page for PPCS" }) %}
 {% block beforeContent %}
-  {% if notification.isVisible %}
-    {% set html %}
-      {% if notification.header %}
-        <p class="govuk-notification-banner__heading">
-          {{ notification.header }}
-        </p>
-      {% endif %}
-      <span class="govuk-body">{{ notification.body }}</span>
-    {% endset %}
-    {{ govukNotificationBanner({html: html}) }}
-  {% endif %}
+    {% if notification.isVisible %}
+        {% set html %}
+            {% if notification.header %}
+                <p class="govuk-notification-banner__heading">
+                    {{ notification.header }}
+                </p>
+            {% endif %}
+            <span class="govuk-body">{{ notification.body }}</span>
+        {% endset %}
+        {{ govukNotificationBanner({html: html}) }}
+    {% endif %}
 {% endblock %}
 {% block content %}
+    {% if not validMappingAndPpudUser %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert"
+             data-module="govuk-error-summary" data-qa="error-list">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <p class='govuk-body'>
+                    Your account needs updating before you can book a recall. Contact Service Now with your NDelius and
+                    PPUD user names to complete this.
+                </p>
+            </div>
+        </div>
+    {% endif %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class="govuk-heading-l">Check and book a recall</h1>
@@ -29,9 +43,12 @@
                 <li>Book the recall onto PPUD.</li>
             </ul>
 
-            <a href="/ppcs-search" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8"  data-module="govuk-button">
+            <a href="/ppcs-search" role="button" draggable="false"
+               class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8"
+               data-module="govuk-button">
                 Start now
-                <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
+                <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
+                     viewBox="0 0 33 40" role="presentation" focusable="false">
                     <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
                 </svg>
             </a>

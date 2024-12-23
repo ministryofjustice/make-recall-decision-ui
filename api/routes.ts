@@ -10,4 +10,5 @@ export const routes = {
   healthCheck: '/health',
   recommendations: '/recommendations',
   getUser: '/user',
+  searchMappedUser: '/user-mapping/search',
 }
