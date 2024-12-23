@@ -68,6 +68,15 @@ export const riskLevelLabel = (level: string) => {
   }
 }
 
+export const ospdcLevelLabel = (level: string) => {
+  switch (level) {
+    case 'VERY_HIGH':
+      return 'VERY HIGH'
+    default:
+      return level
+  }
+}
+
 export const roshYesNoLabel = (level: string | null) => {
   switch (level) {
     case 'YES':

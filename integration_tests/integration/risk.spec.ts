@@ -1,7 +1,7 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
-import { riskLevelLabel } from '../../server/utils/nunjucks'
+import { ospdcLevelLabel, riskLevelLabel } from '../../server/utils/nunjucks'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
 context('Risk page', () => {
@@ -49,7 +49,7 @@ context('Risk page', () => {
     cy.getElement(`RSR (risk of serious recidivism) score - ${currentScores.RSR.score}%`).should('exist')
     cy.getElement('scale-ospc').should('not.exist')
     cy.getElement('scale-ospi').should('not.exist')
-    cy.getText('scale-ospdc').should('contain', currentScores.OSPDC.level)
+    cy.getText('scale-ospdc').should('contain', ospdcLevelLabel(currentScores.OSPDC.level))
     cy.getText('scale-ospiic').should('contain', currentScores.OSPIIC.level)
     cy.getText('ogrs-1yr').should('equal', `${currentScores.OGRS.oneYear}%`)
     cy.getText('ogrs-2yr').should('equal', `${currentScores.OGRS.twoYears}%`)
@@ -84,6 +84,41 @@ context('Risk page', () => {
     cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="mappa"]' }).should('exist')
   })
 
+  it('displays VERY_HIGH OSPDC predictor score correctly', () => {
+    const currentScore = {
+      date: '2021-10-24',
+      scores: {
+        OSPDC: {
+          level: 'VERY_HIGH',
+          type: 'OSP/DC',
+        },
+        OSPIIC: {
+          level: 'MEDIUM',
+          type: 'OSP/IIC',
+        },
+      },
+    }
+    const predictorScores = {
+      current: currentScore,
+      historical: [currentScore],
+    }
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+        predictorScores,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+
+    // predictor scores
+    cy.getText('scale-ospdc').should('contain', ospdcLevelLabel(currentScore.scores.OSPDC.level))
+    cy.getText('scale-ospiic').should('contain', currentScore.scores.OSPIIC.level)
+    cy.getElement('scale-ospc').should('not.exist')
+    cy.getElement('scale-ospi').should('not.exist')
+  })
+
   it('shows predictor scores with old OSP values', () => {
     const currentScore = {
       date: '2021-10-24',
@@ -113,7 +148,7 @@ context('Risk page', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
     // predictor scores
-    cy.getText('scale-ospc').should('contain', currentScore.scores.OSPC.level)
+    cy.getText('scale-ospc').should('contain', ospdcLevelLabel(currentScore.scores.OSPC.level))
     cy.getText('scale-ospi').should('contain', currentScore.scores.OSPI.level)
     cy.getElement('scale-ospdc').should('not.exist')
     cy.getElement('scale-ospiic').should('not.exist')

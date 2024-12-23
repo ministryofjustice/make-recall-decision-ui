@@ -1,6 +1,6 @@
 <div class="score-label__card">
     <div class="score-label__card-top">
-        <h3>{{ predictorScore.level }}</h3>
+        <h3>{{ ospdcLevelLabel(predictorScore.level) }}</h3>
         <p>{{ predictorScore.type }}</p>
     </div>
     {% if showScore and predictorScore.score %}
