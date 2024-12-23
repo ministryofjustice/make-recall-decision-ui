@@ -14,7 +14,7 @@
 {% elif ['OSP/C', 'OSP/DC'].includes(predictorScore.type) %}
     {% switch predictorScore.level %}
         {% case 'LOW'%}
-            {% set scoreLabelClass = 'score-label-wrapper--medium score-label-wrapper--position-one-of-four' %}
+            {% set scoreLabelClass = 'score-label-wrapper--low score-label-wrapper--position-one-of-four' %}
         {% case 'MEDIUM' %}
             {% set scoreLabelClass = 'score-label-wrapper--medium score-label-wrapper--position-two-of-four' %}
         {% case 'HIGH' %}
