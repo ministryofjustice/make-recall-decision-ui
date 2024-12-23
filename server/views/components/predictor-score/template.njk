@@ -14,7 +14,7 @@
     {% set scoreLabelClass = 'score-label-wrapper--medium score-label-wrapper--position-two-of-four' %}
 {% elif predictorScore.level === 'HIGH' and (predictorScore.type  === 'OSP/C'  or predictorScore.type === 'OSP/DC') %}
     {% set scoreLabelClass = 'score-label-wrapper--high score-label-wrapper--position-three-of-four' %}
-{% elif predictorScore.level === 'VERY HIGH' and (predictorScore.type  === 'OSP/C'  or predictorScore.type === 'OSP/DC') %}
+{% elif predictorScore.level === 'VERY_HIGH' and (predictorScore.type  === 'OSP/C'  or predictorScore.type === 'OSP/DC') %}
     {% set scoreLabelClass = 'score-label-wrapper--very-high score-label-wrapper--position-four-of-four' %}
 {% endif %}
 
