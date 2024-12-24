@@ -1896,7 +1896,6 @@ context('Make a recommendation', () => {
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.start}`)
