@@ -1,4 +1,6 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
+import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
+import searchMappedUserResponse from '../../api/responses/searchMappedUsers.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
@@ -314,6 +316,8 @@ context('Accessibility (a11y) AP Checks', () => {
 
 context('Accessibility (a11y) PPCS Checks', () => {
   beforeEach(() => {
+    cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
+    cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
 
     cy.task('ppcsSearch', {
