@@ -12,6 +12,7 @@ import {
   removeUndefinedListItems,
   selectedFilterItems,
   riskLevelLabel,
+  ospdcLevelLabel,
   defaultValue,
   roshYesNoLabel,
   formatDateFilterQueryString,
@@ -90,6 +91,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('nextPageLinkUrl', nextPageLinkUrl)
   njkEnv.addGlobal('possessiveSuffix', possessiveSuffix)
   njkEnv.addGlobal('riskLevelLabel', riskLevelLabel)
+  njkEnv.addGlobal('ospdcLevelLabel', ospdcLevelLabel)
   njkEnv.addGlobal('roshYesNoLabel', roshYesNoLabel)
   njkEnv.addGlobal('isDefined', isDefined)
   njkEnv.addGlobal('formatDateFilterQueryString', formatDateFilterQueryString)

@@ -109,7 +109,7 @@
                             <div aria-hidden="true">
                                 {{ predictorScore(caseSummary.predictorScores.current.scores.OSPDC) }}
                             </div>
-                            <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPDC.level }}</div>
+                            <div class='govuk-visually-hidden'>Level: {{ ospdcLevelLabel(caseSummary.predictorScores.current.scores.OSPDC.level) }}</div>
                         {% else %}
                             <p class='govuk-body' data-qa='ospdc-missing'>Data not available.</p>
                         {% endif %}
@@ -147,7 +147,7 @@
                         <div aria-hidden="true">
                             {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
                         </div>
-                        <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPC.level }}</div>
+                        <div class='govuk-visually-hidden'>Level: {{ ospdcLevelLabel(caseSummary.predictorScores.current.scores.OSPC.level) }}</div>
                         {% else %}
                             <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
                         {% endif %}
