@@ -1,4 +1,4 @@
 export type PpudUser = {
-  userName: string,
-  fullName: string
+  fullName: string,
+  teamName: string
 };
