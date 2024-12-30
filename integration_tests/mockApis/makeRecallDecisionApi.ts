@@ -247,3 +247,17 @@ export const createNoRecallLetter = ({ statusCode = 200, response }: { statusCod
     statusCode,
     response,
   })
+
+export const searchMappedUsers = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/user-mapping/search`,
+    statusCode,
+    response,
+  })
+
+export const ppudSearchActiveUsers = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/ppud/user/search`,
+    statusCode,
+    response,
+  })
