@@ -35,28 +35,34 @@ describe('get', () => {
 
 describe('post', () => {
   it('post with valid data', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
+    const recommendation = {
       ...recommendationApiResponse,
       bookRecallToPpud: {
         policeForce: 'Kent',
       },
-    })
+    }
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/1/`
+    const legislationReleasedUnder = 'blue'
     const req = mockReq({
-      params: { recommendationId: '1' },
+      params: { recommendationId: recommendation.id.toString() },
       body: {
-        legislationReleasedUnder: 'blue',
+        legislationReleasedUnder,
       },
     })
 
+    const token = 'token1'
+
+    const featureFlags = { xyz: true }
+
     const res = mockRes({
-      token: 'token1',
+      token,
       locals: {
-        user: { token: 'token1' },
+        user: { token },
         urlInfo: { basePath },
-        flags: { xyz: true },
+        flags: featureFlags,
       },
     })
     const next = mockNext()
@@ -64,17 +70,15 @@ describe('post', () => {
     await editLegislationReleasedUnderController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
+      recommendationId: req.params.recommendationId,
       valuesToSave: {
         bookRecallToPpud: {
-          policeForce: 'Kent',
-          legislationReleasedUnder: 'blue',
+          policeForce: recommendation.bookRecallToPpud.policeForce,
+          legislationReleasedUnder,
         },
       },
-      token: 'token1',
-      featureFlags: {
-        xyz: true,
-      },
+      token,
+      featureFlags,
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)

@@ -56,40 +56,42 @@ describe('update sentence', () => {
       },
     } as unknown as RecommendationResponse
 
-    const result = await createOrUpdateSentence(bookingMemento, recommendation, 'token', { xyz: true })
+    const token = 'token'
 
-    expect(ppudUpdateSentence).toHaveBeenCalledWith('token', '767', '444', {
-      custodyType: 'Determinate',
-      mappaLevel: 'Level 2 - local inter-agency management',
-      dateOfSentence: '2016-01-01',
-      licenceExpiryDate: '2018-02-02',
-      releaseDate: '2017-03-03',
-      sentenceExpiryDate: '2019-04-04',
-      sentencingCourt: 'court desc',
+    const featureFlags = { xyz: true }
+
+    const result = await createOrUpdateSentence(bookingMemento, recommendation, token, featureFlags)
+
+    expect(ppudUpdateSentence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
+      custodyType: recommendation.bookRecallToPpud.custodyType,
+      mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
+      dateOfSentence: recommendation.nomisIndexOffence.allOptions[0].sentenceDate,
+      licenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].licenceExpiryDate,
+      releaseDate: recommendation.nomisIndexOffence.allOptions[0].releaseDate,
+      sentenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].sentenceEndDate,
+      sentencingCourt: recommendation.nomisIndexOffence.allOptions[0].courtDescription,
       sentenceLength: {
-        partDays: 1,
-        partMonths: 2,
-        partYears: 3,
+        partDays: recommendation.nomisIndexOffence.allOptions[0].terms[0].days,
+        partMonths: recommendation.nomisIndexOffence.allOptions[0].terms[0].months,
+        partYears: recommendation.nomisIndexOffence.allOptions[0].terms[0].years,
       },
     })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
+      recommendationId: recommendation.id,
       valuesToSave: {
         bookingMemento: {
-          offenderId: '767',
-          sentenceId: '444',
+          offenderId: bookingMemento.offenderId,
+          sentenceId: bookingMemento.sentenceId,
           stage: 'SENTENCE_BOOKED',
         },
       },
-      token: 'token',
-      featureFlags: {
-        xyz: true,
-      },
+      token,
+      featureFlags,
     })
     expect(result).toEqual({
-      offenderId: '767',
-      sentenceId: '444',
+      offenderId: bookingMemento.offenderId,
+      sentenceId: bookingMemento.sentenceId,
       stage: 'SENTENCE_BOOKED',
     })
   })
@@ -134,42 +136,45 @@ describe('update sentence', () => {
       },
     } as unknown as RecommendationResponse
 
-    ;(ppudCreateSentence as jest.Mock).mockResolvedValue({ sentence: { id: '445' } })
+    const sentence = { id: '445' }
+    ;(ppudCreateSentence as jest.Mock).mockResolvedValue({ sentence })
 
-    const result = await createOrUpdateSentence(bookingMemento, recommendation, 'token', { xyz: true })
+    const token = 'token'
 
-    expect(ppudCreateSentence).toHaveBeenCalledWith('token', '767', {
-      custodyType: 'Determinate',
-      mappaLevel: 'Level 2 - local inter-agency management',
-      dateOfSentence: '2016-01-01',
-      licenceExpiryDate: '2018-02-02',
-      releaseDate: '2017-03-03',
-      sentenceExpiryDate: '2019-04-04',
-      sentencingCourt: 'court desc',
+    const featureFlags = { xyz: true }
+
+    const result = await createOrUpdateSentence(bookingMemento, recommendation, token, featureFlags)
+
+    expect(ppudCreateSentence).toHaveBeenCalledWith(token, bookingMemento.offenderId, {
+      custodyType: recommendation.bookRecallToPpud.custodyType,
+      mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
+      dateOfSentence: recommendation.nomisIndexOffence.allOptions[0].sentenceDate,
+      licenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].licenceExpiryDate,
+      releaseDate: recommendation.nomisIndexOffence.allOptions[0].releaseDate,
+      sentenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].sentenceEndDate,
+      sentencingCourt: recommendation.nomisIndexOffence.allOptions[0].courtDescription,
       sentenceLength: {
-        partDays: 1,
-        partMonths: 2,
-        partYears: 3,
+        partDays: recommendation.nomisIndexOffence.allOptions[0].terms[0].days,
+        partMonths: recommendation.nomisIndexOffence.allOptions[0].terms[0].months,
+        partYears: recommendation.nomisIndexOffence.allOptions[0].terms[0].years,
       },
     })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
+      recommendationId: recommendation.id,
       valuesToSave: {
         bookingMemento: {
-          offenderId: '767',
-          sentenceId: '445',
+          offenderId: bookingMemento.offenderId,
+          sentenceId: sentence.id,
           stage: 'SENTENCE_BOOKED',
         },
       },
-      token: 'token',
-      featureFlags: {
-        xyz: true,
-      },
+      token,
+      featureFlags,
     })
     expect(result).toEqual({
-      offenderId: '767',
-      sentenceId: '445',
+      offenderId: bookingMemento.offenderId,
+      sentenceId: sentence.id,
       stage: 'SENTENCE_BOOKED',
     })
   })
