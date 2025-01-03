@@ -8,7 +8,7 @@ describe('validateRecallReceived', () => {
     basePath: `/recommendations/${recommendationId}/`,
     path: `/recommendations/${recommendationId}/check-booking-details`,
   }
-  const { year } = DateTime.now().plus({ years: 0 })
+  const { year } = DateTime.now().plus({ years: -1 })
 
   it('returns valuesToSave and no errors, and redirects to preview, if valid', async () => {
     const requestBody = {
@@ -20,7 +20,7 @@ describe('validateRecallReceived', () => {
     }
     const { errors, valuesToSave, nextPagePath } = await validateRecallReceived({ requestBody, urlInfo })
     expect(errors).toBeUndefined()
-    expect(valuesToSave).toEqual({ receivedDateTime: '2024-01-12T11:53:00.000Z' })
+    expect(valuesToSave).toEqual({ receivedDateTime: `${year.toString()}-01-12T11:53:00.000Z` })
     expect(nextPagePath).toEqual('/recommendations/34/check-booking-details')
   })
 
