@@ -31,30 +31,23 @@ export default async function createOrUpdateSentence(
         }
       : null
 
+  const sentence = {
+    custodyType: recommendation.bookRecallToPpud?.custodyType,
+    mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
+    dateOfSentence: nomisOffence.sentenceDate,
+    licenceExpiryDate: nomisOffence.licenceExpiryDate,
+    releaseDate: nomisOffence.releaseDate,
+    sentenceLength,
+    sentenceExpiryDate: nomisOffence.sentenceEndDate,
+    sentencingCourt: nomisOffence.courtDescription,
+    sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
+  }
   if (recommendation.bookRecallToPpud.ppudSentenceId === 'ADD_NEW') {
-    const createSentenceResponse = await ppudCreateSentence(token, memento.offenderId, {
-      custodyType: recommendation.bookRecallToPpud?.custodyType,
-      mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
-      dateOfSentence: nomisOffence.sentenceDate,
-      licenceExpiryDate: nomisOffence.licenceExpiryDate,
-      releaseDate: nomisOffence.releaseDate,
-      sentenceLength,
-      sentenceExpiryDate: nomisOffence.sentenceEndDate,
-      sentencingCourt: nomisOffence.courtDescription,
-    })
+    const createSentenceResponse = await ppudCreateSentence(token, memento.offenderId, sentence)
 
     memento.sentenceId = createSentenceResponse.sentence.id
   } else {
-    await ppudUpdateSentence(token, memento.offenderId, memento.sentenceId, {
-      custodyType: recommendation.bookRecallToPpud?.custodyType,
-      mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
-      dateOfSentence: nomisOffence.sentenceDate,
-      licenceExpiryDate: nomisOffence.licenceExpiryDate,
-      releaseDate: nomisOffence.releaseDate,
-      sentenceLength,
-      sentenceExpiryDate: nomisOffence.sentenceEndDate,
-      sentencingCourt: nomisOffence.courtDescription,
-    })
+    await ppudUpdateSentence(token, memento.offenderId, memento.sentenceId, sentence)
   }
 
   memento.stage = StageEnum.SENTENCE_BOOKED

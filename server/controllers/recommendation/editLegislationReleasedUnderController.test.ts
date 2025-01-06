@@ -75,6 +75,7 @@ describe('post', () => {
         bookRecallToPpud: {
           policeForce: recommendation.bookRecallToPpud.policeForce,
           legislationReleasedUnder,
+          legislationSentencedUnder: legislationReleasedUnder,
         },
       },
       token,

@@ -111,6 +111,8 @@ describe('update sentence', () => {
         custodyType: 'Determinate',
         mappaLevel: 'Level 2 - local inter-agency management',
         ppudSentenceId: 'ADD_NEW',
+        legislationReleasedUnder: 'CJA 2023',
+        legislationSentencedUnder: 'CJA 2023',
       },
       nomisIndexOffence: {
         allOptions: [
@@ -153,6 +155,7 @@ describe('update sentence', () => {
       releaseDate: recommendation.nomisIndexOffence.allOptions[0].releaseDate,
       sentenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].sentenceEndDate,
       sentencingCourt: recommendation.nomisIndexOffence.allOptions[0].courtDescription,
+      sentencedUnder: recommendation.bookRecallToPpud.legislationSentencedUnder,
       sentenceLength: {
         partDays: recommendation.nomisIndexOffence.allOptions[0].terms[0].days,
         partMonths: recommendation.nomisIndexOffence.allOptions[0].terms[0].months,

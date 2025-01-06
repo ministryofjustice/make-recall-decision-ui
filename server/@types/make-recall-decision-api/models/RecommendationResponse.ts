@@ -175,6 +175,7 @@ export type BookRecallToPpud = {
   gender?: string,
   ethnicity: string,
   legislationReleasedUnder?: string,
+  legislationSentencedUnder?: string,
   releasingPrison?: string,
   minute?: string,
 }

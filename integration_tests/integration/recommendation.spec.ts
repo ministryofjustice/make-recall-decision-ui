@@ -2224,6 +2224,7 @@ context('Make a recommendation', () => {
           prisonOffender: {},
           bookRecallToPpud: {
             legislationReleasedUnder: 'CJA1',
+            legislationSentencedUnder: 'CJA1',
           },
           ppudOffender: {},
         },
