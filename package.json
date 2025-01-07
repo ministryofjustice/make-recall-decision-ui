@@ -210,6 +210,9 @@
     "json5": "2.2.3",
     "csurf": {
       "cookie": "0.7.2"
+    },
+    "cypress-multi-reporters": {
+      "mocha": "10.3.0"
     }
   }
 }
