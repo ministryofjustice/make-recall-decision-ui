@@ -17,7 +17,13 @@
                 <h2 class='govuk-heading-m'>From Part A</h2>
                 <div class="govuk-text-list__row">
                     <div class="govuk-text-list__key">MAPPA Level</div>
-                    <div class="govuk-text-list__value" data-qa="mappaLevel"> Level {{ recommendation.personOnProbation.mappa.level }}</div>
+                    <div class="govuk-text-list__value" data-qa="mappaLevel">
+                        {% if recommendation.personOnProbation.mappa.level is defined %}
+                            Level {{ recommendation.personOnProbation.mappa.level }}
+                        {% else %}
+                            Unknown
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
