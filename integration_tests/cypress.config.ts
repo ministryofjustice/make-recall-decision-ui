@@ -22,6 +22,8 @@ import {
   updateStatuses,
   getSupportingDocuments,
   downloadSupportingDocument,
+  searchMappedUsers,
+  ppudSearchActiveUsers,
 } from './mockApis/makeRecallDecisionApi'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import { readDocX } from '../cypress_shared/plugins'
@@ -76,6 +78,8 @@ export default defineConfig({
         getActiveRecommendation,
         getSupportingDocuments,
         downloadSupportingDocument,
+        searchMappedUsers,
+        ppudSearchActiveUsers,
       })
     },
     baseUrl: 'http://localhost:3007',

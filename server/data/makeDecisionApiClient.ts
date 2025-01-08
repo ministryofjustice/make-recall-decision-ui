@@ -35,6 +35,8 @@ import { SupportingDocumentResponse } from '../@types/make-recall-decision-api/m
 import { PpudUploadMandatoryDocument } from '../@types/make-recall-decision-api/models/PpudUploadMandatoryDocument'
 import { PpudUploadAdditionalDocument } from '../@types/make-recall-decision-api/models/PpudUploadAdditionalDocument'
 import { PpudCreateMinuteRequest } from '../@types/make-recall-decision-api/models/PpudCreateMinuteRequest'
+import { PpudUserMappingResponse } from '../@types/make-recall-decision-api/models/PpudUserMappingResponse'
+import { PpudUserResponse } from '../@types/make-recall-decision-api/models/PpudUserResponse'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -239,6 +241,17 @@ export const ppudReferenceList = (token: string, name: string): Promise<PpudRefe
   return ppudRestClient(token).post({
     path: `/ppud/reference/${name}`,
   }) as Promise<PpudReferenceListResponse>
+}
+
+export const ppudSearchActiveUsers = (token: string, userName: string, fullName: string): Promise<PpudUserResponse> => {
+  const body: Record<string, unknown> = {
+    userName,
+    fullName,
+  }
+  return ppudRestClient(token).post({
+    path: `/ppud/user/search`,
+    data: body,
+  }) as Promise<PpudUserResponse>
 }
 
 export const searchPersons = (
@@ -482,4 +495,13 @@ export const deleteSupportingDocument = ({
     path: `${routes.recommendations}/${recommendationId}/documents/${id}`,
     headers: featureFlagHeaders(featureFlags),
   }) as Promise<SupportingDocument[]>
+}
+
+export const searchMappedUsers = (userName: string, token: string): Promise<PpudUserMappingResponse> => {
+  const body: Record<string, unknown> = {}
+  body.userName = userName
+  return restClient(token).post({
+    path: `${routes.searchMappedUser}`,
+    data: body,
+  }) as Promise<PpudUserMappingResponse>
 }
