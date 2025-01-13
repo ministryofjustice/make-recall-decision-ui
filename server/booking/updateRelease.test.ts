@@ -52,6 +52,7 @@ describe('update release', () => {
         policeForce: 'NCIS Los Angeles',
         probationArea: 'london',
         legislationReleasedUnder: 'CJA 2023',
+        legislationSentencedUnder: 'CJA 2023',
       },
       nomisIndexOffence: {
         allOptions: [

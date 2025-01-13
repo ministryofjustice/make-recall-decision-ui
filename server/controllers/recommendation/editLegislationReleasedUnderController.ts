@@ -67,6 +67,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         legislationReleasedUnder,
+        legislationSentencedUnder: legislationReleasedUnder,
       },
     },
     token,
