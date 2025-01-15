@@ -1,0 +1,15 @@
+@import '../../../node_modules/accessible-autocomplete/dist/accessible-autocomplete.min';
+
+// We have to override these values here:
+//  * z-index: the default from library is -1, which results in the arrow not being rendered,
+//             despite the input element in front of it being styled with a transparent
+//             background.
+//  * pointer-events: this is needed after changing the z-index to 0, as otherwise the arrow
+//                    prevents the user from clicking on it and having the dropdown work
+//  * top: the example code used had the VStyle arrow code include the style in its return
+//         string, but this is ignored when used in innerHtml, so we have to specify via css
+.autocomplete__dropdown-arrow-down {
+  z-index: 0;
+  pointer-events: none;
+  top: 8px;
+}

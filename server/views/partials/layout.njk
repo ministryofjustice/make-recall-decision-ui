@@ -44,6 +44,7 @@
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/inset-text/macro.njk" import govukInsetText -%}
 {% from "govuk/components/warning-text/macro.njk"             import govukWarningText %}
+{% from "components/accessible-autocomplete/macro.njk" import accessibleAutocomplete %}
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
   <script src="/assets/applicationinsights-web.min.js"></script>
@@ -56,6 +57,8 @@
     window.MOJFrontend = window.MOJFrontend || {};
   </script>
   <script src='/assets/moj/components/filter-toggle-button/filter-toggle-button.js'></script>
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script src="/assets/js/vStyleDropdownArrow.js"></script>
   {% block headEnd %}{% endblock %}
 {% endblock %}
 {% block pageTitle %}
