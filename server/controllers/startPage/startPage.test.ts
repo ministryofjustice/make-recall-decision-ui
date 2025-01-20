@@ -1,3 +1,4 @@
+import { createClient } from 'redis'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { startPage } from './startPage'
 import { ppudSearchActiveUsers, searchMappedUsers } from '../../data/makeDecisionApiClient'
@@ -5,8 +6,25 @@ import searchMappedUsersApiResponse from '../../../api/responses/searchMappedUse
 import ppudSearchActiveUsersApiResponse from '../../../api/responses/ppudSearchActiveUsers.json'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('redis')
 
 describe('startPage', () => {
+  const redisGet = jest.fn()
+  const redisSet = jest.fn()
+  const redisDel = jest.fn()
+  const redisExpire = jest.fn()
+
+  beforeEach(() => {
+    ;(createClient as jest.Mock).mockReturnValue({
+      connect: jest.fn().mockResolvedValue(undefined),
+      get: redisGet,
+      set: redisSet,
+      expire: redisExpire,
+      del: redisDel,
+      on: jest.fn(),
+    })
+  })
+
   it('normal operation', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: false } } })
     await startPage(mockReq(), res)
@@ -20,6 +38,18 @@ describe('startPage', () => {
     await startPage(mockReq(), res)
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
     expect(res.locals.validMappingAndPpudUser).toEqual(true)
+  })
+  it('with PPCS role and caches ppud user', async () => {
+    const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username' } } })
+    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
+    ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce(ppudSearchActiveUsersApiResponse)
+    await startPage(mockReq(), res)
+    expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
+    expect(res.locals.validMappingAndPpudUser).toEqual(true)
+    expect(redisSet).toHaveBeenCalledWith(
+      'ppudUserResponse:username',
+      JSON.stringify({ userIds: [null], data: { results: [{ fullName: 'John Smith', teamName: 'Team1' }] } })
+    )
   })
   it('with PPCS role and no mapped user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
