@@ -24,17 +24,21 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                {{ govukSelect({
-                  id: "releasingPrison",
-                  name: "releasingPrison",
-                  label: {
-                    text: "List of prisons",
-                    classes: "govuk-label--m"
-                  },
-                  errorMessage: errorMessage(errors.releasingPrison),
-                  value: recommendation.bookRecallToPpud.releasingPrison,
-                  items: releasingPrisons
-                }) }}
+                {{ accessibleAutocomplete({
+                    id: 'releasingPrison',
+                    label: {
+                        text: 'List of prisons',
+                        class: 'govuk-label--m'
+                    },
+                    class: 'govuk-!-margin-bottom-4 govuk-input--width-30',
+                    errorMessage: errorMessage(errors.releasingPrison),
+                    list: releasingPrisons,
+                    value: recommendation.bookRecallToPpud.releasingPrison,
+                    defaultValue: 'Select prison',
+                    nonce: cspNonce
+                    })
+                }}
+
 
                 {{ formSubmitButton() }}
             </form>

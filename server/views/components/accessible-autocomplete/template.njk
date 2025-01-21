@@ -1,0 +1,33 @@
+<div class="govuk-form-group {{ params.class }} {% if params.errorMessage %}govuk-form-group--error{% endif %}">
+    {% if params.label %}
+        <label class="govuk-label {{ params.label.class }}" for="{{ params.id }}">
+            {{ params.label.text }}
+        </label>
+    {% endif %}
+    {% if params.hint %}
+        <div id="{{ params.id }}-hint" class="govuk-hint">
+            {{ params.hint }}
+        </div>
+    {% endif %}
+    {% if params.errorMessage %}
+        <span id="{{ params.id }}-error" class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error: </span>{{ params.errorMessage.text }}
+    </span>
+    {% endif %}
+    <select id="{{ params.id }}" name="{{ params.id }}"class="govuk-body">
+        <option value="" {% if not params.value %}selected{% endif %}>{{ params.defaultValue }}</option>
+        {% for item in params.list %}
+            <option value="{{item.value}}" {% if item.value === params.value %}selected{% endif %}>{{item.text}}</option>
+        {% endfor %}
+    </select>
+
+    <script nonce="{{ params.nonce }}">
+      window.accessibleAutocomplete.enhanceSelectElement({
+        selectElement: document.querySelector('#{{ params.id }}'),
+        autoselect: true,
+        showAllValues: true,
+        confirmOnBlur: false,
+        dropdownArrow: vStyleDropdownArrow
+      })
+    </script>
+</div>

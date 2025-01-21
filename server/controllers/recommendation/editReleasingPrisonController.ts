@@ -18,10 +18,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       value,
     }
   })
-  releasingPrisons.unshift({
-    text: 'Enter releasing prison',
-    value: '',
-  })
 
   res.locals = {
     ...res.locals,

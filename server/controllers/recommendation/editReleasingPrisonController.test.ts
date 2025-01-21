@@ -24,7 +24,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editReleasingPrison' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editReleasingPrison')
     expect(res.locals.releasingPrisons).toEqual([
-      { text: 'Enter releasing prison', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
