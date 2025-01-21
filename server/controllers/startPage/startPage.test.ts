@@ -1,30 +1,13 @@
-import { createClient } from 'redis'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { startPage } from './startPage'
 import { ppudSearchActiveUsers, searchMappedUsers } from '../../data/makeDecisionApiClient'
 import searchMappedUsersApiResponse from '../../../api/responses/searchMappedUsers.json'
 import ppudSearchActiveUsersApiResponse from '../../../api/responses/ppudSearchActiveUsers.json'
+import * as caching from '../../data/fetchFromCacheOrApi'
 
 jest.mock('../../data/makeDecisionApiClient')
-jest.mock('redis')
 
 describe('startPage', () => {
-  const redisGet = jest.fn()
-  const redisSet = jest.fn()
-  const redisDel = jest.fn()
-  const redisExpire = jest.fn()
-
-  beforeEach(() => {
-    ;(createClient as jest.Mock).mockReturnValue({
-      connect: jest.fn().mockResolvedValue(undefined),
-      get: redisGet,
-      set: redisSet,
-      expire: redisExpire,
-      del: redisDel,
-      on: jest.fn(),
-    })
-  })
-
   it('normal operation', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: false } } })
     await startPage(mockReq(), res)
@@ -40,16 +23,24 @@ describe('startPage', () => {
     expect(res.locals.validMappingAndPpudUser).toEqual(true)
   })
   it('with PPCS role and caches ppud user', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username' } } })
+    const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username', userId: '123' } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
     ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce(ppudSearchActiveUsersApiResponse)
+    const spy = jest.spyOn(caching, 'fetchFromCacheOrApi')
+    spy.mockReturnValueOnce(Promise.resolve(ppudSearchActiveUsersApiResponse))
+
     await startPage(mockReq(), res)
+
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenNthCalledWith(1, {
+      checkWhetherToCacheDataFn: expect.any(Function),
+      fetchDataFn: expect.any(Function),
+      redisKey: `ppudUserResponse:${res.locals.user.username}`,
+      ttlOverrideSeconds: 60 * 60 * 24 * 7,
+      userId: res.locals.user.userId,
+    })
     expect(res.locals.validMappingAndPpudUser).toEqual(true)
-    expect(redisSet).toHaveBeenCalledWith(
-      'ppudUserResponse:username',
-      JSON.stringify({ userIds: [null], data: { results: [{ fullName: 'John Smith', teamName: 'Team1' }] } })
-    )
   })
   it('with PPCS role and no mapped user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
