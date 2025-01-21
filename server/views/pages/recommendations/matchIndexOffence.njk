@@ -31,16 +31,20 @@
                     </div>
                 </div>
 
-                {{ govukSelect({
-                  id: "indexOffence",
-                  name: "indexOffence",
-                  label: {
-                    text: "PPUD list of offences"
-                  },
-                  errorMessage: errorMessage(errors.indexOffence),
-                  value: recommendation.bookRecallToPpud.indexOffence,
-                  items: indexOffences
-                }) }}
+                {{ accessibleAutocomplete({
+                    id: 'indexOffence',
+                    label: {
+                        text: 'PPUD list of offences',
+                        class: 'govuk-label--m'
+                    },
+                    class: 'govuk-!-margin-bottom-4 govuk-input--width-30',
+                    errorMessage: errorMessage(errors.indexOffence),
+                    list: indexOffences,
+                    value: recommendation.bookRecallToPpud.indexOffence,
+                    defaultValue: 'Select an offence',
+                    nonce: cspNonce
+                })
+                }}
 
                 {{ formSubmitButton() }}
             </form>

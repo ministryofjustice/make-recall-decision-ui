@@ -51,7 +51,6 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'matchIndexOffence' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence')
     expect(res.locals.indexOffences).toEqual([
-      { text: 'Select an offence', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },

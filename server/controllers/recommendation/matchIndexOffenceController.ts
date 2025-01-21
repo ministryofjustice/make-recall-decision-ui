@@ -24,10 +24,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       value,
     }
   })
-  indexOffences.unshift({
-    text: 'Select an offence',
-    value: '',
-  })
 
   res.locals = {
     ...res.locals,
