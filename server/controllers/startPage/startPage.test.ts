@@ -14,14 +14,6 @@ describe('startPage', () => {
     expect(res.locals.searchEndpoint).toEqual('/search-by-name')
     expect(res.render).toHaveBeenCalledWith('pages/startPage')
   })
-  it('with PPCS role', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
-    ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce(ppudSearchActiveUsersApiResponse)
-    await startPage(mockReq(), res)
-    expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
-    expect(res.locals.validMappingAndPpudUser).toEqual(true)
-  })
   it('with PPCS role and caches ppud user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username', userId: '123' } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
