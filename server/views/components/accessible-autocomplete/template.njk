@@ -14,8 +14,8 @@
       <span class="govuk-visually-hidden">Error: </span>{{ params.errorMessage.text }}
     </span>
     {% endif %}
-    <select id="{{ params.id }}" name="{{ params.id }}"class="govuk-body">
-        <option value="" {% if not params.value %}selected{% endif %}>{{ params.defaultValue }}</option>
+    <select id="{{ params.id }}" name="{{ params.id }}" class="govuk-body" data-gov-select-autocomplete="true">
+        <option value="" disabled {% if not params.value %}selected{% endif %}></option>
         {% for item in params.list %}
             <option value="{{item.value}}" {% if item.value === params.value %}selected{% endif %}>{{item.text}}</option>
         {% endfor %}
@@ -27,7 +27,7 @@
         autoselect: true,
         showAllValues: true,
         confirmOnBlur: false,
-        dropdownArrow: vStyleDropdownArrow
+        dropdownArrow: vStyleDropdownArrow,
       })
     </script>
 </div>
