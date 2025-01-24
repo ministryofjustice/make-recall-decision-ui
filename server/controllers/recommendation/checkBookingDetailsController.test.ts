@@ -523,7 +523,7 @@ describe('post', () => {
         errorId: 'missingReleasingPrison',
         href: '#releasingPrison',
         name: 'releasingPrison',
-        text: 'Enter releasing prison',
+        text: 'A valid releasing prison must be provided',
         invalidParts: undefined,
         values: undefined,
       },

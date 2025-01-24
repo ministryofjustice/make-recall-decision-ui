@@ -105,7 +105,7 @@ describe('post', () => {
         invalidParts: undefined,
         href: '#releasingPrison',
         name: 'releasingPrison',
-        text: 'Enter releasing prison',
+        text: 'A valid releasing prison must be provided',
         values: undefined,
       },
     ])
