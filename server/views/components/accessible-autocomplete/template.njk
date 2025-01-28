@@ -1,3 +1,37 @@
+{#
+Adaptation of the alphagov accessibleAutocomplete component, with added ancillary elements.
+
+This template will optionally display a label, a hint and an error message, if the relevant
+parameters are provided.
+
+The autocomplete is used with opinionated config values:
+ - autocomplete: true
+ - showAllValues: true
+ - confirmOnBlur: false
+Additionally, a v-style down arrow is used, rather than the default filled in triangle, and
+the placeholder (if one is provided through the parameters) is configured to disappear as
+soon as the field is clicked on to prevent it from overlapping with the text that is
+displayed in the field due to the 'autocomplete' option being set to true.
+
+Parameters:
+ @param id: id of the autocomplete field. Optional elements (label, hint, error) will
+            either reference this id or have their own ids built based on this one, as
+            appropriate in each case
+ @param nonce: nonce for the js script running the accessibleAutocomplete component
+ @param list: the list of valid values
+ @param [value]: the currently selected value for the field. If set, must be one of the
+               value provided in the 'list' parameter, or null/undefined
+ @param [class]: class for the overall div element that will contain the autoselect and the
+               other optional elements
+ @param [errorMessage.text]: error text to display (if any)
+ @param [label.text]: text for the autocomplete field's label (if any)
+ @param [label.class]: classes for the autocomplete field's label (if any). The label (if
+                     one is to be displayed) will always have the 'govuk-label' class.
+                     This field is for additional classes
+ @param [hint]: text for a field hint (if any)
+ @param [placeholder]: placeholder to display in the field if empty
+#}
+
 <div class="govuk-form-group {{ params.class }} {% if params.errorMessage %}govuk-form-group--error{% endif %}">
     {% if params.label %}
         <label class="govuk-label {{ params.label.class }}" for="{{ params.id }}">
@@ -14,8 +48,8 @@
       <span class="govuk-visually-hidden">Error: </span>{{ params.errorMessage.text }}
     </span>
     {% endif %}
-    <select id="{{ params.id }}" name="{{ params.id }}"class="govuk-body">
-        <option value="" {% if not params.value %}selected{% endif %}>{{ params.defaultValue }}</option>
+    <select id="{{ params.id }}" name="{{ params.id }}" class="govuk-body" data-gov-select-autocomplete="true">
+        <option value="" disabled {% if not params.value %}selected{% endif %}></option>
         {% for item in params.list %}
             <option value="{{item.value}}" {% if item.value === params.value %}selected{% endif %}>{{item.text}}</option>
         {% endfor %}
@@ -27,7 +61,10 @@
         autoselect: true,
         showAllValues: true,
         confirmOnBlur: false,
-        dropdownArrow: vStyleDropdownArrow
+        dropdownArrow: vStyleDropdownArrow,
+        placeholder: '{{ params.placeholder }}',
+        inputClasses: 'disappear-on-focus-placeholder',
+        menuClasses: 'moj-task-list__item', // menu items don't get the right font without this for unknown reasons
       })
     </script>
 </div>
