@@ -9,6 +9,7 @@ interface Fn {
     checkWhetherToCacheDataFn: (data: Type) => boolean
     userId: string
     redisKey: string
+    ttlOverrideSeconds?: number
   }): Promise<Type>
 }
 
@@ -23,7 +24,7 @@ export const mrdApiCache = async () => {
   return apiCache
 }
 
-const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey }) => {
+const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey, ttlOverrideSeconds }) => {
   const apiResponse = await fetchDataFn()
   const cache = await mrdApiCache()
   try {
@@ -40,7 +41,7 @@ const fetchAndCache: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userI
           newValueToCache.userIds = dedupedUserIds
         }
         cache.set(redisKey, JSON.stringify(newValueToCache))
-        cache.expire(redisKey, TTL_SECONDS)
+        cache.expire(redisKey, ttlOverrideSeconds || TTL_SECONDS)
       } else {
         cache.del(redisKey)
       }
@@ -60,7 +61,13 @@ export const getValue = async (redisKey: string) => {
   return undefined
 }
 
-export const fetchFromCacheOrApi: Fn = async ({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey }) => {
+export const fetchFromCacheOrApi: Fn = async ({
+  fetchDataFn,
+  checkWhetherToCacheDataFn,
+  userId,
+  redisKey,
+  ttlOverrideSeconds,
+}) => {
   const stored = await getValue(redisKey)
   if (stored) {
     logger.info(`Redis cache hit for ${redisKey}`)
@@ -68,7 +75,7 @@ export const fetchFromCacheOrApi: Fn = async ({ fetchDataFn, checkWhetherToCache
       const { userIds, data } = stored
       if (userIds.includes(userId)) {
         // start a fetch to update the cache, but don't wait for it
-        fetchAndCache({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey })
+        fetchAndCache({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey, ttlOverrideSeconds })
         return data
       }
     } catch (err) {
@@ -77,5 +84,5 @@ export const fetchFromCacheOrApi: Fn = async ({ fetchDataFn, checkWhetherToCache
   } else {
     logger.info(`Redis cache miss for ${redisKey}`)
   }
-  return fetchAndCache({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey })
+  return fetchAndCache({ fetchDataFn, checkWhetherToCacheDataFn, userId, redisKey, ttlOverrideSeconds })
 }

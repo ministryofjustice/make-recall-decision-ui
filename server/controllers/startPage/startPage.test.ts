@@ -3,6 +3,7 @@ import { startPage } from './startPage'
 import { ppudSearchActiveUsers, searchMappedUsers } from '../../data/makeDecisionApiClient'
 import searchMappedUsersApiResponse from '../../../api/responses/searchMappedUsers.json'
 import ppudSearchActiveUsersApiResponse from '../../../api/responses/ppudSearchActiveUsers.json'
+import * as caching from '../../data/fetchFromCacheOrApi'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -13,12 +14,24 @@ describe('startPage', () => {
     expect(res.locals.searchEndpoint).toEqual('/search-by-name')
     expect(res.render).toHaveBeenCalledWith('pages/startPage')
   })
-  it('with PPCS role', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
+  it('with PPCS role and caches ppud user', async () => {
+    const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username', userId: '123' } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
     ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce(ppudSearchActiveUsersApiResponse)
+    const spy = jest.spyOn(caching, 'fetchFromCacheOrApi')
+    spy.mockReturnValueOnce(Promise.resolve(ppudSearchActiveUsersApiResponse))
+
     await startPage(mockReq(), res)
+
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenNthCalledWith(1, {
+      checkWhetherToCacheDataFn: expect.any(Function),
+      fetchDataFn: expect.any(Function),
+      redisKey: `ppudUserResponse:${res.locals.user.username}`,
+      ttlOverrideSeconds: 60 * 60 * 24 * 7,
+      userId: res.locals.user.userId,
+    })
     expect(res.locals.validMappingAndPpudUser).toEqual(true)
   })
   it('with PPCS role and no mapped user', async () => {

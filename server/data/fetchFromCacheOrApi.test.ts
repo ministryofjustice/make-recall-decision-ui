@@ -114,6 +114,28 @@ describe('fetchFromCacheOrApi', () => {
         })
       )
     })
+
+    it('when supplied, the time to live override (ttlOverrideSeconds) should be passed to expire() and override the default', async () => {
+      redisGet.mockResolvedValue(null)
+      fetchDataFn.mockResolvedValue(apiData)
+      const data = await fetchFromCacheOrApi({
+        fetchDataFn,
+        checkWhetherToCacheDataFn,
+        userId: currentUserId,
+        redisKey,
+        ttlOverrideSeconds: 5,
+      })
+
+      expect(data).toEqual(apiData)
+      expect(redisSet).toHaveBeenCalledWith(
+        redisKey,
+        JSON.stringify({
+          userIds: [currentUserId],
+          data: apiData,
+        })
+      )
+      expect(redisExpire).toHaveBeenCalledWith(redisKey, 5)
+    })
   })
 
   describe('CRN is excluded or restricted', () => {
