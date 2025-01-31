@@ -1,9 +1,9 @@
-import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { mockNext, mockReq, mockRes } from '../../../middleware/testutils/mockRequestUtils'
+import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../../data/makeDecisionApiClient'
 import checkBookingDetailsController from './checkBookingDetailsController'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 
-jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../../data/makeDecisionApiClient')
 
 const prisonOffenderFirstName = 'ANNE'
 const prisonOffenderMiddleName = 'C'
@@ -92,7 +92,7 @@ const STATUSES_TEMPLATE = [
 
 describe('get', () => {
   beforeEach(() => {
-    jest.mock('../../utils/utils', () => ({
+    jest.mock('../../../utils/utils', () => ({
       ...jest.requireActual('../../utils/utils'),
       convertToTitleCase: (name: string) => {
         switch (name) {

@@ -78,7 +78,7 @@ import alreadyExistingController from '../controllers/recommendation/alreadyExis
 import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
-import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
+import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
