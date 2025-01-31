@@ -15,6 +15,7 @@ import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { checkIfAddressesAreEmpty } from '../../utils/addressChecker'
 import { currentHighestRosh } from '../recommendations/helpers/rosh'
+import { NamedFormError } from '../../@types/pagesForms'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -207,115 +208,25 @@ async function post(req: Request, res: Response, next: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const errors = []
+  const errors: NamedFormError[] = []
 
-  const recommendation = await getRecommendation(recommendationId, token)
+  const { bookRecallToPpud } = await getRecommendation(recommendationId, token)
 
-  if (!hasValue(recommendation.bookRecallToPpud.gender) || recommendation.bookRecallToPpud.gender.length === 0) {
-    const errorId = 'missingGender'
-    errors.push(
-      makeErrorObject({
-        id: 'gender',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
 
-  if (!hasValue(recommendation.bookRecallToPpud.ethnicity) || recommendation.bookRecallToPpud.ethnicity.length === 0) {
-    const errorId = 'missingEthnicity'
-    errors.push(
-      makeErrorObject({
-        id: 'ethnicity',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
 
-  if (
-    !hasValue(recommendation.bookRecallToPpud.legislationReleasedUnder) ||
-    recommendation.bookRecallToPpud.legislationReleasedUnder.length === 0
-  ) {
-    const errorId = 'missingLegislationReleasedUnder'
-    errors.push(
-      makeErrorObject({
-        id: 'legislationReleasedUnder',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'legislationReleasedUnder', 'missingLegislationReleasedUnder', errors)
 
-  if (
-    !hasValue(recommendation.bookRecallToPpud.custodyType) ||
-    recommendation.bookRecallToPpud.custodyType.length === 0
-  ) {
-    const errorId = 'missingCustodyType'
-    errors.push(
-      makeErrorObject({
-        id: 'custodyType',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'custodyType', 'missingCustodyType', errors)
 
-  if (
-    !hasValue(recommendation.bookRecallToPpud.probationArea) ||
-    recommendation.bookRecallToPpud.probationArea.length === 0
-  ) {
-    const errorId = 'missingProbationArea'
-    errors.push(
-      makeErrorObject({
-        id: 'probationArea',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
 
-  if (
-    !hasValue(recommendation.bookRecallToPpud.policeForce) ||
-    recommendation.bookRecallToPpud.policeForce.length === 0
-  ) {
-    const errorId = 'missingPoliceForce'
-    errors.push(
-      makeErrorObject({
-        id: 'policeForce',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'policeForce', 'missingPoliceForce', errors)
 
-  if (
-    !hasValue(recommendation.bookRecallToPpud.releasingPrison) ||
-    recommendation.bookRecallToPpud.releasingPrison.length === 0
-  ) {
-    const errorId = 'missingReleasingPrison'
-    errors.push(
-      makeErrorObject({
-        id: 'releasingPrison',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'releasingPrison', 'missingReleasingPrison', errors)
 
-  if (
-    !hasValue(recommendation.bookRecallToPpud.mappaLevel) ||
-    recommendation.bookRecallToPpud.mappaLevel.length === 0
-  ) {
-    const errorId = 'missingMappaLevel'
-    errors.push(
-      makeErrorObject({
-        id: 'mappaLevel',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  validateBookRecallToPpudField(bookRecallToPpud, 'mappaLevel', 'missingMappaLevel', errors)
 
   if (errors.length > 0) {
     req.session.errors = errors
@@ -326,6 +237,25 @@ async function post(req: Request, res: Response, next: NextFunction) {
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()
+
+  function validateBookRecallToPpudField(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    bookRecallToPpud: BookRecallToPpud,
+    fieldName: keyof BookRecallToPpud,
+    errorId: string,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    errors: NamedFormError[]
+  ) {
+    if (!hasValue(bookRecallToPpud[fieldName]) || bookRecallToPpud[fieldName].length === 0) {
+      errors.push(
+        makeErrorObject({
+          id: fieldName,
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+  }
 }
 
 export default { get, post }
