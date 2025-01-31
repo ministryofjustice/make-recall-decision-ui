@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { currentHighestRosh } from './checkBookingDetailsController'
+import { currentHighestRosh } from './ppcs/checkBookingDetailsController'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
