@@ -86,7 +86,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'bookingSummary' })
     expect(res.locals.offence).toEqual(RECOMMENDATION_TEMPLATE.nomisIndexOffence.allOptions[0])
     expect(res.locals.recallReceived).toEqual('2023-11-13T09:49:31.777Z')
-    expect(res.locals.currentHighestRosh).toEqual('HIGH')
+    expect(res.locals.currentHighestRosh).toEqual('High')
     expect(res.locals.practitioner).toEqual({
       name: 'dudette',
       email: 'dudette@me.com',

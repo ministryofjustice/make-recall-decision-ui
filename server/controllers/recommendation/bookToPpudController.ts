@@ -20,6 +20,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
+import { generateRecallMinuteText } from '../recommendations/helpers/ppudMinutes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -129,16 +130,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       memento = await uploadAdditionalDocument(memento, recommendationId, id, token, flags)
     }
 
-    if (recommendation.bookRecallToPpud?.minute) {
-      memento = await createMinute(
-        memento,
-        recommendationId,
-        'Notes regarding documents added from Consider a Recall',
-        recommendation.bookRecallToPpud?.minute,
-        token,
-        flags
-      )
-    }
+    memento = await createMinute(memento, recommendationId, '', generateRecallMinuteText(recommendation), token, flags)
 
     await updateStatuses({
       recommendationId,

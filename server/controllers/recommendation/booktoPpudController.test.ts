@@ -189,8 +189,18 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('post - happy path - with SupportingDocuments', async () => {
-    const recommendation = { id: '12345', bookRecallToPpud: { minute: 'a minute' } }
+  it('post - happy path - with SupportingDocuments and additional minute', async () => {
+    const recommendation = {
+      id: '12345',
+      bookRecallToPpud: { minute: 'a minute' },
+      currentRoshForPartA: {
+        riskToStaff: 'VERY_HIGH',
+        riskToPublic: 'HIGH',
+        riskToChildren: 'LOW',
+        riskToPrisoners: 'NOT_APPLICABLE',
+        riskToKnownAdult: 'MEDIUM',
+      },
+    }
     const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
@@ -400,8 +410,13 @@ describe('post', () => {
     expect(createMinute).toHaveBeenCalledWith(
       { uploaded: ['9'] },
       '1',
-      'Notes regarding documents added from Consider a Recall',
-      'a minute',
+      '',
+      'BACKGROUND INFO \n' +
+        'Extended sentence: NO\n' +
+        'Risk of Serious Harm Level: VERY HIGH\n' +
+        'In custody: NO\n' +
+        'Notes regarding documents added from Consider a Recall:\n' +
+        'a minute',
       'token',
       flags
     )
@@ -417,8 +432,18 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('post - create minute should not be called when no minute is supplied', async () => {
-    const recommendation = { id: '12345', bookRecallToPpud: { minute: 'a minute' } }
+  it('post - create minute called without additional minute', async () => {
+    const recommendation = {
+      id: '12345',
+      bookRecallToPpud: {},
+      currentRoshForPartA: {
+        riskToStaff: 'VERY_HIGH',
+        riskToPublic: 'HIGH',
+        riskToChildren: 'LOW',
+        riskToPrisoners: 'NOT_APPLICABLE',
+        riskToKnownAdult: 'MEDIUM',
+      },
+    }
     const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
@@ -445,11 +470,11 @@ describe('post', () => {
 
     await bookToPpudController.post(req, res, next)
 
-    expect(createMinute).not.toHaveBeenCalledWith(
-      { uploaded: ['9'] },
+    expect(createMinute).toHaveBeenCalledWith(
+      { stage: 'RECALL_BOOKED' },
       '1',
-      'Notes regarding documents added from Consider a Recall',
-      'a minute',
+      '',
+      'BACKGROUND INFO \nExtended sentence: NO\nRisk of Serious Harm Level: VERY HIGH\nIn custody: NO',
       'token',
       flags
     )
