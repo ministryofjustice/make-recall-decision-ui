@@ -11,6 +11,7 @@ import { StageEnum } from '../../booking/StageEnum'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
+import { generateRecallMinuteText } from '../recommendations/helpers/ppudMinutes'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -22,6 +23,7 @@ jest.mock('../../booking/uploadMandatoryDocument')
 jest.mock('../../booking/uploadAdditionalDocument')
 jest.mock('../../booking/createMinute')
 jest.mock('../../monitoring/azureAppInsights')
+jest.mock('../recommendations/helpers/ppudMinutes')
 
 const LOCALS_PAGE_TEMPLATE = {
   user: {
@@ -189,17 +191,9 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('post - happy path - with SupportingDocuments and additional minute', async () => {
+  it('post - happy path - with SupportingDocuments', async () => {
     const recommendation = {
       id: '12345',
-      bookRecallToPpud: { minute: 'a minute' },
-      currentRoshForPartA: {
-        riskToStaff: 'VERY_HIGH',
-        riskToPublic: 'HIGH',
-        riskToChildren: 'LOW',
-        riskToPrisoners: 'NOT_APPLICABLE',
-        riskToKnownAdult: 'MEDIUM',
-      },
     }
     const flags = {}
 
@@ -223,6 +217,7 @@ describe('post', () => {
     ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
     ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
     ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
+    ;(generateRecallMinuteText as jest.Mock).mockReturnValue('a minute')
 
     const PPUDPartA = {
       title: '',
@@ -407,19 +402,9 @@ describe('post', () => {
       flags
     )
 
-    expect(createMinute).toHaveBeenCalledWith(
-      { uploaded: ['9'] },
-      '1',
-      '',
-      'BACKGROUND INFO \n' +
-        'Extended sentence: NO\n' +
-        'Risk of Serious Harm Level: VERY HIGH\n' +
-        'In custody: NO\n' +
-        'Notes regarding documents added from Consider a Recall:\n' +
-        'a minute',
-      'token',
-      flags
-    )
+    expect(createMinute).toHaveBeenCalledWith({ uploaded: ['9'] }, '1', '', 'a minute', 'token', flags)
+
+    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
@@ -430,54 +415,6 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
     expect(next).not.toHaveBeenCalled()
-  })
-
-  it('post - create minute called without additional minute', async () => {
-    const recommendation = {
-      id: '12345',
-      bookRecallToPpud: {},
-      currentRoshForPartA: {
-        riskToStaff: 'VERY_HIGH',
-        riskToPublic: 'HIGH',
-        riskToChildren: 'LOW',
-        riskToPrisoners: 'NOT_APPLICABLE',
-        riskToKnownAdult: 'MEDIUM',
-      },
-    }
-    const flags = {}
-
-    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
-
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      params: { recommendationId: '1' },
-    })
-
-    const res = mockRes({
-      locals: {
-        urlInfo: { basePath },
-        flags,
-      },
-    })
-    const next = mockNext()
-
-    ;(bookOffender as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENDER_BOOKED })
-    ;(createOrUpdateSentence as jest.Mock).mockResolvedValue({ stage: StageEnum.SENTENCE_BOOKED })
-    ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
-    ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
-    ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
-    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([])
-
-    await bookToPpudController.post(req, res, next)
-
-    expect(createMinute).toHaveBeenCalledWith(
-      { stage: 'RECALL_BOOKED' },
-      '1',
-      '',
-      'BACKGROUND INFO \nExtended sentence: NO\nRisk of Serious Harm Level: VERY HIGH\nIn custody: NO',
-      'token',
-      flags
-    )
   })
 
   it('post - exception', async () => {

@@ -41,13 +41,6 @@ describe('update recall', () => {
         selected: true,
         details: 'Contraband detail...',
       },
-      currentRoshForPartA: {
-        riskToChildren: 'LOW',
-        riskToPublic: 'HIGH',
-        riskToKnownAdult: 'MEDIUM',
-        riskToStaff: 'VERY_HIGH',
-        riskToPrisoners: 'NOT_APPLICABLE',
-      },
     } as unknown as RecommendationResponse
 
     ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
