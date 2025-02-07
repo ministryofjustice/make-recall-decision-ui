@@ -7,5 +7,4 @@ export type PpudCreateRecallRequest = {
   probationArea: string,
   receivedDateTime: string,
   riskOfContrabandDetails: string,
-  riskOfSeriousHarmLevel: string,
 };

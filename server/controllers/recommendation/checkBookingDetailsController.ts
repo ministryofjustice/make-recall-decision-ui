@@ -13,8 +13,8 @@ import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-
 import { formatDateTimeFromIsoString } from '../../utils/dates/format'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-
 import { checkIfAddressesAreEmpty } from '../../utils/addressChecker'
+import { currentHighestRosh } from '../recommendations/helpers/rosh'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -190,9 +190,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   res.render(`pages/recommendations/checkBookingDetails`)
   next()
+
   function convertToTitleCaseIfRequired(name: string): string {
     return requiresTitleCaseConversion(name) ? convertToTitleCase(name) : name
   }
+
   function requiresTitleCaseConversion(name: string): boolean {
     return name && name.toUpperCase() === name
   }
@@ -327,65 +329,3 @@ async function post(req: Request, res: Response, next: NextFunction) {
 }
 
 export default { get, post }
-
-type Rosh = {
-  riskToChildren: string
-  riskToPublic: string
-  riskToKnownAdult: string
-  riskToStaff: string
-  riskToPrisoners: string
-}
-
-export function currentHighestRosh(rosh?: Rosh | null) {
-  if (rosh === undefined || rosh === null) {
-    return undefined
-  }
-
-  const values = []
-
-  function mapToNumber(val: string) {
-    if (val === 'VERY_HIGH') {
-      return 1
-    }
-    if (val === 'HIGH') {
-      return 2
-    }
-    if (val === 'MEDIUM') {
-      return 3
-    }
-    if (val === 'LOW') {
-      return 4
-    }
-    if (val === 'NOT_APPLICABLE') {
-      return 5
-    }
-  }
-
-  function mapFromNumber(val: number) {
-    if (val === 1) {
-      return 'VERY_HIGH'
-    }
-    if (val === 2) {
-      return 'HIGH'
-    }
-    if (val === 3) {
-      return 'MEDIUM'
-    }
-    if (val === 4) {
-      return 'LOW'
-    }
-    if (val === 5) {
-      return 'NOT_APPLICABLE'
-    }
-  }
-
-  values.push(mapToNumber(rosh.riskToChildren))
-  values.push(mapToNumber(rosh.riskToPublic))
-  values.push(mapToNumber(rosh.riskToKnownAdult))
-  values.push(mapToNumber(rosh.riskToStaff))
-  values.push(mapToNumber(rosh.riskToPrisoners))
-
-  values.sort()
-
-  return mapFromNumber(values[0])
-}

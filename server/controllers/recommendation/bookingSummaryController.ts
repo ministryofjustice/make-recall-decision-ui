@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { currentHighestRosh } from './checkBookingDetailsController'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { currentHighestRosh } from '../recommendations/helpers/rosh'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, statuses } = res.locals

@@ -1,35 +1,21 @@
 {% extends "../../partials/layout.njk" %}
 
-{% macro getRiskLevelText(level) %}
-    {% if level == 'VERY_HIGH' %}
-        Very high
-    {% elif level == 'HIGH' %}
-        High
-    {% elif level == 'MEDIUM' %}
-        Medium
-    {% elif level == 'LOW' %}
-        Low
-    {% elif level == 'NOT_APPLICABLE' %}
-        Not applicable
-    {% endif %}
-{% endmacro %}
-
 {% macro formatAddress(address) %}
     {% if not address.noFixedAbode %}
-     <p class="govuk-body">
-        {% if address.line1 %}
-            {{ address.line1 }},
-        {% endif %}
-        {% if address.line2 %}
-            {{ address.line2 }},
-        {% endif %}
-        {% if address.town %}
-            {{ address.town }},
-        {% endif %}
-        {% if address.postcode %}
-            {{ address.postcode }}
-        {% endif %}
-    </p>
+        <p class="govuk-body">
+            {% if address.line1 %}
+                {{ address.line1 }},
+            {% endif %}
+            {% if address.line2 %}
+                {{ address.line2 }},
+            {% endif %}
+            {% if address.town %}
+                {{ address.town }},
+            {% endif %}
+            {% if address.postcode %}
+                {{ address.postcode }}
+            {% endif %}
+        </p>
     {% endif %}
 {% endmacro %}
 
@@ -38,7 +24,8 @@
         {{ value }}
     {% else %}
         {% if mandatory %}
-            <svg class="govuk-icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+            <svg class="govuk-icon" fill="currentColor" role="presentation" focusable="false"
+                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
                 <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8 C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"></path>
             </svg>
             {{ message }}
@@ -54,15 +41,17 @@
     {{ backLink() }}
 {% endblock %}
 
+{% set fullName = [recommendation.bookRecallToPpud.firstNames, " ", recommendation.bookRecallToPpud.lastName] | join %}
+
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include '../../partials/error-summary.njk' %}
+            {% include '../../partials/error-summary.njk' %}
 
-            <h1 class='govuk-heading-l'>Your recall booking - {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
+            <h1 class='govuk-heading-l'>Your recall booking - {{ fullName }}</h1>
 
             <a class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'
-                           href='/recommendations/{{ recommendation.id }}/book-to-ppud'>Continue</a>
+               href='/recommendations/{{ recommendation.id }}/book-to-ppud'>Continue</a>
 
             <h2 class='govuk-heading-m govuk-!-margin-top-8'>
                 Sentence
@@ -139,7 +128,7 @@
                 {% else %}
                     {% for term in offence.terms %}
                         <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key" data-qa="{{loop.index}}-termType">
+                            <dt class="govuk-summary-list__key" data-qa="{{ loop.index }}-termType">
                                 {% if term.code === "IMP" %}
                                     Custodial term
                                 {% endif %}
@@ -147,8 +136,8 @@
                                     Extended term
                                 {% endif %}
                             </dt>
-                            <dd class="govuk-summary-list__value" data-qa="{{loop.index}}-term">
-                                <div>{{ hyphenForBlank(formatTerm(term))}}</div>
+                            <dd class="govuk-summary-list__value" data-qa="{{ loop.index }}-term">
+                                <div>{{ hyphenForBlank(formatTerm(term)) }}</div>
                             </dd>
                         </div>
                     {% endfor %}
@@ -190,9 +179,9 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         {% if recommendation.prisonOffender.image %}
-                        <img src="{{ recommendation.prisonOffender.image }}"/>
+                            <img src="{{ recommendation.prisonOffender.image }}" />
                         {% else %}
-                        - <span class="govuk-visually-hidden">no value</span>
+                            - <span class="govuk-visually-hidden">no value</span>
                         {% endif %}
                     </dd>
                 </div>
@@ -246,7 +235,7 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         {{ blankSafe(
-                        formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
+                            formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
                     </dd>
 
                 </div>
@@ -442,7 +431,7 @@
                         Current risk of serious harm
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        {{ getRiskLevelText(currentHighestRosh) }}
+                        {{ currentHighestRosh }}
                     </dd>
                 </div>
             </dl>

@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
-import checkBookingDetailsController, { currentHighestRosh } from './checkBookingDetailsController'
+import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -538,63 +538,5 @@ describe('post', () => {
     ])
 
     expect(next).not.toHaveBeenCalled()
-  })
-})
-
-describe('rosh', () => {
-  it('mappings', async () => {
-    expect(currentHighestRosh(undefined)).toEqual(undefined)
-
-    expect(currentHighestRosh(null)).toEqual(undefined)
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'HIGH',
-        riskToPublic: 'LOW',
-        riskToStaff: 'MEDIUM',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'MEDIUM',
-      })
-    ).toEqual('HIGH')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'LOW',
-        riskToPublic: 'LOW',
-        riskToStaff: 'VERY_HIGH',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'MEDIUM',
-      })
-    ).toEqual('VERY_HIGH')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'LOW',
-        riskToPublic: 'MEDIUM',
-        riskToStaff: 'LOW',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'LOW',
-      })
-    ).toEqual('MEDIUM')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'LOW',
-        riskToPublic: 'LOW',
-        riskToStaff: 'LOW',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'LOW',
-      })
-    ).toEqual('LOW')
-
-    expect(
-      currentHighestRosh({
-        riskToPrisoners: 'NOT_APPLICABLE',
-        riskToPublic: 'NOT_APPLICABLE',
-        riskToStaff: 'NOT_APPLICABLE',
-        riskToKnownAdult: 'NOT_APPLICABLE',
-        riskToChildren: 'NOT_APPLICABLE',
-      })
-    ).toEqual('NOT_APPLICABLE')
   })
 })

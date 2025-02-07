@@ -1,19 +1,5 @@
 {% extends "../../partials/layout.njk" %}
 
-{% macro getRiskLevelText(level) %}
-    {% if level == 'VERY_HIGH' %}
-        Very high
-        {% elif level == 'HIGH' %}
-        High
-        {% elif level == 'MEDIUM' %}
-        Medium
-        {% elif level == 'LOW' %}
-        Low
-        {% elif level == 'NOT_APPLICABLE' %}
-        Not applicable
-    {% endif %}
-{% endmacro %}
-
 {% macro formatAddress(address) %}
     {% if not address.noFixedAbode %}
         <p class="govuk-body">
@@ -457,7 +443,7 @@
                             Current risk of serious harm
                         </div>
                         <div class="govuk-summary-list__value">
-                            {{ getRiskLevelText(currentHighestRosh) }}
+                            {{ currentHighestRosh }}
                         </div>
                     </div>
                 </div>
