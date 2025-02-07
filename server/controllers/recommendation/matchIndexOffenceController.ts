@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { isDefined } from '../../utils/utils'
+import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
@@ -41,7 +41,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { indexOffence } = req.body
+  const { indexOffence, indexOffenceComment } = req.body
 
   const {
     user: { token },
@@ -70,6 +70,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         indexOffence,
+        indexOffenceComment: isEmptyStringOrWhitespace(indexOffenceComment) ? null : indexOffenceComment,
       },
     },
     token,

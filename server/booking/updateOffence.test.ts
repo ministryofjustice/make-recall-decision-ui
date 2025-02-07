@@ -30,6 +30,7 @@ describe('update offence', () => {
       id: '1',
       bookRecallToPpud: {
         indexOffence: 'index offence',
+        indexOffenceComment: 'index offence comment',
       },
       nomisIndexOffence: {
         allOptions: [
@@ -58,6 +59,7 @@ describe('update offence', () => {
 
     expect(ppudUpdateOffence).toHaveBeenCalledWith('token', '767', '444', {
       indexOffence: 'index offence',
+      indexOffenceComment: 'index offence comment',
       dateOfIndexOffence: '2016-01-01',
     })
 

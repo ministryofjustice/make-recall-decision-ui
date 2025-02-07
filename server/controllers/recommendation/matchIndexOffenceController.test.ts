@@ -74,6 +74,7 @@ describe('post', () => {
       params: { recommendationId: '1' },
       body: {
         indexOffence: 'some offence',
+        indexOffenceComment: 'some comment',
       },
     })
 
@@ -95,6 +96,7 @@ describe('post', () => {
         bookRecallToPpud: {
           policeForce: 'Kent',
           indexOffence: 'some offence',
+          indexOffenceComment: 'some comment',
         },
       },
       token: 'token1',
@@ -144,6 +146,7 @@ describe('post', () => {
         bookRecallToPpud: {
           policeForce: 'Kent',
           indexOffence: 'some offence',
+          indexOffenceComment: null,
         },
       },
       token: 'token1',
