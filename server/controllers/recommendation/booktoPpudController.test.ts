@@ -402,7 +402,14 @@ describe('post', () => {
       flags
     )
 
-    expect(createMinute).toHaveBeenCalledWith({ uploaded: ['9'] }, '1', '', 'a minute', 'token', flags)
+    expect(createMinute).toHaveBeenCalledWith(
+      { uploaded: ['9'] },
+      '1',
+      'BACKGROUND INFO...',
+      'a minute',
+      'token',
+      flags
+    )
 
     expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
 
