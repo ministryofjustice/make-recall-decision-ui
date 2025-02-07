@@ -130,7 +130,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
       memento = await uploadAdditionalDocument(memento, recommendationId, id, token, flags)
     }
 
-    memento = await createMinute(memento, recommendationId, '', generateRecallMinuteText(recommendation), token, flags)
+    memento = await createMinute(
+      memento,
+      recommendationId,
+      'BACKGROUND INFO...',
+      generateRecallMinuteText(recommendation),
+      token,
+      flags
+    )
 
     await updateStatuses({
       recommendationId,
