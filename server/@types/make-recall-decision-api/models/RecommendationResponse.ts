@@ -167,6 +167,7 @@ export type BookRecallToPpud = {
   receivedDateTime?: string,
   custodyType?: string,
   indexOffence?: string,
+  indexOffenceComment?: string,
   ppudSentenceId?: string,
   mappaLevel?: string,
   policeForce?: string,

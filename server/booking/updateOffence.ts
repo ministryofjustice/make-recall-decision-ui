@@ -22,6 +22,7 @@ export default async function updateOffence(
 
   await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
     indexOffence: recommendation.bookRecallToPpud?.indexOffence,
+    indexOffenceComment: recommendation.bookRecallToPpud?.indexOffenceComment,
     dateOfIndexOffence: nomisOffence.offenceDate,
   })
 

@@ -15,18 +15,21 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                <p class='govuk-body'>You selected this index offence.  Now select the nearest match from the list in PPUD.</p>
+                <p class='govuk-body'>You selected this index offence. Now select the nearest match from the list in
+                    PPUD.</p>
 
                 <div class="govuk-inset-text">
                     <div class="govuk-text-list">
                         <h2 class='govuk-heading-s' data-qa="offenceDescription">{{ offence.offenceDescription }}A</h2>
                         <div class="govuk-text-list__row">
                             <div class="govuk-text-list__key">Start date</div>
-                            <div class="govuk-text-list__value" data-qa="sentenceStartDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </div>
+                            <div class="govuk-text-list__value"
+                                 data-qa="sentenceStartDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </div>
                         </div>
                         <div class="govuk-text-list__row">
                             <div class="govuk-text-list__key">Sentence expiry date</div>
-                            <div class="govuk-text-list__value" data-qa="sentenceEndDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </div>
+                            <div class="govuk-text-list__value"
+                                 data-qa="sentenceEndDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </div>
                         </div>
                     </div>
                 </div>
@@ -43,8 +46,17 @@
                     value: recommendation.bookRecallToPpud.indexOffence,
                     placeholder: 'Search for an offence',
                     nonce: cspNonce
-                })
-                }}
+                }) }}
+
+                {{ govukTextarea({
+                    name: "indexOffenceComment",
+                    id: "indexOffenceComment",
+                    label: {
+                        text: 'Add comments, including any additional offences (optional)',
+                        class: 'govuk-label--m'
+                    },
+                    value: recommendation.bookRecallToPpud.indexOffenceComment
+                }) }}
 
                 {{ formSubmitButton() }}
             </form>
