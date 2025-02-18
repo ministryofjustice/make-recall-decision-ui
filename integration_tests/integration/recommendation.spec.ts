@@ -2266,6 +2266,29 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Edit custody type')
     })
 
+    it('edit Current Establishment', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: {
+            currentEstablishment: 'The Kiln',
+          },
+          ppudOffender: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getReferenceList', {
+        name: 'establishments',
+        statusCode: 200,
+        response: { values: ['The Kiln'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-current-establishment`)
+      cy.pageHeading().should('contain', 'Edit current establishment')
+    })
+
     it('edit Received Date and Time', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

@@ -8,6 +8,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingOdmName: 'Provide an out-of-hours manager name',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Enter custody type',
+    missingCurrentEstablishment: 'Select an establishment from the list',
     missingPoliceForce: 'Enter police force',
     missingMappaLevel: 'Enter MAPPA level',
     missingGender: 'Enter gender',

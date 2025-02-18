@@ -65,6 +65,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
           ethnicity: nomisPrisonOffender.physicalAttributes.ethnicity,
           cro: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
           pnc: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
+          establishment: '', // TODO get establishment
         }
         recommendation.prisonOffender = valuesToSave.prisonOffender
       }
