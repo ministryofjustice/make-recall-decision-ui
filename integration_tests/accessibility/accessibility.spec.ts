@@ -129,6 +129,7 @@ const ppcsUrls = [
   recommendationEndpoint('edit-releasing-prison', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-legislation-released-under', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-custody-type', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-current-establishment', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-recall-received-date-and-time', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-probation-area', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-mappa-level', ['SENT_TO_PPCS']),

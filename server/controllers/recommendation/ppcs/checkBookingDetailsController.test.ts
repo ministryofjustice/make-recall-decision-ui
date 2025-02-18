@@ -150,6 +150,7 @@ describe('get', () => {
           status: PRISON_OFFENDER_TEMPLATE.status,
           gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
           locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
+          establishment: '', // TODO update once establishment retrieved
         },
         bookRecallToPpud: {
           dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
@@ -177,6 +178,7 @@ describe('get', () => {
       status: PRISON_OFFENDER_TEMPLATE.status,
       gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
       locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
+      establishment: '', // TODO update once establishment retrieved
     })
     expect(res.locals.spoSigned).toEqual(SPO_SIGNED_STATUS_TEMPLATE)
     expect(res.locals.acoSigned).toEqual(ACO_SIGNED_STATUS_TEMPLATE)
