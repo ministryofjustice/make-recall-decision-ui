@@ -1,8 +1,6 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
-import { isInCustody } from '../helpers/isInCustody'
-import { CustodyStatus } from '../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
@@ -43,20 +41,12 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
       },
     }
   }
-  const inCustody = isInCustody(custodyStatus as CustodyStatus.selected)
-  const resets = inCustody
-    ? {
-        hasArrestIssues: null,
-        localPoliceContact: null,
-      }
-    : {}
   const valuesToSave = {
     custodyStatus: {
       selected: custodyStatus,
       details: custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
       allOptions: formOptions.custodyStatus,
     },
-    ...resets,
   }
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'task-list', urlInfo })
   return {
