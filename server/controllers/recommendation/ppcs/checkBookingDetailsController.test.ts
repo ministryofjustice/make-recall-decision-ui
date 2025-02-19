@@ -3,9 +3,11 @@ import { getRecommendation, searchForPrisonOffender, updateRecommendation } from
 import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/format'
+import { mapEstablishment } from './establishmentMapping'
 
 jest.mock('../../../data/makeDecisionApiClient')
 jest.mock('../../../utils/dates/format')
+jest.mock('./establishmentMapping')
 
 const prisonOffenderFirstName = 'ANNE'
 const prisonOffenderMiddleName = 'C'
@@ -24,6 +26,8 @@ const PRISON_OFFENDER_TEMPLATE = {
   lastName: prisonOffenderLastName,
   facialImageId: 1234,
   dateOfBirth: '1970-03-15',
+  agencyId: 'KLN',
+  agencyDescription: 'The Kyln',
   status: 'ACTIVE IN',
   physicalAttributes: {
     gender: 'Male',
@@ -59,6 +63,7 @@ const RECOMMENDATION_TEMPLATE = {
     familyName: 'Harrison',
     dateOfBirth: '1971-02-03',
     prisonNumber: '12345678',
+    establishment: 'Blackgate Penitentiary',
   },
   whoCompletedPartA: {
     localDeliveryUnit: 'who-completed-delivery-unit',
@@ -116,6 +121,8 @@ describe('get', () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
     const formattedPpudDateOfBirth = 'date'
     ;(formatDateTimeFromIsoString as jest.Mock).mockReturnValueOnce(formattedPpudDateOfBirth)
+    const expectedCurrentEstablishment = 'The Kyln in PPUD'
+    ;(mapEstablishment as jest.Mock).mockReturnValueOnce(expectedCurrentEstablishment)
 
     const res = mockRes({
       locals: {
@@ -132,6 +139,8 @@ describe('get', () => {
 
     expect(searchForPrisonOffender).toHaveBeenCalledWith('token', '567Y')
 
+    expect(mapEstablishment).toHaveBeenCalledWith(PRISON_OFFENDER_TEMPLATE.agencyId)
+
     expect(updateRecommendation).toHaveBeenCalledWith({
       featureFlags: { xyz: 1 },
       recommendationId: RECOMMENDATION_TEMPLATE.id,
@@ -145,12 +154,13 @@ describe('get', () => {
           middleName: prisonOffenderMiddleName,
           lastName: prisonOffenderLastName,
           dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
+          agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
+          agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
           ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
           facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
           status: PRISON_OFFENDER_TEMPLATE.status,
           gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
           locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
-          establishment: '', // TODO update once establishment retrieved
         },
         bookRecallToPpud: {
           dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
@@ -159,6 +169,7 @@ describe('get', () => {
           cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
           prisonNumber: PRISON_OFFENDER_TEMPLATE.bookingNo,
           receivedDateTime: SENT_TO_PPCS_STATUS_TEMPLATE.created,
+          currentEstablishment: expectedCurrentEstablishment,
           image: undefined,
         },
       },
@@ -173,12 +184,13 @@ describe('get', () => {
       middleName: prisonOffenderMiddleName,
       lastName: prisonOffenderLastName,
       dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
+      agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
+      agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
       ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
       facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
       status: PRISON_OFFENDER_TEMPLATE.status,
       gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
       locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
-      establishment: '', // TODO update once establishment retrieved
     })
     expect(res.locals.spoSigned).toEqual(SPO_SIGNED_STATUS_TEMPLATE)
     expect(res.locals.acoSigned).toEqual(ACO_SIGNED_STATUS_TEMPLATE)
@@ -412,6 +424,7 @@ describe('post', () => {
         policeForce: 'kent',
         legislationReleasedUnder: 'c 2008',
         probationArea: 'camden',
+        currentEstablishment: 'The Kyln in PPUD',
       },
     })
 
@@ -507,6 +520,14 @@ describe('post', () => {
         href: '#custodyType',
         name: 'custodyType',
         text: 'Enter custody type',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingCurrentEstablishment',
+        href: '#currentEstablishment',
+        name: 'currentEstablishment',
+        text: 'Select an establishment from the list',
         invalidParts: undefined,
         values: undefined,
       },

@@ -9,6 +9,7 @@ import {
   PpudOffender,
   PrisonOffender,
 } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { PPUD_ESTABLISHMENT_NOT_SPECIFIED } from '../establishmentMapping'
 
 describe('extractNomisEstablishment', () => {
   let recommendation: RecommendationResponse
@@ -19,15 +20,15 @@ describe('extractNomisEstablishment', () => {
   })
 
   it('extracts non-null establishment', () => {
-    recommendation.prisonOffender.establishment = 'abc'
+    recommendation.prisonOffender.agencyId = 'abc'
 
     const actualNomisEstablishment = extractNomisEstablishment(recommendation)
 
-    expect(actualNomisEstablishment).toEqual(recommendation.prisonOffender.establishment)
+    expect(actualNomisEstablishment).toEqual(recommendation.prisonOffender.agencyId)
   })
 
   it('extracts undefined establishment', () => {
-    delete recommendation.prisonOffender.establishment
+    delete recommendation.prisonOffender.agencyId
 
     const actualNomisEstablishment = extractNomisEstablishment(recommendation)
 
@@ -114,22 +115,22 @@ describe('extractCurrentEstablishment', () => {
   }
 
   describe('with "Not Specified" available', () => {
-    const validEstablishments = ['abc', 'def', 'ghi', 'Not Specified']
+    const validEstablishments = ['abc', 'def', 'ghi', PPUD_ESTABLISHMENT_NOT_SPECIFIED]
 
     it('extracts valid non-null establishment', () => {
       extractsValidNonNullEstablishment(validEstablishments)
     })
 
     it('extracts invalid non-null establishment', () => {
-      extractsInvalidNonNullEstablishment('jkl', validEstablishments, 'Not Specified')
+      extractsInvalidNonNullEstablishment('jkl', validEstablishments, PPUD_ESTABLISHMENT_NOT_SPECIFIED)
     })
 
     it('extracts undefined establishment', () => {
-      extractsUndefinedEstablishment(validEstablishments, 'Not Specified')
+      extractsUndefinedEstablishment(validEstablishments, PPUD_ESTABLISHMENT_NOT_SPECIFIED)
     })
 
     it('extracts blank/empty establishment', () => {
-      extractsBlankEstablishment(validEstablishments, 'Not Specified')
+      extractsBlankEstablishment(validEstablishments, PPUD_ESTABLISHMENT_NOT_SPECIFIED)
     })
   })
 

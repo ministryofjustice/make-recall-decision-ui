@@ -2273,7 +2273,7 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {
-            currentEstablishment: 'The Kiln',
+            currentEstablishment: 'The Kyln',
           },
           ppudOffender: {},
         },
@@ -2282,7 +2282,7 @@ context('Make a recommendation', () => {
       cy.task('getReferenceList', {
         name: 'establishments',
         statusCode: 200,
-        response: { values: ['The Kiln'] },
+        response: { values: ['The Kyln'] },
       })
 
       cy.visit(`/recommendations/252523937/edit-current-establishment`)

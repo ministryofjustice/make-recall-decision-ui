@@ -17,6 +17,7 @@ import { strings } from '../../../textStrings/en'
 import { checkIfAddressesAreEmpty } from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
+import { mapEstablishment } from './establishmentMapping'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -60,12 +61,13 @@ async function get(_: Request, res: Response, next: NextFunction) {
           middleName: nomisPrisonOffender.middleName,
           lastName: nomisPrisonOffender.lastName,
           dateOfBirth: nomisPrisonOffender.dateOfBirth,
+          agencyId: nomisPrisonOffender.agencyId,
+          agencyDescription: nomisPrisonOffender.agencyDescription,
           status: nomisPrisonOffender.status,
           gender: nomisPrisonOffender.physicalAttributes.gender,
           ethnicity: nomisPrisonOffender.physicalAttributes.ethnicity,
           cro: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
           pnc: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
-          establishment: '', // TODO get establishment
         }
         recommendation.prisonOffender = valuesToSave.prisonOffender
       }
@@ -82,12 +84,14 @@ async function get(_: Request, res: Response, next: NextFunction) {
     let middleName = ''
     let lastName = ''
     let dateOfBirth = ''
+    let currentEstablishment = ''
 
     if (recommendation.prisonOffender) {
       firstName = convertToTitleCaseIfRequired(recommendation.prisonOffender.firstName)
       middleName = convertToTitleCaseIfRequired(recommendation.prisonOffender.middleName)
       lastName = convertToTitleCaseIfRequired(recommendation.prisonOffender.lastName)
       dateOfBirth = recommendation.prisonOffender.dateOfBirth
+      currentEstablishment = mapEstablishment(recommendation.prisonOffender.agencyId)
     }
 
     const sentToPpcs = (statuses as RecommendationStatusResponse[])
@@ -101,6 +105,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       prisonNumber: recommendation.prisonOffender?.bookingNo,
       cro: recommendation.prisonOffender?.cro,
       receivedDateTime: sentToPpcs?.created,
+      currentEstablishment,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   } else {
@@ -221,6 +226,8 @@ async function post(req: Request, res: Response, next: NextFunction) {
   validateBookRecallToPpudField(bookRecallToPpud, 'legislationReleasedUnder', 'missingLegislationReleasedUnder', errors)
 
   validateBookRecallToPpudField(bookRecallToPpud, 'custodyType', 'missingCustodyType', errors)
+
+  validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
 
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
 
