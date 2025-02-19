@@ -135,8 +135,6 @@ describe('post', () => {
             { value: 'NO', text: 'No' },
           ],
         },
-        hasArrestIssues: null,
-        localPoliceContact: null,
       },
       featureFlags: {},
     })

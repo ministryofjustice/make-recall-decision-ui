@@ -8,7 +8,7 @@ describe('validateCustodyStatus', () => {
     path: `/recommendations/${recommendationId}/custody-status`,
   }
 
-  it('returns valuesToSave and no errors if set to "Yes, police custody", and resets arrest issues / local police contact', async () => {
+  it('returns valuesToSave and no errors if set to "Yes, police custody"', async () => {
     const requestBody = {
       custodyStatus: 'YES_POLICE',
       custodyStatusDetailsYesPolice: 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
@@ -26,8 +26,6 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_POLICE',
         details: 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
       },
-      hasArrestIssues: null,
-      localPoliceContact: null,
     })
     expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
@@ -46,7 +44,7 @@ describe('validateCustodyStatus', () => {
     )
   })
 
-  it('returns valuesToSave and no errors if Yes, prison selected, and resets details / arrest issues / local police contact', async () => {
+  it('returns valuesToSave and no errors if "Yes, prison" selected', async () => {
     const requestBody = {
       custodyStatus: 'YES_PRISON',
       crn: 'X34534',
@@ -63,8 +61,32 @@ describe('validateCustodyStatus', () => {
         selected: 'YES_PRISON',
         details: null,
       },
+    })
+    expect(valuesToSave).not.toContain({
       hasArrestIssues: null,
       localPoliceContact: null,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
+  })
+
+  it('returns valuesToSave, null details, and no errors if "No" selected', async () => {
+    const requestBody = {
+      custodyStatus: 'NO',
+      custodyStatusDetailsYesPolice: 'something from a previous entry',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({ requestBody, urlInfo })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      custodyStatus: {
+        allOptions: [
+          { value: 'YES_PRISON', text: 'Yes, prison custody' },
+          { value: 'YES_POLICE', text: 'Yes, police custody' },
+          { value: 'NO', text: 'No' },
+        ],
+        selected: 'NO',
+        details: null,
+      },
     })
     expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
   })
