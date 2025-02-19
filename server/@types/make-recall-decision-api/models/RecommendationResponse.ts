@@ -190,12 +190,13 @@ export type PrisonOffender = {
   middleName: string,
   lastName: string,
   dateOfBirth: string,
+  agencyId: string,
+  agencyDescription: string,
   status: string,
   gender: string,
   ethnicity: string,
   cro: string,
   pnc: string,
-  establishment: string,
 }
 
 export type PpudOffender = {
