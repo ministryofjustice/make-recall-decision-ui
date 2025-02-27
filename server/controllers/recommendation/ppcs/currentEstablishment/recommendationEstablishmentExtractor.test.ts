@@ -9,7 +9,6 @@ import {
   PpudOffender,
   PrisonOffender,
 } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { PPUD_ESTABLISHMENT_NOT_SPECIFIED } from '../establishmentMapping'
 
 describe('extractNomisEstablishment', () => {
   let recommendation: RecommendationResponse
@@ -70,6 +69,7 @@ describe('extractPpudEstablishment', () => {
 })
 
 describe('extractCurrentEstablishment', () => {
+  const validEstablishments = ['abc', 'def', 'ghi']
   let recommendation: RecommendationResponse
   beforeEach(() => {
     recommendation = {
@@ -77,80 +77,36 @@ describe('extractCurrentEstablishment', () => {
     }
   })
 
-  const extractsValidNonNullEstablishment = (validEstablishments: string[]) => {
+  it('extracts valid non-null establishment', () => {
     // eslint-disable-next-line prefer-destructuring
     recommendation.bookRecallToPpud.currentEstablishment = validEstablishments[0]
 
     const actualPpudEstablishment = extractCurrentEstablishment(recommendation, validEstablishments)
 
     expect(actualPpudEstablishment).toEqual(recommendation.bookRecallToPpud.currentEstablishment)
-  }
+  })
 
-  const extractsInvalidNonNullEstablishment = (
-    invalidEstablishment: string,
-    validEstablishments: string[],
-    expectedCurrentEstablishment: string
-  ) => {
-    recommendation.bookRecallToPpud.currentEstablishment = invalidEstablishment
+  it('extracts invalid non-null establishment', () => {
+    recommendation.bookRecallToPpud.currentEstablishment = 'jkl'
 
     const actualPpudEstablishment = extractCurrentEstablishment(recommendation, validEstablishments)
 
-    expect(actualPpudEstablishment).toEqual(expectedCurrentEstablishment)
-  }
+    expect(actualPpudEstablishment).toEqual('')
+  })
 
-  const extractsUndefinedEstablishment = (validEstablishments: string[], expectedCurrentEstablishment: string) => {
+  it('extracts undefined establishment', () => {
     delete recommendation.bookRecallToPpud.currentEstablishment
 
     const actualPpudEstablishment = extractCurrentEstablishment(recommendation, validEstablishments)
 
-    expect(actualPpudEstablishment).toEqual(expectedCurrentEstablishment)
-  }
+    expect(actualPpudEstablishment).toEqual('')
+  })
 
-  const extractsBlankEstablishment = (validEstablishments: string[], expectedCurrentEstablishment: string) => {
+  it('extracts blank/empty establishment', () => {
     recommendation.bookRecallToPpud.currentEstablishment = ''
 
     const actualPpudEstablishment = extractCurrentEstablishment(recommendation, validEstablishments)
 
-    expect(actualPpudEstablishment).toEqual(expectedCurrentEstablishment)
-  }
-
-  describe('with "Not Specified" available', () => {
-    const validEstablishments = ['abc', 'def', 'ghi', PPUD_ESTABLISHMENT_NOT_SPECIFIED]
-
-    it('extracts valid non-null establishment', () => {
-      extractsValidNonNullEstablishment(validEstablishments)
-    })
-
-    it('extracts invalid non-null establishment', () => {
-      extractsInvalidNonNullEstablishment('jkl', validEstablishments, PPUD_ESTABLISHMENT_NOT_SPECIFIED)
-    })
-
-    it('extracts undefined establishment', () => {
-      extractsUndefinedEstablishment(validEstablishments, PPUD_ESTABLISHMENT_NOT_SPECIFIED)
-    })
-
-    it('extracts blank/empty establishment', () => {
-      extractsBlankEstablishment(validEstablishments, PPUD_ESTABLISHMENT_NOT_SPECIFIED)
-    })
-  })
-
-  describe('with "Not Specified" unavailable', () => {
-    const validEstablishments = ['abc', 'def', 'ghi']
-
-    it('extracts valid non-null establishment', () => {
-      extractsValidNonNullEstablishment(validEstablishments)
-    })
-
-    it('extracts invalid non-null establishment', () => {
-      extractsInvalidNonNullEstablishment('jkl', validEstablishments, '')
-    })
-
-    it('extracts undefined establishment', () => {
-      extractsUndefinedEstablishment(validEstablishments, '')
-    })
-
-    it('extracts blank/empty establishment', () => {
-      extractsBlankEstablishment(validEstablishments, '')
-    })
+    expect(actualPpudEstablishment).toEqual('')
   })
 })

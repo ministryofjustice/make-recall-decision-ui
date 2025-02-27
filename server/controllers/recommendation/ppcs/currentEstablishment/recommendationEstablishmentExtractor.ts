@@ -1,5 +1,4 @@
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
-import { PPUD_ESTABLISHMENT_NOT_SPECIFIED } from '../establishmentMapping'
 
 export const extractNomisEstablishment = (recommendation: RecommendationResponse): string => {
   return recommendation.prisonOffender?.agencyId
@@ -19,12 +18,7 @@ export const extractCurrentEstablishment = (
 ): string => {
   let currentEstablishment = recommendation.bookRecallToPpud?.currentEstablishment
   if (!currentEstablishment || !validEstablishments.includes(currentEstablishment)) {
-    // We guard ourselves against the PPUD list changing without us knowing
-    if (validEstablishments.includes(PPUD_ESTABLISHMENT_NOT_SPECIFIED)) {
-      currentEstablishment = PPUD_ESTABLISHMENT_NOT_SPECIFIED
-    } else {
-      currentEstablishment = ''
-    }
+    currentEstablishment = ''
   }
   return currentEstablishment
 }

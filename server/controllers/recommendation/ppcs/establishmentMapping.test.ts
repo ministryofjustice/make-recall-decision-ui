@@ -1,10 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import {
-  mapEstablishment,
-  NOMIS_ESTABLISHMENT_OUT,
-  PPUD_ESTABLISHMENT_NOT_APPLICABLE,
-  PPUD_ESTABLISHMENT_NOT_SPECIFIED,
-} from './establishmentMapping'
+import { mapEstablishment, NOMIS_ESTABLISHMENT_OUT, PPUD_ESTABLISHMENT_NOT_APPLICABLE } from './establishmentMapping'
 
 describe('mapEstablisment', () => {
   it('maps OUT to Not Applicable', () => {
@@ -13,9 +8,9 @@ describe('mapEstablisment', () => {
     expect(ppudEstablishment).toEqual(PPUD_ESTABLISHMENT_NOT_APPLICABLE)
   })
 
-  it('maps values other than OUT to Not Specified', () => {
+  it('maps values other than OUT to blank', () => {
     const ppudEstablishment = mapEstablishment(randomUUID())
 
-    expect(ppudEstablishment).toEqual(PPUD_ESTABLISHMENT_NOT_SPECIFIED)
+    expect(ppudEstablishment).toEqual('')
   })
 })
