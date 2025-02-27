@@ -1,7 +1,7 @@
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 
 export const extractNomisEstablishment = (recommendation: RecommendationResponse): string => {
-  return recommendation.prisonOffender?.agencyId
+  return recommendation.prisonOffender?.agencyDescription
 }
 
 export const extractPpudEstablishment = (recommendation: RecommendationResponse): string => {

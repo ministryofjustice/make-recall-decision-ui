@@ -19,15 +19,15 @@ describe('extractNomisEstablishment', () => {
   })
 
   it('extracts non-null establishment', () => {
-    recommendation.prisonOffender.agencyId = 'abc'
+    recommendation.prisonOffender.agencyDescription = 'abc'
 
     const actualNomisEstablishment = extractNomisEstablishment(recommendation)
 
-    expect(actualNomisEstablishment).toEqual(recommendation.prisonOffender.agencyId)
+    expect(actualNomisEstablishment).toEqual(recommendation.prisonOffender.agencyDescription)
   })
 
   it('extracts undefined establishment', () => {
-    delete recommendation.prisonOffender.agencyId
+    delete recommendation.prisonOffender.agencyDescription
 
     const actualNomisEstablishment = extractNomisEstablishment(recommendation)
 
