@@ -6,6 +6,8 @@ export type PrisonOffenderSearchResponse = {
   middleName: string;
   lastName: string;
   dateOfBirth: string;
+  agencyId: string;
+  agencyDescription: string;
   status: string;
   physicalAttributes: {
     gender: string;

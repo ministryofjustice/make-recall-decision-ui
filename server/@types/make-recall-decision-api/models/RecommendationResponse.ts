@@ -179,6 +179,7 @@ export type BookRecallToPpud = {
   legislationSentencedUnder?: string,
   releasingPrison?: string,
   minute?: string,
+  currentEstablishment?: string,
 }
 
 export type PrisonOffender = {
@@ -190,6 +191,8 @@ export type PrisonOffender = {
   middleName: string,
   lastName: string,
   dateOfBirth: string,
+  agencyId: string,
+  agencyDescription: string,
   status: string,
   gender: string,
   ethnicity: string,
@@ -206,6 +209,7 @@ export type PpudOffender = {
   firstNames: string,
   gender: string,
   immigrationStatus: string,
+  establishment: string,
   nomsId: string,
   prisonerCategory: string,
   prisonNumber: string,

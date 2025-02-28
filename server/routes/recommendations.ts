@@ -78,7 +78,7 @@ import alreadyExistingController from '../controllers/recommendation/alreadyExis
 import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
-import checkBookingDetailsController from '../controllers/recommendation/checkBookingDetailsController'
+import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
@@ -120,6 +120,7 @@ import additionalSupportingDocumentReplaceController from '../controllers/recomm
 import additionalSupportingDocumentRemoveController from '../controllers/recommendation/additionalSupportingDocumentRemoveController'
 import recordConsiderationRationaleController from '../controllers/recommendation/recordConsiderationRationaleController'
 import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/DocumentType'
+import editCurrentEstablishmentController from '../controllers/recommendation/ppcs/currentEstablishment/editCurrentEstablishmentController'
 
 const recommendations = Router()
 
@@ -460,6 +461,9 @@ ppcsRouteBuilder.post('edit-cro', editCroController.post)
 
 ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
 ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
+
+ppcsRouteBuilder.get('edit-current-establishment', editCurrentEstablishmentController.get)
+ppcsRouteBuilder.post('edit-current-establishment', editCurrentEstablishmentController.post)
 
 ppcsRouteBuilder.get('edit-releasing-prison', editReleasingPrisonController.get)
 ppcsRouteBuilder.post('edit-releasing-prison', editReleasingPrisonController.post)

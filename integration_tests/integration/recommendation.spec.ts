@@ -8,6 +8,7 @@ import { setResponsePropertiesToNull } from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
+import { RECOMMENDATION_STATUS } from '../../server/middleware/recommendationStatus'
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -319,7 +320,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true }],
+      })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
@@ -332,7 +336,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true }] })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
@@ -351,8 +355,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNED', active: true },
-          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -370,8 +374,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNED', active: true },
-          { name: 'ACO_SIGNED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true },
         ],
       })
 
@@ -927,7 +931,10 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.fillInput('Where can the police find Paula Smith?', '35 Hayward Rise, Carshalton, Surrey S1 8SH')
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.RECALL_DECIDED, active: true }],
+      })
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
@@ -1030,8 +1037,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
-          { name: 'SPO_SIGNED', active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: false },
         ],
       })
 
@@ -1054,8 +1061,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: false },
-          { name: 'SPO_SIGNED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
         ],
       })
 
@@ -1078,9 +1085,9 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: false },
-          { name: 'SPO_SIGNED', active: true },
-          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1103,10 +1110,10 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: false },
-          { name: 'SPO_SIGNED', active: true },
-          { name: 'ACO_SIGNATURE_REQUESTED', active: false },
-          { name: 'ACO_SIGNED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: false },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true },
         ],
       })
 
@@ -1136,7 +1143,7 @@ context('Make a recommendation', () => {
 
     it('request ACO countersign', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true }] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/request-aco-countersign`)
       cy.pageHeading().should('equal', 'Request countersignature')
     })
@@ -1163,7 +1170,7 @@ context('Make a recommendation', () => {
 
     it('SPO delete confirmation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'REC_DELETED', active: true }] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.REC_DELETED, active: true }] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-delete-confirmation`)
       cy.pageHeading().should('contains', 'Recommendation deleted')
     })
@@ -1183,8 +1190,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1247,8 +1254,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1274,7 +1281,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true }],
+      })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
@@ -1298,7 +1308,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true }],
+      })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
@@ -1348,8 +1361,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_RECORDED_RATIONALE', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: true },
         ],
       })
 
@@ -1382,7 +1395,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, spoRecallType: 'RECALL' },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true }],
+      })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-record-decision`)
       cy.pageHeading().should('contains', 'Record the decision in NDelius')
     })
@@ -1392,7 +1408,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, spoRecallType: 'RECALL' },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_RECORDED_RATIONALE', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: true }],
+      })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale-confirmation`)
       cy.pageHeading().should('contains', 'Decision to recall')
     })
@@ -1414,8 +1433,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_RECORDED_RATIONALE', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: true },
         ],
       })
 
@@ -1456,8 +1475,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
-          { name: 'SPO_RECORDED_RATIONALE', active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: false },
         ],
       })
 
@@ -1476,8 +1495,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
-          { name: 'SPO_RECORDED_RATIONALE', active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: false },
         ],
       })
 
@@ -1498,9 +1517,9 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_RECORDED_RATIONALE', active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: false },
         ],
       })
 
@@ -1521,8 +1540,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1549,8 +1568,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
-          { name: 'SPO_RECORDED_RATIONALE', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_RECORDED_RATIONALE, active: true },
         ],
       })
 
@@ -1568,7 +1587,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true }],
       })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
@@ -1585,7 +1604,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true }],
       })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
@@ -1604,8 +1623,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_CONSIDER_RECALL', active: true },
-          { name: 'SPO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_CONSIDER_RECALL, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1624,7 +1643,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED, active: true }],
       })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -1647,8 +1666,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNED', active: true },
-          { name: 'ACO_SIGNATURE_REQUESTED', active: false },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: false },
         ],
       })
       cy.task('updateStatuses', { statusCode: 200, response: [] })
@@ -1672,7 +1691,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: true }],
       })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
@@ -1689,8 +1708,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SPO_SIGNED', active: true, createdBy: 'USER1' },
-          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true, createdBy: 'USER1' },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1709,7 +1728,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'ACO_SIGNED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true }],
       })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
@@ -1725,7 +1744,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'ACO_SIGNED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true }],
       })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
@@ -1740,7 +1759,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: true }],
       })
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -1763,8 +1782,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'ACO_SIGNED', active: true },
-          { name: 'ACO_SIGNATURE_REQUESTED', active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED, active: true },
         ],
       })
 
@@ -1948,7 +1967,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('ppcsSearch', {
         statusCode: 200,
         response: {
@@ -1974,7 +1996,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('searchPpud', {
         statusCode: 200,
         response: {
@@ -2001,7 +2026,10 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: { ...completeRecommendationResponse, recallConsideredList: null },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('searchForPrisonOffender', {
         statusCode: 200,
         response: {
@@ -2051,7 +2079,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/edit-name`)
       cy.pageHeading().should('contain', 'Edit names')
@@ -2077,7 +2108,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', { name: 'genders', statusCode: 200, response: { values: ['M', 'F'] } })
 
       cy.visit(`/recommendations/252523937/edit-gender`)
@@ -2103,7 +2137,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'ethnicities',
         statusCode: 200,
@@ -2133,7 +2170,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/edit-date-of-birth`)
       cy.pageHeading().should('contain', 'Edit date of birth')
@@ -2158,7 +2198,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/edit-cro`)
       cy.pageHeading().should('contain', 'Edit CRO')
@@ -2183,7 +2226,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/edit-prison-booking-number`)
       cy.pageHeading().should('contain', 'Edit prison booking number')
@@ -2206,7 +2252,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'establishments',
         statusCode: 200,
@@ -2232,7 +2281,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'released-unders',
         statusCode: 200,
@@ -2255,7 +2307,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'custody-types',
         statusCode: 200,
@@ -2264,6 +2319,17 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/edit-custody-type`)
       cy.pageHeading().should('contain', 'Edit custody type')
+    })
+
+    it('edit Current Establishment', () => {
+      cy.task('getReferenceList', {
+        name: 'establishments',
+        statusCode: 200,
+        response: { values: ['The Kyln'] },
+      })
+
+      cy.visit(`/recommendations/252523937/edit-current-establishment`)
+      cy.pageHeading().should('contain', 'Edit current establishment')
     })
 
     it('edit Received Date and Time', () => {
@@ -2280,7 +2346,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'SENT_TO_PPCS', active: true, created: '2024-01-31T15:17:58Z' }],
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true, created: '2024-01-31T15:17:58Z' }],
       })
 
       cy.visit(`/recommendations/252523937/edit-recall-received-date-and-time`)
@@ -2299,7 +2365,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'probation-services',
         statusCode: 200,
@@ -2322,7 +2391,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'police-forces',
         statusCode: 200,
@@ -2345,7 +2417,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'mappa-levels',
         statusCode: 200,
@@ -2373,7 +2448,10 @@ context('Make a recommendation', () => {
           ppudOffender: {},
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'mappa-levels',
         statusCode: 200,
@@ -2397,7 +2475,10 @@ context('Make a recommendation', () => {
           bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('prisonSentences', {
         statusCode: 200,
         response: [
@@ -2467,7 +2548,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
       cy.task('getReferenceList', {
         name: 'index-offences',
         statusCode: 200,
@@ -2525,7 +2609,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/select-ppud-sentence`)
       cy.pageHeading().should('contain', 'Add your booking to PPUD - Pinky Pooh')
@@ -2588,7 +2675,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
       cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
@@ -2642,7 +2732,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
       cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
@@ -2715,7 +2808,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit-existing-offender`)
       cy.pageHeading().should('contain', 'Double check your booking')
@@ -2755,7 +2851,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
       cy.pageHeading().should('contain', 'Create new PPUD record for Pinky Pooh')
@@ -2812,7 +2911,10 @@ context('Make a recommendation', () => {
           },
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
       cy.pageHeading().should('contain', 'Book  Pinky Pooh onto PPUD')
@@ -2829,7 +2931,7 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: 'BOOKED_TO_PPUD', active: true }],
+        response: [{ name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true }],
       })
 
       cy.visit(`/recommendations/252523937/booked-to-ppud`)
@@ -2874,8 +2976,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: 'SENT_TO_PPCS', active: true },
-          { name: 'BOOKED_TO_PPUD', active: true },
+          { name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true },
+          { name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true },
         ],
       })
 
@@ -2890,7 +2992,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.task('getSupportingDocuments', {
         statusCode: 200,
@@ -2916,7 +3021,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/supporting-document-upload/part-a`)
       cy.pageHeading().should('contain', 'Upload Part A')
@@ -2929,7 +3037,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.task('getSupportingDocuments', {
         statusCode: 200,
@@ -2954,7 +3065,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.task('getSupportingDocuments', {
         statusCode: 200,
@@ -2979,7 +3093,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.visit(`/recommendations/252523937/additional-supporting-document-upload`)
       cy.pageHeading().should('contain', 'Add additional document')
@@ -2992,7 +3109,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.task('getSupportingDocuments', {
         statusCode: 200,
@@ -3017,7 +3137,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.task('getSupportingDocuments', {
         statusCode: 200,
@@ -3042,7 +3165,10 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SENT_TO_PPCS', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
 
       cy.task('getSupportingDocuments', {
         statusCode: 200,
@@ -3161,7 +3287,10 @@ context('Make a recommendation', () => {
           odmName: 'Dankey Maus',
         },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [{ name: 'AP_RECORDED_RATIONALE', active: true }] })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.AP_RECORDED_RATIONALE, active: true }],
+      })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-rationale-confirmation`)
 

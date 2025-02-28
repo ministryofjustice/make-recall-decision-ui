@@ -283,6 +283,18 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <div class="govuk-summary-list__key">
+                            {{ errorDisplay(errors.currentEstablishment) }}
+                            Current establishment
+                        </div>
+                        <div class="govuk-summary-list__value">
+                            {{ blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment') }}
+                        </div>
+                        <div class="govuk-summary-list__actions">
+                            <a class='govuk-link' href='edit-current-establishment'>Edit</a>
+                        </div>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <div class="govuk-summary-list__key">
                             Last known address
                             <p class="govuk-hint">From the Part A</p>
                         </div>

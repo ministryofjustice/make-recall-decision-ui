@@ -1,9 +1,13 @@
-import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { mockNext, mockReq, mockRes } from '../../../middleware/testutils/mockRequestUtils'
+import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../../data/makeDecisionApiClient'
 import checkBookingDetailsController from './checkBookingDetailsController'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
+import { formatDateTimeFromIsoString } from '../../../utils/dates/format'
+import { mapEstablishment } from './establishmentMapping'
 
-jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../../data/makeDecisionApiClient')
+jest.mock('../../../utils/dates/format')
+jest.mock('./establishmentMapping')
 
 const prisonOffenderFirstName = 'ANNE'
 const prisonOffenderMiddleName = 'C'
@@ -22,6 +26,8 @@ const PRISON_OFFENDER_TEMPLATE = {
   lastName: prisonOffenderLastName,
   facialImageId: 1234,
   dateOfBirth: '1970-03-15',
+  agencyId: 'KLN',
+  agencyDescription: 'The Kyln',
   status: 'ACTIVE IN',
   physicalAttributes: {
     gender: 'Male',
@@ -57,6 +63,7 @@ const RECOMMENDATION_TEMPLATE = {
     familyName: 'Harrison',
     dateOfBirth: '1971-02-03',
     prisonNumber: '12345678',
+    establishment: 'Blackgate Penitentiary',
   },
   whoCompletedPartA: {
     localDeliveryUnit: 'who-completed-delivery-unit',
@@ -67,32 +74,36 @@ const RECOMMENDATION_TEMPLATE = {
   },
 }
 
+const SPO_SIGNED_STATUS_TEMPLATE = {
+  name: 'SPO_SIGNED',
+  active: true,
+  created: '2023-11-13T09:49:31.361Z',
+}
+const ACO_SIGNED_STATUS_TEMPLATE = {
+  name: 'ACO_SIGNED',
+  active: true,
+  created: '2023-11-13T09:49:31.361Z',
+}
+const PO_RECALL_CONSULT_SPO_STATUS_TEMPLATE = {
+  name: 'PO_RECALL_CONSULT_SPO',
+  active: true,
+  created: '2023-11-13T09:49:31.361Z',
+}
+const SENT_TO_PPCS_STATUS_TEMPLATE = {
+  name: 'SENT_TO_PPCS',
+  active: true,
+  created: '2023-11-13T09:49:31.371Z',
+}
 const STATUSES_TEMPLATE = [
-  {
-    name: 'SPO_SIGNED',
-    active: true,
-    created: '2023-11-13T09:49:31.361Z',
-  },
-  {
-    name: 'ACO_SIGNED',
-    active: true,
-    created: '2023-11-13T09:49:31.361Z',
-  },
-  {
-    name: 'PO_RECALL_CONSULT_SPO',
-    active: true,
-    created: '2023-11-13T09:49:31.361Z',
-  },
-  {
-    name: 'SENT_TO_PPCS',
-    active: true,
-    created: '2023-11-13T09:49:31.371Z',
-  },
+  SPO_SIGNED_STATUS_TEMPLATE,
+  ACO_SIGNED_STATUS_TEMPLATE,
+  PO_RECALL_CONSULT_SPO_STATUS_TEMPLATE,
+  SENT_TO_PPCS_STATUS_TEMPLATE,
 ]
 
 describe('get', () => {
   beforeEach(() => {
-    jest.mock('../../utils/utils', () => ({
+    jest.mock('../../../utils/utils', () => ({
       ...jest.requireActual('../../utils/utils'),
       convertToTitleCase: (name: string) => {
         switch (name) {
@@ -108,6 +119,10 @@ describe('get', () => {
   })
   it('load', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+    const formattedPpudDateOfBirth = 'date'
+    ;(formatDateTimeFromIsoString as jest.Mock).mockReturnValueOnce(formattedPpudDateOfBirth)
+    const expectedCurrentEstablishment = 'The Kyln in PPUD'
+    ;(mapEstablishment as jest.Mock).mockReturnValueOnce(expectedCurrentEstablishment)
 
     const res = mockRes({
       locals: {
@@ -124,32 +139,37 @@ describe('get', () => {
 
     expect(searchForPrisonOffender).toHaveBeenCalledWith('token', '567Y')
 
+    expect(mapEstablishment).toHaveBeenCalledWith(PRISON_OFFENDER_TEMPLATE.agencyId)
+
     expect(updateRecommendation).toHaveBeenCalledWith({
       featureFlags: { xyz: 1 },
-      recommendationId: '123',
+      recommendationId: RECOMMENDATION_TEMPLATE.id,
       token: 'token',
       valuesToSave: {
         prisonOffender: {
-          cro: '1234/2345',
-          pnc: 'X234547',
-          bookingNo: '1234',
+          cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
+          pnc: PRISON_OFFENDER_TEMPLATE.identifiers[1].value,
+          bookingNo: PRISON_OFFENDER_TEMPLATE.bookingNo,
           firstName: prisonOffenderFirstName,
           middleName: prisonOffenderMiddleName,
           lastName: prisonOffenderLastName,
-          dateOfBirth: '1970-03-15',
-          ethnicity: 'Caucasian',
-          facialImageId: 1234,
-          status: 'ACTIVE IN',
-          gender: 'Male',
-          locationDescription: 'Graceland',
+          dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
+          agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
+          agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
+          ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
+          facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
+          status: PRISON_OFFENDER_TEMPLATE.status,
+          gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
+          locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
         },
         bookRecallToPpud: {
-          dateOfBirth: '1970-03-15',
+          dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
           firstNames: `${convertedFirstName} ${convertedMiddleName}`,
           lastName: convertedLastName,
-          cro: '1234/2345',
-          prisonNumber: '1234',
-          receivedDateTime: '2023-11-13T09:49:31.371Z',
+          cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
+          prisonNumber: PRISON_OFFENDER_TEMPLATE.bookingNo,
+          receivedDateTime: SENT_TO_PPCS_STATUS_TEMPLATE.created,
+          currentEstablishment: expectedCurrentEstablishment,
           image: undefined,
         },
       },
@@ -157,36 +177,34 @@ describe('get', () => {
 
     expect(res.locals.page.id).toEqual('checkBookingDetails')
     expect(res.locals.recommendation.prisonOffender).toEqual({
-      cro: '1234/2345',
-      pnc: 'X234547',
-      bookingNo: '1234',
+      cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
+      pnc: PRISON_OFFENDER_TEMPLATE.identifiers[1].value,
+      bookingNo: PRISON_OFFENDER_TEMPLATE.bookingNo,
       firstName: prisonOffenderFirstName,
       middleName: prisonOffenderMiddleName,
       lastName: prisonOffenderLastName,
-      dateOfBirth: '1970-03-15',
-      ethnicity: 'Caucasian',
-      facialImageId: 1234,
-      status: 'ACTIVE IN',
-      gender: 'Male',
-      locationDescription: 'Graceland',
+      dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
+      agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
+      agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
+      ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
+      facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
+      status: PRISON_OFFENDER_TEMPLATE.status,
+      gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
+      locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
     })
-    expect(res.locals.spoSigned).toEqual({
-      name: 'SPO_SIGNED',
-      active: true,
-      created: '2023-11-13T09:49:31.361Z',
-    })
-    expect(res.locals.acoSigned).toEqual({
-      name: 'ACO_SIGNED',
-      active: true,
-      created: '2023-11-13T09:49:31.361Z',
-    })
+    expect(res.locals.spoSigned).toEqual(SPO_SIGNED_STATUS_TEMPLATE)
+    expect(res.locals.acoSigned).toEqual(ACO_SIGNED_STATUS_TEMPLATE)
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
 
     expect(res.locals.warnings).toStrictEqual({
-      'PPUD-Date of birth': '3 February 1971',
-      'PPUD-First name': 'Robert Tate',
-      'PPUD-Last name': 'Harrison',
-      'PPUD-Prison booking number': '12345678',
+      'PPUD-Date of birth': formattedPpudDateOfBirth,
+      'PPUD-First name': RECOMMENDATION_TEMPLATE.ppudOffender.firstNames,
+      'PPUD-Last name': RECOMMENDATION_TEMPLATE.ppudOffender.familyName,
+      'PPUD-Prison booking number': RECOMMENDATION_TEMPLATE.ppudOffender.prisonNumber,
+    })
+    expect(formatDateTimeFromIsoString).toHaveBeenCalledWith({
+      isoDate: RECOMMENDATION_TEMPLATE.ppudOffender.dateOfBirth,
+      dateOnly: true,
     })
     expect(next).toHaveBeenCalled()
   })
@@ -406,6 +424,7 @@ describe('post', () => {
         policeForce: 'kent',
         legislationReleasedUnder: 'c 2008',
         probationArea: 'camden',
+        currentEstablishment: 'The Kyln in PPUD',
       },
     })
 
@@ -415,11 +434,12 @@ describe('post', () => {
       body: {},
     })
 
+    const basePath = `/recommendations/123/`
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Harry Smith' } },
-        urlInfo: { basePath: `/recommendations/123/` },
+        urlInfo: { basePath },
       },
     })
 
@@ -428,7 +448,7 @@ describe('post', () => {
     await checkBookingDetailsController.post(req, res, next)
 
     expect(req.session.errors).toBeUndefined()
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/select-index-offence`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}select-index-offence`)
 
     expect(next).toHaveBeenCalled()
   })
@@ -500,6 +520,14 @@ describe('post', () => {
         href: '#custodyType',
         name: 'custodyType',
         text: 'Enter custody type',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingCurrentEstablishment',
+        href: '#currentEstablishment',
+        name: 'currentEstablishment',
+        text: 'Select an establishment from the list',
         invalidParts: undefined,
         values: undefined,
       },
