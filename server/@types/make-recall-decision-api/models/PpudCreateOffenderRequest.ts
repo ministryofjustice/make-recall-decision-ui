@@ -11,6 +11,7 @@ export type PpudCreateOffenderRequest = {
   gender: string,
   indexOffence: string,
   isInCustody: boolean,
+  establishment: string,
   mappaLevel: string,
   nomsId: string,
   prisonNumber: string,

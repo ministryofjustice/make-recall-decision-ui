@@ -24,6 +24,7 @@ describe('book offender', () => {
       stage: StageEnum.STARTED,
     }
 
+    const establishment = 'The Kyln'
     const recommendation: RecommendationResponse = {
       id: '1',
       prisonOffender: {
@@ -56,6 +57,7 @@ describe('book offender', () => {
         firstNames: 'Johnny J',
         lastName: 'Teale',
         dateOfBirth: '1970-03-15',
+        currentEstablishment: establishment,
         prisonNumber: '7878783',
         cro: '1234',
       },
@@ -93,6 +95,7 @@ describe('book offender', () => {
       indexOffence:
         'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
       isInCustody: false,
+      establishment,
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
@@ -110,6 +113,7 @@ describe('book offender', () => {
           gender: 'Male',
           id: '767',
           immigrationStatus: 'N/A',
+          establishment,
           nomsId: 'A12345',
           prisonNumber: '7878783',
           prisonerCategory: 'N/A',
@@ -150,6 +154,7 @@ describe('book offender', () => {
       stage: StageEnum.STARTED,
     }
 
+    const establishment = 'The Kyln'
     const recommendation: RecommendationResponse = {
       id: '1',
       ppudOffender: {
@@ -183,6 +188,7 @@ describe('book offender', () => {
         firstNames: 'Johnny J',
         lastName: 'Teale',
         dateOfBirth: '1970-03-15',
+        currentEstablishment: establishment,
         prisonNumber: '7878783',
       },
     } as unknown as RecommendationResponse
@@ -213,6 +219,7 @@ describe('book offender', () => {
       firstNames: 'Johnny J',
       gender: 'Male',
       isInCustody: false,
+      establishment,
       nomsId: 'A12345',
       prisonNumber: '7878783',
     })
@@ -243,6 +250,7 @@ describe('book offender', () => {
       stage: StageEnum.STARTED,
     }
 
+    const establishment = 'The Kyln'
     const recommendation: RecommendationResponse = {
       id: '1',
       prisonOffender: {
@@ -272,6 +280,7 @@ describe('book offender', () => {
         firstNames: 'Johnny J',
         lastName: 'Teale',
         dateOfBirth: '1970-03-15',
+        currentEstablishment: establishment,
         prisonNumber: '7878783',
       },
     } as unknown as RecommendationResponse
@@ -308,6 +317,7 @@ describe('book offender', () => {
       indexOffence:
         'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
       isInCustody: false,
+      establishment,
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
@@ -326,6 +336,7 @@ describe('book offender', () => {
       failedMessage: '{}',
     }
 
+    const establishment = 'The Kyln'
     const recommendation: RecommendationResponse = {
       id: '1',
       ppudOffender: {
@@ -359,6 +370,7 @@ describe('book offender', () => {
         firstNames: 'Johnny J',
         lastName: 'Teale',
         dateOfBirth: '1970-03-15',
+        currentEstablishment: establishment,
         prisonNumber: '7878783',
       },
     } as unknown as RecommendationResponse
