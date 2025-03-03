@@ -8,6 +8,7 @@ export type PpudUpdateOffenderRequest = {
   familyName: string,
   gender: string,
   isInCustody: boolean,
+  establishment: string,
   nomsId: string,
   prisonNumber: string,
 };
