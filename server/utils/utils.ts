@@ -125,30 +125,20 @@ export const removeParamsFromQueryString = ({
   return queryString ? `?${queryString}` : ''
 }
 
-export function isBannerDisplayDateRangeValid() {
-  const dateToday = new Date()
-  if (
-    config.notification.startDate == null ||
-    config.notification.startDate === '' ||
-    config.notification.endDate === '' ||
-    config.notification.endDate == null
-  ) {
+export function isDateTimeRangeCurrent(startDateTimeStr: string, endDateTimeStr: string) {
+  if (!startDateTimeStr || !endDateTimeStr) {
     return false
   }
 
-  const startDate = new Date(String(config.notification.startDate))
-  const endDate = new Date(String(config.notification.endDate))
+  const dateToday = new Date()
+  const startDateTime = new Date(startDateTimeStr)
+  const endDateTime = new Date(endDateTimeStr)
 
-  dateToday.setHours(0, 0, 0, 0)
-  startDate.setHours(0, 0, 0, 0)
-  endDate.setHours(0, 0, 0, 0)
+  if (Number.isNaN(startDateTime) || Number.isNaN(endDateTime)) {
+    return false
+  }
 
-  const endDateIsAfterDateToday = Boolean(endDate.toISOString() > dateToday.toISOString())
-  const endDateIsDateToday = Boolean(endDate.toISOString() === dateToday.toISOString())
-  const startDateIsBeforeDateToday = Boolean(startDate.toISOString() < dateToday.toISOString())
-  const startDateIsDateToday = Boolean(startDate.toISOString() === dateToday.toISOString())
-
-  return (startDateIsBeforeDateToday || startDateIsDateToday) && (endDateIsAfterDateToday || endDateIsDateToday)
+  return startDateTime <= dateToday && endDateTime >= dateToday
 }
 
 export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {

@@ -28,6 +28,8 @@ import config from './config'
 import logger from '../logger'
 import { authorisationCheck } from './middleware/authorisationCheck'
 import { hasRole } from './middleware/check'
+import { isDateTimeRangeCurrent } from './utils/utils'
+import { formatDateTimeFromIsoString } from './utils/dates/format'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -40,24 +42,37 @@ export default function createApp(userService: UserService): express.Application
     next()
   })
   app.use(cookieParser())
-
-  if (config.displayMaintenancePage && config.maintenancePageText) {
-    logger.info('Maintenance page enabled')
-    app.get('*', (req, res) => {
-      res.locals.maintenancePageText = config.maintenancePageText
-      return res.render('maintenance-page.njk')
-    })
-  }
-
   app.use(setUpSentry())
   app.use(appInsightsOperationId)
-
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+
+  if (isDateTimeRangeCurrent(config.maintenancePage.startDateTime, config.maintenancePage.endDateTime)) {
+    logger.info('Maintenance page enabled')
+    app.get('*', (req, res) => {
+      res.locals.maintenancePageBody = config.maintenancePage.body
+      res.locals.maintenancePageStartDateTime = formatDateTimeFromIsoString({
+        isoDate: config.maintenancePage.startDateTime,
+        dateOnly: false,
+        timeOnly: false,
+        monthAndYear: false,
+        shortDate: true,
+      })
+      res.locals.maintenancePageEndDateTime = formatDateTimeFromIsoString({
+        isoDate: config.maintenancePage.endDateTime,
+        dateOnly: false,
+        timeOnly: false,
+        monthAndYear: false,
+        shortDate: true,
+      })
+      return res.render('maintenance-page.njk')
+    })
+  }
+
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware)

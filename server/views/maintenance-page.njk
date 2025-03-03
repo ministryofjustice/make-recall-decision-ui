@@ -2,25 +2,30 @@
 {% from "./components/widgets/macro.njk" import widgets %}
 
 {% block pageTitle %}
-{{ pageTitle }}
+    {{ pageTitle }}
 {% endblock %}
 
 {% block header %}
-{%- set usingBrowserBack = true -%}
-{% include "./partials/header.njk" %}
+    {%- set usingBrowserBack = true -%}
+    {% include "./partials/header.njk" %}
 {% endblock %}
 
 {% block content %}
-{{ super() }}
+    {{ super() }}
 
 
-<div class="govuk-grid-row">
+    <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">
-            Sorry, this service is unavailable
+            Service temporarily unavailable
         </h1>
-        <p class="govuk-body" >
-        {{ maintenancePageText }}
+        <p class="govuk-body">
+            {{ maintenancePageBody }}
         </p>
-</div>
+        <p class="govuk-body">
+            The system will be undergoing maintenance between {{ maintenancePageStartDateTime }}
+            and {{ maintenancePageEndDateTime }}
+        <p>
+
+    </div>
 {% endblock %}
