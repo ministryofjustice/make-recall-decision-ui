@@ -116,13 +116,13 @@ export default {
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   maintenancePage: {
     body: get('MAINTENANCE_PAGE_BODY', null),
-    startDateTime: get('MAINTENANCE_PAGE_START_DATE_TIME', null, { requireInProduction: false }),
-    endDateTime: get('MAINTENANCE_PAGE_END_DATE_TIME', null, { requireInProduction: false }),
+    startDateTime: get('MAINTENANCE_PAGE_START_DATE_TIME', null),
+    endDateTime: get('MAINTENANCE_PAGE_END_DATE_TIME', null),
   },
   notification: {
-    header: get('NOTIFICATION_HEADER', null, { requireInProduction: false }),
-    body: get('NOTIFICATION_BODY', null, { requireInProduction: false }),
-    startDateTime: get('NOTIFICATION_BANNER_START_DATE_TIME', null, { requireInProduction: false }),
-    endDateTime: get('NOTIFICATION_BANNER_END_DATE_TIME', null, { requireInProduction: false }),
+    header: get('NOTIFICATION_HEADER', null),
+    body: get('NOTIFICATION_BODY', null),
+    startDateTime: get('NOTIFICATION_BANNER_START_DATE_TIME', null),
+    endDateTime: get('NOTIFICATION_BANNER_END_DATE_TIME', null),
   },
 }
