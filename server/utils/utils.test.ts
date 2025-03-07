@@ -1,9 +1,8 @@
-import config from '../config'
 import {
   convertToTitleCase,
   getProperty,
   hasData,
-  isBannerDisplayDateRangeValid,
+  isDateTimeRangeCurrent,
   isPreprodOrProd,
   listToString,
   logMessage,
@@ -105,7 +104,7 @@ describe('getProperty', () => {
     expect(val).toEqual('blah')
   })
 
-  it("returns undefined for a nested property thtaa doesn't exist", () => {
+  it("returns undefined for a nested property that doesn't exist", () => {
     const obj = {
       legalRepresentativeInfo: {
         email: 'davey@crockett.com',
@@ -232,43 +231,58 @@ describe('validateCrn', () => {
   })
 })
 
-describe('isBannerDisplayDateRangeValid', () => {
-  config.notification.body = 'This application will be unavailable on 13 September 2023, save your work ahead of time'
+describe('isDateTimeRangeCurrent', () => {
   it('returns true when date today is within date range in config', () => {
-    config.notification.startDate = '2000-09-13'
-    config.notification.endDate = '2050-09-13'
-    const result = isBannerDisplayDateRangeValid()
+    const result = isDateTimeRangeCurrent('2000-09-13', '2050-09-13')
     expect(result).toEqual(true)
   })
   it('returns false when date today is outside date range in config', () => {
-    config.notification.startDate = '2040-09-13'
-    config.notification.endDate = '2050-09-13'
-    const result = isBannerDisplayDateRangeValid()
+    const result = isDateTimeRangeCurrent('2040-09-13', '2050-09-13')
     expect(result).toEqual(false)
   })
   it('returns false when start date is null', () => {
-    config.notification.startDate = null
-    config.notification.endDate = '2050-09-13'
-    const result = isBannerDisplayDateRangeValid()
+    const result = isDateTimeRangeCurrent(null, '2050-09-13')
     expect(result).toEqual(false)
   })
   it('returns false when start date is empty', () => {
-    config.notification.startDate = ''
-    config.notification.endDate = '2050-09-13'
-    const result = isBannerDisplayDateRangeValid()
+    const result = isDateTimeRangeCurrent('', '2050-09-13')
+    expect(result).toEqual(false)
+  })
+  it('returns false when start date is an invalid date', () => {
+    const result = isDateTimeRangeCurrent('invalid string', '2050-09-13')
     expect(result).toEqual(false)
   })
   it('returns false when end date is empty', () => {
-    config.notification.startDate = '2023-09-18'
-    config.notification.endDate = ''
-    const result = isBannerDisplayDateRangeValid()
+    const result = isDateTimeRangeCurrent('2023-09-18', '')
     expect(result).toEqual(false)
   })
   it('returns false when end date is null', () => {
-    config.notification.startDate = '2023-09-18'
-    config.notification.endDate = null
-    const result = isBannerDisplayDateRangeValid()
+    const result = isDateTimeRangeCurrent('2023-09-18', null)
     expect(result).toEqual(false)
+  })
+  it('returns false when end date is an invalid date', () => {
+    const result = isDateTimeRangeCurrent('2050-09-13', 'invalid string')
+    expect(result).toEqual(false)
+  })
+  it('returns true when the current date and time is within the specified date and time range', () => {
+    const dateToday = new Date()
+    const startDateTime = new Date()
+    startDateTime.setHours(
+      dateToday.getHours() - 1,
+      dateToday.getMinutes(),
+      dateToday.getSeconds(),
+      dateToday.getMilliseconds()
+    )
+    const endDateTime = new Date()
+    endDateTime.setHours(
+      dateToday.getHours() + 1,
+      dateToday.getMinutes(),
+      dateToday.getSeconds(),
+      dateToday.getMilliseconds()
+    )
+
+    const result = isDateTimeRangeCurrent(startDateTime.toISOString(), endDateTime.toISOString())
+    expect(result).toEqual(true)
   })
 })
 

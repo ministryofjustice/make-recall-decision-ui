@@ -46,11 +46,12 @@ generic-service:
     AUDIT_SQS_REGION: "eu-west-2"
     NOTIFICATION_HEADER: "Scheduled maintenance"
     NOTIFICATION_BODY: "Consider a recall will be unavailable between 6pm and 6:30pm on Monday 11 March 2024. This is so we can update our database."
-    # dates must be written in ISO format eg/YYYY-MM-DD
-    NOTIFICATION_BANNER_START_DATE: "2024-03-08"
-    NOTIFICATION_BANNER_END_DATE: "2024-03-11"
-    DISPLAY_MAINTENANCE_PAGE: false
-    MAINTENANCE_PAGE_TEXT: ""
+    # datetimes must be written in ISO format eg/YYYY-MM-DDTHH:MM:SS
+    NOTIFICATION_BANNER_START_DATE_TIME: "2024-06-11T08:00:00"
+    NOTIFICATION_BANNER_END_DATE_TIME: "2024-06-13T18:00:00"
+    MAINTENANCE_PAGE_TEXT: Please follow your business continuity procedures to deal with recalls.
+    MAINTENANCE_PAGE_START_DATE_TIME: 2019-09-27T04:00:00
+    MAINTENANCE_PAGE_END_DATE_TIME: 2019-09-27T18:00:00
     HMPPS_SQS_USE_WEB_TOKEN: "true"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.

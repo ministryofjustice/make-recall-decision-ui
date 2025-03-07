@@ -26,6 +26,8 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { createRecommendationBanner } from '../../utils/bannerUtils'
+import config from '../../config'
+import { isDateTimeRangeCurrent } from '../../utils/utils'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -664,6 +666,36 @@ describe('get', () => {
       title: 'Countersign',
     })
   })
+
+  it('ensure notification fields returned depending on config', async () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    const req = mockReq({
+      params: { crn, sectionId: 'overview' },
+    })
+    res = mockRes({
+      token,
+      locals: {
+        user: {
+          username: 'Dave',
+          roles: ['ROLE_MAKE_RECALL_DECISION'],
+        },
+      },
+    })
+
+    await caseSummaryController.get(req, res, next)
+
+    expect(res.locals.notification).toEqual({
+      header: config.notification.header,
+      body: config.notification.body,
+      startDateTime: config.notification.startDateTime,
+      endDateTime: config.notification.endDateTime,
+      isVisible: isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
+    })
+  })
+
   describe('recommendation banner tests', () => {
     describe('when there is an active recommendation', () => {
       describe('and the recommendation is open for probation services', () => {

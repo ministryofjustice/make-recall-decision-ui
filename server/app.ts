@@ -24,8 +24,6 @@ import { metricsMiddleware } from './monitoring/metricsApp'
 import { appInsightsOperationId } from './middleware/appInsightsOperationId'
 import setUpCsrf from './middleware/setUpCsrf'
 import { setupRecommendationStatusCheck } from './middleware/recommendationStatusCheck'
-import config from './config'
-import logger from '../logger'
 import { authorisationCheck } from './middleware/authorisationCheck'
 import { hasRole } from './middleware/check'
 
@@ -40,18 +38,8 @@ export default function createApp(userService: UserService): express.Application
     next()
   })
   app.use(cookieParser())
-
-  if (config.displayMaintenancePage && config.maintenancePageText) {
-    logger.info('Maintenance page enabled')
-    app.get('*', (req, res) => {
-      res.locals.maintenancePageText = config.maintenancePageText
-      return res.render('maintenance-page.njk')
-    })
-  }
-
   app.use(setUpSentry())
   app.use(appInsightsOperationId)
-
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())

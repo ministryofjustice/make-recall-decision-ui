@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import {
-  isBannerDisplayDateRangeValid,
   isCaseRestrictedOrExcluded,
+  isDateTimeRangeCurrent,
   isPreprodOrProd,
   isString,
   validateCrn,
@@ -228,7 +228,9 @@ async function get(req: Request, res: Response, _: NextFunction) {
 
   res.locals.notification = {
     ...config.notification,
-    isVisible: Boolean(config.notification.body) && isBannerDisplayDateRangeValid(),
+    isVisible:
+      Boolean(config.notification.body) &&
+      isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
   }
 
   res.locals = {

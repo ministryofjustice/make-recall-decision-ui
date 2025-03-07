@@ -1,0 +1,19 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: "Maintenance page" }) %}
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class="govuk-heading-xl">
+                Service temporarily unavailable
+            </h1>
+            <p class="govuk-body">
+                {{ maintenancePageBody }}
+            </p>
+            <p class="govuk-body">
+                The system will be undergoing maintenance between {{ maintenancePageStartDateTime }}
+                and {{ maintenancePageEndDateTime }}
+            <p>
+        </div>
+    </div>
+{% endblock %}
