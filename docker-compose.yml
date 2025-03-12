@@ -9,7 +9,7 @@ services:
     ports:
       - '6379:6379'
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
 
@@ -21,7 +21,7 @@ services:
     ports:
       - "9090:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health/ping"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/auth/health/ping" ]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
@@ -49,7 +49,7 @@ services:
     ports:
       - "3000:3000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/ping" ]
     environment:
       - DEBUG=*
       - NODE_ENV=development
@@ -70,4 +70,5 @@ services:
 
 networks:
   hmpps:
+    external: true
     name: hmpps
