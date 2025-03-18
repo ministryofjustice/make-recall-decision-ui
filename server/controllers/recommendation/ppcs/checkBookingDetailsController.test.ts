@@ -3,11 +3,11 @@ import { getRecommendation, searchForPrisonOffender, updateRecommendation } from
 import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/format'
-import { mapEstablishment } from './establishmentMapping'
+import { determinePpudEstablishment } from './determinePpudEstablishment'
 
 jest.mock('../../../data/makeDecisionApiClient')
 jest.mock('../../../utils/dates/format')
-jest.mock('./establishmentMapping')
+jest.mock('./determinePpudEstablishment')
 
 const prisonOffenderFirstName = 'ANNE'
 const prisonOffenderMiddleName = 'C'
@@ -122,7 +122,24 @@ describe('get', () => {
     const formattedPpudDateOfBirth = 'date'
     ;(formatDateTimeFromIsoString as jest.Mock).mockReturnValueOnce(formattedPpudDateOfBirth)
     const expectedCurrentEstablishment = 'The Kyln in PPUD'
-    ;(mapEstablishment as jest.Mock).mockReturnValueOnce(expectedCurrentEstablishment)
+    ;(determinePpudEstablishment as jest.Mock).mockReturnValueOnce(expectedCurrentEstablishment)
+
+    const expectedPrisonOffender = {
+      cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
+      pnc: PRISON_OFFENDER_TEMPLATE.identifiers[1].value,
+      bookingNo: PRISON_OFFENDER_TEMPLATE.bookingNo,
+      firstName: prisonOffenderFirstName,
+      middleName: prisonOffenderMiddleName,
+      lastName: prisonOffenderLastName,
+      dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
+      agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
+      agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
+      ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
+      facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
+      status: PRISON_OFFENDER_TEMPLATE.status,
+      gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
+      locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
+    }
 
     const res = mockRes({
       locals: {
@@ -139,29 +156,20 @@ describe('get', () => {
 
     expect(searchForPrisonOffender).toHaveBeenCalledWith('token', '567Y')
 
-    expect(mapEstablishment).toHaveBeenCalledWith(PRISON_OFFENDER_TEMPLATE.agencyId)
+    expect(determinePpudEstablishment).toHaveBeenCalledWith(
+      {
+        ...RECOMMENDATION_TEMPLATE,
+        prisonOffender: expectedPrisonOffender,
+      },
+      'token'
+    )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       featureFlags: { xyz: 1 },
       recommendationId: RECOMMENDATION_TEMPLATE.id,
       token: 'token',
       valuesToSave: {
-        prisonOffender: {
-          cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
-          pnc: PRISON_OFFENDER_TEMPLATE.identifiers[1].value,
-          bookingNo: PRISON_OFFENDER_TEMPLATE.bookingNo,
-          firstName: prisonOffenderFirstName,
-          middleName: prisonOffenderMiddleName,
-          lastName: prisonOffenderLastName,
-          dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
-          agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
-          agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
-          ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
-          facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
-          status: PRISON_OFFENDER_TEMPLATE.status,
-          gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
-          locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
-        },
+        prisonOffender: expectedPrisonOffender,
         bookRecallToPpud: {
           dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
           firstNames: `${convertedFirstName} ${convertedMiddleName}`,
@@ -176,22 +184,7 @@ describe('get', () => {
     })
 
     expect(res.locals.page.id).toEqual('checkBookingDetails')
-    expect(res.locals.recommendation.prisonOffender).toEqual({
-      cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
-      pnc: PRISON_OFFENDER_TEMPLATE.identifiers[1].value,
-      bookingNo: PRISON_OFFENDER_TEMPLATE.bookingNo,
-      firstName: prisonOffenderFirstName,
-      middleName: prisonOffenderMiddleName,
-      lastName: prisonOffenderLastName,
-      dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
-      agencyId: PRISON_OFFENDER_TEMPLATE.agencyId,
-      agencyDescription: PRISON_OFFENDER_TEMPLATE.agencyDescription,
-      ethnicity: PRISON_OFFENDER_TEMPLATE.physicalAttributes.ethnicity,
-      facialImageId: PRISON_OFFENDER_TEMPLATE.facialImageId,
-      status: PRISON_OFFENDER_TEMPLATE.status,
-      gender: PRISON_OFFENDER_TEMPLATE.physicalAttributes.gender,
-      locationDescription: PRISON_OFFENDER_TEMPLATE.locationDescription,
-    })
+    expect(res.locals.recommendation.prisonOffender).toEqual(expectedPrisonOffender)
     expect(res.locals.spoSigned).toEqual(SPO_SIGNED_STATUS_TEMPLATE)
     expect(res.locals.acoSigned).toEqual(ACO_SIGNED_STATUS_TEMPLATE)
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
