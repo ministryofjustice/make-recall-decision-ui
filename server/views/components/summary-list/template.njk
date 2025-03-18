@@ -4,7 +4,7 @@
     {% for row in params.rows %}
         <div id="{{ params.id }}-{{ row.key.replaceAll(' ', '-').toLowerCase() }}-row" class="govuk-summary-list__row {{ 'border-top' if (params.borderTop and loop.first) else '' }}">
             <dt class="govuk-summary-list__key">
-                {% if row.error %}
+                {% if params.error %}
                     {{ errorDisplay(row.error) }}
                 {% endif %}
                 {{ row.key }}
