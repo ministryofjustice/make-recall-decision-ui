@@ -1,0 +1,22 @@
+<dl id="{{params.id}}" class="govuk-summary-list">
+    {% for row in params.rows %}
+        <div id="{{ params.id }}-{{ row.key.replaceAll(' ', '-').toLowerCase() }}-row" class="govuk-summary-list__row {{ 'border-top' if (params.borderTop and loop.first) else '' }}">
+            <dt class="govuk-summary-list__key">
+                {% if params.error %}
+                    {{ errorDisplay(row.error) }}
+                {% endif %}
+                {{ row.key }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ row.value | safe }}
+            </dd>
+            {% if row.actions | length %}
+                <dd class="govuk-summary-list__actions">
+                    {% for action in row.actions %}
+                        <a id="{{ action.id }}" class="govuk-link" href="{{ action.href }}">{{ action.text }}{% if action.visuallyHidden %}<span class="govuk-visually-hidden"> {{ action.visuallyHidden }}</span>{% endif %}</a>
+                    {% endfor %}
+                </dd>
+            {% endif %}
+        </div>
+    {% endfor %}
+</dl>
