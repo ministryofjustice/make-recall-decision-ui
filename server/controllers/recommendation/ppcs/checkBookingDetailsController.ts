@@ -17,7 +17,7 @@ import { strings } from '../../../textStrings/en'
 import { checkIfAddressesAreEmpty } from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
-import { mapEstablishment } from './establishmentMapping'
+import { determinePpudEstablishment } from './determinePpudEstablishment'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -91,7 +91,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       middleName = convertToTitleCaseIfRequired(recommendation.prisonOffender.middleName)
       lastName = convertToTitleCaseIfRequired(recommendation.prisonOffender.lastName)
       dateOfBirth = recommendation.prisonOffender.dateOfBirth
-      currentEstablishment = mapEstablishment(recommendation.prisonOffender.agencyId)
+      currentEstablishment = await determinePpudEstablishment(recommendation, token)
     }
 
     const sentToPpcs = (statuses as RecommendationStatusResponse[])

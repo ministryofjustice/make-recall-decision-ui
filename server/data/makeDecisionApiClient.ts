@@ -37,6 +37,9 @@ import { PpudUploadAdditionalDocument } from '../@types/make-recall-decision-api
 import { PpudCreateMinuteRequest } from '../@types/make-recall-decision-api/models/PpudCreateMinuteRequest'
 import { PpudUserMappingResponse } from '../@types/make-recall-decision-api/models/PpudUserMappingResponse'
 import { PpudUserResponse } from '../@types/make-recall-decision-api/models/PpudUserResponse'
+import { OffenderMovement } from '../@types/make-recall-decision-api/models/prison-api/OffenderMovement'
+import { OffenderMovementResponse } from '../@types/make-recall-decision-api/models/prison-api/OffenderMovementResponse'
+import { EstablishmentMap } from '../@types/make-recall-decision-api/models/prison-api/EstablishmentMap'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -101,6 +104,32 @@ export const prisonSentences = async (token: string, nomsId: string): Promise<Pr
     }
     throw err
   }
+}
+
+export const offenderMovements = async (token: string, nomisId: string): Promise<OffenderMovement[]> => {
+  try {
+    const response = (await restClient(token).get({
+      path: `/offenders/${nomisId}/movements`,
+    })) as OffenderMovementResponse[]
+    return response.map((res: OffenderMovementResponse) => {
+      return {
+        ...res,
+        movementDateTime: new Date(res.movementDateTime),
+      }
+    })
+  } catch (err) {
+    if (err.data.status === 404) {
+      return
+    }
+    throw err
+  }
+}
+
+export const establishmentMappings = async (token: string): Promise<EstablishmentMap> => {
+  const mappings = await restClient(token).get({
+    path: '/establishment-mappings',
+  })
+  return new Map<string, string>(Object.entries(mappings))
 }
 
 export const searchPpud = (
