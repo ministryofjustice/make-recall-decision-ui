@@ -347,7 +347,7 @@ jobs:
             set +e
 
             npx cypress run \
-              --env TAGS='not @E2E and not @smoke',USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local},USERNAME_ACO=${CYPRESS_USERNAME_ACO_local},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_local} \
+              --env TAGS='not @E2E and not @smoke',USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local},USERNAME_ACO=${CYPRESS_USERNAME_ACO_local},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_local},USERNAME_PPCS=${CYPRESS_USERNAME_PPCS_local},PASSWORD_PPCS=${CYPRESS_PASSWORD_PPCS_local},MAKE_RECALL_DECISION_API_URL=${CYPRESS_MAKE_RECALL_DECISION_API_URL_local},HMPPS_AUTH_EXTERNAL_URL=${CYPRESS_HMPPS_AUTH_EXTERNAL_URL_local} \
               --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \
