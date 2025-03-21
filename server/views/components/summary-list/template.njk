@@ -1,8 +1,10 @@
+{% from "components/error-display/macro.njk" import errorDisplay %}
+
 <dl id="{{params.id}}" class="govuk-summary-list">
     {% for row in params.rows %}
         <div id="{{ params.id }}-{{ row.key.replaceAll(' ', '-').toLowerCase() }}-row" class="govuk-summary-list__row {{ 'border-top' if (params.borderTop and loop.first) else '' }}">
             <dt class="govuk-summary-list__key">
-                {% if params.error %}
+                {% if row.error %}
                     {{ errorDisplay(row.error) }}
                 {% endif %}
                 {{ row.key }}
