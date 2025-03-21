@@ -210,7 +210,7 @@
                         { key: 'Local police contact', value: blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'Enter a local police force'), actions: [{ id: editIdPrefix+'policecontact', text: editText, href: 'edit-police-contact', visuallyHidden: 'local police contact' }], error: errors.policeForce },
                         { key: 'Senior manager (ACO)', value: acoSigned.createdByUserFullName },
                         { key: 'Senior manager (ACO) email', value: acoSigned.emailAddress },
-                        { key: 'MAPPA level', value: blankSafe(recommendation.bookRecallToPpud.mappaLevel,true, 'Enter a MAPPA level'), actions: [{ id: editIdPrefix+'mapaalevel', text: editText, href: 'edit-mappa-level', visuallyHidden: 'MAPAA level' }], error: errors.mappaLevel },
+                        { key: 'MAPPA level', value: blankSafe(recommendation.bookRecallToPpud.mappaLevel,true, 'Enter a MAPPA level'), actions: [{ id: editIdPrefix+'mappalevel', text: editText, href: 'edit-mappa-level', visuallyHidden: 'MAPPA level' }], error: errors.mappaLevel },
                         { key: 'Current risk of serious harm', value: currentHighestRosh }
                     ],
                     borderTop: true
