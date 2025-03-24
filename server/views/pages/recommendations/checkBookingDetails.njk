@@ -1,4 +1,7 @@
 {% extends "../../partials/layout.njk" %}
+{% from "components/summary-list/macro.njk" import summaryList %}
+{% set editText = 'Edit' %}
+{% set editIdPrefix = 'edit-' %}
 
 {% macro formatAddress(address) %}
     {% if not address.noFixedAbode %}
@@ -114,351 +117,105 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
 
-                <h2 class='govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-0'>
+                <h2 class='govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4'>
                     Personal details
                     <span class="govuk-caption-m">Taken from NOMIS</span>
                 </h2>
 
-                <div class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
+                {% set offenderImage %}
+                    {% if recommendation.prisonOffender.image %}
+                        <img src="{{ recommendation.prisonOffender.image }}" />
+                    {% else %}
+                        - <span class="govuk-visually-hidden">no value</span>
+                    {% endif %}
+                {% endset %}
+                {% set firstNamesBlock %}{{ editedBadge(edited.firstNames) }}{{ blankSafe(recommendation.bookRecallToPpud.firstNames) }}{% endset %}
+                {% set lastNameBlock %}{{ editedBadge(edited.lastName) }}{{ blankSafe(recommendation.bookRecallToPpud.lastName) }}{% endset %}
+                {% set dateOfBirthBlock %}{{ editedBadge(edited.dateOfBirth) }}{{ blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}{% endset %}
+                {% set prisonNumberBlock %}{{ editedBadge(edited.prisonNumber) }}{{ blankSafe(recommendation.bookRecallToPpud.prisonNumber) }}{% endset %}
+                {% set custodyStatusBlock %}
+                    {% if recommendation.prisonOffender.status == "ACTIVE IN" %}
+                        In custody
+                    {% elseif recommendation.prisonOffender.status == "INACTIVE OUT" %}
+                        Unlawfully at large (UAL)
+                    {% elseif recommendation.prisonOffender.status == "INACTIVE TRN" %}
+                        In transit - Unlawfully at large (UAL)
+                    {% else %}
+                        - <span class="govuk-visually-hidden">no value</span>
+                    {% endif %}
+                {% endset %}
+                {% set addressBlock %}
+                    {% if not hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
+                        <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span>
                         </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Image
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {% if recommendation.prisonOffender.image %}
-                                <img src="{{ recommendation.prisonOffender.image }}" />
-                            {% else %}
-                                - <span class="govuk-visually-hidden">no value</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            NOMIS number
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.personOnProbation.nomsNumber) }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            First names
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ editedBadge(edited.firstNames) }}
-                            {{ blankSafe(recommendation.bookRecallToPpud.firstNames) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-name'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Last name
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ editedBadge(edited.lastName) }}
-                            {{ blankSafe(recommendation.bookRecallToPpud.lastName) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-name'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.gender) }}
-                            Gender
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.gender, true, 'Enter a gender') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-gender'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.ethnicity) }}
-                            Ethnicity
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'Enter an ethnicity') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-ethnicity'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Date of birth
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ editedBadge(edited.dateOfBirth) }}
-                            {{ blankSafe(
-                                formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-date-of-birth'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            CRO
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.cro) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-cro'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.prisonNumber) }}
-                            Prison booking number
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ editedBadge(edited.prisonNumber) }}
-                            {{ blankSafe(recommendation.bookRecallToPpud.prisonNumber) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-prison-booking-number'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.releasingPrison) }}
-                            Releasing prison
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-releasing-prison'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.legislationReleasedUnder) }}
-                            Legislation released under
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-legislation-released-under'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Custody status
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {% if recommendation.prisonOffender.status == "ACTIVE IN" %}
-                                In custody
-                            {% elseif recommendation.prisonOffender.status == "INACTIVE OUT" %}
-                                Unlawfully at large (UAL)
-                            {% elseif recommendation.prisonOffender.status == "INACTIVE TRN" %}
-                                In transit - Unlawfully at large (UAL)
-                            {% else %}
-                                - <span class="govuk-visually-hidden">no value</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.custodyType) }}
-                            Custody type
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.custodyType, true, 'Enter a custody type') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-custody-type'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.currentEstablishment) }}
-                            Current establishment
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-current-establishment'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Last known address
-                            <p class="govuk-hint">From the Part A</p>
-                        </div>
-                        {% if not hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
-                            <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span>
-                            </div>
-                        {% else %}
-                            <div class="govuk-summary-list__value">
-                                {% if not hasLastKnownAddress %}
-                                    - <span class="govuk-visually-hidden">no value</span>
-                                {% endif %}
-                                {% for address in recommendation.personOnProbation.addresses %}
-                                    {{ formatAddress(address) }}
-                                {% endfor %}
-
-                                {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
-                                    <p class="govuk-body govuk-!-font-weight-bold">
-                                        Additional address
-                                    </p>
-                                    <span class="govuk-body">
-                                        <pre class="govuk-body">
-                                        {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
-                                        </pre>
-                                    </span>
-                                {% endif %}
-                            </div>
+                    {% else %}
+                        {% if not hasLastKnownAddress %}
+                            - <span class="govuk-visually-hidden">no value</span>
                         {% endif %}
-                    </div>
-                </div>
+                        {% for address in recommendation.personOnProbation.addresses %}
+                            {{ formatAddress(address) }}
+                        {% endfor %}
+
+                        {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
+                            <p class="govuk-body govuk-!-font-weight-bold">
+                                Additional address
+                            </p>
+                            <span class="govuk-body">
+                                <pre class="govuk-body">
+                                {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
+                                </pre>
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                {% endset %}
+                {{ summaryList({
+                    id: 'personal-details-list',
+                    rows: [
+                        { key: 'Image', value: offenderImage },
+                        { key: 'NOMIS number', value: blankSafe(recommendation.personOnProbation.nomsNumber) },
+                        { key: 'First names', value: firstNamesBlock, actions: [{ id: editIdPrefix+'firstnames', text: editText, href: 'edit-name', visuallyHidden: 'first names' }] },
+                        { key: 'Last name', value: lastNameBlock, actions: [{ id: editIdPrefix+'lastname', text: editText, href: 'edit-name', visuallyHidden: 'last name' }] },
+                        { key: 'Gender', value: blankSafe(recommendation.bookRecallToPpud.gender, true, 'Enter a gender'), actions: [{ id: editIdPrefix+'gender', text: editText, href: 'edit-gender', visuallyHidden: 'gender' }], error: errors.gender},
+                        { key: 'Ethnicity', value: blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'Enter an ethnicity'), actions: [{ id: editIdPrefix+'ethnicity', text: editText, href: 'edit-ethnicity', visuallyHidden: 'ethnicity' }], error: errors.ethnicity },
+                        { key: 'Date of birth', value: dateOfBirthBlock, actions: [{ id: editIdPrefix+'dateofbirth', text: editText, href: 'edit-date-of-birth', visuallyHidden: 'date of birth' }] },
+                        { key: 'CRO', value: blankSafe(recommendation.bookRecallToPpud.cro), actions: [{ id: editIdPrefix+'cro', text: editText, href: 'edit-cro' , visuallyHidden: 'CRO' }] },
+                        { key: 'Prison booking number', value: prisonNumberBlock, actions: [{ id: editIdPrefix+'prisonbookingnumber', text: editText, href: 'edit-prison-booking-number' , visuallyHidden: 'prison booking number' }], error: errors.prisonNumber },
+                        { key: 'Releasing prison', value: blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison'), actions: [{ id: editIdPrefix+'releasingprison', text: editText, href: 'edit-releasing-prison' , visuallyHidden: 'releasing prison' }], error: errors.releasingPrison },
+                        { key: 'Legislation released under', value: blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under'), actions: [{ id: editIdPrefix+'legislationreleasedunder', text: editText, href: 'edit-legislation-released-under', visuallyHidden: 'legislation released under' }], error: errors.legislationReleasedUnder },
+                        { key: 'Custody status', value: custodyStatusBlock },
+                        { key: 'Custody type', value: blankSafe(recommendation.bookRecallToPpud.custodyType, true, 'Enter a custody type'), actions: [{ id: editIdPrefix+'custodytype', text: editText, href: 'edit-custody-type', visuallyHidden: 'custody type' }], error: errors.custodyType },
+                        { key: 'Current establishment', value: blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment'), actions: [{ id: editIdPrefix+'currentestablishment', text: editText, href: 'edit-current-establishment', visuallyHidden: 'current establishment' }], error: errors.currentEstablishment },
+                        { key: 'Last known address', value: addressBlock }
+                    ],
+                    borderTop: true
+                }) }}
 
 
-                <h2 class='govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0'>
+                <h2 class='govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4'>
                     Probation details
                     <span class="govuk-caption-m">Taken from the Part A</span>
                 </h2>
 
-                <div class="govuk-summary-list govuk-!-margin-bottom-4">
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Recall received date
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-recall-received-date-and-time'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Recall received time
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }) }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-recall-received-date-and-time'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Recall decision date
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Recall decision time
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.probationArea) }}
-                            Probation area
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'Enter a probation area') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-probation-area'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Probation practitioner
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(practitioner.name) }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Probation practitioner email
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(practitioner.email) }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Probation practitioner phone number
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(practitioner.telephone) }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.policeForce) }}
-                            Local police contact
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'Enter a local police force') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-police-contact'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Senior manager (ACO)
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ acoSigned.createdByUserFullName }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Senior manager (ACO) email
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ acoSigned.emailAddress }}
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            {{ errorDisplay(errors.mappaLevel) }}
-                            MAPPA level
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ blankSafe(recommendation.bookRecallToPpud.mappaLevel, true, 'Enter a MAPPA level') }}
-                        </div>
-                        <div class="govuk-summary-list__actions">
-                            <a class='govuk-link' href='edit-mappa-level'>Edit</a>
-                        </div>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <div class="govuk-summary-list__key">
-                            Current risk of serious harm
-                        </div>
-                        <div class="govuk-summary-list__value">
-                            {{ currentHighestRosh }}
-                        </div>
-                    </div>
-                </div>
+                {{ summaryList({
+                    id: 'probation-details-list',
+                    rows: [
+                        { key: 'Recall received date', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }), actions: [{ id: editIdPrefix+'recallreceiveddate', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date' }] },
+                        { key: 'Recall received time', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }), actions: [{ id: editIdPrefix+'recallreceivedtime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received time' }] },
+                        { key: 'Recall decision date', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) },
+                        { key: 'Recall decision time', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) },
+                        { key: 'Probation area', value: blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'Enter a probation area'), actions: [{ id: editIdPrefix+'probationarea', text: editText, href: 'edit-probation-area', visuallyHidden: 'probation area' }], error: errors.probationArea },
+                        { key: 'Probation practitioner', value: blankSafe(practitioner.name) },
+                        { key: 'Probation practitioner email', value: blankSafe(practitioner.email) },
+                        { key: 'Probation practitioner phone number', value: blankSafe(practitioner.telephone) },
+                        { key: 'Local police contact', value: blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'Enter a local police force'), actions: [{ id: editIdPrefix+'policecontact', text: editText, href: 'edit-police-contact', visuallyHidden: 'local police contact' }], error: errors.policeForce },
+                        { key: 'Senior manager (ACO)', value: acoSigned.createdByUserFullName },
+                        { key: 'Senior manager (ACO) email', value: acoSigned.emailAddress },
+                        { key: 'MAPPA level', value: blankSafe(recommendation.bookRecallToPpud.mappaLevel,true, 'Enter a MAPPA level'), actions: [{ id: editIdPrefix+'mappalevel', text: editText, href: 'edit-mappa-level', visuallyHidden: 'MAPPA level' }], error: errors.mappaLevel },
+                        { key: 'Current risk of serious harm', value: currentHighestRosh }
+                    ],
+                    borderTop: true
+                })}}
+                
                 {{ formSubmitButton({ label: 'Accept and continue' }) }}
             </form>
         </div>
