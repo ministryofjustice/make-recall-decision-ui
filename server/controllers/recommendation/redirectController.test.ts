@@ -15,7 +15,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -34,7 +34,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -59,7 +59,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -84,7 +84,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -102,7 +102,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
         },
       },
     })
@@ -125,7 +125,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -148,7 +148,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -172,7 +172,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -199,7 +199,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -274,7 +274,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -297,7 +297,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -321,7 +321,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -345,7 +345,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -369,7 +369,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -398,7 +398,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -427,7 +427,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
