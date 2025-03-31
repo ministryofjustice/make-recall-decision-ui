@@ -3,6 +3,7 @@ import outOfHoursWarningController from './outOfHoursWarningController'
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { createRecommendation, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { RECOMMENDATION_STATUS } from '../../middleware/recommendationStatus'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../caseSummary/getCaseSection')
@@ -164,7 +165,7 @@ describe('Out of Hours Warning Controller', () => {
     expect(createRecommendation).toHaveBeenCalledWith({ crn: 'X1234Y' }, 'token', {})
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['PO_START_RECALL'],
+      activate: [RECOMMENDATION_STATUS.PO_START_RECALL],
       deActivate: [],
       recommendationId: '456',
       token: 'token',
