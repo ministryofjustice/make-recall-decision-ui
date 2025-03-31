@@ -68,22 +68,22 @@ async function post(req: Request, res: Response, _: NextFunction) {
     statuses,
   } = res.locals
 
-  let errorId: string
-
-  const isDoNotRecall = statuses.find((status: { name: STATUSES }) => status.name === STATUSES.NO_RECALL_DECIDED)
-  const isRecallDecided = statuses.find((status: { name: STATUSES }) => status.name === STATUSES.RECALL_DECIDED)
-
-  if (isDoNotRecall) {
-    errorId = 'missingDeleteDntrRationale'
-  } else if (isRecallDecided) {
-    errorId = 'missingDeletePartARationale'
-  } else {
-    // to capture legacy recommendations and any new ones that have status STATUSES.PO_START_RECALL
-    errorId = 'missingDeleteRecommendationRationale'
-  }
   const errors = []
 
   if (!isMandatoryTextValue(spoDeleteRecommendationRationale)) {
+    let errorId: string
+
+    const isDoNotRecall = statuses.find((status: { name: STATUSES }) => status.name === STATUSES.NO_RECALL_DECIDED)
+    const isRecallDecided = statuses.find((status: { name: STATUSES }) => status.name === STATUSES.RECALL_DECIDED)
+
+    if (isDoNotRecall) {
+      errorId = 'missingDeleteDntrRationale'
+    } else if (isRecallDecided) {
+      errorId = 'missingDeletePartARationale'
+    } else {
+      // to capture legacy recommendations and any new ones that have status STATUSES.PO_START_RECALL
+      errorId = 'missingDeleteRecommendationRationale'
+    }
     errors.push(
       makeErrorObject({
         id: 'spoDeleteRecommendationRationale',
