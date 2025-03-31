@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import redirectController from './redirectController'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -225,7 +226,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.SPO],
         },
       },
     })
@@ -252,7 +253,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.SPO],
         },
       },
     })
