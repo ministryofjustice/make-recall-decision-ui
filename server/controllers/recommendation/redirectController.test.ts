@@ -114,7 +114,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to recall-type-indeterminate if extended sentence and spo has recorded decision', async () => {
+  it('redirect to recall-type-extended if extended sentence and spo has recorded decision', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
     const res = mockRes({
       locals: {
@@ -160,7 +160,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to recall-type-indeterminate if not indeterminate or extended sentence and spo has recorded decision', async () => {
+  it('redirect to suitability-for-fixed-term-recall if not indeterminate or extended sentence and spo has recorded decision', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
     const res = mockRes({
       locals: {
