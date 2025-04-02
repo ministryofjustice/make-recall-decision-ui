@@ -61,7 +61,7 @@ fi
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
-export SPRING_PROFILES_ACTIVE=dev
+export SPRING_PROFILES_ACTIVE=dev,seed-test-data
 docker compose build
 docker compose up -d
 popd
