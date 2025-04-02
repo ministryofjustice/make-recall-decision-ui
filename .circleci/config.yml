@@ -283,11 +283,11 @@ jobs:
             echo $(pwd)
             shopt -s globstar
 
-            SPECS=$(circleci tests glob "e2e_tests/features/e2eJourneyTests/*.feature" | circleci tests split --show-counts)
+            SPECS=$(circleci tests glob "e2e_tests/features/e2eTests/*.feature" | circleci tests split --show-counts)
             echo $SPECS
 
             npx cypress run \
-              --env TAGS='<< parameters.e2e-tags >>',USERNAME=${CYPRESS_USERNAME_<< parameters.environment >>},PASSWORD=${CYPRESS_PASSWORD_<< parameters.environment >>},USERNAME_SPO=${CYPRESS_USERNAME_SPO_<< parameters.environment >>},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_<< parameters.environment >>},USERNAME_ACO=${CYPRESS_USERNAME_ACO_<< parameters.environment >>},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_<< parameters.environment >>},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
+              --env TAGS='<< parameters.e2e-tags >>',USERNAME_PO=${<< parameters.environment >>_CYPRESS_USERNAME_PO},PASSWORD_PO=${<< parameters.environment >>_CYPRESS_PASSWORD_PO},USERNAME_SPO=${<< parameters.environment >>_CYPRESS_USERNAME_SPO},PASSWORD_SPO=${<< parameters.environment >>_CYPRESS_PASSWORD_SPO},USERNAME_ACO=${<< parameters.environment >>_CYPRESS_USERNAME_ACO},PASSWORD_ACO=${<< parameters.environment >>_CYPRESS_PASSWORD_ACO},CRN=${CRN_<< parameters.environment >>},CRN2=${CRN2_<< parameters.environment >>},CRN3=${CRN3_<< parameters.environment >>},CRN4=${CRN4_<< parameters.environment >>},CRN5=${CRN5_<< parameters.environment >>},ENV=<< parameters.environment >> \
               --config-file e2e_tests/cypress.config.ts \
               --config baseUrl=https://make-recall-decision-<< parameters.environment >>.hmpps.service.justice.gov.uk \
               --spec $SPECS \
@@ -347,7 +347,7 @@ jobs:
             set +e
 
             npx cypress run \
-              --env TAGS='not @E2E and not @smoke',USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},USERNAME_SPO=${CYPRESS_USERNAME_SPO_local},PASSWORD_SPO=${CYPRESS_PASSWORD_SPO_local},USERNAME_ACO=${CYPRESS_USERNAME_ACO_local},PASSWORD_ACO=${CYPRESS_PASSWORD_ACO_local},USERNAME_PPCS=${CYPRESS_USERNAME_PPCS_local},PASSWORD_PPCS=${CYPRESS_PASSWORD_PPCS_local},MAKE_RECALL_DECISION_API_URL=${CYPRESS_MAKE_RECALL_DECISION_API_URL_local},HMPPS_AUTH_EXTERNAL_URL=${CYPRESS_HMPPS_AUTH_EXTERNAL_URL_local} \
+              --env TAGS='not @E2E and not @smoke',USERNAME_PO=${local_CYPRESS_USERNAME_PO},PASSWORD_PO=${local_CYPRESS_PASSWORD_PO},USERNAME_SPO=${local_CYPRESS_USERNAME_SPO},PASSWORD_SPO=${local_CYPRESS_PASSWORD_SPO},USERNAME_ACO=${local_CYPRESS_USERNAME_ACO},PASSWORD_ACO=${local_CYPRESS_PASSWORD_ACO},USERNAME_PPCS=${local_CYPRESS_USERNAME_PPCS},PASSWORD_PPCS=${local_CYPRESS_PASSWORD_PPCS},API_CLIENT_ID=${local_CYPRESS_API_CLIENT_ID},API_CLIENT_SECRET=${local_CYPRESS_API_CLIENT_SECRET},MAKE_RECALL_DECISION_API_URL=${local_CYPRESS_MAKE_RECALL_DECISION_API_URL},HMPPS_AUTH_EXTERNAL_URL=${local_CYPRESS_HMPPS_AUTH_EXTERNAL_URL} \
               --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \
