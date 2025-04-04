@@ -1,0 +1,1 @@
+export type EstablishmentMap = Map<string, string>
