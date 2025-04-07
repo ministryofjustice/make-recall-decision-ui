@@ -241,6 +241,14 @@ export const prisonSentences = ({ statusCode = 200, response }: { statusCode?; r
   })
 }
 
+export const establishmentMappings = ({ statusCode = 200, response }: { statusCode?; response }) => {
+  return mockGet({
+    urlPathPattern: `/establishment-mappings`,
+    statusCode,
+    response,
+  })
+}
+
 export const createNoRecallLetter = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockUpdate({
     urlPathPattern: `${routes.recommendations}/(.*)/no-recall-letter`,

@@ -2041,6 +2041,7 @@ context('Make a recommendation', () => {
           facialImageId: 1234,
           dateOfBirth: '1970-03-15',
           status: 'ACTIVE IN',
+          agencyId: 'MLI',
           physicalAttributes: {
             gender: 'Male',
             ethnicity: 'Caucasian',
@@ -2055,6 +2056,12 @@ context('Make a recommendation', () => {
               value: 'X234547',
             },
           ],
+        },
+      })
+      cy.task('establishmentMappings', {
+        statusCode: 200,
+        response: {
+          MLI: 'HMPPS Moorland',
         },
       })
 
