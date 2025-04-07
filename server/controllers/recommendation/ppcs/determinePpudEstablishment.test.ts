@@ -216,4 +216,40 @@ describe('determinePpudEstablishment', () => {
     expect(offenderMovements).toHaveBeenCalledWith(TOKEN, nomisId)
     expect(searchForPrisonOffender).toHaveBeenCalledWith(TOKEN, nomisId)
   })
+
+  it('returns blank when agency is TRN and an empty list of movements is returned', async () => {
+    const recommendation = RECOMMENDATION_TEMPLATE
+    const nomisId = randomUUID()
+    recommendation.personOnProbation.nomsNumber = nomisId
+    recommendation.prisonOffender.agencyId = NOMIS_ESTABLISHMENT_TRANSFER
+
+    const firstOffenderMovement = OFFENDER_MOVEMENT_TEMPLATE
+    const lastOffenderMovement = OFFENDER_MOVEMENT_TEMPLATE
+    lastOffenderMovement.movementType = randomUUID()
+    lastOffenderMovement.movementDateTime.setDate(firstOffenderMovement.movementDateTime.getDate() + 1)
+    ;(offenderMovements as jest.Mock).mockReturnValueOnce([])
+
+    const actualPpudEstablishment = await determinePpudEstablishment(recommendation, TOKEN)
+
+    expect(actualPpudEstablishment).toEqual('')
+    expect(offenderMovements).toHaveBeenCalledWith(TOKEN, nomisId)
+  })
+
+  it('returns blank when agency is TRN and no movements (undefined) are returned', async () => {
+    const recommendation = RECOMMENDATION_TEMPLATE
+    const nomisId = randomUUID()
+    recommendation.personOnProbation.nomsNumber = nomisId
+    recommendation.prisonOffender.agencyId = NOMIS_ESTABLISHMENT_TRANSFER
+
+    const firstOffenderMovement = OFFENDER_MOVEMENT_TEMPLATE
+    const lastOffenderMovement = OFFENDER_MOVEMENT_TEMPLATE
+    lastOffenderMovement.movementType = randomUUID()
+    lastOffenderMovement.movementDateTime.setDate(firstOffenderMovement.movementDateTime.getDate() + 1)
+    ;(offenderMovements as jest.Mock).mockReturnValueOnce(undefined)
+
+    const actualPpudEstablishment = await determinePpudEstablishment(recommendation, TOKEN)
+
+    expect(actualPpudEstablishment).toEqual('')
+    expect(offenderMovements).toHaveBeenCalledWith(TOKEN, nomisId)
+  })
 })
