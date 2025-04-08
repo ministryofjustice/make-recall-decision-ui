@@ -35,6 +35,14 @@ async function getTransferAgencyId(recommendation: RecommendationResponse, token
   let nomisAgencyId = recommendation.prisonOffender.agencyId
 
   const latestMovement = await getLatestMovement(recommendation.personOnProbation.nomsNumber, token)
+
+  // An undefined value at this point indicates something is probably going wrong either in Prison API, NOMIS or our
+  // connection to them, so the logic beyond this if branch would be unreliable. Instead, we leave the field blank for
+  // the user to manually react to the problem. This is only expected to affect a very low number of cases.
+  if (latestMovement === undefined) {
+    return ''
+  }
+
   if (latestMovement.movementType === NOMIS_ESTABLISHMENT_TRANSFER) {
     nomisAgencyId = latestMovement.toAgency
     if (!hasValue(nomisAgencyId) || nomisAgencyId.length === 0) {
@@ -54,10 +62,12 @@ async function getTransferAgencyId(recommendation: RecommendationResponse, token
 
 async function getLatestMovement(nomisId: string, token: string) {
   const movements = await offenderMovements(token, nomisId)
-  movements.sort((movementA, movementB) => (movementA.movementDateTime < movementB.movementDateTime ? -1 : 1))
-  const latestMovement = movements[movements.length - 1]
+  if (movements === undefined || movements.length === 0) {
+    return
+  }
 
-  return latestMovement
+  movements.sort((movementA, movementB) => (movementA.movementDateTime < movementB.movementDateTime ? -1 : 1))
+  return movements[movements.length - 1]
 }
 
 /**
