@@ -165,6 +165,13 @@ describe('post', () => {
       },
       featureFlags: {},
     })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.SPO_RECORDED_RATIONALE],
+      deActivate: [STATUSES.SPO_CONSIDER_RECALL],
+    })
   })
   it('sent to ppcs', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.PP_DOCUMENT_CREATED, active: true }])
