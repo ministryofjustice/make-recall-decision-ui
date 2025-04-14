@@ -1,4 +1,6 @@
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { RecommendationResponse } from '../@types/make-recall-decision-api'
 
 export type Check = (locals: Record<string, unknown>) => boolean
 
@@ -21,6 +23,14 @@ export function flagIsActive(name: string): Check {
   return (locals: Record<string, unknown>) => {
     const flags = locals.flags as Record<string, boolean>
     return flags[name]
+  }
+}
+
+export function ppcsCustodyGroup(custodyGroup: CUSTODY_GROUP): Check {
+  return (locals: Record<string, unknown>) => {
+    const recommendation = locals.recommendation as RecommendationResponse
+    const recommendationCustodyGroup: CUSTODY_GROUP = recommendation.bookRecallToPpud?.custodyGroup
+    return recommendationCustodyGroup !== undefined && recommendationCustodyGroup === custodyGroup
   }
 }
 

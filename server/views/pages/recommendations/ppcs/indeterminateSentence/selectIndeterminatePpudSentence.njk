@@ -1,0 +1,85 @@
+{% extends "../../../../partials/layout.njk" %}
+{% from "components/summary-list/macro.njk" import summaryList %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+
+    {% set nomisSentence = selectIndeterminatePpudSentencePageData.nomisSentence %}
+    {% set ppudSentences = selectIndeterminatePpudSentencePageData.ppudSentences %}
+    {% set selectedSentenceId = selectIndeterminatePpudSentencePageData.selectedSentenceId %}
+
+    {% set ppudSentenceRadioButtonList = [] %}
+    {% for sentence in ppudSentences %}
+        {% set _ =
+            ppudSentenceRadioButtonList.push({
+                value: sentence.id,
+                label: {
+                    classes: 'govuk-label car-radio-label-with-summary-list govuk-!-font-weight-bold'
+                },
+                html: summaryList({
+                    id: sentence.id,
+                    rows: [
+                        { key: 'Offence', value: hyphenForBlank(sentence.offence.indexOffence) },
+                        { key: 'Custody type', value: hyphenForBlank(sentence.custodyType) },
+                        { key: 'Date of sentence', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.dateOfSentence })) },
+                        { key: 'Sentence end date', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate })) }
+                    ]
+                })
+            })
+        %}
+    {% endfor %}
+
+    <h1 class='govuk-heading-l'>{{ pageTitles[page.id] }}</h1>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../../../partials/error-summary.njk' %}
+
+            <p class='govuk-body'>Check the details of your booking then add it to the correct sentence in PPUD. If the
+                right sentence is not listed, select "add a sentence".</p>
+
+            <h2 class='govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4'>Booking details from Part A</h2>
+
+            {{ summaryList({
+                id: 'nomis-sentence-details',
+                rows: [
+                    { key: 'Offence', value: hyphenForBlank(nomisSentence.offenceDescription) },
+                    { key: 'Date of sentence', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: nomisSentence.dateOfSentence })) },
+                    { key: 'Sentence type', value: hyphenForBlank(nomisSentence.custodyGroup) },
+                    { key: 'Sentence end date', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: nomisSentence.sentenceExpiryDate })) }
+                ],
+                borderTop: true
+            }) }}
+
+            <h2 class='govuk-heading-m govuk-!-margin-top-6'>Add your booking to PPUD</h2>
+
+            <p class='govuk-body'>Select an existing PPUD sentence for this booking. If something is not right, you can
+                edit it in the next step. If the correct sentence is not listed, select add a sentence to create
+                one. </p>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukRadios({
+                    name: "ppudSentenceId",
+                    fieldset: {
+                        legend: {
+                            text: "Indeterminate sentences in PPUD",
+                            classes: "govuk-fieldset__legend--l"
+                        }
+                    },
+                    value: selectedSentenceId,
+                    items: ppudSentenceRadioButtonList
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

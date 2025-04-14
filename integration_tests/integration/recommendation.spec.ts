@@ -9,6 +9,7 @@ import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 import { RECOMMENDATION_STATUS } from '../../server/middleware/recommendationStatus'
+import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -2479,7 +2480,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           recallConsideredList: null,
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.DETERMINATE },
         },
       })
       cy.task('getStatuses', {
@@ -2529,7 +2530,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: {},
+          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
           ppudOffender: {},
           nomisIndexOffence: {
             allOptions: [
@@ -2578,13 +2579,13 @@ context('Make a recommendation', () => {
       cy.getText('sentenceEndDate').should('contain', '15 November 3022')
     })
 
-    it('select ppud sentence', () => {
+    it('select determinate ppud sentence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           ppudOffender: {
             id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
             sentences: [
@@ -2646,6 +2647,7 @@ context('Make a recommendation', () => {
             lastName: 'Pooh',
             custodyType: 'custody type',
             indexOffence: 'index offence',
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
           },
           nomisIndexOffence: {
             allOptions: [
@@ -2710,7 +2712,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2786,6 +2788,7 @@ context('Make a recommendation', () => {
             firstNames: 'Pinky',
             lastName: 'Pooh',
             ppudSentenceId: '1',
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
           },
           nomisIndexOffence: {
             allOptions: [
@@ -2823,6 +2826,57 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/sentence-to-commit-existing-offender`)
       cy.pageHeading().should('contain', 'Double check your booking')
     })
+
+    it('select indeterminate ppud sentence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          isIndeterminateSentence: true,
+          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [
+              {
+                id: '1',
+                dateOfSentence: '2003-06-12',
+                custodyType: 'Mandatory (MLP)',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+            ],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Select or add a sentence for your booking')
+
+      cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
+      cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
+      cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should('contain.text', CUSTODY_GROUP.INDETERMINATE)
+      cy.get('div[id=nomis-sentence-details-sentence-end-date-row] dd').should('contain.text', '10 May 2024')
+
+      cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
+      cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
+      cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
+      cy.get('div[id=1-sentence-end-date-row] dd').should('contain.text', '2 March 1969')
+    })
+
     it('book to ppud - create offender', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

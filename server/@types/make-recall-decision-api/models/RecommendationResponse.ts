@@ -27,6 +27,7 @@ import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendat
 import type { WhyConsideredRecall } from './WhyConsideredRecall'
 import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
 import BookingMemento from '../../../booking/BookingMemento'
+import { CUSTODY_GROUP } from './ppud/CustodyGroup'
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -166,6 +167,7 @@ export type BookRecallToPpud = {
   decisionDateTime?: string,
   receivedDateTime?: string,
   custodyType?: string,
+  custodyGroup?: CUSTODY_GROUP,
   indexOffence?: string,
   indexOffenceComment?: string,
   ppudSentenceId?: string,

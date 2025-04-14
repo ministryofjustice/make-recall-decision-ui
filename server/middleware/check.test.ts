@@ -1,6 +1,7 @@
-import { flagIsActive, hasRole, statusIsActive } from './check'
+import { flagIsActive, hasRole, ppcsCustodyGroup, statusIsActive } from './check'
 import { STATUSES } from './recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -74,6 +75,32 @@ describe('flagIsActive', () => {
   it('flag is not active', async () => {
     const result = flagIsActive('flagRecommendationsPage')({
       flags: { flagRecommendationsPage: false },
+    })
+
+    expect(result).toBe(false)
+  })
+})
+
+describe('ppcsCustodyGroup', () => {
+  it('is same', async () => {
+    const result = ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE)({
+      recommendation: { bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE } },
+    })
+
+    expect(result).toBe(true)
+  })
+
+  it('is different', async () => {
+    const result = ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE)({
+      recommendation: { bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE } },
+    })
+
+    expect(result).toBe(false)
+  })
+
+  it('is undefined', async () => {
+    const result = ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE)({
+      recommendation: {},
     })
 
     expect(result).toBe(false)
