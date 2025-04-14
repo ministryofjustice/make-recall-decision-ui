@@ -87,7 +87,7 @@ describe('post', () => {
   it('post with checkbox unchecked', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(updateStatuses as jest.Mock).mockResolvedValue([])
+    ;(updateStatuses as jest.Mock).mockResolvedValue([]) // why mock if not checked?
 
     const req = mockReq({
       params: { recommendationId: '123' },
@@ -112,6 +112,13 @@ describe('post', () => {
         sendSpoDeleteRationaleToDelius: true,
       },
       featureFlags: {},
+    })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.REC_CLOSED, STATUSES.REC_DELETED],
+      deActivate: [],
     })
   })
 })
