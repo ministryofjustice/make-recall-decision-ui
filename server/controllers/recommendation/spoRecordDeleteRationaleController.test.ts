@@ -87,7 +87,7 @@ describe('post', () => {
   it('post with checkbox unchecked', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(updateStatuses as jest.Mock).mockResolvedValue([]) // why mock if not checked?
+    ;(updateStatuses as jest.Mock).mockResolvedValue([])
 
     const req = mockReq({
       params: { recommendationId: '123' },
