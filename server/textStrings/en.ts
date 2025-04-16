@@ -27,8 +27,6 @@ export const strings: Record<string, Record<string, string>> = {
     saveChanges: 'An error occurred saving your changes',
     noIndexOffenceSelected: 'Select an index offence',
     noPpudSentenceSelected: 'Select an existing sentence or add a new one',
-    noIndeterminatePpudSentenceSelected: 'Select an existing sentence or add a new one',
-    invalidIndeterminatePpudSentenceSelected: 'The selected sentence is not a valid one',
     noRecallTypeSelected: 'Select a recommendation',
     noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
     noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
@@ -117,6 +115,10 @@ export const strings: Record<string, Record<string, string>> = {
     missingCustodyGroup: 'Select a determinate/indeterminate value',
     invalidCustodyGroup:
       "Something went wrong. The determinate/indeterminate value you've selected wasn't recognised. Refresh the page and try again. If the problem continues, contact the support team.",
+    // indeterminate sentence selection
+    missingIndeterminatePpudSentence: 'Select an existing sentence or add a new one',
+    invalidIndeterminatePpudSentenceSelected:
+      "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -243,7 +245,6 @@ export const strings: Record<string, Record<string, string>> = {
     recordDeleteRecommendationRationale: 'Record the explanation in NDelius',
     spoDeleteConfirmation: 'Delete Confirmation',
     selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
-    selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
     supportingDocuments: 'Add supporting documents for {{ fullName }}',
     supportingDocumentUpload: 'Upload supporting document',
     supportingDocumentReplace: 'Replace supporting document',
@@ -257,5 +258,7 @@ export const strings: Record<string, Record<string, string>> = {
     /// PPCS ///
     // custody group
     editCustodyGroup: 'Is the sentence determinate or indeterminate?',
+    // indeterminate sentence selection
+    selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
   },
 }

@@ -237,9 +237,9 @@ describe('post', () => {
     // then
     expect(req.session.errors).toEqual([errorObject])
     expect(makeErrorObject).toHaveBeenCalledWith({
-      id: 'ppudSentenceId', // TODO should this also be passed into the njk to use as an anchor id?
-      text: strings.errors.noIndeterminatePpudSentenceSelected,
-      errorId: 'noIndeterminatePpudSentenceSelected',
+      id: 'ppudSentenceId',
+      text: strings.errors.missingIndeterminatePpudSentence,
+      errorId: 'missingIndeterminatePpudSentence',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
     expect(next).not.toHaveBeenCalled()

@@ -42,7 +42,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   let errorId
   if (ppudSentenceId === undefined) {
-    errorId = 'noIndeterminatePpudSentenceSelected'
+    errorId = 'missingIndeterminatePpudSentence'
   } else {
     const sentences: PpudDetailsSentence[] = getIndeterminateSentences(recommendation.ppudOffender.sentences)
     const sentenceIds = sentences.map((sentence: PpudDetailsSentence) => sentence.id)
