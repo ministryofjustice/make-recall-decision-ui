@@ -183,7 +183,7 @@
                         { key: 'Releasing prison', value: blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison'), actions: [{ id: editIdPrefix+'releasingprison', text: editText, href: 'edit-releasing-prison' , visuallyHidden: 'releasing prison' }], error: errors.releasingPrison },
                         { key: 'Legislation released under', value: blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under'), actions: [{ id: editIdPrefix+'legislationreleasedunder', text: editText, href: 'edit-legislation-released-under', visuallyHidden: 'legislation released under' }], error: errors.legislationReleasedUnder },
                         { key: 'Custody status', value: custodyStatusBlock },
-                        { key: 'Custody type', value: blankSafe(recommendation.bookRecallToPpud.custodyType, true, 'Enter a custody type'), actions: [{ id: editIdPrefix+'custodytype', text: editText, href: 'edit-custody-type', visuallyHidden: 'custody type' }], error: errors.custodyType },
+                        { key: 'Determinate or indeterminate', value: blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'), actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }], error: errors.custodyGroup },
                         { key: 'Current establishment', value: blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment'), actions: [{ id: editIdPrefix+'currentestablishment', text: editText, href: 'edit-current-establishment', visuallyHidden: 'current establishment' }], error: errors.currentEstablishment },
                         { key: 'Last known address', value: addressBlock }
                     ],
@@ -215,7 +215,7 @@
                     ],
                     borderTop: true
                 })}}
-                
+
                 {{ formSubmitButton({ label: 'Accept and continue' }) }}
             </form>
         </div>

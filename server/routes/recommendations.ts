@@ -84,7 +84,6 @@ import selectIndexOffenceController from '../controllers/recommendation/selectIn
 import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
-import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
 import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
 import matchIndexOffenceController from '../controllers/recommendation/matchIndexOffenceController'
 import bookToPpudController from '../controllers/recommendation/bookToPpudController'
@@ -123,6 +122,7 @@ import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/Documen
 import editCurrentEstablishmentController from '../controllers/recommendation/ppcs/currentEstablishment/editCurrentEstablishmentController'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
+import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
 
 const recommendations = Router()
 
@@ -449,8 +449,8 @@ ppcsRouteBuilder.post('edit-name', editNameController.post)
 ppcsRouteBuilder.get('edit-cro', editCroController.get)
 ppcsRouteBuilder.post('edit-cro', editCroController.post)
 
-ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
-ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
+ppcsRouteBuilder.get('edit-custody-group', editCustodyGroupController.get)
+ppcsRouteBuilder.post('edit-custody-group', editCustodyGroupController.post)
 
 ppcsRouteBuilder.get('edit-current-establishment', editCurrentEstablishmentController.get)
 ppcsRouteBuilder.post('edit-current-establishment', editCurrentEstablishmentController.post)

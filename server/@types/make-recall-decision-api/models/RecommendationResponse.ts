@@ -154,7 +154,7 @@ export type Term = {
   years: number;
   months: number;
   weeks: number;
-  days: number
+  days: number;
   code: string;
 }
 

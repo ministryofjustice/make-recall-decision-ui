@@ -1,13 +1,18 @@
+import { randomUUID } from 'node:crypto'
 import { mockNext, mockReq, mockRes } from '../../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, searchForPrisonOffender, updateRecommendation } from '../../../data/makeDecisionApiClient'
 import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/format'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
+import { randomEnum } from '../../../@types/enum.testFactory'
+import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { getRoute } from './custodyGroupRouter'
 
 jest.mock('../../../data/makeDecisionApiClient')
 jest.mock('../../../utils/dates/format')
 jest.mock('./determinePpudEstablishment')
+jest.mock('./custodyGroupRouter')
 
 const prisonOffenderFirstName = 'ANNE'
 const prisonOffenderMiddleName = 'C'
@@ -394,6 +399,7 @@ describe('get', () => {
 
 describe('post', () => {
   it('book in ppud', async () => {
+    const custodyGroup = randomEnum(CUSTODY_GROUP)
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
       bookRecallToPpud: {
@@ -411,6 +417,7 @@ describe('post', () => {
         image: undefined,
         gender: 'm',
         ethnicity: 'caucasian',
+        custodyGroup,
         custodyType: 'extended',
         releasingPrison: 'traitors gate',
         mappaLevel: '1',
@@ -438,10 +445,14 @@ describe('post', () => {
 
     const next = mockNext()
 
+    const destinationUrl = randomUUID()
+    ;(getRoute as jest.Mock).mockReturnValueOnce(destinationUrl)
+
     await checkBookingDetailsController.post(req, res, next)
 
     expect(req.session.errors).toBeUndefined()
-    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}select-index-offence`)
+    expect(getRoute).toHaveBeenCalledWith(custodyGroup)
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${destinationUrl}`)
 
     expect(next).toHaveBeenCalled()
   })
@@ -509,10 +520,10 @@ describe('post', () => {
         values: undefined,
       },
       {
-        errorId: 'missingCustodyType',
-        href: '#custodyType',
-        name: 'custodyType',
-        text: 'Enter custody type',
+        errorId: 'missingCustodyGroup',
+        href: '#custodyGroup',
+        name: 'custodyGroup',
+        text: 'Select a determinate/indeterminate value',
         invalidParts: undefined,
         values: undefined,
       },

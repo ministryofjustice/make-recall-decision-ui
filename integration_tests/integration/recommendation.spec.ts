@@ -2303,14 +2303,14 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Edit legislation released under')
     })
 
-    it('edit Custody Type', () => {
+    it('edit Custody Group', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {
-            custodyType: 'Determinate',
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
           },
           ppudOffender: {},
         },
@@ -2319,14 +2319,9 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
       })
-      cy.task('getReferenceList', {
-        name: 'custody-types',
-        statusCode: 200,
-        response: { values: ['Determinate'] },
-      })
 
-      cy.visit(`/recommendations/252523937/edit-custody-type`)
-      cy.pageHeading().should('contain', 'Edit custody type')
+      cy.visit(`/recommendations/252523937/edit-custody-group`)
+      cy.pageHeading().should('contain', 'Is the sentence determinate or indeterminate?')
     })
 
     it('edit Current Establishment', () => {

@@ -29,6 +29,11 @@ export function flagIsActive(name: string): Check {
 export function ppcsCustodyGroup(custodyGroup: CUSTODY_GROUP): Check {
   return (locals: Record<string, unknown>) => {
     const recommendation = locals.recommendation as RecommendationResponse
+    // In some cases there isn't a relevant recommendation available (e.g. in the offender
+    // overview page), in which case we forego this check
+    if (!recommendation) {
+      return true
+    }
     const recommendationCustodyGroup: CUSTODY_GROUP = recommendation.bookRecallToPpud?.custodyGroup
     return recommendationCustodyGroup !== undefined && recommendationCustodyGroup === custodyGroup
   }

@@ -112,6 +112,11 @@ export const strings: Record<string, Record<string, string>> = {
     missingFile: 'Upload a document',
     duplicateTitle: 'Enter a unique document title',
     titleLengthExceeded: 'The title must be less than 250 characters',
+    /// PPCS ///
+    // custody group
+    missingCustodyGroup: 'Select a determinate/indeterminate value',
+    invalidCustodyGroup:
+      "Something went wrong. The determinate/indeterminate value you've selected wasn't recognised. Refresh the page and try again. If the problem continues, contact the support team.",
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -249,5 +254,8 @@ export const strings: Record<string, Record<string, string>> = {
     additionalSupportingDocumentUpload: 'Add additional document',
     additionalSupportingDocumentReplace: 'Replace additional document',
     additionalSupportingDocumentRemove: 'Add additional document',
+    /// PPCS ///
+    // custody group
+    editCustodyGroup: 'Is the sentence determinate or indeterminate?',
   },
 }

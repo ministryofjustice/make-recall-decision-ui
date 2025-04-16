@@ -1,0 +1,53 @@
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% set partACustodyGroup = editCustodyGroupPageData.partACustodyGroup %}
+{% set selectedCustodyGroup = editCustodyGroupPageData.selectedCustodyGroup %}
+{% set custodyGroups = editCustodyGroupPageData.custodyGroups %}
+
+{% set custodyGroupRadioButtonList = [] %}
+{% for custodyGroup in custodyGroups %}
+    {% set _ = custodyGroupRadioButtonList.push({ text: custodyGroup, value: custodyGroup }) %}
+{% endfor %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            <div class="govuk-text-list">
+                <h2 class='govuk-heading-m'>From Part A</h2>
+                <div class="govuk-text-list__row">
+                    <div class="govuk-text-list__key">Sentence type</div>
+                    <div class="govuk-text-list__value">{{ partACustodyGroup }}</div>
+                </div>
+            </div>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ govukRadios({
+                    name: "custodyGroup",
+                    fieldset: {
+                        legend: {
+                            text: "Select a sentence type",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    errorMessage: errorMessage(errors.custodyGroup),
+                    value: selectedCustodyGroup,
+                    items: custodyGroupRadioButtonList
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
