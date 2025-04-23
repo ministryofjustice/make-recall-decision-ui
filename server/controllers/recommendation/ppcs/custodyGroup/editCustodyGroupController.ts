@@ -50,7 +50,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     return res.redirect(303, req.originalUrl)
   }
 
-  let { bookRecallToPpud } = recommendation
+  const { bookRecallToPpud } = recommendation
 
   if (bookRecallToPpud.custodyGroup !== custodyGroup) {
     let valuesToSave
@@ -61,7 +61,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     // the PPUD sentence to update). This is to ensure we don't accidentally book
     // data that is no longer valid/relevant
     if (bookRecallToPpud.custodyGroup !== undefined) {
-      bookRecallToPpud = removeOffenceAndSentenceData(bookRecallToPpud)
+      removeOffenceAndSentenceData(bookRecallToPpud)
       valuesToSave = {
         nomisIndexOffence: {},
       }
@@ -93,14 +93,14 @@ async function post(req: Request, res: Response, next: NextFunction) {
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo: res.locals.urlInfo }))
 }
 
-function removeOffenceAndSentenceData(bookRecallToPpud: BookRecallToPpud): BookRecallToPpud {
-  const bookRecallToPpudCopy = bookRecallToPpud
-  delete bookRecallToPpudCopy.sentenceDate
-  delete bookRecallToPpudCopy.indexOffence
-  delete bookRecallToPpudCopy.indexOffenceComment
-  delete bookRecallToPpudCopy.ppudSentenceId
-  delete bookRecallToPpudCopy.custodyType
-  return bookRecallToPpudCopy
+function removeOffenceAndSentenceData(bookRecallToPpud: BookRecallToPpud) {
+  /* eslint-disable no-param-reassign */
+  delete bookRecallToPpud.sentenceDate
+  delete bookRecallToPpud.indexOffence
+  delete bookRecallToPpud.indexOffenceComment
+  delete bookRecallToPpud.ppudSentenceId
+  delete bookRecallToPpud.custodyType
+  /* eslint-enable no-param-reassign */
 }
 
 export default { get, post }
