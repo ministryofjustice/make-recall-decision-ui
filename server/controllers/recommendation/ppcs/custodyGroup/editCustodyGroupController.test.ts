@@ -7,20 +7,20 @@ import { randomEnum } from '../../../../@types/enum.testFactory'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { featureFlags } from '../../../../@types/featureFlags.testFactory'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
-import { NamedFormError } from '../../../../@types/pagesForms'
-import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
 import {
   bookRecallToPpud,
   nomisIndexOffence,
 } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse.testFactory'
 import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { getCustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import { determineErrorId, reloadPageWithError } from '../validation/fieldValidation'
+import { randomErrorId } from '../../../../textStrings/en.testFactory'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 jest.mock('../../../../helpers/ppudSentence/ppudSentenceHelper')
 jest.mock('../../../recommendations/helpers/urls')
 jest.mock('../../../../utils/errors')
+jest.mock('../validation/fieldValidation')
 
 describe('get', () => {
   it('load when custody group not set', async () => {
@@ -93,6 +93,8 @@ describe('get', () => {
 })
 
 describe('post', () => {
+  const custodyGroupFieldName = 'CustodyGroup'
+  const validCustodyGroups = Object.values(CUSTODY_GROUP)
   it('valid value selected, no previous value selected', async () => {
     // given
     const req = mockReq({
@@ -116,7 +118,8 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    ;(updateRecommendation as jest.Mock).mockResolvedValue({})
+    ;(determineErrorId as jest.Mock).mockReturnValue(undefined)
+    ;(updateRecommendation as jest.Mock).mockReturnValue({})
 
     const nextPagePath: string = 'nextPagePath'
     const nextPageLink: string = 'nextPageLink'
@@ -126,6 +129,8 @@ describe('post', () => {
     await editCustodyGroupController.post(req, res, next)
 
     // then
+    expect(determineErrorId).toHaveBeenCalledWith(req.body.custodyGroup, custodyGroupFieldName, validCustodyGroups)
+
     const expectedBookRecallToPpud = {
       ...recommendation.bookRecallToPpud,
       custodyGroup: req.body.custodyGroup,
@@ -179,7 +184,8 @@ describe('post', () => {
     })
     const next = mockNext()
 
-    ;(updateRecommendation as jest.Mock).mockResolvedValue({})
+    ;(determineErrorId as jest.Mock).mockReturnValue(undefined)
+    ;(updateRecommendation as jest.Mock).mockReturnValue({})
 
     const nextPagePath: string = 'nextPagePath'
     const nextPageLink: string = 'nextPageLink'
@@ -189,6 +195,8 @@ describe('post', () => {
     await editCustodyGroupController.post(req, res, next)
 
     // then
+    expect(determineErrorId).toHaveBeenCalledWith(req.body.custodyGroup, custodyGroupFieldName, validCustodyGroups)
+
     const expectedBookRecallToPpud = {
       ...initialBookRecallToPpud,
       custodyGroup: req.body.custodyGroup,
@@ -241,6 +249,8 @@ describe('post', () => {
     })
     const next = mockNext()
 
+    ;(determineErrorId as jest.Mock).mockReturnValue(undefined)
+
     const nextPagePath: string = 'nextPagePath'
     const nextPageLink: string = 'nextPageLink'
     ;(nextPageLinkUrl as jest.Mock).mockReturnValueOnce(nextPagePath).mockReturnValueOnce(nextPageLink)
@@ -249,6 +259,7 @@ describe('post', () => {
     await editCustodyGroupController.post(req, res, next)
 
     // then
+    expect(determineErrorId).toHaveBeenCalledWith(req.body.custodyGroup, custodyGroupFieldName, validCustodyGroups)
     expect(nextPageLinkUrl).toHaveBeenNthCalledWith(1, {
       nextPageId: 'check-booking-details',
       urlInfo: res.locals.urlInfo,
@@ -257,37 +268,7 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, nextPageLink)
     expect(next).not.toHaveBeenCalled()
   })
-  it('missing custody group', async () => {
-    // given
-    const req = mockReq({
-      originalUrl: randomUUID(),
-      body: {},
-    })
-
-    const res = mockRes()
-    const next = mockNext()
-
-    const errorObject: NamedFormError = {
-      name: randomUUID(),
-      text: randomUUID(),
-    }
-    ;(makeErrorObject as jest.Mock).mockReturnValueOnce(errorObject)
-
-    // when
-    await editCustodyGroupController.post(req, res, next)
-
-    // then
-    expect(req.session.errors).toEqual([errorObject])
-    expect(makeErrorObject).toHaveBeenCalledWith({
-      id: 'custodyGroup',
-      text: strings.errors.missingCustodyGroup,
-      errorId: 'missingCustodyGroup',
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
-    expect(next).not.toHaveBeenCalled()
-  })
-  it('invalid custody group', async () => {
+  it('erroneous custody group value', async () => {
     // given
     const req = mockReq({
       originalUrl: randomUUID(),
@@ -299,24 +280,16 @@ describe('post', () => {
     const res = mockRes()
     const next = mockNext()
 
-    const errorObject: NamedFormError = {
-      name: randomUUID(),
-      text: randomUUID(),
-    }
-    ;(makeErrorObject as jest.Mock).mockReturnValueOnce(errorObject)
+    const errorId = randomErrorId()
+    ;(determineErrorId as jest.Mock).mockReturnValue(errorId)
+    ;(reloadPageWithError as jest.Mock).mockReturnValue(undefined)
 
     // when
     await editCustodyGroupController.post(req, res, next)
 
     // then
-    expect(req.session.errors).toEqual([errorObject])
-    expect(makeErrorObject).toHaveBeenCalledWith({
-      id: 'custodyGroup',
-      text: strings.errors.invalidCustodyGroup,
-      errorId: 'invalidCustodyGroup',
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
+    expect(determineErrorId).toHaveBeenCalledWith(req.body.custodyGroup, custodyGroupFieldName, validCustodyGroups)
+    expect(reloadPageWithError).toHaveBeenCalledWith(errorId, 'custodyGroup', req, res)
     expect(next).not.toHaveBeenCalled()
   })
 })
