@@ -6,6 +6,7 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { hasValue, isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
+import { OfferedOffence } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -38,7 +39,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     errorMessage,
   }
 
-  const allOptions = sentences
+  const allOptions: OfferedOffence[] = sentences
     .flatMap(sentence => {
       if (sentence.offences) {
         return sentence.offences.map(offence => {

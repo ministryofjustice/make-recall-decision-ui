@@ -223,6 +223,7 @@ export const strings: Record<string, Record<string, string>> = {
     selectIndexOffence: 'Select the index offence for {{ fullName }}',
     sentenceToCommit: 'Your recall booking - {{ fullName }}',
     sentenceToCommitExistingOffender: 'Check the sentence and offence details for {{ fullName }}',
+    sentenceToCommitIndeterminate: 'Your recall booking for {{ fullName }}',
     bookToPpud: 'Book {{ fullName }} onto PPUD',
     bookedToPpud: 'Case created and booked onto PPUD',
     editCustodyType: 'Edit custody type',

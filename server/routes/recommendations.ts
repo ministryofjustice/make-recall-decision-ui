@@ -81,7 +81,9 @@ import searchPpudResultsController from '../controllers/recommendation/searchPpu
 import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
-import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
+import sentenceToCommitController from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitController'
+import sentenceToCommitExistingOffender from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitExistingOffenderController'
+import sentenceToCommitIndeterminate from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitIndeterminateController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
 import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
@@ -105,7 +107,6 @@ import supportingDocumentUploadController from '../controllers/recommendation/su
 import apRecordDecisionController from '../controllers/recommendation/apRecordDecisionController'
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
 import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
-import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
 import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
 import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAgreeDecision'
@@ -442,6 +443,21 @@ ppcsRouteBuilder.post('edit-recall-received-date-and-time', editRecallReceivedCo
 
 ppcsRouteBuilder.get('edit-prison-booking-number', editPrisonBookingNumberController.get)
 ppcsRouteBuilder.post('edit-prison-booking-number', editPrisonBookingNumberController.post)
+
+ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
+ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
+
+ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
+ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
+
+ppcsRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
+ppcsRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
+
+ppcsRouteBuilder.get('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.get)
+ppcsRouteBuilder.post('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.post)
+
+ppcsRouteBuilder.get('sentence-to-commit-indeterminate', sentenceToCommitIndeterminate.get)
+ppcsRouteBuilder.post('sentence-to-commit-indeterminate', sentenceToCommitIndeterminate.post)
 
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)
