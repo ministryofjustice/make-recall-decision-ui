@@ -2864,12 +2864,12 @@ context('Make a recommendation', () => {
       cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
       cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
       cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should('contain.text', CUSTODY_GROUP.INDETERMINATE)
-      cy.get('div[id=nomis-sentence-details-sentence-end-date-row] dd').should('contain.text', '10 May 2024')
+      cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
 
       cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
       cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
       cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
-      cy.get('div[id=1-sentence-end-date-row] dd').should('contain.text', '2 March 1969')
+      cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1969')
     })
 
     it('book to ppud - create offender', () => {

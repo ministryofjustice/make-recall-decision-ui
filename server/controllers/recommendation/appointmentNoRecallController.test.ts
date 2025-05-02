@@ -117,16 +117,21 @@ describe('post', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
+    const futureDate = new Date()
+    futureDate.setDate(futureDate.getDate() + 50)
+    // Seconds and milliseconds aren't passed through in the body, so we truncate here for the comparison later
+    futureDate.setSeconds(0)
+    futureDate.setMilliseconds(0)
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
         createLetterTasksComplete: '1',
         howWillAppointmentHappen: 'TELEPHONE',
-        'dateTimeOfAppointment-day': '01',
-        'dateTimeOfAppointment-month': '05',
-        'dateTimeOfAppointment-year': '2025',
-        'dateTimeOfAppointment-hour': '12',
-        'dateTimeOfAppointment-minute': '59',
+        'dateTimeOfAppointment-day': futureDate.getDate().toString(),
+        'dateTimeOfAppointment-month': (futureDate.getMonth() + 1).toString(),
+        'dateTimeOfAppointment-year': futureDate.getFullYear().toString(),
+        'dateTimeOfAppointment-hour': futureDate.getHours().toString(),
+        'dateTimeOfAppointment-minute': futureDate.getMinutes().toString(),
         probationPhoneNumber: '01277 960 001',
       },
     })
@@ -147,7 +152,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         nextAppointment: {
-          dateTimeOfAppointment: '2025-05-01T11:59:00.000Z',
+          dateTimeOfAppointment: futureDate.toISOString(),
           howWillAppointmentHappen: {
             allOptions: [
               {
@@ -182,6 +187,7 @@ describe('post', () => {
   it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
+    const currentDate = new Date()
     const req = mockReq({
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
@@ -190,7 +196,7 @@ describe('post', () => {
         howWillAppointmentHappen: 'TELEPHONE',
         'dateTimeOfAppointment-day': '01',
         'dateTimeOfAppointment-month': '05',
-        'dateTimeOfAppointment-year': '2025',
+        'dateTimeOfAppointment-year': (currentDate.getFullYear() + 3).toString(),
         'dateTimeOfAppointment-hour': '12',
         'dateTimeOfAppointment-minute': '59',
         probationPhoneNumber: '',
