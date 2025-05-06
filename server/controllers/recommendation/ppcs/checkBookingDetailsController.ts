@@ -18,6 +18,7 @@ import { checkIfAddressesAreEmpty } from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
+import { getRoute } from './custodyGroupRouter'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -225,7 +226,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   validateBookRecallToPpudField(bookRecallToPpud, 'legislationReleasedUnder', 'missingLegislationReleasedUnder', errors)
 
-  validateBookRecallToPpudField(bookRecallToPpud, 'custodyType', 'missingCustodyType', errors)
+  validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
 
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
 
@@ -242,7 +243,8 @@ async function post(req: Request, res: Response, next: NextFunction) {
     return res.redirect(303, req.originalUrl)
   }
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'select-index-offence', urlInfo })
+  const nextPageId = getRoute(bookRecallToPpud.custodyGroup)
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   next()

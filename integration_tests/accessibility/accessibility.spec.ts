@@ -6,6 +6,7 @@ import completeRecommendationResponse from '../../api/responses/get-recommendati
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
+import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -114,8 +115,14 @@ const spoUrls = [
 ]
 
 const ppcsUrls = [
-  { url: '/ppcs-search', validationError: false, fullRecommendationData: false, statuses: [] },
-  { url: '/ppcs-search-results?crn=X098092', validationError: false, fullRecommendationData: false, statuses: [] },
+  { url: '/ppcs-search', validationError: false, fullRecommendationData: false, statuses: [], bookRecallToPpud: {} },
+  {
+    url: '/ppcs-search-results?crn=X098092',
+    validationError: false,
+    fullRecommendationData: false,
+    statuses: [],
+    bookRecallToPpud: {},
+  },
   recommendationEndpoint('search-ppud', ['SENT_TO_PPCS']),
   recommendationEndpoint('search-ppud-results', ['SENT_TO_PPCS']),
   recommendationEndpoint('check-booking-details', ['SENT_TO_PPCS']),
@@ -128,15 +135,29 @@ const ppcsUrls = [
   recommendationEndpoint('edit-police-contact', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-releasing-prison', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-legislation-released-under', ['SENT_TO_PPCS']),
-  recommendationEndpoint('edit-custody-type', ['SENT_TO_PPCS']),
+  recommendationEndpoint('edit-custody-group', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-current-establishment', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-recall-received-date-and-time', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-probation-area', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-mappa-level', ['SENT_TO_PPCS']),
-  recommendationEndpoint('select-index-offence', ['SENT_TO_PPCS']),
-  recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS']),
-  recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS']),
-  recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS']),
+  recommendationEndpoint('select-index-offence', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint('select-indeterminate-ppud-sentence', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+  }),
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-upload/part-a', ['SENT_TO_PPCS']),
   recommendationEndpoint('additional-supporting-document-upload', ['SENT_TO_PPCS']),
@@ -145,7 +166,6 @@ const ppcsUrls = [
   recommendationEndpoint('edit-ppud-minute', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-replace/part-a/11111', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-remove/11111', ['SENT_TO_PPCS']),
-  recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS']),
   recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),
   recommendationEndpoint('booked-to-ppud', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
   recommendationEndpoint('booking-summary', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
@@ -159,13 +179,19 @@ const apUrls = [
   recommendationEndpoint('ap-rationale-confirmation', ['AP_RECORDED_RATIONALE']),
 ]
 
-function recommendationEndpoint(resource: string, statuses = [], fullRecommendationData: boolean = false) {
+function recommendationEndpoint(
+  resource: string,
+  statuses = [],
+  fullRecommendationData: boolean = false,
+  bookRecallToPpud = {}
+) {
   return {
     url: `${routeUrls.recommendations}/456/${resource}`,
     fullRecommendationData,
     validationError: false,
     noRecallData: false,
     statuses: statuses.map(name => ({ name, active: true })),
+    bookRecallToPpud,
   }
 }
 
@@ -375,6 +401,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
             lastName: 'Mull',
           },
           bookRecallToPpud: {
+            ...item.bookRecallToPpud,
             firstNames: 'Pinky',
             lastName: 'Pooh',
             ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',

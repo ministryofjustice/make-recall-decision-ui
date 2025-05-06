@@ -75,7 +75,7 @@ import spoWhyNoRecallController from '../controllers/recommendation/spoWhyNoReca
 import spoSeniorManagerEndorsementController from '../controllers/recommendation/spoSeniorManagerEndorsementController'
 import recallTypeExtendedController from '../controllers/recommendation/recallTypeExtendedController'
 import alreadyExistingController from '../controllers/recommendation/alreadyExistingController'
-import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
+import { and, hasRole, not, or, ppcsCustodyGroup, statusIsActive } from '../middleware/check'
 import ppcsConsiderRecallController from '../controllers/recommendation/searchPpudController'
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
@@ -84,7 +84,6 @@ import selectIndexOffenceController from '../controllers/recommendation/selectIn
 import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
-import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
 import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
 import matchIndexOffenceController from '../controllers/recommendation/matchIndexOffenceController'
 import bookToPpudController from '../controllers/recommendation/bookToPpudController'
@@ -121,6 +120,9 @@ import additionalSupportingDocumentRemoveController from '../controllers/recomme
 import recordConsiderationRationaleController from '../controllers/recommendation/recordConsiderationRationaleController'
 import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/DocumentType'
 import editCurrentEstablishmentController from '../controllers/recommendation/ppcs/currentEstablishment/editCurrentEstablishmentController'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
+import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
 
 const recommendations = Router()
 
@@ -441,26 +443,14 @@ ppcsRouteBuilder.post('edit-recall-received-date-and-time', editRecallReceivedCo
 ppcsRouteBuilder.get('edit-prison-booking-number', editPrisonBookingNumberController.get)
 ppcsRouteBuilder.post('edit-prison-booking-number', editPrisonBookingNumberController.post)
 
-ppcsRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
-ppcsRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
-
-ppcsRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
-ppcsRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
-
-ppcsRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
-ppcsRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
-
-ppcsRouteBuilder.get('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.get)
-ppcsRouteBuilder.post('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.post)
-
 ppcsRouteBuilder.get('edit-name', editNameController.get)
 ppcsRouteBuilder.post('edit-name', editNameController.post)
 
 ppcsRouteBuilder.get('edit-cro', editCroController.get)
 ppcsRouteBuilder.post('edit-cro', editCroController.post)
 
-ppcsRouteBuilder.get('edit-custody-type', editCustodyTypeController.get)
-ppcsRouteBuilder.post('edit-custody-type', editCustodyTypeController.post)
+ppcsRouteBuilder.get('edit-custody-group', editCustodyGroupController.get)
+ppcsRouteBuilder.post('edit-custody-group', editCustodyGroupController.post)
 
 ppcsRouteBuilder.get('edit-current-establishment', editCurrentEstablishmentController.get)
 ppcsRouteBuilder.post('edit-current-establishment', editCurrentEstablishmentController.post)
@@ -486,9 +476,6 @@ ppcsRouteBuilder.post('edit-probation-area', editProbationAreaController.post)
 ppcsRouteBuilder.get('edit-legislation-released-under', editLegislationReleasedUnderController.get)
 ppcsRouteBuilder.post('edit-legislation-released-under', editLegislationReleasedUnderController.post)
 
-ppcsRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
-ppcsRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
-
 ppcsRouteBuilder.get('supporting-documents', supportingDocumentsController.get)
 
 ppcsRouteBuilder.get('supporting-document-upload/:type', supportingDocumentUploadController.get)
@@ -513,6 +500,49 @@ ppcsRouteBuilder.get('supporting-document-remove/:id', supportingDocumentRemoveC
 ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemoveController.post)
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
+
+const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
+  and(
+    statusIsActive(STATUSES.SENT_TO_PPCS),
+    ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE),
+    not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
+    not(statusIsActive(STATUSES.REC_CLOSED))
+  )
+)
+
+ppcsDeterminateSentenceRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
+
+ppcsDeterminateSentenceRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
+
+// TODO change to select-determinate-ppud-sentence
+ppcsDeterminateSentenceRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
+
+ppcsDeterminateSentenceRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
+ppcsDeterminateSentenceRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
+
+ppcsDeterminateSentenceRouteBuilder.get('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.get)
+ppcsDeterminateSentenceRouteBuilder.post('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.post)
+
+const ppcsIndeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
+  and(
+    statusIsActive(STATUSES.SENT_TO_PPCS),
+    ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
+    not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
+    not(statusIsActive(STATUSES.REC_CLOSED))
+  )
+)
+
+ppcsIndeterminateSentenceRouteBuilder.get(
+  'select-indeterminate-ppud-sentence',
+  selectIndeterminatePpudSentenceController.get
+)
+ppcsIndeterminateSentenceRouteBuilder.post(
+  'select-indeterminate-ppud-sentence',
+  selectIndeterminatePpudSentenceController.post
+)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 

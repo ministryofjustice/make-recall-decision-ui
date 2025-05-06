@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import redirectController from './redirectController'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -14,7 +15,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -33,7 +34,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -58,7 +59,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -83,7 +84,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -101,7 +102,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MAKE_RECALL_DECISION_SPO'],
+          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
         },
       },
     })
@@ -114,7 +115,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to recall-type-indeterminate if extended sentence and spo has recorded decision', async () => {
+  it('redirect to recall-type-extended if extended sentence and spo has recorded decision', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
     const res = mockRes({
       locals: {
@@ -124,7 +125,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -147,7 +148,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -160,7 +161,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to recall-type-indeterminate if not indeterminate or extended sentence and spo has recorded decision', async () => {
+  it('redirect to suitability-for-fixed-term-recall if not indeterminate or extended sentence and spo has recorded decision', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
     const res = mockRes({
       locals: {
@@ -171,7 +172,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -198,7 +199,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -225,7 +226,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.SPO],
         },
       },
     })
@@ -252,7 +253,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.SPO],
         },
       },
     })
@@ -273,7 +274,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -296,7 +297,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -320,7 +321,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -344,7 +345,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -368,7 +369,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -397,7 +398,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })
@@ -426,7 +427,7 @@ describe('get', () => {
         urlInfo: { basePath: '/recommendation/123/' },
         user: {
           token: 'token1',
-          roles: ['ROLE_MAKE_RECALL_DECISION'],
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
       },
     })

@@ -12,6 +12,7 @@ import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import { generateRecallMinuteText } from '../recommendations/helpers/ppudMinutes'
+import { RECOMMENDATION_STATUS } from '../../middleware/recommendationStatus'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -92,7 +93,7 @@ describe('post', () => {
     await bookToPpudController.post(req, res, next)
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['BOOKING_ON_STARTED'],
+      activate: [RECOMMENDATION_STATUS.BOOKING_ON_STARTED],
       deActivate: [],
       recommendationId: '1',
       token: 'token',
@@ -111,7 +112,7 @@ describe('post', () => {
     expect(res.locals).toEqual(LOCALS_PAGE_TEMPLATE)
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
+      activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
       deActivate: [],
       recommendationId: '1',
       token: 'token',
@@ -163,7 +164,7 @@ describe('post', () => {
     await bookToPpudController.post(req, res, next)
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['BOOKING_ON_STARTED'],
+      activate: [RECOMMENDATION_STATUS.BOOKING_ON_STARTED],
       deActivate: [],
       recommendationId: '1',
       token: 'token',
@@ -181,7 +182,7 @@ describe('post', () => {
     expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
+      activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
       deActivate: [],
       recommendationId: '1',
       token: 'token',
@@ -312,7 +313,7 @@ describe('post', () => {
     await bookToPpudController.post(req, res, next)
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['BOOKING_ON_STARTED'],
+      activate: [RECOMMENDATION_STATUS.BOOKING_ON_STARTED],
       deActivate: [],
       recommendationId: '1',
       token: 'token',
@@ -414,7 +415,7 @@ describe('post', () => {
     expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
 
     expect(updateStatuses).toHaveBeenCalledWith({
-      activate: ['BOOKED_TO_PPUD', 'REC_CLOSED'],
+      activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
       deActivate: [],
       recommendationId: '1',
       token: 'token',

@@ -266,3 +266,12 @@ pre {
 .disappear-on-focus-placeholder:focus::-moz-placeholder { opacity: 0; } /* FF 19-50 */
 .disappear-on-focus-placeholder:focus:-ms-input-placeholder { opacity: 0; } /* IE 10+ */
 .disappear-on-focus-placeholder:focus::placeholder { opacity: 0; } /* Modern Browsers */
+
+// radio labels wrap the lines too early due to the display value, so we override the
+// value here. We also remove the top padding, as the summary list can determine its
+// own padding
+.car-radio-label-with-summary-list {
+  @extend .govuk-radios__label;
+  display: block;
+  padding-top: 0;
+}

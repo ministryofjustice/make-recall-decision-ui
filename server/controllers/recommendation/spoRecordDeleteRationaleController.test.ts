@@ -113,5 +113,12 @@ describe('post', () => {
       },
       featureFlags: {},
     })
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.REC_CLOSED, STATUSES.REC_DELETED],
+      deActivate: [],
+    })
   })
 })
