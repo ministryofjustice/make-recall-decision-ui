@@ -1,7 +1,9 @@
+import { DateTime } from 'luxon'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import appointmentNoRecallController from './appointmentNoRecallController'
+import { europeLondon } from '../../utils/dates'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -117,21 +119,34 @@ describe('post', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
+
+    // The date and time converter function used within appointmentNoRecallController.post
+    // expects the time it is provided to be expressed in Europe/London time (i.e. GMT or
+    // BST, depending on the time of the year), so we ensure that here
     const futureDate = new Date()
     futureDate.setDate(futureDate.getDate() + 50)
-    // Seconds and milliseconds aren't passed through in the body, so we truncate here for the comparison later
-    futureDate.setSeconds(0)
-    futureDate.setMilliseconds(0)
+    const futureDateTime = DateTime.fromObject(
+      {
+        year: futureDate.getFullYear(),
+        month: futureDate.getMonth() + 1,
+        day: futureDate.getDate(),
+        hour: futureDate.getHours(),
+        minute: futureDate.getMinutes(),
+      },
+      {
+        zone: europeLondon,
+      }
+    )
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
         createLetterTasksComplete: '1',
         howWillAppointmentHappen: 'TELEPHONE',
-        'dateTimeOfAppointment-day': futureDate.getDate().toString(),
-        'dateTimeOfAppointment-month': (futureDate.getMonth() + 1).toString(),
-        'dateTimeOfAppointment-year': futureDate.getFullYear().toString(),
-        'dateTimeOfAppointment-hour': futureDate.getHours().toString(),
-        'dateTimeOfAppointment-minute': futureDate.getMinutes().toString(),
+        'dateTimeOfAppointment-day': futureDateTime.get('day').toString(),
+        'dateTimeOfAppointment-month': futureDateTime.get('month').toString(),
+        'dateTimeOfAppointment-year': futureDateTime.get('year').toString(),
+        'dateTimeOfAppointment-hour': futureDateTime.get('hour').toString(),
+        'dateTimeOfAppointment-minute': futureDateTime.get('minute').toString(),
         probationPhoneNumber: '01277 960 001',
       },
     })
@@ -152,7 +167,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         nextAppointment: {
-          dateTimeOfAppointment: futureDate.toISOString(),
+          dateTimeOfAppointment: futureDateTime.toUTC().toISO(),
           howWillAppointmentHappen: {
             allOptions: [
               {
