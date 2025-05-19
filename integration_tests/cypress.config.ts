@@ -86,7 +86,7 @@ export default defineConfig({
     },
     baseUrl: 'http://localhost:3007',
     excludeSpecPattern: '**/!(*.spec).ts',
-    specPattern: 'integration_tests/integration/*.spec.ts',
+    specPattern: 'integration_tests/integration/**/*.spec.ts',
     supportFile: 'integration_tests/support/index.ts',
   },
 })

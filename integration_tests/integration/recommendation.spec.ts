@@ -2469,55 +2469,6 @@ context('Make a recommendation', () => {
       cy.getText('mappaLevel').should('contain', 'Unknown')
     })
 
-    it('select index offence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          recallConsideredList: null,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('prisonSentences', {
-        statusCode: 200,
-        response: [
-          {
-            bookingId: 13,
-            sentenceSequence: 4,
-            lineSequence: 4,
-            caseSequence: 2,
-            courtDescription: 'Blackburn County Court',
-            sentenceStatus: 'A',
-            sentenceCategory: '2003',
-            sentenceCalculationType: 'MLP',
-            sentenceTypeDescription: 'Adult Mandatory Life',
-            sentenceDate: '2023-11-16',
-            sentenceStartDate: '2023-11-16',
-            sentenceEndDate: '3022-11-15',
-            terms: [],
-            offences: [
-              {
-                offenderChargeId: 3934369,
-                offenceStartDate: '1899-01-01',
-                offenceStatute: 'SA96',
-                offenceCode: 'SA12345',
-                offenceDescription: 'Attack / assault / batter a member of the public',
-                indicators: [],
-              },
-            ],
-          },
-        ],
-      })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`/recommendations/252523937/select-index-offence`)
-      cy.pageHeading().should('contain', 'Select the index offence for Joseph Bluggs')
-    })
-
     it('match index offence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
