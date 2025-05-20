@@ -24,7 +24,7 @@ export const personSearchResults = async (req: Request, res: Response) => {
   }
   res.locals.crn = searchValue
   res.locals.hasPpcsRole = user.hasPpcsRole
-  res.locals.page = await searchPersons(user.token, Number(page) - 1, 20, searchValue, undefined, undefined)
+  res.locals.page = await searchPersons(user.token, Number(page), 20, searchValue, undefined, undefined)
   res.render('pages/paginatedPersonSearchResults')
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue, region: user.region }, flags)
   await auditService.personSearch({
