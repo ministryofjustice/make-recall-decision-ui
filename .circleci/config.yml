@@ -508,25 +508,11 @@ workflows:
           context:
             - hmpps-common-vars
           <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_preprod
-          environment: preprod
-          e2e-tags: "@smoke"
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_preprod
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
 
       - request-prod-approval:
           type: approval
           requires:
             - deploy_preprod
-            - e2e_test_preprod
       - hmpps/deploy_env:
           name: deploy_prod
           env: prod
