@@ -11,7 +11,7 @@ jest.mock('../../monitoring/azureAppInsights')
 const TEMPLATE = {
   results: [
     {
-      name: 'Harry 1 Smith',
+      name: 'Harry 1 Bloggs',
       crn: 'X098092',
       dateOfBirth: '1980-05-06',
       userExcluded: false,
@@ -27,7 +27,7 @@ describe('personSearchResultsByName', () => {
     jest.spyOn(AuditService.prototype, 'personSearch')
     const req = mockReq({
       query: {
-        lastName: 'Styles',
+        lastName: 'Bloggs',
         firstName: 'Harry',
         page: '1',
       },
@@ -38,7 +38,7 @@ describe('personSearchResultsByName', () => {
     })
 
     await personSearchResultsByName(req, res)
-    expect(searchPersons).toHaveBeenCalledWith('token', 0, 20, undefined, 'Harry', 'Styles')
+    expect(searchPersons).toHaveBeenCalledWith('token', 0, 20, undefined, 'Harry', 'Bloggs')
     expect(res.render).toHaveBeenCalledWith('pages/paginatedPersonSearchResults')
     expect(res.locals.page).toEqual(TEMPLATE)
 
@@ -47,14 +47,14 @@ describe('personSearchResultsByName', () => {
       'Dave',
       {
         firstName: 'Harry',
-        lastName: 'Styles',
+        lastName: 'Bloggs',
         region: { code: 'N07', name: 'London' },
       },
       {}
     )
 
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
-      searchTerm: { firstName: 'Harry', lastName: 'Styles' },
+      searchTerm: { firstName: 'Harry', lastName: 'Bloggs' },
       username: 'Dave',
       logErrors: true,
     })

@@ -68,17 +68,17 @@ describe('post', () => {
       },
       file: {
         fieldname: 'file',
-        originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+        originalname: 'NAT_Recall_Part_A_01022024_Bloggs_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         size: 207988,
-        buffer: Buffer.from('Once upon a midnight dreary'),
+        buffer: Buffer.from('Some random text'),
       },
     })
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -89,9 +89,9 @@ describe('post', () => {
     await additionalSupportingDocumentUploadController.post(req, res, next)
 
     expect(uploadSupportingDocument).toHaveBeenCalledWith({
-      data: 'T25jZSB1cG9uIGEgbWlkbmlnaHQgZHJlYXJ5',
+      data: 'U29tZSByYW5kb20gdGV4dA==',
       featureFlags: {},
-      filename: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+      filename: 'NAT_Recall_Part_A_01022024_Bloggs_H_X098092.docx',
       mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       recommendationId: '1234',
       token: 'token1',
@@ -115,7 +115,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -142,18 +142,18 @@ describe('post', () => {
       },
       file: {
         fieldname: 'file',
-        originalname: 'NAT_Recall?Part_A_01022024_Smith_H_X098092.docx',
+        originalname: 'NAT_Recall?Part_A_01022024_Bloggs_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         size: 25600001,
-        buffer: Buffer.from('Once upon a midnight dreary'),
+        buffer: Buffer.from('Some random text'),
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -203,7 +203,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -238,18 +238,18 @@ describe('post', () => {
       },
       file: {
         fieldname: 'file',
-        originalname: 'Part_A_01022024_Smith_H_X098092.docx',
+        originalname: 'Part_A_01022024_Bloggs_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         size: 512000,
-        buffer: Buffer.from('Once upon a midnight dreary'),
+        buffer: Buffer.from('Some random text'),
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -262,7 +262,7 @@ describe('post', () => {
         createdBy: 'MAKE_RECALL_DECISION_PPCS_USER',
         createdByUserFullName: 'Making Recall Decisions PPCS User',
         created: '2024-05-07T15:15:32.636Z',
-        filename: 'NAT_Recall_Part_A_01052024_Smith_H_X098092.docx',
+        filename: 'NAT_Recall_Part_A_01052024_Bloggs_H_X098092.docx',
         type: 'OtherDocument',
         uploadedBy: 'MAKE_RECALL_DECISION_PPCS_USER',
         uploadedByUserFullName: 'Making Recall Decisions PPCS User',
@@ -298,18 +298,18 @@ describe('post', () => {
       },
       file: {
         fieldname: 'file',
-        originalname: 'NAT_Recall_Part_A_01022024_Smith_H_X098092.docx',
+        originalname: 'NAT_Recall_Part_A_01022024_Bloggs_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         size: 512000,
-        buffer: Buffer.from('Once upon a midnight dreary'),
+        buffer: Buffer.from('Some random text'),
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -347,18 +347,18 @@ describe('post', () => {
       },
       file: {
         fieldname: 'file',
-        originalname: 'Part_A_01022024_Smith_H_X098092.docx',
+        originalname: 'Part_A_01022024_Bloggs_H_X098092.docx',
         encoding: '7bit',
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         size: 512000,
-        buffer: Buffer.from('Once upon a midnight dreary'),
+        buffer: Buffer.from('Some random text'),
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/1234/` },
       },
     })
@@ -371,7 +371,7 @@ describe('post', () => {
         createdBy: 'MAKE_RECALL_DECISION_PPCS_USER',
         createdByUserFullName: 'Making Recall Decisions PPCS User',
         created: '2024-05-07T15:15:32.636Z',
-        filename: 'NAT_Recall_Part_A_01052024_Smith_H_X098092.docx',
+        filename: 'NAT_Recall_Part_A_01052024_Bloggs_H_X098092.docx',
         type: 'OtherDocument',
         uploadedBy: 'MAKE_RECALL_DECISION_PPCS_USER',
         uploadedByUserFullName: 'Making Recall Decisions PPCS User',

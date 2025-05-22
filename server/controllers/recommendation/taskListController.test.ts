@@ -12,7 +12,7 @@ describe('get', () => {
       selected: 'NO',
     },
     localPoliceContact: {
-      contactName: 'Inspector Gadget',
+      contactName: 'Joe Bloggs',
     },
     crn: 'X098092',
     recallType: {
@@ -32,7 +32,7 @@ describe('get', () => {
     hasArrestIssues: { selected: false },
     hasContrabandRisk: { selected: false },
     personOnProbation: {
-      name: 'Harry Smith',
+      name: 'Joe Bloggs',
       mappa: { hasBeenReviewed: true },
       hasBeenReviewed: true,
     },
@@ -55,16 +55,16 @@ describe('get', () => {
     previousRecalls: { hasBeenRecalledPreviously: false },
     currentRoshForPartA: {},
     whoCompletedPartA: {
-      name: 'dude',
-      email: 'dude@me.com',
+      name: 'john',
+      email: 'john@me.com',
       telephone: '123456',
       region: 'region A',
       localDeliveryUnit: 'here',
       isPersonProbationPractitionerForOffender: true,
     },
     practitionerForPartA: {
-      name: 'dudette',
-      email: 'dudette@me.com',
+      name: 'jane',
+      email: 'jane@me.com',
       telephone: '55555',
       region: 'region A',
       localDeliveryUnit: 'here',

@@ -14,12 +14,12 @@ jest.mock('../../../utils/dates/format')
 jest.mock('./determinePpudEstablishment')
 jest.mock('./custodyGroupRouter')
 
-const prisonOffenderFirstName = 'ANNE'
+const prisonOffenderFirstName = 'JANE'
 const prisonOffenderMiddleName = 'C'
-const prisonOffenderLastName = 'McCaffrey'
+const prisonOffenderLastName = 'Doe'
 
 // We only want to convert if the name is in all caps for now
-const convertedFirstName = 'Anne'
+const convertedFirstName = 'Jane'
 const convertedMiddleName = prisonOffenderMiddleName
 const convertedLastName = prisonOffenderLastName
 
@@ -31,12 +31,12 @@ const PRISON_OFFENDER_TEMPLATE = {
   lastName: prisonOffenderLastName,
   facialImageId: 1234,
   dateOfBirth: '1970-03-15',
-  agencyId: 'KLN',
-  agencyDescription: 'The Kyln',
+  agencyId: 'BRX',
+  agencyDescription: 'HMP Brixton',
   status: 'ACTIVE IN',
   physicalAttributes: {
     gender: 'Male',
-    ethnicity: 'Caucasian',
+    ethnicity: 'White',
   },
   identifiers: [
     {
@@ -55,20 +55,20 @@ const RECOMMENDATION_TEMPLATE = {
   personOnProbation: {
     croNumber: '123X',
     nomsNumber: '567Y',
-    surname: 'Mayer',
+    surname: 'Doe',
     dateOfBirth: '2001-01-01',
     mappa: {
       level: '1',
     },
   },
   ppudOffender: {
-    ethnicity: 'Caucasian',
+    ethnicity: 'White',
     gender: 'Male',
-    firstNames: 'Robert Tate',
-    familyName: 'Harrison',
+    firstNames: 'Joe John',
+    familyName: 'Bloggs',
     dateOfBirth: '1971-02-03',
     prisonNumber: '12345678',
-    establishment: 'Blackgate Penitentiary',
+    establishment: 'HMP Belmarsh',
   },
   whoCompletedPartA: {
     localDeliveryUnit: 'who-completed-delivery-unit',
@@ -126,7 +126,7 @@ describe('get', () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
     const formattedPpudDateOfBirth = 'date'
     ;(formatDateTimeFromIsoString as jest.Mock).mockReturnValueOnce(formattedPpudDateOfBirth)
-    const expectedCurrentEstablishment = 'The Kyln in PPUD'
+    const expectedCurrentEstablishment = 'HMP Brixton in PPUD'
     ;(determinePpudEstablishment as jest.Mock).mockReturnValueOnce(expectedCurrentEstablishment)
 
     const expectedPrisonOffender = {
@@ -238,15 +238,15 @@ describe('get', () => {
         recommendation: {
           ...RECOMMENDATION_TEMPLATE,
           bookRecallToPpud: {
-            firstNames: 'Ted',
-            lastName: 'Cunningham',
+            firstNames: 'Joe',
+            lastName: 'Bloggs',
             dateOfBirth: '2000-01-01',
             prisonNumber: '1234',
           },
           prisonOffender: {
-            firstName: 'Teddy',
+            firstName: 'Joseph',
             middleName: '',
-            lastName: 'Todsworth',
+            lastName: 'Doe',
             dateOfBirth: '2000-01-02',
             bookingNo: '123',
           },
@@ -278,15 +278,15 @@ describe('get', () => {
         recommendation: {
           ...RECOMMENDATION_TEMPLATE,
           bookRecallToPpud: {
-            firstNames: 'Ted Trouble',
-            lastName: 'Todsworth',
+            firstNames: 'Joe John',
+            lastName: 'Bloggs',
             dateOfBirth: '2000-01-01',
             prisonNumber: '1234',
           },
           prisonOffender: {
-            firstName: 'Ted',
-            middleName: 'Trouble',
-            lastName: 'Todsworth',
+            firstName: 'Joe',
+            middleName: 'John',
+            lastName: 'Bloggs',
             dateOfBirth: '2000-01-01',
             bookingNo: '1234',
           },
@@ -315,7 +315,7 @@ describe('get', () => {
           personOnProbation: {
             croNumber: '123X',
             nomsNumber: '567Y',
-            surname: 'Mayer',
+            surname: 'Doe',
             dateOfBirth: '2001-01-01',
             mappa: {
               level: '1',
@@ -359,7 +359,7 @@ describe('get', () => {
           personOnProbation: {
             croNumber: '123X',
             nomsNumber: undefined,
-            surname: 'Mayer',
+            surname: 'Doe',
             dateOfBirth: '2001-01-01',
             mappa: {
               level: '1',
@@ -405,8 +405,8 @@ describe('post', () => {
       bookRecallToPpud: {
         dateOfBirth: '1970-03-15',
         decisionDateTime: '2023-11-13T09:49:31',
-        firstNames: 'Anne C',
-        lastName: 'McCaffrey',
+        firstNames: 'Jane J',
+        lastName: 'Bloggs',
         cro: '1234/2345',
         prisonNumber: '1234',
         receivedDateTime: '2023-11-13T09:49:31',
@@ -419,12 +419,12 @@ describe('post', () => {
         ethnicity: 'caucasian',
         custodyGroup,
         custodyType: 'extended',
-        releasingPrison: 'traitors gate',
+        releasingPrison: 'HMP leeds',
         mappaLevel: '1',
         policeForce: 'kent',
         legislationReleasedUnder: 'c 2008',
         probationArea: 'camden',
-        currentEstablishment: 'The Kyln in PPUD',
+        currentEstablishment: 'HMP Brixton in PPUD',
       },
     })
 
@@ -438,7 +438,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -462,8 +462,8 @@ describe('post', () => {
       bookRecallToPpud: {
         dateOfBirth: '1970-03-15',
         decisionDateTime: '2023-11-13T09:49:31',
-        firstNames: 'Anne C',
-        lastName: 'McCaffrey',
+        firstNames: 'Jane J',
+        lastName: 'Bloggs',
         cro: '1234/2345',
         prisonNumber: '1234',
         receivedDateTime: '2023-11-13T09:49:31',
@@ -484,7 +484,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

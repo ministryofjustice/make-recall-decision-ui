@@ -89,7 +89,7 @@ describe('validateArrestIssues', () => {
 
     it('returns an error, if hasArrestIssues is set to an invalid value', async () => {
       const requestBody = {
-        hasArrestIssues: 'BANANA',
+        hasArrestIssues: 'VALUE',
         crn: 'X34534',
       }
       const { errors, valuesToSave } = await validateArrestIssues({ requestBody, recommendationId })

@@ -33,8 +33,8 @@ describe('listToString', () => {
   })
 
   it('accepts empty string as the conjunction', () => {
-    expect(listToString(['5 Andrew Crescent', 'Southampton', 'S1 8EY'], '')).toEqual(
-      '5 Andrew Crescent, Southampton S1 8EY'
+    expect(listToString(['5 Oak Crescent', 'Southampton', 'S12 345'], '')).toEqual(
+      '5 Oak Crescent, Southampton S12 345'
     )
   })
 
@@ -60,7 +60,7 @@ describe('Convert to title case', () => {
     expect(convertToTitleCase('RoBErT')).toEqual('Robert')
   })
   it('Multiple words', () => {
-    expect(convertToTitleCase('RobeRT SMiTH')).toEqual('Robert Smith')
+    expect(convertToTitleCase('RobeRT BLoGGS')).toEqual('Robert Bloggs')
   })
   it('Leading spaces', () => {
     expect(convertToTitleCase('  RobeRT')).toEqual('  Robert')
@@ -69,7 +69,7 @@ describe('Convert to title case', () => {
     expect(convertToTitleCase('RobeRT  ')).toEqual('Robert  ')
   })
   it('Hyphenated', () => {
-    expect(convertToTitleCase('Robert-John SmiTH-jONes-WILSON')).toEqual('Robert-John Smith-Jones-Wilson')
+    expect(convertToTitleCase('Robert-Joe BloGGS-jONes-WILSON')).toEqual('Robert-Joe Bloggs-Jones-Wilson')
   })
 })
 
@@ -89,25 +89,25 @@ describe('getProperty', () => {
   it('returns a nested property', () => {
     const obj = {
       legalRepresentativeInfo: {
-        email: 'davey@crockett.com',
+        email: 'joe@bloggs.com',
       },
     }
     const val = getProperty(obj, 'legalRepresentativeInfo.email')
-    expect(val).toEqual('davey@crockett.com')
+    expect(val).toEqual('joe@bloggs.com')
   })
 
   it('returns a top level property', () => {
     const obj = {
-      legalRepresentativeInfo: 'blah',
+      legalRepresentativeInfo: 'info',
     }
     const val = getProperty(obj, 'legalRepresentativeInfo')
-    expect(val).toEqual('blah')
+    expect(val).toEqual('info')
   })
 
   it("returns undefined for a nested property that doesn't exist", () => {
     const obj = {
       legalRepresentativeInfo: {
-        email: 'davey@crockett.com',
+        email: 'joe@bloggs.com',
       },
     }
     const val = getProperty(obj, 'legalRepresentativeInfo.phone')

@@ -47,24 +47,24 @@ describe('get', () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
-        recommendation: { countersignSpoExposition: 'lorem ipsum blah blah blah' },
+        recommendation: { countersignSpoExposition: 'Countersignature text' },
       },
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum blah blah blah')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('Countersignature text')
   })
 
   it('load with existing data for ACO', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
-        recommendation: { countersignAcoExposition: 'lorem ipsum blah blah blah' },
+        recommendation: { countersignAcoExposition: 'Countersignature text' },
       },
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum blah blah blah')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('Countersignature text')
   })
 
   it('initial load with error data', async () => {
@@ -87,12 +87,12 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         errors,
-        recommendation: { countersignSpoExposition: 'lorem ipsum' },
+        recommendation: { countersignSpoExposition: 'Countersignature text' },
       },
     })
 
     await managerCountersignatureController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('lorem ipsum')
+    expect(res.locals.inputDisplayValues.managerCountersignatureExposition).toEqual('Countersignature text')
     expect(res.locals.inputDisplayValues.errors).toEqual(errors)
   })
 })
@@ -115,7 +115,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
         user: { username: userName, region: { code: regionCode, name: regionName } },
       },
@@ -167,7 +167,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
         user: { username: userName, region: { code: regionCode, name: regionName } },
       },
@@ -219,7 +219,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

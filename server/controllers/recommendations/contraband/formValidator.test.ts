@@ -89,7 +89,7 @@ describe('validateContraband', () => {
 
     it('returns an error, if hasContrabandRisk is set to an invalid value', async () => {
       const requestBody = {
-        hasContrabandRisk: 'BANANA',
+        hasContrabandRisk: 'VALUE',
         crn: 'X34534',
       }
       const { errors, valuesToSave } = await validateContraband({ requestBody, recommendationId })

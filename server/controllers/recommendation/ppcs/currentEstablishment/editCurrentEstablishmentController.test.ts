@@ -77,7 +77,7 @@ describe('post', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const recommendationId = recommendationApiResponse.id.toString()
-    const currentEstablishment = 'The Kyln'
+    const currentEstablishment = 'HMP Brixton'
     const req = mockReq({
       params: { recommendationId },
       body: {

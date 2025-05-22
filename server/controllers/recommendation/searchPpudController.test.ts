@@ -32,7 +32,7 @@ describe('post', () => {
         croNumber: '123456/12A',
         nomsId: 'JG123POE',
         firstNames: 'John',
-        familyName: 'Teal',
+        familyName: 'Doe',
         dateOfBirth: '2000-01-01',
       },
     ]
@@ -46,9 +46,9 @@ describe('post', () => {
         crn: 'X123',
         croNumber: '678',
         nomsNumber: '234',
-        surname: 'McBoverin',
+        surname: 'Bloggs',
         dateOfBirth: '1980-10-02',
-        fullName: 'Ducko',
+        fullName: 'Joe',
       },
     })
 
@@ -64,7 +64,7 @@ describe('post', () => {
 
     await searchPpudController.post(req, res, next)
 
-    expect(searchPpud).toHaveBeenCalledWith('token1', '678', '234', 'McBoverin', '1980-10-02')
+    expect(searchPpud).toHaveBeenCalledWith('token1', '678', '234', 'Bloggs', '1980-10-02')
 
     expect(req.session.ppudSearchResults).toEqual(results)
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/search-ppud-results`)
@@ -83,9 +83,9 @@ describe('post', () => {
         crn: 'X123',
         croNumber: '678',
         nomsNumber: '234',
-        surname: 'McBoverin',
+        surname: 'Bloggs',
         dateOfBirth: '1980-10-02',
-        fullName: 'Ducko',
+        fullName: 'Joe',
       },
     })
 
@@ -101,7 +101,7 @@ describe('post', () => {
 
     await searchPpudController.post(req, res, next)
 
-    expect(searchPpud).toHaveBeenCalledWith('token1', '678', '234', 'McBoverin', '1980-10-02')
+    expect(searchPpud).toHaveBeenCalledWith('token1', '678', '234', 'Bloggs', '1980-10-02')
 
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdNoPpudSearchResultsPageView',
@@ -114,7 +114,7 @@ describe('post', () => {
       { xyz: true }
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/no-search-ppud-results?fullName=Ducko`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/no-search-ppud-results?fullName=Joe`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

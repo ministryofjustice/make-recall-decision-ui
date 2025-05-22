@@ -1,6 +1,6 @@
 import { inputDisplayValuesFixedTermLicenceConditions } from './inputDisplayValues'
 
-describe('inputDisplayValuesArrestIssues', () => {
+describe('inputDisplayValuesFixedTermLicenceConditions', () => {
   const apiValues = {
     fixedTermAdditionalLicenceConditions: {
       selected: true,

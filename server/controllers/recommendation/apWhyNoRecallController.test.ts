@@ -57,7 +57,7 @@ describe('get', () => {
         },
         unsavedValues: {
           spoNoRecallRationale: 'a rationale that belongs to no recall',
-          odmName: 'mr sparky',
+          odmName: 'mr bloggs',
         },
         recommendation: { spoRecallRationale: undefined },
       },
@@ -79,7 +79,7 @@ describe('get', () => {
           errorId: 'missingSpoNoRecallRationale',
         },
       },
-      odmName: 'mr sparky',
+      odmName: 'mr bloggs',
       spoNoRecallRationale: 'a rationale that belongs to no recall',
     })
   })
@@ -89,7 +89,7 @@ describe('post', () => {
   const res = mockRes({
     token: 'token1',
     locals: {
-      recommendation: { personOnProbation: { name: 'Harry Smith' } },
+      recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
       urlInfo: { basePath: `/recommendations/123/` },
       user: {
         token: 'token',
@@ -105,7 +105,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        spoNoRecallRationale: 'a good reason',
+        spoNoRecallRationale: 'A substantial reason',
       },
     })
 
@@ -128,7 +128,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         explainTheDecision: true,
-        spoRecallRationale: 'a good reason',
+        spoRecallRationale: 'A substantial reason',
       },
       featureFlags: {},
     })
@@ -176,7 +176,7 @@ describe('post', () => {
     const response = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
         user: {
           token: 'token',

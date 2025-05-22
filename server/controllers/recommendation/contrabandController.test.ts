@@ -9,7 +9,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         token: 'token1',
       },
     })
@@ -93,14 +93,14 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         hasContrabandRisk: 'YES',
-        hasContrabandRiskDetailsYes: 'stuff and bother',
+        hasContrabandRiskDetailsYes: 'I think there is the risk',
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -113,7 +113,7 @@ describe('post', () => {
       valuesToSave: {
         hasContrabandRisk: {
           selected: true,
-          details: 'stuff and bother',
+          details: 'I think there is the risk',
         },
       },
       token: 'token1',
@@ -138,7 +138,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

@@ -99,7 +99,7 @@ describe('validateIsExtendedSentence', () => {
 
   it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
-      isExtendedSentence: 'BANANA',
+      isExtendedSentence: 'VALUE',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsExtendedSentence({ requestBody, urlInfo })

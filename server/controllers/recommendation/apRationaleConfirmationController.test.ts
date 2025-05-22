@@ -13,7 +13,7 @@ describe('get', () => {
           crn: 'X123F',
           personOnProbation: {
             nomsNumber: '123X',
-            name: 'Stiffy McBoveration',
+            name: 'Joe Bloggs',
           },
           spoRecallType: 'RECALL',
         },
@@ -39,7 +39,7 @@ describe('get', () => {
 
     expect(res.locals.nomsNumber).toEqual('123X')
     expect(res.locals.crn).toEqual('X123F')
-    expect(res.locals.personOnProbation).toEqual('Stiffy McBoveration')
+    expect(res.locals.personOnProbation).toEqual('Joe Bloggs')
     expect(next).toHaveBeenCalled()
   })
 
@@ -51,7 +51,7 @@ describe('get', () => {
           crn: 'X123F',
           personOnProbation: {
             nomsNumber: '123X',
-            name: 'Stiffy McBoveration',
+            name: 'Joe Bloggs',
           },
           spoRecallType: 'NO_RECALL',
         },
@@ -77,7 +77,7 @@ describe('get', () => {
 
     expect(res.locals.nomsNumber).toEqual('123X')
     expect(res.locals.crn).toEqual('X123F')
-    expect(res.locals.personOnProbation).toEqual('Stiffy McBoveration')
+    expect(res.locals.personOnProbation).toEqual('Joe Bloggs')
     expect(next).toHaveBeenCalled()
   })
 })

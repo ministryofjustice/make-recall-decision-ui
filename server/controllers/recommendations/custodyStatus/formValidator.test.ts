@@ -110,7 +110,7 @@ describe('validateCustodyStatus', () => {
 
   it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
-      custodyStatus: 'BANANA',
+      custodyStatus: 'VALUE',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo })

@@ -150,7 +150,7 @@ describe('Error messages', () => {
         },
       ]
       const result = renderErrorMessages(transformErrorMessages(errors), {
-        fullName: 'Dave Angel',
+        fullName: 'Joe Bloggs',
       })
       expect(result).toEqual({
         additionalLicenceConditionsDetail: {
@@ -158,7 +158,7 @@ describe('Error messages', () => {
           text: 'Provide detail on additional licence conditions',
         },
         differentNomsNumberDetail: {
-          text: 'Enter the NOMIS number Dave Angel is being held under',
+          text: 'Enter the NOMIS number Joe Bloggs is being held under',
           href: '#differentNomsNumberDetail',
           values: 'A123',
         },
@@ -171,7 +171,7 @@ describe('Error messages', () => {
           {
             href: '#differentNomsNumberDetail',
             name: 'differentNomsNumberDetail',
-            html: 'Enter the NOMIS number Dave Angel is being held under',
+            html: 'Enter the NOMIS number Joe Bloggs is being held under',
             values: 'A123',
           },
         ],

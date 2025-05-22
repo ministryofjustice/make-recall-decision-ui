@@ -337,7 +337,7 @@ describe('validateRecallType', () => {
 
     it('returns an error, if recallType is set to an invalid value', async () => {
       const requestBody = {
-        recallType: 'BANANA',
+        recallType: 'VALUE',
         crn: 'X34534',
       }
       const { errors, valuesToSave } = await validateRecallType({ requestBody, recommendationId, urlInfo })

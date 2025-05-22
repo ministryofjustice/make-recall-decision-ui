@@ -47,7 +47,7 @@ describe('getCaseSection', () => {
           descriptionType: 'Registration Review',
           outcome: null,
           notes:
-            'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+            'Comment added by Joe Bloggs on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
           enforcementAction: 'action 2',
           systemGenerated: false,
         },
@@ -121,7 +121,7 @@ describe('getCaseSection', () => {
       },
       hasAllConvictionsReleasedOnLicence: true,
       personalDetailsOverview: {
-        fullName: 'Harry Tom Smith',
+        fullName: 'Joe T Bloggs',
       },
     }
 
@@ -152,7 +152,7 @@ describe('getCaseSection', () => {
     })
     expect(recs.hasAllConvictionsReleasedOnLicence).toStrictEqual(true)
     expect(recs.personalDetailsOverview).toStrictEqual({
-      fullName: 'Harry Tom Smith',
+      fullName: 'Joe T Bloggs',
     })
     expect(recs.activeRecommendation).toStrictEqual({
       recommendationId: 1860300544,

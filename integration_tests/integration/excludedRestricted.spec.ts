@@ -24,7 +24,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('risk page', () => {
@@ -38,7 +38,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('personal details page', () => {
@@ -52,7 +52,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
       cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('licence conditions page', () => {
@@ -66,7 +66,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
       cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('contact history page', () => {
@@ -80,7 +80,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
   })
 
@@ -96,7 +96,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'Restricted case')
-      cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('risk page', () => {
@@ -110,7 +110,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.pageHeading().should('equal', 'Restricted case')
-      cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('personal details page', () => {
@@ -124,7 +124,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
       cy.pageHeading().should('equal', 'Restricted case')
-      cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('licence conditions page', () => {
@@ -138,7 +138,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
       cy.pageHeading().should('equal', 'Restricted case')
-      cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('contact history page', () => {
@@ -152,7 +152,7 @@ context('Excluded and restricted cases', () => {
       const crn = 'X34983'
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Restricted case')
-      cy.contains('You are restricted from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
   })
 

@@ -12,11 +12,11 @@ import UserService from '../../services/userService'
 import * as auth from '../../authentication/auth'
 
 const user = {
-  name: 'john smith',
+  name: 'joe bloggs',
   firstName: 'john',
   lastName: 'smith',
   username: 'user1',
-  displayName: 'John Smith',
+  displayName: 'Joe Bloggs',
   hasSpoRole: false,
 }
 

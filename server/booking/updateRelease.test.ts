@@ -22,7 +22,7 @@ describe('update release', () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
       {
         name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Brightside',
+        createdByUserFullName: 'Mr Bloggs',
         emailAddress: 'email@me.com',
         active: true,
       },
@@ -40,8 +40,8 @@ describe('update release', () => {
     const recommendation: RecommendationResponse = {
       id: '1',
       whoCompletedPartA: {
-        name: 'dude',
-        email: 'dude@me.com',
+        name: 'john',
+        email: 'john@me.com',
         telephone: '123456',
         region: 'region A',
         localDeliveryUnit: 'here',
@@ -49,7 +49,7 @@ describe('update release', () => {
       },
       bookRecallToPpud: {
         releasingPrison: 'here',
-        policeForce: 'NCIS Los Angeles',
+        policeForce: 'Bethnal Green Police Force',
         probationArea: 'london',
         legislationReleasedUnder: 'CJA 2023',
         legislationSentencedUnder: 'CJA 2023',
@@ -84,17 +84,17 @@ describe('update release', () => {
       postRelease: {
         assistantChiefOfficer: {
           faxEmail: 'email@me.com',
-          name: 'Mr Brightside',
+          name: 'Mr Bloggs',
         },
         offenderManager: {
-          faxEmail: 'dude@me.com',
-          name: 'dude',
+          faxEmail: 'john@me.com',
+          name: 'john',
           telephone: '123456',
         },
         probationService: 'london',
         spoc: {
           faxEmail: '',
-          name: 'NCIS Los Angeles',
+          name: 'Bethnal Green Police Force',
         },
       },
       releasedFrom: 'here',

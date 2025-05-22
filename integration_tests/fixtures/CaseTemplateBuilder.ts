@@ -2,7 +2,7 @@ import { ActiveConvictionTemplateBuilder } from './ActiveConvictionTemplateBuild
 
 export class CaseTemplateBuilder {
   private personalDetailsOverview = {
-    name: 'Charles Edwin',
+    name: 'Joe',
     dateOfBirth: '1980-07-24',
     age: 41,
     gender: 'Male',

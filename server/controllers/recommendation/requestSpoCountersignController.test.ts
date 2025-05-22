@@ -10,7 +10,7 @@ describe('get', () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
     const res = mockRes({
       locals: {
-        recommendation: { id: '123', personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
       },
     })
     const next = mockNext()
@@ -41,7 +41,7 @@ describe('get', () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
     const res = mockRes({
       locals: {
-        recommendation: { id: '123', personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
       },
     })
     const next = mockNext()

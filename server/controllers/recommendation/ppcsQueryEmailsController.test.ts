@@ -79,16 +79,16 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         size: '3',
-        email_0: 'huey@me.com',
-        email_1: 'duey@me.com',
-        email_2: 'louie@me.com',
+        email_0: 'joe@me.com',
+        email_1: 'john@me.com',
+        email_2: 'jane@me.com',
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -100,7 +100,7 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
-        ppcsQueryEmails: ['huey@me.com', 'duey@me.com', 'louie@me.com'],
+        ppcsQueryEmails: ['joe@me.com', 'john@me.com', 'jane@me.com'],
       },
       featureFlags: {},
     })
@@ -117,7 +117,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         size: '3',
-        email_0: 'huey@me.com',
+        email_0: 'joe@me.com',
         email_1: '',
         email_2: '',
       },
@@ -126,7 +126,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -138,7 +138,7 @@ describe('post', () => {
       recommendationId: '123',
       token: 'token1',
       valuesToSave: {
-        ppcsQueryEmails: ['huey@me.com'],
+        ppcsQueryEmails: ['joe@me.com'],
       },
       featureFlags: {},
     })
@@ -162,7 +162,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -198,7 +198,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -227,7 +227,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         size: '1',
-        email_0: 'gadget@me.com',
+        email_0: 'bloggs@me.com',
         add: '',
       },
     })
@@ -235,7 +235,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -244,7 +244,7 @@ describe('post', () => {
 
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.unsavedValues).toEqual({
-      ppcsQueryEmails: ['gadget@me.com', ''],
+      ppcsQueryEmails: ['bloggs@me.com', ''],
     })
     expect(req.session.errors).not.toBeDefined()
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
@@ -258,8 +258,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         size: '2',
-        email_0: 'gadget@me.com',
-        email_1: 'huey@me.com',
+        email_0: 'bloggs@me.com',
+        email_1: 'joe@me.com',
         remove_1: '',
       },
     })
@@ -267,7 +267,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -276,7 +276,7 @@ describe('post', () => {
 
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.unsavedValues).toEqual({
-      ppcsQueryEmails: ['gadget@me.com'],
+      ppcsQueryEmails: ['bloggs@me.com'],
     })
     expect(req.session.errors).not.toBeDefined()
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)

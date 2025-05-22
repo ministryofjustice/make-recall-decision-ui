@@ -8,7 +8,7 @@ describe('inputDisplayValuesNextAppointment', () => {
       howWillAppointmentHappen: {
         selected: 'VIDEO_CALL',
       },
-      probationPhoneNumber: '01277345263',
+      probationPhoneNumber: '01234567890',
     },
   } as RecommendationResponse
 
@@ -77,7 +77,7 @@ describe('inputDisplayValuesNextAppointment', () => {
         },
       },
       howWillAppointmentHappen: 'VIDEO_CALL',
-      probationPhoneNumber: '01277345263',
+      probationPhoneNumber: '01234567890',
     })
   })
 })

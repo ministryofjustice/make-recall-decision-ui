@@ -61,7 +61,7 @@ describe('parseRecommendationUrl', () => {
   })
 
   it("doesn't include fromPageId if it is invalid", () => {
-    const fromPageId = 'banana'
+    const fromPageId = 'value'
     const req = mockReq({
       ...defaultRequest,
       query: { fromPageId },

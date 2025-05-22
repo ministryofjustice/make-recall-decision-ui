@@ -3,10 +3,10 @@ import { inputDisplayValuesLocalPoliceContactDetails } from './inputDisplayValue
 describe('inputDisplayValuesLocalPoliceContactDetails', () => {
   const apiValues = {
     localPoliceContact: {
-      contactName: 'Thomas Magnum',
-      phoneNumber: '07337838282',
-      faxNumber: '02075289289',
-      emailAddress: 'thomas.magnum@gmail.com',
+      contactName: 'Joe Bloggs',
+      phoneNumber: '01234567890',
+      faxNumber: '09876543210',
+      emailAddress: 'joe.bloggs@gmail.com',
     },
   }
 
@@ -37,9 +37,9 @@ describe('inputDisplayValuesLocalPoliceContactDetails', () => {
       },
     }
     const unsavedValues = {
-      contactName: 'Thomas Magnum',
-      faxNumber: '02075289289',
-      emailAddress: 'banana',
+      contactName: 'Joe Bloggs',
+      faxNumber: '09876543210',
+      emailAddress: 'invalid',
     }
     const inputDisplayValues = inputDisplayValuesLocalPoliceContactDetails({
       errors,

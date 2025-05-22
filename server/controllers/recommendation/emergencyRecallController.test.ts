@@ -11,7 +11,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         token: 'token1',
       },
     })
@@ -103,7 +103,7 @@ describe('post', () => {
       token: 'token1',
       locals: {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -151,7 +151,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -189,7 +189,7 @@ describe('post', () => {
       token: 'token1',
       locals: {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -217,7 +217,7 @@ describe('post', () => {
       token: 'token1',
       locals: {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })

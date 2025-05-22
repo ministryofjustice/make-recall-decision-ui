@@ -10,7 +10,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           crn: 'X123',
           licenceConditionsBreached: {
             standardLicenceConditions: {
@@ -74,7 +74,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
 
-    expect(res.locals.offenderName).toEqual('Harry Smith')
+    expect(res.locals.offenderName).toEqual('Joe Bloggs')
     expect(res.locals.triggerLeadingToRecall).toBeUndefined()
     expect(res.locals.responseToProbation).toBeUndefined()
     expect(res.locals.standardLicenceConditions).toEqual([
@@ -112,7 +112,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           crn: 'X123',
           licenceConditionsBreached: {
             standardLicenceConditions: {
@@ -185,7 +185,7 @@ describe('get', () => {
           isExtendedSentence: true,
           triggerLeadingToRecall: 'some reason 1',
           responseToProbation: 'some reason 2',
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           crn: 'X123',
           licenceConditionsBreached: {
             standardLicenceConditions: {
@@ -219,7 +219,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
 
-    expect(res.locals.offenderName).toEqual('Harry Smith')
+    expect(res.locals.offenderName).toEqual('Joe Bloggs')
     expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
     expect(res.locals.responseToProbation).toEqual('some reason 2')
     expect(res.locals.standardLicenceConditions).toEqual([])
@@ -241,7 +241,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           crn: 'X123',
           licenceConditionsBreached: null,
           cvlLicenceConditionsBreached: {
@@ -313,7 +313,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           crn: 'X123',
           licenceConditionsBreached: null,
           cvlLicenceConditionsBreached: {

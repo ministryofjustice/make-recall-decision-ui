@@ -25,12 +25,12 @@ describe('get', () => {
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { whatLedToRecall: 'lorem ipsum' },
+        recommendation: { whatLedToRecall: 'Recall reason' },
       },
     })
 
     whatLedController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum')
+    expect(res.locals.inputDisplayValues.value).toEqual('Recall reason')
   })
 
   it('initial load with error data', async () => {
@@ -76,7 +76,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -109,7 +109,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

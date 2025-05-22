@@ -31,9 +31,8 @@ const RECOMMENDATION_TEMPLATE = {
       {
         bookingId: 13,
         courtDescription: 'Blackburn County Court',
-        offenceCode: 'SA96036',
-        offenceDescription:
-          'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+        offenceCode: 'SA12345',
+        offenceDescription: 'Attack / assault / batter a member of the public',
         offenceStatute: 'SA96',
         offenderChargeId: 3934369,
         sentenceDate: '2023-11-16',
@@ -55,16 +54,16 @@ const RECOMMENDATION_TEMPLATE = {
     riskToPrisoners: 'LOW',
   },
   whoCompletedPartA: {
-    name: 'dude',
-    email: 'dude@me.com',
+    name: 'john',
+    email: 'john@me.com',
     telephone: '1234567',
     region: 'region B',
     localDeliveryUnit: 'who-completed-delivery-unit',
     isPersonProbationPractitionerForOffender: true,
   },
   practitionerForPartA: {
-    name: 'dudette',
-    email: 'dudette@me.com',
+    name: 'jane',
+    email: 'jane@me.com',
     telephone: '55555',
     region: 'region A',
     localDeliveryUnit: 'practitioner-delivery-unit',
@@ -88,8 +87,8 @@ describe('get', () => {
     expect(res.locals.recallReceived).toEqual('2023-11-13T09:49:31.777Z')
     expect(res.locals.currentHighestRosh).toEqual('High')
     expect(res.locals.practitioner).toEqual({
-      name: 'dudette',
-      email: 'dudette@me.com',
+      name: 'jane',
+      email: 'jane@me.com',
       telephone: '55555',
       region: 'region A',
       localDeliveryUnit: 'practitioner-delivery-unit',
@@ -121,8 +120,8 @@ describe('get', () => {
     await bookingSummaryController.get(mockReq(), res, next)
 
     expect(res.locals.practitioner).toEqual({
-      name: 'dude',
-      email: 'dude@me.com',
+      name: 'john',
+      email: 'john@me.com',
       telephone: '1234567',
       region: 'region B',
       localDeliveryUnit: 'who-completed-delivery-unit',

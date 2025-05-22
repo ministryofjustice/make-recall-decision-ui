@@ -70,7 +70,7 @@ describe('transformRiskManagementPlan', () => {
       expect(transformed.incompleteAssessment).toEqual(true)
     })
 
-    it('sets gsldr to true if last assessment is complete', () => {
+    it('sets flag to false if last assessment is complete', () => {
       const transformed = transformRiskManagementPlan({
         ...riskManagementPlan,
         assessmentStatusComplete: true,

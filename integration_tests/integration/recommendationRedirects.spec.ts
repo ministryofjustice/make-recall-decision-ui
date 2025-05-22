@@ -10,7 +10,7 @@ context('Make a recommendation - Branching / redirects', () => {
     id: recommendationId,
     crn,
     personOnProbation: {
-      name: 'Paula Smith',
+      name: 'Jane Bloggs',
     },
     recallType: { selected: { value: 'STANDARD' } },
     managerRecallDecision: {
@@ -93,7 +93,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
-    cy.selectRadio('Is Paula Smith on an extended sentence?', 'Yes')
+    cy.selectRadio('Is Jane Bloggs on an extended sentence?', 'Yes')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Consider a recall')
   })

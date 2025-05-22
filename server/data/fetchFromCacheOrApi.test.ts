@@ -26,15 +26,15 @@ describe('fetchFromCacheOrApi', () => {
   })
 
   const cachedData = {
-    firstName: 'Bobby',
-    lastName: 'Badger',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
   }
 
   describe('CRN is not excluded or restricted', () => {
     const apiData = {
       userAccessResponse: {
-        firstName: 'Brian',
-        lastName: 'Bling',
+        firstName: 'John',
+        lastName: 'Doe',
       },
     }
 

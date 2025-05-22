@@ -9,14 +9,14 @@ describe('get', () => {
     const PPUDPartA = {
       title: 'Part A',
       type: 'PPUDPartA',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
     }
 
     const OtherDocument = {
       title: 'Some Document',
       type: 'OtherDocument',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098044.docx',
+      filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098044.docx',
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9f',
     }
 
@@ -47,7 +47,7 @@ describe('get', () => {
     const PPUDPartA = {
       title: 'Part A',
       type: 'PPUDPartA',
-      filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+      filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
     }
 

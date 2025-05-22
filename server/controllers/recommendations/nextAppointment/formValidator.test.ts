@@ -18,7 +18,7 @@ describe('validateNextAppointment', () => {
       'dateTimeOfAppointment-year': year.toString(),
       'dateTimeOfAppointment-hour': '12',
       'dateTimeOfAppointment-minute': '53',
-      probationPhoneNumber: '01277345263',
+      probationPhoneNumber: '01234567890',
       createLetterTasksComplete: '1',
       crn: 'X34534',
     }
@@ -48,7 +48,7 @@ describe('validateNextAppointment', () => {
           ],
           selected: 'VIDEO_CALL',
         },
-        probationPhoneNumber: '01277345263',
+        probationPhoneNumber: '01234567890',
       },
     })
     expect(nextPagePath).toEqual('/recommendations/34/preview-no-recall')
@@ -62,7 +62,7 @@ describe('validateNextAppointment', () => {
       'dateTimeOfAppointment-year': year.toString(),
       'dateTimeOfAppointment-hour': '12',
       'dateTimeOfAppointment-minute': '53',
-      probationPhoneNumber: '01277345263',
+      probationPhoneNumber: '01234567890',
       createLetterTasksComplete: '0',
       crn: 'X34534',
     }
@@ -79,7 +79,7 @@ describe('validateNextAppointment', () => {
       'dateTimeOfAppointment-year': year.toString(),
       'dateTimeOfAppointment-hour': '12',
       'dateTimeOfAppointment-minute': '53',
-      probationPhoneNumber: '01277345263',
+      probationPhoneNumber: '01234567890',
       crn: 'X34534',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list-no-recall', fromAnchor: 'heading-create-letter' }
@@ -141,7 +141,7 @@ describe('validateNextAppointment', () => {
       'dateTimeOfAppointment-year': '2022',
       'dateTimeOfAppointment-hour': '12',
       'dateTimeOfAppointment-minute': '53',
-      probationPhoneNumber: '01277345263',
+      probationPhoneNumber: '01234567890',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateNextAppointment({ requestBody, urlInfo })

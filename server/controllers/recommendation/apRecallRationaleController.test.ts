@@ -37,7 +37,7 @@ describe('get', () => {
           username: 'Dave',
           roles: ['ROLE_MAKE_RECALL_DECISION', 'ROLE_MARD_RESIDENT_WORKER'],
         },
-        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: 'some reason', odmName: 'Boss Dave' },
+        recommendation: { spoRecallType: 'RECALL', spoRecallRationale: 'some reason', odmName: 'John Doe' },
         statuses: [],
       },
     })
@@ -46,7 +46,7 @@ describe('get', () => {
       errors: undefined,
       spoRecallRationale: 'some reason',
       spoRecallType: 'RECALL',
-      odmName: 'Boss Dave',
+      odmName: 'John Doe',
     })
   })
   it('present with errors', async () => {
@@ -70,7 +70,7 @@ describe('get', () => {
         unsavedValues: {
           spoRecallType: 'RECALL',
           spoRecallRationale: 'a rationale that belongs to recall',
-          odmName: 'mr sparky',
+          odmName: 'mr bloggs',
         },
         recommendation: { spoRecallType: 'NO_RECALL', spoRecallRationale: undefined },
         statuses: [],
@@ -99,7 +99,7 @@ describe('get', () => {
       },
       spoRecallType: 'RECALL',
       spoRecallRationale: 'a rationale that belongs to recall',
-      odmName: 'mr sparky',
+      odmName: 'mr bloggs',
     })
   })
 })
@@ -108,7 +108,7 @@ describe('post', () => {
   const res = mockRes({
     token: 'token1',
     locals: {
-      recommendation: { personOnProbation: { name: 'Harry Smith' } },
+      recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
       urlInfo: { basePath: `/recommendations/123/` },
       user: {
         token: 'token',
@@ -126,7 +126,7 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         spoRecallType: 'RECALL',
-        spoRecallRationale: 'a good reason',
+        spoRecallRationale: 'A substantial reason',
         spoNoRecallRationale: '',
       },
     })
@@ -143,7 +143,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         spoRecallType: 'RECALL',
-        spoRecallRationale: 'a good reason',
+        spoRecallRationale: 'A substantial reason',
         explainTheDecision: true,
       },
       featureFlags: {},
@@ -264,7 +264,7 @@ describe('post', () => {
     const response = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
         user: {
           token: 'token',

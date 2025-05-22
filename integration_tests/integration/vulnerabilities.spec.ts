@@ -17,7 +17,7 @@ context('Vulnerabilities page', () => {
     cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
     cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
-    cy.pageHeading().should('equal', 'Vulnerabilities for Paula Smith')
+    cy.pageHeading().should('equal', 'Vulnerabilities for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-vulnerabilities' }).should(
       'contain',
       'This information is from OASys. Check the contact history for vulnerability information from NDelius.'

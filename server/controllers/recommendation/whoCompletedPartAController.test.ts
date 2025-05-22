@@ -32,8 +32,8 @@ describe('get', () => {
       locals: {
         recommendation: {
           whoCompletedPartA: {
-            name: 'dude',
-            email: 'dude@me.com',
+            name: 'john',
+            email: 'john@me.com',
             telephone: '123456',
             region: 'region A',
             localDeliveryUnit: 'here',
@@ -45,8 +45,8 @@ describe('get', () => {
 
     await whoCompletedPartAController.get(mockReq(), res, mockNext())
 
-    expect(res.locals.inputDisplayValues.name).toEqual('dude')
-    expect(res.locals.inputDisplayValues.email).toEqual('dude@me.com')
+    expect(res.locals.inputDisplayValues.name).toEqual('john')
+    expect(res.locals.inputDisplayValues.email).toEqual('john@me.com')
     expect(res.locals.inputDisplayValues.telephone).toEqual('123456')
     expect(res.locals.inputDisplayValues.region).toEqual('region A')
     expect(res.locals.inputDisplayValues.localDeliveryUnit).toEqual('here')
@@ -67,8 +67,8 @@ describe('get', () => {
         },
         recommendation: {
           whoCompletedPartA: {
-            name: 'dude',
-            email: 'dude@me.com',
+            name: 'john',
+            email: 'john@me.com',
             telephone: '123456',
             region: 'region A',
             localDeliveryUnit: 'here',
@@ -98,8 +98,8 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        name: 'dude',
-        email: 'dude@here.com',
+        name: 'john',
+        email: 'john@here.com',
         telephone: '5555555',
         region: 'region C',
         localDeliveryUnit: 'place A',
@@ -110,7 +110,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -123,8 +123,8 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         whoCompletedPartA: {
-          name: 'dude',
-          email: 'dude@here.com',
+          name: 'john',
+          email: 'john@here.com',
           telephone: '5555555',
           region: 'region C',
           localDeliveryUnit: 'place A',
@@ -145,8 +145,8 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        name: 'dude',
-        email: 'dude@here.com',
+        name: 'john',
+        email: 'john@here.com',
         telephone: '5555555',
         region: 'region C',
         localDeliveryUnit: 'place A',
@@ -157,7 +157,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -187,7 +187,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -231,8 +231,8 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
-        name: 'dude',
-        email: 'fabnabit',
+        name: 'john',
+        email: 'doe',
         telephone: '5555555',
         region: 'region C',
         localDeliveryUnit: 'place A',
@@ -243,7 +243,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

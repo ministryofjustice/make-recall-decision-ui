@@ -198,14 +198,14 @@ function recommendationEndpoint(
 const TEMPLATE = {
   results: [
     {
-      name: 'Harry 1 Smith',
+      name: 'Harry 1 Bloggs',
       crn: 'X098092',
       dateOfBirth: '1980-05-06',
       userExcluded: false,
       userRestricted: false,
     },
     {
-      name: 'Harry 2 Hamburger',
+      name: 'Harry 2 Doe',
       crn: 'X098093',
       dateOfBirth: '1980-05-06',
       userExcluded: false,
@@ -352,7 +352,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
       response: {
         results: [
           {
-            name: 'Harry Smith',
+            name: 'Harry Bloggs',
             crn: 'X098092',
             dateOfBirth: '1980-05-06',
             recommendationId: 799270715,
@@ -365,15 +365,15 @@ context('Accessibility (a11y) PPCS Checks', () => {
       response: {
         locationDescription: 'Graceland',
         bookingNo: '1234',
-        firstName: 'Anne',
-        middleName: 'C',
-        lastName: 'McCaffrey',
+        firstName: 'Jane',
+        middleName: 'J',
+        lastName: 'Bloggs',
         facialImageId: 1234,
         dateOfBirth: '1970-03-15',
         status: 'ACTIVE IN',
         physicalAttributes: {
           gender: 'Male',
-          ethnicity: 'Caucasian',
+          ethnicity: 'White',
         },
         identifiers: [
           {
@@ -396,14 +396,14 @@ context('Accessibility (a11y) PPCS Checks', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {
-            firstName: 'Max',
+            firstName: 'Joe',
             middleName: 'Arthur',
-            lastName: 'Mull',
+            lastName: 'Bloggs',
           },
           bookRecallToPpud: {
             ...item.bookRecallToPpud,
-            firstNames: 'Pinky',
-            lastName: 'Pooh',
+            firstNames: 'Joseph',
+            lastName: 'Bluggs',
             ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
           },
           ppudOffender: {
@@ -432,9 +432,8 @@ context('Accessibility (a11y) PPCS Checks', () => {
               {
                 bookingId: 13,
                 courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceCode: 'SA12345',
+                offenceDescription: 'Attack / assault / batter a member of the public',
                 offenceStatute: 'SA96',
                 offenderChargeId: 3934369,
                 sentenceDate: '2023-11-16',
@@ -487,9 +486,8 @@ context('Accessibility (a11y) PPCS Checks', () => {
                 offenderChargeId: 3934369,
                 offenceStartDate: '1899-01-01',
                 offenceStatute: 'SA96',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceCode: 'SA12345',
+                offenceDescription: 'Attack / assault / batter a member of the public',
                 indicators: [],
               },
             ],
@@ -502,13 +500,13 @@ context('Accessibility (a11y) PPCS Checks', () => {
           {
             title: 'Part A',
             type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: '11111',
           },
           {
             title: 'some  title',
             type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: '12356',
           },
         ],

@@ -4,10 +4,10 @@ describe('validateLocalPoliceContactDetails', () => {
   const recommendationId = '34'
   it('returns valuesToSave with HTML tags stripped, and no errors if valid', async () => {
     const requestBody = {
-      contactName: 'Thomas Magnum',
+      contactName: 'Joe Bloggs',
       phoneNumber: '+44 808 157 0192',
-      faxNumber: '0207 528 9289',
-      emailAddress: 'thomas.magnum@gmail.com',
+      faxNumber: '0123 456 7890',
+      emailAddress: 'joe.bloggs@gmail.com',
     }
     const { errors, valuesToSave, nextPagePath } = await validateLocalPoliceContactDetails({
       requestBody,
@@ -22,7 +22,7 @@ describe('validateLocalPoliceContactDetails', () => {
 
   it('returns no errors if optional fields are missing', async () => {
     const requestBody = {
-      contactName: 'Thomas Magnum',
+      contactName: 'Joe Bloggs',
       phoneNumber: '',
       faxNumber: '',
       emailAddress: '',
@@ -36,7 +36,7 @@ describe('validateLocalPoliceContactDetails', () => {
 
   it('does not validate telephone number', async () => {
     const requestBody = {
-      contactName: 'Thomas Magnum',
+      contactName: 'Joe Bloggs',
       phoneNumber: 'invalid',
       faxNumber: '',
       emailAddress: '',
@@ -66,8 +66,8 @@ describe('validateLocalPoliceContactDetails', () => {
 
   it('returns unsaved values if there are errors', async () => {
     const requestBody = {
-      contactName: 'Thomas Magnum',
-      phoneNumber: '00442082922943',
+      contactName: 'Joe Bloggs',
+      phoneNumber: '00441234567890',
       emailAddress: 'test.com',
     }
     const { errors, unsavedValues, valuesToSave } = await validateLocalPoliceContactDetails({
@@ -88,10 +88,10 @@ describe('validateLocalPoliceContactDetails', () => {
 
   it('returns errors and unsaved values for invalid fields', async () => {
     const requestBody = {
-      contactName: 'Thomas Magnum',
+      contactName: 'Joe Bloggs',
       phoneNumber: '',
       faxNumber: '345',
-      emailAddress: 'nope',
+      emailAddress: 'no',
     }
     const { errors, unsavedValues, valuesToSave } = await validateLocalPoliceContactDetails({
       requestBody,

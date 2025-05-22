@@ -16,7 +16,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          bookRecallToPpud: { firstNames: 'Harrison C', lastName: 'Ford' },
+          bookRecallToPpud: { firstNames: 'Joe C', lastName: 'Bloggs' },
         },
       },
     })
@@ -25,8 +25,8 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'editName' })
     expect(res.locals.values).toEqual({
-      firstNames: 'Harrison C',
-      lastName: 'Ford',
+      firstNames: 'Joe C',
+      lastName: 'Bloggs',
     })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editName')
     expect(next).toHaveBeenCalled()
@@ -42,12 +42,12 @@ describe('get', () => {
       locals: {
         errors: [],
         unsavedValues: {
-          firstName: 'Ethan',
-          lastName: 'Hawk',
+          firstName: 'John',
+          lastName: 'Doe',
           secondName: 'H',
         },
         recommendation: {
-          bookRecallToPpud: { firstNames: 'Harrison C', lastName: 'Ford' },
+          bookRecallToPpud: { firstNames: 'Joe C', lastName: 'Bloggs' },
         },
       },
     })
@@ -57,8 +57,8 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editName' })
     expect(res.locals.errors).toEqual([])
     expect(res.locals.values).toEqual({
-      firstName: 'Ethan',
-      lastName: 'Hawk',
+      firstName: 'John',
+      lastName: 'Doe',
       secondName: 'H',
     })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editName')
@@ -80,8 +80,8 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '1' },
       body: {
-        firstNames: 'Al Bert',
-        lastName: 'Zweitestein',
+        firstNames: 'John',
+        lastName: 'Doe',
       },
     })
 
@@ -102,8 +102,8 @@ describe('post', () => {
       valuesToSave: {
         bookRecallToPpud: {
           policeForce: 'Kent',
-          firstNames: 'Al Bert',
-          lastName: 'Zweitestein',
+          firstNames: 'John',
+          lastName: 'Doe',
         },
       },
       token: 'token1',

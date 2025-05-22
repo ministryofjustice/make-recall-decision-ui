@@ -12,13 +12,13 @@ context('Make a recommendation - form validation', () => {
     id: recommendationId,
     crn,
     personOnProbation: {
-      name: 'Paula Smith',
+      name: 'Jane Bloggs',
       addresses: [
         {
           line1: '41 Newport Pagnell Rd',
-          line2: 'Newtown',
-          town: 'Northampton',
-          postcode: 'NN4 6HP',
+          line2: 'Bethnal Green',
+          town: 'London',
+          postcode: 'BG1 234',
         },
       ],
     },
@@ -36,7 +36,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'responseToProbation',
-      errorText: 'Explain how Paula Smith has responded to probation',
+      errorText: 'Explain how Jane Bloggs has responded to probation',
     })
   })
 
@@ -88,7 +88,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isIndeterminateSentence',
-      errorText: 'Select whether Paula Smith is on an indeterminate sentence or not',
+      errorText: 'Select whether Jane Bloggs is on an indeterminate sentence or not',
     })
   })
 
@@ -100,7 +100,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isExtendedSentence',
-      errorText: 'Select whether Paula Smith is on an extended sentence or not',
+      errorText: 'Select whether Jane Bloggs is on an extended sentence or not',
     })
   })
 
@@ -112,7 +112,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateSentenceType',
-      errorText: 'Select whether Paula Smith is on a life, IPP or DPP sentence',
+      errorText: 'Select whether Jane Bloggs is on a life, IPP or DPP sentence',
     })
   })
 
@@ -127,9 +127,9 @@ context('Make a recommendation - form validation', () => {
       errorText: 'Select at least one of the criteria',
     })
     cy.selectCheckboxes('Indeterminate and extended sentences', [
-      'Paula Smith has shown behaviour similar to the index offence',
-      'Paula Smith has shown behaviour that could lead to a sexual or violent offence',
-      'Paula Smith is out of touch',
+      'Jane Bloggs has shown behaviour similar to the index offence',
+      'Jane Bloggs has shown behaviour that could lead to a sexual or violent offence',
+      'Jane Bloggs is out of touch',
     ])
     cy.clickButton('Continue')
     cy.assertErrorMessage({
@@ -142,7 +142,7 @@ context('Make a recommendation - form validation', () => {
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
-      errorText: 'Enter details about Paula Smith being out of touch',
+      errorText: 'Enter details about Jane Bloggs being out of touch',
     })
   })
 
@@ -229,7 +229,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isUnderIntegratedOffenderManagement',
-      errorText: 'Select whether Paula Smith is under Integrated Offender Management',
+      errorText: 'Select whether Jane Bloggs is under Integrated Offender Management',
     })
   })
 
@@ -297,7 +297,7 @@ context('Make a recommendation - form validation', () => {
       fieldName: 'hasArrestIssues',
       errorText: "Select whether there's anything the police should know",
     })
-    cy.selectRadio('Is there anything the police should know before they arrest Paula Smith?', 'Yes')
+    cy.selectRadio('Is there anything the police should know before they arrest Jane Bloggs?', 'Yes')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasArrestIssuesDetailsYes',
@@ -313,9 +313,9 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasContrabandRisk',
-      errorText: 'Select whether you think Paula Smith is using recall to bring contraband into prison',
+      errorText: 'Select whether you think Jane Bloggs is using recall to bring contraband into prison',
     })
-    cy.selectRadio(`Do you think Paula Smith is using recall to bring contraband into prison?`, 'Yes')
+    cy.selectRadio(`Do you think Jane Bloggs is using recall to bring contraband into prison?`, 'Yes')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasContrabandRiskDetailsYes',
@@ -331,9 +331,9 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isMainAddressWherePersonCanBeFound',
-      errorText: 'Select whether this is where the police can find Paula Smith',
+      errorText: 'Select whether this is where the police can find Jane Bloggs',
     })
-    cy.selectRadio('Is this where the police can find Paula Smith?', 'No')
+    cy.selectRadio('Is this where the police can find Jane Bloggs?', 'No')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isMainAddressWherePersonCanBeFoundDetailsNo',
@@ -427,7 +427,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'triggerLeadingToRecall',
-      errorText: 'Explain what has made you consider recalling Paula Smith',
+      errorText: 'Explain what has made you consider recalling Jane Bloggs',
     })
   })
   it('Rationale Check', () => {
