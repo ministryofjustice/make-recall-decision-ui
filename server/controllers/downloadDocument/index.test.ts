@@ -6,7 +6,7 @@ import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 jest.mock('../../data/makeDecisionApiClient')
 
 const crn = '123'
-const documentId = '88'
+const documentId = '45'
 
 describe('downloadDocument', () => {
   const downloadFileContents = 'file contents'

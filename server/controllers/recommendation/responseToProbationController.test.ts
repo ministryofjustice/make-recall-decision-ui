@@ -25,19 +25,19 @@ describe('get', () => {
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { responseToProbation: 'lorem ipsum' },
+        recommendation: { responseToProbation: 'Response text' },
       },
     })
 
     responseToProbationController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum')
+    expect(res.locals.inputDisplayValues.value).toEqual('Response text')
   })
 
   it('initial load with error data', async () => {
     const res = mockRes({
       locals: {
         errors: { responseToProbation: { text: 'val' } },
-        recommendation: { responseToProbation: 'lorem ipsum' },
+        recommendation: { responseToProbation: 'Response text' },
       },
     })
 
@@ -60,7 +60,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -92,7 +92,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

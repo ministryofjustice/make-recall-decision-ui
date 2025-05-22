@@ -57,7 +57,7 @@ describe('validateRosh', () => {
       riskToChildren: 'LOW',
       riskToPublic: 'HIGH',
       riskToKnownAdult: 'MEDIUM',
-      riskToStaff: 'BANANA',
+      riskToStaff: 'VALUE',
       riskToPrisoners: 'NOT_APPLICABLE',
       crn: 'X34534',
     }

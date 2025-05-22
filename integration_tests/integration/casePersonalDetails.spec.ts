@@ -21,7 +21,7 @@ context('Personal details', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
-    cy.pageHeading().should('equal', 'Personal details for Paula Smith')
+    cy.pageHeading().should('equal', 'Personal details for Jane Bloggs')
 
     cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
     cy.getText('personalDetailsOverview-dateOfBirth').should(
@@ -36,11 +36,11 @@ context('Personal details', () => {
     // personal details
     cy.getDefinitionListValue('Main addresses').should('contain', '5 Anderton Road')
     cy.contains('Address 1 5 Anderton Road Newham London E15 1UJ').should('be.visible')
-    cy.contains('Address 2 33 Balaam St Plaistow London E15 3NU').should('be.visible')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Name: Jenny Eclair')
+    cy.contains('Address 2 33 Balaam St Birmingham BH1 234').should('be.visible')
+    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Name: Jane Doe')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Code: N07')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Team: NPS London')
-    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Telephone: 07824637629')
+    cy.getDefinitionListValue('Probation practitioner').should('contain', 'Telephone: 01234567890')
     cy.getDefinitionListValue('Probation practitioner').should('contain', 'Email: jenny@probation.com')
     cy.getLinkHref('jenny@probation.com').should('equal', 'mailto:jenny@probation.com')
   })

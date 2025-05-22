@@ -14,7 +14,7 @@ context('Overview', () => {
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.pageHeading().should('equal', 'Overview for Paula Smith')
+    cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
     // licence info
     const { lastRelease, activeConvictions, risk } = getCaseOverviewResponse
     cy.getText('lastReleaseDate').should('equal', formatDateTimeFromIsoString({ isoDate: lastRelease.releaseDate }))
@@ -40,7 +40,7 @@ context('Overview', () => {
     // offence analysis
     cy.getDefinitionListValue('Analysis', { parent: '[data-qa="offence-analysis"]' }).should(
       'contain',
-      'Mr Smith was recalled again on 13/12/2021.'
+      'Mr Bloggs was recalled again on 13/12/2021.'
     )
 
     // contingency plan

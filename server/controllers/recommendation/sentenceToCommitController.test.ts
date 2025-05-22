@@ -13,9 +13,8 @@ describe('get', () => {
               {
                 bookingId: 13,
                 courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceCode: 'SA12345',
+                offenceDescription: 'Attack / assault / batter a member of the public',
                 offenceStatute: 'SA96',
                 offenderChargeId: 3934369,
                 sentenceDate: '2023-11-16',
@@ -41,9 +40,8 @@ describe('get', () => {
     expect(res.locals.offence).toEqual({
       bookingId: 13,
       courtDescription: 'Blackburn County Court',
-      offenceCode: 'SA96036',
-      offenceDescription:
-        'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+      offenceCode: 'SA12345',
+      offenceDescription: 'Attack / assault / batter a member of the public',
       offenceStatute: 'SA96',
       offenderChargeId: 3934369,
       sentenceDate: '2023-11-16',
@@ -94,7 +92,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })

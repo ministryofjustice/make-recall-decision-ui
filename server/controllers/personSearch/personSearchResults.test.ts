@@ -63,7 +63,7 @@ describe('personSearchResults', () => {
   const TEMPLATE = {
     results: [
       {
-        name: 'Harry 1 Smith',
+        name: 'Harry 1 Bloggs',
         crn: 'X098092',
         dateOfBirth: '1980-05-06',
         userExcluded: false,

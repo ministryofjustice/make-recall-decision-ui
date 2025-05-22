@@ -261,7 +261,7 @@ describe('get', () => {
           descriptionType: 'Registration Review',
           outcome: null,
           notes:
-            'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+            'Comment added by Joe Bloggs on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
           enforcementAction: 'action 2',
           systemGenerated: false,
         },
@@ -295,7 +295,7 @@ describe('get', () => {
               descriptionType: 'Registration Review',
               enforcementAction: 'action 2',
               notes:
-                'Comment added by John Smith on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
+                'Comment added by Joe Bloggs on 05/05/2022 at 17:45\nType: Public Protection - MAPPA\nLevel: MAPPA Level 3\nCategory: MAPPA Cat 3\nNotes: Please Note - Category 3 offenders require multi-agency management at Level 2 or 3 and should not be recorded at Level 1.',
               outcome: null,
               startDate: '2022-06-03',
               systemGenerated: false,
@@ -403,9 +403,9 @@ describe('get', () => {
     ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
     ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
       display: true,
-      createdByUserFullName: 'Madison Bayer',
+      createdByUserFullName: 'Jo Bloggs',
       createdDate: '2020-01-01',
-      personOnProbationName: 'John Dodo',
+      personOnProbationName: 'John Doe',
       recommendationId: '12345',
       linkText: 'Mock Link',
       text: 'Mock Text',
@@ -416,7 +416,7 @@ describe('get', () => {
       token,
       locals: {
         user: {
-          username: 'Madison',
+          username: 'Jo',
           roles: ['ROLE_MAKE_RECALL_DECISION'],
         },
       },
@@ -442,9 +442,9 @@ describe('get', () => {
     ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
     ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
       display: true,
-      createdByUserFullName: 'Madison Bayer',
+      createdByUserFullName: 'Jo Bloggs',
       createdDate: '2020-01-01',
-      personOnProbationName: 'John Dodo',
+      personOnProbationName: 'John Doe',
       recommendationId: '12345',
       linkText: 'Mock Link',
       text: 'Mock Text',
@@ -455,7 +455,7 @@ describe('get', () => {
       token,
       locals: {
         user: {
-          username: 'Madison',
+          username: 'Jo',
           roles: ['ROLE_MAKE_RECALL_DECISION'],
         },
       },
@@ -707,9 +707,9 @@ describe('get', () => {
             ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               linkText: 'Mock Link',
               text: 'Mock Text',
@@ -740,9 +740,9 @@ describe('get', () => {
             ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               text: 'Mock Text',
             })
@@ -773,9 +773,9 @@ describe('get', () => {
             ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               dataAnalyticsEventCategory: 'spo_delete_part_a_click',
               linkText: 'Delete the Part A',
@@ -813,9 +813,9 @@ describe('get', () => {
             ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               linkText: '',
               text: 'started a Part A for',
@@ -853,9 +853,9 @@ describe('get', () => {
             ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               dataAnalyticsEventCategory: 'spo_delete_dntr_click',
               linkText: 'Delete the decision not to recall',
@@ -893,9 +893,9 @@ describe('get', () => {
             ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               dataAnalyticsEventCategory: 'spo_delete_dntr_click',
               text: 'started a decision not to recall letter for',
@@ -938,9 +938,9 @@ describe('get', () => {
             ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               linkText: 'Mock Link',
               text: 'Mock Text',
@@ -974,9 +974,9 @@ describe('get', () => {
             ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
             ;(createRecommendationBanner as jest.Mock).mockReturnValueOnce({
               display: true,
-              createdByUserFullName: 'Madison Bayer',
+              createdByUserFullName: 'Jo Bloggs',
               createdDate: '2020-01-01',
-              personOnProbationName: 'John Dodo',
+              personOnProbationName: 'John Doe',
               recommendationId: '12345',
               text: 'Mock Text',
             })

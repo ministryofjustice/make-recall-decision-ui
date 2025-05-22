@@ -54,11 +54,11 @@ describe('get', () => {
               name: 'isUnderIntegratedOffenderManagement',
               href: '#isUnderIntegratedOffenderManagement',
               errorId: 'noIntegratedOffenderManagementSelected',
-              html: 'You must select whether Harry Smith is under Integrated Offender Management',
+              html: 'You must select whether Joe Bloggs is under Integrated Offender Management',
             },
           ],
           isUnderIntegratedOffenderManagement: {
-            text: 'You must select whether Harry Smith is under Integrated Offender Management',
+            text: 'You must select whether Joe Bloggs is under Integrated Offender Management',
             href: '#isUnderIntegratedOffenderManagement',
             errorId: 'noIntegratedOffenderManagementSelected',
           },
@@ -78,11 +78,11 @@ describe('get', () => {
           name: 'isUnderIntegratedOffenderManagement',
           href: '#isUnderIntegratedOffenderManagement',
           errorId: 'noIntegratedOffenderManagementSelected',
-          html: 'You must select whether Harry Smith is under Integrated Offender Management',
+          html: 'You must select whether Joe Bloggs is under Integrated Offender Management',
         },
       ],
       isUnderIntegratedOffenderManagement: {
-        text: 'You must select whether Harry Smith is under Integrated Offender Management',
+        text: 'You must select whether Joe Bloggs is under Integrated Offender Management',
         href: '#isUnderIntegratedOffenderManagement',
         errorId: 'noIntegratedOffenderManagementSelected',
       },
@@ -145,7 +145,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

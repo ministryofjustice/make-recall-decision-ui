@@ -25,19 +25,19 @@ describe('get', () => {
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { triggerLeadingToRecall: 'lorem ipsum' },
+        recommendation: { triggerLeadingToRecall: 'Trigger text' },
       },
     })
 
     triggerLeadingToRecallController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('lorem ipsum')
+    expect(res.locals.inputDisplayValues.value).toEqual('Trigger text')
   })
 
   it('initial load with error data', async () => {
     const res = mockRes({
       locals: {
         errors: { triggerLeadingToRecall: { text: 'val' } },
-        recommendation: { triggerLeadingToRecall: 'lorem ipsum' },
+        recommendation: { triggerLeadingToRecall: 'Trigger text' },
       },
     })
 
@@ -60,7 +60,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -93,7 +93,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

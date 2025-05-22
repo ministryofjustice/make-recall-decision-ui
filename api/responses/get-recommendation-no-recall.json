@@ -98,9 +98,9 @@
     ]
   },
   "personOnProbation": {
-    "name": "Paula Smith",
-    "firstName": "Paula",
-    "surname": "Smith"
+    "name": "Jane Bloggs",
+    "firstName": "Jane",
+    "surname": "Bloggs"
   },
   "licenceConditionsBreached": {
     "standardLicenceConditions": {
@@ -124,7 +124,7 @@
           "subCatCode": "NST14",
           "title": "Disclosure of information",
           "details": "Notify your supervising officer of any intimate relationships",
-          "note": "Persons wife is Joan Smyth"
+          "note": "Persons wife is Jane Bloggs"
         }
       ]
     }

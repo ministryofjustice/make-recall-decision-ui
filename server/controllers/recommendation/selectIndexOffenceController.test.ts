@@ -30,9 +30,8 @@ describe('get', () => {
             offenderChargeId: 3934369,
             offenceStartDate: '1899-01-01',
             offenceStatute: 'SA96',
-            offenceCode: 'SA96036',
-            offenceDescription:
-              'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+            offenceCode: 'SA12345',
+            offenceDescription: 'Attack / assault / batter a member of the public',
             indicators: [],
           },
         ],
@@ -51,7 +50,7 @@ describe('get', () => {
           personOnProbation: {
             croNumber: '123X',
             nomsNumber: '567Y',
-            surname: 'Mayer',
+            surname: 'Doe',
             dateOfBirth: '2001-01-01',
             mappa: {
               level: '1',
@@ -76,10 +75,9 @@ describe('get', () => {
             {
               bookingId: 13,
               courtDescription: 'Blackburn County Court',
-              offenceCode: 'SA96036',
+              offenceCode: 'SA12345',
               offenceDate: '1899-01-01',
-              offenceDescription:
-                'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+              offenceDescription: 'Attack / assault / batter a member of the public',
               offenceStatute: 'SA96',
               offenderChargeId: 3934369,
               sentenceDate: '2023-11-16',
@@ -121,9 +119,8 @@ describe('get', () => {
             offenderChargeId: 3934369,
             offenceStartDate: '1899-01-01',
             offenceStatute: 'SA96',
-            offenceCode: 'SA96036',
-            offenceDescription:
-              'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+            offenceCode: 'SA12345',
+            offenceDescription: 'Attack / assault / batter a member of the public',
             indicators: [],
           },
         ],
@@ -188,7 +185,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -231,7 +228,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

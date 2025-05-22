@@ -32,7 +32,7 @@ describe('update recall', () => {
       decisionDateTime: '2024-01-29T16:15:39',
       bookRecallToPpud: {
         mappaLevel: 'Level 2 - local inter-agency management',
-        policeForce: 'NCIS Los Angeles',
+        policeForce: 'Bethnal Green Police Force',
         probationArea: 'london',
         receivedDateTime: '2024-01-29T16:15:39',
       },
@@ -52,7 +52,7 @@ describe('update recall', () => {
       isExtendedSentence: true,
       isInCustody: false,
       mappaLevel: 'Level 2 - local inter-agency management',
-      policeForce: 'NCIS Los Angeles',
+      policeForce: 'Bethnal Green Police Force',
       probationArea: 'london',
       receivedDateTime: '2024-01-29T16:15:39',
       riskOfContrabandDetails: 'Contraband detail...',

@@ -45,7 +45,7 @@ Cypress.Commands.add('mockRecommendationData', () => {
       recommendationId: '456',
       crn: '123',
       personOnProbation: {
-        name: 'Paula Smith',
+        name: 'Jane Bloggs',
       },
     },
   })
@@ -55,9 +55,9 @@ Cypress.Commands.add('createNoRecallLetter', () => {
   cy.task('createNoRecallLetter', {
     response: {
       letterContent: {
-        letterAddress: 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC',
+        letterAddress: 'Jane Bloggs\n123 Oak Avenue\nBirmingham\nB23 1BC',
         letterDate: '12/09/2022',
-        salutation: 'Dear Paula',
+        salutation: 'Dear Jane',
         letterTitle: 'DECISION NOT TO RECALL',
         section1: 'section 1',
         section2: 'section 2',

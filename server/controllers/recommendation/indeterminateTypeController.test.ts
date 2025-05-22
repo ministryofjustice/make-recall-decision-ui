@@ -10,7 +10,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         token: 'token1',
       },
     })
@@ -18,7 +18,7 @@ describe('get', () => {
     await indeterminateTypeController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'indeterminateSentenceType' })
-    expect(res.locals.pageHeadings.indeterminateSentenceType).toEqual('What type of sentence is Harry Smith on?')
+    expect(res.locals.pageHeadings.indeterminateSentenceType).toEqual('What type of sentence is Joe Bloggs on?')
     expect(res.locals.pageTitles.indeterminateSentenceType).toEqual('What type of sentence is the person on?')
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/indeterminateSentenceType')
@@ -30,7 +30,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           indeterminateSentenceType: {
             selected: 'IPP',
             allOptions: [
@@ -61,17 +61,17 @@ describe('get', () => {
               name: 'indeterminateSentenceType',
               href: '#indeterminateSentenceType',
               errorId: 'noIndeterminateSentenceTypeSelected',
-              text: 'Select whether Harry Smith is on a life, IPP or DPP sentence',
+              text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
             },
           ],
           indeterminateSentenceType: {
-            text: 'Select whether Harry Smith is on a life, IPP or DPP sentence',
+            text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
             href: '#indeterminateSentenceType',
             errorId: 'noIndeterminateSentenceTypeSelected',
           },
         },
         recommendation: {
-          personOnProbation: { name: 'Harry Smith' },
+          personOnProbation: { name: 'Joe Bloggs' },
           indeterminateSentenceType: '',
         },
         token: 'token1',
@@ -84,13 +84,13 @@ describe('get', () => {
       indeterminateSentenceType: {
         errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
-        text: 'Select whether Harry Smith is on a life, IPP or DPP sentence',
+        text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
       },
       list: [
         {
           href: '#indeterminateSentenceType',
           errorId: 'noIndeterminateSentenceTypeSelected',
-          text: 'Select whether Harry Smith is on a life, IPP or DPP sentence',
+          text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
           name: 'indeterminateSentenceType',
         },
       ],
@@ -114,7 +114,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
         statuses: [],
       },
@@ -161,7 +161,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })
@@ -197,7 +197,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
         statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
       },

@@ -79,7 +79,7 @@ describe('validateIntegratedOffenderManagement', () => {
 
   it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
-      isUnderIntegratedOffenderManagement: 'BANANA',
+      isUnderIntegratedOffenderManagement: 'VALUE',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIntegratedOffenderManagement({ requestBody, recommendationId })

@@ -24,7 +24,7 @@ context('Risk page', () => {
 
   it('shows RoSH, MAPPA and predictor scores', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.pageHeading().should('equal', 'Risk for Paula Smith')
+    cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
 
     // Content panels

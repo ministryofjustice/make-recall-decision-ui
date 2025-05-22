@@ -46,7 +46,7 @@ describe('validateIndeterminateSentenceType', () => {
 
   it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
-      indeterminateSentenceType: 'BANANA',
+      indeterminateSentenceType: 'VALUE',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })

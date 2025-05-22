@@ -20,7 +20,7 @@ describe('transformContactHistory', () => {
       descriptionType: 'Management Oversight - Recall',
       outcome: null,
       notes:
-        'Good afternoon, the police attempted to arrest Mr. Edwin at 18 Serata Street today, they forced entry but he was not present. We have a contractor repairing the door and changing the locks so that Mr. Edwin will not be able to return. Kind regards, PC Street',
+        'Good afternoon, the police attempted to arrest Mr. Doe at 18 Serata Street today, they forced entry but he was not present. We have a contractor repairing the door and changing the locks so that Mr. Doe will not be able to return. Kind regards, PC Street',
       enforcementAction: null,
       systemGenerated: true,
     },
@@ -30,7 +30,7 @@ describe('transformContactHistory', () => {
       descriptionType: 'Arrest attempt',
       outcome: 'Decision to Recall',
       notes:
-        'Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.',
+        'Comment added by Jane Bloggs on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Doe has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Doe to address his alcohol abuse and consider most appropriate accommodation on release.',
       enforcementAction: null,
       systemGenerated: false,
     },
@@ -39,7 +39,7 @@ describe('transformContactHistory', () => {
       contactStartDate: '2022-04-21T11:30:00Z',
       descriptionType: 'Planned Office Visit (NS)',
       outcome: 'Failed to Attend',
-      notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+      notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
       enforcementAction: 'Decision Pending Response from Person on Probation',
       systemGenerated: true,
     },
@@ -100,7 +100,7 @@ describe('transformContactHistory', () => {
               descriptionType: 'Arrest attempt',
               enforcementAction: null,
               notes:
-                'Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.',
+                'Comment added by Jane Bloggs on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Doe has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Doe to address his alcohol abuse and consider most appropriate accommodation on release.',
               outcome: 'Decision to Recall',
               startDate: '2022-04-21',
               systemGenerated: false,

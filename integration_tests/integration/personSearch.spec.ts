@@ -17,14 +17,14 @@ context('Search for a person', () => {
   const TEMPLATE = {
     results: [
       {
-        name: 'Harry 1 Smith',
+        name: 'Harry 1 Bloggs',
         crn: 'X098092',
         dateOfBirth: '1980-05-06',
         userExcluded: false,
         userRestricted: false,
       },
       {
-        name: 'Harry 2 Hamburger',
+        name: 'Harry 2 Doe',
         crn: 'X098093',
         dateOfBirth: '1980-05-06',
         userExcluded: false,
@@ -72,7 +72,7 @@ context('Search for a person', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
     // link to case summary
     cy.clickLink(TEMPLATE.results[0].name)
-    cy.pageHeading().should('equal', 'Overview for Paula Smith')
+    cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Search results')
   })
@@ -95,18 +95,18 @@ context('Search for a person', () => {
     // no search results
     cy.task('searchPersons', { statusCode: 200, response: { ...TEMPLATE, results: [] } })
     cy.fillInput('First name', 'Harry')
-    cy.fillInput('Last name', 'Styles')
+    cy.fillInput('Last name', 'Surname')
     cy.clickButton('Search')
     cy.pageHeading().should('equal', 'Search results')
     cy.getElement(`First name: Harry`).should('exist')
-    cy.getElement(`Last name: Styles`).should('exist')
+    cy.getElement(`Last name: Surname`).should('exist')
     cy.getElement('No results found. Double-check you entered the right name.').should('exist')
 
     // one search result
     cy.task('searchPersons', { statusCode: 200, response: TEMPLATE })
     cy.clickLink('Change')
     cy.fillInput('First name', 'Harry')
-    cy.fillInput('Last name', 'Styles')
+    cy.fillInput('Last name', 'Surname')
     cy.clickButton('Search')
     cy.getRowValuesFromTable({
       tableCaption: 'Persons found',
@@ -129,7 +129,7 @@ context('Search for a person', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
     // link to case summary
     cy.clickLink(TEMPLATE.results[0].name)
-    cy.pageHeading().should('equal', 'Overview for Paula Smith')
+    cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Search results')
   })

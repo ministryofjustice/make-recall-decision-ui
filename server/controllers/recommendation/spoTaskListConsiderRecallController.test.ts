@@ -10,7 +10,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, crn: 'X123' },
         user: {
           username: 'Dave',
           token: 'token1',

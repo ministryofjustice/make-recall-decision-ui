@@ -26,7 +26,7 @@ context('Contact history', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
-      cy.pageHeading().should('equal', 'Contact history for Charles Edwin')
+      cy.pageHeading().should('equal', 'Contact history for Joe Bloggs')
       // contacts
       const filtered = removeSystemGenerated(getCaseContactHistoryResponse.contactSummary)
       const sortedByDate = sortListByDateField({
@@ -229,14 +229,14 @@ context('Contact history', () => {
       cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-1"]' }).should('equal', true)
       // one of the contacts was matched on description, so check the details were not expanded
       cy.isDetailsOpen('View more detail', { parent: '[data-qa="contact-3"]' }).should('equal', false)
-      cy.fillInput('Search term', 'Eliot Prufrock')
+      cy.fillInput('Search term', 'Joe E Bloggs')
       cy.clickButton('Apply filters')
       // all text search terms are required, so result set is reduced
       cy.getElement('3 contacts').should('exist')
       // clear filters
       cy.clickLink('letter')
       cy.getElement('7 contacts').should('exist')
-      cy.clickLink('Eliot Prufrock')
+      cy.clickLink('Joe E Bloggs')
       cy.getElement('12 contacts').should('exist')
     })
 

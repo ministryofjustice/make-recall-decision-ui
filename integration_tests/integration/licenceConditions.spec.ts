@@ -182,7 +182,7 @@ context('Licence conditions', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
-    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    cy.pageHeading().should('equal', 'Licence conditions for Joe')
     // Standard licence conditions
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
     formOptions.standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
@@ -209,7 +209,7 @@ context('Licence conditions', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
-    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    cy.pageHeading().should('equal', 'Licence conditions for Joe')
     // Standard licence conditions
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
     cy.getElement('This is a standard licence condition').should('exist')
@@ -238,7 +238,7 @@ context('Licence conditions', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
-    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    cy.pageHeading().should('equal', 'Licence conditions for Joe')
     cy.get('[data-qa="bespoke"]').should('not.exist')
   })
 
@@ -258,7 +258,7 @@ context('Licence conditions', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
-    cy.pageHeading().should('equal', 'Licence conditions for Charles Edwin')
+    cy.pageHeading().should('equal', 'Licence conditions for Joe')
     cy.get('[data-qa="additional"]').should('not.exist')
   })
 })

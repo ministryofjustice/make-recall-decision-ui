@@ -22,14 +22,14 @@ describe('User service', () => {
       ;(getUser as jest.Mock).mockReturnValueOnce({
         username: 'MAKE_RECALL_DECISION_USER',
         active: true,
-        name: 'John Smith',
+        name: 'Joe Bloggs',
         authSource: 'delius',
         userId: '2500485109',
         uuid: 'a0701e84-71a6-4a20-95a7-59082cc57b00',
       })
       ;(getUserEmail as jest.Mock).mockReturnValueOnce({
         username: 'MAKE_RECALL_DECISION_USER',
-        email: 'john@gov.uk',
+        email: 'joe@gov.uk',
         verified: true,
       })
 
@@ -44,8 +44,8 @@ describe('User service', () => {
       const result = await userService.getUser(token)
 
       expect(getUserFromDeliusFacade).toHaveBeenCalledWith('MAKE_RECALL_DECISION_USER', 'abcdefg')
-      expect(result.displayName).toEqual('John Smith')
-      expect(result.email).toEqual('john@gov.uk')
+      expect(result.displayName).toEqual('Joe Bloggs')
+      expect(result.email).toEqual('joe@gov.uk')
       expect(result.region).toEqual({
         code: 'N07',
         name: 'London',

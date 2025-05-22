@@ -10,7 +10,7 @@ describe('get', () => {
     ;(searchForPpcs as jest.Mock).mockResolvedValue({
       results: [
         {
-          name: 'Harry Smith',
+          name: 'Joe Bloggs',
           crn: 'X098092',
           dateOfBirth: '1980-05-06',
           recommendationId: 799270715,
@@ -31,7 +31,7 @@ describe('get', () => {
     expect(res.locals.bookingOnStarted).toEqual(false)
     expect(res.locals.crn).toEqual('123')
     expect(res.locals.result).toEqual({
-      name: 'Harry Smith',
+      name: 'Joe Bloggs',
       crn: 'X098092',
       dateOfBirth: '1980-05-06',
       recommendationId: 799270715,
@@ -42,7 +42,7 @@ describe('get', () => {
     ;(searchForPpcs as jest.Mock).mockResolvedValue({
       results: [
         {
-          name: 'Harry Smith',
+          name: 'Joe Bloggs',
           crn: 'X098092',
           dateOfBirth: '1980-05-06',
           recommendationId: 799270715,

@@ -10,7 +10,7 @@ describe('get', () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNED, active: true }])
     const recommendation = {
       crn: 'X1213',
-      personOnProbation: { name: 'Harry Smith' },
+      personOnProbation: { name: 'Joe Bloggs' },
     }
 
     const res = mockRes({
@@ -53,7 +53,7 @@ describe('get', () => {
     ])
     const recommendation = {
       crn: 'X1213',
-      personOnProbation: { name: 'Harry Smith' },
+      personOnProbation: { name: 'Joe Bloggs' },
     }
 
     const res = mockRes({

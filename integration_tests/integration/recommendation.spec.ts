@@ -21,13 +21,13 @@ context('Make a recommendation', () => {
     createdByUserFullName: 'Mr Anderson',
     crn,
     personOnProbation: {
-      name: 'Paula Smith',
+      name: 'Jane Bloggs',
       addresses: [
         {
           line1: '41 Newport Pagnell Rd',
-          line2: 'Newtown',
-          town: 'Northampton',
-          postcode: 'NN4 6HP',
+          line2: 'Bethnal Green',
+          town: 'London',
+          postcode: 'BG1 234',
         },
       ],
     },
@@ -74,7 +74,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
       cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'There is already a recommendation for Paula Smith')
+      cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
       cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
 
       cy.clickLink('Update recommendation')
@@ -120,12 +120,12 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/`)
       cy.pageHeading().should('equal', 'Consider a recall')
 
-      cy.getElement('What has made you consider recalling Paula Smith? To do').should('exist')
-      cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
-      cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
+      cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
+      cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
+      cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('Is Paula Smith on an indeterminate sentence? To do').should('exist')
-      cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
+      cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
+      cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
     })
 
     it('show already existing page', () => {
@@ -137,7 +137,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/already-existing`)
-      cy.pageHeading().should('equal', 'There is already a recommendation for Paula Smith')
+      cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
     })
 
     it('present trigger-leading-to-recall', () => {
@@ -149,9 +149,9 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
-      cy.clickLink('What has made you consider recalling Paula Smith?')
+      cy.clickLink('What has made you consider recalling Jane Bloggs?')
 
-      cy.pageHeading().should('equal', 'What has made you consider recalling Paula Smith?')
+      cy.pageHeading().should('equal', 'What has made you consider recalling Jane Bloggs?')
 
       cy.get('textarea').type('Some details')
       cy.get('button').click()
@@ -216,7 +216,7 @@ context('Make a recommendation', () => {
 
       cy.clickLink('Return to overview')
 
-      cy.pageHeading().should('equal', 'Overview for Paula Smith')
+      cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
     })
 
     it('present discuss-with-manager', () => {
@@ -405,7 +405,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/123/custody-status`)
       cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM John Smith').should('exist')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
   })
 
@@ -432,16 +432,16 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'Be of good behaviour and not behave in a way which undermines the purpose of the licence period'
       ).should('be.checked')
 
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'Not commit any offence'
       ).should('be.checked')
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'Poss, own, control, inspect specified items /docs'
       ).should('be.checked')
     })
@@ -486,16 +486,16 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
 
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'This is a standard licence condition'
       ).should('be.checked')
 
-      cy.getSelectableOptionByLabel('What licence conditions has Paula Smith breached?', 'Freedom of movement').should(
+      cy.getSelectableOptionByLabel('What licence conditions has Jane Bloggs breached?', 'Freedom of movement').should(
         'be.checked'
       )
 
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'This is a bespoke condition'
       ).should('be.checked')
     })
@@ -543,16 +543,16 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
 
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'Be of good behaviour and not behave in a way which undermines the purpose of the licence period'
       ).should('be.checked')
 
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'Not commit any offence'
       ).should('be.checked')
       cy.getSelectableOptionByLabel(
-        'What licence conditions has Paula Smith breached?',
+        'What licence conditions has Jane Bloggs breached?',
         'Poss, own, control, inspect specified items /docs'
       ).should('be.checked')
     })
@@ -574,7 +574,7 @@ context('Make a recommendation', () => {
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
       ).should('exist')
-      cy.getElement('What licence conditions has Paula Smith breached?').should('exist')
+      cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
     })
 
     it('licence conditions - shows message if person has no active custodial convictions', () => {
@@ -612,7 +612,7 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: completeRecommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/personal-details`)
-      cy.getDefinitionListValue('Name').should('contain', 'Paula Smith')
+      cy.getDefinitionListValue('Name').should('contain', 'Jane Bloggs')
       cy.getDefinitionListValue('Gender').should('contain', 'Female')
       cy.getDefinitionListValue('Date of birth').should('contain', '14 November 2003')
       cy.getDefinitionListValue('Ethnic group').should('contain', 'White British')
@@ -857,19 +857,19 @@ context('Make a recommendation', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,
         personOnProbation: {
-          name: 'Paula Smith',
+          name: 'Jane Bloggs',
           addresses: [
             {
               line1: '41 Newport Pagnell Rd',
-              line2: 'Newtown',
-              town: 'Northampton',
-              postcode: 'NN4 6HP',
+              line2: 'Bethnal Green',
+              town: 'London',
+              postcode: 'BG1 234',
             },
             {
-              line1: 'The Lodge, Hennaway Drive',
+              line1: 'The Lodge, Oak Drive',
               line2: null,
               town: 'Corby',
-              postcode: 'S2 3HU',
+              postcode: 'S12 345',
             },
           ],
         },
@@ -878,29 +878,29 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.getElement(
-        'These are the last known addresses for Paula Smith in NDelius. If they are incorrect, update NDelius.'
+        'These are the last known addresses for Jane Bloggs in NDelius. If they are incorrect, update NDelius.'
       )
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
-      cy.getText('address-1').should('contain', 'Newtown')
-      cy.getText('address-1').should('contain', 'Northampton')
-      cy.getText('address-1').should('contain', 'NN4 6HP')
-      cy.getText('address-2').should('contain', 'The Lodge, Hennaway Drive')
+      cy.getText('address-1').should('contain', 'Bethnal Green')
+      cy.getText('address-1').should('contain', 'London')
+      cy.getText('address-1').should('contain', 'BG1 234')
+      cy.getText('address-2').should('contain', 'The Lodge, Oak Drive')
       cy.getText('address-2').should('contain', 'Corby')
-      cy.getText('address-2').should('contain', 'S2 3HU')
-      cy.selectRadio('Can the police find Paula Smith at these addresses?', 'No')
+      cy.getText('address-2').should('contain', 'S12 345')
+      cy.selectRadio('Can the police find Jane Bloggs at these addresses?', 'No')
     })
 
     it('lists a mixture of "No fixed abode" and addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,
         personOnProbation: {
-          name: 'Paula Smith',
+          name: 'Jane Bloggs',
           addresses: [
             {
               line1: '41 Newport Pagnell Rd',
-              line2: 'Newtown',
-              town: 'Northampton',
-              postcode: 'NN4 6HP',
+              line2: 'Bethnal Green',
+              town: 'London',
+              postcode: 'BG1 234',
             },
             {
               noFixedAbode: true,
@@ -911,11 +911,11 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
-      cy.getElement('These are the last known addresses for Paula Smith')
+      cy.getElement('These are the last known addresses for Jane Bloggs')
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
-      cy.getText('address-1').should('contain', 'Newtown')
-      cy.getText('address-1').should('contain', 'Northampton')
-      cy.getText('address-1').should('contain', 'NN4 6HP')
+      cy.getText('address-1').should('contain', 'Bethnal Green')
+      cy.getText('address-1').should('contain', 'London')
+      cy.getText('address-1').should('contain', 'BG1 234')
       cy.getText('address-2').should('contain', 'No fixed abode')
     })
 
@@ -923,7 +923,7 @@ context('Make a recommendation', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,
         personOnProbation: {
-          name: 'Paula Smith',
+          name: 'Jane Bloggs',
           addresses: [],
         },
       }
@@ -931,7 +931,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
-      cy.fillInput('Where can the police find Paula Smith?', '35 Hayward Rise, Carshalton, Surrey S1 8SH')
+      cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
       cy.task('getStatuses', {
         statusCode: 200,
         response: [{ name: RECOMMENDATION_STATUS.RECALL_DECIDED, active: true }],
@@ -944,10 +944,10 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
-      cy.getElement('This is the last known address for Paula Smith')
+      cy.getElement('This is the last known address for Jane Bloggs')
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
-      cy.getText('address-1').should('contain', 'Newtown')
-      cy.getText('address-1').should('contain', 'Northampton')
+      cy.getText('address-1').should('contain', 'Bethnal Green')
+      cy.getText('address-1').should('contain', 'London')
       cy.getElement({ qaAttr: 'address-2' }).should('not.exist')
     })
   })
@@ -1047,7 +1047,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
-      cy.pageHeading().should('contain', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Jane Bloggs')
 
       cy.getElement('Line manager countersignature Requested').should('exist')
       cy.getElement('Senior manager countersignature Cannot start yet').should('exist')
@@ -1071,7 +1071,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
-      cy.pageHeading().should('contain', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Jane Bloggs')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature To do').should('exist')
@@ -1096,7 +1096,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
-      cy.pageHeading().should('contain', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Jane Bloggs')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Requested').should('exist')
@@ -1122,7 +1122,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
-      cy.pageHeading().should('contain', 'Part A for Paula Smith')
+      cy.pageHeading().should('contain', 'Part A for Jane Bloggs')
 
       cy.getElement('Line manager countersignature Completed').should('exist')
       cy.getElement('Senior manager countersignature Completed').should('exist')
@@ -1159,7 +1159,7 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-delete-recommendation-rationale`)
-      cy.pageHeading().should('equal', 'Delete recommendation for Paula Smith')
+      cy.pageHeading().should('equal', 'Delete recommendation for Jane Bloggs')
     })
 
     it('record delete rationale', () => {
@@ -1330,7 +1330,7 @@ context('Make a recommendation', () => {
 
       cy.url().should('contain', 'spo-why-no-recall')
 
-      cy.pageHeading().should('equal', 'Why do you think Paula Smith should not be recalled?')
+      cy.pageHeading().should('equal', 'Why do you think Jane Bloggs should not be recalled?')
 
       cy.fillTextareaByName('spoNoRecallRationale', 'some text')
 
@@ -1356,7 +1356,7 @@ context('Make a recommendation', () => {
           reviewOffenderProfile: true,
           explainTheDecision: true,
           spoRecallType: 'RECALL',
-          spoRecallRationale: 'while I nodded, nearly napping',
+          spoRecallRationale: 'There are strong arguments in favour of recalling',
         },
       })
       cy.task('getStatuses', {
@@ -1375,7 +1375,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Record the decision in NDelius')
 
-      cy.getText('reason').should('contain', 'while I nodded, nearly napping')
+      cy.getText('reason').should('contain', 'There are strong arguments in favour of recalling')
 
       cy.selectCheckboxes('Record the decision in NDelius', [
         'Contains sensitive information - do not show to the person on probation',
@@ -1387,7 +1387,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('contains', 'Decision to recall')
 
-      cy.getText('fullName').should('contain', 'Paula Smith')
+      cy.getText('fullName').should('contain', 'Jane Bloggs')
       cy.getText('crn').should('contain', 'X12345')
     })
 
@@ -1426,7 +1426,7 @@ context('Make a recommendation', () => {
           reviewOffenderProfile: true,
           explainTheDecision: true,
           spoRecallType: 'NO_RECALL',
-          spoRecallRationale: 'while I nodded, nearly napping',
+          spoRecallRationale: 'There are strong arguments in favour of recalling',
         },
       })
 
@@ -1447,7 +1447,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'Record the decision in NDelius')
 
-      cy.getText('reason').should('contain', 'while I nodded, nearly napping')
+      cy.getText('reason').should('contain', 'There are strong arguments in favour of recalling')
 
       cy.selectCheckboxes('Record the decision in NDelius', [
         'Contains sensitive information - do not show to the person on probation',
@@ -1459,7 +1459,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('contains', 'Decision not to recall')
 
-      cy.getText('fullName').should('contain', 'Paula Smith')
+      cy.getText('fullName').should('contain', 'Jane Bloggs')
       cy.getText('crn').should('contain', 'X12345')
     })
   })
@@ -1552,7 +1552,7 @@ context('Make a recommendation', () => {
 
       cy.clickLink('Explain the decision')
 
-      cy.pageHeading().should('equal', 'Explain the decision to recall Paula Smith')
+      cy.pageHeading().should('equal', 'Explain the decision to recall Jane Bloggs')
 
       cy.fillInput('Explain your decision', 'some text')
 
@@ -1813,9 +1813,9 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('contain', 'Who completed this Part A?')
 
-      cy.fillInput('Name', 'Inspector Gadget')
-      cy.fillInput('Email', 'gadget@me.com')
-      cy.selectRadio('Is this person the probation practitioner for Paula Smith?', 'Yes')
+      cy.fillInput('Name', 'Joe Bloggs')
+      cy.fillInput('Email', 'bloggs@me.com')
+      cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
@@ -1831,10 +1831,10 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/`)
 
-      cy.pageHeading().should('contain', 'Practitioner for Paula Smith?')
+      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs?')
 
-      cy.fillInput('Name', 'Inspector Gadget')
-      cy.fillInput('Email', 'gadget@me.com')
+      cy.fillInput('Name', 'Joe Bloggs')
+      cy.fillInput('Email', 'bloggs@me.com')
 
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
@@ -1853,7 +1853,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
 
-      cy.fillInput('Enter email address', 'gadget@me.com')
+      cy.fillInput('Enter email address', 'bloggs@me.com')
 
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
@@ -1871,7 +1871,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
 
-      cy.fillInput('Enter email address', 'gadget@me.com')
+      cy.fillInput('Enter email address', 'bloggs@me.com')
 
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
@@ -1948,7 +1948,7 @@ context('Make a recommendation', () => {
         response: {
           results: [
             {
-              name: 'Harry Smith',
+              name: 'Joe Bloggs',
               crn: 'X098092',
               dateOfBirth: '1980-05-06',
               recommendationId: 799270715,
@@ -1977,7 +1977,7 @@ context('Make a recommendation', () => {
         response: {
           results: [
             {
-              name: 'Harry Smith',
+              name: 'Joe Bloggs',
               crn: 'X098092',
               dateOfBirth: '1980-05-06',
               recommendationId: 799270715,
@@ -2010,7 +2010,7 @@ context('Make a recommendation', () => {
               croNumber: '123456/12A',
               nomsId: 'JG123POE',
               firstNames: 'John',
-              familyName: 'Teal',
+              familyName: 'Doe',
               dateOfBirth: '2000-01-01',
             },
           ],
@@ -2036,16 +2036,16 @@ context('Make a recommendation', () => {
         response: {
           locationDescription: 'Graceland',
           bookingNo: '1234',
-          firstName: 'Anne',
+          firstName: 'Jane',
           middleName: 'C',
-          lastName: 'McCaffrey',
+          lastName: 'Bloggs',
           facialImageId: 1234,
           dateOfBirth: '1970-03-15',
           status: 'ACTIVE IN',
           agencyId: 'MLI',
           physicalAttributes: {
             gender: 'Male',
-            ethnicity: 'Caucasian',
+            ethnicity: 'White',
           },
           identifiers: [
             {
@@ -2068,7 +2068,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`/recommendations/252523937/check-booking-details`)
-      cy.pageHeading().should('contain', 'Check booking details for Paula Smith')
+      cy.pageHeading().should('contain', 'Check booking details for Jane Bloggs')
     })
 
     it('edit name', () => {
@@ -2077,13 +2077,13 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {
-            firstName: 'Max',
+            firstName: 'Joe',
             middleName: 'Arthur',
-            lastName: 'Mull',
+            lastName: 'Bloggs',
           },
           bookRecallToPpud: {
-            firstNames: 'Max Arthur',
-            lastName: 'Mull',
+            firstNames: 'Joe Arthur',
+            lastName: 'Bloggs',
           },
         },
       })
@@ -2095,9 +2095,9 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/edit-name`)
       cy.pageHeading().should('contain', 'Edit names')
 
-      cy.getText('nomisFirstName').should('contain', 'Max')
+      cy.getText('nomisFirstName').should('contain', 'Joe')
       cy.getText('nomisMiddleName').should('contain', 'Arthur')
-      cy.getText('nomisLastName').should('contain', 'Mull')
+      cy.getText('nomisLastName').should('contain', 'Bloggs')
     })
 
     it('edit gender', () => {
@@ -2135,7 +2135,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {
-            ethnicity: 'White/Caucasian',
+            ethnicity: 'White',
           },
           bookRecallToPpud: {
             ethnicity: 'Irish',
@@ -2152,13 +2152,13 @@ context('Make a recommendation', () => {
       cy.task('getReferenceList', {
         name: 'ethnicities',
         statusCode: 200,
-        response: { values: ['Caucasian', 'Irish'] },
+        response: { values: ['White', 'Irish'] },
       })
 
       cy.visit(`/recommendations/252523937/edit-ethnicity`)
       cy.pageHeading().should('contain', 'Edit ethnicity')
 
-      cy.getText('nomisEthnicity').should('contain', 'White/Caucasian')
+      cy.getText('nomisEthnicity').should('contain', 'White')
       cy.getText('ppudEthnicity').should('contain', 'Irish')
     })
 
@@ -2267,7 +2267,7 @@ context('Make a recommendation', () => {
       cy.task('getReferenceList', {
         name: 'establishments',
         statusCode: 200,
-        response: { values: ['Caucasian', 'Irish'] },
+        response: { values: ['White', 'Irish'] },
       })
 
       cy.visit(`/recommendations/252523937/edit-releasing-prison`)
@@ -2328,7 +2328,7 @@ context('Make a recommendation', () => {
       cy.task('getReferenceList', {
         name: 'establishments',
         statusCode: 200,
-        response: { values: ['The Kyln'] },
+        response: { values: ['HMP Brixton'] },
       })
 
       cy.visit(`/recommendations/252523937/edit-current-establishment`)
@@ -2407,7 +2407,7 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/edit-police-contact`)
       cy.pageHeading().should('contain', 'Edit police local contact details')
 
-      cy.getText('localPoliceContact').should('contain', 'thomas.magnum@gmail.com')
+      cy.getText('localPoliceContact').should('contain', 'joe.bloggs@gmail.com')
     })
 
     it('edit MAPPA Level', () => {
@@ -2428,7 +2428,7 @@ context('Make a recommendation', () => {
         name: 'mappa-levels',
         statusCode: 200,
         response: {
-          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPP'],
+          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPA'],
         },
       })
 
@@ -2459,7 +2459,7 @@ context('Make a recommendation', () => {
         name: 'mappa-levels',
         statusCode: 200,
         response: {
-          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPP'],
+          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPA'],
         },
       })
 
@@ -2475,7 +2475,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           recallConsideredList: null,
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.DETERMINATE },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
         },
       })
       cy.task('getStatuses', {
@@ -2504,9 +2504,8 @@ context('Make a recommendation', () => {
                 offenderChargeId: 3934369,
                 offenceStartDate: '1899-01-01',
                 offenceStatute: 'SA96',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceCode: 'SA12345',
+                offenceDescription: 'Attack / assault / batter a member of the public',
                 indicators: [],
               },
             ],
@@ -2516,7 +2515,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`/recommendations/252523937/select-index-offence`)
-      cy.pageHeading().should('contain', 'Select the index offence for Pinky Pooh')
+      cy.pageHeading().should('contain', 'Select the index offence for Joseph Bluggs')
     })
 
     it('match index offence', () => {
@@ -2532,9 +2531,8 @@ context('Make a recommendation', () => {
               {
                 bookingId: 13,
                 courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA96036',
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceCode: 'SA12345',
+                offenceDescription: 'Attack / assault / batter a member of the public',
                 offenceStatute: 'SA96',
                 offenderChargeId: 3934369,
                 sentenceDate: '2023-11-16',
@@ -2566,10 +2564,7 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/match-index-offence`)
       cy.pageHeading().should('contain', 'Select a matching index offence in PPUD')
 
-      cy.getText('offenceDescription').should(
-        'contain',
-        'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London'
-      )
+      cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
       cy.getText('sentenceStartDate').should('contain', '16 November 2023')
       cy.getText('sentenceEndDate').should('contain', '15 November 3022')
     })
@@ -2580,7 +2575,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.DETERMINATE },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           ppudOffender: {
             id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
             sentences: [
@@ -2601,8 +2596,7 @@ context('Make a recommendation', () => {
           nomisIndexOffence: {
             allOptions: [
               {
-                offenceDescription:
-                  'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+                offenceDescription: 'Attack / assault / batter a member of the public',
                 offenderChargeId: 3934369,
                 sentenceDate: '2023-11-16',
                 sentenceEndDate: '3022-11-15',
@@ -2618,12 +2612,9 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/select-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Add your booking to PPUD - Pinky Pooh')
+      cy.pageHeading().should('contain', 'Add your booking to PPUD - Joseph Bluggs')
 
-      cy.getText('offenceDescription').should(
-        'contain',
-        'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London'
-      )
+      cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
       cy.getText('sentenceDate').should('contain', '16 November 2023')
       cy.getText('sentenceEndDate').should('contain', '15 November 3022')
 
@@ -2638,8 +2629,8 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {
-            firstNames: 'Pinky',
-            lastName: 'Pooh',
+            firstNames: 'Joseph',
+            lastName: 'Bluggs',
             custodyType: 'custody type',
             indexOffence: 'index offence',
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
@@ -2685,7 +2676,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
+      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
 
       cy.getText('custodyType').should('contain', 'custody type')
       cy.getText('offenceDescription').should('contain', 'index offence')
@@ -2707,7 +2698,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.DETERMINATE },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2742,7 +2733,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
+      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
 
       cy.getText('sentenceLength').should('contain', '4 years')
     })
@@ -2780,8 +2771,8 @@ context('Make a recommendation', () => {
             ],
           },
           bookRecallToPpud: {
-            firstNames: 'Pinky',
-            lastName: 'Pooh',
+            firstNames: 'Joseph',
+            lastName: 'Bluggs',
             ppudSentenceId: '1',
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
           },
@@ -2828,7 +2819,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           isIndeterminateSentence: true,
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
           ppudOffender: {
             id: '1',
             sentences: [
@@ -2878,7 +2869,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2913,7 +2904,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Create new PPUD record for Pinky Pooh')
+      cy.pageHeading().should('contain', 'Create new PPUD record for Joseph Bluggs')
     })
     it('book to ppud - update offender', () => {
       cy.task('getRecommendation', {
@@ -2921,7 +2912,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
           ppudOffender: {
             id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
             sentences: [
@@ -2973,7 +2964,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Book  Pinky Pooh onto PPUD')
+      cy.pageHeading().should('contain', 'Book  Joseph Bluggs onto PPUD')
     })
 
     it('booked to ppud', () => {
@@ -2982,7 +2973,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
         },
       })
       cy.task('getStatuses', {
@@ -2991,7 +2982,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/booked-to-ppud`)
-      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
+      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
     })
 
     it('booking summary', () => {
@@ -3000,7 +2991,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Pinky', lastName: 'Pooh' },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -3038,7 +3029,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/booking-summary`)
-      cy.pageHeading().should('contain', 'Your recall booking - Pinky Pooh')
+      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
     })
 
     it('supporting documents', () => {
@@ -3059,15 +3050,15 @@ context('Make a recommendation', () => {
           {
             title: 'Part A',
             type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_J_X098092.docx',
             id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
           },
         ],
       })
 
       cy.visit(`/recommendations/252523937/supporting-documents`)
-      cy.pageHeading().should('contain', 'Add supporting documents for Paula Smith')
-      cy.getText('filename').should('contain', 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx')
+      cy.pageHeading().should('contain', 'Add supporting documents for Jane Bloggs')
+      cy.getText('filename').should('contain', 'NAT_Recall_Part_A_02022024_Bloggs_J_X098092.docx')
     })
 
     it('uploading supporting documents', () => {
@@ -3104,7 +3095,7 @@ context('Make a recommendation', () => {
           {
             title: 'Part A',
             type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
           },
         ],
@@ -3132,7 +3123,7 @@ context('Make a recommendation', () => {
           {
             title: 'Part A',
             type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: '1234',
           },
         ],
@@ -3176,7 +3167,7 @@ context('Make a recommendation', () => {
           {
             title: 'some title',
             type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: '1234',
           },
         ],
@@ -3204,7 +3195,7 @@ context('Make a recommendation', () => {
           {
             title: 'some title',
             type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: '1234',
           },
         ],
@@ -3232,7 +3223,7 @@ context('Make a recommendation', () => {
           {
             title: 'some title',
             type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Smith_H_X098092.docx',
+            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
             id: '1234',
           },
         ],
@@ -3294,7 +3285,7 @@ context('Make a recommendation', () => {
     it('present licence condition breaches page for AP', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions`)
 
-      cy.pageHeading().should('contain', 'What licence conditions has Paula Smith breached?')
+      cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
     })
     it('present AP Recall Rationale page', () => {
       cy.task('getRecommendation', {
@@ -3303,7 +3294,7 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           spoRecallType: 'RECALL',
           spoRecallRationale: 'some lorem ipsum stuff',
-          odmName: 'Dankey Maus',
+          odmName: 'John Doe',
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -3313,7 +3304,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Explain the decision')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
-      cy.getTextInputValue('Name of out-of-hours manager').should('contain', 'Dankey Maus')
+      cy.getTextInputValue('Name of out-of-hours manager').should('contain', 'John Doe')
     })
     it('present AP record decision page', () => {
       cy.task('getRecommendation', {
@@ -3321,7 +3312,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           spoRecallRationale: 'some lorem ipsum stuff',
-          odmName: 'Dankey Maus',
+          odmName: 'John Doe',
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -3332,7 +3323,7 @@ context('Make a recommendation', () => {
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
       cy.getText('reason').should('contain', 'Be of good behaviour')
-      cy.getText('reason').should('contain', 'Manager(s) name: Dankey Maus')
+      cy.getText('reason').should('contain', 'Manager(s) name: John Doe')
     })
     it('present AP rationale confirmation', () => {
       cy.task('getRecommendation', {
@@ -3340,7 +3331,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           spoRecallRationale: 'some lorem ipsum stuff',
-          odmName: 'Dankey Maus',
+          odmName: 'John Doe',
         },
       })
       cy.task('getStatuses', {
@@ -3354,7 +3345,7 @@ context('Make a recommendation', () => {
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
       cy.getText('reason').should('contain', 'Be of good behaviour')
-      cy.getText('reason').should('contain', 'Manager(s) name: Dankey Maus')
+      cy.getText('reason').should('contain', 'Manager(s) name: John Doe')
     })
     it('present AP why no recall', () => {
       cy.task('getRecommendation', {
@@ -3362,16 +3353,16 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           spoRecallRationale: 'some lorem ipsum stuff',
-          odmName: 'Dankey Maus',
+          odmName: 'John Doe',
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-why-no-recall`)
 
-      cy.pageHeading().should('contain', 'Why do you think Paula Smith should not be recalled?')
+      cy.pageHeading().should('contain', 'Why do you think Jane Bloggs should not be recalled?')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
-      cy.getTextInputValue('Name of out-of-hours manager').should('contain', 'Dankey Maus')
+      cy.getTextInputValue('Name of out-of-hours manager').should('contain', 'John Doe')
     })
   })
 })

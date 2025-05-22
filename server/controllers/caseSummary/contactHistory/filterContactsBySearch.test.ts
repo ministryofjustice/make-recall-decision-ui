@@ -21,7 +21,7 @@ describe('filterContactsBySearch', () => {
       outcome: 'Decision to Recall',
       description: 'Contact description',
       notes:
-        'Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.',
+        'Comment added by Jane Bloggs on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Doe has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Doe to address his alcohol abuse and consider most appropriate accommodation on release.',
       enforcementAction: null,
       systemGenerated: false,
     },
@@ -31,7 +31,7 @@ describe('filterContactsBySearch', () => {
       contactStartDate: '2022-04-21T11:30:00Z',
       outcome: 'Failed to Attend',
       description: 'Description of the incident',
-      notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+      notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
       enforcementAction: 'Decision Pending Response from Person on Probation',
       systemGenerated: false,
     },
@@ -40,7 +40,7 @@ describe('filterContactsBySearch', () => {
       descriptionType: 'Planned Office Visit (NS)',
       contactStartDate: '2022-04-13T11:30:00Z',
       outcome: 'Failed to Attend',
-      notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+      notes: 'Comment added by Joe E Bloggs on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
       enforcementAction: 'Second Enforcement Letter Sent',
       systemGenerated: false,
     },
@@ -81,7 +81,7 @@ describe('filterContactsBySearch', () => {
         descriptionType: 'Planned Office Visit (NS)',
         contactStartDate: '2022-04-13T11:30:00Z',
         outcome: 'Failed to Attend',
-        notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
@@ -108,7 +108,7 @@ describe('filterContactsBySearch', () => {
         descriptionType: 'Planned Office Visit (NS)',
         contactStartDate: '2022-04-13T11:30:00Z',
         outcome: 'Failed to Attend',
-        notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
@@ -126,7 +126,7 @@ describe('filterContactsBySearch', () => {
       contacts: contactList,
       filters: {
         ...defaultFilters,
-        searchFilters: 'Jane Pavement',
+        searchFilters: 'Jane Bloggs',
       },
     })
     expect(contacts).toEqual([
@@ -137,7 +137,7 @@ describe('filterContactsBySearch', () => {
         outcome: 'Decision to Recall',
         description: 'Contact description',
         notes:
-          'Comment added by Jane Pavement on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Edwin has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Edwin to address his alcohol abuse and consider most appropriate accommodation on release.',
+          'Comment added by Jane Bloggs on 21/04/2022 at 10:40\nEnforcement Action:  A standard recall is appropriate here because Mr. Doe has lost his current accommodation as a result of concerns related to drug supply. There are ongoing concerns about his alcohol misuse and poor engagement with probation appointments. A standard recall will allow Mr. Doe to address his alcohol abuse and consider most appropriate accommodation on release.',
         enforcementAction: null,
         systemGenerated: false,
         searchTextMatch: {
@@ -147,7 +147,7 @@ describe('filterContactsBySearch', () => {
         startDate: null,
       },
     ])
-    expect(selected).toEqual([{ text: 'Jane Pavement', href: '' }])
+    expect(selected).toEqual([{ text: 'Jane Bloggs', href: '' }])
   })
 
   it('matches the search string against description', () => {
@@ -165,7 +165,7 @@ describe('filterContactsBySearch', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         outcome: 'Failed to Attend',
         description: 'Description of the incident',
-        notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Decision Pending Response from Person on Probation',
         systemGenerated: false,
         searchTextMatch: {
@@ -193,7 +193,7 @@ describe('filterContactsBySearch', () => {
         contactStartDate: '2022-04-21T11:30:00Z',
         outcome: 'Failed to Attend',
         description: 'Description of the incident',
-        notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Decision Pending Response from Person on Probation',
         systemGenerated: false,
         searchTextMatch: {
@@ -207,7 +207,7 @@ describe('filterContactsBySearch', () => {
         descriptionType: 'Planned Office Visit (NS)',
         contactStartDate: '2022-04-13T11:30:00Z',
         outcome: 'Failed to Attend',
-        notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
@@ -234,7 +234,7 @@ describe('filterContactsBySearch', () => {
         descriptionType: 'Planned Office Visit (NS)',
         contactStartDate: '2022-04-13T11:30:00Z',
         outcome: 'Failed to Attend',
-        notes: 'Comment added by Eliot Prufrock on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 13/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Second Enforcement Letter Sent',
         systemGenerated: false,
         searchTextMatch: {
@@ -276,15 +276,14 @@ describe('filterContactsBySearch', () => {
           descriptionType: 'Responsible Officer Change',
           contactStartDate: '2022-04-21T11:30:00Z',
           outcome: 'Failed to Attend',
-          notes:
-            'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+          notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
           enforcementAction: 'Decision Pending Response from Person on Probation',
           systemGenerated: false,
         },
       ],
       filters: {
         ...defaultFilters,
-        searchFilters: ['Responsible officer', 'Prufrock'],
+        searchFilters: ['Responsible officer', 'Bloggs'],
       },
     })
     expect(contacts).toEqual([
@@ -293,7 +292,7 @@ describe('filterContactsBySearch', () => {
         descriptionType: 'Responsible Officer Change',
         contactStartDate: '2022-04-21T11:30:00Z',
         outcome: 'Failed to Attend',
-        notes: 'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+        notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
         enforcementAction: 'Decision Pending Response from Person on Probation',
         systemGenerated: false,
         searchTextMatch: {
@@ -304,8 +303,8 @@ describe('filterContactsBySearch', () => {
       },
     ])
     expect(selected).toEqual([
-      { text: 'Responsible officer', href: '?searchFilters=Prufrock' },
-      { text: 'Prufrock', href: '?searchFilters=Responsible%20officer' },
+      { text: 'Responsible officer', href: '?searchFilters=Bloggs' },
+      { text: 'Bloggs', href: '?searchFilters=Responsible%20officer' },
     ])
   })
 
@@ -317,8 +316,7 @@ describe('filterContactsBySearch', () => {
           descriptionType: 'Responsible Officer Change',
           contactStartDate: '2022-04-21T11:30:00Z',
           outcome: 'Failed to Attend',
-          notes:
-            'Comment added by Eliot Prufrock on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
+          notes: 'Comment added by Joe E Bloggs on 20/04/2022 at 11:35\nEnforcement Action: Refer to Offender Manager',
           enforcementAction: 'Decision Pending Response from Person on Probation',
           systemGenerated: false,
         },

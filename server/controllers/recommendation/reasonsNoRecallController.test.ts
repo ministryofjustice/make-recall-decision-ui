@@ -64,7 +64,7 @@ describe('get', () => {
               name: 'popProgressMade',
               href: '#popProgressMade',
               errorId: 'noRecallPopProgressMade',
-              html: 'You must explain what progress Harry Smith has made so far',
+              html: 'You must explain what progress Joe Bloggs has made so far',
             },
           ],
           licenceBreach: {
@@ -73,7 +73,7 @@ describe('get', () => {
             errorId: 'noRecallLicenceBreachDetails',
           },
           popProgressMade: {
-            text: 'You must explain what progress Harry Smith has made so far',
+            text: 'You must explain what progress Joe Bloggs has made so far',
             href: '#popProgressMade',
             errorId: 'noRecallPopProgressMade',
           },
@@ -95,7 +95,7 @@ describe('get', () => {
           name: 'popProgressMade',
           href: '#popProgressMade',
           errorId: 'noRecallPopProgressMade',
-          html: 'You must explain what progress Harry Smith has made so far',
+          html: 'You must explain what progress Joe Bloggs has made so far',
         },
       ],
       licenceBreach: {
@@ -104,7 +104,7 @@ describe('get', () => {
         errorId: 'noRecallLicenceBreachDetails',
       },
       popProgressMade: {
-        text: 'You must explain what progress Harry Smith has made so far',
+        text: 'You must explain what progress Joe Bloggs has made so far',
         href: '#popProgressMade',
         errorId: 'noRecallPopProgressMade',
       },
@@ -131,7 +131,7 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
@@ -176,7 +176,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

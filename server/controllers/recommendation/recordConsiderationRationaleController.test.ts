@@ -11,7 +11,7 @@ describe('get', () => {
   it('render page', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Harry Smith' }, crn: 'X123' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, crn: 'X123' },
       },
     })
     const next = mockNext()

@@ -72,7 +72,7 @@ describe('validateVictimContactScheme', () => {
 
   it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
-      hasVictimsInContactScheme: 'BANANA',
+      hasVictimsInContactScheme: 'VALUE',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateVictimContactScheme({ requestBody, recommendationId })

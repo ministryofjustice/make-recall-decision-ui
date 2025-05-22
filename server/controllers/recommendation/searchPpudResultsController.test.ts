@@ -12,8 +12,8 @@ const PPUD_DETAILS_TEMPLATE = {
     id: 'string',
     croOtherNumber: 'string',
     dateOfBirth: '2000-01-01',
-    ethnicity: 'Caucasian',
-    familyName: 'Teal',
+    ethnicity: 'White',
+    familyName: 'Doe',
     firstNames: 'John',
     gender: 'Male',
     immigrationStatus: 'British',
@@ -40,7 +40,7 @@ describe('get', () => {
         croNumber: '123456/12A',
         nomsId: 'JG123POE',
         firstNames: 'John',
-        familyName: 'Teal',
+        familyName: 'Doe',
         dateOfBirth: '2000-01-01',
       },
     ]
@@ -61,7 +61,7 @@ describe('get', () => {
         croNumber: '123456/12A',
         nomsId: 'JG123POE',
         firstNames: 'John',
-        familyName: 'Teal',
+        familyName: 'Doe',
         dateOfBirth: '2000-01-01',
       },
     ])

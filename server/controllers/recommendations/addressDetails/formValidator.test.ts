@@ -134,7 +134,7 @@ describe('validateAddress', () => {
 
     it('returns an error, if isMainAddressWherePersonCanBeFound is set to an invalid value', async () => {
       const requestBody = {
-        isMainAddressWherePersonCanBeFound: 'BANANA',
+        isMainAddressWherePersonCanBeFound: 'VALUE',
         addressCount: '1',
         crn: 'X34534',
       }

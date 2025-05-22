@@ -23,7 +23,7 @@ describe('checkAddresses', () => {
 
   test('returns false when any address contains data', () => {
     const addresses = [
-      { line1: '123 Main St', line2: '', town: 'Springfield', postcode: '12345', noFixedAbode: false },
+      { line1: '123 Oak St', line2: '', town: 'Birmingham', postcode: '12345', noFixedAbode: false },
       { line1: '', line2: '', town: '', postcode: '', noFixedAbode: true },
       {
         line1: '34 Not THe Address',

@@ -5,7 +5,7 @@ describe('get', () => {
   it('present', async () => {
     const recommendation = {
       crn: 'X1213',
-      personOnProbation: { name: 'Harry Smith' },
+      personOnProbation: { name: 'Joe Bloggs' },
       spoRecallType: 'XYZ',
     }
 

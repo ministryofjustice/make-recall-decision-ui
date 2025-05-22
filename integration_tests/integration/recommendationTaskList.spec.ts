@@ -14,7 +14,7 @@ context('Recommendation - task list', () => {
     id: recommendationId,
     crn,
     personOnProbation: {
-      name: 'Paula Smith',
+      name: 'Jane Bloggs',
     },
     recallType: { selected: { value: 'STANDARD' } },
     activeCustodialConvictionCount: 1,
@@ -37,24 +37,24 @@ context('Recommendation - task list', () => {
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-    cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')
-    cy.getElement('What licence conditions has Paula Smith breached? Completed').should('exist')
+    cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
+    cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
     cy.getElement('Would recall affect vulnerability or additional needs? Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
-    cy.getElement('Is Paula Smith in custody now? Completed').should('exist')
-    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? Completed').should('exist')
-    cy.getElement('Is Paula Smith on an indeterminate sentence? Completed').should('exist')
-    cy.getElement('Is Paula Smith on an extended sentence? Completed').should('exist')
+    cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
+    cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('exist')
+    cy.getElement('Is Jane Bloggs on an indeterminate sentence? Completed').should('exist')
+    cy.getElement('Is Jane Bloggs on an extended sentence? Completed').should('exist')
     cy.getElement('Type of indeterminate sentence Completed').should('exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should('exist')
     cy.getElement('Personal details Reviewed').should('exist')
     cy.getElement('Offence details Reviewed').should('exist')
     cy.getElement('Offence analysis Completed').should('exist')
-    cy.getElement('MAPPA for Paula Smith Reviewed').should('exist')
+    cy.getElement('MAPPA for Jane Bloggs Reviewed').should('exist')
     cy.getElement('Previous releases Completed').should('exist')
     cy.getElement('Local police contact details').should('exist')
     // the following link should not be present, as person is in custody
-    cy.getElement('Is there anything the police should know before they arrest Paula Smith?').should('not.exist')
+    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs?').should('not.exist')
     cy.getElement('Address').should('not.exist')
     // should not exist
     cy.getElement('Is this an emergency recall?').should('not.exist')
@@ -69,9 +69,9 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Is Paula Smith in custody now? Completed').should('exist')
+    cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
-    cy.getElement('Is there anything the police should know before they arrest Paula Smith? Completed').should('exist')
+    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? Completed').should('exist')
     cy.getElement('Address Completed').should('exist')
     cy.getElement("Request line manager's countersignature To do").should('exist')
   })
@@ -118,22 +118,22 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-    cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
-    cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
+    cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
+    cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
     cy.getElement('Would recall affect vulnerability or additional needs? To do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
-    cy.getElement('Is Paula Smith in custody now? To do').should('exist')
+    cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
-    cy.getElement('Is Paula Smith under Integrated Offender Management (IOM)? To do').should('exist')
-    cy.getElement('Is there anything the police should know before they arrest Paula Smith? To do').should('exist')
-    cy.getElement('Is Paula Smith on an indeterminate sentence? To do').should('exist')
-    cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
+    cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? To do').should('exist')
+    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
+    cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
+    cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
     cy.getElement('Type of indeterminate sentence').should('not.exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
     cy.getElement('Personal details To review').should('exist')
     cy.getElement('Offence details To review').should('exist')
     cy.getElement('Offence analysis To do').should('exist')
-    cy.getElement('MAPPA for Paula Smith To review').should('exist')
+    cy.getElement('MAPPA for Jane Bloggs To review').should('exist')
     cy.getElement('Previous releases To do').should('exist')
     cy.getElement('Create Part A').should('not.exist')
   })
@@ -143,13 +143,13 @@ context('Recommendation - task list', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.clickLink('How has Paula Smith responded to probation so far?')
+    cy.clickLink('How has Jane Bloggs responded to probation so far?')
     cy.log('============= Back link')
     cy.clickLink('Back')
     cy.pageHeading().should('equal', 'Create a Part A form')
     cy.log('============= Continue button')
-    cy.clickLink('How has Paula Smith responded to probation so far?')
-    cy.fillInput('How has Paula Smith responded to probation so far?', 'Re-offending has occurred')
+    cy.clickLink('How has Jane Bloggs responded to probation so far?')
+    cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
     cy.clickButton('Continue')
     cy.pageHeading().should('equal', 'Create a Part A form')
     cy.clickLink('When did the SPO agree this recall?')
@@ -167,11 +167,11 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
     )
-    cy.getLinkHref('Is Paula Smith on an indeterminate sentence?').should(
+    cy.getLinkHref('Is Jane Bloggs on an indeterminate sentence?').should(
       'contain',
       '/recommendations/123/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
-    cy.getLinkHref('Is Paula Smith on an extended sentence?').should(
+    cy.getLinkHref('Is Jane Bloggs on an extended sentence?').should(
       'contain',
       '/recommendations/123/is-extended?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
@@ -179,11 +179,11 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
-    cy.getLinkHref('How has Paula Smith responded to probation so far?').should(
+    cy.getLinkHref('How has Jane Bloggs responded to probation so far?').should(
       'contain',
       '/recommendations/123/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
-    cy.getLinkHref('What licence conditions has Paula Smith breached?').should(
+    cy.getLinkHref('What licence conditions has Jane Bloggs breached?').should(
       'contain',
       '/recommendations/123/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances'
     )
@@ -196,21 +196,21 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/victim-contact-scheme'
     )
-    cy.getLinkHref('Is Paula Smith in custody now?').should(
+    cy.getLinkHref('Is Jane Bloggs in custody now?').should(
       'contain',
       '/recommendations/123/custody-status?fromPageId=task-list&fromAnchor=heading-custody'
     )
     cy.getLinkHref('Local police contact details').should('contain', '/recommendations/123/police-details')
     cy.getLinkHref('Address').should('contain', '/recommendations/123/address-details')
-    cy.getLinkHref('Is Paula Smith under Integrated Offender Management (IOM)?').should(
+    cy.getLinkHref('Is Jane Bloggs under Integrated Offender Management (IOM)?').should(
       'contain',
       '/recommendations/123/iom'
     )
-    cy.getLinkHref('Is there anything the police should know before they arrest Paula Smith?').should(
+    cy.getLinkHref('Is there anything the police should know before they arrest Jane Bloggs?').should(
       'contain',
       '/recommendations/123/arrest-issues'
     )
-    cy.getLinkHref('Do you think Paula Smith is using recall to bring contraband into prison?').should(
+    cy.getLinkHref('Do you think Jane Bloggs is using recall to bring contraband into prison?').should(
       'contain',
       '/recommendations/123/contraband'
     )
@@ -234,7 +234,7 @@ context('Recommendation - task list', () => {
       'contain',
       '/recommendations/123/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details'
     )
-    cy.getLinkHref('MAPPA for Paula Smith').should(
+    cy.getLinkHref('MAPPA for Jane Bloggs').should(
       'contain',
       '/recommendations/123/mappa?fromPageId=task-list&fromAnchor=heading-risk-profile'
     )

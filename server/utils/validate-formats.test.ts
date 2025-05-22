@@ -17,15 +17,15 @@ describe('Validations', () => {
 
   describe('isPhoneValid', () => {
     it('fails if it has a non-UK prefix', () => {
-      expect(isPhoneValid('0011277231432')).toEqual(false)
+      expect(isPhoneValid('0011234567890')).toEqual(false)
     })
 
     it('passes if it has a UK prefix and no leading zero following that', () => {
-      expect(isPhoneValid('00441277231432')).toEqual(true)
+      expect(isPhoneValid('00441234567890')).toEqual(true)
     })
 
     it('passes if it has a UK prefix and a leading zero following that', () => {
-      expect(isPhoneValid('004401277231432')).toEqual(true)
+      expect(isPhoneValid('004401234567890')).toEqual(true)
     })
 
     it('passes if it has a UK prefix for a mobile number', () => {

@@ -24,7 +24,7 @@ describe('book offender', () => {
       stage: StageEnum.STARTED,
     }
 
-    const establishment = 'The Kyln'
+    const establishment = 'HMP Brixton'
     const recommendation: RecommendationResponse = {
       id: '1',
       prisonOffender: {
@@ -35,16 +35,16 @@ describe('book offender', () => {
         addresses: [
           {
             line1: '41 Newport Pagnell Rd',
-            line2: 'Newtown',
-            town: 'Northampton',
-            postcode: 'NN4 6HP',
+            line2: 'Bethnal Green',
+            town: 'London',
+            postcode: 'BG1 234',
             noFixedAbode: false,
           },
         ],
       },
       isMainAddressWherePersonCanBeFound: {
         selected: false,
-        details: '123 Acacia Avenue, Birmingham, B23 1AV',
+        details: '123 Oak Avenue, Birmingham, B23 456',
       },
       bookRecallToPpud: {
         custodyType: 'Determinate',
@@ -54,8 +54,8 @@ describe('book offender', () => {
         sentenceDate: '2023-11-16',
         gender: 'Male',
         ethnicity: 'Irish',
-        firstNames: 'Johnny J',
-        lastName: 'Teale',
+        firstNames: 'Joe J',
+        lastName: 'Bloggs',
         dateOfBirth: '1970-03-15',
         currentEstablishment: establishment,
         prisonNumber: '7878783',
@@ -74,14 +74,14 @@ describe('book offender', () => {
           line2: '',
           phoneNumber: '',
           postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+          premises: '123 Oak Avenue, Birmingham, B23 456',
         },
       ],
       address: {
-        line1: 'Newtown',
-        line2: 'Northampton',
+        line1: 'Bethnal Green',
+        line2: 'London',
         phoneNumber: '',
-        postcode: 'NN4 6HP',
+        postcode: 'BG1 234',
         premises: '41 Newport Pagnell Rd',
       },
       croNumber: '1234',
@@ -89,8 +89,8 @@ describe('book offender', () => {
       dateOfBirth: '1970-03-15',
       dateOfSentence: '2023-11-16',
       ethnicity: 'Irish',
-      familyName: 'Teale',
-      firstNames: 'Johnny J',
+      familyName: 'Bloggs',
+      firstNames: 'Joe J',
       gender: 'Male',
       indexOffence:
         'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
@@ -108,8 +108,8 @@ describe('book offender', () => {
           croOtherNumber: '1234',
           dateOfBirth: '1970-03-15',
           ethnicity: 'Irish',
-          familyName: 'Teale',
-          firstNames: 'Johnny J',
+          familyName: 'Bloggs',
+          firstNames: 'Joe J',
           gender: 'Male',
           id: '767',
           immigrationStatus: 'N/A',
@@ -154,7 +154,7 @@ describe('book offender', () => {
       stage: StageEnum.STARTED,
     }
 
-    const establishment = 'The Kyln'
+    const establishment = 'HMP Brixton'
     const recommendation: RecommendationResponse = {
       id: '1',
       ppudOffender: {
@@ -169,24 +169,24 @@ describe('book offender', () => {
         addresses: [
           {
             line1: '41 Newport Pagnell Rd',
-            line2: 'Newtown',
-            town: 'Northampton',
-            postcode: 'NN4 6HP',
+            line2: 'Bethnal Green',
+            town: 'London',
+            postcode: 'BG1 234',
             noFixedAbode: false,
           },
         ],
       },
       isMainAddressWherePersonCanBeFound: {
         selected: false,
-        details: '123 Acacia Avenue, Birmingham, B23 1AV',
+        details: '123 Oak Avenue, Birmingham, B23 456',
       },
       bookRecallToPpud: {
         cro: '1234',
         ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
         gender: 'Male',
         ethnicity: 'Irish',
-        firstNames: 'Johnny J',
-        lastName: 'Teale',
+        firstNames: 'Joe J',
+        lastName: 'Bloggs',
         dateOfBirth: '1970-03-15',
         currentEstablishment: establishment,
         prisonNumber: '7878783',
@@ -202,21 +202,21 @@ describe('book offender', () => {
           line2: '',
           phoneNumber: '',
           postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+          premises: '123 Oak Avenue, Birmingham, B23 456',
         },
       ],
       address: {
-        line1: 'Newtown',
-        line2: 'Northampton',
+        line1: 'Bethnal Green',
+        line2: 'London',
         phoneNumber: '',
-        postcode: 'NN4 6HP',
+        postcode: 'BG1 234',
         premises: '41 Newport Pagnell Rd',
       },
       croNumber: '1234',
       dateOfBirth: '1970-03-15',
       ethnicity: 'Irish',
-      familyName: 'Teale',
-      firstNames: 'Johnny J',
+      familyName: 'Bloggs',
+      firstNames: 'Joe J',
       gender: 'Male',
       isInCustody: false,
       establishment,
@@ -250,7 +250,7 @@ describe('book offender', () => {
       stage: StageEnum.STARTED,
     }
 
-    const establishment = 'The Kyln'
+    const establishment = 'HMP Brixton'
     const recommendation: RecommendationResponse = {
       id: '1',
       prisonOffender: {
@@ -266,7 +266,7 @@ describe('book offender', () => {
       },
       isMainAddressWherePersonCanBeFound: {
         selected: false,
-        details: '123 Acacia Avenue, Birmingham, B23 1AV',
+        details: '123 Oak Avenue, Birmingham, B23 456',
       },
       bookRecallToPpud: {
         cro: '1234',
@@ -277,8 +277,8 @@ describe('book offender', () => {
         sentenceDate: '2023-11-16',
         gender: 'Male',
         ethnicity: 'Irish',
-        firstNames: 'Johnny J',
-        lastName: 'Teale',
+        firstNames: 'Joe J',
+        lastName: 'Bloggs',
         dateOfBirth: '1970-03-15',
         currentEstablishment: establishment,
         prisonNumber: '7878783',
@@ -296,7 +296,7 @@ describe('book offender', () => {
           line2: '',
           phoneNumber: '',
           postcode: '',
-          premises: '123 Acacia Avenue, Birmingham, B23 1AV',
+          premises: '123 Oak Avenue, Birmingham, B23 456',
         },
       ],
       address: {
@@ -311,8 +311,8 @@ describe('book offender', () => {
       dateOfBirth: '1970-03-15',
       dateOfSentence: '2023-11-16',
       ethnicity: 'Irish',
-      familyName: 'Teale',
-      firstNames: 'Johnny J',
+      familyName: 'Bloggs',
+      firstNames: 'Joe J',
       gender: 'Male',
       indexOffence:
         'Permit an animal to be taken into / upon a Greater Manchester Metrolink vehicle / station without authority',
@@ -336,7 +336,7 @@ describe('book offender', () => {
       failedMessage: '{}',
     }
 
-    const establishment = 'The Kyln'
+    const establishment = 'HMP Brixton'
     const recommendation: RecommendationResponse = {
       id: '1',
       ppudOffender: {
@@ -352,23 +352,23 @@ describe('book offender', () => {
         addresses: [
           {
             line1: '41 Newport Pagnell Rd',
-            line2: 'Newtown',
-            town: 'Northampton',
-            postcode: 'NN4 6HP',
+            line2: 'Bethnal Green',
+            town: 'London',
+            postcode: 'BG1 234',
             noFixedAbode: false,
           },
         ],
       },
       isMainAddressWherePersonCanBeFound: {
         selected: false,
-        details: '123 Acacia Avenue, Birmingham, B23 1AV',
+        details: '123 Oak Avenue, Birmingham, B23 456',
       },
       bookRecallToPpud: {
         ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
         gender: 'Male',
         ethnicity: 'Irish',
-        firstNames: 'Johnny J',
-        lastName: 'Teale',
+        firstNames: 'Joe J',
+        lastName: 'Bloggs',
         dateOfBirth: '1970-03-15',
         currentEstablishment: establishment,
         prisonNumber: '7878783',

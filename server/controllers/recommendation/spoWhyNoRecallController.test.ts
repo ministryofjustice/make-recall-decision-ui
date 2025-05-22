@@ -83,7 +83,7 @@ describe('post', () => {
   const res = mockRes({
     token: 'token1',
     locals: {
-      recommendation: { personOnProbation: { name: 'Harry Smith' } },
+      recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
       urlInfo: { basePath: `/recommendations/123/` },
     },
   })
@@ -94,7 +94,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        spoNoRecallRationale: 'a good reason',
+        spoNoRecallRationale: 'A substantial reason',
       },
     })
 
@@ -110,7 +110,7 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         explainTheDecision: true,
-        spoRecallRationale: 'a good reason',
+        spoRecallRationale: 'A substantial reason',
       },
       featureFlags: {},
     })

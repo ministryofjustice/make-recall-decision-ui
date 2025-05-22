@@ -28,10 +28,10 @@ describe('get', () => {
       locals: {
         recommendation: {
           localPoliceContact: {
-            contactName: 'Danny Smokes',
-            phoneNumber: '07881975777',
+            contactName: 'John Doe',
+            phoneNumber: '01234567890',
             faxNumber: '',
-            emailAddress: 'smokes@me.com',
+            emailAddress: 'doe@me.com',
           },
         },
         token: 'token1',
@@ -41,10 +41,10 @@ describe('get', () => {
     await policeDetailsController.get(mockReq(), res, next)
 
     expect(res.locals.inputDisplayValues).toEqual({
-      contactName: 'Danny Smokes',
-      phoneNumber: '07881975777',
+      contactName: 'John Doe',
+      phoneNumber: '01234567890',
       faxNumber: '',
-      emailAddress: 'smokes@me.com',
+      emailAddress: 'doe@me.com',
     })
   })
 
@@ -101,10 +101,10 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        contactName: 'Danny Smokes',
-        phoneNumber: '07881975777',
+        contactName: 'John Doe',
+        phoneNumber: '01234567890',
         faxNumber: '',
-        emailAddress: 'smokes@me.com',
+        emailAddress: 'doe@me.com',
       },
     })
 
@@ -123,10 +123,10 @@ describe('post', () => {
       recommendationId: '123',
       valuesToSave: {
         localPoliceContact: {
-          contactName: 'Danny Smokes',
-          phoneNumber: '07881975777',
+          contactName: 'John Doe',
+          phoneNumber: '01234567890',
           faxNumber: '',
-          emailAddress: 'smokes@me.com',
+          emailAddress: 'doe@me.com',
         },
       },
       token: 'token1',
@@ -149,7 +149,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Harry Smith' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
       },
     })

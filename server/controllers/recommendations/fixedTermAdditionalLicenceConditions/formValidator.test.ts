@@ -122,7 +122,7 @@ describe('validateFixedTermLicenceConditions', () => {
 
     it('returns an error, if hasFixedTermLicenceConditions is set to an invalid value', async () => {
       const requestBody = {
-        hasFixedTermLicenceConditions: 'BANANA',
+        hasFixedTermLicenceConditions: 'VALUE',
         crn: 'X34534',
       }
       const { errors, valuesToSave } = await validateFixedTermLicenceConditions({ requestBody, recommendationId })

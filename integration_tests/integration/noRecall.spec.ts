@@ -16,7 +16,7 @@ context('No recall', () => {
     id: recommendationId,
     crn,
     personOnProbation: {
-      name: 'Paula Smith',
+      name: 'Jane Bloggs',
     },
   }
 
@@ -39,19 +39,19 @@ context('No recall', () => {
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'licenceBreach',
-        errorText: 'Tell Paula Smith why the licence breach is a problem',
+        errorText: 'Tell Jane Bloggs why the licence breach is a problem',
       })
       cy.assertErrorMessage({
         fieldName: 'noRecallRationale',
-        errorText: 'Tell Paula Smith why they are not being recalled',
+        errorText: 'Tell Jane Bloggs why they are not being recalled',
       })
       cy.assertErrorMessage({
         fieldName: 'popProgressMade',
-        errorText: 'Remind Paula Smith about their progress',
+        errorText: 'Remind Jane Bloggs about their progress',
       })
       cy.assertErrorMessage({
         fieldName: 'futureExpectations',
-        errorText: "Tell Paula Smith what you've agreed for the future",
+        errorText: "Tell Jane Bloggs what you've agreed for the future",
       })
     })
 
@@ -83,13 +83,13 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('How has Paula Smith responded to probation so far? To do').should('exist')
-      cy.getElement('What licence conditions has Paula Smith breached? To do').should('exist')
-      cy.getElement('Is Paula Smith on an indeterminate sentence? To do').should('exist')
-      cy.getElement('Is Paula Smith on an extended sentence? To do').should('exist')
+      cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
+      cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
+      cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
+      cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
       cy.getElement('Type of indeterminate sentence To do').should('not.exist')
       cy.getElement('Why you considered recall To do').should('exist')
-      cy.getElement('Why Paula Smith should not be recalled To do').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Appointment date and time To do').should('exist')
       cy.getElement('Create letter').should('not.exist')
     })
@@ -100,13 +100,13 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-      cy.getElement('How has Paula Smith responded to probation so far? Completed').should('exist')
-      cy.getElement('What licence conditions has Paula Smith breached? Completed').should('exist')
-      cy.getElement('Is Paula Smith on an indeterminate sentence? Completed').should('exist')
-      cy.getElement('Is Paula Smith on an extended sentence? Completed').should('exist')
+      cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
+      cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
+      cy.getElement('Is Jane Bloggs on an indeterminate sentence? Completed').should('exist')
+      cy.getElement('Is Jane Bloggs on an extended sentence? Completed').should('exist')
       cy.getElement('Type of indeterminate sentence Completed').should('exist')
       cy.getElement('Why you considered recall Completed').should('exist')
-      cy.getElement('Why Paula Smith should not be recalled Completed').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled Completed').should('exist')
       cy.getElement('Appointment date and time Completed').should('exist')
       cy.clickLink('Create letter')
     })
@@ -119,7 +119,7 @@ context('No recall', () => {
         'contain',
         '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter'
       )
-      cy.getLinkHref('Why Paula Smith should not be recalled').should(
+      cy.getLinkHref('Why Jane Bloggs should not be recalled').should(
         'contain',
         '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter'
       )
@@ -192,9 +192,9 @@ context('No recall', () => {
       cy.createNoRecallLetter()
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-no-recall`)
-      cy.getText('pop-address').should('equal', 'Paula Smith\n123 Acacia Avenue\nBirmingham\nB23 1BC')
+      cy.getText('pop-address').should('equal', 'Jane Bloggs\n123 Oak Avenue\nBirmingham\nB23 1BC')
       cy.getText('probation-address').should('equal', 'Probation office address')
-      cy.getText('pop-salutation').should('equal', 'Dear Paula')
+      cy.getText('pop-salutation').should('equal', 'Dear Jane')
       cy.getText('letter-date').should('equal', '12/09/2022')
       cy.getText('letter-title').should('equal', 'DECISION NOT TO RECALL')
       cy.getText('section-1').should('equal', 'section 1')
