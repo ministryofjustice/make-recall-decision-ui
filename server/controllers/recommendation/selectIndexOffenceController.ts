@@ -6,6 +6,7 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { hasValue, isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
+import { Term } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -17,30 +18,77 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
 
-  let errorMessage
+  let nomisError
   if (hasValue(sentences) && sentences.length === 0) {
-    errorMessage = 'No sentences found'
+    nomisError = 'No sentences found'
   }
+
+  const resolveTerm = (term: Term) => {
+    switch (term.code) {
+      case 'IMP':
+        return { key: 'Custodial term', value: term }
+      case 'LIC':
+        return { key: 'Extended term', value: term }
+      default:
+        return undefined
+    }
+  }
+
+  const nomisOffenceData = sentences?.flatMap(s =>
+    s?.offences?.map(o => ({
+      id: o.offenderChargeId,
+      description: o.offenceDescription,
+      sentenceType: s.sentenceTypeDescription,
+      court: s.courtDescription,
+      dateOfSentence: s.sentenceDate,
+      startDate: s.sentenceStartDate,
+      endDate: s.sentenceEndDate,
+      terms:
+        s.terms.length < 2
+          ? [{ key: 'Sentence length', value: s.terms.at(0) ?? {} }]
+          : s.terms.map(t => resolveTerm(t)),
+      consecutiveCount: s.consecutiveGroup?.length,
+    }))
+  )
 
   const { convictionDetail } = recommendation
   const isExtended: boolean =
     !isEmptyStringOrWhitespace(convictionDetail?.custodialTerm) &&
     !isEmptyStringOrWhitespace(convictionDetail?.extendedTerm)
+  const convictionData = {
+    description: convictionDetail.indexOffenceDescription,
+    dateOfSentence: convictionDetail.dateOfSentence,
+    sentenceType: convictionDetail.sentenceDescription,
+    sentenceExpiryDate: convictionDetail.sentenceExpiryDate,
+    terms: isExtended
+      ? [
+          { key: 'Custodial term', value: convictionDetail.custodialTerm },
+          { key: 'Extended term', value: convictionDetail.extendedTerm },
+        ]
+      : [
+          {
+            key: 'Sentence length',
+            value: `${convictionDetail.lengthOfSentence} ${convictionDetail.lengthOfSentenceUnits}`,
+          },
+        ],
+  }
 
   res.locals = {
     ...res.locals,
     page: {
       id: 'selectIndexOffence',
     },
-    convictionDetail,
-    isExtended,
-    sentences,
-    errorMessage,
+    pageData: {
+      offenderName: `${recommendation.bookRecallToPpud.firstNames} ${recommendation.bookRecallToPpud.lastName}`,
+      nomisOffenceData,
+      convictionData,
+    },
+    nomisError,
   }
 
   const allOptions = sentences
     .flatMap(sentence => {
-      if (sentence.offences) {
+      if (sentence?.offences) {
         return sentence.offences.map(offence => {
           return {
             offenderChargeId: offence.offenderChargeId,
