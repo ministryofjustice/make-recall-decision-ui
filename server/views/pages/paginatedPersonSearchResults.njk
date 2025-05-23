@@ -83,7 +83,7 @@
     </table>
     {{ paginate({
         href: '/search-results-by-name?firstName=' + firstName + '&lastName='  + lastName,
-        index: page.paging.page + 1,
+        index: page.paging.page,
         total: page.paging.totalNumberOfPages
         }) }}
     {% endif %}
