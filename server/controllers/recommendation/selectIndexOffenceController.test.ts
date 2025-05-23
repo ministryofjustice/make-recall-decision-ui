@@ -3,120 +3,121 @@ import { getRecommendation, prisonSentences, updateRecommendation } from '../../
 import selectIndexOffenceController from './selectIndexOffenceController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { PrisonSentence } from '../../@types/make-recall-decision-api/models/PrisonSentence'
-import { ConvictionDetail } from '../../@types/make-recall-decision-api'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { PrisonSentenceGenerator } from '../../../data/prisonSentences/prisonSentenceGenerator'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { TermGenerator } from '../../../data/common/termGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 const recommendationId = 123
 
-const defaultRecommendation = {
-  id: recommendationId,
-  bookRecallToPpud: {
-    firstNames: 'Joe',
-    lastName: 'Bloggs',
-  },
-  convictionDetail: {
-    indexOffenceDescription: 'offence description',
-    dateOfSentence: '2015-01-01',
-    lengthOfSentence: 5,
-    lengthOfSentenceUnits: 'years',
-    sentenceDescription: 'sentence description',
-    sentenceExpiryDate: '2016-01-01',
-  },
-  personOnProbation: {
-    croNumber: '123X',
-    nomsNumber: '567Y',
-    surname: 'Mayer',
-    dateOfBirth: '2001-01-01',
-    mappa: {
-      level: '1',
-    },
-  },
-}
+// const defaultRecommendation = {
+//   id: recommendationId,
+//   bookRecallToPpud: {
+//     firstNames: 'Joe',
+//     lastName: 'Bloggs',
+//   },
+//   convictionDetail: {
+//     indexOffenceDescription: 'offence description',
+//     dateOfSentence: '2015-01-01',
+//     lengthOfSentence: 5,
+//     lengthOfSentenceUnits: 'years',
+//     sentenceDescription: 'sentence description',
+//     sentenceExpiryDate: '2016-01-01',
+//   },
+//   personOnProbation: {
+//     croNumber: '123X',
+//     nomsNumber: '567Y',
+//     surname: 'Bloggs',
+//     dateOfBirth: '2001-01-01',
+//     mappa: {
+//       level: '1',
+//     },
+//   },
+// }
 
-const defaultSentence: PrisonSentence = {
-  bookingId: 13,
-  sentenceSequence: 1,
-  lineSequence: 1,
-  caseSequence: 1,
-  courtDescription: 'Blackburn County Court',
-  sentenceStatus: 'A',
-  sentenceCategory: '2003',
-  sentenceCalculationType: 'MLP',
-  sentenceTypeDescription: 'Adult Mandatory Life',
-  sentenceDate: '2023-11-16',
-  sentenceStartDate: '2023-11-16',
-  sentenceEndDate: '3022-11-15',
-  releaseDate: '2025-11-16',
-  licenceExpiryDate: '2025-11-17',
-  releasingPrison: 'Broad Moor',
-  terms: [{ years: 1, months: 0, weeks: 2, days: 3, code: 'UnitTest' }],
-  offences: [
-    {
-      offenderChargeId: 3934369,
-      offenceStartDate: '1899-01-01',
-      offenceStatute: 'SA96',
-      offenceCode: 'SA96036',
-      offenceDescription:
-        'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
-      indicators: [],
-    },
-  ],
-}
+// const defaultSentence: PrisonSentence = {
+//   bookingId: 13,
+//   sentenceSequence: 1,
+//   lineSequence: 1,
+//   caseSequence: 1,
+//   courtDescription: 'Blackburn County Court',
+//   sentenceStatus: 'A',
+//   sentenceCategory: '2003',
+//   sentenceCalculationType: 'MLP',
+//   sentenceTypeDescription: 'Adult Mandatory Life',
+//   sentenceDate: '2023-11-16',
+//   sentenceStartDate: '2023-11-16',
+//   sentenceEndDate: '3022-11-15',
+//   releaseDate: '2025-11-16',
+//   licenceExpiryDate: '2025-11-17',
+//   releasingPrison: 'Broad Moor',
+//   terms: [{ years: 1, months: 0, weeks: 2, days: 3, code: 'UnitTest' }],
+//   offences: [
+//     {
+//       offenderChargeId: 3934369,
+//       offenceStartDate: '1899-01-01',
+//       offenceStatute: 'SA96',
+//       offenceCode: 'SA96036',
+//       offenceDescription:
+//         'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
+//       indicators: [],
+//     },
+//   ],
+// }
 
-const expectedDefaultSentenceOptions = [
-  {
-    bookingId: 13,
-    courtDescription: 'Blackburn County Court',
-    offenceCode: 'SA96036',
-    offenceDate: '1899-01-01',
-    offenceDescription:
-      'Sing / shout / play a musical instrument / operate a portable music machine cause annoyance at Stansted Airport London',
-    offenceStatute: 'SA96',
-    offenderChargeId: 3934369,
-    sentenceDate: '2023-11-16',
-    sentenceEndDate: '3022-11-15',
-    sentenceStartDate: '2023-11-16',
-    sentenceTypeDescription: 'Adult Mandatory Life',
-    terms: [{ years: 1, months: 0, weeks: 2, days: 3, code: 'UnitTest' }],
-    releaseDate: '2025-11-16',
-    licenceExpiryDate: '2025-11-17',
-    releasingPrison: 'Broad Moor',
-  },
-]
+const expectedOptionForSentence = (sentence: PrisonSentence) => ({
+  bookingId: sentence.bookingId,
+  courtDescription: sentence.courtDescription,
+  offenceCode: sentence.offences.at(0).offenceCode,
+  offenceDate: sentence.offences.at(0).offenceStartDate,
+  offenceDescription: sentence.offences.at(0).offenceDescription,
+  offenceStatute: sentence.offences.at(0).offenceStatute,
+  offenderChargeId: sentence.offences.at(0).offenderChargeId,
+  sentenceDate: sentence.sentenceDate,
+  sentenceEndDate: sentence.sentenceEndDate,
+  sentenceStartDate: sentence.sentenceStartDate,
+  sentenceTypeDescription: sentence.sentenceTypeDescription,
+  terms: sentence.terms,
+  releaseDate: sentence.releaseDate,
+  licenceExpiryDate: sentence.licenceExpiryDate,
+  releasingPrison: sentence.releasingPrison,
+})
 
-const expectedNomisOffenceData = {
-  id: defaultSentence.offences[0].offenderChargeId,
-  description: defaultSentence.offences[0].offenceDescription,
-  sentenceType: defaultSentence.sentenceTypeDescription,
-  court: defaultSentence.courtDescription,
-  dateOfSentence: defaultSentence.sentenceDate,
-  startDate: defaultSentence.sentenceStartDate,
-  endDate: defaultSentence.sentenceEndDate,
-}
+const expectedNomisOffenceForSentence = (sentence: PrisonSentence) => ({
+  id: sentence.offences[0].offenderChargeId,
+  description: sentence.offences[0].offenceDescription,
+  sentenceType: sentence.sentenceTypeDescription,
+  court: sentence.courtDescription,
+  dateOfSentence: sentence.sentenceDate,
+  startDate: sentence.sentenceStartDate,
+  endDate: sentence.sentenceEndDate,
+})
 
-const expectedConvictionData = {
-  description: defaultRecommendation.convictionDetail.indexOffenceDescription,
-  dateOfSentence: defaultRecommendation.convictionDetail.dateOfSentence,
-  sentenceType: defaultRecommendation.convictionDetail.sentenceDescription,
-  sentenceExpiryDate: defaultRecommendation.convictionDetail.sentenceExpiryDate,
-}
+const expectedConvictionDataForRecommendation = (recommendation: RecommendationResponse) => ({
+  description: recommendation.convictionDetail.indexOffenceDescription,
+  dateOfSentence: recommendation.convictionDetail.dateOfSentence,
+  sentenceType: recommendation.convictionDetail.sentenceDescription,
+  sentenceExpiryDate: recommendation.convictionDetail.sentenceExpiryDate,
+})
 
 const expectedErrorMessage = 'No sentences found'
-
-const req = mockReq({
-  params: { recommendationId: '123' },
-})
-
-const res = mockRes({
-  locals: {
-    recommendation: defaultRecommendation,
-  },
-})
 
 const next = mockNext()
 
 describe('get', () => {
+  const defaultRecommendation = RecommendationResponseGenerator.generate()
+  const defaultSentence = PrisonSentenceGenerator.generate()
+
+  const req = mockReq({
+    params: { recommendationId: '123' },
+  })
+  const res = mockRes({
+    locals: {
+      recommendation: defaultRecommendation,
+    },
+  })
   describe('Non conditional logic:', () => {
     beforeEach(async () => {
       ;(prisonSentences as jest.Mock).mockResolvedValue([defaultSentence])
@@ -133,7 +134,7 @@ describe('get', () => {
         valuesToSave: {
           nomisIndexOffence: {
             selected: undefined,
-            allOptions: expectedDefaultSentenceOptions,
+            allOptions: [expectedOptionForSentence(defaultSentence)],
           },
         },
       }))
@@ -153,9 +154,14 @@ describe('get', () => {
       describe('Page Data:', () => {
         it('- Is provided', async () => expect(res.locals.pageData).toBeDefined())
         describe('Offender name:', () => {
-          it('- Correct value', async () => expect(res.locals.pageData.offenderName).toEqual('Frederick Mayer'))
+          it('- Correct value', async () =>
+            expect(res.locals.pageData.offenderName).toEqual(
+              `${defaultRecommendation.bookRecallToPpud.firstNames} ${defaultRecommendation.bookRecallToPpud.lastName}`
+            ))
         })
         describe('Nomis Offence Data', () => {
+          const expectedNomisOffenceData = expectedNomisOffenceForSentence(defaultSentence)
+
           it('- Is provided', async () => expect(res.locals.pageData.nomisOffenceData).toBeDefined())
           it('- Expected length', async () => expect(res.locals.pageData.nomisOffenceData).toHaveLength(1))
           const offenceData = () => res.locals.pageData.nomisOffenceData[0]
@@ -173,6 +179,8 @@ describe('get', () => {
           it(' - consecutiveCount (to be undefined, conditional)', async () => expect(offenceData().id).toBeUndefined)
         })
         describe('Conviction data', () => {
+          const expectedConvictionData = expectedConvictionDataForRecommendation(defaultRecommendation)
+
           it('- Is provided', async () => expect(res.locals.pageData.convictionData).toBeDefined())
           const convictionData = () => res.locals.pageData.convictionData
           it('- description', async () =>
@@ -212,9 +220,7 @@ describe('get', () => {
     describe('Nomis offence data:', () => {
       describe('Terms:', () => {
         it('- Single term, lists key as "Sentence length" with the expected value', async () => {
-          const sentenceWithSingleTerm = {
-            ...defaultSentence,
-          }
+          const sentenceWithSingleTerm = PrisonSentenceGenerator.generate()
 
           expect(sentenceWithSingleTerm.terms).toHaveLength(1)
           ;(prisonSentences as jest.Mock).mockResolvedValue([sentenceWithSingleTerm])
@@ -228,12 +234,38 @@ describe('get', () => {
           ])
         })
         describe('Multiple terms, lists key based on the term code with the expected value', () => {
-          const termIMP = { code: 'IMP', years: 1, months: 2, weeks: 3, days: 4 }
-          const termLIC = { code: 'LIC', years: 4, months: 3, weeks: 2, days: 1 }
-          const sentenceWithMultipleTerms = {
-            ...defaultSentence,
-            terms: [termIMP, termLIC],
-          }
+          const termIMP = TermGenerator.generate({
+            code: 'IMP',
+            years: 'include',
+            months: 'include',
+            weeks: 'include',
+            days: 'include',
+          })
+          const termLIC = TermGenerator.generate({
+            code: 'LIC',
+            years: 'include',
+            months: 'include',
+            weeks: 'include',
+            days: 'include',
+          })
+          const sentenceWithMultipleTerms = PrisonSentenceGenerator.generate({
+            terms: [
+              {
+                code: termIMP.code,
+                years: termIMP.years,
+                months: termIMP.months,
+                weeks: termIMP.weeks,
+                days: termIMP.days,
+              },
+              {
+                code: termLIC.code,
+                years: termLIC.years,
+                months: termLIC.months,
+                weeks: termLIC.weeks,
+                days: termLIC.days,
+              },
+            ],
+          })
 
           beforeEach(async () => {
             expect(sentenceWithMultipleTerms.terms.length).not.toBeLessThan(2)
@@ -255,10 +287,7 @@ describe('get', () => {
       describe('Consecutive count:', () => {
         it('- Has no value when no the sentence has no consecutive group', async () => {
           ;(prisonSentences as jest.Mock).mockResolvedValue([
-            {
-              ...defaultSentence,
-              consecutiveGroup: undefined,
-            },
+            PrisonSentenceGenerator.generate({ consecutiveGroup: undefined }),
           ])
           await selectIndexOffenceController.get(req, res, next)
 
@@ -273,10 +302,7 @@ describe('get', () => {
           ].forEach(testCase => {
             it(`Consecutive group: [${testCase.consecutiveGroup}] - Result: ${testCase.expectedValue}`, async () => {
               ;(prisonSentences as jest.Mock).mockResolvedValue([
-                {
-                  ...defaultSentence,
-                  consecutiveGroup: testCase.consecutiveGroup,
-                },
+                PrisonSentenceGenerator.generate({ consecutiveGroup: testCase.consecutiveGroup }),
               ])
               await selectIndexOffenceController.get(req, res, next)
 
@@ -290,38 +316,31 @@ describe('get', () => {
       describe('Terms:', () => {
         describe('Expected none extended terms, lists key as "Sentence length" with the expected value', () => {
           const testTerm = 'Term unit test value'
-          const testCases: { name: string; termsTransformer: (detail: ConvictionDetail) => ConvictionDetail }[] = [
+          const testCases: { name: string; custodialTerm?: string; extendedTerm?: string }[] = [
             {
               name: 'Neither Custodial nor Extended term',
-              termsTransformer: (detail: ConvictionDetail) => ({
-                ...detail,
-                custodialTerm: undefined,
-                extendedTerm: undefined,
-              }),
+              custodialTerm: undefined,
+              extendedTerm: undefined,
             },
             {
               name: 'Custodial but not Extended term',
-              termsTransformer: (detail: ConvictionDetail) => ({
-                ...detail,
-                custodialTerm: testTerm,
-                extendedTerm: undefined,
-              }),
+              custodialTerm: testTerm,
+              extendedTerm: undefined,
             },
             {
               name: 'Extended but not Custodial term',
-              termsTransformer: (detail: ConvictionDetail) => ({
-                ...detail,
-                custodialTerm: undefined,
-                extendedTerm: testTerm,
-              }),
+              custodialTerm: undefined,
+              extendedTerm: testTerm,
             },
           ]
           testCases.forEach(testCase => {
             it(`- ${testCase.name}`, async () => {
-              const recommendationNotExtended = {
-                ...defaultRecommendation,
-                convictionDetail: testCase.termsTransformer(defaultRecommendation.convictionDetail),
-              }
+              const recommendationNotExtended = RecommendationResponseGenerator.generate({
+                convictionDetail: {
+                  custodialTerm: testCase.custodialTerm,
+                  extendedTerm: testCase.extendedTerm,
+                },
+              })
               res.locals = {
                 ...res.locals,
                 recommendation: recommendationNotExtended,
@@ -331,21 +350,21 @@ describe('get', () => {
               expect(resultTerms).toBeDefined()
               expect(resultTerms).toHaveLength(1)
               expect(resultTerms[0].key).toEqual('Sentence length')
-              expect(resultTerms[0].value).toEqual('5 years')
+              expect(resultTerms[0].value).toEqual(
+                `${defaultRecommendation.convictionDetail.lengthOfSentence} ${defaultRecommendation.convictionDetail.lengthOfSentenceUnits}`
+              )
             })
           })
         })
         it('- Both a Custodial and Extended term, lists both of these with respective keys and expected value', async () => {
           const custodailTermValue = 'Unit test custodial term'
           const extendedTermValue = 'Unit test extended term'
-          const recommendationIsExtended = {
-            ...defaultRecommendation,
+          const recommendationIsExtended = RecommendationResponseGenerator.generate({
             convictionDetail: {
-              ...defaultRecommendation.convictionDetail,
               custodialTerm: custodailTermValue,
               extendedTerm: extendedTermValue,
             },
-          }
+          })
           res.locals = {
             ...res.locals,
             recommendation: recommendationIsExtended,

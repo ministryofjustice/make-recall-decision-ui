@@ -1,7 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { BookRecallToPpud } from '../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import { BookRecallToPpud } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { DataGenerator, AnyNoneOrOption } from '../@generators/dataGenerators'
-import { CUSTODY_GROUP } from '../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { resolveAnyNoneOrOption } from '../@generators/dataGenerator.utils'
 
 export const ETHNICITIES = {

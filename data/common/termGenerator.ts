@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Term } from '../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import { Term } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { DataGeneratorWithSeries } from '../@generators/dataGenerators'
 
 export type TermOptions =

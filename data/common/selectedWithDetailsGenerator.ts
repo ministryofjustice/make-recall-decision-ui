@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { SelectedWithDetails } from '../../../server/@types/make-recall-decision-api'
+import { SelectedWithDetails } from '../../server/@types/make-recall-decision-api'
 import { DataGenerator } from '../@generators/dataGenerators'
 
 export type SelectedWithDetailsOptions = {

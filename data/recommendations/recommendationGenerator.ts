@@ -1,14 +1,14 @@
 // import { CustodyStatus, IndeterminateSentenceType, RecallTypeSelectedValue, RecommendationResponse, VictimsInContactScheme } from "../../server/@types/make-recall-decision-api";
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { SelectedWithDetailsGenerator, SelectedWithDetailsOptions } from '../common/selectedWithDetailsGenerator'
-import { RoshEnum } from '../../../server/@types/make-recall-decision-api/models/RoshData'
+import { RoshEnum } from '../../server/@types/make-recall-decision-api/models/RoshData'
 import { BookRecallToPpudGenerator, BookRecallToPpudOptions } from './bookRecallToPpudGenerator'
 import { DataGenerator } from '../@generators/dataGenerators'
-import { CustodyStatus } from '../../../server/@types/make-recall-decision-api/models/CustodyStatus'
-import { IndeterminateSentenceType } from '../../../server/@types/make-recall-decision-api/models/IndeterminateSentenceType'
-import { RecallTypeSelectedValue } from '../../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { RecommendationResponse } from '../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
-import { VictimsInContactScheme } from '../../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
+import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
+import { IndeterminateSentenceType } from '../../server/@types/make-recall-decision-api/models/IndeterminateSentenceType'
+import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { RecommendationResponse } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import { VictimsInContactScheme } from '../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { ConvictionDetailGenerator, ConvictionDetailOptions } from './convictionDetailGenerator'
 
 /*
@@ -63,7 +63,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
   generate: options => ({
     id: faker.number.int({ min: 1, max: 99 }),
     status: RecommendationResponse.status.DRAFT,
-    crn: options.crn ?? faker.helpers.replaceSymbols('?######'),
+    crn: options?.crn ?? faker.helpers.replaceSymbols('?######'),
     createdByUserFullName: 'Integration test data generator',
     createdBy: 'INTEGRATION_TEST_DATA_GENERATOR',
     activeCustodialConvictionCount: faker.number.int({ min: 1, max: 9 }),
@@ -115,7 +115,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isIndeterminateSentence: options?.isIndeterminateSentence ?? faker.datatype.boolean(),
     isMainAddressWherePersonCanBeFound:
       options?.isMainAddressWherePersonCanBeFound ?? true
-        ? SelectedWithDetailsGenerator.generate(options.isMainAddressWherePersonCanBeFound)
+        ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)
         : undefined,
     isThisAnEmergencyRecall: options?.isThisAnEmergencyRecall ?? faker.datatype.boolean(),
     isUnderIntegratedOffenderManagement:
@@ -179,7 +179,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     convictionDetail:
-      options?.convictionDetail ?? true ? ConvictionDetailGenerator.generate(options.convictionDetail) : undefined,
+      options?.convictionDetail ?? true ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
     indexOffenceDetails: options?.indexOffenceDetails ?? true ? faker.lorem.sentence() : undefined,
     offenceAnalysis: options?.offenceAnalysis ?? true ? faker.lorem.sentence() : undefined,
     previousReleases:
@@ -271,7 +271,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
       options?.spoDeleteRecommendationRationale ?? true ? faker.lorem.sentence() : undefined,
     spoRecallType: options?.spoRecallType ?? true ? faker.lorem.sentence() : undefined,
     whoCompletedPartA:
-      options.whoCompletedPartA ?? true
+      options?.whoCompletedPartA ?? true
         ? {
             name: faker.person.fullName(),
             email: faker.internet.email(),

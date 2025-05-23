@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { AnyNoneOrOption, IncludeNoneOrOption } from './dataGenerators'
 
 export function resolveAnyNoneOrOption<T>(anyNoneOrOption: AnyNoneOrOption<T>, key: string, allOptions: T[]) {
-  const build = {}
+  const build: { [key: string]: T } = {}
   switch (anyNoneOrOption) {
     case 'any':
       build[key] = faker.helpers.arrayElement(allOptions)

@@ -1,7 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { DataGenerator, IncludeNoneOrOption } from '../@generators/dataGenerators'
 import { resolveIncludeNoneOrOption } from '../@generators/dataGenerator.utils'
-import { ConvictionDetail } from '../../../server/@types/make-recall-decision-api'
+import { ConvictionDetail } from '../../server/@types/make-recall-decision-api'
 
 export type ConvictionDetailOptions = {
   custodialTerm?: IncludeNoneOrOption<string>

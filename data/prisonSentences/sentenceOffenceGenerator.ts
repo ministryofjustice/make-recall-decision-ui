@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { SentenceOffence } from '../../../server/@types/make-recall-decision-api/models/PrisonSentence'
+import { SentenceOffence } from '../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { DataGeneratorWithSeries } from '../@generators/dataGenerators'
 
 export type SentenceOffenceOptions = {
