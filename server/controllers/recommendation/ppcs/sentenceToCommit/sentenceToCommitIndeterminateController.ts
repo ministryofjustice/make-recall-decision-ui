@@ -1,23 +1,41 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
+import { PpudSentenceLength } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const recommendationResponse = recommendation as RecommendationResponse
-
-  const offence = recommendationResponse.nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+  const sentence = recommendationResponse.ppudOffender.sentences.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
 
+  const formatSentenceLength = (sentenceLength: PpudSentenceLength) => {
+    let latch = false
+    let result = ''
+    if (sentenceLength.partYears) {
+      result = `${result + sentenceLength.partYears} years`
+      latch = true
+    }
+    if (sentenceLength.partMonths) {
+      result = `${result}${latch ? ', ' : ''}${sentenceLength.partMonths} months`
+      latch = true
+    }
+    if (sentenceLength.partDays) {
+      result = `${result}${latch ? ', ' : ''}${sentenceLength.partDays} days`
+    }
+    return result
+  }
+
   const sentenceSummary = {
-    custodyType: recommendationResponse.bookRecallToPpud.custodyType,
-    offence: recommendationResponse.bookRecallToPpud.indexOffence,
-    releaseDate: offence.releaseDate,
-    sentencingCourt: offence.courtDescription,
-    dateOfSentence: offence.sentenceDate,
-    tarrifExpiryDate: offence.sentenceEndDate,
+    custodyType: sentence.custodyType,
+    offence: sentence.offence.indexOffence,
+    releaseDate: sentence.releaseDate,
+    sentencingCourt: sentence.sentencingCourt,
+    dateOfSentence: sentence.dateOfSentence,
+    tarrifExpiryDate: sentence.sentenceExpiryDate,
+    fullPunishment: formatSentenceLength(sentence.sentenceLength),
   }
 
   res.locals = {

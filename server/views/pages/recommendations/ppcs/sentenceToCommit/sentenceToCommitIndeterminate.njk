@@ -18,14 +18,6 @@
 
                 {{ heading("Your recall booking", 2, "m") }}
 
-                {% set indeterminateTermRows = [] %}
-                {% for term in offence.terms %}
-                    {% if term.code == "FP" %}
-                        {% set _ = indeterminateTermRows.push({ key: "Full punishment", value: hyphenForBlank(formatTerm(term)), actions: [{ id: editIdPrefix+'fullpunishment', text: editText, href: '#', visuallyHidden: 'full punishment' }] }) %}
-                    {% endif %}
-                {% endfor %}
-
-
                 {{ summaryList({
                     id: " indeterminate-sentence-to-commit",
                     rows: [
@@ -34,8 +26,9 @@
                         { key: "Release date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.releaseDate })), actions: [{ id: editIdPrefix+'releasedate', text: editText, href: '#', visuallyHidden: 'release date' }] },
                         { key: "Sentencing Court", value: hyphenForBlank(sentenceSummary.sentencingCourt), actions: [{ id: editIdPrefix+'sentencingcourt', text: editText, href: '#', visuallyHidden: 'sentencing court' }] },
                         { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.dateOfSentence })), actions: [{ id: editIdPrefix+'dateofentence', text: editText, href: '#', visuallyHidden: 'date of sentence' }] },
-                        { key: "Tarrif expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.tarrifExpiryDate })), actions: [{ id: editIdPrefix+'tarrifexpirydate', text: editText, href: '#', visuallyHidden: 'tarrif expiry date' }] }
-                    ].concat(indeterminateTermRows)
+                        { key: "Tarrif expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.tarrifExpiryDate })), actions: [{ id: editIdPrefix+'tarrifexpirydate', text: editText, href: '#', visuallyHidden: 'tarrif expiry date' }] },
+                        { key: "Full punishement", value: hyphenForBlank(sentenceSummary.fullPunishment), actions: [{ id: editIdPrefix+'fullPunishment', text: editText, href: '#', visuallyHiden: 'full punishement' }] }
+                    ]
                 }) }}
 
             <form novalidate method="post">

@@ -2,19 +2,19 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitIndeterminateController from './sentenceToCommitIndeterminateController'
 
-type Expected = { [key: string]: { [key: string]: string } }
 const releaseDate = faker.date.future()
-const expected: Expected = {
-  recommendation: {
-    custoryType: faker.helpers.arrayElement(['IPP', 'DPP']), // Are we introducing a source for these?
-    indexOffence: faker.lorem.sentence(),
-  },
-  offeredOffence: {
-    chargeId: faker.number.int().toString(),
+const expected = {
+  sentence: {
+    id: faker.helpers.replaceSymbols('********************'),
+    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']), // Are we introducing a source for these?
+    indexOffence: faker.lorem.words(),
     releaseDate: releaseDate.toISOString(),
-    courtDescription: `${faker.location.city} Court`,
-    sentenceDate: faker.date.past().toISOString(),
-    sentenceEndDate: faker.date.future({ refDate: releaseDate }).toISOString(),
+    sentencingCourt: `${faker.location.city} Court`,
+    dateOfSentence: faker.date.past().toISOString(),
+    sentenceExpiryDate: faker.date.future({ refDate: releaseDate }).toISOString(),
+    fullPunishmentYears: faker.number.int({ min: 1, max: 5 }),
+    fullPunishmentMonths: faker.number.int({ min: 1, max: 11 }),
+    fullPunishmentDays: faker.number.int({ min: 1, max: 30 }),
   },
   render: {
     path: 'pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitIndeterminate',
@@ -27,18 +27,25 @@ describe('Sentence to Commit Indeterminate Controler', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: {
-            custodyType: expected.recommendation.custodyType,
-            indexOffence: expected.recommendation.indexOffence,
+            ppudSentenceId: expected.sentence.id,
           },
-          nomisIndexOffence: {
-            selected: expected.offeredOffence.chargeId,
-            allOptions: [
+          ppudOffender: {
+            sentences: [
               {
-                offenderChargeId: expected.offeredOffence.chargeId,
-                releaseDate: expected.offeredOffence.releaseDate,
-                courtDescription: expected.offeredOffence.courtDescription,
-                sentenceDate: expected.offeredOffence.sentenceDate,
-                sentenceEndDate: expected.offeredOffence.sentenceEndDate,
+                id: expected.sentence.id,
+                custodyType: expected.sentence.custodyType,
+                offence: {
+                  indexOffence: expected.sentence.indexOffence,
+                },
+                releaseDate: expected.sentence.releaseDate,
+                sentencingCourt: expected.sentence.sentencingCourt,
+                dateOfSentence: expected.sentence.dateOfSentence,
+                sentenceExpiryDate: expected.sentence.sentenceExpiryDate,
+                sentenceLength: {
+                  partYears: expected.sentence.fullPunishmentYears,
+                  partMonths: expected.sentence.fullPunishmentMonths,
+                  partDays: expected.sentence.fullPunishmentDays,
+                },
               },
             ],
           },
@@ -54,12 +61,13 @@ describe('Sentence to Commit Indeterminate Controler', () => {
     it('Sets the correct page id', async () => expect(res.locals.page.id).toEqual('sentenceToCommitIndeterminate'))
     it('Sets the correct details for the sentence summary', async () => {
       expect(res.locals.sentenceSummary).toEqual({
-        custodyType: expected.recommendation.custodyType,
-        offence: expected.recommendation.indexOffence,
-        releaseDate: expected.offeredOffence.releaseDate,
-        sentencingCourt: expected.offeredOffence.courtDescription,
-        dateOfSentence: expected.offeredOffence.sentenceDate,
-        tarrifExpiryDate: expected.offeredOffence.sentenceEndDate,
+        custodyType: expected.sentence.custodyType,
+        offence: expected.sentence.indexOffence,
+        releaseDate: expected.sentence.releaseDate,
+        sentencingCourt: expected.sentence.sentencingCourt,
+        dateOfSentence: expected.sentence.dateOfSentence,
+        tarrifExpiryDate: expected.sentence.sentenceExpiryDate,
+        fullPunishment: `${expected.sentence.fullPunishmentYears} years, ${expected.sentence.fullPunishmentMonths} months, ${expected.sentence.fullPunishmentDays} days`,
       })
     })
     it('Does not set any error message', async () => expect(res.locals.errorMessage).toBeUndefined())
