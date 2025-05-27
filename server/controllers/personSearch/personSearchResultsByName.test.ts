@@ -38,7 +38,7 @@ describe('personSearchResultsByName', () => {
     })
 
     await personSearchResultsByName(req, res)
-    expect(searchPersons).toHaveBeenCalledWith('token', 0, 20, undefined, 'Harry', 'Bloggs')
+    expect(searchPersons).toHaveBeenCalledWith('token', 1, 20, undefined, 'Harry', 'Bloggs')
     expect(res.render).toHaveBeenCalledWith('pages/paginatedPersonSearchResults')
     expect(res.locals.page).toEqual(TEMPLATE)
 
