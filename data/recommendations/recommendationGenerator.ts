@@ -3,13 +3,14 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { SelectedWithDetailsGenerator, SelectedWithDetailsOptions } from '../common/selectedWithDetailsGenerator'
 import { RoshEnum } from '../../server/@types/make-recall-decision-api/models/RoshData'
 import { BookRecallToPpudGenerator, BookRecallToPpudOptions } from './bookRecallToPpudGenerator'
-import { DataGenerator } from '../@generators/dataGenerators'
+import { DataGenerator, NoneOrOption } from '../@generators/dataGenerators'
 import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import { IndeterminateSentenceType } from '../../server/@types/make-recall-decision-api/models/IndeterminateSentenceType'
 import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { VictimsInContactScheme } from '../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { ConvictionDetailGenerator, ConvictionDetailOptions } from './convictionDetailGenerator'
+import { NomisIndexGenerator, NomisIndexOffenceOptions } from './nomisIndexOffenceGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -57,6 +58,7 @@ export type RecommendationOptions = {
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
+  nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -295,5 +297,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     revocationOrderRecipients: options?.revocationOrderRecipients ?? true ? [faker.internet.email()] : undefined,
     ppcsQueryEmails: options?.ppcsQueryEmails ?? true ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
+    nomisIndexOffence:
+      options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
   }),
 }

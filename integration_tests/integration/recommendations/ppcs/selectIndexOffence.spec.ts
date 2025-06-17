@@ -1,23 +1,22 @@
-import { fakerEN_GB as faker } from '@faker-js/faker'
-import { testSummaryList } from '../../componentTests/summaryList.tests'
-import { testForErrorPageTitle, testForErrorSummary } from '../../componentTests/errors.tests'
-import { PrisonSentenceGenerator } from '../../../data/prisonSentences/prisonSentenceGenerator'
-import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { TermOptions } from '../../../data/common/termGenerator'
-import { SentenceOffenceOptions } from '../../../data/prisonSentences/sentenceOffenceGenerator'
-import searchMappedUserResponse from '../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../api/responses/ppudSearchActiveUsers.json'
-import { RECOMMENDATION_STATUS } from '../../../server/middleware/recommendationStatus'
-import { defaultUpdateRecommendationResponse } from './_data'
-import { CUSTODY_GROUP } from '../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { PrisonSentence } from '../../../server/@types/make-recall-decision-api/models/PrisonSentence'
-import { ConvictionDetail } from '../../../server/@types/make-recall-decision-api'
+import { testSummaryList } from '../../../componentTests/summaryList.tests'
+import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
+import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
+import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
+import { TermOptions } from '../../../../data/common/termGenerator'
+import { SentenceOffenceOptions } from '../../../../data/prisonSentences/sentenceOffenceGenerator'
+import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
+import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
+import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
+import { defaultUpdateRecommendationResponse } from '../_data'
+import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
+import { ConvictionDetail } from '../../../../server/@types/make-recall-decision-api'
 
-context('Select Index Offence Page', () => {
+context('Determinate Sentence - Select Index Offence Page', () => {
   const crn = 'X34983'
   const recommendationId = '123'
 
-  const testPageUrl = '/recommendations/123456789/select-index-offence'
+  const testPageUrl = `/recommendations/123456789/select-index-offence`
 
   beforeEach(() => {
     cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
@@ -32,11 +31,23 @@ context('Select Index Offence Page', () => {
     },
   })
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
-  const anyThreeOffencesOptions: SentenceOffenceOptions[] = [{}, {}, {}]
-  const defaultPrisonSentence = PrisonSentenceGenerator.generate({
-    sentenceType: 'Determinate',
-    offences: anyThreeOffencesOptions,
-  })
+  const anyTwoOffencesOptions: SentenceOffenceOptions[] = [{}, {}]
+  const anyOneOffenceOptions: SentenceOffenceOptions[] = [{}]
+  const defaultPrisonSentenceSequence = PrisonSentenceSequenceGenerator.generateSeries([
+    {
+      indexSentence: {
+        sentenceType: 'Determinate',
+        offences: anyTwoOffencesOptions,
+      },
+    },
+    {
+      indexSentence: {
+        sentenceType: 'Determinate',
+        offences: anyOneOffenceOptions,
+      },
+    },
+  ])
+  const expectedIndexOffenceCount = defaultPrisonSentenceSequence.length
 
   describe('Page Data', () => {
     it('Standard page load', () => {
@@ -46,7 +57,7 @@ context('Select Index Offence Page', () => {
         statusCode: 200,
         response: defaultUpdateRecommendationResponse(crn, recommendationId),
       })
-      cy.task('prisonSentences', { statusCode: 200, response: [defaultPrisonSentence] })
+      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
 
       cy.visit(testPageUrl)
 
@@ -69,9 +80,26 @@ context('Select Index Offence Page', () => {
       cy.get('@radioFieldset').get('.govuk-radios').should('exist').as('radioGroup')
 
       cy.get('@radioGroup').get('div.govuk-radios__item').as('radios')
-      cy.get('@radios').should('have.length', anyThreeOffencesOptions.length)
+      cy.get('@radios').should('have.length', expectedIndexOffenceCount)
       cy.get('@radios').each((radio, index) => {
-        const expectedOffence = defaultPrisonSentence.offences.at(index)
+        let expectedSentenceAndOffence
+        switch (index) {
+          case 0:
+            expectedSentenceAndOffence = {
+              expectedSentence: defaultPrisonSentenceSequence.at(0).indexSentence,
+              expectedOffence: defaultPrisonSentenceSequence.at(0).indexSentence.offences.at(0),
+            }
+            break
+          case 1:
+            expectedSentenceAndOffence = {
+              expectedSentence: defaultPrisonSentenceSequence.at(1).indexSentence,
+              expectedOffence: defaultPrisonSentenceSequence.at(1).indexSentence.offences.at(0),
+            }
+            break
+          default:
+            throw new Error(`No expected sentence and offence configured for index: ${index}`)
+        }
+        const { expectedSentence, expectedOffence } = expectedSentenceAndOffence
         const expectedInputId = `indexOffence-${index + 1}-input`
         const expectedHintId = `indexOffence-${index + 1}-input-item-hint`
         const expectedSummaryId = `indexOffence-${index + 1}-summary`
@@ -94,17 +122,18 @@ context('Select Index Offence Page', () => {
           .should('have.class', 'govuk-radios__hint')
           .should('contain.html', `dl id="${expectedSummaryId}"`)
         cy.wrap(radio).find(`dl#${expectedSummaryId}`).should('exist').as('hintSummaryList')
-        const expectedTerm = `${defaultPrisonSentence.terms.at(0).years} years, ${defaultPrisonSentence.terms.at(0).months} months, ${defaultPrisonSentence.terms.at(0).weeks} weeks, ${defaultPrisonSentence.terms.at(0).days} days`
+        const expectedTerm = defaultPrisonSentenceSequence.at(index).indexSentence.terms.at(0)
+        const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
         testSummaryList(cy.get('@hintSummaryList'), {
           rows: {
             matchLength: false,
             expectedContent: [
-              { key: 'Sentence type', value: defaultPrisonSentence.sentenceTypeDescription },
-              { key: 'Court', value: defaultPrisonSentence.courtDescription },
-              { key: 'Date of sentence', value: defaultPrisonSentence.sentenceDate },
-              { key: 'Start date', value: defaultPrisonSentence.sentenceStartDate },
-              { key: 'Sentence expiry date', value: defaultPrisonSentence.sentenceEndDate },
-              { key: 'Sentence length', value: expectedTerm },
+              { key: 'Sentence type', value: expectedSentence.sentenceTypeDescription },
+              { key: 'Court', value: expectedSentence.courtDescription },
+              { key: 'Date of sentence', value: expectedSentence.sentenceDate },
+              { key: 'Start date', value: expectedSentence.sentenceStartDate },
+              { key: 'Sentence expiry date', value: expectedSentence.sentenceEndDate },
+              { key: 'Sentence length', value: expectedTermText },
             ],
           },
         })
@@ -174,11 +203,13 @@ context('Select Index Offence Page', () => {
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
 
-        const anySingleTermOptions: TermOptions[] = ['all']
-        const prisonSentenceWithSingleTerm = PrisonSentenceGenerator.generate({
-          sentenceType: 'Determinate',
-          offences: [{}],
-          terms: anySingleTermOptions,
+        const anySingleTermOptions: TermOptions[] = [{ chronos: 'all' }]
+        const prisonSentenceWithSingleTerm = PrisonSentenceSequenceGenerator.generate({
+          indexSentence: {
+            sentenceType: 'Determinate',
+            offences: [{}],
+            terms: anySingleTermOptions,
+          },
         })
         cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceWithSingleTerm] })
 
@@ -188,14 +219,15 @@ context('Select Index Offence Page', () => {
         const radio = verifyAndRetrieveSingleNOMISRadioItem()
         const hintSummaryList = radio.find(`dl`).should('exist')
 
-        const expectedTerm = `${prisonSentenceWithSingleTerm.terms.at(0).years} years, ${prisonSentenceWithSingleTerm.terms.at(0).months} months, ${prisonSentenceWithSingleTerm.terms.at(0).weeks} weeks, ${prisonSentenceWithSingleTerm.terms.at(0).days} days`
+        const expectedTerm = prisonSentenceWithSingleTerm.indexSentence.terms.at(0)
+        const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
         testNOMISSummaryListForTermRows(
           hintSummaryList,
-          [{ key: 'Sentence length', value: expectedTerm }],
-          prisonSentenceWithSingleTerm
+          [{ key: 'Sentence length', value: expectedTermText }],
+          prisonSentenceWithSingleTerm.indexSentence
         )
       })
-      it('Sentence with multiple term - displays as resolved term based on code', () => {
+      it('Sentence with multiple terms - displays as resolved term based on code', () => {
         cy.task('getRecommendation', { statusCode: 200, response: defaultRecommendationResponse })
         cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
         cy.task('updateRecommendation', {
@@ -204,10 +236,13 @@ context('Select Index Offence Page', () => {
         })
 
         const termsWithExpectedCodes: TermOptions[] = [{ code: 'IMP' }, { code: 'LIC' }]
-        const prisonSentenceWithSingleTerm = PrisonSentenceGenerator.generate({
-          sentenceType: 'Determinate',
-          offences: [{}],
-          terms: termsWithExpectedCodes,
+        cy.log(JSON.stringify(termsWithExpectedCodes))
+        const prisonSentenceWithSingleTerm = PrisonSentenceSequenceGenerator.generate({
+          indexSentence: {
+            sentenceType: 'Determinate',
+            offences: [{}],
+            terms: termsWithExpectedCodes,
+          },
         })
         cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceWithSingleTerm] })
 
@@ -217,15 +252,17 @@ context('Select Index Offence Page', () => {
         const radio = verifyAndRetrieveSingleNOMISRadioItem()
         const hintSummaryList = radio.find(`dl`).should('exist')
 
-        const expectedCustodialTerm = `${prisonSentenceWithSingleTerm.terms.at(0).years} years, ${prisonSentenceWithSingleTerm.terms.at(0).months} months, ${prisonSentenceWithSingleTerm.terms.at(0).weeks} weeks, ${prisonSentenceWithSingleTerm.terms.at(0).days} days`
-        const expectedExtendedTerm = `${prisonSentenceWithSingleTerm.terms.at(1).years} years, ${prisonSentenceWithSingleTerm.terms.at(1).months} months, ${prisonSentenceWithSingleTerm.terms.at(1).weeks} weeks, ${prisonSentenceWithSingleTerm.terms.at(1).days} days`
+        const expectedCustodialTerm = prisonSentenceWithSingleTerm.indexSentence.terms.at(0)
+        const expectedCustodialTermText = `${expectedCustodialTerm.years} years, ${expectedCustodialTerm.months} months, ${expectedCustodialTerm.weeks} weeks, ${expectedCustodialTerm.days} days`
+        const expectedExtendedTerm = prisonSentenceWithSingleTerm.indexSentence.terms.at(1)
+        const expectedExtendedTermText = `${expectedExtendedTerm.years} years, ${expectedExtendedTerm.months} months, ${expectedExtendedTerm.weeks} weeks, ${expectedExtendedTerm.days} days`
         testNOMISSummaryListForTermRows(
           hintSummaryList,
           [
-            { key: 'Custodial term', value: expectedCustodialTerm },
-            { key: 'Extended term', value: expectedExtendedTerm },
+            { key: 'Custodial term', value: expectedCustodialTermText },
+            { key: 'Extended term', value: expectedExtendedTermText },
           ],
-          prisonSentenceWithSingleTerm
+          prisonSentenceWithSingleTerm.indexSentence
         )
       })
 
@@ -267,7 +304,7 @@ context('Select Index Offence Page', () => {
           statusCode: 200,
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
-        cy.task('prisonSentences', { statusCode: 200, response: [defaultPrisonSentence] })
+        cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
 
         cy.visit(testPageUrl)
 
@@ -301,7 +338,7 @@ context('Select Index Offence Page', () => {
           statusCode: 200,
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
-        cy.task('prisonSentences', { statusCode: 200, response: [defaultPrisonSentence] })
+        cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
 
         cy.visit(testPageUrl)
 
@@ -332,7 +369,7 @@ context('Select Index Offence Page', () => {
           statusCode: 200,
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
-        const prisonSentenceWithoutConsecutiveGroup = PrisonSentenceGenerator.generate()
+        const prisonSentenceWithoutConsecutiveGroup = PrisonSentenceSequenceGenerator.generate()
         cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceWithoutConsecutiveGroup] })
 
         cy.visit(testPageUrl)
@@ -346,9 +383,8 @@ context('Select Index Offence Page', () => {
           statusCode: 200,
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
-        const consecutiveGroup = [faker.number.int(), faker.number.int()]
-        const prisonSentenceWithConsecutiveGroup = PrisonSentenceGenerator.generate({
-          consecutiveGroup,
+        const prisonSentenceWithConsecutiveGroup = PrisonSentenceSequenceGenerator.generate({
+          sentencesInSequence: new Map([[1, [{}, {}]]]),
         })
         cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceWithConsecutiveGroup] })
 
@@ -368,7 +404,7 @@ context('Select Index Offence Page', () => {
         statusCode: 200,
         response: defaultUpdateRecommendationResponse(crn, recommendationId),
       })
-      cy.task('prisonSentences', { statusCode: 200, response: [defaultPrisonSentence] })
+      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
 
       cy.visit(testPageUrl)
       cy.get('button').click()

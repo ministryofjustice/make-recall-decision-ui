@@ -1,0 +1,17 @@
+{% from "components/summary-list/macro.njk" import summaryList %}
+{% from "components/hyphen-for-blank/macro.njk"   import hyphenForBlank %}
+{% set sentenceRows = [
+    { key: offenceTitle, value: hyphenForBlank(sentence.offence) },
+    { key: "Sentence type", value: hyphenForBlank(sentence.sentenceType) },
+    { key: "Court", value: hyphenForBlank(sentence.court) },
+    { key: "Date of sentence" , value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.dateOfSentence})) },
+    { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.startDate})) },
+    { key: "Sentence expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate})) }
+] %}
+{% for term in sentence.sentenceLength %}
+    {% set sentenceRows = (sentenceRows.push({ key: term.key, value: hyphenForBlank(formatTerm(term.value)) }), sentenceRows) %}
+{% endfor %}
+{{ summaryList({
+    id: id,
+    rows: sentenceRows
+}) }}

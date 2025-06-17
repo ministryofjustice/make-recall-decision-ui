@@ -1,4 +1,4 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "../../../../partials/layout.njk" %}
 
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
@@ -9,7 +9,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
+            {% include '../../../../partials/error-summary.njk' %}
 
             <h1 class='govuk-heading-l'>Select the index offence for {{ pageData.offenderName }}</h1>
 
@@ -38,7 +38,7 @@
                             {% set sentenceRows = [
                                 { key: "Sentence type", value: hyphenForBlank(offence.sentenceType) },
                                 { key: "Court", value: offence.court },
-                                { key: "Date of sentence", value: offence.dateOfSentence },
+                                { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.dateOfSentence })) },
                                 { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.startDate })) },
                                 { key: "Sentence expiry date", value: hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.endDate })) }
                             ] %}

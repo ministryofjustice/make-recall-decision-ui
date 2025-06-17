@@ -1,7 +1,6 @@
 export type PrisonSentence = {
   bookingId: number;
   sentenceSequence: number;
-  consecutiveGroup?: number[];
   lineSequence: number;
   caseSequence: number;
   courtDescription: string;

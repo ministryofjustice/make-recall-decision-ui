@@ -4,7 +4,6 @@ export const testSummaryList = (
     rows: {
       expectedContent: { key: string; value: string }[]
       matchLength?: boolean
-      match?: 'ordered' | 'find'
     }
   }
 ) => {
@@ -14,7 +13,9 @@ export const testSummaryList = (
   }
   summaryRows.each((row, index) => {
     const expectedContent = params.rows.expectedContent.at(index)
-    cy.wrap(row).should('contain.html', 'dt').find('dt').should('contain.text', expectedContent.key)
-    cy.wrap(row).should('contain.html', 'dd').find('dd').should('contain.text', expectedContent.value)
+    if (expectedContent) {
+      cy.wrap(row).should('contain.html', 'dt').find('dt').should('contain.text', expectedContent.key)
+      cy.wrap(row).should('contain.html', 'dd').find('dd').should('contain.text', expectedContent.value)
+    }
   })
 }

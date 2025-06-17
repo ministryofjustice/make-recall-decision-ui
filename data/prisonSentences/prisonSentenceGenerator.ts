@@ -7,8 +7,8 @@ import { TermGenerator, TermOptions } from '../common/termGenerator'
 type SentenceTypeOption = 'Determinate' | 'Indeterminate' | 'Any' | 'None'
 
 export type PrisonSentenceOptions = {
+  lineSequence?: number
   sentenceType?: SentenceTypeOption
-  consecutiveGroup?: number[]
   terms?: TermOptions[]
   offences?: SentenceOffenceOptions[]
 }
@@ -33,9 +33,8 @@ const resolveSentenceType = (option?: SentenceTypeOption) => {
 const generateInternal = (options?: PrisonSentenceOptions): PrisonSentence => ({
   bookingId: faker.number.int(),
   sentenceSequence: faker.number.int(),
-  lineSequence: faker.number.int(),
+  lineSequence: options?.lineSequence ?? faker.number.int(),
   caseSequence: faker.number.int(),
-  consecutiveGroup: options?.consecutiveGroup,
   courtDescription: `${faker.location.city()} Court`,
   sentenceStatus: faker.lorem.word(),
   sentenceCategory: faker.lorem.word(),
@@ -44,7 +43,7 @@ const generateInternal = (options?: PrisonSentenceOptions): PrisonSentence => ({
   sentenceDate: faker.date.past().toDateString(),
   sentenceStartDate: faker.date.past().toDateString(),
   sentenceEndDate: faker.date.future().toDateString(),
-  terms: TermGenerator.generateSeries(options?.terms ?? ['all']),
+  terms: TermGenerator.generateSeries(options?.terms ?? [{ chronos: 'all' }]),
   offences: SentenceOffenceGenerator.generateSeries(options?.offences ?? [{}]),
   releaseDate: faker.date.future().toDateString(),
   releasingPrison: `HMPPS ${faker.location.city()} Example`,

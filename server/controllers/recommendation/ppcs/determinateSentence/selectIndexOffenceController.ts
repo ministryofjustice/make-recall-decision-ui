@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { getRecommendation, prisonSentences, updateRecommendation } from '../../data/makeDecisionApiClient'
-import { NamedFormError } from '../../@types/pagesForms'
-import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { hasValue, isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
-import { Term } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
+import { getRecommendation, prisonSentences, updateRecommendation } from '../../../../data/makeDecisionApiClient'
+import { NamedFormError } from '../../../../@types/pagesForms'
+import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
+import { makeErrorObject } from '../../../../utils/errors'
+import { strings } from '../../../../textStrings/en'
+import { hasValue, isDefined, isEmptyStringOrWhitespace } from '../../../../utils/utils'
+import { OfferedOffence, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { ppcsPaths } from '../../../../routes/paths/ppcs'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -16,10 +17,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
   } = res.locals
 
-  const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
+  const sentenceSequences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
 
   let nomisError
-  if (hasValue(sentences) && sentences.length === 0) {
+  if (hasValue(sentenceSequences) && sentenceSequences.length === 0) {
     nomisError = 'No sentences found'
   }
 
@@ -34,22 +35,26 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   }
 
-  const nomisOffenceData = sentences?.flatMap(s =>
-    s?.offences?.map(o => ({
-      id: o.offenderChargeId,
-      description: o.offenceDescription,
-      sentenceType: s.sentenceTypeDescription,
-      court: s.courtDescription,
-      dateOfSentence: s.sentenceDate,
-      startDate: s.sentenceStartDate,
-      endDate: s.sentenceEndDate,
+  const nomisOffenceData = sentenceSequences?.flatMap(seq => {
+    const { indexSentence } = seq
+    const indexOffence = indexSentence.offences.at(0)
+    return {
+      id: indexOffence.offenderChargeId,
+      description: indexOffence.offenceDescription,
+      sentenceType: indexSentence.sentenceTypeDescription,
+      court: indexSentence.courtDescription,
+      dateOfSentence: indexSentence.sentenceDate,
+      startDate: indexSentence.sentenceStartDate,
+      endDate: indexSentence.sentenceEndDate,
       terms:
-        s.terms.length < 2
-          ? [{ key: 'Sentence length', value: s.terms.at(0) ?? {} }]
-          : s.terms.map(t => resolveTerm(t)),
-      consecutiveCount: s.consecutiveGroup?.length,
-    }))
-  )
+        indexSentence.terms.length < 2
+          ? [{ key: 'Sentence length', value: seq.indexSentence.terms.at(0) ?? {} }]
+          : seq.indexSentence.terms.map(t => resolveTerm(t)),
+      consecutiveCount: seq.sentencesInSequence
+        ? Array.from(new Map(Object.entries(seq.sentencesInSequence)).values()).flatMap(x => x).length
+        : null,
+    }
+  })
 
   const { convictionDetail } = recommendation
   const isExtended: boolean =
@@ -86,26 +91,26 @@ async function get(req: Request, res: Response, next: NextFunction) {
     nomisError,
   }
 
-  const allOptions = sentences
-    .flatMap(sentence => {
-      if (sentence?.offences) {
-        return sentence.offences.map(offence => {
+  const allOptions: OfferedOffence[] = sentenceSequences
+    .flatMap(seq => {
+      if (seq?.indexSentence.offences) {
+        return seq.indexSentence.offences.map(offence => {
           return {
             offenderChargeId: offence.offenderChargeId,
             offenceCode: offence.offenceCode,
             offenceDate: offence.offenceStartDate,
             offenceStatute: offence.offenceStatute,
             offenceDescription: offence.offenceDescription,
-            sentenceDate: sentence.sentenceDate,
-            courtDescription: sentence.courtDescription,
-            sentenceStartDate: sentence.sentenceStartDate,
-            sentenceEndDate: sentence.sentenceEndDate,
-            bookingId: sentence.bookingId,
-            terms: sentence.terms,
-            sentenceTypeDescription: sentence.sentenceTypeDescription,
-            releaseDate: sentence.releaseDate,
-            releasingPrison: sentence.releasingPrison,
-            licenceExpiryDate: sentence.licenceExpiryDate,
+            sentenceDate: seq.indexSentence.sentenceDate,
+            courtDescription: seq.indexSentence.courtDescription,
+            sentenceStartDate: seq.indexSentence.sentenceStartDate,
+            sentenceEndDate: seq.indexSentence.sentenceEndDate,
+            bookingId: seq.indexSentence.bookingId,
+            terms: seq.indexSentence.terms,
+            sentenceTypeDescription: seq.indexSentence.sentenceTypeDescription,
+            releaseDate: seq.indexSentence.releaseDate,
+            releasingPrison: seq.indexSentence.releasingPrison,
+            licenceExpiryDate: seq.indexSentence.licenceExpiryDate,
           }
         })
       }
@@ -125,7 +130,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
-  res.render(`pages/recommendations/selectIndexOffence`)
+  res.render(`pages/recommendations/ppcs/determinateSentence/selectIndexOffence`)
   next()
 }
 
@@ -159,10 +164,14 @@ async function post(req: Request, res: Response, next: NextFunction) {
   }
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-
   const indexOffenceData = recommendation.nomisIndexOffence.allOptions.find(
     option => option.offenderChargeId === Number(indexOffence)
   )
+  const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
+  const sentenceForOffence = sentences.find(s =>
+    s.indexSentence.offences.some(o => o.offenderChargeId === indexOffenceData.offenderChargeId)
+  )
+  const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
 
   await updateRecommendation({
     recommendationId,
@@ -180,9 +189,11 @@ async function post(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'match-index-offence', urlInfo })
+  const nextPagePath = nextPageLinkUrl({
+    nextPageId: sentenceHasConsecutive ? ppcsPaths.consecutiveSentenceDetails : ppcsPaths.matchIndex,
+    urlInfo,
+  })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
-
   next()
 }
 
