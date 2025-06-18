@@ -44,10 +44,8 @@
 
             <h2 class='govuk-heading-m'>Booking details from Part A</h2>
 
-            {# Increase the bottom margin, as otherwise the separation between Part A and PPUD data isn't as obvious #}
             {{ summaryList({
                 id: 'nomis-sentence-details',
-                classes: 'govuk-!-margin-bottom-9',
                 rows: [
                     { key: 'Offence', value: hyphenForBlank(nomisSentence.offenceDescription) },
                     { key: 'Date of sentence', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: nomisSentence.dateOfSentence })) },
@@ -56,9 +54,11 @@
                 ]
             }) }}
 
+            <hr class="govuk-section-break govuk-section-break--l">
+
             <h2 class='govuk-heading-m'>Add your booking to PPUD</h2>
 
-            {# Increase the bottom margin, as otherwise it's too crowded and clsoe to the radio button legend #}
+            {# Increase the bottom margin, as otherwise it's too crowded and close to the radio button legend #}
             <p class='govuk-body govuk-!-margin-bottom-7'>Select an existing PPUD sentence for this booking. If something is not right, you can
                 edit it in the next step. If the correct sentence is not listed, select add a sentence to create
                 one. </p>
