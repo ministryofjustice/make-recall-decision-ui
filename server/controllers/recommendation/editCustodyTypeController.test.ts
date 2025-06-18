@@ -2,11 +2,20 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import editCustodyTypeController from './editCustodyTypeController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load', async () => {
+  it('load determinate custody types', async () => {
+    await testGet(CUSTODY_GROUP.DETERMINATE, 'determinate-custody-types')
+  })
+
+  it('load indeterminate custody types', async () => {
+    await testGet(CUSTODY_GROUP.INDETERMINATE, 'indeterminate-custody-types')
+  })
+
+  async function testGet(custodyGroup: CUSTODY_GROUP, referenceEndpoint: string) {
     ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
 
     const req = mockReq({
@@ -15,11 +24,19 @@ describe('get', () => {
       },
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          bookRecallToPpud: {
+            custodyGroup,
+          },
+        },
+      },
+    })
     const next = mockNext()
     await editCustodyTypeController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'custody-types')
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', referenceEndpoint)
 
     expect(res.locals.page).toEqual({ id: 'editCustodyType' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editCustodyType')
@@ -30,7 +47,7 @@ describe('get', () => {
       { text: 'three', value: 'three' },
     ])
     expect(next).toHaveBeenCalled()
-  })
+  }
 })
 
 describe('post', () => {

@@ -461,7 +461,12 @@ context('Accessibility (a11y) PPCS Checks', () => {
       cy.task('getReferenceList', { name: 'police-forces', statusCode: 200, response: { values: ['val'] } })
       cy.task('getReferenceList', { name: 'mappa-levels', statusCode: 200, response: { values: ['val'] } })
       cy.task('getReferenceList', { name: 'index-offences', statusCode: 200, response: { values: ['val'] } })
-      cy.task('getReferenceList', { name: 'custody-types', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', { name: 'determinate-custody-types', statusCode: 200, response: { values: ['val'] } })
+      cy.task('getReferenceList', {
+        name: 'indeterminate-custody-types',
+        statusCode: 200,
+        response: { values: ['val'] },
+      })
       cy.task('getReferenceList', { name: 'probation-services', statusCode: 200, response: { values: ['val'] } })
       cy.task('getReferenceList', { name: 'index-offences', statusCode: 200, response: { values: ['val'] } })
       cy.task('prisonSentences', {
