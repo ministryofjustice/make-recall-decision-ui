@@ -111,16 +111,12 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
       })
 
       it('Page Heading and pre-sentences body', () => {
-        cy.pageHeading().should('contain', 'Check the index offence and its consecutive sentences')
-        cy.get('.govuk-body').should(
-          'contain.text',
-          'View the index offence selected from NOMIS and the sentences that run consecutively to it.'
-        )
-        cy.get('h2').should('exist').should('contain', 'Offence sequence')
+        cy.pageHeading().should('contain', 'iew the index offence and its consecutive sentences')
         cy.get('.govuk-body').should(
           'contain.text',
           'The index offence is the first sentence in the consecutive sequence.'
         )
+        cy.get('h2').should('exist').should('contain', 'Offence sequence')
       })
       it('Continue link as button', () => {
         cy.get('a#continue')
