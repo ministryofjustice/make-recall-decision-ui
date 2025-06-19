@@ -1,15 +1,15 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitIndeterminateController from './sentenceToCommitIndeterminateController'
-import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
+import { formatPpudSentenceLength } from '../../../../utils/dates/format/formatPpudSentenceLength'
 
-jest.mock('../../../../utils/dates/ppudSentenceLength/formatting')
+jest.mock('../../../../utils/dates/format/formatPpudSentenceLength')
 
 const releaseDate = faker.date.future()
 const expected = {
   sentence: {
     id: faker.helpers.replaceSymbols('********************'),
-    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']),
+    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']), // Are we introducing a source for these?
     indexOffence: faker.lorem.words(),
     releaseDate: releaseDate.toISOString(),
     sentencingCourt: `${faker.location.city} Court`,
