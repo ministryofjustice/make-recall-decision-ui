@@ -20,19 +20,23 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../../partials/error-summary.njk' %}
 
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <h1 class='govuk-heading-l govuk-!-margin-bottom-7'>{{ pageHeadings[page.id] }}</h1>
 
+            {# We make the bottom margin smaller, as the default is too much when the text right after is as short as it is here #}
+            <h2 class='govuk-heading-m govuk-!-margin-bottom-2'>From Part A</h2>
             <div class="govuk-text-list">
-                <h2 class='govuk-heading-m'>From Part A</h2>
                 <div class="govuk-text-list__row">
                     <div class="govuk-text-list__key">Sentence type</div>
                     <div class="govuk-text-list__value">{{ partACustodyGroup }}</div>
                 </div>
             </div>
 
+            <hr class="govuk-section-break govuk-section-break--m">
+
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
+                {# Override the class as otherwise the last item is too close to the submit button #}
                 {{ govukRadios({
                     name: "custodyGroup",
                     fieldset: {
@@ -43,7 +47,10 @@
                     },
                     errorMessage: errorMessage(errors.custodyGroup),
                     value: selectedCustodyGroup,
-                    items: custodyGroupRadioButtonList
+                    items: custodyGroupRadioButtonList,
+                    formGroup: {
+                        classes: 'govuk-!-margin-bottom-7'
+                    }
                 }) }}
 
                 {{ formSubmitButton() }}

@@ -40,10 +40,9 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../../../partials/error-summary.njk' %}
 
-            <p class='govuk-body'>Check the details of your booking then add it to the correct sentence in PPUD. If the
-                right sentence is not listed, select "add a sentence".</p>
+            <p class='govuk-body govuk-!-margin-bottom-8'>Check the details of your booking then add it to the correct sentence in PPUD.</p>
 
-            <h2 class='govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4'>Booking details from Part A</h2>
+            <h2 class='govuk-heading-m'>Booking details from Part A</h2>
 
             {{ summaryList({
                 id: 'nomis-sentence-details',
@@ -52,25 +51,28 @@
                     { key: 'Date of sentence', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: nomisSentence.dateOfSentence })) },
                     { key: 'Sentence type', value: hyphenForBlank(nomisSentence.custodyGroup) },
                     { key: 'Sentence expiry date', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: nomisSentence.sentenceExpiryDate })) }
-                ],
-                borderTop: true
+                ]
             }) }}
 
-            <h2 class='govuk-heading-m govuk-!-margin-top-6'>Add your booking to PPUD</h2>
+            <hr class="govuk-section-break govuk-section-break--l">
 
-            <p class='govuk-body'>Select an existing PPUD sentence for this booking. If something is not right, you can
+            <h2 class='govuk-heading-m'>Add your booking to PPUD</h2>
+
+            {# Increase the bottom margin, as otherwise it's too crowded and close to the radio button legend #}
+            <p class='govuk-body govuk-!-margin-bottom-7'>Select an existing PPUD sentence for this booking. If something is not right, you can
                 edit it in the next step. If the correct sentence is not listed, select add a sentence to create
                 one. </p>
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
+                {# Increase the bottom margin for the legend, as with table items it otherwise looks too close #}
                 {{ govukRadios({
                     name: "ppudSentenceId",
                     fieldset: {
                         legend: {
                             text: "Indeterminate sentences in PPUD",
-                            classes: "govuk-fieldset__legend--l"
+                            classes: "govuk-fieldset__legend--m govuk-!-margin-bottom-6"
                         }
                     },
                     value: selectedSentenceId,
