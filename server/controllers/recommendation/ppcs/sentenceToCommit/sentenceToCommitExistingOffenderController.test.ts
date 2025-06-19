@@ -1,7 +1,7 @@
-import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitExistingOffenderController from './sentenceToCommitExistingOffenderController'
 
-jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load - with existing ppud user and selected sentence', async () => {
@@ -47,7 +47,9 @@ describe('get', () => {
       releaseDate: '2024-01-01',
     })
     expect(res.locals.errorMessage).toBeUndefined()
-    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/sentenceToCommitExistingOffender`)
+    expect(res.render).toHaveBeenCalledWith(
+      `pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`
+    )
     expect(next).toHaveBeenCalled()
   })
 })

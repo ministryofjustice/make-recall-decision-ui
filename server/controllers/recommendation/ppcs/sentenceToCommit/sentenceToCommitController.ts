@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
+import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     offence,
   }
 
-  res.render(`pages/recommendations/sentenceToCommit`)
+  res.render(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommit`)
   next()
 }
 

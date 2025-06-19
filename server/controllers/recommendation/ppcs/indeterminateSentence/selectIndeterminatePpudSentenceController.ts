@@ -4,6 +4,7 @@ import { getCustodyGroup, getIndeterminateSentences } from '../../../../helpers/
 import { makeErrorObject } from '../../../../utils/errors'
 import { strings } from '../../../../textStrings/en'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
+import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -73,7 +74,9 @@ async function post(req: Request, res: Response, next: NextFunction) {
     token: res.locals.user.token,
   })
 
-  // TODO MRD-2687 redirect to the next page once it's ready
+  const { urlInfo } = res.locals
+  res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
+  next()
 }
 
 export default { get, post }
