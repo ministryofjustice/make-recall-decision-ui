@@ -196,13 +196,8 @@ describe('post', () => {
         },
       },
     })
-    expect(res.redirect).not.toHaveBeenCalled()
-    expect(next).not.toHaveBeenCalled()
-    // TODO MRD-2687 replace the two lines above with the lines below once the next page is added
-    // expect(nextPageLinkUrl).toHaveBeenNthCalledWith(1, { nextPageId: 'check-booking-details', urlInfo })
-    // expect(nextPageLinkUrl).toHaveBeenNthCalledWith(2, { nextPagePath, urlInfo })
-    // expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sentence-to-commit-existing-offender`)
-    // expect(next).toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}sentence-to-commit-indeterminate`)
+    expect(next).toHaveBeenCalled()
   })
 
   it('missing ppud sentence', async () => {
