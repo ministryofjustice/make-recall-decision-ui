@@ -17,7 +17,6 @@ import { RecommendationStatusResponse } from '../@types/make-recall-decision-api
 import { PpcsSearchResponse } from '../@types/make-recall-decision-api/models/PpcsSearchResponse'
 import { PpudSearchResponse } from '../@types/make-recall-decision-api/models/ppudSearchResponse'
 import { PrisonOffenderSearchResponse } from '../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
-import { PrisonSentence } from '../@types/make-recall-decision-api/models/PrisonSentence'
 import { PpudReferenceListResponse } from '../@types/make-recall-decision-api/models/PpudReferenceListResponse'
 import { PpudDetailsResponse } from '../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { PpudCreateOffenderResponse } from '../@types/make-recall-decision-api/models/PpudCreateOffenderResponse'
@@ -40,6 +39,7 @@ import { PpudUserResponse } from '../@types/make-recall-decision-api/models/Ppud
 import { OffenderMovement } from '../@types/make-recall-decision-api/models/prison-api/OffenderMovement'
 import { OffenderMovementResponse } from '../@types/make-recall-decision-api/models/prison-api/OffenderMovementResponse'
 import { EstablishmentMap } from '../@types/make-recall-decision-api/models/prison-api/EstablishmentMap'
+import { PrisonSentenceSequence } from '../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -87,7 +87,7 @@ export const searchForPrisonOffender = async (token: string, nomsId: string): Pr
   }
 }
 
-export const prisonSentences = async (token: string, nomsId: string): Promise<PrisonSentence[]> => {
+export const prisonSentences = async (token: string, nomsId: string): Promise<PrisonSentenceSequence[]> => {
   const body: Record<string, unknown> = {}
   if (nomsId) {
     body.nomsId = nomsId
@@ -97,7 +97,7 @@ export const prisonSentences = async (token: string, nomsId: string): Promise<Pr
     return (await restClient(token).post({
       path: `${routes.prisonSentences}`,
       data: body,
-    })) as Promise<PrisonSentence[]>
+    })) as Promise<PrisonSentenceSequence[]>
   } catch (err) {
     if (err.data.status === 404) {
       return
