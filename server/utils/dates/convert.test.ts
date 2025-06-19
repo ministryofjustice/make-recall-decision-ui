@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { convertGmtDatePartsToUtc, splitIsoDateToParts } from './convert'
-import { padWithZeroes } from './format'
+import { padWithZeroes } from './format/format'
 
 describe('convertGmtDatePartsToUtc', () => {
   describe('valid', () => {

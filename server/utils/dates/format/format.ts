@@ -1,7 +1,7 @@
 import { DateTime, Settings } from 'luxon'
-import { isDefined, isNumber } from '../utils'
-import { europeLondon, getDateTimeInEuropeLondon } from './index'
-import { Term } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { isDefined, isNumber } from '../../utils'
+import { europeLondon, getDateTimeInEuropeLondon } from '../index'
+import { Term } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 Settings.throwOnInvalid = true
 Settings.defaultZone = 'utc'
