@@ -80,7 +80,7 @@ import ppcsConsiderRecallController from '../controllers/recommendation/searchPp
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
-import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
+import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
 import sentenceToCommitController from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitExistingOffenderController'
 import sentenceToCommitIndeterminate from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitIndeterminateController'

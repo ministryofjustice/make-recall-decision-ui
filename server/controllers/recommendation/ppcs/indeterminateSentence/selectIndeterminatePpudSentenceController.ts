@@ -5,6 +5,7 @@ import { makeErrorObject } from '../../../../utils/errors'
 import { strings } from '../../../../textStrings/en'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
+import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
