@@ -8,6 +8,7 @@ type SentenceTypeOption = 'Determinate' | 'Indeterminate' | 'Any' | 'None'
 
 export type PrisonSentenceOptions = {
   lineSequence?: number
+  sentenceSequence?: number
   sentenceType?: SentenceTypeOption
   terms?: TermOptions[]
   offences?: SentenceOffenceOptions[]
@@ -32,7 +33,7 @@ const resolveSentenceType = (option?: SentenceTypeOption) => {
 
 const generateInternal = (options?: PrisonSentenceOptions): PrisonSentence => ({
   bookingId: faker.number.int(),
-  sentenceSequence: faker.number.int(),
+  sentenceSequence: options?.sentenceSequence ?? faker.number.int(),
   lineSequence: options?.lineSequence ?? faker.number.int(),
   caseSequence: faker.number.int(),
   courtDescription: `${faker.location.city()} Court`,

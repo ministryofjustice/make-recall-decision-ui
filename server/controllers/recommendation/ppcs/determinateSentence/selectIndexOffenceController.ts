@@ -5,7 +5,7 @@ import { NamedFormError } from '../../../../@types/pagesForms'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../../../utils/errors'
 import { strings } from '../../../../textStrings/en'
-import { hasValue, isDefined, isEmptyStringOrWhitespace } from '../../../../utils/utils'
+import { isDefined, isEmptyStringOrWhitespace } from '../../../../utils/utils'
 import { OfferedOffence, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { ppcsPaths } from '../../../../routes/paths/ppcs'
 
@@ -20,7 +20,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const sentenceSequences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
 
   let nomisError
-  if (!hasValue(sentenceSequences) || sentenceSequences.length === 0) {
+  if (sentenceSequences.length === 0) {
     nomisError = 'No sentences found'
   }
 

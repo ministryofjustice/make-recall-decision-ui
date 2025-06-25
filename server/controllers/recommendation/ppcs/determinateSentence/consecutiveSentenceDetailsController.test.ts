@@ -170,23 +170,18 @@ describe('Consecutive Sentence Details Controller', () => {
           expect(res.locals.pageData.nomisError).toBeUndefined()
           expect(res.locals.pageData.sentenceInfo).toBeDefined()
         })
-        it('- Is set as expected when no sentences are provided', async () => {
-          await setSentencesAndCall(undefined)
-          expect(res.locals.pageData.nomisError).toBeDefined()
-          expect(res.locals.pageData.nomisError).toEqual(expectedErrorMessage)
-          expect(res.locals.pageData.sentenceInfo).toBeNull()
-        })
-        it('- Is set as expected when null sentences are provided', async () => {
-          await setSentencesAndCall(null)
-          expect(res.locals.pageData.nomisError).toBeDefined()
-          expect(res.locals.pageData.nomisError).toEqual(expectedErrorMessage)
-          expect(res.locals.pageData.sentenceInfo).toBeNull()
-        })
-        it('- Is set as expected when an empty sentences are provided', async () => {
-          await setSentencesAndCall([])
-          expect(res.locals.pageData.nomisError).toBeDefined()
-          expect(res.locals.pageData.nomisError).toEqual(expectedErrorMessage)
-          expect(res.locals.pageData.sentenceInfo).toBeNull()
+        const noSentenceTestCases: { name: string; value: PrisonSentenceSequence[] }[] = [
+          { name: 'undefined', value: undefined },
+          { name: 'null', value: null },
+          { name: 'empty', value: [] },
+        ]
+        noSentenceTestCases.forEach(({ name, value }) => {
+          it(`- Is set as expected with ${name} sentences are provided`, async () => {
+            await setSentencesAndCall(value)
+            expect(res.locals.pageData.nomisError).toBeDefined()
+            expect(res.locals.pageData.nomisError).toEqual(expectedErrorMessage)
+            expect(res.locals.pageData.sentenceInfo).toBeNull()
+          })
         })
       })
       describe('Resolving terms:', () => {

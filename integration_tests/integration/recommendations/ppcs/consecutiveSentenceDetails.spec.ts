@@ -7,6 +7,7 @@ import { RecommendationResponseGenerator } from '../../../../data/recommendation
 import { defaultUpdateRecommendationResponse } from '../_data'
 import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
+import { PrisonSentenceOptions } from '../../../../data/prisonSentences/prisonSentenceGenerator'
 
 context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', () => {
   const crn = 'X34983'
@@ -33,6 +34,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     {
       indexSentence: {
         lineSequence: 1,
+        sentenceSequence: 1,
         offences: [
           {
             offenderChargeId: defaultRecommendationResponse.nomisIndexOffence.selected,
@@ -40,12 +42,13 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
         ],
         terms: [{ chronos: { years: 'include', months: 'include', weeks: 'include', days: 'include' } }],
       },
-      sentencesInSequence: new Map([
+      sentencesInSequence: new Map<number, Array<PrisonSentenceOptions>>([
         [
           1,
           [
             {
               lineSequence: 2,
+              sentenceSequence: 2,
               terms: [{ chronos: { years: 'include', months: 'include', weeks: 'include', days: 'none' } }],
             },
           ],
@@ -55,10 +58,12 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
           [
             {
               lineSequence: 3,
+              sentenceSequence: 3,
               terms: [{ chronos: { years: 'include', months: 'include', weeks: 'none', days: 'include' } }],
             },
             {
               lineSequence: 4,
+              sentenceSequence: 4,
               terms: [{ chronos: { years: 'include', months: 'include', weeks: 'none', days: 'none' } }],
             },
           ],
@@ -68,6 +73,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
           [
             {
               lineSequence: 5,
+              sentenceSequence: 5,
               terms: [
                 { code: 'IMP', chronos: { years: 'include', months: 'include', weeks: 'include', days: 'include' } },
                 { code: 'LIC', chronos: { years: 'include', months: 'include', weeks: 'include', days: 'include' } },
@@ -75,7 +81,15 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             },
           ],
         ],
-        [5, [{ lineSequence: 6, terms: [] }, { lineSequence: 7 }, { lineSequence: 8 }, { lineSequence: 9 }]],
+        [
+          5,
+          [
+            { lineSequence: 6, sentenceSequence: 6, terms: [] },
+            { lineSequence: 7, sentenceSequence: 7 },
+            { lineSequence: 8, sentenceSequence: 8 },
+            { lineSequence: 9, sentenceSequence: 9 },
+          ],
+        ],
       ]),
     },
     {},

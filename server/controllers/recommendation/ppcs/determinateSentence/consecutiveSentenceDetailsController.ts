@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { prisonSentences } from '../../../../data/makeDecisionApiClient'
-import { hasValue } from '../../../../utils/utils'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
 import { Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
@@ -18,7 +17,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const sentenceSequences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
 
   let nomisError
-  if (hasValue(sentenceSequences) && sentenceSequences.length === 0) {
+  if (sentenceSequences.length === 0) {
     nomisError = 'No sentences found'
   }
 
