@@ -37,7 +37,7 @@
                 <div class="govuk-grid-column-two-thirds">
                     {{ consecutiveSentenceSummary("indexSentence", pageData.sentenceInfo.indexSentence, "Index offence") }}
                     {% for consecToLine, sentences in pageData.sentenceInfo.sentencesInSequence %}
-                        {{ concurrentSentencesSummary(loop.index, consecToLine, sentences) }}
+                        {{ concurrentSentencesSummary(loop.index, consecToLine, sentences, pageData.sentenceInfo.indexSentence.lineSequence) }}
                     {% endfor %}
                     {{ linkAsButton('continue', "Continue", pageData.nextPagePath) }}
                 </div>

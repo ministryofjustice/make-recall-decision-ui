@@ -9,11 +9,10 @@
 {% set sentencesHtml %}
     <div id="{{ ['consecutive-group-title', consecToLine] | join('-') }}">
         <span>Sequence: line {{ initialSentence.lineSequence }}</span>
-        <p class="govuk-body-s govuk-!-margin-0">Consecutive to {{ "line " + consecToLine if consecToLine > 1 else "index offence" }}</p>
+        <p class="govuk-body-s govuk-!-margin-0">Consecutive to {{ "line " + consecToLine if consecToLine != indexLineSequence else "index offence" }}</p>
     </div>
     {{ consecutiveSentenceSummary("sentence-seq-"+groupId+"-initial", initialSentence, "Offence") }}
     {% if concurrentSentences | length > 0 %}
-        {% set concurrentSentencesHeading = (concurrentSentences | length)+" concurrent sentence"+("s" if concurrentSentences | length > 0 else "") %}
         {% set concurrentSentencesHtml %}
             {% for concurrentSentence in concurrentSentences %}
                 {{ consecutiveSentenceSummary("sentence-seq-"+groupId+"-"+loop.index, concurrentSentence, "Offence") }}

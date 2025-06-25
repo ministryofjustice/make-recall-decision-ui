@@ -59,7 +59,7 @@
                                         </div>
                                     {% endset %}
                                     {{ govukInsetText({
-                                        id: (["indexOffence", loop.index, "consecutive"] | join("-")),
+                                        id: (["indexOffence", loop.index, "inset"] | join("-")),
                                         html: consecutiveHtml
                                     })}}
                                 {% endif %}

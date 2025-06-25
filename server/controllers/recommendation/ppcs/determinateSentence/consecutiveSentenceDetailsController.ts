@@ -74,7 +74,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     pageData: {
       nomisError,
       sentenceInfo,
-      nextPagePath: nextPageLinkUrl({ nextPageId: ppcsPaths.matchIndex, urlInfo }),
+      nextPagePath: nextPageLinkUrl({ nextPageId: ppcsPaths.matchIndexOffence, urlInfo }),
     },
   }
 

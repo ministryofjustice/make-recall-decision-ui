@@ -13,28 +13,31 @@ import { TermGenerator } from '../../../../../data/common/termGenerator'
 import { ppcsPaths } from '../../../../routes/paths/ppcs'
 import { PrisonSentenceSequenceGenerator } from '../../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
+import { OfferedOffence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
 const recommendationId = 123
 
-const expectedOptionForSentence = (sentence: PrisonSentence) => ({
-  bookingId: sentence.bookingId,
-  courtDescription: sentence.courtDescription,
-  offenceCode: sentence.offences.at(0).offenceCode,
-  offenceDate: sentence.offences.at(0).offenceStartDate,
-  offenceDescription: sentence.offences.at(0).offenceDescription,
-  offenceStatute: sentence.offences.at(0).offenceStatute,
-  offenderChargeId: sentence.offences.at(0).offenderChargeId,
-  sentenceDate: sentence.sentenceDate,
-  sentenceEndDate: sentence.sentenceEndDate,
-  sentenceStartDate: sentence.sentenceStartDate,
-  sentenceTypeDescription: sentence.sentenceTypeDescription,
-  terms: sentence.terms,
-  releaseDate: sentence.releaseDate,
-  licenceExpiryDate: sentence.licenceExpiryDate,
-  releasingPrison: sentence.releasingPrison,
-})
+const expectedOptionForSentence = (sentence: PrisonSentence, expectedConsecutiveCount: number) =>
+  ({
+    bookingId: sentence.bookingId,
+    consecutiveCount: expectedConsecutiveCount,
+    courtDescription: sentence.courtDescription,
+    offenceCode: sentence.offences.at(0).offenceCode,
+    offenceDate: sentence.offences.at(0).offenceStartDate,
+    offenceDescription: sentence.offences.at(0).offenceDescription,
+    offenceStatute: sentence.offences.at(0).offenceStatute,
+    offenderChargeId: sentence.offences.at(0).offenderChargeId,
+    sentenceDate: sentence.sentenceDate,
+    sentenceEndDate: sentence.sentenceEndDate,
+    sentenceStartDate: sentence.sentenceStartDate,
+    sentenceTypeDescription: sentence.sentenceTypeDescription,
+    terms: sentence.terms,
+    releaseDate: sentence.releaseDate,
+    licenceExpiryDate: sentence.licenceExpiryDate,
+    releasingPrison: sentence.releasingPrison,
+  }) as OfferedOffence
 
 const expectedNomisOffenceForSentence = (sentence: PrisonSentence) => ({
   id: sentence.offences[0].offenderChargeId,
@@ -82,7 +85,16 @@ describe('Select Index Offence Controller', () => {
 
       it('- Prison Sentences correctly called', async () =>
         expect(prisonSentences).toHaveBeenCalledWith('token', defaultGetRecommendation.personOnProbation.nomsNumber))
-      it('- Update Recommendation is called with the expected snapshot of options', async () =>
+      it('- Update Recommendation is called with only the index offered offences', async () => {
+        const multipleSentenceSequencesWithConsecutives = PrisonSentenceSequenceGenerator.generateSeries([
+          { indexSentence: {}, sentencesInSequence: null },
+          { indexSentence: {}, sentencesInSequence: new Map([[2, [{}]]]) },
+          { indexSentence: {}, sentencesInSequence: new Map([[3, [{}, {}, {}]]]) },
+        ])
+        ;(prisonSentences as jest.Mock).mockResolvedValue(multipleSentenceSequencesWithConsecutives)
+        ;(updateRecommendation as jest.Mock).mockReset()
+        await selectIndexOffenceController.get(req, res, next)
+
         expect(updateRecommendation).toHaveBeenCalledWith({
           featureFlags: {},
           recommendationId: recommendationId.toString(),
@@ -90,10 +102,15 @@ describe('Select Index Offence Controller', () => {
           valuesToSave: {
             nomisIndexOffence: {
               selected: undefined,
-              allOptions: [expectedOptionForSentence(defaultGetSentence)],
+              allOptions: [
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(0).indexSentence, undefined),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(1).indexSentence, 1),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(2).indexSentence, 3),
+              ],
             },
           },
-        }))
+        })
+      })
       it('- Calls render for the expected page', async () =>
         expect(res.render).toHaveBeenCalledWith(`pages/recommendations/ppcs/determinateSentence/selectIndexOffence`))
       it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
@@ -131,8 +148,9 @@ describe('Select Index Offence Controller', () => {
               expect(offenceData().dateOfSentence).toEqual(expectedNomisOffenceData.dateOfSentence))
             it(' - startDate', async () => expect(offenceData().startDate).toEqual(expectedNomisOffenceData.startDate))
             it(' - endDate', async () => expect(offenceData().endDate).toEqual(expectedNomisOffenceData.endDate))
-            it(' - terms (to be defined, conditional)', async () => expect(offenceData().id).toBeDefined)
-            it(' - consecutiveCount (to be undefined, conditional)', async () => expect(offenceData().id).toBeUndefined)
+            it(' - terms (to be defined, conditional)', async () => expect(offenceData().terms).toBeDefined())
+            it(' - consecutiveCount (to be undefined, conditional)', async () =>
+              expect(offenceData().consecutiveCount).toBeUndefined())
           })
           describe('Conviction data', () => {
             const expectedConvictionData = expectedConvictionDataForRecommendation(defaultGetRecommendation)
@@ -249,13 +267,13 @@ describe('Select Index Offence Controller', () => {
           })
         })
         describe('Consecutive count:', () => {
-          it('- Has no value when no the sentence has no consecutive group', async () => {
+          it('- Has no value when the sentence has no consecutive group', async () => {
             ;(prisonSentences as jest.Mock).mockResolvedValue([
               PrisonSentenceSequenceGenerator.generate({ indexSentence: {}, sentencesInSequence: null }),
             ])
             await selectIndexOffenceController.get(req, res, next)
 
-            expect(res.locals.pageData.nomisOffenceData[0].consecutiveCount).toBeNull()
+            expect(res.locals.pageData.nomisOffenceData[0].consecutiveCount).toBeUndefined()
           })
           describe('Has the expected value of the consecutive groups length when provided', () => {
             const testCases: {
@@ -431,7 +449,6 @@ describe('Select Index Offence Controller', () => {
       })
       const selectedIndexRes = mockRes({
         locals: {
-          user: { token: 'token1' },
           recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
           urlInfo: { basePath: `/recommendations/123/` },
         },
@@ -472,7 +489,6 @@ describe('Select Index Offence Controller', () => {
         })
         const noIndexSelectedRes = mockRes({
           locals: {
-            user: { token: 'token1' },
             recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
             urlInfo: { basePath: `/recommendations/123/` },
           },

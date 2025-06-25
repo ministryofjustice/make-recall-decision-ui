@@ -5,16 +5,16 @@ export const defaultUpdateRecommendationResponse = (crn: string, id: string) => 
   ...setResponsePropertiesToNull(completeRecommendationResponse),
   id,
   createdDate: '2000-10-31T01:30:00.000Z',
-  createdByUserFullName: 'Mr Anderson',
+  createdByUserFullName: 'Joe Bloggs',
   crn,
   personOnProbation: {
-    name: 'Paula Smith',
+    name: 'Jane Bloggs',
     addresses: [
       {
-        line1: '41 Newport Pagnell Rd',
-        line2: 'Newtown',
-        town: 'Northampton',
-        postcode: 'NN4 6HP',
+        line1: '102 Petty France',
+        line2: 'Petty France',
+        town: 'London',
+        postcode: 'SW1H 9AJ',
       },
     ],
   },

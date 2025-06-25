@@ -176,6 +176,12 @@ describe('Consecutive Sentence Details Controller', () => {
           expect(res.locals.pageData.nomisError).toEqual(expectedErrorMessage)
           expect(res.locals.pageData.sentenceInfo).toBeNull()
         })
+        it('- Is set as expected when null sentences are provided', async () => {
+          await setSentencesAndCall(null)
+          expect(res.locals.pageData.nomisError).toBeDefined()
+          expect(res.locals.pageData.nomisError).toEqual(expectedErrorMessage)
+          expect(res.locals.pageData.sentenceInfo).toBeNull()
+        })
         it('- Is set as expected when an empty sentences are provided', async () => {
           await setSentencesAndCall([])
           expect(res.locals.pageData.nomisError).toBeDefined()

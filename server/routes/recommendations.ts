@@ -517,8 +517,8 @@ ppcsDeterminateSentenceRouteBuilder.post('select-index-offence', selectIndexOffe
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, consecutiveSentenceDetailsController.get)
 
-ppcsDeterminateSentenceRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
-ppcsDeterminateSentenceRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.matchIndexOffence, matchIndexOffenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndexOffenceController.post)
 
 // TODO change to select-determinate-ppud-sentence
 ppcsDeterminateSentenceRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)

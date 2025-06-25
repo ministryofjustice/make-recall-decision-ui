@@ -111,7 +111,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
       })
 
       it('Page Heading and pre-sentences body', () => {
-        cy.pageHeading().should('contain', 'iew the index offence and its consecutive sentences')
+        cy.pageHeading().should('contain', 'View the index offence and its consecutive sentences')
         cy.get('.govuk-body').should(
           'contain.text',
           'The index offence is the first sentence in the consecutive sequence.'
@@ -172,7 +172,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             { key: expectedLabels.sentenceLength, value: expectedFirstTimeSentenceLength },
           ])
 
-          testConcurrentGroup(2, 1, ['sentence-seq-2-1'])
+          testConcurrentGroup(2, ['sentence-seq-2-1'])
 
           testSentenceSummaryDetails('sentence-seq-2-1', secondConurrentSentence, expectedLabels.offence, [
             { key: expectedLabels.sentenceLength, value: expectedSecondTimeSentenceLength },
@@ -226,7 +226,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             { key: expectedLabels.sentenceLength, value: expectedFirstTimeSentenceLength },
           ])
 
-          testConcurrentGroup(4, 3, ['sentence-seq-4-1', 'sentence-seq-4-2', 'sentence-seq-4-3'])
+          testConcurrentGroup(4, ['sentence-seq-4-1', 'sentence-seq-4-2', 'sentence-seq-4-3'])
 
           testSentenceSummaryDetails('sentence-seq-4-1', secondConurrentSentence, expectedLabels.offence, [
             { key: expectedLabels.sentenceLength, value: expectedSecondTimeSentenceLength },
@@ -291,11 +291,8 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     expectedSummaryListIds.forEach(id => cy.get('@consecutiveGroup').find(`dl#${id}`).should('exist'))
   }
 
-  const testConcurrentGroup = (
-    index: number,
-    expectedConcurrentSentenceCount: number,
-    expectedSummaryListIds: string[]
-  ) => {
+  const testConcurrentGroup = (index: number, expectedSummaryListIds: string[]) => {
+    const expectedConcurrentSentenceCount = expectedSummaryListIds.length
     cy.get(`#consecutive-group-${index}`)
       .should('exist')
       .should('have.class', 'govuk-inset-text')

@@ -291,7 +291,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             telephone: faker.phone.number(),
             region: faker.location.county(),
             localDeliveryUnit: faker.location.city(),
-            isPersonProbationPractitionerForOffender: faker.datatype.boolean(),
           }
         : undefined,
     revocationOrderRecipients: options?.revocationOrderRecipients ?? true ? [faker.internet.email()] : undefined,

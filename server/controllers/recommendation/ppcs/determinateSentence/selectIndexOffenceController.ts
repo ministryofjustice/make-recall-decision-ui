@@ -20,7 +20,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const sentenceSequences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
 
   let nomisError
-  if (hasValue(sentenceSequences) && sentenceSequences.length === 0) {
+  if (!hasValue(sentenceSequences) || sentenceSequences.length === 0) {
     nomisError = 'No sentences found'
   }
 
@@ -52,7 +52,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
           : seq.indexSentence.terms.map(t => resolveTerm(t)),
       consecutiveCount: seq.sentencesInSequence
         ? Array.from(new Map(Object.entries(seq.sentencesInSequence)).values()).flatMap(x => x).length
-        : null,
+        : undefined,
     }
   })
 
@@ -94,8 +94,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const allOptions: OfferedOffence[] = sentenceSequences
     .flatMap(seq => {
       if (seq?.indexSentence.offences) {
-        return seq.indexSentence.offences.map(offence => {
+        return seq.indexSentence.offences.slice(0, 1).map(offence => {
           return {
+            consecutiveCount: seq.sentencesInSequence
+              ? Array.from(new Map(Object.entries(seq.sentencesInSequence)).values()).flatMap(x => x).length
+              : undefined,
             offenderChargeId: offence.offenderChargeId,
             offenceCode: offence.offenceCode,
             offenceDate: offence.offenceStartDate,
@@ -168,8 +171,8 @@ async function post(req: Request, res: Response, next: NextFunction) {
     option => option.offenderChargeId === Number(indexOffence)
   )
   const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
-  const sentenceForOffence = sentences.find(s =>
-    s.indexSentence.offences.some(o => o.offenderChargeId === indexOffenceData.offenderChargeId)
+  const sentenceForOffence = sentences.find(
+    s => s.indexSentence.offences?.at(0)?.offenderChargeId === indexOffenceData.offenderChargeId
   )
   const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
 
@@ -190,7 +193,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: sentenceHasConsecutive ? ppcsPaths.consecutiveSentenceDetails : ppcsPaths.matchIndex,
+    nextPageId: sentenceHasConsecutive ? ppcsPaths.consecutiveSentenceDetails : ppcsPaths.matchIndexOffence,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
