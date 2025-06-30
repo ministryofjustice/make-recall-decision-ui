@@ -80,7 +80,7 @@ import ppcsConsiderRecallController from '../controllers/recommendation/searchPp
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
-import selectIndexOffenceController from '../controllers/recommendation/selectIndexOffenceController'
+import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
@@ -123,6 +123,8 @@ import editCurrentEstablishmentController from '../controllers/recommendation/pp
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
 import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
+import { ppcsPaths } from './paths/ppcs'
+import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 
 const recommendations = Router()
 
@@ -513,8 +515,10 @@ const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
 ppcsDeterminateSentenceRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
 
-ppcsDeterminateSentenceRouteBuilder.get('match-index-offence', matchIndexOffenceController.get)
-ppcsDeterminateSentenceRouteBuilder.post('match-index-offence', matchIndexOffenceController.post)
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, consecutiveSentenceDetailsController.get)
+
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.matchIndexOffence, matchIndexOffenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndexOffenceController.post)
 
 // TODO change to select-determinate-ppud-sentence
 ppcsDeterminateSentenceRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)

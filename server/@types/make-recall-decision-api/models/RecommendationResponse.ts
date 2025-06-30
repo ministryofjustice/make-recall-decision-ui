@@ -134,6 +134,7 @@ export type NomisIndexOffence = {
 }
 
 export type OfferedOffence = {
+  consecutiveCount?: number;
   offenderChargeId?: number;
   offenceCode?: string;
   offenceStatute: string;

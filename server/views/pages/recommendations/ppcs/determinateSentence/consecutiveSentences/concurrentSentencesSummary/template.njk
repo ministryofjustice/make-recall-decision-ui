@@ -1,0 +1,27 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "components/heading/macro.njk" import heading %}
+{% from "../consecutiveSentenceSummary/macro.njk" import consecutiveSentenceSummary %}
+
+{% set initialSentence = sentences[0] %}
+{% set concurrentSentences = sentences.slice(1) %}
+{% set sentencesHtml %}
+    <div id="{{ ['consecutive-group-title', consecToLine] | join('-') }}">
+        <span>Sequence: line {{ initialSentence.lineSequence }}</span>
+        <p class="govuk-body-s govuk-!-margin-0">Consecutive to {{ "line " + consecToLine if consecToLine != indexLineSequence else "index offence" }}</p>
+    </div>
+    {{ consecutiveSentenceSummary("sentence-seq-"+groupId+"-initial", initialSentence, "Offence") }}
+    {% if concurrentSentences | length > 0 %}
+        {% set concurrentSentencesHtml %}
+            {% for concurrentSentence in concurrentSentences %}
+                {{ consecutiveSentenceSummary("sentence-seq-"+groupId+"-"+loop.index, concurrentSentence, "Offence") }}
+            {% endfor %}
+        {% endset %}
+        {{ govukDetails({
+            summaryHtml: heading((concurrentSentences | length)+" concurrent sentence"+("s" if concurrentSentences | length > 1 else ""), 3, 's', 'govuk-!-margin-0'),
+            html: concurrentSentencesHtml
+        })}}
+    {% endif %}
+{% endset %}
+{{ govukInsetText({ id: "consecutive-group-"+groupId, html: sentencesHtml })}}

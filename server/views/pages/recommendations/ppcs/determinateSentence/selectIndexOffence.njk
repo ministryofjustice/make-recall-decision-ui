@@ -1,0 +1,124 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {% include '../../../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>Select the index offence for {{ pageData.offenderName }}</h1>
+
+            <p class='govuk-body'>Compare the offence details in NOMIS with the Part A</p>
+
+            {% if nomisError %}
+                {% set html %}
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
+                    <span> {{ nomisError }}</span>
+                {% endset %}
+
+                {{ mojBanner({
+                    type: 'warning',
+                    html: html,
+                    iconFallbackText: 'warning'
+                }) }}
+            {% endif %}
+
+            <div class="govuk-grid-row wrap-reverse">
+                <div class="govuk-grid-column-one-half">
+                    <form novalidate method="post">
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                        {% set offenceItems = [] %}
+                        {% for offence in pageData.nomisOffenceData %}
+                            {% set sentenceRows = [
+                                { key: "Sentence type", value: hyphenForBlank(offence.sentenceType) },
+                                { key: "Court", value: offence.court },
+                                { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.dateOfSentence })) },
+                                { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.startDate })) },
+                                { key: "Sentence expiry date", value: hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.endDate })) }
+                            ] %}
+                            {% for term in offence.terms %}
+                                {% set sentenceRows = (sentenceRows.push({ key: term.key, value: hyphenForBlank(formatTerm(term.value)) }), sentenceRows) %}
+                            {% endfor %}
+
+                            {% set hintHtml %}
+                                {{ summaryList({
+                                    id: (["indexOffence", loop.index, "summary"] | join("-")),
+                                    rows: sentenceRows
+                                }) }}
+                                {% if offence.consecutiveCount %}
+                                    {% set consecutiveHtml %}
+                                        <div id="{{ ['indexOffence', loop.index, 'consecutive'] | join('-') }}">
+                                            <span>{{ offence.consecutiveCount}} consecutive sentences</span>
+                                            <p class="govuk-body-s govuk-!-margin-0">More details on next page</p>
+                                        </div>
+                                    {% endset %}
+                                    {{ govukInsetText({
+                                        id: (["indexOffence", loop.index, "inset"] | join("-")),
+                                        html: consecutiveHtml
+                                    })}}
+                                {% endif %}
+                            {% endset %}
+
+                            {% set _ = offenceItems.push({
+                                id: (["indexOffence", loop.index, "input"] | join("-")),
+                                value: offence.id,
+                                html: '<h3 class="govuk-heading-s">'+offence.description+"</h3>",
+                                hint: {
+                                    html: hintHtml
+                                }
+                            }) %}
+                        {% endfor %}
+
+                        {{ govukRadios({
+                            name: "indexOffence",
+                            fieldset: {
+                                legend: {
+                                    html: '<h2 class="govuk-heading-m">NOMIS</h2>',
+                                    classes: "govuk-!-margin-bottom-0"
+                                }
+                            },
+                            hint: {
+                                html: '<p class="govuk-body govuk-body-underlined">Includes court cases, sentences and offences</p>',
+                                classes: " govuk-!-margin-top-0 govuk-!-margin-bottom-4"
+                            },
+                            items: offenceItems,
+                            errorMessage: errorMessage(errors.indexOffence)
+                        }) }}
+
+                        {{ formSubmitButton() }}
+                    </form>
+                </div>
+
+                
+                <div class="govuk-grid-column-one-half">
+                    <div id="part-A-details">
+                        <h2 class='govuk-heading-m'>Part A</h2>
+
+                        <p class='govuk-body govuk-body-underlined'>Index offence</p>
+
+                        <h3 class='govuk-heading-s'>{{ hyphenForBlank(pageData.convictionData.description) }}</h3>
+
+                        {% set offenceRows = [
+                            { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: pageData.convictionData.dateOfSentence })) },
+                            { key: "Sentence type", value: hyphenForBlank(pageData.convictionData.sentenceType) },
+                            { key: "Sentence expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: pageData.convictionData.sentenceExpiryDate })) }
+                        ] %}
+                        {% for term in pageData.convictionData.terms %}
+                            {% set offenceRows = (offenceRows.push({ key: term.key, value: hyphenForBlank(term.value) }), offenceRows) %}
+                        {%  endfor %}
+                        {{ summaryList({
+                            id: "partAOffence",
+                            rows: offenceRows
+                        })}}
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+{% endblock %}

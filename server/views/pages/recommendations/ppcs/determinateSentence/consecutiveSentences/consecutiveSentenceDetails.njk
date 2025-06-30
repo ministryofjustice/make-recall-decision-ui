@@ -1,0 +1,47 @@
+{% extends "../../../../../partials/layout.njk" %}
+{% from "./consecutiveSentenceSummary/macro.njk" import consecutiveSentenceSummary %}
+{% from "./concurrentSentencesSummary/macro.njk" import concurrentSentencesSummary %}
+
+{% set title = 'View the index offence and its consecutive sentences' %}
+
+{% set pageTitle = makePageTitle({ pageHeading: title, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {% include '../../../../../partials/error-summary.njk' %}
+
+            {{ heading(title) }}
+            {{ bodyParagraph('The index offence is the first sentence in the consecutive sequence.') }}
+            
+            {% if nomisError %}
+                {% set html %}
+                    <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
+                    <span> {{ nomisError }}</span>
+                {% endset %}
+
+                {{ mojBanner({
+                    type: 'warning',
+                    html: html,
+                    iconFallbackText: 'warning'
+                }) }}
+            {% endif %}
+
+            {{ heading('Offence sequence', 2, 'm', 'govuk-!-margin-bottom-1') }}
+
+            <div class="govuk-grid-row wrap-reverse">
+                <div class="govuk-grid-column-two-thirds">
+                    {{ consecutiveSentenceSummary("indexSentence", pageData.sentenceInfo.indexSentence, "Index offence") }}
+                    {% for consecToLine, sentences in pageData.sentenceInfo.sentencesInSequence %}
+                        {{ concurrentSentencesSummary(loop.index, consecToLine, sentences, pageData.sentenceInfo.indexSentence.lineSequence) }}
+                    {% endfor %}
+                    {{ linkAsButton('continue', "Continue", pageData.nextPagePath) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
