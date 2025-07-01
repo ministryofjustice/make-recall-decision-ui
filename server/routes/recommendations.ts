@@ -541,16 +541,16 @@ const ppcsIndeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
 )
 
 ppcsIndeterminateSentenceRouteBuilder.get(
-  'select-indeterminate-ppud-sentence',
+  ppcsPaths.selectIndeterminatePpudSentence,
   selectIndeterminatePpudSentenceController.get
 )
 ppcsIndeterminateSentenceRouteBuilder.post(
-  'select-indeterminate-ppud-sentence',
+  ppcsPaths.selectIndeterminatePpudSentence,
   selectIndeterminatePpudSentenceController.post
 )
 
-ppcsIndeterminateSentenceRouteBuilder.get('sentence-to-commit-indeterminate', sentenceToCommitIndeterminate.get)
-ppcsIndeterminateSentenceRouteBuilder.post('sentence-to-commit-indeterminate', sentenceToCommitIndeterminate.post)
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.get)
+ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.post)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
