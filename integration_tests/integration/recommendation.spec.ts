@@ -2915,7 +2915,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Book  Joseph Bluggs onto PPUD')
+      cy.pageHeading().should('contain', 'Book Joseph Bluggs onto PPUD')
     })
 
     it('booked to ppud', () => {
