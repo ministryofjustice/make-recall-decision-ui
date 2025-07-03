@@ -1,22 +1,12 @@
 import { PpudSentenceLength } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
-export const formatPpudSentenceLength = (sentenceLength: PpudSentenceLength) => {
-  const sentenceLengthDisplayArray: string[] = []
-  pushLengthComponentDisplay(sentenceLengthDisplayArray, sentenceLength.partYears, 'year')
-  pushLengthComponentDisplay(sentenceLengthDisplayArray, sentenceLength.partMonths, 'month')
-  pushLengthComponentDisplay(sentenceLengthDisplayArray, sentenceLength.partDays, 'day')
+export const formatPpudSentenceLength = ({ partYears, partMonths, partDays }: PpudSentenceLength) => {
+  const sentenceLengthPeriods: string[] = []
+  if (partYears) sentenceLengthPeriods.push(`${partYears} ${pluralise('year', partYears)}`)
+  if (partMonths) sentenceLengthPeriods.push(`${partMonths} ${pluralise('month', partMonths)}`)
+  if (partDays) sentenceLengthPeriods.push(`${partDays} ${pluralise('day', partDays)}`)
 
-  return sentenceLengthDisplayArray.join(', ')
-}
-
-function pushLengthComponentDisplay(
-  sentenceLengthArray: string[],
-  sentenceLengthComponent: number,
-  componentDisplay: string
-) {
-  if (sentenceLengthComponent && sentenceLengthComponent !== 0) {
-    sentenceLengthArray.push(`${sentenceLengthComponent} ${pluralise(componentDisplay, sentenceLengthComponent)}`)
-  }
+  return sentenceLengthPeriods.join(', ')
 }
 
 function pluralise(text: string, numericValue: number): string {
