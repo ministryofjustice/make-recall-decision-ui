@@ -94,3 +94,7 @@ export const formatTerm = (term: Term) => {
   }
   return result
 }
+
+export const pluralise = (text: string, numericValue: number): string => {
+  return `${text}${numericValue > 1 ? 's' : ''}`
+}

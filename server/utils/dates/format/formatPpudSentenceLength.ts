@@ -1,4 +1,5 @@
 import { PpudSentenceLength } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { pluralise } from './format'
 
 export const formatPpudSentenceLength = ({ partYears, partMonths, partDays }: PpudSentenceLength) => {
   const sentenceLengthPeriods: string[] = []
@@ -7,8 +8,4 @@ export const formatPpudSentenceLength = ({ partYears, partMonths, partDays }: Pp
   if (partDays) sentenceLengthPeriods.push(`${partDays} ${pluralise('day', partDays)}`)
 
   return sentenceLengthPeriods.join(', ')
-}
-
-function pluralise(text: string, numericValue: number): string {
-  return `${text}${numericValue > 1 ? 's' : ''}`
 }
