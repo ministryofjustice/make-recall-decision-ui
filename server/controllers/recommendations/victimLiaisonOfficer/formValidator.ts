@@ -2,7 +2,7 @@ import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } f
 import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
-import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateVictimLiaisonOfficer = async ({

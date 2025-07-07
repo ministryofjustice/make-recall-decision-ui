@@ -4,7 +4,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { routeUrls } from '../../routes/routeUrls'
 import { booleanToYesNo, isDefined } from '../../utils/utils'
 import { validatePreviousReleases } from '../recommendations/previousReleases/formValidator'
-import { splitIsoDateToParts } from '../../utils/dates/convert'
+import { splitIsoDateToParts } from '../../utils/dates/conversion'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params

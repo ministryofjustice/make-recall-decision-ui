@@ -4,7 +4,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesFor
 import { getExistingReleaseDates } from '../addPreviousRelease/formValidator'
 import { isDefined, isNumber } from '../../../utils/utils'
 import { isValueValid } from '../formOptions/formOptions'
-import { convertGmtDatePartsToUtc, extractDateFieldsToDateParts } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc, extractDateFieldsToDateParts } from '../../../utils/dates/conversion'
 import { dateHasError } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { ValidationError } from '../../../@types/dates'

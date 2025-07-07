@@ -1,5 +1,5 @@
 import { PpudSentenceLength } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { formatPpudSentenceLength } from './formatPpudSentenceLength'
+import { formatPpudSentenceLength } from './formatting'
 
 describe('formatPpudSentenceLength', () => {
   it('formats sentence length with all values equal to 1', () => {

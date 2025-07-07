@@ -1,7 +1,7 @@
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
-import { formatDateTimeFromIsoString } from '../../server/utils/dates/format/format'
+import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 
 context('Search for a person', () => {
   beforeEach(() => {

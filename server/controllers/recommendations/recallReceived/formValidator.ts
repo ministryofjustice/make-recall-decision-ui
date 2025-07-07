@@ -1,7 +1,7 @@
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
-import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 

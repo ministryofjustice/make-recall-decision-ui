@@ -1,4 +1,4 @@
-import { formatDateRange, formatDateTimeFromIsoString } from './format'
+import { formatDateRange, formatDateTimeFromIsoString } from './formatting'
 
 describe('formatDateTimeFromIsoString', () => {
   it('formats a date', () => {

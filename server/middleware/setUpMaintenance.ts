@@ -3,7 +3,7 @@ import express, { Router } from 'express'
 import config from '../config'
 import { isDateTimeRangeCurrent } from '../utils/utils'
 import logger from '../../logger'
-import { formatDateTimeFromIsoString } from '../utils/dates/format/format'
+import { formatDateTimeFromIsoString } from '../utils/dates/formatting'
 
 export default function setUpMaintenance(): Router {
   const router = express.Router()

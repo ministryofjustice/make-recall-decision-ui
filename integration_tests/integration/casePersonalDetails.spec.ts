@@ -1,5 +1,5 @@
 import { routeUrls } from '../../server/routes/routeUrls'
-import { formatDateTimeFromIsoString } from '../../server/utils/dates/format/format'
+import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 

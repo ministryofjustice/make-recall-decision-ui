@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { DatePartNames, DatePartsParsed, DateTimePart, ValidationError } from '../../@types/dates'
 
-import { padWithZeroes } from './format/format'
+import { padWithZeroes } from './formatting'
 import logger from '../../../logger'
 import { areStringArraysTheSame, isDefined, isEmptyStringOrWhitespace } from '../utils'
 import { europeLondon, getDateTimeInEuropeLondon } from './index'

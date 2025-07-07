@@ -1,5 +1,5 @@
 import { PpudSentenceLength } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { pluralise } from './format'
+import { pluralise } from '../formatting'
 
 export const formatPpudSentenceLength = ({ partYears, partMonths, partDays }: PpudSentenceLength) => {
   const sentenceLengthPeriods: string[] = []

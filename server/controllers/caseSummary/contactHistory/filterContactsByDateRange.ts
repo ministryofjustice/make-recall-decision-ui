@@ -1,11 +1,11 @@
 import { DateTime, Interval } from 'luxon'
 
 import { ValidationError } from '../../../@types/dates'
-import { convertGmtDatePartsToUtc } from '../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { dateHasError, europeLondon } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { formatDateRange } from '../../../utils/dates/format/format'
+import { formatDateRange } from '../../../utils/dates/formatting'
 import { removeParamsFromQueryString } from '../../../utils/utils'
 import { ContactHistoryFilters } from '../../../@types/contacts'
 import { NamedFormError } from '../../../@types/pagesForms'
