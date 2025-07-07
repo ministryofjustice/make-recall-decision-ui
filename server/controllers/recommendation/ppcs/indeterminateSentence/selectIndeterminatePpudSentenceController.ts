@@ -36,7 +36,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-async function post(req: Request, res: Response, next: NextFunction) {
+async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const { ppudSentenceId } = req.body
   const { recommendation } = res.locals
@@ -76,7 +76,6 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   const { urlInfo } = res.locals
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
-  next()
 }
 
 export default { get, post }

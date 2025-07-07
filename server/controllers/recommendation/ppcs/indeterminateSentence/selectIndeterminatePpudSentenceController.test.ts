@@ -197,7 +197,7 @@ describe('post', () => {
       },
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}sentence-to-commit-indeterminate`)
-    expect(next).toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('missing ppud sentence', async () => {
