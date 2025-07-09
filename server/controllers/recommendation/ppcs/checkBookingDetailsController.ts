@@ -10,7 +10,7 @@ import {
 } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { convertToTitleCase, hasValue, isDefined } from '../../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
-import { formatDateTimeFromIsoString } from '../../../utils/dates/format'
+import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { makeErrorObject } from '../../../utils/errors'
 import { strings } from '../../../textStrings/en'
 

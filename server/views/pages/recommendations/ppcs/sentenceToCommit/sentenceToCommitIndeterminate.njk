@@ -1,0 +1,40 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+{% set editText = 'Edit' %}
+{% set editIdPrefix = 'edit-' %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {{ heading(pageHeadings[page.id]) }}
+            <p class="govuk-body">
+                This is the sentence you've selected from PPUD. You can edit anything that's wrong. This will update what's in PPUD.
+            </p>
+
+                {{ heading("Your recall booking", 2, "m") }}
+
+                {{ summaryList({
+                    id: " indeterminate-sentence-to-commit",
+                    rows: [
+                        { key: "Custody type", value: hyphenForBlank(sentenceSummary.custodyType) },
+                        { key: "Offence",  value: hyphenForBlank(sentenceSummary.offence), actions: [{ id: editIdPrefix+'offence', text: editText, href: '#', visuallyHidden: 'offence' }] },
+                        { key: "Release date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.releaseDate })), actions: [{ id: editIdPrefix+'releasedate', text: editText, href: '#', visuallyHidden: 'release date' }] },
+                        { key: "Sentencing Court", value: hyphenForBlank(sentenceSummary.sentencingCourt), actions: [{ id: editIdPrefix+'sentencingcourt', text: editText, href: '#', visuallyHidden: 'sentencing court' }] },
+                        { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.dateOfSentence })), actions: [{ id: editIdPrefix+'dateofsentence', text: editText, href: '#', visuallyHidden: 'date of sentence' }] },
+                        { key: "Tariff expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.tariffExpiryDate })) },
+                        { key: "Full punishment", value: hyphenForBlank(sentenceSummary.fullPunishment) }
+                    ]
+                }) }}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

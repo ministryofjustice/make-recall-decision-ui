@@ -1,5 +1,5 @@
 import { getProperty, isDefined } from '../../../utils/utils'
-import { splitIsoDateToParts } from '../../../utils/dates/convert'
+import { splitIsoDateToParts } from '../../../utils/dates/conversion'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { NextAppointment } from '../../../@types/make-recall-decision-api/models/NextAppointment'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'

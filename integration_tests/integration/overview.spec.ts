@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import { routeUrls } from '../../server/routes/routeUrls'
-import { formatDateTimeFromIsoString } from '../../server/utils/dates/format'
+import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 
 context('Overview', () => {
   const crn = 'X34983'

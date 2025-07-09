@@ -4,7 +4,7 @@ import express from 'express'
 import * as pathModule from 'path'
 import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
-import { formatDateTimeFromIsoString, formatTerm } from './dates/format'
+import { formatDateTimeFromIsoString, formatTerm } from './dates/formatting'
 import {
   dateTimeItems,
   possessiveSuffix,

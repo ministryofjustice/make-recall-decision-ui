@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { PpudSentence } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
+import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
+import { PpudSentence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -24,7 +24,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     ppudSentence,
   }
 
-  res.render(`pages/recommendations/sentenceToCommitExistingOffender`)
+  res.render(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`)
   next()
 }
 

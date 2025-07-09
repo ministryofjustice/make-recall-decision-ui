@@ -1,5 +1,5 @@
 import { isDefined } from '../../../utils/utils'
-import { splitIsoDateToParts } from '../../../utils/dates/convert'
+import { splitIsoDateToParts } from '../../../utils/dates/conversion'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
 export const inputDisplayValuesDecisionDateTime = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {

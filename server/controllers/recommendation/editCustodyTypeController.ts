@@ -4,13 +4,18 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
     user: { token },
   } = res.locals
 
-  const list = await ppudReferenceList(token, 'custody-types')
+  const { custodyGroup } = res.locals.recommendation.bookRecallToPpud
+
+  const referenceEndpoint =
+    custodyGroup === CUSTODY_GROUP.DETERMINATE ? 'determinate-custody-types' : 'indeterminate-custody-types'
+  const list = await ppudReferenceList(token, referenceEndpoint)
 
   const custodyTypes = list.values.map(value => {
     return {

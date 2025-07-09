@@ -1,7 +1,7 @@
-import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitController from './sentenceToCommitController'
 
-jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load - with no ppud offender', async () => {
@@ -54,7 +54,7 @@ describe('get', () => {
       releasingPrison: 'Broad Moor',
     })
     expect(res.locals.errorMessage).toBeUndefined()
-    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/sentenceToCommit`)
+    expect(res.render).toHaveBeenCalledWith(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommit`)
     expect(next).toHaveBeenCalled()
   })
   it('load - with add new sentence', async () => {

@@ -1,5 +1,5 @@
 import { ValidationError } from '../@types/dates'
-import { MIN_VALUE_YEAR } from './dates/convert'
+import { MIN_VALUE_YEAR } from './dates/conversion'
 import { listToString } from './utils'
 import { strings } from '../textStrings/en'
 import { SanitisedError } from '../sanitisedError'

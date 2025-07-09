@@ -81,7 +81,9 @@ import searchPpudResultsController from '../controllers/recommendation/searchPpu
 import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
-import sentenceToCommitController from '../controllers/recommendation/sentenceToCommitController'
+import sentenceToCommitController from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitController'
+import sentenceToCommitExistingOffender from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitExistingOffenderController'
+import sentenceToCommitIndeterminate from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitIndeterminateController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
 import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
@@ -105,7 +107,6 @@ import supportingDocumentUploadController from '../controllers/recommendation/su
 import apRecordDecisionController from '../controllers/recommendation/apRecordDecisionController'
 import apRationaleConfirmationController from '../controllers/recommendation/apRationaleConfirmationController'
 import apRecallRationaleController from '../controllers/recommendation/apRecallRationaleController'
-import sentenceToCommitExistingOffender from '../controllers/recommendation/sentenceToCommitExistingOffenderController'
 import apWhyNoRecallController from '../controllers/recommendation/apWhyNoRecallController'
 import bookingSummaryController from '../controllers/recommendation/bookingSummaryController'
 import whenDidSproAgreeToRecall from '../controllers/recommendation/whenDidSpoAgreeDecision'
@@ -540,13 +541,16 @@ const ppcsIndeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
 )
 
 ppcsIndeterminateSentenceRouteBuilder.get(
-  'select-indeterminate-ppud-sentence',
+  ppcsPaths.selectIndeterminatePpudSentence,
   selectIndeterminatePpudSentenceController.get
 )
 ppcsIndeterminateSentenceRouteBuilder.post(
-  'select-indeterminate-ppud-sentence',
+  ppcsPaths.selectIndeterminatePpudSentence,
   selectIndeterminatePpudSentenceController.post
 )
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.get)
+ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.post)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
