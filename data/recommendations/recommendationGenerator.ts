@@ -64,7 +64,7 @@ export type RecommendationOptions = {
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
   nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
-  ppudOffender?: PpudOffenderOptions
+  ppudOffender?: NoneOrOption<PpudOffenderOptions>
   isUnder18?: boolean
   isSentence48MonthsOrOver?: boolean
   isMappaCategory4?: boolean
@@ -259,7 +259,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
       options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
-    ppudOffender: options?.ppudOffender ? PpudOffenderGenerator.generate(options.ppudOffender) : undefined,
+    ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     isUnder18: options?.isUnder18,
     isSentence48MonthsOrOver: options?.isSentence48MonthsOrOver,
     isMappaCategory4: options?.isMappaCategory4,

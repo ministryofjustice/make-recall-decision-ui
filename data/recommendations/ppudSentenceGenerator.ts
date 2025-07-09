@@ -2,12 +2,16 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { PpudSentence } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { DataGeneratorWithSeries } from '../@generators/dataGenerators'
 import { CustodyType } from '../../server/helpers/ppudSentence/custodyTypes'
+import { PpudOffenceGenerator, PpudOffenceOptions } from './ppudOffenceGenerator'
+import { PpudSentenceLengthGenerator, PpudSentenceLengthOptions } from './ppudSentenceLengthGenerator'
 
 export type PpudSentenceOptions = {
   id?: string
   custodyType?: CustodyType
   offenceDescription?: string
+  offence?: PpudOffenceOptions
   releaseDate?: Date
+  sentenceLength?: PpudSentenceLengthOptions
   dateOfSentence?: Date
   sentencingCourt?: string
 }
@@ -19,16 +23,9 @@ const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (optio
   custodyType: options?.custodyType ?? 'Determinate',
   mappaLevel: 'MAPPA_LEVEL',
   licenceExpiryDate: faker.date.future().toISOString(),
-  offence: {
-    indexOffence: options.offenceDescription ?? faker.lorem.sentence(),
-    dateOfIndexOffence: faker.date.past().toISOString(),
-  },
+  offence: PpudOffenceGenerator.generate(options?.offence),
   releaseDate: (options.releaseDate ?? faker.date.future()).toISOString(),
-  sentenceLength: {
-    partYears: faker.number.int({ min: 1, max: 5 }),
-    partMonths: faker.number.int({ min: 1, max: 12 }),
-    partDays: faker.number.int({ min: 1, max: 28 }),
-  },
+  sentenceLength: PpudSentenceLengthGenerator.generate(options?.sentenceLength),
   sentencingCourt: options.sentencingCourt ?? `${faker.location.city()} Court`,
 })
 

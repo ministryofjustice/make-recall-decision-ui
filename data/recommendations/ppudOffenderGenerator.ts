@@ -7,7 +7,7 @@ import { EthnicityGenerator, EthnicityKey } from '../common/ethnicityGenerator'
 export type PpudOffenderOptions = {
   id?: string
   ethnicity?: EthnicityKey
-  sentences: PpudSentenceOptions[]
+  sentences?: PpudSentenceOptions[]
 }
 
 export const PpudOffenderGenerator: DataGenerator<PpudOffender, PpudOffenderOptions> = {
@@ -24,7 +24,7 @@ export const PpudOffenderGenerator: DataGenerator<PpudOffender, PpudOffenderOpti
     nomsId: faker.number.int().toString(),
     prisonerCategory: faker.lorem.word(),
     prisonNumber: faker.number.int().toString(),
-    sentences: PpudSentenceGenerator.generateSeries(options.sentences ?? [{}, {}, {}]),
+    sentences: PpudSentenceGenerator.generateSeries(options?.sentences ?? [{}, {}, {}]),
     status: faker.lorem.word(),
     youngOffender: `${faker.datatype.boolean()}`,
   }),
