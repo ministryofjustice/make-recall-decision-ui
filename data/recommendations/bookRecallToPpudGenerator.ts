@@ -46,5 +46,6 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
     ...(options?.custodyGroup ?? false
       ? resolveAnyNoneOrOption<CUSTODY_GROUP>(options.custodyGroup, 'custodyGroup', Object.values(CUSTODY_GROUP))
       : {}),
+    ppudSentenceId: faker.string.alphanumeric(),
   }),
 }

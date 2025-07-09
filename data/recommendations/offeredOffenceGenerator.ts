@@ -25,7 +25,7 @@ const generateInternal = (options?: OfferedOffenceOptions) => ({
   licenceExpiryDate: faker.date.future().toISOString(),
 })
 
-export const OfferenceOffenceGenerator: DataGeneratorWithSeries<OfferedOffence, OfferedOffenceOptions> = {
+export const OfferedOffenceGenerator: DataGeneratorWithSeries<OfferedOffence, OfferedOffenceOptions> = {
   generate: (options?) => generateInternal(options),
   generateSeries: optionsSeries => optionsSeries.map(options => generateInternal(options)),
 }
