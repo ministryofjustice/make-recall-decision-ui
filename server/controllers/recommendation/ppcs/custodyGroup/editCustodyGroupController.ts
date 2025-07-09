@@ -3,14 +3,14 @@ import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { getCustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import { calculatePartACustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { determineErrorId, reloadPageWithError } from '../validation/fieldValidation'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const pageData = {
     custodyGroups: Object.values(CUSTODY_GROUP),
     selectedCustodyGroup: res.locals.recommendation.bookRecallToPpud.custodyGroup,
-    partACustodyGroup: getCustodyGroup(res.locals.recommendation),
+    partACustodyGroup: calculatePartACustodyGroup(res.locals.recommendation),
   }
 
   res.locals = {

@@ -1,5 +1,5 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
-import { getDeterminateSentences, getIndeterminateSentences, getCustodyGroup } from './ppudSentenceHelper'
+import { getDeterminateSentences, getIndeterminateSentences, calculatePartACustodyGroup } from './ppudSentenceHelper'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
@@ -124,7 +124,7 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: false,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
@@ -133,14 +133,14 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: true,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
   })
 
   it('returns DETERMINATE when indeterminate flag not present', () => {
     const recommendation: RecommendationResponse = {}
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
@@ -149,7 +149,7 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: null,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
@@ -158,7 +158,7 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: undefined,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
