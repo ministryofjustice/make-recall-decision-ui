@@ -1,126 +1,172 @@
+import { faker } from '@faker-js/faker'
 import { StageEnum } from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { getStatuses, ppudUpdateRelease, updateRecommendation } from '../data/makeDecisionApiClient'
 import updateRelease from './updateRelease'
 import { STATUSES } from '../middleware/recommendationStatusCheck'
+import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
+import BookingMemento from './BookingMemento'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
+import {
+  PpudContact,
+  PpudContactWithTelephone,
+  PpudUpdateReleaseRequest,
+} from '../@types/make-recall-decision-api/models/PpudUpdateReleaseRequest'
+import { RecommendationStatusResponseGenerator } from '../../data/recommendationStatus/recommendationStatusResponseGenerator'
+import { PpudUpdateReleaseResponseGenerator } from '../../data/ppud/updateRelease/ppudUpdateReleaseResponseGenerator'
 
 jest.mock('../data/makeDecisionApiClient')
 
+const token = 'token'
+const featureFlags = { xyz: true }
+
 describe('update release', () => {
-  it('happy path - stage has passed', async () => {
-    const bookingMemento = {
-      stage: StageEnum.RELEASE_BOOKED,
-    }
-
-    const result = await updateRelease(bookingMemento, {}, 'token', { xyz: true })
-
-    expect(ppudUpdateRelease).not.toHaveBeenCalled()
-    expect(bookingMemento).toEqual(result)
+  describe('not in expected stage', () => {
+    const bookingMemento = BookingMementoGenerator.generate({
+      stage: faker.helpers.arrayElement(
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENCE_BOOKED)
+      ),
+    })
+    let returnedMemento: BookingMemento
+    beforeEach(async () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      returnedMemento = await updateRelease(bookingMemento, recommendation, token, featureFlags)
+    })
+    it('- returns booking memento unchanged', () => {
+      expect(returnedMemento).toEqual(bookingMemento)
+    })
+    it('- makes no calls', () => {
+      expect(getStatuses).not.toHaveBeenCalled()
+      expect(ppudUpdateRelease).not.toHaveBeenCalled()
+      expect(updateRecommendation).not.toHaveBeenCalled()
+    })
   })
 
-  it('happy path', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([
-      {
-        name: STATUSES.ACO_SIGNED,
-        createdByUserFullName: 'Mr Bloggs',
-        emailAddress: 'email@me.com',
-        active: true,
-      },
-    ])
-    ;(ppudUpdateRelease as jest.Mock).mockResolvedValue({ release: { id: '555' } })
-
-    const bookingMemento = {
-      stage: StageEnum.OFFENCE_BOOKED,
-      offenderId: '767',
-      sentenceId: '444',
-      failed: true,
-      failedMessage: '{}',
-    }
-
-    const recommendation: RecommendationResponse = {
-      id: '1',
-      whoCompletedPartA: {
-        name: 'john',
-        email: 'john@me.com',
-        telephone: '123456',
-        region: 'region A',
-        localDeliveryUnit: 'here',
-        isPersonProbationPractitionerForOffender: true,
-      },
-      bookRecallToPpud: {
-        releasingPrison: 'here',
-        policeForce: 'Bethnal Green Police Force',
-        probationArea: 'london',
-        legislationReleasedUnder: 'CJA 2023',
-        legislationSentencedUnder: 'CJA 2023',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            offenceDate: '2016-01-01',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            offenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
-              {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
-              },
-            ],
-          },
-        ],
-        selected: 3934369,
-      },
-    } as unknown as RecommendationResponse
-
-    const result = await updateRelease(bookingMemento, recommendation, 'token', { xyz: true })
-
-    expect(ppudUpdateRelease).toHaveBeenCalledWith('token', '767', '444', {
-      dateOfRelease: '2017-03-03',
-      postRelease: {
-        assistantChiefOfficer: {
-          faxEmail: 'email@me.com',
-          name: 'Mr Bloggs',
-        },
-        offenderManager: {
-          faxEmail: 'john@me.com',
-          name: 'john',
-          telephone: '123456',
-        },
-        probationService: 'london',
-        spoc: {
-          faxEmail: '',
-          name: 'Bethnal Green Police Force',
-        },
-      },
-      releasedFrom: 'here',
-      releasedUnder: 'CJA 2023',
+  describe('in expected stage', () => {
+    describe('probation practitioner completed the part A', () => {
+      const recommendationCompletedByProbationPractitioner = RecommendationResponseGenerator.generate({
+        whoCompletedPartA: true,
+      })
+      recommendationCompletedByProbationPractitioner.whoCompletedPartA.isPersonProbationPractitionerForOffender = true
+      const offenderManager: PpudContactWithTelephone = {
+        name: recommendationCompletedByProbationPractitioner.whoCompletedPartA.name,
+        faxEmail: recommendationCompletedByProbationPractitioner.whoCompletedPartA.email,
+        telephone: recommendationCompletedByProbationPractitioner.whoCompletedPartA.telephone,
+      }
+      const dateOfRelease = recommendationCompletedByProbationPractitioner.nomisIndexOffence.allOptions[0].releaseDate
+      testSuccessfulReleaseUpdate(recommendationCompletedByProbationPractitioner, offenderManager, dateOfRelease)
     })
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        bookingMemento: {
-          offenderId: '767',
-          sentenceId: '444',
-          releaseId: '555',
-          stage: 'RELEASE_BOOKED',
-        },
-      },
-      token: 'token',
-      featureFlags: {
-        xyz: true,
-      },
-    })
-    expect(result).toEqual({
-      offenderId: '767',
-      releaseId: '555',
-      sentenceId: '444',
-      stage: 'RELEASE_BOOKED',
+    describe('probation practitioner did not complete the part A', () => {
+      const recommendationCompletedByAdminWorker = RecommendationResponseGenerator.generate({
+        whoCompletedPartA: true,
+      })
+      recommendationCompletedByAdminWorker.whoCompletedPartA.isPersonProbationPractitionerForOffender = false
+      const offenderManager = {
+        name: recommendationCompletedByAdminWorker.practitionerForPartA.name,
+        faxEmail: recommendationCompletedByAdminWorker.practitionerForPartA.email,
+        telephone: recommendationCompletedByAdminWorker.practitionerForPartA.telephone,
+      }
+      const dateOfRelease = recommendationCompletedByAdminWorker.nomisIndexOffence.allOptions[0].releaseDate
+      testSuccessfulReleaseUpdate(recommendationCompletedByAdminWorker, offenderManager, dateOfRelease)
     })
   })
 })
+
+function testSuccessfulReleaseUpdate(
+  recommendation: RecommendationResponse,
+  offenderManager: PpudContactWithTelephone,
+  dateOfRelease: string
+) {
+  const bookingMemento = BookingMementoGenerator.generate({
+    stage: StageEnum.OFFENCE_BOOKED,
+  })
+
+  const releaseResponse = PpudUpdateReleaseResponseGenerator.generate()
+
+  const expectedMemento = {
+    ...bookingMemento,
+    releaseId: releaseResponse.release.id,
+    stage: StageEnum.RELEASE_BOOKED,
+  }
+  delete expectedMemento.failed
+  delete expectedMemento.failedMessage
+
+  const recommendationStatuses = RecommendationStatusResponseGenerator.generateSeries([
+    {
+      active: true,
+      name: STATUSES.ACO_SIGNED,
+    },
+    { active: true },
+    { active: false },
+  ])
+  const acoSignedStatus = recommendationStatuses[0]
+  const assistantChiefOfficer = {
+    name: acoSignedStatus.createdByUserFullName,
+    faxEmail: acoSignedStatus.emailAddress,
+  }
+
+  const expectedUpdateReleaseRequest = buildExpectedUpdateReleaseRequest(
+    recommendation,
+    dateOfRelease,
+    assistantChiefOfficer,
+    offenderManager
+  )
+
+  let returnedMemento: BookingMemento
+  beforeEach(async () => {
+    ;(getStatuses as jest.Mock).mockReturnValueOnce(recommendationStatuses)
+    ;(ppudUpdateRelease as jest.Mock).mockReturnValueOnce(releaseResponse)
+    ;(updateRecommendation as jest.Mock).mockReturnValueOnce(recommendation)
+
+    returnedMemento = await updateRelease(bookingMemento, recommendation, token, featureFlags)
+  })
+  it('gets the recommendation statuses', () => {
+    expect(getStatuses).toHaveBeenCalledWith({
+      recommendationId: recommendation.id.toString(),
+      token,
+    })
+  })
+  it('updates the release in PPUD', () => {
+    expect(ppudUpdateRelease).toHaveBeenCalledWith(
+      token,
+      bookingMemento.offenderId,
+      bookingMemento.sentenceId,
+      expectedUpdateReleaseRequest
+    )
+  })
+  it('updates the recommendation', () => {
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: recommendation.id.toString(),
+      valuesToSave: {
+        bookingMemento: expectedMemento,
+      },
+      token,
+      featureFlags,
+    })
+  })
+  it('returns an updated memento', () => {
+    expect(returnedMemento).toEqual(expectedMemento)
+  })
+}
+
+function buildExpectedUpdateReleaseRequest(
+  recommendation: RecommendationResponse,
+  dateOfRelease: string,
+  assistantChiefOfficer: PpudContact,
+  offenderManager: PpudContactWithTelephone
+): PpudUpdateReleaseRequest {
+  return {
+    dateOfRelease,
+    postRelease: {
+      assistantChiefOfficer,
+      offenderManager,
+      spoc: {
+        name: recommendation.bookRecallToPpud.policeForce,
+        faxEmail: '',
+      },
+      probationService: recommendation.bookRecallToPpud.probationArea,
+    },
+    releasedFrom: recommendation.bookRecallToPpud.releasingPrison,
+    releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
+  }
+}
