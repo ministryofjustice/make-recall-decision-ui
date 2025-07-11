@@ -58,7 +58,7 @@ export const convertGmtDatePartsToUtc = (
   let dateParts = [
     { name: 'day', value: day, minLength: 2, minValue: 1, maxValue: 31 },
     { name: 'month', value: month, minLength: 2, minValue: 1, maxValue: 12 },
-    { name: 'year', value: year, minLength: 4, minValue: 1900, maxValue: 2200 },
+    { name: 'year', value: year, minLength: 4, minValue: MIN_VALUE_YEAR, maxValue: 2200 },
   ] as DateTimePart[]
   if (options.includeTime) {
     dateParts = [
@@ -103,6 +103,7 @@ export const convertGmtDatePartsToUtc = (
   if (y < MIN_VALUE_YEAR) {
     return {
       errorId: 'minValueDateYear',
+      invalidParts: ['year'],
     }
   }
   dateTimePartErrors = filterPartsForValueRange(dateParts)
@@ -151,10 +152,10 @@ export const convertGmtDatePartsToUtc = (
   if (options) {
     const now = DateTime.now()
     if (options.dateMustBeInPast === true && now < date) {
-      return { errorId: 'dateMustBeInPast' }
+      return { errorId: 'dateMustBeInPast', invalidParts: ['day', 'month', 'year'] }
     }
     if (options.dateMustBeInFuture === true && now > date) {
-      return { errorId: 'dateMustBeInFuture' }
+      return { errorId: 'dateMustBeInFuture', invalidParts: ['day', 'month', 'year'] }
     }
   }
   if (options.includeTime) {

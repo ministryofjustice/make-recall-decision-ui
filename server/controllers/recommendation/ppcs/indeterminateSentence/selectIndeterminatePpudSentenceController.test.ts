@@ -1,40 +1,34 @@
 import { randomUUID } from 'node:crypto'
 import { randomInt } from 'crypto'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import { getCustodyGroup, getIndeterminateSentences } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { ppudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
-import { randomBoolean } from '../../../../@types/boolean.testFactory'
-import { randomDate } from '../../../../@types/dates.testFactory'
 import { randomEnum } from '../../../../@types/enum.testFactory'
 import selectIndeterminatePpudSentenceController from './selectIndeterminatePpudSentenceController'
 import { makeErrorObject } from '../../../../utils/errors'
 import { NamedFormError } from '../../../../@types/pagesForms'
 import { strings } from '../../../../textStrings/en'
 import { featureFlags } from '../../../../@types/featureFlags.testFactory'
+import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 jest.mock('../../../../helpers/ppudSentence/ppudSentenceHelper')
 jest.mock('../../../../utils/errors')
 
+const sentenceId = faker.number.int().toString()
+const recommendation = RecommendationResponseGenerator.generate({
+  ppudOffender: {
+    sentences: [{ id: sentenceId, custodyType: 'IPP' }, { custodyType: 'DPP' }, { custodyType: 'Mandatory (MLP)' }],
+  },
+})
+const expectedSentence = recommendation.ppudOffender.sentences.at(0)
+
 describe('get', () => {
   it('load with no sentence selected', async () => {
-    // given
-    const recommendation = {
-      id: randomInt(0, 10000).toString(),
-      convictionDetail: {
-        indexOffenceDescription: randomUUID(),
-        dateOfSentence: randomDate().toDateString(),
-        sentenceExpiryDate: randomDate().toDateString(),
-      },
-      ppudOffender: {
-        sentences: ppudDetailsSentence(),
-      },
-      isIndeterminateSentence: randomBoolean(),
-      bookRecallToPpud: {},
-    }
     const res = mockRes({
       locals: {
         user: {
@@ -84,21 +78,6 @@ describe('get', () => {
 
   it('load with a sentence selected', async () => {
     // given
-    const recommendation = {
-      id: randomInt(0, 10000).toString(),
-      convictionDetail: {
-        indexOffenceDescription: randomUUID(),
-        dateOfSentence: randomDate().toDateString(),
-        sentenceExpiryDate: randomDate().toDateString(),
-      },
-      ppudOffender: {
-        sentences: ppudDetailsSentence(),
-      },
-      isIndeterminateSentence: randomBoolean(),
-      bookRecallToPpud: {
-        ppudSentenceId: randomUUID(),
-      },
-    }
     const res = mockRes({
       locals: {
         user: {
@@ -151,24 +130,12 @@ describe('get', () => {
 describe('post', () => {
   it('select ppud sentence', async () => {
     // given
-    const ppudSentenceId = randomInt(0, 10000).toString()
-    const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence({ id: ppudSentenceId })]
-    ;(getIndeterminateSentences as jest.Mock).mockReturnValueOnce(indeterminateSentences)
+    ;(getIndeterminateSentences as jest.Mock).mockReturnValueOnce(recommendation.ppudOffender.sentences)
 
     const req = mockReq({
       params: { recommendationId: randomInt(0, 10000).toString() },
-      body: { ppudSentenceId },
+      body: { ppudSentenceId: sentenceId },
     })
-
-    // We include bookRecallToPpud values just to ensure they aren't overridden by the post method
-    const recommendation = {
-      bookRecallToPpud: {
-        mappaLevel: randomUUID(),
-      },
-      ppudOffender: {
-        sentences: [ppudDetailsSentence()],
-      },
-    }
     const res = mockRes({
       token: randomUUID(),
       locals: {
@@ -193,6 +160,12 @@ describe('post', () => {
         bookRecallToPpud: {
           ...recommendation.bookRecallToPpud,
           ppudSentenceId: req.body.ppudSentenceId,
+          ppudSentenceData: {
+            offenceDescription: expectedSentence.offence.indexOffence,
+            releaseDate: expectedSentence.releaseDate,
+            sentencingCourt: expectedSentence.sentencingCourt,
+            dateOfSentence: expectedSentence.dateOfSentence,
+          },
         },
       },
     })
@@ -250,14 +223,14 @@ describe('post', () => {
       body: { ppudSentenceId: randomInt(0, 10000).toString() },
     })
 
-    const recommendation = {
+    const invalidSentenceRecommendation = {
       ppudOffender: {
         sentences: [ppudDetailsSentence()],
       },
     }
     const res = mockRes({
       locals: {
-        recommendation,
+        recommendation: invalidSentenceRecommendation,
       },
     })
 
@@ -274,7 +247,7 @@ describe('post', () => {
 
     // then
     expect(req.session.errors).toEqual([errorObject])
-    expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
+    expect(getIndeterminateSentences).toHaveBeenCalledWith(invalidSentenceRecommendation.ppudOffender.sentences)
     expect(makeErrorObject).toHaveBeenCalledWith({
       id: 'ppudSentenceId',
       text: strings.errors.invalidIndeterminatePpudSentenceSelected,

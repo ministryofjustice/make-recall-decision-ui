@@ -20,7 +20,7 @@ const expected = {
     fullPunishmentDays: faker.number.int({ min: 1, max: 30 }),
   },
   render: {
-    path: 'pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitIndeterminate',
+    path: 'pages/recommendations/ppcs/indeterminateSentence/sentenceToCommitIndeterminate',
   },
 }
 
@@ -65,7 +65,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
 
     it('Sets the correct page id', async () => expect(res.locals.page.id).toEqual('sentenceToCommitIndeterminate'))
     it('Sets the correct details for the sentence summary', async () => {
-      expect(res.locals.sentenceSummary).toEqual({
+      expect(res.locals.pageData.sentenceSummary).toEqual({
         custodyType: expected.sentence.custodyType,
         offence: expected.sentence.indexOffence,
         releaseDate: expected.sentence.releaseDate,

@@ -11,6 +11,7 @@ import { RecommendationResponse } from '../../server/@types/make-recall-decision
 import { VictimsInContactScheme } from '../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { ConvictionDetailGenerator, ConvictionDetailOptions } from './convictionDetailGenerator'
 import { NomisIndexGenerator, NomisIndexOffenceOptions } from './nomisIndexOffenceGenerator'
+import { PPUDOffenderGenerator, PPUDOffenderOptions } from './ppudOffenderGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -59,6 +60,7 @@ export type RecommendationOptions = {
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
   nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
+  ppudOffender?: PPUDOffenderOptions
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -298,5 +300,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
       options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
+    ppudOffender: options?.ppudOffender ? PPUDOffenderGenerator.generate(options.ppudOffender) : undefined,
   }),
 }

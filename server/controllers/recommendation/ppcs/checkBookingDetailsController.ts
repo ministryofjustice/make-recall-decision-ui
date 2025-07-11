@@ -257,7 +257,10 @@ async function post(req: Request, res: Response, next: NextFunction) {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     errors: NamedFormError[]
   ) {
-    if (!hasValue(bookRecallToPpud[fieldName]) || bookRecallToPpud[fieldName].length === 0) {
+    if (
+      !hasValue(bookRecallToPpud[fieldName]) ||
+      (typeof bookRecallToPpud[fieldName] === 'string' && bookRecallToPpud[fieldName].length === 0)
+    ) {
       errors.push(
         makeErrorObject({
           id: fieldName,

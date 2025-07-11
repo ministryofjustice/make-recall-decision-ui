@@ -2,7 +2,11 @@ import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/model
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
-const determinateCustodyTypes = ['Determinate', 'EDS', 'EDS (non parole)']
+type CustodyType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElemenetType> ? ElemenetType : never
+export type DeterminateCustody = CustodyType<typeof determinateCustodyTypes>
+export type IndeterminateCustody = CustodyType<typeof indeterminateCustodyTypes>
+
+const determinateCustodyTypes: Array<string> = ['Determinate', 'EDS', 'EDS (non parole)']
 
 const indeterminateCustodyTypes = [
   'IPP',

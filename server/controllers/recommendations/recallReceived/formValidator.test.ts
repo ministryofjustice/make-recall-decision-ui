@@ -94,7 +94,7 @@ describe('validateRecallReceived', () => {
       {
         errorId: 'dateMustBeInPast',
         href: '#dateTime-day',
-        invalidParts: undefined,
+        invalidParts: ['day', 'month', 'year'],
         name: 'dateTime',
         text: 'The date and time must be today or in the past',
         values: {

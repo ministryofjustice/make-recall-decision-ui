@@ -1,0 +1,65 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% extends "../../../../../partials/layout.njk" %}
+
+{% set title = 'Edit release date' %}
+{% set pageTitle = makePageTitle({ pageHeading: title, hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../../../../partials/error-summary.njk' %}
+
+            {{ heading(title, classes='govuk-!-margin-bottom-2') }}
+            {{ bodyParagraph('Update the information to record in PPUD') }}
+
+            {{ heading('Currently in PPUD', 2, 's', 'govuk-!-font-weight-bold govuk-!-margin-bottom-1') }}
+            {{ bodyParagraph(formatDateTimeFromIsoString({ isoDate: pageData.existingReleaseDate, dateOnly: true })) }}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {% set dateInputError = { text: errors.releaseDate } if errors.releaseDate else null %}
+                {{ govukDateInput({
+                    id: "release-date",
+                    fieldset: {
+                        legend: {
+                            text: 'Release date',
+                            classes: "govuk-fieldset__legend--s"
+                        }
+                    },
+                    hint: {
+                        text: "For example, 27 3 2023"
+                    },
+                    items: [
+                        {
+                            id:'releaseDate-day',
+                            name: 'day',
+                            value: pageData.day,
+                            classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('day', errors.releaseDate))
+                        },
+                        {
+                            id:'releaseDate-month',
+                            name: 'month',
+                            value: pageData.month,
+                            classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('month', errors.releaseDate))
+                        },
+                        {
+                            id:'releaseDate-year',
+                            name: 'year',
+                            value: pageData.year,
+                            classes: 'govuk-input--width-4' + (' govuk-input--error' if isDatePartInvalid('year', errors.releaseDate))
+                        }
+                    ]
+                    ,
+                    errorMessage: { text: errors.releaseDate.text } if errors.releaseDate else null
+                }) }}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
