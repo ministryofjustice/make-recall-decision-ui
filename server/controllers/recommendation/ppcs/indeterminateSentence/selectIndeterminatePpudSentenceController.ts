@@ -42,11 +42,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const { ppudSentenceId } = req.body
   const { recommendation } = res.locals
 
+  const sentences: PpudDetailsSentence[] = getIndeterminateSentences(recommendation.ppudOffender.sentences)
+
   let errorId
   if (ppudSentenceId === undefined) {
     errorId = 'missingIndeterminatePpudSentence'
   } else {
-    const sentences: PpudDetailsSentence[] = getIndeterminateSentences(recommendation.ppudOffender.sentences)
     const sentenceIds = sentences.map((sentence: PpudDetailsSentence) => sentence.id)
     if (!sentenceIds.includes(ppudSentenceId)) {
       errorId = 'invalidIndeterminatePpudSentenceSelected'
@@ -63,12 +64,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
     return res.redirect(303, req.originalUrl)
   }
 
+  const sentence = sentences.find(s => s.id === ppudSentenceId)
   await updateRecommendation({
     recommendationId,
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         ppudSentenceId,
+        ppudSentenceData: {
+          offenceDescription: sentence.offence.indexOffence,
+          releaseDate: sentence.releaseDate,
+          sentencingCourt: sentence.sentencingCourt,
+          dateOfSentence: sentence.dateOfSentence,
+        },
       },
     },
     featureFlags: res.locals.flags,
