@@ -14,6 +14,7 @@ import {
 } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseRequest'
 import { RecommendationStatusResponseGenerator } from '../../data/recommendationStatus/recommendationStatusResponseGenerator'
 import { PpudUpdateReleaseResponseGenerator } from '../../data/ppud/updateRelease/ppudUpdateReleaseResponseGenerator'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -43,34 +44,60 @@ describe('update release', () => {
   })
 
   describe('in expected stage', () => {
-    describe('probation practitioner completed the part A', () => {
-      const recommendationCompletedByProbationPractitioner = RecommendationResponseGenerator.generate({
-        whoCompletedPartA: true,
-      })
-      recommendationCompletedByProbationPractitioner.whoCompletedPartA.isPersonProbationPractitionerForOffender = true
-      const offenderManager: PpudContactWithTelephone = {
-        name: recommendationCompletedByProbationPractitioner.whoCompletedPartA.name,
-        faxEmail: recommendationCompletedByProbationPractitioner.whoCompletedPartA.email,
-        telephone: recommendationCompletedByProbationPractitioner.whoCompletedPartA.telephone,
+    describe('for determinate sentence', () => {
+      const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
+        return recommendation.nomisIndexOffence.allOptions[0].releaseDate
       }
-      const dateOfRelease = recommendationCompletedByProbationPractitioner.nomisIndexOffence.allOptions[0].releaseDate
-      testSuccessfulReleaseUpdate(recommendationCompletedByProbationPractitioner, offenderManager, dateOfRelease)
+
+      testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.DETERMINATE, calculateExpectedDateOfRelease)
     })
-    describe('probation practitioner did not complete the part A', () => {
-      const recommendationCompletedByAdminWorker = RecommendationResponseGenerator.generate({
-        whoCompletedPartA: true,
-      })
-      recommendationCompletedByAdminWorker.whoCompletedPartA.isPersonProbationPractitionerForOffender = false
-      const offenderManager = {
-        name: recommendationCompletedByAdminWorker.practitionerForPartA.name,
-        faxEmail: recommendationCompletedByAdminWorker.practitionerForPartA.email,
-        telephone: recommendationCompletedByAdminWorker.practitionerForPartA.telephone,
+    describe('for indeterminate sentence', () => {
+      const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
+        return recommendation.ppudOffender.sentences[0].releaseDate
       }
-      const dateOfRelease = recommendationCompletedByAdminWorker.nomisIndexOffence.allOptions[0].releaseDate
-      testSuccessfulReleaseUpdate(recommendationCompletedByAdminWorker, offenderManager, dateOfRelease)
+
+      testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.INDETERMINATE, calculateExpectedDateOfRelease)
     })
   })
 })
+
+function testSuccessfulReleaseUpdateAlternatives(
+  custodyGroup: CUSTODY_GROUP,
+  calculateExpectedDateOfRelease: (recommendation: RecommendationResponse) => string
+) {
+  describe('probation practitioner completed the part A', () => {
+    const recommendationCompletedByProbationPractitioner = RecommendationResponseGenerator.generate({
+      whoCompletedPartA: true,
+      bookRecallToPpud: { custodyGroup },
+    })
+    recommendationCompletedByProbationPractitioner.whoCompletedPartA.isPersonProbationPractitionerForOffender = true
+    recommendationCompletedByProbationPractitioner.bookRecallToPpud.ppudSentenceId =
+      recommendationCompletedByProbationPractitioner.ppudOffender.sentences[0].id
+    const offenderManager: PpudContactWithTelephone = {
+      name: recommendationCompletedByProbationPractitioner.whoCompletedPartA.name,
+      faxEmail: recommendationCompletedByProbationPractitioner.whoCompletedPartA.email,
+      telephone: recommendationCompletedByProbationPractitioner.whoCompletedPartA.telephone,
+    }
+    const dateOfRelease = calculateExpectedDateOfRelease(recommendationCompletedByProbationPractitioner)
+    testSuccessfulReleaseUpdate(recommendationCompletedByProbationPractitioner, offenderManager, dateOfRelease)
+  })
+  describe('probation practitioner did not complete the part A', () => {
+    const recommendationCompletedByAdminWorker = RecommendationResponseGenerator.generate({
+      whoCompletedPartA: true,
+      bookRecallToPpud: { custodyGroup },
+    })
+    recommendationCompletedByAdminWorker.whoCompletedPartA.isPersonProbationPractitionerForOffender = false
+    recommendationCompletedByAdminWorker.bookRecallToPpud.ppudSentenceId =
+      recommendationCompletedByAdminWorker.ppudOffender.sentences[0].id
+    const offenderManager = {
+      name: recommendationCompletedByAdminWorker.practitionerForPartA.name,
+      faxEmail: recommendationCompletedByAdminWorker.practitionerForPartA.email,
+      telephone: recommendationCompletedByAdminWorker.practitionerForPartA.telephone,
+    }
+    const dateOfRelease = calculateExpectedDateOfRelease(recommendationCompletedByAdminWorker)
+    testSuccessfulReleaseUpdate(recommendationCompletedByAdminWorker, offenderManager, dateOfRelease)
+  })
+}
 
 function testSuccessfulReleaseUpdate(
   recommendation: RecommendationResponse,
