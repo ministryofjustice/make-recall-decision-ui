@@ -5,6 +5,7 @@ import updateOffence from './updateOffence'
 import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
 import BookingMemento from './BookingMemento'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -36,7 +37,6 @@ describe('update offence', () => {
     const bookingMemento = BookingMementoGenerator.generate({
       stage: StageEnum.SENTENCE_BOOKED,
     })
-    const recommendation = RecommendationResponseGenerator.generate()
 
     const expectedMemento = {
       ...bookingMemento,
@@ -45,32 +45,67 @@ describe('update offence', () => {
     delete expectedMemento.failed
     delete expectedMemento.failedMessage
 
-    let returnedMemento: BookingMemento
-    beforeEach(async () => {
-      ;(ppudUpdateOffence as jest.Mock).mockImplementationOnce(() => Promise.resolve())
-      ;(updateRecommendation as jest.Mock).mockReturnValueOnce(recommendation)
+    describe('determinate sentence', () => {
+      const recommendation = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
+      })
 
-      returnedMemento = await updateOffence(bookingMemento, recommendation, token, featureFlags)
-    })
-    it('updates the PPUD offence', () => {
-      expect(ppudUpdateOffence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
-        indexOffence: recommendation.bookRecallToPpud.indexOffence,
-        indexOffenceComment: recommendation.bookRecallToPpud.indexOffenceComment,
-        dateOfIndexOffence: recommendation.nomisIndexOffence.allOptions[0].offenceDate,
+      let returnedMemento: BookingMemento
+      beforeEach(async () => {
+        ;(ppudUpdateOffence as jest.Mock).mockImplementationOnce(() => Promise.resolve())
+        ;(updateRecommendation as jest.Mock).mockReturnValueOnce(recommendation)
+
+        returnedMemento = await updateOffence(bookingMemento, recommendation, token, featureFlags)
+      })
+      it('updates the PPUD offence', () => {
+        expect(ppudUpdateOffence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
+          indexOffence: recommendation.bookRecallToPpud.indexOffence,
+          indexOffenceComment: recommendation.bookRecallToPpud.indexOffenceComment,
+          dateOfIndexOffence: recommendation.nomisIndexOffence.allOptions[0].offenceDate,
+        })
+      })
+      it('updates the recommendation', () => {
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId: recommendation.id.toString(),
+          valuesToSave: {
+            bookingMemento: expectedMemento,
+          },
+          token,
+          featureFlags,
+        })
+      })
+      it('returns updated memento', () => {
+        expect(returnedMemento).toEqual(expectedMemento)
       })
     })
-    it('updates the recommendation', () => {
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: recommendation.id.toString(),
-        valuesToSave: {
-          bookingMemento: expectedMemento,
-        },
-        token,
-        featureFlags,
+
+    describe('indeterminate sentence', () => {
+      const recommendation = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
       })
-    })
-    it('returns updated memento', () => {
-      expect(returnedMemento).toEqual(expectedMemento)
+
+      let returnedMemento: BookingMemento
+      beforeEach(async () => {
+        ;(updateRecommendation as jest.Mock).mockReturnValueOnce(recommendation)
+
+        returnedMemento = await updateOffence(bookingMemento, recommendation, token, featureFlags)
+      })
+      it('does not update the offence (nothing to update)', () => {
+        expect(ppudUpdateOffence).not.toHaveBeenCalled()
+      })
+      it('updates the recommendation', () => {
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId: recommendation.id.toString(),
+          valuesToSave: {
+            bookingMemento: expectedMemento,
+          },
+          token,
+          featureFlags,
+        })
+      })
+      it('returns updated memento', () => {
+        expect(returnedMemento).toEqual(expectedMemento)
+      })
     })
   })
 })
