@@ -1,86 +1,76 @@
+import { faker } from '@faker-js/faker'
 import { StageEnum } from './StageEnum'
-import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudUpdateOffence, updateRecommendation } from '../data/makeDecisionApiClient'
 import updateOffence from './updateOffence'
+import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
+import BookingMemento from './BookingMemento'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 
 jest.mock('../data/makeDecisionApiClient')
 
+const token = 'token'
+const featureFlags = { xyz: true }
+
 describe('update offence', () => {
-  it('happy path - stage has passed', async () => {
-    const bookingMemento = {
-      stage: StageEnum.OFFENCE_BOOKED,
-    }
-
-    const result = await updateOffence(bookingMemento, {}, 'token', { xyz: true })
-
-    expect(ppudUpdateOffence).not.toHaveBeenCalled()
-    expect(bookingMemento).toEqual(result)
+  describe('not in expected stage', () => {
+    const bookingMemento = BookingMementoGenerator.generate({
+      stage: faker.helpers.arrayElement(
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.SENTENCE_BOOKED)
+      ),
+    })
+    let returnedMemento: BookingMemento
+    beforeEach(async () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      returnedMemento = await updateOffence(bookingMemento, recommendation, token, featureFlags)
+    })
+    it('- returns booking memento', () => {
+      expect(returnedMemento).toEqual(bookingMemento)
+    })
+    it('- makes no calls', () => {
+      expect(ppudUpdateOffence).not.toHaveBeenCalled()
+      expect(updateRecommendation).not.toHaveBeenCalled()
+    })
   })
 
-  it('happy path', async () => {
-    const bookingMemento = {
+  describe('in expected stage', () => {
+    const bookingMemento = BookingMementoGenerator.generate({
       stage: StageEnum.SENTENCE_BOOKED,
-      offenderId: '767',
-      sentenceId: '444',
-      failed: true,
-      failedMessage: '{}',
+    })
+    const recommendation = RecommendationResponseGenerator.generate()
+
+    const expectedMemento = {
+      ...bookingMemento,
+      stage: StageEnum.OFFENCE_BOOKED,
     }
+    delete expectedMemento.failed
+    delete expectedMemento.failedMessage
 
-    const recommendation: RecommendationResponse = {
-      id: '1',
-      bookRecallToPpud: {
-        indexOffence: 'index offence',
-        indexOffenceComment: 'index offence comment',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            offenceDate: '2016-01-01',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            offenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
-              {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
-              },
-            ],
-          },
-        ],
-        selected: 3934369,
-      },
-    } as unknown as RecommendationResponse
+    let returnedMemento: BookingMemento
+    beforeEach(async () => {
+      ;(ppudUpdateOffence as jest.Mock).mockImplementationOnce(() => Promise.resolve())
+      ;(updateRecommendation as jest.Mock).mockReturnValueOnce(recommendation)
 
-    const result = await updateOffence(bookingMemento, recommendation, 'token', { xyz: true })
-
-    expect(ppudUpdateOffence).toHaveBeenCalledWith('token', '767', '444', {
-      indexOffence: 'index offence',
-      indexOffenceComment: 'index offence comment',
-      dateOfIndexOffence: '2016-01-01',
+      returnedMemento = await updateOffence(bookingMemento, recommendation, token, featureFlags)
     })
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        bookingMemento: {
-          offenderId: '767',
-          sentenceId: '444',
-          stage: 'OFFENCE_BOOKED',
+    it('updates the PPUD offence', () => {
+      expect(ppudUpdateOffence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
+        indexOffence: recommendation.bookRecallToPpud.indexOffence,
+        indexOffenceComment: recommendation.bookRecallToPpud.indexOffenceComment,
+        dateOfIndexOffence: recommendation.nomisIndexOffence.allOptions[0].offenceDate,
+      })
+    })
+    it('updates the recommendation', () => {
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        recommendationId: recommendation.id.toString(),
+        valuesToSave: {
+          bookingMemento: expectedMemento,
         },
-      },
-      token: 'token',
-      featureFlags: {
-        xyz: true,
-      },
+        token,
+        featureFlags,
+      })
     })
-    expect(result).toEqual({
-      offenderId: '767',
-      sentenceId: '444',
-      stage: 'OFFENCE_BOOKED',
+    it('returns updated memento', () => {
+      expect(returnedMemento).toEqual(expectedMemento)
     })
   })
 })

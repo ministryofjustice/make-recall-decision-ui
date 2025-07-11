@@ -1,6 +1,6 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { BookRecallToPpud } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
-import { DataGenerator, AnyNoneOrOption } from '../@generators/dataGenerators'
+import { AnyNoneOrOption, DataGenerator } from '../@generators/dataGenerators'
 import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { resolveAnyNoneOrOption } from '../@generators/dataGenerator.utils'
 
@@ -47,5 +47,7 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       ? resolveAnyNoneOrOption<CUSTODY_GROUP>(options.custodyGroup, 'custodyGroup', Object.values(CUSTODY_GROUP))
       : {}),
     ppudSentenceId: faker.string.alphanumeric(),
+    indexOffence: faker.lorem.sentence(),
+    indexOffenceComment: faker.lorem.sentence(),
   }),
 }
