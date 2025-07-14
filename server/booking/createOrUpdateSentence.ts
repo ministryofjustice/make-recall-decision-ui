@@ -6,6 +6,48 @@ import { StageEnum } from './StageEnum'
 import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
+function buildDeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
+  const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+  )
+
+  const offenceTerm = nomisOffence.terms.find(term => term.code === 'IMP')
+
+  const sentenceLength =
+    offenceTerm != null
+      ? {
+          partDays: offenceTerm?.days || 0,
+          partMonths: offenceTerm?.months || 0,
+          partYears: offenceTerm?.years || 0,
+        }
+      : null
+
+  return {
+    custodyType: recommendation.bookRecallToPpud?.custodyType,
+    mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
+    dateOfSentence: nomisOffence.sentenceDate,
+    licenceExpiryDate: nomisOffence.licenceExpiryDate,
+    releaseDate: nomisOffence.releaseDate,
+    sentenceLength,
+    sentenceExpiryDate: nomisOffence.sentenceEndDate,
+    sentencingCourt: nomisOffence.courtDescription,
+    sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
+  }
+}
+
+function buildIndeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
+  const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
+    sentence => sentence.id === recommendation.bookRecallToPpud.ppudSentenceId
+  )
+
+  return {
+    custodyType: selectedPpudSentence.custodyType,
+    dateOfSentence: selectedPpudSentence.dateOfSentence,
+    releaseDate: selectedPpudSentence.releaseDate,
+    sentencingCourt: selectedPpudSentence.sentencingCourt,
+  }
+}
+
 export default async function createOrUpdateSentence(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
@@ -53,46 +95,4 @@ export default async function createOrUpdateSentence(
   })
 
   return memento
-}
-
-function buildDeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
-  const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
-  )
-
-  const offenceTerm = nomisOffence.terms.find(term => term.code === 'IMP')
-
-  const sentenceLength =
-    offenceTerm != null
-      ? {
-          partDays: offenceTerm?.days || 0,
-          partMonths: offenceTerm?.months || 0,
-          partYears: offenceTerm?.years || 0,
-        }
-      : null
-
-  return {
-    custodyType: recommendation.bookRecallToPpud?.custodyType,
-    mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
-    dateOfSentence: nomisOffence.sentenceDate,
-    licenceExpiryDate: nomisOffence.licenceExpiryDate,
-    releaseDate: nomisOffence.releaseDate,
-    sentenceLength,
-    sentenceExpiryDate: nomisOffence.sentenceEndDate,
-    sentencingCourt: nomisOffence.courtDescription,
-    sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
-  }
-}
-
-function buildIndeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
-  const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
-    sentence => sentence.id === recommendation.bookRecallToPpud.ppudSentenceId
-  )
-
-  return {
-    custodyType: selectedPpudSentence.custodyType,
-    dateOfSentence: selectedPpudSentence.dateOfSentence,
-    releaseDate: selectedPpudSentence.releaseDate,
-    sentencingCourt: selectedPpudSentence.sentencingCourt,
-  }
 }
