@@ -21,25 +21,26 @@ export type PpudDetailsOffender = {
 }
 
 export type PpudDetailsSentence = {
-  id: string,
-  sentenceExpiryDate: string,
-  dateOfSentence: string,
-  custodyType: string,
-  mappaLevel: string,
-  licenceExpiryDate: string,
-  offence: PpudDetailsOffence,
-  releaseDate: string,
-  sentenceLength: PpudDetailsSentenceLength,
-  sentencingCourt: string,
+  id?: string,
+  sentenceExpiryDate?: string,
+  dateOfSentence?: string,
+  custodyType?: string,
+  mappaLevel?: string,
+  licenceExpiryDate?: string,
+  tariffExpiryDate?: string,
+  offence?: PpudDetailsOffence,
+  releaseDate?: string,
+  sentenceLength?: PpudDetailsSentenceLength,
+  sentencingCourt?: string,
 }
 
 export type PpudDetailsOffence = {
-  indexOffence: string,
-  dateOfIndexOffence: string,
+  indexOffence?: string,
+  dateOfIndexOffence?: string,
 }
 
 export type PpudDetailsSentenceLength = {
-  partYears: number,
-  partMonths: number,
-  partDays: number,
+  partYears?: number,
+  partMonths?: number,
+  partDays?: number,
 }
