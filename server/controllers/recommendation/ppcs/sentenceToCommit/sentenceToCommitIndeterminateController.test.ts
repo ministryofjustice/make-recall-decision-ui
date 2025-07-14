@@ -14,7 +14,7 @@ const expected = {
     releaseDate: releaseDate.toISOString(),
     sentencingCourt: `${faker.location.city} Court`,
     dateOfSentence: faker.date.past().toISOString(),
-    sentenceExpiryDate: faker.date.future({ refDate: releaseDate }).toISOString(),
+    tariffExpiryDate: faker.date.future({ refDate: releaseDate }).toISOString(),
     fullPunishmentYears: faker.number.int({ min: 1, max: 5 }),
     fullPunishmentMonths: faker.number.int({ min: 1, max: 11 }),
     fullPunishmentDays: faker.number.int({ min: 1, max: 30 }),
@@ -43,7 +43,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
                 releaseDate: expected.sentence.releaseDate,
                 sentencingCourt: expected.sentence.sentencingCourt,
                 dateOfSentence: expected.sentence.dateOfSentence,
-                sentenceExpiryDate: expected.sentence.sentenceExpiryDate,
+                tariffExpiryDate: expected.sentence.tariffExpiryDate,
                 sentenceLength: {
                   partYears: expected.sentence.fullPunishmentYears,
                   partMonths: expected.sentence.fullPunishmentMonths,
@@ -71,7 +71,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
         releaseDate: expected.sentence.releaseDate,
         sentencingCourt: expected.sentence.sentencingCourt,
         dateOfSentence: expected.sentence.dateOfSentence,
-        tariffExpiryDate: expected.sentence.sentenceExpiryDate,
+        tariffExpiryDate: expected.sentence.tariffExpiryDate,
         fullPunishment: sentenceLengthDisplay,
       })
 
