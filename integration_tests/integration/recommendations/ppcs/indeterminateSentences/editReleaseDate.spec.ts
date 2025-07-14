@@ -6,7 +6,7 @@ import { RecommendationResponseGenerator } from '../../../../../data/recommendat
 import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../componentTests/errors.tests'
-import { MIN_VALUE_YEAR } from '../../../../../server/utils/dates/convert'
+import { MIN_VALUE_YEAR } from '../../../../../server/utils/dates/conversion'
 
 context('Determinate Sentence - Edit Release Date Page', () => {
   const recommendationId = '123'

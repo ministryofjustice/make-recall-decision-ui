@@ -1,12 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
-<<<<<<< HEAD:server/controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitIndeterminateController.ts
 import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
-=======
-import { formatPpudSentenceLength } from '../../../../utils/dates/format/formatPpudSentenceLength'
+
 import { ppcsPaths } from '../../../../routes/paths/ppcs'
->>>>>>> fb9d790e (Add edit indeterminate sentence release date):server/controllers/recommendation/ppcs/indeterminateSentence/sentenceToCommitIndeterminateController.ts
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals

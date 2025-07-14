@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { convertGmtDatePartsToUtc, dateHasError } from '../../../../../utils/dates/convert'
+import { convertGmtDatePartsToUtc, dateHasError } from '../../../../../utils/dates/conversion'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../../../utils/errors'
 import { ValidationError } from '../../../../../@types/dates'
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'

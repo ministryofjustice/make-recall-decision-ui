@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitIndeterminateController from './sentenceToCommitIndeterminateController'
-import { formatPpudSentenceLength } from '../../../../utils/dates/format/formatPpudSentenceLength'
+import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
 
-jest.mock('../../../../utils/dates/format/formatPpudSentenceLength')
+jest.mock('../../../../utils/dates/ppudSentenceLength/formatting')
 
 const releaseDate = faker.date.future()
 const expected = {
