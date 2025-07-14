@@ -1,15 +1,15 @@
 export type PpudUpdateSentenceRequest = {
   custodyType: string,
   dateOfSentence: string,
-  licenceExpiryDate: string,
-  mappaLevel: string,
-  releaseDate: string,
-  sentenceLength: SentenceLength,
+  licenceExpiryDate?: string,
+  mappaLevel?: string,
+  releaseDate?: string,
+  sentenceLength?: SentenceLength,
   espCustodialPeriod?: YearMonth,
   espExtendedPeriod?: YearMonth,
-  sentenceExpiryDate: string,
+  sentenceExpiryDate?: string,
   sentencingCourt: string,
-  sentencedUnder: string,
+  sentencedUnder?: string,
 };
 
 export type SentenceLength = {

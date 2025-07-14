@@ -1,7 +1,10 @@
 import { randomUUID } from 'node:crypto'
 import { randomInt } from 'crypto'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
-import { getCustodyGroup, getIndeterminateSentences } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import {
+  calculatePartACustodyGroup,
+  getIndeterminateSentences,
+} from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
@@ -51,7 +54,7 @@ describe('get', () => {
     const next = mockNext()
 
     const custodyGroup: CUSTODY_GROUP = randomEnum(CUSTODY_GROUP)
-    ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
+    ;(calculatePartACustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
 
     const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     ;(getIndeterminateSentences as jest.Mock).mockReturnValueOnce(indeterminateSentences)
@@ -75,7 +78,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(getCustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
     )
@@ -115,7 +118,7 @@ describe('get', () => {
     const next = mockNext()
 
     const custodyGroup: CUSTODY_GROUP = randomEnum(CUSTODY_GROUP)
-    ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
+    ;(calculatePartACustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
 
     const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     ;(getIndeterminateSentences as jest.Mock).mockReturnValueOnce(indeterminateSentences)
@@ -140,7 +143,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(getCustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
     )

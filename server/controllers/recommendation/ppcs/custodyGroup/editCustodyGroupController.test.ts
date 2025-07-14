@@ -12,7 +12,7 @@ import {
   nomisIndexOffence,
 } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse.testFactory'
 import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { getCustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import { calculatePartACustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { determineErrorId, reloadPageWithError } from '../validation/fieldValidation'
 import { randomErrorId } from '../../../../textStrings/en.testFactory'
 
@@ -39,7 +39,7 @@ describe('get', () => {
     const next = mockNext()
 
     const partACustodyGroup: CUSTODY_GROUP = randomEnum(CUSTODY_GROUP)
-    ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(partACustodyGroup)
+    ;(calculatePartACustodyGroup as jest.Mock).mockReturnValueOnce(partACustodyGroup)
 
     // when
     await editCustodyGroupController.get(req, res, next)
@@ -53,7 +53,7 @@ describe('get', () => {
         partACustodyGroup,
       },
     })
-    expect(getCustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/editCustodyGroup')
     expect(next).toHaveBeenCalled()
   })
@@ -71,7 +71,7 @@ describe('get', () => {
     const next = mockNext()
 
     const partACustodyGroup: CUSTODY_GROUP = randomEnum(CUSTODY_GROUP)
-    ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(partACustodyGroup)
+    ;(calculatePartACustodyGroup as jest.Mock).mockReturnValueOnce(partACustodyGroup)
 
     // when
     await editCustodyGroupController.get(req, res, next)
@@ -86,7 +86,7 @@ describe('get', () => {
         partACustodyGroup,
       },
     })
-    expect(getCustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/editCustodyGroup')
     expect(next).toHaveBeenCalled()
   })

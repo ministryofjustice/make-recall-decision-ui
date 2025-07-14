@@ -5,6 +5,27 @@ import { STATUSES } from '../middleware/recommendationStatusCheck'
 import { getStatuses, ppudUpdateRelease, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+
+function calculateReleaseDate(recommendation: RecommendationResponse) {
+  const { custodyGroup } = recommendation.bookRecallToPpud
+  switch (custodyGroup) {
+    case CUSTODY_GROUP.DETERMINATE:
+      // eslint-disable-next-line no-case-declarations
+      const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
+        o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+      )
+      return nomisOffence.releaseDate
+    case CUSTODY_GROUP.INDETERMINATE:
+      // eslint-disable-next-line no-case-declarations
+      const selectedSentence = recommendation.ppudOffender.sentences.find(
+        s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+      )
+      return selectedSentence.releaseDate
+    default:
+      custodyGroup satisfies never
+  }
+}
 
 export default async function updateRelease(
   bookingMemento: BookingMemento,
@@ -18,9 +39,7 @@ export default async function updateRelease(
     return memento
   }
 
-  const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
-  )
+  const releaseDate = calculateReleaseDate(recommendation)
 
   const statuses = await getStatuses({
     recommendationId: String(recommendation.id),
@@ -32,7 +51,7 @@ export default async function updateRelease(
     .find(s => s.name === STATUSES.ACO_SIGNED)
 
   const releaseResponse = await ppudUpdateRelease(token, memento.offenderId, memento.sentenceId, {
-    dateOfRelease: nomisOffence.releaseDate,
+    dateOfRelease: releaseDate,
     postRelease: {
       assistantChiefOfficer: {
         name: acoSigned.createdByUserFullName,

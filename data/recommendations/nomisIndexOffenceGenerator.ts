@@ -1,6 +1,6 @@
 import { NomisIndexOffence } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { DataGenerator, NoneOrOption } from '../@generators/dataGenerators'
-import { OfferedOffenceOptions, OfferenceOffenceGenerator } from './offeredOffenceGenerator'
+import { OfferedOffenceOptions, OfferedOffenceGenerator } from './offeredOffenceGenerator'
 
 export type NomisIndexOffenceOptions = {
   selectedIndex?: NoneOrOption<number>
@@ -9,7 +9,7 @@ export type NomisIndexOffenceOptions = {
 
 export const NomisIndexGenerator: DataGenerator<NomisIndexOffence, NomisIndexOffenceOptions> = {
   generate: (options?) => {
-    const offences = OfferenceOffenceGenerator.generateSeries(options?.offeredOffenceOptions ?? [{}, {}, {}])
+    const offences = OfferedOffenceGenerator.generateSeries(options?.offeredOffenceOptions ?? [{}, {}, {}])
     if (options?.selectedIndex === 'none') {
       return {
         allOptions: offences,
