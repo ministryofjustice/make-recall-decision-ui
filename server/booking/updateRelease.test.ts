@@ -21,46 +21,6 @@ jest.mock('../data/makeDecisionApiClient')
 const token = 'token'
 const featureFlags = { xyz: true }
 
-describe('update release', () => {
-  describe('not in expected stage', () => {
-    const bookingMemento = BookingMementoGenerator.generate({
-      stage: faker.helpers.arrayElement(
-        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENCE_BOOKED)
-      ),
-    })
-    let returnedMemento: BookingMemento
-    beforeEach(async () => {
-      const recommendation = RecommendationResponseGenerator.generate()
-      returnedMemento = await updateRelease(bookingMemento, recommendation, token, featureFlags)
-    })
-    it('- returns booking memento unchanged', () => {
-      expect(returnedMemento).toEqual(bookingMemento)
-    })
-    it('- makes no calls', () => {
-      expect(getStatuses).not.toHaveBeenCalled()
-      expect(ppudUpdateRelease).not.toHaveBeenCalled()
-      expect(updateRecommendation).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('in expected stage', () => {
-    describe('for determinate sentence', () => {
-      const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
-        return recommendation.nomisIndexOffence.allOptions[0].releaseDate
-      }
-
-      testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.DETERMINATE, calculateExpectedDateOfRelease)
-    })
-    describe('for indeterminate sentence', () => {
-      const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
-        return recommendation.ppudOffender.sentences[0].releaseDate
-      }
-
-      testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.INDETERMINATE, calculateExpectedDateOfRelease)
-    })
-  })
-})
-
 function testSuccessfulReleaseUpdateAlternatives(
   custodyGroup: CUSTODY_GROUP,
   calculateExpectedDateOfRelease: (recommendation: RecommendationResponse) => string
@@ -197,3 +157,43 @@ function buildExpectedUpdateReleaseRequest(
     releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
   }
 }
+
+describe('update release', () => {
+  describe('not in expected stage', () => {
+    const bookingMemento = BookingMementoGenerator.generate({
+      stage: faker.helpers.arrayElement(
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENCE_BOOKED)
+      ),
+    })
+    let returnedMemento: BookingMemento
+    beforeEach(async () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      returnedMemento = await updateRelease(bookingMemento, recommendation, token, featureFlags)
+    })
+    it('- returns booking memento unchanged', () => {
+      expect(returnedMemento).toEqual(bookingMemento)
+    })
+    it('- makes no calls', () => {
+      expect(getStatuses).not.toHaveBeenCalled()
+      expect(ppudUpdateRelease).not.toHaveBeenCalled()
+      expect(updateRecommendation).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('in expected stage', () => {
+    describe('for determinate sentence', () => {
+      const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
+        return recommendation.nomisIndexOffence.allOptions[0].releaseDate
+      }
+
+      testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.DETERMINATE, calculateExpectedDateOfRelease)
+    })
+    describe('for indeterminate sentence', () => {
+      const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
+        return recommendation.ppudOffender.sentences[0].releaseDate
+      }
+
+      testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.INDETERMINATE, calculateExpectedDateOfRelease)
+    })
+  })
+})
