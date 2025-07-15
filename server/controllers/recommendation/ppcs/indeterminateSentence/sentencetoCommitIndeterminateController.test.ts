@@ -9,7 +9,7 @@ const releaseDate = faker.date.future()
 const expected = {
   sentence: {
     id: faker.helpers.replaceSymbols('********************'),
-    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']), // Are we introducing a source for these?
+    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']),
     indexOffence: faker.lorem.words(),
     releaseDate: releaseDate.toISOString(),
     sentencingCourt: `${faker.location.city} Court`,
