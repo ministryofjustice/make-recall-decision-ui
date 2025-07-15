@@ -3,13 +3,13 @@ import { PpudSentence } from '../../server/@types/make-recall-decision-api/model
 import { DataGeneratorWithSeries } from '../@generators/dataGenerators'
 import { DeterminateCustody, IndeterminateCustody } from '../../server/helpers/ppudSentence/ppudSentenceHelper'
 
-export type PPUDSentenceOptions = {
+export type PpudSentenceOptions = {
   id?: string
   custodyType?: DeterminateCustody | IndeterminateCustody
   releaseDate?: Date
 }
 
-const generateInternal: (options?: PPUDSentenceOptions) => PpudSentence = (options?) => ({
+const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (options?) => ({
   id: options.id ?? faker.number.int().toString(),
   sentenceExpiryDate: faker.date.future().toISOString(),
   dateOfSentence: faker.date.past().toISOString(),
@@ -29,7 +29,7 @@ const generateInternal: (options?: PPUDSentenceOptions) => PpudSentence = (optio
   sentencingCourt: `${faker.location.city()} Court`,
 })
 
-export const PPUDSentenceGenerator: DataGeneratorWithSeries<PpudSentence, PPUDSentenceOptions> = {
+export const PpudSentenceGenerator: DataGeneratorWithSeries<PpudSentence, PpudSentenceOptions> = {
   generate: options => generateInternal(options),
   generateSeries: optionsSeries => optionsSeries.map(options => generateInternal(options)),
 }

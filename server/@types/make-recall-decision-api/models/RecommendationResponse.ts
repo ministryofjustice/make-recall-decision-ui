@@ -172,7 +172,7 @@ export type BookRecallToPpud = {
   indexOffence?: string,
   indexOffenceComment?: string,
   ppudSentenceId?: string,
-  ppudSentenceData?: PPUDSentenceData,
+  ppudSentenceData?: PpudSentenceData,
   mappaLevel?: string,
   policeForce?: string,
   probationArea?: string,
@@ -186,7 +186,7 @@ export type BookRecallToPpud = {
   currentEstablishment?: string,
 }
 
-export type PPUDSentenceData = {
+export type PpudSentenceData = {
     offenceDescription: string,
     releaseDate: string,
     sentencingCourt: string,

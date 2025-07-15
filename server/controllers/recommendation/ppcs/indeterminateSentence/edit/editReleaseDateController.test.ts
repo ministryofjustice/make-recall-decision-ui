@@ -67,7 +67,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
     const recommendationId = faker.number.int().toString()
     const basePath = `/recommendations/${faker.number.int()}/`
     const next = mockNext()
-    const validDate = DateTime.now().plus({ days: 1 })
+    const validDate = DateTime.now().minus({ days: 1 })
     const expectedDateParts = {
       day: validDate.day.toString().padStart(2, '0'),
       month: validDate.month.toString().padStart(2, '0'),
@@ -113,7 +113,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
     describe('Given an invalid date is submitted', () => {
       type DateKey = 'day' | 'month' | 'year'
       const variableShortYear = faker.helpers.arrayElement([1, 12, 123])
-      const pastDate = DateTime.now().minus({ days: faker.number.int({ min: 1, max: 6 }) })
+      const futureDate = DateTime.now().plus({ days: faker.number.int({ min: 1, max: 6 }) })
       const invalidDateTestCases: {
         name: string
         testBody: { day: number; month: number; year: number }
@@ -134,14 +134,14 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
         },
         { name: 'Day less than minimum', testBody: { day: 0, month: 1, year: 2025 }, id: 'day', parts: ['day'] },
         {
-          name: 'Day greater than minimum',
+          name: 'Day greater than maximum',
           testBody: { day: faker.number.int({ min: 32 }), month: 1, year: 2025 },
           id: 'day',
           parts: ['day'],
         },
         { name: 'Month less than minimum', testBody: { day: 1, month: 0, year: 2025 }, id: 'month', parts: ['month'] },
         {
-          name: 'Month greater than minimum',
+          name: 'Month greater than maximum',
           testBody: { day: 1, month: faker.number.int({ min: 13 }), year: 2025 },
           id: 'month',
           parts: ['month'],
@@ -153,15 +153,15 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
           parts: ['year'],
         },
         {
-          name: 'Year greater than minimum',
+          name: 'Year greater than maximum',
           testBody: { day: 1, month: 1, year: faker.number.int({ min: 2201 }) },
           id: 'year',
           parts: ['year'],
         },
         { name: 'Not a real date', testBody: { day: 31, month: 2, year: 2025 }, id: 'day', parts: undefined },
         {
-          name: 'Date is in the past',
-          testBody: { day: pastDate.day, month: pastDate.month, year: pastDate.year },
+          name: 'Date is in the future',
+          testBody: { day: futureDate.day, month: futureDate.month, year: futureDate.year },
           id: 'day',
           parts: ['day', 'month', 'year'],
         },
@@ -173,6 +173,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
             month: testBody.month?.toString(),
             year: testBody.year?.toString(),
           },
+          originalUrl: faker.internet.url(),
         })
         beforeEach(async () => {
           await editReleaseDateController.post(invalidReq, res, next)
@@ -191,7 +192,9 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
               expect(getError().invalidParts).toEqual(parts))
             it('- Does not update the recommendation', async () => expect(updateRecommendation).not.toHaveBeenCalled())
           })
-          it('Does not execute the next function ', async () => expect(next).not.toHaveBeenCalled())
+          it('- Redirects to back to the original url', async () =>
+            expect(res.redirect).toHaveBeenCalledWith(303, invalidReq.originalUrl))
+          it('- Does not execute the next function ', async () => expect(next).not.toHaveBeenCalled())
         })
       })
     })

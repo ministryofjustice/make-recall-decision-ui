@@ -1,16 +1,16 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { PPUDSentenceData } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import { PpudSentenceData } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { DataGenerator } from '../@generators/dataGenerators'
 
-export type PPUDSentenceDataOptions = {
+export type PpudSentenceDataOptions = {
   offenceDescription?: string
   releaseDate?: Date
   sentencingCourt?: string
   dateOfSentence?: Date
 }
 
-export const PPUDSentenceDataGenerator: DataGenerator<PPUDSentenceData, PPUDSentenceDataOptions> = {
-  generate: (options?: PPUDSentenceDataOptions) => ({
+export const PpudSentenceDataGenerator: DataGenerator<PpudSentenceData, PpudSentenceDataOptions> = {
+  generate: (options?: PpudSentenceDataOptions) => ({
     offenceDescription: options.offenceDescription ?? faker.lorem.sentence(),
     releaseDate: (options.releaseDate ?? faker.date.future()).toISOString(),
     sentencingCourt: options.sentencingCourt ?? `${faker.location.city()} Court`,

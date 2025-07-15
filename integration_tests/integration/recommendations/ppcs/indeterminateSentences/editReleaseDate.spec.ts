@@ -22,18 +22,18 @@ context('Determinate Sentence - Edit Release Date Page', () => {
   })
 
   const sentenceId = faker.number.int().toString()
-  const sentenceDate = faker.date.future()
-  const releaseDate = faker.date.future()
+  const ppudReleaseDate = faker.date.future()
+  const editedReleaseDate = faker.date.future()
   const defaultRecommendationResponse = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
       custodyGroup: CUSTODY_GROUP.INDETERMINATE,
       ppudSentenceId: sentenceId,
       ppudSentenceData: {
-        releaseDate,
+        releaseDate: editedReleaseDate,
       },
     },
     ppudOffender: {
-      sentences: [{ id: sentenceId, releaseDate: sentenceDate }],
+      sentences: [{ id: sentenceId, releaseDate: ppudReleaseDate }],
     },
   })
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
@@ -55,7 +55,7 @@ context('Determinate Sentence - Edit Release Date Page', () => {
 
       cy.get('p.govuk-body').should(
         'contain.text',
-        `${sentenceDate.getDate()} ${sentenceDate.toLocaleString('default', { month: 'long' })} ${sentenceDate.getFullYear()}`
+        `${ppudReleaseDate.getDate()} ${ppudReleaseDate.toLocaleString('default', { month: 'long' })} ${ppudReleaseDate.getFullYear()}`
       )
 
       // Date input surrounds
@@ -79,9 +79,9 @@ context('Determinate Sentence - Edit Release Date Page', () => {
 
       // Individual labels and input
       const inputTestCases = [
-        { suffix: 'day', label: 'Day', value: releaseDate.getDate() },
-        { suffix: 'month', label: 'Month', value: releaseDate.getMonth() + 1 },
-        { suffix: 'year', label: 'Year', value: releaseDate.getFullYear() },
+        { suffix: 'day', label: 'Day', value: editedReleaseDate.getDate() },
+        { suffix: 'month', label: 'Month', value: editedReleaseDate.getMonth() + 1 },
+        { suffix: 'year', label: 'Year', value: editedReleaseDate.getFullYear() },
       ]
       inputTestCases.forEach(({ suffix, label, value }, i) => {
         cy.get('@dateInputLabels')

@@ -3,7 +3,7 @@ import { BookRecallToPpud } from '../../server/@types/make-recall-decision-api/m
 import { DataGenerator, AnyNoneOrOption } from '../@generators/dataGenerators'
 import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { resolveAnyNoneOrOption } from '../@generators/dataGenerator.utils'
-import { PPUDSentenceDataGenerator, PPUDSentenceDataOptions } from './ppudSentenceDataGenerator'
+import { PpudSentenceDataGenerator, PpudSentenceDataOptions } from './ppudSentenceDataGenerator'
 import { EthnicityGenerator, EthnicityKey } from '../common/ethnicityGenerator'
 
 export type BookRecallToPpudOptions = {
@@ -14,7 +14,7 @@ export type BookRecallToPpudOptions = {
 
   custodyGroup?: AnyNoneOrOption<CUSTODY_GROUP>
   ppudSentenceId?: string
-  ppudSentenceData?: PPUDSentenceDataOptions
+  ppudSentenceData?: PpudSentenceDataOptions
 }
 
 export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookRecallToPpudOptions> = {
@@ -30,7 +30,7 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
 
     ppudSentenceId: options?.ppudSentenceId,
     ppudSentenceData: options?.ppudSentenceData
-      ? PPUDSentenceDataGenerator.generate(options.ppudSentenceData)
+      ? PpudSentenceDataGenerator.generate(options.ppudSentenceData)
       : undefined,
   }),
 }

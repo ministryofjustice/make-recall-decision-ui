@@ -9,7 +9,7 @@ const releaseDate = faker.date.future()
 const expected = {
   sentence: {
     id: faker.helpers.replaceSymbols('********************'),
-    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']), // Are we introducing a source for these?
+    custodyType: faker.helpers.arrayElement(['IPP', 'DPP']),
     indexOffence: faker.lorem.words(),
     releaseDate: releaseDate.toISOString(),
     sentencingCourt: `${faker.location.city} Court`,
@@ -80,6 +80,10 @@ describe('Sentence to Commit Indeterminate Controller', () => {
       )
     })
     it('Does not set any error message', async () => expect(res.locals.errorMessage).toBeUndefined())
+    describe('Sets the edit links as expected', () => {
+      it('- Is defined', async () => expect(res.locals.pageData.editLinks).toBeDefined())
+      it('- Release date', async () => expect(res.locals.pageData.editLinks.releaseDate).toEqual('edit-release-date'))
+    })
     it('Calls render to for the expected page', async () =>
       expect(res.render).toHaveBeenCalledWith(expected.render.path))
     it('Executes the next function', async () => expect(next).toHaveBeenCalled())

@@ -41,7 +41,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const releaseDate = convertGmtDatePartsToUtc(releaseDateParts as Record<string, string>, {
     includeTime: false,
-    dateMustBeInFuture: true,
+    dateMustBeInPast: true,
     validatePartLengths: true,
   })
   const errors = []
