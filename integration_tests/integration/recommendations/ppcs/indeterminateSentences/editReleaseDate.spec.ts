@@ -125,8 +125,8 @@ context('Determinate Sentence - Edit Release Date Page', () => {
       it('- Month that does not exist: Error links to month', () => testInvalidDate([1, 99, 2020], 'month'))
       it('- Year that does not exist: Error links to year', () => testInvalidDate([1, 1, 12345], 'year'))
       const now = new Date(Date.now())
-      it('- Date in the past: Error links to day', () =>
-        testInvalidDate([now.getDate(), now.getMonth() + 1, now.getFullYear() - 1], 'day'))
+      it('- Date in the future: Error links to day', () =>
+        testInvalidDate([now.getDate(), now.getMonth() + 1, now.getFullYear() + 1], 'day'))
     })
   })
 })
