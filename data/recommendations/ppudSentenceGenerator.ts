@@ -1,11 +1,11 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { PpudSentence } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { DataGeneratorWithSeries } from '../@generators/dataGenerators'
-import { DeterminateCustody, IndeterminateCustody } from '../../server/helpers/ppudSentence/ppudSentenceHelper'
+import { CustodyType } from '../../server/helpers/ppudSentence/custodyTypes'
 
 export type PpudSentenceOptions = {
   id?: string
-  custodyType?: DeterminateCustody | IndeterminateCustody
+  custodyType?: CustodyType
   releaseDate?: Date
 }
 

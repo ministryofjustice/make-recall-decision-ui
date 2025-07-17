@@ -16,7 +16,7 @@ const expected = {
 
 describe('Indeterminate Sentence - Edit Release Date Controller', () => {
   const sentenceId = faker.number.int().toString()
-  const expectedSentenceDate = faker.date.past()
+  const originalReleaseDate = faker.date.past()
   const recommendation = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
       ppudSentenceId: sentenceId,
@@ -26,7 +26,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
       sentences: [
         {
           id: sentenceId,
-          releaseDate: expectedSentenceDate,
+          releaseDate: originalReleaseDate,
         },
       ],
     },
@@ -49,7 +49,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
       describe('Page Data', () => {
         it('- is defined', async () => expect(res.locals.pageData).toBeDefined())
         it('- Existing release date', async () =>
-          expect(res.locals.pageData.existingReleaseDate).toEqual(expectedSentenceDate.toISOString()))
+          expect(res.locals.pageData.existingReleaseDate).toEqual(originalReleaseDate.toISOString()))
         it('- Day value to edit', async () => expect(res.locals.pageData.day).toEqual(expectedReleaseDate.getDate()))
         it('- Month value to edit', async () =>
           expect(res.locals.pageData.month).toEqual(expectedReleaseDate.getMonth() + 1))

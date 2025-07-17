@@ -1,5 +1,6 @@
 import { randomInt } from 'crypto'
 import { randomUUID } from 'node:crypto'
+import { faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import editCustodyGroupController from './editCustodyGroupController'
 import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
@@ -15,6 +16,7 @@ import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/mo
 import { getCustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { determineErrorId, reloadPageWithError } from '../validation/fieldValidation'
 import { randomErrorId } from '../../../../textStrings/en.testFactory'
+import { BookRecallToPpudGenerator } from '../../../../../data/recommendations/bookRecallToPpudGenerator'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 jest.mock('../../../../helpers/ppudSentence/ppudSentenceHelper')
@@ -166,9 +168,31 @@ describe('post', () => {
       },
     })
 
-    const initialBookRecallToPpud = bookRecallToPpud({
-      custodyGroup: randomEnum(CUSTODY_GROUP, [req.body.custodyGroup]),
+    const differingCustodyGroup = randomEnum(CUSTODY_GROUP, [req.body.custodyGroup])
+    const initialBookRecallToPpud = BookRecallToPpudGenerator.generate({
+      custodyGroup: differingCustodyGroup,
+      custodyTypeBasedOnGroup: CUSTODY_GROUP.DETERMINATE,
+      indexOffence: 'include',
+      indexOffenceComment: 'include',
+      ppudSentenceId: faker.string.alphanumeric(),
+      ppudSentenceData: {},
+      sentenceDate: 'include',
     })
+    const expectedBookRecallToPpud = {
+      ...initialBookRecallToPpud,
+      custodyGroup: req.body.custodyGroup,
+    }
+    // Assert that these properties all exist so that we can see they are removed
+    // before we call updateRecommendation with the result
+    expect(expectedBookRecallToPpud.sentenceDate).toBeDefined()
+    expect(expectedBookRecallToPpud.indexOffence).toBeDefined()
+    expect(expectedBookRecallToPpud.indexOffenceComment).toBeDefined()
+    expect(expectedBookRecallToPpud.ppudSentenceId).toBeDefined()
+    expect(expectedBookRecallToPpud.ppudSentenceData).toBeDefined()
+    // These values will be set managed so also need to exist for future expectations
+    expect(expectedBookRecallToPpud.custodyGroup).toBeDefined()
+    expect(expectedBookRecallToPpud.custodyType).toBeDefined()
+
     const res = mockRes({
       locals: {
         recommendation: {
@@ -197,14 +221,11 @@ describe('post', () => {
     // then
     expect(determineErrorId).toHaveBeenCalledWith(req.body.custodyGroup, custodyGroupFieldName, validCustodyGroups)
 
-    const expectedBookRecallToPpud = {
-      ...initialBookRecallToPpud,
-      custodyGroup: req.body.custodyGroup,
-    }
     delete expectedBookRecallToPpud.sentenceDate
     delete expectedBookRecallToPpud.indexOffence
     delete expectedBookRecallToPpud.indexOffenceComment
     delete expectedBookRecallToPpud.ppudSentenceId
+    delete expectedBookRecallToPpud.ppudSentenceData
     // TODO temporary expectation until the temporary measure in the
     //      controller is removed as part of MRD-2703
     if (req.body.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
