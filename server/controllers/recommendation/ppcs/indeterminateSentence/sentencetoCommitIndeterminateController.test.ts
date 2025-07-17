@@ -20,7 +20,7 @@ const expected = {
     fullPunishmentDays: faker.number.int({ min: 1, max: 30 }),
   },
   render: {
-    path: 'pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitIndeterminate',
+    path: 'pages/recommendations/ppcs/indeterminateSentence/sentenceToCommitIndeterminate',
   },
 }
 
@@ -65,7 +65,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
 
     it('Sets the correct page id', async () => expect(res.locals.page.id).toEqual('sentenceToCommitIndeterminate'))
     it('Sets the correct details for the sentence summary', async () => {
-      expect(res.locals.sentenceSummary).toEqual({
+      expect(res.locals.pageData.sentenceSummary).toEqual({
         custodyType: expected.sentence.custodyType,
         offence: expected.sentence.indexOffence,
         releaseDate: expected.sentence.releaseDate,
@@ -80,6 +80,10 @@ describe('Sentence to Commit Indeterminate Controller', () => {
       )
     })
     it('Does not set any error message', async () => expect(res.locals.errorMessage).toBeUndefined())
+    describe('Sets the edit links as expected', () => {
+      it('- Is defined', async () => expect(res.locals.pageData.editLinks).toBeDefined())
+      it('- Release date', async () => expect(res.locals.pageData.editLinks.releaseDate).toEqual('edit-release-date'))
+    })
     it('Calls render to for the expected page', async () =>
       expect(res.render).toHaveBeenCalledWith(expected.render.path))
     it('Executes the next function', async () => expect(next).toHaveBeenCalled())

@@ -1,24 +1,20 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
-
-const determinateCustodyTypes = ['Determinate', 'EDS', 'EDS (non parole)']
-
-const indeterminateCustodyTypes = [
-  'IPP',
-  'DPP',
-  'Mandatory (MLP)',
-  'Discretionary',
-  'Discretionary (Tariff Expired)',
-  'Automatic',
-]
+import { determinateCustodyTypes, indeterminateCustodyTypes } from './custodyTypes'
 
 export function getDeterminateSentences(sentences: PpudDetailsSentence[]): PpudDetailsSentence[] {
-  return getSentencesByCustodyType(sentences, determinateCustodyTypes)
+  return getSentencesByCustodyType(
+    sentences,
+    determinateCustodyTypes.map(ct => ct.toString())
+  )
 }
 
 export function getIndeterminateSentences(sentences: PpudDetailsSentence[]): PpudDetailsSentence[] {
-  return getSentencesByCustodyType(sentences, indeterminateCustodyTypes)
+  return getSentencesByCustodyType(
+    sentences,
+    indeterminateCustodyTypes.map(ct => ct.toString())
+  )
 }
 
 function getSentencesByCustodyType(sentences: PpudDetailsSentence[], custodyTypes: string[]) {

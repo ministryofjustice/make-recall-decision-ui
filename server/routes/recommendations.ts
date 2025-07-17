@@ -80,10 +80,9 @@ import ppcsConsiderRecallController from '../controllers/recommendation/searchPp
 import searchPpudResultsController from '../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../controllers/recommendation/ppcs/checkBookingDetailsController'
 import noSearchPpudResults from '../controllers/recommendation/noSearchPpudResults'
-import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import sentenceToCommitController from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitController'
 import sentenceToCommitExistingOffender from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitExistingOffenderController'
-import sentenceToCommitIndeterminate from '../controllers/recommendation/ppcs/sentenceToCommit/sentenceToCommitIndeterminateController'
+import sentenceToCommitIndeterminate from '../controllers/recommendation/ppcs/indeterminateSentence/sentenceToCommitIndeterminateController'
 import bookedToPpudController from '../controllers/recommendation/bookedToPpudController'
 import editPoliceContactController from '../controllers/recommendation/editPoliceContactController'
 import editRecallReceivedController from '../controllers/recommendation/editRecallReceivedController'
@@ -126,6 +125,8 @@ import selectIndeterminatePpudSentenceController from '../controllers/recommenda
 import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
 import { ppcsPaths } from './paths/ppcs'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
+import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
+import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 
 const recommendations = Router()
 
@@ -513,8 +514,8 @@ const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   )
 )
 
-ppcsDeterminateSentenceRouteBuilder.get('select-index-offence', selectIndexOffenceController.get)
-ppcsDeterminateSentenceRouteBuilder.post('select-index-offence', selectIndexOffenceController.post)
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.selectIndexOffence, selectIndexOffenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.selectIndexOffence, selectIndexOffenceController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, consecutiveSentenceDetailsController.get)
 
@@ -551,6 +552,9 @@ ppcsIndeterminateSentenceRouteBuilder.post(
 
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.get)
 ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.post)
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.get)
+ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.post)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 

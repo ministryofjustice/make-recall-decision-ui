@@ -153,7 +153,7 @@ describe('convertGmtDatePartsToUtc', () => {
 
     it('error for a date with the year below the minimum value', () => {
       const result = convertGmtDatePartsToUtc({ year: '1899', month: '10', day: '12' })
-      expect(result).toEqual({ errorId: 'minValueDateYear' })
+      expect(result).toEqual({ errorId: 'minValueDateYear', invalidParts: ['year'] })
     })
 
     it('error for a date with any date part having a negative value', () => {
@@ -220,7 +220,7 @@ describe('convertGmtDatePartsToUtc', () => {
         { year: '2050', month: '12', day: '10', hour: '23', minute: '12' },
         { dateMustBeInPast: true, includeTime: true }
       )
-      expect(result).toEqual({ errorId: 'dateMustBeInPast' })
+      expect(result).toEqual({ errorId: 'dateMustBeInPast', invalidParts: ['day', 'month', 'year'] })
     })
 
     it('error if a date must be in the past but is in the future', () => {
@@ -228,7 +228,7 @@ describe('convertGmtDatePartsToUtc', () => {
         { year: '2045', month: '03', day: '04' },
         { dateMustBeInPast: true, includeTime: false }
       )
-      expect(result).toEqual({ errorId: 'dateMustBeInPast' })
+      expect(result).toEqual({ errorId: 'dateMustBeInPast', invalidParts: ['day', 'month', 'year'] })
     })
 
     it('error if a date-time must be in the future but is in the past', () => {
@@ -236,7 +236,7 @@ describe('convertGmtDatePartsToUtc', () => {
         { year: '2020', month: '12', day: '10', hour: '23', minute: '12' },
         { dateMustBeInFuture: true, includeTime: true }
       )
-      expect(result).toEqual({ errorId: 'dateMustBeInFuture' })
+      expect(result).toEqual({ errorId: 'dateMustBeInFuture', invalidParts: ['day', 'month', 'year'] })
     })
 
     it('error if a date must be in the future but is in the past', () => {
@@ -244,7 +244,7 @@ describe('convertGmtDatePartsToUtc', () => {
         { year: '2020', month: '03', day: '04' },
         { dateMustBeInFuture: true, includeTime: false }
       )
-      expect(result).toEqual({ errorId: 'dateMustBeInFuture' })
+      expect(result).toEqual({ errorId: 'dateMustBeInFuture', invalidParts: ['day', 'month', 'year'] })
     })
   })
 

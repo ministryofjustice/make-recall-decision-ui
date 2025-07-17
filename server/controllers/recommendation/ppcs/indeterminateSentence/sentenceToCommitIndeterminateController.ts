@@ -3,6 +3,8 @@ import { RecommendationResponse } from '../../../../@types/make-recall-decision-
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
 
+import { ppcsPaths } from '../../../../routes/paths/ppcs'
+
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
@@ -12,13 +14,16 @@ async function get(_: Request, res: Response, next: NextFunction) {
   )
 
   const sentenceSummary = {
-    custodyType: ppudSentence.custodyType,
-    offence: ppudSentence.offence.indexOffence,
-    releaseDate: ppudSentence.releaseDate,
-    sentencingCourt: ppudSentence.sentencingCourt,
-    dateOfSentence: ppudSentence.dateOfSentence,
-    tariffExpiryDate: ppudSentence.sentenceExpiryDate,
-    fullPunishment: formatPpudSentenceLength(ppudSentence.sentenceLength),
+    ...{
+      custodyType: ppudSentence.custodyType,
+      offence: ppudSentence.offence.indexOffence,
+      releaseDate: ppudSentence.releaseDate,
+      sentencingCourt: ppudSentence.sentencingCourt,
+      dateOfSentence: ppudSentence.dateOfSentence,
+      tariffExpiryDate: ppudSentence.sentenceExpiryDate,
+      fullPunishment: formatPpudSentenceLength(ppudSentence.sentenceLength),
+    },
+    ...(recommendationResponse?.bookRecallToPpud?.ppudSentenceData ?? {}),
   }
 
   res.locals = {
@@ -26,14 +31,19 @@ async function get(_: Request, res: Response, next: NextFunction) {
     page: {
       id: 'sentenceToCommitIndeterminate',
     },
-    sentenceSummary,
+    pageData: {
+      sentenceSummary,
+      editLinks: {
+        releaseDate: ppcsPaths.indeterminateEdit.releaseDate,
+      },
+    },
   }
 
-  res.render(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitIndeterminate`)
+  res.render(`pages/recommendations/ppcs/indeterminateSentence/sentenceToCommitIndeterminate`)
   next()
 }
 
-async function post(req: Request, res: Response, _: NextFunction) {
+async function post(_: Request, res: Response, next: NextFunction) {
   const { urlInfo } = res.locals
   res.redirect(303, nextPageLinkUrl({ nextPageId: 'book-to-ppud', urlInfo }))
 }
