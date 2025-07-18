@@ -11,7 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, unsavedValues } = res.locals
   const recommendationResponse = recommendation as RecommendationResponse
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudIndeterminateSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
   const releaseDate = new Date(recommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate)
 
@@ -20,7 +20,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     pageData: {
       existingReleaseDate: ppudSentence.releaseDate,
       day: unsavedValues?.day ?? releaseDate.getDate(),
-      month: unsavedValues?.month ?? releaseDate.getMonth() + 1, // Apparently, months are index 0 -11
+      month: unsavedValues?.month ?? releaseDate.getMonth() + 1, // Apparently, months are index 0 - 11
       year: unsavedValues?.year ?? releaseDate.getFullYear(),
     },
   }

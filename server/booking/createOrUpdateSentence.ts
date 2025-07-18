@@ -42,7 +42,7 @@ export default async function createOrUpdateSentence(
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
   }
-  if (recommendation.bookRecallToPpud.ppudIndeterminateSentenceId === 'ADD_NEW') {
+  if (recommendation.bookRecallToPpud.ppudSentenceId === 'ADD_NEW') {
     const createSentenceResponse = await ppudCreateSentence(token, memento.offenderId, sentence)
 
     memento.sentenceId = createSentenceResponse.sentence.id

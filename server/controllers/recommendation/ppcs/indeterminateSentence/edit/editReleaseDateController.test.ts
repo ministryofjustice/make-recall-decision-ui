@@ -19,7 +19,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
   const originalReleaseDate = faker.date.past()
   const recommendation = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
-      ppudIndeterminateSentenceId: sentenceId,
+      ppudSentenceId: sentenceId,
       ppudIndeterminateSentenceData: {},
     },
     ppudOffender: {

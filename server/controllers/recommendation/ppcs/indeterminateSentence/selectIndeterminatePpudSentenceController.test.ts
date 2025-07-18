@@ -107,7 +107,7 @@ describe('get', () => {
         sentenceExpiryDate: recommendation.convictionDetail.sentenceExpiryDate,
       },
       ppudSentences: indeterminateSentences,
-      selectedSentenceId: recommendation.bookRecallToPpud.ppudIndeterminateSentenceId,
+      selectedSentenceId: recommendation.bookRecallToPpud.ppudSentenceId,
     }
 
     // when
@@ -159,7 +159,7 @@ describe('post', () => {
       valuesToSave: {
         bookRecallToPpud: {
           ...recommendation.bookRecallToPpud,
-          ppudIndeterminateSentenceId: req.body.ppudSentenceId,
+          ppudSentenceId: req.body.ppudSentenceId,
           ppudIndeterminateSentenceData: {
             offenceDescription: expectedSentence.offence.indexOffence,
             releaseDate: expectedSentence.releaseDate,

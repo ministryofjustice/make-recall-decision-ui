@@ -174,7 +174,7 @@ describe('post', () => {
       custodyTypeBasedOnGroup: CUSTODY_GROUP.DETERMINATE,
       indexOffence: 'include',
       indexOffenceComment: 'include',
-      ppudIndeterminateSentenceId: faker.string.alphanumeric(),
+      ppudSentenceId: faker.string.alphanumeric(),
       ppudIndeterminateSentenceData: {},
       sentenceDate: 'include',
     })
@@ -187,7 +187,7 @@ describe('post', () => {
     expect(expectedBookRecallToPpud.sentenceDate).toBeDefined()
     expect(expectedBookRecallToPpud.indexOffence).toBeDefined()
     expect(expectedBookRecallToPpud.indexOffenceComment).toBeDefined()
-    expect(expectedBookRecallToPpud.ppudIndeterminateSentenceId).toBeDefined()
+    expect(expectedBookRecallToPpud.ppudSentenceId).toBeDefined()
     expect(expectedBookRecallToPpud.ppudIndeterminateSentenceData).toBeDefined()
     // These values will be set managed so also need to exist for future expectations
     expect(expectedBookRecallToPpud.custodyGroup).toBeDefined()
@@ -224,7 +224,7 @@ describe('post', () => {
     delete expectedBookRecallToPpud.sentenceDate
     delete expectedBookRecallToPpud.indexOffence
     delete expectedBookRecallToPpud.indexOffenceComment
-    delete expectedBookRecallToPpud.ppudIndeterminateSentenceId
+    delete expectedBookRecallToPpud.ppudSentenceId
     delete expectedBookRecallToPpud.ppudIndeterminateSentenceData
     // TODO temporary expectation until the temporary measure in the
     //      controller is removed as part of MRD-2703

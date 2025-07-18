@@ -27,7 +27,7 @@ context('Determinate Sentence - Edit Release Date Page', () => {
   const defaultRecommendationResponse = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
       custodyGroup: CUSTODY_GROUP.INDETERMINATE,
-      ppudIndeterminateSentenceId: sentenceId,
+      ppudSentenceId: sentenceId,
       ppudIndeterminateSentenceData: {
         releaseDate: editedReleaseDate,
       },

@@ -69,7 +69,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        ppudIndeterminateSentenceId: ppudSentenceId,
+        ppudSentenceId,
         ppudIndeterminateSentenceData: {
           offenceDescription: sentence.offence.indexOffence,
           releaseDate: sentence.releaseDate,

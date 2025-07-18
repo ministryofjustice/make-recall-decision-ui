@@ -21,7 +21,7 @@ export type BookRecallToPpudOptions = {
   custodyType?: AnyNoneOrOption<CustodyType>
   indexOffence?: IncludeNoneOrOption<string>
   indexOffenceComment?: IncludeNoneOrOption<string>
-  ppudIndeterminateSentenceId?: string
+  ppudSentenceId?: string
   ppudIndeterminateSentenceData?: PpudSentenceDataOptions
   sentenceDate?: IncludeNoneOrOption<Date>
 }
@@ -57,7 +57,7 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       custodyType: resolvedCustodyType,
       indexOffence: resolveIncludeNoneOrOption(options?.indexOffence, faker.lorem.words),
       indexOffenceComment: resolveIncludeNoneOrOption(options?.indexOffenceComment, faker.lorem.sentence),
-      ppudIndeterminateSentenceId: options?.ppudIndeterminateSentenceId,
+      ppudSentenceId: options?.ppudSentenceId,
       ppudIndeterminateSentenceData: options?.ppudIndeterminateSentenceData
         ? PpudSentenceDataGenerator.generate(options.ppudIndeterminateSentenceData)
         : undefined,
