@@ -110,7 +110,7 @@ describe('update sentence', () => {
       bookRecallToPpud: {
         custodyType: 'Determinate',
         mappaLevel: 'Level 2 - local inter-agency management',
-        ppudSentenceId: 'ADD_NEW',
+        ppudIndeterminateSentenceId: 'ADD_NEW',
         legislationReleasedUnder: 'CJA 2023',
         legislationSentencedUnder: 'CJA 2023',
       },

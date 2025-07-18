@@ -11,9 +11,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, unsavedValues } = res.locals
   const recommendationResponse = recommendation as RecommendationResponse
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudIndeterminateSentenceId
   )
-  const releaseDate = new Date(recommendationResponse.bookRecallToPpud.ppudSentenceData.releaseDate)
+  const releaseDate = new Date(recommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate)
 
   res.locals = {
     ...res.locals,
@@ -75,8 +75,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        ppudSentenceData: {
-          ...recommendation.bookRecallToPpud.ppudSentenceData,
+        ppudIndeterminateSentenceData: {
+          ...recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
           releaseDate,
         },
       },

@@ -182,7 +182,7 @@ describe('book offender', () => {
       },
       bookRecallToPpud: {
         cro: '1234',
-        ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
+        ppudIndeterminateSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
         gender: 'Male',
         ethnicity: 'Irish',
         firstNames: 'Joe J',
@@ -364,7 +364,7 @@ describe('book offender', () => {
         details: '123 Oak Avenue, Birmingham, B23 456',
       },
       bookRecallToPpud: {
-        ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
+        ppudIndeterminateSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
         gender: 'Male',
         ethnicity: 'Irish',
         firstNames: 'Joe J',

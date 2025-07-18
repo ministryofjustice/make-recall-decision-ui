@@ -55,7 +55,7 @@ export default async function bookOffender(
   if (recommendation.ppudOffender) {
     memento.offenderId = recommendation.ppudOffender.id
     const sentences = recommendation.ppudOffender.sentences as PpudSentence[]
-    memento.sentenceId = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)?.id
+    memento.sentenceId = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudIndeterminateSentenceId)?.id
 
     await ppudUpdateOffender(token, memento.offenderId, {
       nomsId: recommendation.personOnProbation.nomsNumber,

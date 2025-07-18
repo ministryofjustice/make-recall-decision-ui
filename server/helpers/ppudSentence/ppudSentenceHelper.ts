@@ -18,7 +18,7 @@ export function getIndeterminateSentences(sentences: PpudDetailsSentence[]): Ppu
 }
 
 function getSentencesByCustodyType(sentences: PpudDetailsSentence[], custodyTypes: string[]) {
-  return sentences.filter(sentence => custodyTypes.includes(sentence.custodyType))
+  return sentences?.filter(sentence => custodyTypes.includes(sentence.custodyType)) ?? []
 }
 
 export function getCustodyGroup(recommendation: RecommendationResponse): CUSTODY_GROUP {

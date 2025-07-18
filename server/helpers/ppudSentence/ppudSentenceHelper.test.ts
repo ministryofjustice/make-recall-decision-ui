@@ -85,6 +85,12 @@ describe('getDeterminateSentences', () => {
 
     expect(actualDeterminateSentences).toEqual([])
   })
+
+  it('returns an empty list if given an undefined list', () => {
+    const actualDeterminateSentences = getDeterminateSentences(undefined)
+
+    expect(actualDeterminateSentences).toEqual([])
+  })
 })
 
 describe('getIndeterminateSentences', () => {

@@ -22,7 +22,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       tariffExpiryDate: ppudSentence.sentenceExpiryDate,
       fullPunishment: formatPpudSentenceLength(ppudSentence.sentenceLength),
     },
-    ...(recommendationResponse?.bookRecallToPpud?.ppudSentenceData ?? {}),
+    ...(recommendationResponse?.bookRecallToPpud?.ppudIndeterminateSentenceData ?? {}),
   }
 
   res.locals = {

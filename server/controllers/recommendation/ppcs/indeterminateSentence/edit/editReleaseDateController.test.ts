@@ -19,8 +19,8 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
   const originalReleaseDate = faker.date.past()
   const recommendation = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
-      ppudSentenceId: sentenceId,
-      ppudSentenceData: {},
+      ppudIndeterminateSentenceId: sentenceId,
+      ppudIndeterminateSentenceData: {},
     },
     ppudOffender: {
       sentences: [
@@ -31,7 +31,7 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
       ],
     },
   })
-  const expectedReleaseDate = new Date(recommendation.bookRecallToPpud.ppudSentenceData.releaseDate)
+  const expectedReleaseDate = new Date(recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate)
 
   describe('get', () => {
     const req = mockReq()
@@ -97,8 +97,8 @@ describe('Indeterminate Sentence - Edit Release Date Controller', () => {
           valuesToSave: {
             bookRecallToPpud: {
               ...recommendation.bookRecallToPpud,
-              ppudSentenceData: {
-                ...recommendation.bookRecallToPpud.ppudSentenceData,
+              ppudIndeterminateSentenceData: {
+                ...recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
                 releaseDate: `${expectedDateParts.year}-${expectedDateParts.month}-${expectedDateParts.day}`,
               },
             },
