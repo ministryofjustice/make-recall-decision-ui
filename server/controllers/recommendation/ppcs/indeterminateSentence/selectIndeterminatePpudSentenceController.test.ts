@@ -160,7 +160,7 @@ describe('post', () => {
         bookRecallToPpud: {
           ...recommendation.bookRecallToPpud,
           ppudSentenceId: req.body.ppudSentenceId,
-          ppudSentenceData: {
+          ppudIndeterminateSentenceData: {
             offenceDescription: expectedSentence.offence.indexOffence,
             releaseDate: expectedSentence.releaseDate,
             sentencingCourt: expectedSentence.sentencingCourt,

@@ -13,14 +13,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
     s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
-  const releaseDate = new Date(recommendationResponse.bookRecallToPpud.ppudSentenceData.releaseDate)
+  const releaseDate = new Date(recommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate)
 
   res.locals = {
     ...res.locals,
     pageData: {
       existingReleaseDate: ppudSentence.releaseDate,
       day: unsavedValues?.day ?? releaseDate.getDate(),
-      month: unsavedValues?.month ?? releaseDate.getMonth() + 1, // Apparently, months are index 0 -11
+      month: unsavedValues?.month ?? releaseDate.getMonth() + 1, // Apparently, months are index 0 - 11
       year: unsavedValues?.year ?? releaseDate.getFullYear(),
     },
   }
@@ -75,8 +75,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        ppudSentenceData: {
-          ...recommendation.bookRecallToPpud.ppudSentenceData,
+        ppudIndeterminateSentenceData: {
+          ...recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
           releaseDate,
         },
       },

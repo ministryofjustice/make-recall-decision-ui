@@ -47,7 +47,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (ppudSentenceId === undefined) {
     errorId = 'missingIndeterminatePpudSentence'
   } else {
-    const sentenceIds = sentences.map((sentence: PpudDetailsSentence) => sentence.id)
+    const sentenceIds = sentences?.map((sentence: PpudDetailsSentence) => sentence.id)
     if (!sentenceIds.includes(ppudSentenceId)) {
       errorId = 'invalidIndeterminatePpudSentenceSelected'
     }
@@ -70,7 +70,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         ppudSentenceId,
-        ppudSentenceData: {
+        ppudIndeterminateSentenceData: {
           offenceDescription: sentence.offence.indexOffence,
           releaseDate: sentence.releaseDate,
           sentencingCourt: sentence.sentencingCourt,

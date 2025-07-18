@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
-
 import { ppcsPaths } from '../../../../routes/paths/ppcs'
 
 async function get(_: Request, res: Response, next: NextFunction) {
@@ -23,7 +22,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       tariffExpiryDate: ppudSentence.sentenceExpiryDate,
       fullPunishment: formatPpudSentenceLength(ppudSentence.sentenceLength),
     },
-    ...(recommendationResponse?.bookRecallToPpud?.ppudSentenceData ?? {}),
+    ...(recommendationResponse?.bookRecallToPpud?.ppudIndeterminateSentenceData ?? {}),
   }
 
   res.locals = {

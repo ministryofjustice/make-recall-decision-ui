@@ -28,7 +28,7 @@ context('Determinate Sentence - Edit Release Date Page', () => {
     bookRecallToPpud: {
       custodyGroup: CUSTODY_GROUP.INDETERMINATE,
       ppudSentenceId: sentenceId,
-      ppudSentenceData: {
+      ppudIndeterminateSentenceData: {
         releaseDate: editedReleaseDate,
       },
     },
