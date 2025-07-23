@@ -15,7 +15,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const sentenceSummary = {
     ...{
       custodyType: ppudSentence.custodyType,
-      offence: ppudSentence.offence.indexOffence,
+      offenceDescription: ppudSentence.offence.indexOffence,
       releaseDate: ppudSentence.releaseDate,
       sentencingCourt: ppudSentence.sentencingCourt,
       dateOfSentence: ppudSentence.dateOfSentence,

@@ -67,7 +67,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
     it('Sets the correct details for the sentence summary', async () => {
       expect(res.locals.pageData.sentenceSummary).toEqual({
         custodyType: expected.sentence.custodyType,
-        offence: expected.sentence.indexOffence,
+        offenceDescription: expected.sentence.indexOffence,
         releaseDate: expected.sentence.releaseDate,
         sentencingCourt: expected.sentence.sentencingCourt,
         dateOfSentence: expected.sentence.dateOfSentence,
