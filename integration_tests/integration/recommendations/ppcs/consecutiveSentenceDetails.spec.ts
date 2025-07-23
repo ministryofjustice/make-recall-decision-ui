@@ -264,18 +264,16 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
   ) => {
     cy.get(`dl#${id}`).should('exist').as('sentenceSummary')
     testSummaryList(cy.get('@sentenceSummary'), {
-      rows: {
-        matchLength: true,
-        expectedContent: [
-          { key: expectedOffenceLabel, value: expectedSentence.offences.at(0).offenceDescription },
-          { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
-          { key: expectedLabels.court, value: expectedSentence.courtDescription },
-          { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },
-          { key: expectedLabels.startDate, value: expectedSentence.sentenceStartDate },
-          { key: expectedLabels.expiryDate, value: expectedSentence.sentenceEndDate },
-          ...expectedTerms,
-        ],
-      },
+      matchLength: true,
+      rows: [
+        { key: expectedOffenceLabel, value: expectedSentence.offences.at(0).offenceDescription },
+        { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
+        { key: expectedLabels.court, value: expectedSentence.courtDescription },
+        { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },
+        { key: expectedLabels.startDate, value: expectedSentence.sentenceStartDate },
+        { key: expectedLabels.expiryDate, value: expectedSentence.sentenceEndDate },
+        ...expectedTerms,
+      ],
     })
   }
 
