@@ -84,7 +84,7 @@ describe('Indeterminate sentence - Your recall booking page', () => {
     })
     context('and the sentence data has been edited', () => {
       const editedReleaseDate = faker.date.future()
-      const editedOffenceDescription = 'This is my edited offence description'
+      const editedOffenceDescription = faker.lorem.sentence()
       const editedDateOfSentence = faker.date.past()
       const editedSentencingCourt = `${faker.location.city()} Court`
       const editedRecommendationResponse = RecommendationResponseGenerator.generate({
