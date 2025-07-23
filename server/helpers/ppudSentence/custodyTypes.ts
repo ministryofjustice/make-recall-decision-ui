@@ -1,6 +1,7 @@
 export const determinateCustodyTypes = ['Determinate', 'EDS', 'EDS (non parole)'] as const
 
 export const indeterminateCustodyTypes = [
+  'Indeterminate',
   'IPP',
   'DPP',
   'Mandatory (MLP)',
