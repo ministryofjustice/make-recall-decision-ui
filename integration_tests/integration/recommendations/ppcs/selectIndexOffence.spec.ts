@@ -111,17 +111,15 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         const expectedTerm = defaultPrisonSentenceSequence.at(index).indexSentence.terms.at(0)
         const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
         testSummaryList(cy.get('@hintSummaryList'), {
-          rows: {
-            matchLength: false,
-            expectedContent: [
-              { key: 'Sentence type', value: expectedSentence.sentenceTypeDescription },
-              { key: 'Court', value: expectedSentence.courtDescription },
-              { key: 'Date of sentence', value: expectedSentence.sentenceDate },
-              { key: 'Start date', value: expectedSentence.sentenceStartDate },
-              { key: 'Sentence expiry date', value: expectedSentence.sentenceEndDate },
-              { key: 'Sentence length', value: expectedTermText },
-            ],
-          },
+          matchLength: false,
+          rows: [
+            { key: 'Sentence type', value: expectedSentence.sentenceTypeDescription },
+            { key: 'Court', value: expectedSentence.courtDescription },
+            { key: 'Date of sentence', value: expectedSentence.sentenceDate },
+            { key: 'Start date', value: expectedSentence.sentenceStartDate },
+            { key: 'Sentence expiry date', value: expectedSentence.sentenceEndDate },
+            { key: 'Sentence length', value: expectedTermText },
+          ],
         })
       })
 
@@ -136,17 +134,15 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         .should('have.text', defaultRecommendationResponse.convictionDetail.indexOffenceDescription)
       cy.get('@partAGroup').find('dl').should('exist').as('partASummary')
       testSummaryList(cy.get('@partASummary'), {
-        rows: {
-          expectedContent: [
-            { key: 'Date of sentence', value: defaultRecommendationResponse.convictionDetail.dateOfSentence },
-            { key: 'Sentence type', value: defaultRecommendationResponse.convictionDetail.sentenceDescription },
-            { key: 'Sentence expiry date', value: defaultRecommendationResponse.convictionDetail.sentenceExpiryDate },
-            {
-              key: 'Sentence length',
-              value: `${defaultRecommendationResponse.convictionDetail.lengthOfSentence} ${defaultRecommendationResponse.convictionDetail.lengthOfSentenceUnits}`,
-            },
-          ],
-        },
+        rows: [
+          { key: 'Date of sentence', value: defaultRecommendationResponse.convictionDetail.dateOfSentence },
+          { key: 'Sentence type', value: defaultRecommendationResponse.convictionDetail.sentenceDescription },
+          { key: 'Sentence expiry date', value: defaultRecommendationResponse.convictionDetail.sentenceExpiryDate },
+          {
+            key: 'Sentence length',
+            value: `${defaultRecommendationResponse.convictionDetail.lengthOfSentence} ${defaultRecommendationResponse.convictionDetail.lengthOfSentenceUnits}`,
+          },
+        ],
       })
 
       // Continue button
@@ -168,17 +164,15 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         sentence: PrisonSentence
       ) => {
         testSummaryList(summaryList, {
-          rows: {
-            matchLength: false,
-            expectedContent: [
-              { key: 'Sentence type', value: sentence.sentenceTypeDescription },
-              { key: 'Court', value: sentence.courtDescription },
-              { key: 'Date of sentence', value: sentence.sentenceDate },
-              { key: 'Start date', value: sentence.sentenceStartDate },
-              { key: 'Sentence expiry date', value: sentence.sentenceEndDate },
-              ...termsRows,
-            ],
-          },
+          matchLength: false,
+          rows: [
+            { key: 'Sentence type', value: sentence.sentenceTypeDescription },
+            { key: 'Court', value: sentence.courtDescription },
+            { key: 'Date of sentence', value: sentence.sentenceDate },
+            { key: 'Start date', value: sentence.sentenceStartDate },
+            { key: 'Sentence expiry date', value: sentence.sentenceEndDate },
+            ...termsRows,
+          ],
         })
       }
       it('Sentence with single term - displays as Sentence length', () => {
@@ -262,14 +256,12 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         convictionDetail: ConvictionDetail
       ) => {
         testSummaryList(summaryList, {
-          rows: {
-            expectedContent: [
-              { key: 'Date of sentence', value: convictionDetail.dateOfSentence },
-              { key: 'Sentence type', value: convictionDetail.sentenceDescription },
-              { key: 'Sentence expiry date', value: convictionDetail.sentenceExpiryDate },
-              ...termsRows,
-            ],
-          },
+          rows: [
+            { key: 'Date of sentence', value: convictionDetail.dateOfSentence },
+            { key: 'Sentence type', value: convictionDetail.sentenceDescription },
+            { key: 'Sentence expiry date', value: convictionDetail.sentenceExpiryDate },
+            ...termsRows,
+          ],
         })
       }
       it('Part A is not extended - displays as Sentence length using length of sentence', () => {

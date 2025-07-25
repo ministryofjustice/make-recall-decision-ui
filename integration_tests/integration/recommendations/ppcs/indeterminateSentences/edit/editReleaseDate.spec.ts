@@ -1,14 +1,14 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { setDateInput, verifyInputs } from '../../../../componentTests/date.tests'
-import searchMappedUserResponse from '../../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../../api/responses/ppudSearchActiveUsers.json'
-import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
-import { testForErrorPageTitle, testForErrorSummary } from '../../../../componentTests/errors.tests'
-import { MIN_VALUE_YEAR } from '../../../../../server/utils/dates/conversion'
+import { setDateInput, verifyInputs } from '../../../../../componentTests/date.tests'
+import searchMappedUserResponse from '../../../../../../api/responses/searchMappedUsers.json'
+import searchActiveUsersResponse from '../../../../../../api/responses/ppudSearchActiveUsers.json'
+import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
+import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
+import { MIN_VALUE_YEAR } from '../../../../../../server/utils/dates/conversion'
 
-context('Determinate Sentence - Edit Release Date Page', () => {
+context('Indeterminate Sentence - Edit Release Date Page', () => {
   const recommendationId = '123'
   const inputName = 'release-date'
   const inputId = 'releaseDate'
