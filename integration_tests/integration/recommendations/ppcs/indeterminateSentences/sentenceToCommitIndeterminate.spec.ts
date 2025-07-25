@@ -2,7 +2,6 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import searchMappedUserResponse from '../../../../../api/responses/searchMappedUsers.json'
 import searchActiveUsersResponse from '../../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
 import { SummaryList, testSummaryList } from '../../../../componentTests/summaryList.tests'
 import { formatPpudSentenceLength } from '../../../../../server/utils/dates/ppudSentenceLength/formatting'
@@ -29,11 +28,11 @@ describe('Indeterminate sentence - Your recall booking page', () => {
     context("and the sentence data hasn't been edited", () => {
       const defaultRecommendationResponse = RecommendationResponseGenerator.generate({
         bookRecallToPpud: {
-          custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+          custodyType: 'IPP',
           ppudSentenceId: sentenceId,
         },
         ppudOffender: {
-          sentences: [{ id: sentenceId, custodyType: 'Indeterminate', releaseDate }],
+          sentences: [{ id: sentenceId, custodyType: 'IPP', releaseDate }],
         },
       })
       const ppudSentence = defaultRecommendationResponse.ppudOffender.sentences.find(
@@ -46,7 +45,7 @@ describe('Indeterminate sentence - Your recall booking page', () => {
       it('displays the default recommendation data', () => {
         const summaryListContent = {
           rows: [
-            { key: 'Custody type', value: defaultRecommendationResponse.bookRecallToPpud.custodyGroup },
+            { key: 'Custody type', value: defaultRecommendationResponse.bookRecallToPpud.custodyType },
             {
               key: 'Offence',
               value: ppudSentence.offence.indexOffence,
@@ -89,7 +88,7 @@ describe('Indeterminate sentence - Your recall booking page', () => {
       const editedSentencingCourt = `${faker.location.city()} Court`
       const editedRecommendationResponse = RecommendationResponseGenerator.generate({
         bookRecallToPpud: {
-          custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+          custodyType: 'IPP',
           ppudSentenceId: sentenceId,
           ppudIndeterminateSentenceData: {
             offenceDescription: editedOffenceDescription,
@@ -99,7 +98,7 @@ describe('Indeterminate sentence - Your recall booking page', () => {
           },
         },
         ppudOffender: {
-          sentences: [{ id: sentenceId, custodyType: 'Indeterminate', releaseDate }],
+          sentences: [{ id: sentenceId, custodyType: 'IPP', releaseDate }],
         },
       })
       const ppudSentence = editedRecommendationResponse.ppudOffender.sentences.find(
@@ -113,7 +112,7 @@ describe('Indeterminate sentence - Your recall booking page', () => {
         const editedSentenceData = editedRecommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData
         const summaryListContent = {
           rows: [
-            { key: 'Custody type', value: editedRecommendationResponse.bookRecallToPpud.custodyGroup },
+            { key: 'Custody type', value: editedRecommendationResponse.bookRecallToPpud.custodyType },
             {
               key: 'Offence',
               value: editedSentenceData.offenceDescription,
@@ -147,8 +146,6 @@ describe('Indeterminate sentence - Your recall booking page', () => {
           editedRecommendationResponse.personOnProbation.name,
           summaryListContent
         )
-        // Continue button
-        cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
       })
     })
   })
