@@ -53,7 +53,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       } else if (recommendation?.isExtendedSentence) {
         nextPageId = 'recall-type-extended'
       } else {
-        nextPageId = 'recall-type'
+        nextPageId = 'suitability-for-fixed-term-recall'
       }
     } else if (recallType === 'NO_RECALL') {
       nextPageId = 'task-list-no-recall'
