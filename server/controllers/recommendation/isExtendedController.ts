@@ -90,7 +90,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     if (isYes) {
       nextPageId = 'recall-type-extended'
     } else {
-      nextPageId = 'recall-type'
+      nextPageId = 'suitability-for-fixed-term-recall'
     }
   } else {
     nextPageId = 'task-list-consider-recall'
