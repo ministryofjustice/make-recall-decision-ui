@@ -1,56 +1,27 @@
+import { faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import recallTypeController from './recallTypeController'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { inputDisplayValuesRecallType } from '../recommendations/recallType/inputDisplayValues'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { validateRecallType } from '../recommendations/recallType/formValidator'
+import { formOptions } from '../recommendations/formOptions/formOptions'
+import { EVENTS } from '../../utils/constants'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../recommendations/recallType/inputDisplayValues')
+jest.mock('../recommendations/recallType/formValidator')
 
 describe('get', () => {
-  it('load with no data', async () => {
+  it('add result of inputDisplayValuesRecallType to res.locals', async () => {
     const res = mockRes({
       locals: {
-        recommendation: {},
         token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await recallTypeController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'recallType' })
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
-
-    expect(next).toHaveBeenCalled()
-  })
-
-  it('load with existing data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          recallType: {
-            selected: { value: 'STANDARD', details: 'some details' },
-            allOptions: [
-              { value: 'STANDARD', text: 'Standard recall' },
-              { value: 'FIXED_TERM', text: 'Fixed term recall' },
-              { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
-            ],
-          },
-        },
-        token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await recallTypeController.get(mockReq(), res, next)
-
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'STANDARD', details: 'some details' })
-  })
-
-  it('initial load with error data', async () => {
-    const res = mockRes({
-      locals: {
+        recommendation: RecommendationResponseGenerator.generate(),
         unsavedValues: { recallType: 'STANDARD' },
         errors: {
           list: [
@@ -67,35 +38,30 @@ describe('get', () => {
             errorId: 'missingRecallTypeDetail',
           },
         },
-        recommendation: {
-          recallType: '',
-        },
-        token: 'token1',
       },
     })
+    const next = mockNext()
 
-    await recallTypeController.get(mockReq(), res, mockNext())
+    const inputDisplayValues = { value: faker.string.alpha(), details: faker.lorem.text() }
+    ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
 
-    expect(res.locals.errors).toEqual({
-      recallTypeDetailsStandard: {
-        errorId: 'missingRecallTypeDetail',
-        href: '#recallTypeDetailsStandard',
-        text: 'Explain why you recommend this recall type',
-      },
-      list: [
-        {
-          href: '#recallTypeDetailsStandard',
-          errorId: 'missingRecallTypeDetail',
-          html: 'Explain why you recommend this recall type',
-          name: 'recallTypeDetailsStandard',
-        },
-      ],
+    recallTypeController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'recallType' })
+    expect(res.locals.inputDisplayValues).toEqual(inputDisplayValues)
+    expect(inputDisplayValuesRecallType).toHaveBeenCalledWith({
+      errors: res.locals.errors,
+      unsavedValues: res.locals.unsavedValues,
+      apiValues: res.locals.recommendation,
     })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
+
+    expect(next).toHaveBeenCalled()
   })
 })
 
 describe('post', () => {
-  it('post with valid data', async () => {
+  it('post with valid data - recall', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -112,46 +78,62 @@ describe('post', () => {
       token: 'token1',
       locals: {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
       },
     })
     const next = mockNext()
 
+    const validationResults = {
+      valuesToSave: {
+        recallType: {
+          selected: {
+            value: req.body.recallType,
+            details: req.body.recallTypeDetailsStandard,
+          },
+          allOptions: formOptions.recallType,
+        },
+        isThisAnEmergencyRecall: false,
+      },
+      monitoringEvent: {
+        eventName: EVENTS.MRD_RECALL_TYPE,
+        data: {
+          recallType: req.body.recallType,
+        },
+      },
+    }
+    ;(validateRecallType as jest.Mock).mockResolvedValue(validationResults)
+
     await recallTypeController.post(req, res, next)
 
+    expect(validateRecallType).toHaveBeenCalledWith({
+      requestBody: req.body,
+      recommendationId: req.params.recommendationId,
+      urlInfo: res.locals.urlInfo,
+      token: res.locals.user.token,
+    })
+
     expect(updateStatuses).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
+      recommendationId: req.params.recommendationId,
+      token: res.locals.user.token,
       activate: [STATUSES.RECALL_DECIDED],
       deActivate: [STATUSES.NO_RECALL_DECIDED],
     })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
-      valuesToSave: {
-        recallType: {
-          selected: { value: 'STANDARD', details: 'some details' },
-          allOptions: [
-            { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'FIXED_TERM', text: 'Fixed term recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
-          ],
-        },
-        isThisAnEmergencyRecall: null,
-      },
+      recommendationId: req.params.recommendationId,
+      token: res.locals.user.token,
+      valuesToSave: validationResults.valuesToSave,
       featureFlags: {},
     })
 
     expect(appInsightsEvent).toHaveBeenCalledWith(
-      'mrdRecallType',
-      'Dave',
+      validationResults.monitoringEvent.eventName,
+      res.locals.user.username,
       {
-        crn: 'X098092',
-        recallType: 'STANDARD',
-        recommendationId: '123',
-        region: { code: 'N07', name: 'London' },
+        crn: req.body.crn,
+        recallType: validationResults.monitoringEvent.data.recallType,
+        recommendationId: req.params.recommendationId,
+        region: { code: res.locals.user.region.code, name: res.locals.user.region.name },
       },
       {}
     )
@@ -175,37 +157,66 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
         urlInfo: { basePath },
       },
     })
     const next = mockNext()
 
+    const validationResults = {
+      valuesToSave: {
+        recallType: {
+          selected: {
+            value: req.body.recallType,
+            details: req.body.recallTypeDetailsStandard,
+          },
+          allOptions: formOptions.recallType,
+        },
+        isThisAnEmergencyRecall: false,
+      },
+      monitoringEvent: {
+        eventName: EVENTS.MRD_RECALL_TYPE,
+        data: {
+          recallType: req.body.recallType,
+        },
+      },
+    }
+    ;(validateRecallType as jest.Mock).mockResolvedValue(validationResults)
+
     await recallTypeController.post(req, res, next)
 
+    expect(validateRecallType).toHaveBeenCalledWith({
+      requestBody: req.body,
+      recommendationId: req.params.recommendationId,
+      urlInfo: res.locals.urlInfo,
+      token: res.locals.user.token,
+    })
+
     expect(updateStatuses).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
+      recommendationId: req.params.recommendationId,
+      token: res.locals.user.token,
       activate: [STATUSES.NO_RECALL_DECIDED],
       deActivate: [STATUSES.RECALL_DECIDED],
     })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
-      valuesToSave: {
-        recallType: {
-          selected: { value: 'NO_RECALL' },
-          allOptions: [
-            { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'FIXED_TERM', text: 'Fixed term recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
-          ],
-        },
-        isThisAnEmergencyRecall: null,
-      },
+      recommendationId: req.params.recommendationId,
+      token: res.locals.user.token,
+      valuesToSave: validationResults.valuesToSave,
       featureFlags: {},
     })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      validationResults.monitoringEvent.eventName,
+      res.locals.user.username,
+      {
+        crn: req.body.crn,
+        recallType: validationResults.monitoringEvent.data.recallType,
+        recommendationId: req.params.recommendationId,
+        region: { code: res.locals.user.region.code, name: res.locals.user.region.name },
+      },
+      {}
+    )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-no-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
@@ -232,19 +243,33 @@ describe('post', () => {
       },
     })
 
+    const validationResults = {
+      errors: [
+        {
+          errorId: 'missingRecallTypeDetail',
+          href: '#recallTypeDetailsFixedTerm',
+          text: 'Explain why you recommend this recall type',
+          name: 'recallTypeDetailsFixedTerm',
+        },
+      ],
+      unsavedValues: faker.lorem.word(),
+    }
+    ;(validateRecallType as jest.Mock).mockResolvedValue(validationResults)
+
     await recallTypeController.post(req, res, mockNext())
 
+    expect(validateRecallType).toHaveBeenCalledWith({
+      requestBody: req.body,
+      recommendationId: req.params.recommendationId,
+      urlInfo: res.locals.urlInfo,
+      token: res.locals.user.token,
+    })
+
     expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'missingRecallTypeDetail',
-        href: '#recallTypeDetailsFixedTerm',
-        text: 'Explain why you recommend this recall type',
-        name: 'recallTypeDetailsFixedTerm',
-        invalidParts: undefined,
-        values: undefined,
-      },
-    ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+    expect(req.session).toEqual({
+      errors: validationResults.errors,
+      unsavedValues: validationResults.unsavedValues,
+    })
+    expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
   })
 })

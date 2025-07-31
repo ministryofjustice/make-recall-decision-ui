@@ -73,10 +73,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-
   const crn = normalizeCrn(req.body.crn)
   if (!isEmptyStringOrWhitespace(crn)) {
     appInsightsEvent(
@@ -91,6 +87,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
       flags
     )
   }
+
+  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }
