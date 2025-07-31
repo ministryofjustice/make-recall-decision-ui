@@ -6,6 +6,7 @@ import { inputDisplayValuesRecallType } from '../recommendations/recallType/inpu
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { formOptions } from '../recommendations/formOptions/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -20,6 +21,7 @@ function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
+    availableRecallTypes: formOptions.recallType,
     // DO NOT MERGE - temporary flag during development until global flag defined
     ftr48Enabled: true,
   }

@@ -54,6 +54,7 @@ describe('get', () => {
       unsavedValues: res.locals.unsavedValues,
       apiValues: res.locals.recommendation,
     })
+    expect(res.locals.availableRecallTypes).toEqual(formOptions.recallType)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
 
     expect(next).toHaveBeenCalled()
