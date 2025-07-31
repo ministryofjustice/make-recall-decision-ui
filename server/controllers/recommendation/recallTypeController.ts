@@ -9,7 +9,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, flags } = res.locals
 
   res.locals = {
     ...res.locals,
@@ -22,8 +22,8 @@ function get(req: Request, res: Response, next: NextFunction) {
       apiValues: recommendation,
     }),
     availableRecallTypes: formOptions.recallType,
-    // DO NOT MERGE - temporary flag during development until global flag defined
-    ftr48Enabled: true,
+    // READY TO MERGE?? FTR48 flag must be added to the system in order for this to work
+    ftr48Enabled: flags.ftr48Enabled,
   }
 
   res.render(`pages/recommendations/recallType`)

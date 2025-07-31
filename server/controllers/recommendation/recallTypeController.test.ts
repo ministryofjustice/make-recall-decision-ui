@@ -16,48 +16,80 @@ jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/recallType/inputDisplayValues')
 jest.mock('../recommendations/recallType/formValidator')
 
-describe('get', () => {
-  it('add result of inputDisplayValuesRecallType to res.locals', async () => {
-    const res = mockRes({
-      locals: {
-        token: 'token1',
-        recommendation: RecommendationResponseGenerator.generate(),
-        unsavedValues: { recallType: 'STANDARD' },
-        errors: {
-          list: [
-            {
-              name: 'recallTypeDetailsStandard',
-              href: '#recallTypeDetailsStandard',
-              errorId: 'missingRecallTypeDetail',
-              html: 'Explain why you recommend this recall type',
-            },
-          ],
-          recallTypeDetailsStandard: {
-            text: 'Explain why you recommend this recall type',
-            href: '#recallTypeDetailsStandard',
-            errorId: 'missingRecallTypeDetail',
-          },
-        },
-      },
-    })
-    const next = mockNext()
-
-    const inputDisplayValues = { value: faker.string.alpha(), details: faker.lorem.text() }
+function testGet(
+  // not sure how to define the type for locals without any, but ESLint complains if I keep any...
+  locals: object, // Record<string, any> & Locals,
+  inputDisplayValues: {
+    value: string
+    details: string
+  },
+  expectedAvailableRecallTypes: { value: string; text: string }[],
+  next: jest.Mock
+) {
+  // @ts-expect-error ignoring until I figure out how to define locals
+  const res = mockRes({ locals })
+  beforeEach(async () => {
     ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
-
     recallTypeController.get(mockReq(), res, next)
+  })
 
+  it('adds correct page to res.locals', async () => {
     expect(res.locals.page).toEqual({ id: 'recallType' })
+  })
+  it('adds result of inputDisplayValuesRecallType to res.locals', async () => {
     expect(res.locals.inputDisplayValues).toEqual(inputDisplayValues)
     expect(inputDisplayValuesRecallType).toHaveBeenCalledWith({
       errors: res.locals.errors,
       unsavedValues: res.locals.unsavedValues,
       apiValues: res.locals.recommendation,
     })
-    expect(res.locals.availableRecallTypes).toEqual(formOptions.recallType)
+  })
+  it('adds available recall types to res.locals', async () => {
+    expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
+  })
+  it('adds FTR48 flag to res.locals', async () => {
+    // @ts-expect-error ignoring until I figure out how to define locals
+    expect(res.locals.ftr48Enabled).toEqual(locals.flags.ftr48Enabled)
+  })
+  it('renders the recallType page and calls next', async () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
-
     expect(next).toHaveBeenCalled()
+  })
+}
+
+describe('get', () => {
+  const locals = {
+    token: 'token1',
+    recommendation: RecommendationResponseGenerator.generate(),
+    unsavedValues: { recallType: 'STANDARD' },
+    errors: {
+      list: [
+        {
+          name: 'recallTypeDetailsStandard',
+          href: '#recallTypeDetailsStandard',
+          errorId: 'missingRecallTypeDetail',
+          html: 'Explain why you recommend this recall type',
+        },
+      ],
+      recallTypeDetailsStandard: {
+        text: 'Explain why you recommend this recall type',
+        href: '#recallTypeDetailsStandard',
+        errorId: 'missingRecallTypeDetail',
+      },
+    },
+  }
+  const next = mockNext()
+
+  const inputDisplayValues = { value: faker.string.alpha(), details: faker.lorem.text() }
+  describe('with FTR48 flag disabled', () => {
+    const localsWithDisabledFlag = {
+      ...locals,
+      flags: { ftr48Enabled: false },
+    }
+
+    const expectedAvailableRecallTypes = formOptions.recallType
+
+    testGet(localsWithDisabledFlag, inputDisplayValues, expectedAvailableRecallTypes, next)
   })
 })
 
