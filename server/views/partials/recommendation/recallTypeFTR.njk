@@ -50,10 +50,15 @@
     }) }}
 </p>
 {% endset %}
+
+{% if ftr48Enabled %}
+{% include "../../partials/recommendation/recallTypeFTRConditionsPanel.njk" %}
+{% else %}
 {{ govukNotificationBanner({
     html: notificationBannerHtml,
     titleText: "Criminal Justice Act 2003 (Suitability for Fixed Term Recall) Order 2024"
 }) }}
+{% endif %}
 {{ govukRadios({
     idPrefix: "recallType",
     name: "recallType",

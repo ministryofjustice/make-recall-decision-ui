@@ -1,0 +1,26 @@
+{% set ftrPanelTextHtml %}
+    {% set panelHeadingText = [recommendation.personOnProbation.name, " must be given a fixed term recall, if recalled"] | join %}
+    {{ heading(panelHeadingText, 2, "m") }}
+
+    {{ govukDetails({
+        summaryText: "Understanding mandatory fixed term recalls",
+        html: "
+        <p>Sentences under 48 months must be a given fixed term recall unless the person being recalled is:
+        <ul>
+            <li>being managed at MAPPA level 2 or 3, or in category 4, at the point of recall</li>
+            <li>on an extended determinate sentence</li>
+            <li>being recalled for a new charged offence</li>
+            <li>serving a fixed term sentence for an offence within <a href=https://www.legislation.gov.uk/ukpga/2003/44/section/247A>section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners)</a> [The link opens in new tab]</li>
+            <li>serving a sentence for a terrorist or state threat offence</li>
+        </ul>
+        </p>
+        <p>This applies to people aged 18 and over.</p>"
+    }) }}
+{% endset %}
+
+{{ mojTicketPanel({
+    items: [{
+        html: ftrPanelTextHtml,
+        classes: "moj-ticket-panel__content--blue"
+    }]
+}) }}

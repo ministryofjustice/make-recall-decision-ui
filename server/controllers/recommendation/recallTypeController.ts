@@ -20,6 +20,8 @@ function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
+    // DO NOT MERGE - temporary flag during development until global flag defined
+    ftr48Enabled: true,
   }
 
   res.render(`pages/recommendations/recallType`)
