@@ -358,7 +358,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('redirect to recall-type if AP_RECORDED_RATIONALE and is standard', async () => {
+  it('redirect to suitability-for-fixed-term-recall if AP_RECORDED_RATIONALE and is standard', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
     const res = mockRes({
       locals: {
@@ -378,7 +378,7 @@ describe('get', () => {
 
     expect(updateStatuses).not.toHaveBeenCalled()
 
-    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type')
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
     expect(next).toHaveBeenCalled()
   })
 

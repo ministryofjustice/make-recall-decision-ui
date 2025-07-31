@@ -301,6 +301,6 @@ describe('post', () => {
 
     await isExtendedSentenceController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/suitability-for-fixed-term-recall`)
   })
 })
