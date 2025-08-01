@@ -61,6 +61,13 @@ export type RecommendationOptions = {
   bookRecallToPpud?: BookRecallToPpudOptions
   nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: PpudOffenderOptions
+  isUnder18?: boolean
+  isSentence48MonthsOrOver?: boolean
+  isMappaCategory4?: boolean
+  isMappaLevel2Or3?: boolean
+  isRecalledOnNewChargedOffence?: boolean
+  isServingFTSentenceForTerroristOffence?: boolean
+  hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -301,5 +308,12 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     nomisIndexOffence:
       options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
     ppudOffender: options?.ppudOffender ? PpudOffenderGenerator.generate(options.ppudOffender) : undefined,
+    isUnder18: options?.isUnder18,
+    isSentence48MonthsOrOver: options?.isSentence48MonthsOrOver,
+    isMappaCategory4: options?.isMappaCategory4,
+    isMappaLevel2Or3: options?.isMappaLevel2Or3,
+    isRecalledOnNewChargedOffence: options?.isRecalledOnNewChargedOffence,
+    isServingFTSentenceForTerroristOffence: options?.isServingFTSentenceForTerroristOffence,
+    hasBeenChargedWithTerroristOrStateThreatOffence: options?.hasBeenChargedWithTerroristOrStateThreatOffence,
   }),
 }

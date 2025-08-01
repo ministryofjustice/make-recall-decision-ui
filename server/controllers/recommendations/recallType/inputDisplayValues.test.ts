@@ -28,7 +28,7 @@ describe('inputDisplayValuesRecallType', () => {
     })
   })
 
-  it("should use unsavedValue over apiValue for value, and reset details, if there's an error for fixed term details", () => {
+  it("should use unsavedValue over apiValues for value, and reset details, if there's an error for fixed term details", () => {
     const errors = {
       recallTypeDetailsFixedTerm: {
         text: 'Explain why you recommend this recall type',
@@ -40,12 +40,12 @@ describe('inputDisplayValuesRecallType', () => {
     }
     const inputDisplayValues = inputDisplayValuesRecallType({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'STANDARD',
+      value: unsavedValues.recallType,
       details: '',
     })
   })
 
-  it("should use unsavedValue over apiValue for value, and reset details, if there's an error for standard details", () => {
+  it("should use unsavedValue over apiValues for value, and reset details, if there's an error for standard details", () => {
     const errors = {
       recallTypeDetailsStandard: {
         text: 'Explain why you recommend this recall type',
@@ -57,8 +57,20 @@ describe('inputDisplayValuesRecallType', () => {
     }
     const inputDisplayValues = inputDisplayValuesRecallType({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'STANDARD',
+      value: unsavedValues.recallType,
       details: '',
+    })
+  })
+
+  it('should use unsavedValue over apiValues for value and apiValues for details, if no error', () => {
+    const errors = {}
+    const unsavedValues = {
+      recallType: 'STANDARD',
+    }
+    const inputDisplayValues = inputDisplayValuesRecallType({ errors, unsavedValues, apiValues })
+    expect(inputDisplayValues).toEqual({
+      value: unsavedValues.recallType,
+      details: apiValues.recallType.selected.details,
     })
   })
 
@@ -67,8 +79,8 @@ describe('inputDisplayValuesRecallType', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesRecallType({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'FIXED_TERM',
-      details: 'Details...',
+      value: apiValues.recallType.selected.value,
+      details: apiValues.recallType.selected.details,
     })
   })
 })

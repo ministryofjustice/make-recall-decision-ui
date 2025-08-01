@@ -100,6 +100,12 @@ export type RecommendationResponse = {
   isMappaLevelAbove1?: boolean,
   isSentence12MonthsOrOver?: boolean,
   hasBeenConvictedOfSeriousOffence?: boolean,
+  isSentence48MonthsOrOver?: boolean,
+  isMappaCategory4?: boolean,
+  isMappaLevel2Or3?: boolean,
+  isRecalledOnNewChargedOffence?: boolean,
+  isServingFTSentenceForTerroristOffence?: boolean,
+  hasBeenChargedWithTerroristOrStateThreatOffence?: boolean,
 };
 
 export namespace RecommendationResponse {
@@ -187,11 +193,11 @@ export type BookRecallToPpud = {
 }
 
 export type PpudSentenceData = {
-    offenceDescription: string,
-    releaseDate: string,
-    sentencingCourt: string,
-    dateOfSentence: string
-  }
+  offenceDescription: string,
+  releaseDate: string,
+  sentencingCourt: string,
+  dateOfSentence: string
+}
 
 export type PrisonOffender = {
   image: string,
