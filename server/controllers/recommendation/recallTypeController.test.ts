@@ -10,9 +10,11 @@ import { RecommendationResponseGenerator } from '../../../data/recommendations/r
 import { validateRecallType } from '../recommendations/recallType/formValidator'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { EVENTS } from '../../utils/constants'
+import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../recommendations/recallType/availableRecallTypes')
 jest.mock('../recommendations/recallType/inputDisplayValues')
 jest.mock('../recommendations/recallType/formValidator')
 
@@ -23,12 +25,14 @@ function testGet(
     value: string
     details: string
   },
-  expectedAvailableRecallTypes: { value: string; text: string }[],
   next: jest.Mock
 ) {
   // @ts-expect-error ignoring until I figure out how to define locals
   const res = mockRes({ locals })
+
+  const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
   beforeEach(async () => {
+    ;(availableRecallTypes as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
     ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
     recallTypeController.get(mockReq(), res, next)
   })
@@ -44,12 +48,12 @@ function testGet(
       apiValues: res.locals.recommendation,
     })
   })
-  it('adds available recall types to res.locals', async () => {
+  it('adds result of availableRecallTypes to res.locals', async () => {
     expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
   })
   it('adds FTR48 flag to res.locals', async () => {
     // @ts-expect-error ignoring until I figure out how to define locals
-    expect(res.locals.ftr48Enabled).toEqual(locals.flags.ftr48Enabled)
+    expect(res.locals.ftr48Enabled).toEqual(locals.flags?.ftr48Enabled ?? false)
   })
   it('renders the recallType page and calls next', async () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
@@ -81,15 +85,18 @@ describe('get', () => {
   const next = mockNext()
 
   const inputDisplayValues = { value: faker.string.alpha(), details: faker.lorem.text() }
-  describe('with FTR48 flag disabled', () => {
-    const localsWithDisabledFlag = {
+
+  describe('with no FTR48 flag set', () => {
+    testGet(locals, inputDisplayValues, next)
+  })
+
+  describe('with FTR48 flag set', () => {
+    const localsWithFTR48FlagSet = {
       ...locals,
-      flags: { ftr48Enabled: false },
+      flags: { ftr48Enabled: faker.datatype.boolean() },
     }
 
-    const expectedAvailableRecallTypes = formOptions.recallType
-
-    testGet(localsWithDisabledFlag, inputDisplayValues, expectedAvailableRecallTypes, next)
+    testGet(localsWithFTR48FlagSet, inputDisplayValues, next)
   })
 })
 

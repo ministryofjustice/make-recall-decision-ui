@@ -6,10 +6,11 @@ import { inputDisplayValuesRecallType } from '../recommendations/recallType/inpu
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { formOptions } from '../recommendations/formOptions/formOptions'
+import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, flags } = res.locals
+  const ftr48Enabled = flags?.ftr48Enabled ?? false
 
   res.locals = {
     ...res.locals,
@@ -21,9 +22,9 @@ function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: formOptions.recallType,
+    availableRecallTypes: availableRecallTypes(ftr48Enabled, recommendation),
     // READY TO MERGE?? FTR48 flag must be added to the system in order for this to work
-    ftr48Enabled: flags.ftr48Enabled,
+    ftr48Enabled,
   }
 
   res.render(`pages/recommendations/recallType`)
