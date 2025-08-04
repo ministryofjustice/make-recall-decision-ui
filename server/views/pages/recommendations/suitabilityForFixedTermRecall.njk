@@ -81,91 +81,50 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+                {% if flags.flagFtr48Updates %}
+                    <p class="govuk-body">Use the following information to answer the questions and assess which type of
+                        recall is appropriate.</p>
+                {% else %}
+                    <p class="govuk-body">For sentences under 12 months, recalls must be fixed term unless either:</p>
+                    <ul class='govuk-list govuk-list--bullet'>
+                        <li>the person has been charged with a serious offence (murder or an offence listed in
+                            <a href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18" target="_blank" rel="noopener noreferrer" class="govuk-link"/>
+                            Schedule 18 of the Sentencing Act 2020</a>)</li>
+                        <li>the MAPPA level is 2 or 3 at the point of recall</li>
+                    </ul>
 
-                <p class="govuk-body">For sentences under 12 months, recalls must be fixed term unless either:</p>
-                <ul class='govuk-list govuk-list--bullet'>
-                    <li>the person has been charged with a serious offence (murder or an offence listed in
-                        <a href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18" target="_blank" rel="noopener noreferrer" class="govuk-link"/>
-                        Schedule 18 of the Sentencing Act 2020</a>)</li>
-                    <li>the MAPPA level is 2 or 3 at the point of recall</li>
-                </ul>
-
-                <p class="govuk-body">This applies to people aged 18 and over only.</p>
+                    <p class="govuk-body">This applies to people aged 18 and over only.</p>
+                {% endif %}
 
                 {{ appSummaryCard({
                     titleText: 'NDelius details for ' + recommendation.personOnProbation.name,
                     classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
                     html: offenceSentenceHtml
                 }) }}
-
-                {{ govukRadios({
-                    classes: "govuk-radios--inline",
-                    idPrefix: "isUnder18",
-                    name: "isUnder18",
-                    fieldset: {
-                        legend: {
-                            text: 'Is ' + recommendation.personOnProbation.name + ' under 18?',
-                            classes: "govuk-fieldset__legend--m",
-                            isPageHeading: true
-                        }
-                    },
-                    items: radioCheckboxItems({
-                        items: formOptions.yesNo,
-                        currentValues: inputDisplayValues.isUnder18
-                    }),
-                    errorMessage: errorMessage(errors.isUnder18)
-                }) }}
-                {{ govukRadios({
-                    classes: "govuk-radios--inline",
-                    idPrefix: "isSentence12MonthsOrOver",
-                    name: "isSentence12MonthsOrOver",
-                    fieldset: {
-                        legend: {
-                            text: 'Is the sentence 12 months or over?',
-                            classes: "govuk-fieldset__legend--m",
-                            isPageHeading: true
-                        }
-                    },
-                    items: radioCheckboxItems({
-                        items: formOptions.yesNo,
-                        currentValues: inputDisplayValues.isSentence12MonthsOrOver
-                    }),
-                    errorMessage: errorMessage(errors.isSentence12MonthsOrOver)
-                }) }}
-                {{ govukRadios({
-                    classes: "govuk-radios--inline",
-                    idPrefix: "isMappaLevelAbove1",
-                    name: "isMappaLevelAbove1",
-                    fieldset: {
-                        legend: {
-                            text: 'Is the MAPPA level above 1?',
-                            classes: "govuk-fieldset__legend--m",
-                            isPageHeading: true
-                        }
-                    },
-                    items: radioCheckboxItems({
-                        items: formOptions.yesNo,
-                        currentValues: inputDisplayValues.isMappaLevelAbove1
-                    }),
-                    errorMessage: errorMessage(errors.isMappaLevelAbove1)
-                }) }}
-                {{ govukRadios({
-                    classes: "govuk-radios--inline",
-                    idPrefix: "hasBeenConvictedOfSeriousOffence",
-                    name: "hasBeenConvictedOfSeriousOffence",
-                    fieldset: {
-                        legend: {
-                            text: 'Has ' + recommendation.personOnProbation.name + ' been charged with a serious offence?',
-                            classes: "govuk-fieldset__legend--m",
-                            isPageHeading: true
-                        }
-                    },
-                    items: radioCheckboxItems({
-                        items: formOptions.yesNo,
-                        currentValues: inputDisplayValues.hasBeenConvictedOfSeriousOffence
-                    }),
-                    errorMessage: errorMessage(errors.hasBeenConvictedOfSeriousOffence)
-                }) }}
+                {% for key, field in inputDisplayValues %}
+                    {% if field.displayForFTR48 is not defined or field.displayForFTR48 == flags.flagFtr48Updates %}
+                        {{ govukRadios({
+                            classes: "govuk-radios--inline",
+                            idPrefix: key,
+                            name: key,
+                            hint: {
+                                text: field.hint
+                            },
+                            fieldset: {
+                                legend: {
+                                    text: field.label,
+                                    classes: "govuk-fieldset__legend--m",
+                                    isPageHeading: false
+                                }
+                            },
+                            items: radioCheckboxItems({
+                                items: formOptions.yesNo,
+                                currentValues: field.value
+                            }),
+                            errorMessage: errorMessage(errors[key])
+                        }) }}
+                    {% endif %}
+                {% endfor %}
                 {{ formSubmitButton() }}
             </form>
         </div>

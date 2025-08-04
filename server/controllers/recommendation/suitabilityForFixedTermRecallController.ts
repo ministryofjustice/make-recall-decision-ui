@@ -6,6 +6,7 @@ import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { getCaseSection } from '../caseSummary/getCaseSection'
+import { NamedFormError } from '../../@types/pagesForms'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -32,27 +33,82 @@ async function get(req: Request, res: Response, next: NextFunction) {
     flags
   )
 
-  const inputDisplayValues = {
-    errors: res.locals.errors,
-    isUnder18: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
-    isSentence12MonthsOrOver:
-      unsavedValues?.isSentence12MonthsOrOver || booleanToYesNo(recommendation.isSentence12MonthsOrOver),
-    isMappaLevelAbove1: unsavedValues?.isMappaLevelAbove1 || booleanToYesNo(recommendation.isMappaLevelAbove1),
-    hasBeenConvictedOfSeriousOffence:
-      unsavedValues?.hasBeenConvictedOfSeriousOffence ||
-      booleanToYesNo(recommendation.hasBeenConvictedOfSeriousOffence),
-  }
-
   const caseSummary = {
     ...caseSummaryOverview,
     ...caseSummaryRisk,
+  }
+
+  // We're adding fields for MRD-2774 as part of the FTR48 changes
+  // The FTR48 changes are conditionally hidden by the flagFtr48Updates feature flag
+  // TODO: can we remove any inputs with displayForFTR48: true after the rollout?
+  const pageId = flags.flagFtr48Updates ? 'ftr48SuitabilityForFixedTermRecall' : 'suitabilityForFixedTermRecall'
+  const popName = recommendation.personOnProbation.name
+
+  const inputDisplayValues = {
+    isSentence48MonthsOrOver: {
+      label: `Is ${popName}'s sentence 48 months or over?`,
+      hint: `Use the total length if ${popName} is serving consecutive sentences.`,
+      value: unsavedValues?.isSentence48MonthsOrOver || booleanToYesNo(recommendation.isSentence48MonthsOrOver),
+      displayForFTR48: true,
+    },
+    isUnder18: {
+      label: `Is ${popName} under 18?`,
+      value: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
+    },
+    isSentence12MonthsOrOver: {
+      label: `Is the sentence 12 months or over?`,
+      value: unsavedValues?.isSentence12MonthsOrOver || booleanToYesNo(recommendation.isSentence12MonthsOrOver),
+      displayForFTR48: false,
+    },
+    isMappaLevelAbove1: {
+      label: `Is the MAPPA level above 1?`,
+      value: unsavedValues?.isMappaLevelAbove1 || booleanToYesNo(recommendation.isMappaLevelAbove1),
+      displayForFTR48: false,
+    },
+    hasBeenConvictedOfSeriousOffence: {
+      label: `Has ${popName} been charged with a serious offence?`,
+      value:
+        unsavedValues?.hasBeenConvictedOfSeriousOffence ||
+        booleanToYesNo(recommendation.hasBeenConvictedOfSeriousOffence),
+      displayForFTR48: false,
+    },
+    isMappaCategory4: {
+      label: `Is ${popName} in MAPPA category 4?`,
+      value: unsavedValues?.isMappaCategory4 || booleanToYesNo(recommendation.isMappaCategory4),
+      displayForFTR48: true,
+    },
+    isMappaLevel2Or3: {
+      label: `Is ${popName}'s MAPPA level 2 or 3?`,
+      value: unsavedValues?.isMappaLevel2Or3 || booleanToYesNo(recommendation.isMappaLevel2Or3),
+      displayForFTR48: true,
+    },
+    isRecalledOnNewChargedOffence: {
+      label: `Is ${popName} being recalled on a new charged offence?`,
+      value:
+        unsavedValues?.isRecalledOnNewChargedOffence || booleanToYesNo(recommendation.isRecalledOnNewChargedOffence),
+      displayForFTR48: true,
+    },
+    isServingFTSentenceForTerroristOffence: {
+      label: `Is ${popName} serving a fixed term sentence for a terrorist offence?`,
+      value:
+        unsavedValues?.isServingFTSentenceForTerroristOffence ||
+        booleanToYesNo(recommendation.isServingFTSentenceForTerroristOffence),
+      displayForFTR48: true,
+    },
+    hasBeenChargedWithTerroristOrStateThreatOffence: {
+      label: `Has ${popName} been charged with a terrorist or state threat offence?`,
+      value:
+        unsavedValues?.hasBeenChargedWithTerroristOrStateThreatOffence ||
+        booleanToYesNo(recommendation.hasBeenChargedWithTerroristOrStateThreatOffence),
+      displayForFTR48: true,
+    },
   }
 
   res.locals = {
     ...res.locals,
     caseSummary,
     page: {
-      id: 'suitabilityForFixedTermRecall',
+      id: pageId,
     },
     inputDisplayValues,
   }
@@ -70,71 +126,45 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { isUnder18, isSentence12MonthsOrOver, isMappaLevelAbove1, hasBeenConvictedOfSeriousOffence } = req.body
+  const errors: NamedFormError[] = []
+  const valuesToSave: Record<string, unknown> = {}
 
-  const errors = []
-  const unsavedValues = {
-    isUnder18,
-    isSentence12MonthsOrOver,
-    isMappaLevelAbove1,
-    hasBeenConvictedOfSeriousOffence,
-  }
+  const fieldIds = flags.flagFtr48Updates
+    ? [
+        'isSentence48MonthsOrOver',
+        'isUnder18',
+        'isMappaCategory4',
+        'isMappaLevel2Or3',
+        'isRecalledOnNewChargedOffence',
+        'isServingFTSentenceForTerroristOffence',
+        'hasBeenChargedWithTerroristOrStateThreatOffence',
+      ]
+    : ['isUnder18', 'isSentence12MonthsOrOver', 'isMappaLevelAbove1', 'hasBeenConvictedOfSeriousOffence']
 
-  if (!isUnder18 || !isValueValid(isUnder18 as string, 'yesNo')) {
-    const errorId = 'noIsUnder18'
-    errors.push(
-      makeErrorObject({
-        id: 'isUnder18',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
-  if (!isSentence12MonthsOrOver || !isValueValid(isSentence12MonthsOrOver as string, 'yesNo')) {
-    const errorId = 'noIsSentence12MonthsOrOver'
-    errors.push(
-      makeErrorObject({
-        id: 'isSentence12MonthsOrOver',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (!isMappaLevelAbove1 || !isValueValid(isMappaLevelAbove1 as string, 'yesNo')) {
-    const errorId = 'noIsMappaLevelAbove1'
-    errors.push(
-      makeErrorObject({
-        id: 'isMappaLevelAbove1',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
-
-  if (!hasBeenConvictedOfSeriousOffence || !isValueValid(hasBeenConvictedOfSeriousOffence as string, 'yesNo')) {
-    const errorId = 'noHasBeenConvictedOfSeriousOffence'
-    errors.push(
-      makeErrorObject({
-        id: 'hasBeenConvictedOfSeriousOffence',
-        text: strings.errors[errorId],
-        errorId,
-      })
-    )
-  }
+  // Loop through the unsaved values to generate an array of errors
+  Object.entries(unsavedValues).forEach(([key, value]) => {
+    if (!value || !isValueValid(value as string, 'yesNo')) {
+      // Capitalise the first letter of the key to fit the noFieldName format
+      const formatId = key.charAt(0).toUpperCase() + key.slice(1)
+      const errorId = `no${formatId}`
+      errors.push(
+        makeErrorObject({
+          id: key,
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    } else {
+      valuesToSave[key] = value === 'YES'
+    }
+  })
 
   if (errors.length > 0) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
     return res.redirect(303, req.originalUrl)
-  }
-
-  const valuesToSave = {
-    isUnder18: isUnder18 === 'YES',
-    isMappaLevelAbove1: isMappaLevelAbove1 === 'YES',
-    isSentence12MonthsOrOver: isSentence12MonthsOrOver === 'YES',
-    hasBeenConvictedOfSeriousOffence: hasBeenConvictedOfSeriousOffence === 'YES',
   }
 
   await updateRecommendation({
