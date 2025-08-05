@@ -6,9 +6,11 @@ import { inputDisplayValuesRecallType } from '../recommendations/recallType/inpu
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, flags } = res.locals
+  const ftr48Enabled = flags?.ftr48Enabled ?? false
 
   res.locals = {
     ...res.locals,
@@ -20,6 +22,9 @@ function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
+    availableRecallTypes: availableRecallTypes(ftr48Enabled, recommendation),
+    // READY TO MERGE?? FTR48 flag must be added to the system in order for this to work
+    ftr48Enabled,
   }
 
   res.render(`pages/recommendations/recallType`)
@@ -71,10 +76,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-
   const crn = normalizeCrn(req.body.crn)
   if (!isEmptyStringOrWhitespace(crn)) {
     appInsightsEvent(
@@ -89,6 +90,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
       flags
     )
   }
+
+  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }
