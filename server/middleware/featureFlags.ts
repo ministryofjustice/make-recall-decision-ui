@@ -16,6 +16,11 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
   },
+  flagFtr48Updates: {
+    label: 'Content updates for FTR48',
+    description: 'Updates the recall suitability flow in line with the FTR48 changes.',
+    default: false,
+  },
 }
 
 export const readFeatureFlags =

@@ -38,6 +38,14 @@ export const strings: Record<string, Record<string, string>> = {
     noIsIndeterminateSelected: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
     noIsExtendedSelected: 'Select whether {{ fullName }} is on an extended sentence or not',
     noIsUnder18: 'Select whether {{ fullName }} is under 18',
+    noIsSentence48MonthsOrOver: "Select whether {{ fullName }}'s sentence is 48 months or over",
+    noIsMappaCategory4: 'Select whether {{ fullName }} is in MAPPA category 4',
+    noIsMappaLevel2Or3: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+    noIsRecalledOnNewChargedOffence: 'Select whether {{ fullName }} is being recalled on a new charged offence',
+    noIsServingFTSentenceForTerroristOffence:
+      'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
+    noHasBeenChargedWithTerroristOrStateThreatOffence:
+      'Select whether {{ fullName }} has been charged with a terrorist or state threat offence',
     noIsSentence12MonthsOrOver: 'Select whether the sentence is 12 months or over',
     noIsMappaLevelAbove1: 'Select whether the MAPPA level is above 1',
     noHasBeenConvictedOfSeriousOffence: 'Select whether {{ fullName }} has been charged with a serious offence',
@@ -171,6 +179,7 @@ export const strings: Record<string, Record<string, string>> = {
     isIndeterminateSentence: 'Is {{ fullName }} on an indeterminate sentence?',
     isExtendedSentence: 'Is {{ fullName }} on an extended sentence?',
     suitabilityForFixedTermRecall: 'Suitability for standard or fixed term recall',
+    ftr48SuitabilityForFixedTermRecall: "Check {{ fullName }}'s suitability for a standard or fixed term recall ",
     indeterminateSentenceType: 'What type of sentence is {{ fullName }} on?',
     indeterminateOrExtendedSentenceDetails: 'Indeterminate and extended sentences',
     recallType: 'What do you recommend?',
