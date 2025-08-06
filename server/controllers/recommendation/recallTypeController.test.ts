@@ -11,6 +11,7 @@ import { validateRecallType } from '../recommendations/recallType/formValidator'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { EVENTS } from '../../utils/constants'
 import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
+import { generateBooleanCombinations } from '../../testUtils/booleanUtils'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -19,16 +20,15 @@ jest.mock('../recommendations/recallType/inputDisplayValues')
 jest.mock('../recommendations/recallType/formValidator')
 
 function testGet(
-  // not sure how to define the type for locals without any, but ESLint complains if I keep any...
-  locals: object, // Record<string, any> & Locals,
+  locals: Record<string, unknown>,
   inputDisplayValues: {
     value: string
     details: string
   },
   next: jest.Mock
 ) {
-  // @ts-expect-error ignoring until I figure out how to define locals
   const res = mockRes({ locals })
+  const flagFtr48Updates = (locals.flags as Record<string, boolean>)?.flagFtr48Updates ?? false
 
   const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
   beforeEach(async () => {
@@ -52,8 +52,14 @@ function testGet(
     expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
   })
   it('adds FTR48 flag to res.locals', async () => {
-    // @ts-expect-error ignoring until I figure out how to define locals
-    expect(res.locals.ftr48Enabled).toEqual(locals.flags?.ftr48Enabled ?? false)
+    expect(res.locals.ftr48Enabled).toEqual(flagFtr48Updates)
+  })
+  it('adds FTR48 Mandatory to res.locals', async () => {
+    if (flagFtr48Updates) {
+      expect(res.locals.ftrMandatory).toBeTruthy()
+    } else {
+      expect(res.locals.ftrMandatory).toBeFalsy()
+    }
   })
   it('renders the recallType page and calls next', async () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
@@ -64,7 +70,15 @@ function testGet(
 describe('get', () => {
   const locals = {
     token: 'token1',
-    recommendation: RecommendationResponseGenerator.generate(),
+    recommendation: RecommendationResponseGenerator.generate({
+      isSentence48MonthsOrOver: false,
+      isUnder18: false,
+      isMappaCategory4: false,
+      isMappaLevel2Or3: false,
+      isRecalledOnNewChargedOffence: false,
+      isServingFTSentenceForTerroristOffence: false,
+      hasBeenChargedWithTerroristOrStateThreatOffence: false,
+    }),
     unsavedValues: { recallType: 'STANDARD' },
     errors: {
       list: [
@@ -93,10 +107,90 @@ describe('get', () => {
   describe('with FTR48 flag set', () => {
     const localsWithFTR48FlagSet = {
       ...locals,
-      flags: { ftr48Enabled: faker.datatype.boolean() },
+      flags: { flagFtr48Updates: faker.datatype.boolean() },
     }
 
     testGet(localsWithFTR48FlagSet, inputDisplayValues, next)
+
+    describe('and the Person on Probation meets any exclusion criteria', () => {
+      describe('then FTR is not mandatory', () => {
+        const booleanCombinations = generateBooleanCombinations(7).filter(c => !c.every(b => !b))
+        booleanCombinations.forEach(testCase => {
+          const prefix = 'Exclusion criteria: '
+          let testCaseOptions = {
+            isSentence48MonthsOrOver: false,
+            isUnder18: false,
+            isMappaCategory4: false,
+            isMappaLevel2Or3: false,
+            isRecalledOnNewChargedOffence: false,
+            isServingFTSentenceForTerroristOffence: false,
+            hasBeenChargedWithTerroristOrStateThreatOffence: false,
+          }
+          let title = prefix
+
+          if (testCase[0]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              isSentence48MonthsOrOver: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Sentence 48 months or over`
+          }
+          if (testCase[1]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              isUnder18: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Is under 18`
+          }
+          if (testCase[2]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              isMappaCategory4: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Mappa cat. 4`
+          }
+          if (testCase[3]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              isMappaLevel2Or3: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Mappa cat. 2/3`
+          }
+          if (testCase[4]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              isRecalledOnNewChargedOffence: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Recalled on new charge`
+          }
+          if (testCase[5]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              isServingFTSentenceForTerroristOffence: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Serving terrorist offence`
+          }
+          if (testCase[6]) {
+            testCaseOptions = {
+              ...testCaseOptions,
+              hasBeenChargedWithTerroristOrStateThreatOffence: true,
+            }
+            title += `${title !== prefix ? ',' : ''} Charged with terrorist offence`
+          }
+
+          it(title, async () => {
+            const recommendationWithExceptionCriteria = RecommendationResponseGenerator.generate({ ...testCaseOptions })
+            const exceptionCriteriaRes = mockRes({
+              locals: { ...localsWithFTR48FlagSet, recommendation: recommendationWithExceptionCriteria },
+            })
+
+            recallTypeController.get(mockReq(), exceptionCriteriaRes, next)
+
+            expect(exceptionCriteriaRes.locals.ftrMandatory).toBeFalsy()
+          })
+        })
+      })
+    })
   })
 })
 

@@ -3,15 +3,15 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { SelectedWithDetailsGenerator, SelectedWithDetailsOptions } from '../common/selectedWithDetailsGenerator'
 import { RoshEnum } from '../../server/@types/make-recall-decision-api/models/RoshData'
 import { BookRecallToPpudGenerator, BookRecallToPpudOptions } from './bookRecallToPpudGenerator'
-import { DataGenerator, NoneOrOption } from '../@generators/dataGenerators'
+import { AnyNoneOrOption, DataGenerator, NoneOrOption } from '../@generators/dataGenerators'
 import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import { IndeterminateSentenceType } from '../../server/@types/make-recall-decision-api/models/IndeterminateSentenceType'
-import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { VictimsInContactScheme } from '../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { ConvictionDetailGenerator, ConvictionDetailOptions } from './convictionDetailGenerator'
 import { NomisIndexGenerator, NomisIndexOffenceOptions } from './nomisIndexOffenceGenerator'
 import { PpudOffenderGenerator, PpudOffenderOptions } from './ppudOffenderGenerator'
+import { recallTypeGenerator, RecallTypeOptions } from './recallTypeGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -41,7 +41,7 @@ export type RecommendationOptions = {
   offenceAnalysis?: boolean
   previousReleases?: boolean
   previousRecalls?: boolean
-  recallType?: boolean
+  recallType?: AnyNoneOrOption<RecallTypeOptions>
   decisionDateTime?: boolean
   responseToProbation?: boolean
   vulnerabilities?: boolean
@@ -210,16 +210,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             previousRecallDates: [],
           }
         : undefined,
-    recallType:
-      options?.recallType ?? true
-        ? {
-            selected: {
-              value: RecallTypeSelectedValue.value.STANDARD,
-              details: faker.lorem.sentence(),
-            },
-            allOptions: [],
-          }
-        : undefined,
+    recallType: recallTypeGenerator.generate(options?.recallType ?? 'none'),
     decisionDateTime: options?.decisionDateTime ?? true ? faker.date.past().toISOString() : undefined,
     responseToProbation: options?.responseToProbation ?? true ? faker.lorem.sentence() : undefined,
     vulnerabilities:

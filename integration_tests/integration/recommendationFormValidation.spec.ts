@@ -154,7 +154,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: 'Select a recommendation',
+      errorText: "Select if you're recommending a fixed term recall, standard recall, or no recall",
     })
   })
 

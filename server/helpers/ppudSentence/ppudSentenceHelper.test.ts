@@ -111,6 +111,12 @@ describe('getIndeterminateSentences', () => {
 
     expect(actualIndeterminateSentences).toEqual([])
   })
+
+  it('returns an empty list if given an undefined list', () => {
+    const actualIndeterminateSentences = getIndeterminateSentences(undefined)
+
+    expect(actualIndeterminateSentences).toEqual([])
+  })
 })
 
 describe('getSentenceType', () => {

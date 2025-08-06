@@ -329,7 +329,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select a recommendation',
+          text: "Select if you're recommending a fixed term recall, standard recall, or no recall",
           errorId: 'noRecallTypeSelected',
         },
       ])
@@ -346,7 +346,7 @@ describe('validateRecallType', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select a recommendation',
+          text: "Select if you're recommending a fixed term recall, standard recall, or no recall",
           errorId: 'noRecallTypeSelected',
         },
       ])
