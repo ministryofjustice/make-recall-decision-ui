@@ -7,10 +7,26 @@ import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
-function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation, flags } = res.locals
-  const ftr48Enabled = flags?.ftr48Enabled ?? false
+function get(_: Request, res: Response, next: NextFunction) {
+  const { recommendation, flags } = res.locals as {
+    recommendation: RecommendationResponse
+    flags: Record<string, boolean>
+  }
+  const ftr48Enabled = flags?.flagFtr48Updates ?? false
+
+  const ftrMandatory =
+    ftr48Enabled &&
+    !(
+      recommendation?.isSentence48MonthsOrOver ||
+      recommendation?.isUnder18 ||
+      recommendation?.isMappaCategory4 ||
+      recommendation?.isMappaLevel2Or3 ||
+      recommendation?.isRecalledOnNewChargedOffence ||
+      recommendation?.isServingFTSentenceForTerroristOffence ||
+      recommendation?.hasBeenChargedWithTerroristOrStateThreatOffence
+    )
 
   res.locals = {
     ...res.locals,
@@ -25,6 +41,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     availableRecallTypes: availableRecallTypes(ftr48Enabled, recommendation),
     // READY TO MERGE?? FTR48 flag must be added to the system in order for this to work
     ftr48Enabled,
+    ftrMandatory,
   }
 
   res.render(`pages/recommendations/recallType`)

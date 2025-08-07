@@ -1,0 +1,13 @@
+{% set discretionaryPanelTextHtml %}
+    {% set panelHeadingText = [recommendation.personOnProbation.name, " can have either a fixed term or standard recall"] | join %}
+    {{ heading(panelHeadingText, 2, "m") }}
+
+    {{ bodyParagraph("Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.") }}
+{% endset %}
+
+{{ mojTicketPanel({
+    items: [{
+        html: discretionaryPanelTextHtml,
+        classes: "moj-ticket-panel__content--blue"
+    }]
+}) }}
