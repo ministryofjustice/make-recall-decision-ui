@@ -1,8 +1,8 @@
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
+import { randomiseCriteria } from '../../../../data/utils'
 
-context('Recal Type Page', () => {
+context('Recall Type Page', () => {
   const testPageUrl = `/recommendations/123456789/recall-type`
 
   const defaultRecommendation = RecommendationResponseGenerator.generate({
@@ -119,7 +119,7 @@ context('Recal Type Page', () => {
         })
         const expectedName = recommendationWithoutExceptionCriteria.personOnProbation.name
 
-        it('The the mandatory suitability panel is displayed', () => {
+        it('Then the mandatory suitability panel is displayed', () => {
           cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
@@ -166,29 +166,27 @@ context('Recal Type Page', () => {
       })
 
       describe('And the Person on Probation meets any of the exception criteria', () => {
-        const randomiseCriteria = (criteria: {
-          isSentence48MonthsOrOver?: boolean
-          isUnder18?: boolean
-          isMappaCategory4?: boolean
-          isMappaLevel2Or3?: boolean
-          isRecalledOnNewChargedOffence?: boolean
-          isServingFTSentenceForTerroristOffence?: boolean
-          hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
-        }) => {
-          if (Object.keys(criteria).every(k => criteria[k] ?? false)) {
-            return randomiseCriteria({
-              isSentence48MonthsOrOver: faker.datatype.boolean(),
-              isUnder18: faker.datatype.boolean(),
-              isMappaCategory4: faker.datatype.boolean(),
-              isMappaLevel2Or3: faker.datatype.boolean(),
-              isRecalledOnNewChargedOffence: faker.datatype.boolean(),
-              isServingFTSentenceForTerroristOffence: faker.datatype.boolean(),
-              hasBeenChargedWithTerroristOrStateThreatOffence: faker.datatype.boolean(),
-            })
-          }
-          return criteria
-        }
-        const randomCriteria = randomiseCriteria({})
+        const randomCriteria = randomiseCriteria<{
+          isSentence48MonthsOrOver: boolean
+          isUnder18: boolean
+          isMappaCategory4: boolean
+          isMappaLevel2Or3: boolean
+          isRecalledOnNewChargedOffence: boolean
+          isServingFTSentenceForTerroristOffence: boolean
+          hasBeenChargedWithTerroristOrStateThreatOffence: boolean
+        }>(
+          [
+            { key: 'isSentence48MonthsOrOver', generate: 'boolean' },
+            { key: 'isUnder18', generate: 'boolean' },
+            { key: 'isMappaCategory4', generate: 'boolean' },
+            { key: 'isMappaLevel2Or3', generate: 'boolean' },
+            { key: 'isRecalledOnNewChargedOffence', generate: 'boolean' },
+            { key: 'isServingFTSentenceForTerroristOffence', generate: 'boolean' },
+            { key: 'hasBeenChargedWithTerroristOrStateThreatOffence', generate: 'boolean' },
+          ],
+          criteria => !Object.keys(criteria).every(k => criteria[k] ?? false)
+        )
+
         const recommendationWithExceptionCriteria = RecommendationResponseGenerator.generate({
           isSentence48MonthsOrOver: randomCriteria.isSentence48MonthsOrOver,
           isUnder18: randomCriteria.isUnder18,
@@ -202,7 +200,7 @@ context('Recal Type Page', () => {
         const expectedName = recommendationWithExceptionCriteria.personOnProbation.name
 
         describe(`Randomised Criteria: 48+:${randomCriteria.isSentence48MonthsOrOver} | 18+:${randomCriteria.isUnder18} | M4:${randomCriteria.isMappaCategory4} | M2/3:${randomCriteria.isMappaLevel2Or3} | New:${randomCriteria.isRecalledOnNewChargedOffence} | STerr:${randomCriteria.isServingFTSentenceForTerroristOffence} | CTerr:${randomCriteria.hasBeenChargedWithTerroristOrStateThreatOffence}`, () => {
-          it('The the discretionary suitability panel is displayed', () => {
+          it('Then the discretionary suitability panel is displayed', () => {
             cy.task('getRecommendation', { statusCode: 200, response: recommendationWithExceptionCriteria })
             cy.task('getStatuses', { statusCode: 200, response: [] })
 
