@@ -144,7 +144,7 @@ context('Recall Type Page', () => {
           cy.get('@detailsText')
             .should(
               'contain.text',
-              'Sentences under 48 months must be a given fixed term recall unless the person being recalled is:'
+              'Sentences under 48 months must be given a fixed term recall unless the person being recalled is:'
             )
             .should('contain.text', 'This applies to people aged 18 and over.')
           cy.get('@detailsText')
@@ -156,12 +156,15 @@ context('Recall Type Page', () => {
             .should('contain.text', 'being recalled for a new charged offence')
             .should(
               'contain.text',
-              'serving a fixed term sentence for an offence within section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners) [The link opens in new tab]'
+              'serving a fixed term sentence for an offence within section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners) (opens in new tab)'
             )
             .should('contain.text', 'serving a sentence for a terrorist or state threat offence')
             .find('a')
             .should('exist')
+            .should('have.class', 'govuk-link')
             .should('have.attr', 'href', 'https://www.legislation.gov.uk/ukpga/2003/44/section/247A')
+            .should('have.attr', 'rel', 'noreferrer noopener')
+            .should('have.attr', 'target', '_blank')
         })
       })
 
