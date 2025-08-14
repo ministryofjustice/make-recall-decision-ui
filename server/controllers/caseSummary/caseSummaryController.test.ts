@@ -28,6 +28,9 @@ import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { createRecommendationBanner } from '../../utils/bannerUtils'
 import config from '../../config'
 import { isDateTimeRangeCurrent } from '../../utils/utils'
+import { Notification } from '../../@types/notification'
+import { notifications } from '../../content/notifications'
+import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -667,7 +670,167 @@ describe('get', () => {
     })
   })
 
-  it('ensure notification fields returned depending on config', async () => {
+  describe('Notifications', () => {
+    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+    const fixedNow = new Date('2025-08-12T12:00:00Z')
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(fixedNow)
+    })
+    afterAll(() => {
+      jest.useRealTimers()
+    })
+    beforeEach(() => {
+      ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
+      ;(getStatuses as jest.Mock).mockReturnValueOnce([])
+      ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
+      ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
+      notifications.length = 0 // Clear notifications before each test
+    })
+    jest.mock('../../content/notifications', () => ({
+      __esModule: true,
+      notifications: [] as Notification[],
+    }))
+
+    it('returns a notification when there is an active notification and a role match', async () => {
+      notifications.push({
+        headerText: 'Heading text',
+        bodyContent: 'Body text',
+        startDate: new Date('2025-08-01T00:00:00Z'),
+        endDate: new Date('2025-08-20T00:00:00Z'),
+        visibleToRoles: [HMPPS_AUTH_ROLE.RW],
+      })
+
+      const req = mockReq({
+        params: { crn, sectionId: 'overview' },
+      })
+
+      res = mockRes({
+        token,
+        locals: {
+          user: {
+            username: 'Dave',
+            roles: [HMPPS_AUTH_ROLE.RW],
+          },
+        },
+      })
+
+      await caseSummaryController.get(req, res, next)
+      expect(res.locals.notification).toEqual({
+        headerText: 'Heading text',
+        bodyContent: 'Body text',
+        startDate: new Date('2025-08-01T00:00:00Z'),
+        endDate: new Date('2025-08-20T00:00:00Z'),
+        visibleToRoles: [HMPPS_AUTH_ROLE.RW],
+        isHidden: false,
+      })
+    })
+    it('returns no notification when there is an active notification, but no role match', async () => {
+      notifications.push({
+        headerText: 'Heading text',
+        bodyContent: 'Body text',
+        startDate: new Date('2025-08-01T00:00:00Z'),
+        endDate: new Date('2025-08-20T00:00:00Z'),
+        visibleToRoles: [HMPPS_AUTH_ROLE.PO],
+      })
+
+      const req = mockReq({
+        params: { crn, sectionId: 'overview' },
+      })
+
+      res = mockRes({
+        token,
+        locals: {
+          user: {
+            username: 'Dave',
+            roles: [HMPPS_AUTH_ROLE.RW],
+          },
+        },
+      })
+
+      await caseSummaryController.get(req, res, next)
+      expect(res.locals.notification).toBeNull()
+    })
+    it('returns no notification when there are no active notifications, regardless of a role match', async () => {
+      notifications.push({
+        headerText: 'Heading text',
+        bodyContent: 'Body text',
+        startDate: new Date('2025-08-01T00:00:00Z'),
+        endDate: new Date('2025-08-10T00:00:00Z'),
+        visibleToRoles: [HMPPS_AUTH_ROLE.RW],
+      })
+      const req = mockReq({
+        params: { crn, sectionId: 'overview' },
+      })
+
+      res = mockRes({
+        token,
+        locals: {
+          user: {
+            username: 'Dave',
+            roles: [HMPPS_AUTH_ROLE.RW],
+          },
+        },
+      })
+
+      await caseSummaryController.get(req, res, next)
+      expect(res.locals.notification).toBeNull()
+    })
+    it('isHidden is false when viewing the case summary page', async () => {
+      notifications.push({
+        headerText: 'Heading text',
+        bodyContent: 'Body text',
+        startDate: new Date('2025-08-01T00:00:00Z'),
+        endDate: new Date('2025-08-20T00:00:00Z'),
+        visibleToRoles: [HMPPS_AUTH_ROLE.PO],
+      })
+      const req = mockReq({
+        params: { crn, sectionId: 'overview' },
+      })
+
+      res = mockRes({
+        token,
+        locals: {
+          user: {
+            username: 'Dave',
+            roles: [HMPPS_AUTH_ROLE.PO],
+          },
+        },
+      })
+
+      await caseSummaryController.get(req, res, next)
+      expect(res.locals.notification.isHidden).toEqual(false)
+    })
+    it('isHidden is true when viewing the case summary page through the SPO task list', async () => {
+      notifications.push({
+        headerText: 'Heading text',
+        bodyContent: 'Body text',
+        startDate: new Date('2025-08-01T00:00:00Z'),
+        endDate: new Date('2025-08-20T00:00:00Z'),
+        visibleToRoles: [HMPPS_AUTH_ROLE.PO],
+      })
+      const req = mockReq({
+        params: { crn, sectionId: 'overview', recommendationId: '123' },
+      })
+
+      res = mockRes({
+        token,
+        locals: {
+          user: {
+            username: 'Dave',
+            roles: [HMPPS_AUTH_ROLE.PO],
+          },
+        },
+      })
+
+      await caseSummaryController.get(req, res, next)
+      expect(res.locals.notification.isHidden).toEqual(true)
+    })
+  })
+
+  it('ensure maintenanceBanner fields returned depending on config', async () => {
     ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
     ;(getStatuses as jest.Mock).mockReturnValueOnce([])
     ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
@@ -687,12 +850,10 @@ describe('get', () => {
 
     await caseSummaryController.get(req, res, next)
 
-    expect(res.locals.notification).toEqual({
-      header: config.notification.header,
-      body: config.notification.body,
-      startDateTime: config.notification.startDateTime,
-      endDateTime: config.notification.endDateTime,
-      isVisible: isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
+    expect(res.locals.maintenanceBanner).toEqual({
+      headerText: config.maintenanceBanner.header,
+      bodyContent: config.maintenanceBanner.body,
+      isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
   })
 
