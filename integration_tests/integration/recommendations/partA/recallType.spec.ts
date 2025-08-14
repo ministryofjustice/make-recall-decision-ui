@@ -227,22 +227,40 @@ context('Recall Type Page', () => {
           })
         })
       })
-    })
 
-    describe('Error message display', () => {
-      describe('When no Recall Type is selected', () => {
-        it('Then the expected error message is displayed', () => {
-          cy.visit(testPageUrl)
+      describe('Error message display', () => {
+        describe('When no Recall Type is selected', () => {
+          ;[true, false].forEach(ftrMandatory => {
+            describe(`FTR Mandatory: ${ftrMandatory}`, () => {
+              it('Then the expected error message is displayed', () => {
+                const recommendationForMandatoryValue = RecommendationResponseGenerator.generate({
+                  isSentence48MonthsOrOver: !ftrMandatory,
+                  isUnder18: !ftrMandatory,
+                  isMappaCategory4: !ftrMandatory,
+                  isMappaLevel2Or3: !ftrMandatory,
+                  isRecalledOnNewChargedOffence: !ftrMandatory,
+                  isServingFTSentenceForTerroristOffence: !ftrMandatory,
+                  hasBeenChargedWithTerroristOrStateThreatOffence: !ftrMandatory,
+                })
+                cy.task('getRecommendation', { statusCode: 200, response: recommendationForMandatoryValue })
+                cy.task('getStatuses', { statusCode: 200, response: [] })
 
-          cy.get('button.govuk-button').click()
+                cy.visit(testPageUrl)
 
-          testForErrorPageTitle()
-          testForErrorSummary([
-            {
-              href: 'recallType',
-              message: "Select if you're recommending a fixed term recall, standard recall, or no recall",
-            },
-          ])
+                cy.get('button.govuk-button').click()
+
+                testForErrorPageTitle()
+                testForErrorSummary([
+                  {
+                    href: 'recallType',
+                    message: ftrMandatory
+                      ? "Select if you're recommending a fixed term recall or no recall"
+                      : "Select if you're recommending a fixed term recall, standard recall or no recall",
+                  },
+                ])
+              })
+            })
+          })
         })
       })
     })

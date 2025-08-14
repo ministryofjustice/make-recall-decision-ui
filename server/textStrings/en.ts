@@ -27,7 +27,9 @@ export const strings: Record<string, Record<string, string>> = {
     saveChanges: 'An error occurred saving your changes',
     noIndexOffenceSelected: 'Select an index offence',
     noPpudSentenceSelected: 'Select an existing sentence or add a new one',
-    noRecallTypeSelected: "Select if you're recommending a fixed term recall, standard recall, or no recall",
+    noRecallTypeSelectedDiscretionary:
+      "Select if you're recommending a fixed term recall, standard recall or no recall",
+    noRecallTypeSelectedMandatory: "Select if you're recommending a fixed term recall or no recall",
     noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
     noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
     missingRecallTypeDetail: 'Explain why you recommend this recall type',

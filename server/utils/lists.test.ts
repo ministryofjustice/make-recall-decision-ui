@@ -130,17 +130,17 @@ describe('List utilities', () => {
       })
       expect(result).toEqual([
         {
-          checked: false,
-          text: 'Standard recall',
-          value: 'STANDARD',
-        },
-        {
           text: 'Fixed term recall',
           value: 'FIXED_TERM',
           checked: true,
           conditional: {
             html: '<div>test</div>',
           },
+        },
+        {
+          checked: false,
+          text: 'Standard recall',
+          value: 'STANDARD',
         },
         {
           checked: false,
