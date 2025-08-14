@@ -11,11 +11,10 @@ export enum HMPPS_AUTH_ROLE {
 const ONE_WEEK_TTL_OVERRIDE_SECONDS = 60 * 60 * 24 * 7
 
 export const startPage = async (req: Request, res: Response): Promise<Response | void> => {
-  res.locals.notification = {
-    ...config.notification,
-    isVisible:
-      Boolean(config.notification.body) &&
-      isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
+  res.locals.maintenanceBanner = {
+    headerText: config.maintenanceBanner.header,
+    bodyContent: config.maintenanceBanner.body,
+    isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
   }
   const {
     user: { username, userId, token },

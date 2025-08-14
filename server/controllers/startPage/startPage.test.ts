@@ -19,12 +19,10 @@ describe('startPage', () => {
   it('ensure notification fields returned depending on config', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: false } } })
     await startPage(mockReq(), res)
-    expect(res.locals.notification).toEqual({
-      header: config.notification.header,
-      body: config.notification.body,
-      startDateTime: config.notification.startDateTime,
-      endDateTime: config.notification.endDateTime,
-      isVisible: isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
+    expect(res.locals.maintenanceBanner).toEqual({
+      headerText: config.maintenanceBanner.header,
+      bodyContent: config.maintenanceBanner.body,
+      isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
   })
   it('with PPCS role and caches ppud user', async () => {
@@ -68,12 +66,10 @@ describe('startPage', () => {
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
     ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce({ results: [] })
     await startPage(mockReq(), res)
-    expect(res.locals.notification).toEqual({
-      header: config.notification.header,
-      body: config.notification.body,
-      startDateTime: config.notification.startDateTime,
-      endDateTime: config.notification.endDateTime,
-      isVisible: isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
+    expect(res.locals.maintenanceBanner).toEqual({
+      headerText: config.maintenanceBanner.header,
+      bodyContent: config.maintenanceBanner.body,
+      isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
   })
 })
