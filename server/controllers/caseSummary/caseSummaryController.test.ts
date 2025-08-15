@@ -671,10 +671,6 @@ describe('get', () => {
   })
 
   describe('Notifications', () => {
-    ;(getCaseSummary as jest.Mock).mockReturnValueOnce(caseOverviewApiResponse)
-    ;(getStatuses as jest.Mock).mockReturnValueOnce([])
-    ;(getActiveRecommendation as jest.Mock).mockReturnValueOnce(activeRecommendation)
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationApiResponse)
     const fixedNow = new Date('2025-08-12T12:00:00Z')
     beforeAll(() => {
       jest.useFakeTimers().setSystemTime(fixedNow)
