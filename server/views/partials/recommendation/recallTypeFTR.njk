@@ -55,6 +55,10 @@
     {% if ftrMandatory %}
         {% include "../../partials/recommendation/recallTypeFTRConditionsPanel.njk" %}
     {% else %}
+        {% set conditionalContent = {
+            STANDARD: standardDetailHtml,
+            FIXED_TERM: fixedTermDetailHtml
+        } %}
         {% include "../../partials/recommendation/recallTypeFTRDiscretionaryConditionsPanel.njk" %}
     {% endif %}
 {% else %}
@@ -62,6 +66,10 @@
         html: notificationBannerHtml,
         titleText: "Criminal Justice Act 2003 (Suitability for Fixed Term Recall) Order 2024"
     }) }}
+    {% set conditionalContent = {
+        STANDARD: standardDetailHtml,
+        FIXED_TERM: fixedTermDetailHtml
+    } %}
 {% endif %}
 {{ govukRadios({
     idPrefix: "recallType",
@@ -75,10 +83,7 @@
     items: radioCheckboxItems({
         items: availableRecallTypes,
         currentValues: inputDisplayValues.value,
-        conditionalContent: {
-            STANDARD: standardDetailHtml,
-            FIXED_TERM: fixedTermDetailHtml
-        }
+        conditionalContent: conditionalContent
     }),
     errorMessage: errorMessage(errors.recallType)
 }) }}
