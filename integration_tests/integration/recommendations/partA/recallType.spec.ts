@@ -70,11 +70,11 @@ context('Recall Type Page', () => {
         }
       }
 
-      testRecallTypeRadioButton(() => cy.get('@radios').eq(0), 'recallType', 'Standard recall', {
-        idSuffix: 'Standard',
-      })
-      testRecallTypeRadioButton(() => cy.get('@radios').eq(1), 'recallType-2', 'Fixed term recall', {
+      testRecallTypeRadioButton(() => cy.get('@radios').eq(0), 'recallType', 'Fixed term recall', {
         idSuffix: 'FixedTerm',
+      })
+      testRecallTypeRadioButton(() => cy.get('@radios').eq(1), 'recallType-2', 'Standard recall', {
+        idSuffix: 'Standard',
       })
       testRecallTypeRadioButton(
         () => cy.get('@radios').eq(2),
