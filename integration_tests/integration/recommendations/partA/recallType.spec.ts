@@ -15,6 +15,38 @@ context('Recall Type Page', () => {
     cy.signIn()
   })
 
+  const testRecallTypeRadioButton = (
+    radioElement: () => Cypress.Chainable<JQuery<Element>>,
+    radioGroup: () => Cypress.Chainable<JQuery<HTMLElement>>,
+    expectedId: string,
+    expectedLabel: string,
+    conditional?: { idSuffix: string }
+  ) => {
+    radioElement().find('input').should('exist').should('have.id', expectedId).should('have.attr', 'name', 'recallType')
+    radioElement()
+      .find('label')
+      .should('exist')
+      .should('have.attr', 'for', expectedId)
+      .should('contain.text', expectedLabel)
+
+    if (conditional) {
+      radioGroup().find(`.govuk-radios__conditional#conditional-${expectedId}`).should('exist').as('conditional')
+
+      cy.get('@conditional').find('.govuk-form-group').should('exist').as('conditionalGroup')
+
+      cy.get('@conditionalGroup')
+        .find('label')
+        .should('exist')
+        .should('have.attr', 'for', `recallTypeDetails${conditional.idSuffix}`)
+        .should('contain.text', 'Why do you recommend this recall type?')
+      cy.get('@conditionalGroup')
+        .find('textarea')
+        .should('exist')
+        .should('have.id', `recallTypeDetails${conditional.idSuffix}`)
+        .should('have.value', '')
+    }
+  }
+
   describe('Page Data', () => {
     it('Standard page load', () => {
       cy.visit(testPageUrl)
@@ -32,52 +64,27 @@ context('Recall Type Page', () => {
       cy.get('@recallTypeFieldset').get('.govuk-radios').should('exist').as('radioGroup')
       cy.get('@radioGroup').get('div.govuk-radios__item').should('exist').should('have.length', 3).as('radios')
 
-      const testRecallTypeRadioButton = (
-        radioElement: () => Cypress.Chainable<JQuery<Element>>,
-        expectedId: string,
-        expectedLabel: string,
-        conditional?: { idSuffix: string }
-      ) => {
-        radioElement()
-          .find('input')
-          .should('exist')
-          .should('have.id', expectedId)
-          .should('have.attr', 'name', 'recallType')
-        radioElement()
-          .find('label')
-          .should('exist')
-          .should('have.attr', 'for', expectedId)
-          .should('contain.text', expectedLabel)
-
-        if (conditional) {
-          cy.get('@radioGroup')
-            .find(`.govuk-radios__conditional#conditional-${expectedId}`)
-            .should('exist')
-            .as('conditional')
-
-          cy.get('@conditional').find('.govuk-form-group').should('exist').as('conditionalGroup')
-
-          cy.get('@conditionalGroup')
-            .find('label')
-            .should('exist')
-            .should('have.attr', 'for', `recallTypeDetails${conditional.idSuffix}`)
-            .should('contain.text', 'Why do you recommend this recall type?')
-          cy.get('@conditionalGroup')
-            .find('textarea')
-            .should('exist')
-            .should('have.id', `recallTypeDetails${conditional.idSuffix}`)
-            .should('have.value', '')
+      testRecallTypeRadioButton(
+        () => cy.get('@radios').eq(0),
+        () => cy.get('@radioGroup'),
+        'recallType',
+        'Fixed term recall',
+        {
+          idSuffix: 'FixedTerm',
         }
-      }
-
-      testRecallTypeRadioButton(() => cy.get('@radios').eq(0), 'recallType', 'Fixed term recall', {
-        idSuffix: 'FixedTerm',
-      })
-      testRecallTypeRadioButton(() => cy.get('@radios').eq(1), 'recallType-2', 'Standard recall', {
-        idSuffix: 'Standard',
-      })
+      )
+      testRecallTypeRadioButton(
+        () => cy.get('@radios').eq(1),
+        () => cy.get('@radioGroup'),
+        'recallType-2',
+        'Standard recall',
+        {
+          idSuffix: 'Standard',
+        }
+      )
       testRecallTypeRadioButton(
         () => cy.get('@radios').eq(2),
+        () => cy.get('@radioGroup'),
         'recallType-3',
         'No recall - send a decision not to recall letter'
       )
@@ -119,12 +126,31 @@ context('Recall Type Page', () => {
         })
         const expectedName = recommendationWithoutExceptionCriteria.personOnProbation.name
 
-        it('Then the mandatory suitability panel is displayed', () => {
+        beforeEach(() => {
           cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
           cy.visit(testPageUrl)
+        })
 
+        it('The expected mandatory radio options are rendered', () => {
+          cy.get('.govuk-form-group').get('fieldset').get('legend').get('.govuk-radios').as('radiosGroup')
+          cy.get('@radiosGroup').get('div.govuk-radios__item').as('renderedRadios')
+          testRecallTypeRadioButton(
+            () => cy.get('@renderedRadios').eq(0),
+            () => cy.get('@radiosGroup'),
+            'recallType',
+            'Fixed term recall'
+          )
+          testRecallTypeRadioButton(
+            () => cy.get('@renderedRadios').eq(1),
+            () => cy.get('@radiosGroup'),
+            'recallType-2',
+            'No recall'
+          )
+        })
+
+        it('Then the mandatory suitability panel is displayed', () => {
           cy.get('.moj-ticket-panel').should('exist').as('panel')
 
           cy.get('@panel')
@@ -202,13 +228,44 @@ context('Recall Type Page', () => {
         })
         const expectedName = recommendationWithExceptionCriteria.personOnProbation.name
 
+        beforeEach(() => {
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithExceptionCriteria })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.visit(testPageUrl)
+        })
+
+        it('The expected discrentionary radio options are rendered', () => {
+          cy.get('.govuk-form-group').get('fieldset').get('legend').get('.govuk-radios').as('radiosGroup')
+          cy.get('@radiosGroup').get('div.govuk-radios__item').as('renderedRadios')
+          testRecallTypeRadioButton(
+            () => cy.get('@renderedRadios').eq(0),
+            () => cy.get('@radiosGroup'),
+            'recallType',
+            'Fixed term recall',
+            {
+              idSuffix: 'FixedTerm',
+            }
+          )
+          testRecallTypeRadioButton(
+            () => cy.get('@renderedRadios').eq(1),
+            () => cy.get('@radiosGroup'),
+            'recallType-2',
+            'Standard recall',
+            {
+              idSuffix: 'Standard',
+            }
+          )
+          testRecallTypeRadioButton(
+            () => cy.get('@renderedRadios').eq(2),
+            () => cy.get('@radiosGroup'),
+            'recallType-3',
+            'No recall'
+          )
+        })
+
         describe(`Randomised Criteria: 48+:${randomCriteria.isSentence48MonthsOrOver} | 18+:${randomCriteria.isUnder18} | M4:${randomCriteria.isMappaCategory4} | M2/3:${randomCriteria.isMappaLevel2Or3} | New:${randomCriteria.isRecalledOnNewChargedOffence} | STerr:${randomCriteria.isServingFTSentenceForTerroristOffence} | CTerr:${randomCriteria.hasBeenChargedWithTerroristOrStateThreatOffence}`, () => {
           it('Then the discretionary suitability panel is displayed', () => {
-            cy.task('getRecommendation', { statusCode: 200, response: recommendationWithExceptionCriteria })
-            cy.task('getStatuses', { statusCode: 200, response: [] })
-
-            cy.visit(testPageUrl)
-
             cy.get('.moj-ticket-panel').should('exist').as('panel')
 
             cy.get('@panel')
