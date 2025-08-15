@@ -6,7 +6,8 @@ import { EVENTS } from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard, originalRecallType } = requestBody
+  const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard, originalRecallType, ftrMandatory } =
+    requestBody
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
@@ -15,11 +16,12 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
   const missingDetailStandard = isStandard && !recallTypeDetailsStandard
   const isFromTaskList = urlInfo.fromPageId === 'task-list'
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
+  const ftrMandatoryResolved = ftrMandatory === 'true'
   if (hasError) {
     const errors = []
     let errorId
     if (!recallType || invalidRecallType) {
-      errorId = 'noRecallTypeSelected'
+      errorId = ftrMandatoryResolved ? 'noRecallTypeSelectedMandatory' : 'noRecallTypeSelectedDiscretionary'
       errors.push(
         makeErrorObject({
           id: 'recallType',

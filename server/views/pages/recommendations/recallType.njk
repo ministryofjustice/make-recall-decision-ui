@@ -35,6 +35,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
                 <input type="hidden" name="originalRecallType" value="{{ inputDisplayValues.value }}"/>
+                <input type="hidden" name="ftrMandatory" value="{{ ftrMandatory }}"/>
                 {% include "../../partials/recommendation/recallTypeFTR.njk" %}
                 {{ formSubmitButton() }}
             </form>
