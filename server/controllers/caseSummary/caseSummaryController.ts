@@ -29,6 +29,7 @@ import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-
 import { Status } from '../../@types/caseSummary'
 import { createRecommendationBanner } from '../../utils/bannerUtils'
 import { ActiveRecommendation } from '../../@types/make-recall-decision-api'
+import { getActiveNotificationBanner } from '../../utils/notifications'
 
 interface RecommendationButton {
   display: boolean
@@ -225,12 +226,21 @@ async function get(req: Request, res: Response, _: NextFunction) {
       }
     }
   }
-
-  res.locals.notification = {
-    ...config.notification,
-    isVisible:
-      Boolean(config.notification.body) &&
-      isDateTimeRangeCurrent(config.notification.startDateTime, config.notification.endDateTime),
+  // Banners
+  /// Maintenance - appears at the top of the page
+  res.locals.maintenanceBanner = {
+    headerText: config.maintenanceBanner.header,
+    bodyContent: config.maintenanceBanner.body,
+    isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
+  }
+  /// Notification - appears in the case summary body
+  const notification = getActiveNotificationBanner(user.roles)
+  res.locals.notification = null
+  if (notification) {
+    res.locals.notification = {
+      ...getActiveNotificationBanner(user.roles),
+      isHidden: recommendationId != null, // Hide the banner on the SPO task list
+    }
   }
 
   res.locals = {

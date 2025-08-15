@@ -1,0 +1,15 @@
+{# A wrapper for the govukNotificationBanner component so the notification object can be passed directly #}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% if params|length %}
+    {% if not params.isHidden %}
+        {% set html %}
+            {% if params.headerText %}
+                <p class="govuk-notification-banner__heading">
+                    {{ params.headerText }}
+                </p>
+            {% endif %}
+            <span class="govuk-body">{{ params.bodyContent }}</span>
+        {% endset %}
+        {{ govukNotificationBanner({html: html, titleText: 'Service information', titleId: "govuk-notification-banner-heading"}) }}
+    {% endif %}
+{% endif %}

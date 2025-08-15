@@ -119,10 +119,10 @@ export default {
     startDateTime: get('MAINTENANCE_PAGE_START_DATE_TIME', null),
     endDateTime: get('MAINTENANCE_PAGE_END_DATE_TIME', null),
   },
-  notification: {
-    header: get('NOTIFICATION_HEADER', null),
-    body: get('NOTIFICATION_BODY', null),
-    startDateTime: get('NOTIFICATION_BANNER_START_DATE_TIME', null),
-    endDateTime: get('NOTIFICATION_BANNER_END_DATE_TIME', null),
+  maintenanceBanner: {
+    header: get('MAINTENANCE_BANNER_HEADER', null),
+    body: get('MAINTENANCE_BANNER_BODY', null),
+    startDateTime: get('MAINTENANCE_BANNER_START_DATE_TIME', null),
+    endDateTime: get('MAINTENANCE_BANNER_END_DATE_TIME', null),
   },
 }

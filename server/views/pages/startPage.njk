@@ -2,16 +2,8 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: "Start page" }) %}
 {% block beforeContent %}
-    {% if notification.isVisible %}
-        {% set html %}
-            {% if notification.header %}
-                <p class="govuk-notification-banner__heading">
-                    {{ notification.header }}
-                </p>
-            {% endif %}
-            <span class="govuk-body">{{ notification.body }}</span>
-        {% endset %}
-        {{ govukNotificationBanner({html: html}) }}
+    {% if not maintenanceBanner.isHidden %}
+        {{ notificationBanner(maintenanceBanner) }}
     {% endif %}
 {% endblock %}
 {% block content %}
