@@ -267,7 +267,7 @@ jobs:
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Update npm
-          command: 'npm install -g npm@latest'
+          command: 'npm install -g npm@10'
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Install packages
