@@ -8,15 +8,16 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesFor
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard, originalRecallType, ftrMandatory } =
     requestBody
+  const ftrMandatoryResolved = ftrMandatory === 'true'
   const invalidRecallType = !isValueValid(recallType as string, 'recallType')
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
-  const missingDetailFixedTerm = isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
-  const missingDetailStandard = isStandard && !recallTypeDetailsStandard
+  const missingDetailFixedTerm =
+    !ftrMandatoryResolved && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
+  const missingDetailStandard = !ftrMandatoryResolved && isStandard && !recallTypeDetailsStandard
   const isFromTaskList = urlInfo.fromPageId === 'task-list'
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
-  const ftrMandatoryResolved = ftrMandatory === 'true'
   if (hasError) {
     const errors = []
     let errorId

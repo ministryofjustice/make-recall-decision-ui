@@ -141,6 +141,38 @@ describe('validateRecallType', () => {
       expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
     })
 
+    it('returns no missingRecallTypeDetail if fixed term recall is selected but no details sent whilst FTR is Mandatory', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: ' ', // whitespace
+        crn: 'X34534',
+        ftrMandatory: 'true',
+      }
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+      expect(valuesToSave?.recallType).toBeDefined()
+      expect(errors).toBeUndefined()
+    })
+
+    it('returns no missingRecallTypeDetail if stamar∂d recall is selected but no details sent whilst FTR is Mandatory', async () => {
+      const requestBody = {
+        recallType: 'STANDARD',
+        recallTypeDetailsFixedTerm: ' ', // whitespace
+        crn: 'X34534',
+        ftrMandatory: 'true',
+      }
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+      expect(valuesToSave?.recallType).toBeDefined()
+      expect(errors).toBeUndefined()
+    })
+
     describe('Redirects', () => {
       it('redirects to emergency recall if Fixed term recall is selected', async () => {
         const requestBody = {
@@ -243,11 +275,12 @@ describe('validateRecallType', () => {
       ])
     })
 
-    it('errors if fixed term recall is selected but no detail sent', async () => {
+    it('errors if fixed term recall is selected but no detail sent whilst FTR is Discretionary', async () => {
       const requestBody = {
         recallType: 'FIXED_TERM',
         recallTypeDetailsFixedTerm: ' ', // whitespace
         crn: 'X34534',
+        ftrMandatory: 'false',
       }
       const { errors, valuesToSave, unsavedValues } = await validateRecallType({
         requestBody,
@@ -293,11 +326,12 @@ describe('validateRecallType', () => {
       ])
     })
 
-    it('errors if standard recall is selected but no detail sent', async () => {
+    it('errors if standard recall is selected but no detail sent whilst FTR is Discretionary', async () => {
       const requestBody = {
         recallType: 'STANDARD',
         recallTypeDetailsStandard: '',
         crn: 'X34534',
+        ftrMandatory: 'false',
       }
       const { errors, valuesToSave, unsavedValues } = await validateRecallType({
         requestBody,
@@ -318,7 +352,7 @@ describe('validateRecallType', () => {
       ])
     })
 
-    describe('returns an error for the decision, if not set', () => {
+    describe('returns an error for the recall type, if not set', () => {
       ;[true, false].forEach(ftrMandatory => {
         it(`FTR is Mandatory: ${ftrMandatory}`, async () => {
           const requestBody = {
