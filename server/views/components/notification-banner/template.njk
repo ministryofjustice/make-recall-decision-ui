@@ -10,6 +10,12 @@
             {% endif %}
             <span class="govuk-body">{{ params.bodyContent }}</span>
         {% endset %}
-        {{ govukNotificationBanner({html: html, titleText: 'Service information', titleId: "govuk-notification-banner-heading"}) }}
+        {{ govukNotificationBanner({
+            html: html,
+            titleText: 'Service information',
+            titleId: "govuk-notification-banner-heading",
+            classes: "car-notification-banner"
+            })
+        }}
     {% endif %}
 {% endif %}
