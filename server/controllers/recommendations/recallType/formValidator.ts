@@ -9,7 +9,8 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
   const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard, originalRecallType, ftrMandatory } =
     requestBody
   const ftrMandatoryResolved = ftrMandatory === 'true'
-  const invalidRecallType = !isValueValid(recallType as string, 'recallType')
+  const invalidRecallType =
+    !isValueValid(recallType as string, 'recallType') || (ftrMandatoryResolved && recallType === 'STANDARD')
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
