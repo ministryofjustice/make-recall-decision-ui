@@ -5,8 +5,7 @@ import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 export const notifications: Notification[] = [
   {
     headerText: 'Out-of-hours recalls started on 1 September 2025 will need to completed by 11:59pm',
-    bodyContent:
-      'This is because the service needs to be updated in line with FTR48 rules. The probation practitioner will need to fill in the Part A document offline the next day.',
+    bodyContent: 'This is because the service needs to be updated in line with FTR48 rules.',
     startDate: new Date('2025-08-10T00:00:00Z'), // new Date('2025-08-19T00:00:00Z'),
     endDate: new Date('2025-09-09T00:00:00Z'),
     visibleToRoles: [HMPPS_AUTH_ROLE.RW],
