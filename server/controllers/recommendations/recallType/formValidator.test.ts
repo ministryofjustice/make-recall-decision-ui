@@ -2,6 +2,10 @@ import { faker } from '@faker-js/faker'
 import { validateRecallType } from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 import { EVENTS } from '../../../utils/constants'
+import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
+import { strings } from '../../../textStrings/en'
+
+jest.mock('../../../utils/automatedFieldValues/binding')
 
 describe('validateRecallType', () => {
   const recommendationId = '456'
@@ -150,6 +154,8 @@ describe('validateRecallType', () => {
         ftrMandatory: 'true',
         personOnProbationName: faker.person.fullName(),
       }
+      const expectedDetails = faker.lorem.sentence()
+      ;(bindPlaceholderValues as jest.Mock).mockReturnValueOnce(expectedDetails)
       const { errors, valuesToSave } = await validateRecallType({
         requestBody,
         recommendationId,
@@ -158,9 +164,12 @@ describe('validateRecallType', () => {
       expect(valuesToSave.recallType).toEqual({
         selected: {
           value: requestBody.recallType,
-          details: `${requestBody.personOnProbationName} must get an automatic fixed term recall as they do not meet the exemption criteria.`,
+          details: expectedDetails,
         },
         allOptions: formOptions.recallType,
+      })
+      expect(bindPlaceholderValues).toHaveBeenCalledWith(strings.automatedFieldValues.mandatoryFTRRationale, {
+        personOnProbationName: requestBody.personOnProbationName,
       })
       expect(errors).toBeUndefined()
     })

@@ -273,4 +273,8 @@ export const strings: Record<string, Record<string, string>> = {
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
   },
+  automatedFieldValues: {
+    mandatoryFTRRationale:
+      '{{ personOnProbationName }} must get an automatic fixed term recall as they do not meet the exemption criteria.',
+  },
 }
