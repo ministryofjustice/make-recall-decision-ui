@@ -12,6 +12,7 @@ import { formOptions } from '../recommendations/formOptions/formOptions'
 import { EVENTS } from '../../utils/constants'
 import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
 import { generateBooleanCombinations } from '../../testUtils/booleanUtils'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -50,6 +51,11 @@ function testGet(
   })
   it('adds result of availableRecallTypes to res.locals', async () => {
     expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
+  })
+  it("adds PoP's name to res.locals", async () => {
+    expect(res.locals.personOnProbationName).toEqual(
+      (locals.recommendation as RecommendationResponse)?.personOnProbation?.fullName
+    )
   })
   it('adds FTR48 flag to res.locals', async () => {
     expect(res.locals.ftr48Enabled).toEqual(flagFtr48Updates)
@@ -205,6 +211,7 @@ describe('post', () => {
         crn: 'X098092',
         recallType: 'STANDARD',
         recallTypeDetailsStandard: 'some details',
+        personOnProbationName: faker.person.fullName(),
       },
     })
 

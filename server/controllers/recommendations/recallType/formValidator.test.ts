@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { validateRecallType } from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 import { EVENTS } from '../../../utils/constants'
@@ -147,13 +148,20 @@ describe('validateRecallType', () => {
         recallTypeDetailsFixedTerm: ' ', // whitespace
         crn: 'X34534',
         ftrMandatory: 'true',
+        personOnProbationName: faker.person.fullName(),
       }
       const { errors, valuesToSave } = await validateRecallType({
         requestBody,
         recommendationId,
         urlInfo,
       })
-      expect(valuesToSave?.recallType).toBeDefined()
+      expect(valuesToSave.recallType).toEqual({
+        selected: {
+          value: requestBody.recallType,
+          details: `${requestBody.personOnProbationName} must get an automatic fixed term recall as they do not meet the exemption criteria.`,
+        },
+        allOptions: formOptions.recallType,
+      })
       expect(errors).toBeUndefined()
     })
 
