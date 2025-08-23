@@ -4,16 +4,22 @@ import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { EVENTS } from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  const { recallType, recallTypeDetailsFixedTerm, recallTypeDetailsStandard, originalRecallType, ftrMandatory } =
-    requestBody
+  const { recallType, recallTypeDetailsStandard, originalRecallType, ftrMandatory, personOnProbationName } = requestBody
   const ftrMandatoryResolved = ftrMandatory === 'true'
   const invalidRecallType =
     !isValueValid(recallType as string, 'recallType') || (ftrMandatoryResolved && recallType === 'STANDARD')
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
+  const recallTypeDetailsFixedTerm =
+    ftrMandatoryResolved && isFixedTerm
+      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryFTRRationale, {
+          personOnProbationName: personOnProbationName as string,
+        })
+      : requestBody.recallTypeDetailsFixedTerm
   const missingDetailFixedTerm =
     !ftrMandatoryResolved && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
   const missingDetailStandard = !ftrMandatoryResolved && isStandard && !recallTypeDetailsStandard

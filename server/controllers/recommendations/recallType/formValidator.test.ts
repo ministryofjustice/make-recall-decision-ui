@@ -1,6 +1,11 @@
+import { faker } from '@faker-js/faker'
 import { validateRecallType } from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 import { EVENTS } from '../../../utils/constants'
+import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
+import { strings } from '../../../textStrings/en'
+
+jest.mock('../../../utils/automatedFieldValues/binding')
 
 describe('validateRecallType', () => {
   const recommendationId = '456'
@@ -147,13 +152,25 @@ describe('validateRecallType', () => {
         recallTypeDetailsFixedTerm: ' ', // whitespace
         crn: 'X34534',
         ftrMandatory: 'true',
+        personOnProbationName: faker.person.fullName(),
       }
+      const expectedDetails = faker.lorem.sentence()
+      ;(bindPlaceholderValues as jest.Mock).mockReturnValueOnce(expectedDetails)
       const { errors, valuesToSave } = await validateRecallType({
         requestBody,
         recommendationId,
         urlInfo,
       })
-      expect(valuesToSave?.recallType).toBeDefined()
+      expect(valuesToSave.recallType).toEqual({
+        selected: {
+          value: requestBody.recallType,
+          details: expectedDetails,
+        },
+        allOptions: formOptions.recallType,
+      })
+      expect(bindPlaceholderValues).toHaveBeenCalledWith(strings.automatedFieldValues.mandatoryFTRRationale, {
+        personOnProbationName: requestBody.personOnProbationName,
+      })
       expect(errors).toBeUndefined()
     })
 
