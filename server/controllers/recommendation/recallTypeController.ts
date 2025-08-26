@@ -39,6 +39,7 @@ function get(_: Request, res: Response, next: NextFunction) {
       apiValues: recommendation,
     }),
     availableRecallTypes: availableRecallTypes(ftr48Enabled, recommendation),
+    personOnProbationName: recommendation.personOnProbation.fullName,
     // READY TO MERGE?? FTR48 flag must be added to the system in order for this to work
     ftr48Enabled,
     ftrMandatory,
