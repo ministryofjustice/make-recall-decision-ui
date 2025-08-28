@@ -44,6 +44,18 @@ export const changeLinkUrl = ({
   return `${basePath}${pageUrlSlug}${queryParam}`
 }
 
+export const nextPagePreservingFromPageAndAnchor = ({
+  pageUrlSlug,
+  urlInfo,
+}: {
+  pageUrlSlug: string
+  urlInfo: UrlInfo
+}) => {
+  const { basePath, fromPageId, fromAnchor } = urlInfo
+  const queryParam = `${fromPageId ? `?fromPageId=${fromPageId}` : ''}${fromAnchor ? `${fromPageId ? '&' : '?'}fromAnchor=${fromAnchor}` : ''}`
+  return `${basePath}${pageUrlSlug}${queryParam}`
+}
+
 export const checkForRedirectPath = ({
   requestedPageId,
   recommendation,

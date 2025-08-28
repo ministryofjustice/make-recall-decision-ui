@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
@@ -532,5 +532,40 @@ describe('post', () => {
       })
       expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
     })
+  })
+
+  it('preserves fromPageId and fromAnchor when provided', async () => {
+    const expectedFromPageId = faker.word.noun()
+    const expectedFromAnchor = faker.word.adjective()
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        isUnder18: 'YES',
+        isSentence48MonthsOrOver: 'YES',
+        isMappaCategory4: 'YES',
+        isMappaLevel2Or3: 'YES',
+        isRecalledOnNewChargedOffence: 'YES',
+        isServingFTSentenceForTerroristOffence: 'YES',
+        hasBeenChargedWithTerroristOrStateThreatOffence: 'YES',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: faker.person.fullName() } },
+        urlInfo: { basePath, fromPageId: expectedFromPageId, fromAnchor: expectedFromAnchor },
+        statuses: [],
+        flags: { flagFtr48Updates: true },
+      },
+    })
+    const next = mockNext()
+
+    await suitabilityForFixedTermRecallController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `/recommendations/123/recall-type?fromPageId=${expectedFromPageId}&fromAnchor=${expectedFromAnchor}`
+    )
   })
 })

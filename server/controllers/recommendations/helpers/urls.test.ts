@@ -1,4 +1,5 @@
-import { changeLinkUrl, checkForRedirectPath, nextPageLinkUrl } from './urls'
+import { fakerEN_GB as faker } from '@faker-js/faker'
+import { changeLinkUrl, checkForRedirectPath, nextPageLinkUrl, nextPagePreservingFromPageAndAnchor } from './urls'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
@@ -50,6 +51,57 @@ describe('changeLinkUrl', () => {
     }
     const url = changeLinkUrl({ pageUrlSlug: 'recall-type', urlInfo, fromAnchor: 'heading-recommendation' })
     expect(url).toEqual('/recommendations/123/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation')
+  })
+})
+
+describe('nextPagePreservingFromPageAndAnchor', () => {
+  const nextPageTestSlug = 'test-next-slug'
+  const testPath = 'path/is/required'
+  it('returns the base url and page slug when no UrlInfo details present', () => {
+    const expectedBasePath = faker.internet.url()
+    const urlInfo = {
+      path: testPath,
+      basePath: expectedBasePath,
+    }
+    const result = nextPagePreservingFromPageAndAnchor({ pageUrlSlug: nextPageTestSlug, urlInfo })
+    expect(result).toEqual(`${expectedBasePath}${nextPageTestSlug}`)
+  })
+  it('returns the base url and page slug with fromPageId when provided', () => {
+    const expectedBasePath = faker.internet.url()
+    const expectedFromPageId = faker.word.noun()
+    const urlInfo = {
+      path: testPath,
+      basePath: expectedBasePath,
+      fromPageId: expectedFromPageId,
+    }
+    const result = nextPagePreservingFromPageAndAnchor({ pageUrlSlug: nextPageTestSlug, urlInfo })
+    expect(result).toEqual(`${expectedBasePath}${nextPageTestSlug}?fromPageId=${expectedFromPageId}`)
+  })
+  it('returns the base url and page slug with fromAnchor when provided', () => {
+    const expectedBasePath = faker.internet.url()
+    const expectedFromAchorId = faker.word.adjective()
+    const urlInfo = {
+      path: testPath,
+      basePath: expectedBasePath,
+      fromAnchor: expectedFromAchorId,
+    }
+    const result = nextPagePreservingFromPageAndAnchor({ pageUrlSlug: nextPageTestSlug, urlInfo })
+    expect(result).toEqual(`${expectedBasePath}${nextPageTestSlug}?fromAnchor=${expectedFromAchorId}`)
+  })
+  it('returns the base url and page slug with both fromPageId and fromAnchor when provided', () => {
+    const expectedBasePath = faker.internet.url()
+    const expectedFromPageId = faker.word.noun()
+    const expectedFromAchorId = faker.word.adjective()
+    const urlInfo = {
+      path: testPath,
+      basePath: expectedBasePath,
+      fromPageId: expectedFromPageId,
+      fromAnchor: expectedFromAchorId,
+    }
+    const result = nextPagePreservingFromPageAndAnchor({ pageUrlSlug: nextPageTestSlug, urlInfo })
+    expect(result).toEqual(
+      `${expectedBasePath}${nextPageTestSlug}?fromPageId=${expectedFromPageId}&fromAnchor=${expectedFromAchorId}`
+    )
   })
 })
 
