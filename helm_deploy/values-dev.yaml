@@ -18,6 +18,7 @@ generic-service:
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "DEVELOPMENT"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+    FEATURE_FLAGFTR48UPDATES="2025-08-01T00:00"
 
   scheduledDowntime:
     enabled: true

@@ -24,18 +24,23 @@
                                 }
                             },
                             hint: {
-                                html: "<div class='govuk-body'>" + flag.description + "</div>"
+                                html: "<div class='govuk-body'>" +
+                                        flag.description
+                                        + (bodyParagraph('Feature enabled globally by environment settings', 'govuk-hint') if flag.globalyEnabled) + 
+                                      "</div>"
                             },
                             items: [
                                 {
                                     value: "1",
                                     text: "On" + (" (default)" if flag.default == true else ""),
-                                    checked: flag.override == true
+                                    checked: flag.override == true,
+                                    disabled: flag.globalyEnabled
                                 },
                                 {
                                     value: "0",
                                     text: "Off" + (" (default)" if flag.default == false else ""),
-                                    checked: flag.override == false
+                                    checked: flag.override == false,
+                                    disabled: flag.globalyEnabled
                                 }
                             ]
                         }) }}

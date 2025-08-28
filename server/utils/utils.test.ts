@@ -1,7 +1,10 @@
+import { faker } from '@faker-js/faker'
+import { productionEnvValues } from '../testUtils/testConstants'
 import {
   convertToTitleCase,
   getProperty,
   hasData,
+  isDateTimeAfterCurrent,
   isDateTimeRangeCurrent,
   isPreprodOrProd,
   listToString,
@@ -286,6 +289,28 @@ describe('isDateTimeRangeCurrent', () => {
   })
 })
 
+describe('isDateTimeAfterCurrent', () => {
+  describe('returns false when no value is provided', () => {
+    ;[undefined, null, ''].forEach(falsyValue => {
+      it(`- Falsy value: ${falsyValue}`, () => {
+        expect(isDateTimeAfterCurrent(falsyValue)).toEqual(false)
+      })
+    })
+  })
+  const invalidDate = faker.string.alphanumeric()
+  it(`returns false when input is not a valid data - test value: ${invalidDate}`, () => {
+    expect(isDateTimeAfterCurrent(invalidDate)).toBeFalsy()
+  })
+  it('returns false when the input date is ahead of the current date', () => {
+    const futureDate = faker.date.future().toISOString()
+    expect(isDateTimeAfterCurrent(futureDate)).toBeFalsy()
+  })
+  it('returns true when the input date is prior of the current date', () => {
+    const pastDate = faker.date.past().toISOString()
+    expect(isDateTimeAfterCurrent(pastDate)).toBeTruthy()
+  })
+})
+
 describe('isPreprodOrProd', () => {
   it('returns false if given undefined', () => {
     expect(isPreprodOrProd()).toEqual(false)
@@ -295,12 +320,10 @@ describe('isPreprodOrProd', () => {
     expect(isPreprodOrProd('DEVELOPMENT')).toEqual(false)
   })
 
-  it('returns true if given PREPRODUCTION', () => {
-    expect(isPreprodOrProd('PREPRODUCTION')).toEqual(true)
-  })
-
-  it('returns true if given PRODUCTION', () => {
-    expect(isPreprodOrProd('PRODUCTION')).toEqual(true)
+  productionEnvValues.forEach(val => {
+    it(`returns true if given ${val}`, () => {
+      expect(isPreprodOrProd(val)).toEqual(true)
+    })
   })
 })
 
