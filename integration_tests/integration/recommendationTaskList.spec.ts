@@ -336,7 +336,7 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Suitability for fixed term recall To do').should('exist')
+    cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
   })
   it('task list - determinate, not extended, fixed term recall and FTR flag and suitability completed', () => {
     cy.task('getRecommendation', {
@@ -351,7 +351,7 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Suitability for fixed term recall Completed').should('exist')
+    cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
   })
 
   describe('Routing', () => {
