@@ -4,7 +4,8 @@ import { productionEnvValues } from '../testUtils/testConstants'
 import { determineEnvFeatureOverride, readFeatureFlags } from './featureFlags'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
 
-const envKey = (flagKey: string) => `FEATURE_${flagKey.toUpperCase()}`
+const featureKey = (flagKey: string) => `FEATURE_${flagKey.toUpperCase()}`
+const flagQueriesEnabedKey = 'FEATURE_FLAG_QUERY_PARAMETERS_ENABLED'
 
 const invalidFeatureDateValueCases = [
   { name: 'Future date', value: faker.date.future().toISOString() },
@@ -16,21 +17,21 @@ const invalidFeatureDateValueCases = [
 describe('determineEnvFeatureOverride', () => {
   const testFeatureKey = 'DetmineEncTestFeature'
   it('Returns false when the env does not contain the Feature Key', () => {
-    expect(Object.keys(process.env)).not.toContain(envKey(testFeatureKey))
+    expect(Object.keys(process.env)).not.toContain(featureKey(testFeatureKey))
     expect(determineEnvFeatureOverride(testFeatureKey)).toBeFalsy()
   })
   describe('Returns false when the env contains Feature Key but the value is not a valid date in the past', () => {
     invalidFeatureDateValueCases.forEach(({ name, value }) => {
       it(`- Invalid value: ${name} - ${value}`, () => {
-        process.env[envKey(testFeatureKey)] = value
-        expect(Object.keys(process.env)).toContain(envKey(testFeatureKey))
+        process.env[featureKey(testFeatureKey)] = value
+        expect(Object.keys(process.env)).toContain(featureKey(testFeatureKey))
         expect(determineEnvFeatureOverride(testFeatureKey)).toBeFalsy()
       })
     })
   })
   it('Returns true when the env contains Feature Key and it is the past', () => {
-    process.env[envKey(testFeatureKey)] = faker.date.past().toISOString()
-    expect(Object.keys(process.env)).toContain(envKey(testFeatureKey))
+    process.env[featureKey(testFeatureKey)] = faker.date.past().toISOString()
+    expect(Object.keys(process.env)).toContain(featureKey(testFeatureKey))
     expect(determineEnvFeatureOverride(testFeatureKey)).toBeTruthy()
   })
 })
@@ -75,7 +76,8 @@ describe('readFeatureFlags', () => {
     invalidFeatureDateValueCases.forEach(({ name, value }) => {
       let featureDisabledProcessEnv: NodeJS.ProcessEnv
       beforeAll(() => {
-        process.env[envKey(testFlagKey)] = `${value}`
+        process.env[featureKey(testFlagKey)] = `${value}`
+        process.env[flagQueriesEnabedKey] = `${true}`
         featureDisabledProcessEnv = process.env
       })
       afterAll(() => {
@@ -110,7 +112,7 @@ describe('readFeatureFlags', () => {
           })
         })
 
-        describe('Returns the default value regardless of other flag values', () => {
+        describe('Returns the cokkie/query value regardless of other flag values', () => {
           describe('when the environment is a "production" value', () => {
             productionEnvValues.forEach(env => {
               beforeEach(() => {
@@ -120,11 +122,11 @@ describe('readFeatureFlags', () => {
                 process.env = featureDisabledProcessEnv
               })
               describe(`- Environment value: ${env}`, () => {
-                ;[true, false].forEach(def => {
-                  it(`- Default value: ${def}`, () => {
-                    readFeatureFlags(testFlag(def))(cookieAndQueryReq(true, true), resultRes, next)
+                ;[true, false].forEach(val => {
+                  it(`- Default value: ${val}`, () => {
+                    readFeatureFlags(testFlag(val))(cookieAndQueryReq(val, val), resultRes, next)
                     expect(resultRes.locals.flags).toEqual({
-                      testFlag: def,
+                      testFlag: val,
                     })
                   })
                 })
@@ -139,7 +141,7 @@ describe('readFeatureFlags', () => {
   describe('When environment feature settings override is enabled', () => {
     let featureEnabledProcessEnv: NodeJS.ProcessEnv
     beforeAll(() => {
-      process.env[envKey(testFlagKey)] = faker.date.past().toISOString()
+      process.env[featureKey(testFlagKey)] = faker.date.past().toISOString()
       featureEnabledProcessEnv = process.env
     })
     afterAll(() => {

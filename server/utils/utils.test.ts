@@ -297,8 +297,8 @@ describe('isDateTimeAfterCurrent', () => {
       })
     })
   })
-  const invalidDate = faker.string.alphanumeric()
-  it(`returns false when input is not a valid data - test value: ${invalidDate}`, () => {
+  const invalidDate = faker.string.alphanumeric({ length: { min: 5, max: 10 } })
+  it(`returns false when input is not a valid date - test value: ${invalidDate}`, () => {
     expect(isDateTimeAfterCurrent(invalidDate)).toBeFalsy()
   })
   it('returns false when the input date is ahead of the current date', () => {
