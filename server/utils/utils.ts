@@ -141,6 +141,21 @@ export function isDateTimeRangeCurrent(startDateTimeStr: string, endDateTimeStr:
   return startDateTime <= dateToday && endDateTime >= dateToday
 }
 
+export function isDateTimeAfterCurrent(afterDateTimeStr: string) {
+  if (!afterDateTimeStr) {
+    return false
+  }
+
+  const dateToday = new Date()
+  const afterDateTime = new Date(afterDateTimeStr)
+
+  if (Number.isNaN(afterDateTime)) {
+    return false
+  }
+
+  return dateToday > afterDateTime
+}
+
 export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {
   return userAccessResponse?.userNotFound || userAccessResponse?.userRestricted || userAccessResponse?.userExcluded
 }
