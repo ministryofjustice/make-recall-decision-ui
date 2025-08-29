@@ -104,11 +104,20 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
   }
 
+  const warningPanel =
+    recommendation.recallType === null || recommendation.recallType === undefined
+      ? undefined
+      : {
+          title: 'Changes could affect your recall recommendation choices',
+          body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+        }
+
   res.locals = {
     ...res.locals,
     caseSummary,
     page: {
       id: pageId,
+      warningPanel,
     },
     inputDisplayValues,
   }

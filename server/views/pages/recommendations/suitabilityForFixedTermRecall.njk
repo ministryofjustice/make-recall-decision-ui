@@ -101,6 +101,16 @@
                     classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
                     html: offenceSentenceHtml
                 }) }}
+                {% if page.warningPanel %}
+                    {% set bannerHtml%}
+                        {{ heading(page.warningPanel.title, 2, 'm') }}
+                        {{ bodyParagraph(page.warningPanel.body) }}
+                    {% endset %}
+                    {{ mojBanner({
+                        type: 'warning',
+                        html: bannerHtml
+                    }) }}
+                {% endif %}
                 {% for key, field in inputDisplayValues %}
                     {% if field.displayForFTR48 is not defined or field.displayForFTR48 == flags.flagFtr48Updates %}
                         {{ govukRadios({

@@ -4,6 +4,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import suitabilityForFixedTermRecallController from './suitabilityForFixedTermRecallController'
 import { getCaseSection } from '../caseSummary/getCaseSection'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
@@ -37,6 +38,7 @@ describe('get', () => {
             personOnProbation: {
               name: faker.person.fullName(),
             },
+            recallType: null,
           },
           token: 'token1',
           flags: { flagFtr48Updates: true },
@@ -59,6 +61,7 @@ describe('get', () => {
             personOnProbation: {
               name: faker.person.fullName(),
             },
+            recallType: null,
           },
           token: 'token1',
           flags: {},
@@ -269,6 +272,45 @@ describe('get', () => {
       text: 'Select whether {{ fullName }} is 18 or over',
       href: '#isUnder18',
       errorId: 'noIsUnder18',
+    })
+  })
+
+  describe('When a recall type does not already exists', () => {
+    it('The warning panel properties are undefined', async () => {
+      const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
+        recallType: 'none',
+        personOnProbation: true,
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: recommendationWithSelectedRecallType,
+        },
+      })
+
+      await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+      expect(res.locals.page.warningPanel).toBeUndefined()
+    })
+  })
+  describe('When a recall type already exists', () => {
+    it('The warning panel properties are added to the page data', async () => {
+      const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
+        recallType: 'any',
+        personOnProbation: true,
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: recommendationWithSelectedRecallType,
+        },
+      })
+
+      await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+      expect(res.locals.page.warningPanel).toBeDefined()
+      expect(res.locals.page.warningPanel).toEqual({
+        title: 'Changes could affect your recall recommendation choices',
+        body: `Changing your answers could make ${recommendationWithSelectedRecallType.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+      })
     })
   })
 })
