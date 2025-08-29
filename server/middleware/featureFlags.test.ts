@@ -75,12 +75,12 @@ describe('readFeatureFlags', () => {
   describe('When environment feature settings override is not enabled', () => {
     invalidFeatureDateValueCases.forEach(({ name, value }) => {
       let featureDisabledProcessEnv: NodeJS.ProcessEnv
-      beforeAll(() => {
+      beforeEach(() => {
         process.env[featureKey(testFlagKey)] = `${value}`
         process.env[flagQueriesEnabedKey] = `${true}`
         featureDisabledProcessEnv = process.env
       })
-      afterAll(() => {
+      afterEach(() => {
         process.env = INITAL_ENV
       })
       describe(`- Not enabled value: ${name} - ${value}`, () => {
@@ -112,22 +112,28 @@ describe('readFeatureFlags', () => {
           })
         })
 
-        describe('Returns the cokkie/query value regardless of other flag values', () => {
-          describe('when the environment is a "production" value', () => {
-            productionEnvValues.forEach(env => {
+        describe('Returns the default value regardless of other cookie/query values when the environment is a "production" value', () => {
+          productionEnvValues.forEach(env => {
+            beforeEach(() => {
+              process.env.ENVIRONMENT = env
+            })
+            afterEach(() => {
+              process.env = featureDisabledProcessEnv
+            })
+            describe(`- Environment value: ${env}`, () => {
               beforeEach(() => {
-                process.env = { ...process.env, ENVIRONMENT: env }
+                process.env[flagQueriesEnabedKey] = `${false}`
               })
-              afterAll(() => {
-                process.env = featureDisabledProcessEnv
-              })
-              describe(`- Environment value: ${env}`, () => {
-                ;[true, false].forEach(val => {
-                  it(`- Default value: ${val}`, () => {
-                    readFeatureFlags(testFlag(val))(cookieAndQueryReq(val, val), resultRes, next)
-                    expect(resultRes.locals.flags).toEqual({
-                      testFlag: val,
-                    })
+              ;[true, false].forEach(def => {
+                it(`- Default value: ${def}`, () => {
+                  const cookieQueryValue = !def
+                  readFeatureFlags(testFlag(def))(
+                    cookieAndQueryReq(cookieQueryValue, cookieQueryValue),
+                    resultRes,
+                    next
+                  )
+                  expect(resultRes.locals.flags).toEqual({
+                    testFlag: def,
                   })
                 })
               })
@@ -140,11 +146,11 @@ describe('readFeatureFlags', () => {
 
   describe('When environment feature settings override is enabled', () => {
     let featureEnabledProcessEnv: NodeJS.ProcessEnv
-    beforeAll(() => {
+    beforeEach(() => {
       process.env[featureKey(testFlagKey)] = faker.date.past().toISOString()
       featureEnabledProcessEnv = process.env
     })
-    afterAll(() => {
+    afterEach(() => {
       process.env = INITAL_ENV
     })
 
@@ -161,7 +167,7 @@ describe('readFeatureFlags', () => {
           beforeEach(() => {
             process.env = { ...process.env, ENVIRONMENT: env }
           })
-          afterAll(() => {
+          afterEach(() => {
             process.env = featureEnabledProcessEnv
           })
           it(`- Environment value: ${env}`, () => {
