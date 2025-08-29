@@ -1,12 +1,15 @@
-import { faker } from '@faker-js/faker'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import suitabilityForFixedTermRecallController from './suitabilityForFixedTermRecallController'
 import { getCaseSection } from '../caseSummary/getCaseSection'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
+jest.mock('../recommendations/helpers/urls')
 
 describe('get', () => {
   beforeEach(() => {
@@ -37,6 +40,7 @@ describe('get', () => {
             personOnProbation: {
               name: faker.person.fullName(),
             },
+            recallType: null,
           },
           token: 'token1',
           flags: { flagFtr48Updates: true },
@@ -59,6 +63,7 @@ describe('get', () => {
             personOnProbation: {
               name: faker.person.fullName(),
             },
+            recallType: null,
           },
           token: 'token1',
           flags: {},
@@ -271,11 +276,52 @@ describe('get', () => {
       errorId: 'noIsUnder18',
     })
   })
+
+  describe('When a recall type does not already exists', () => {
+    it('The warning panel properties are undefined', async () => {
+      const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
+        recallType: 'none',
+        personOnProbation: true,
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: recommendationWithSelectedRecallType,
+        },
+      })
+
+      await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+      expect(res.locals.page.warningPanel).toBeUndefined()
+    })
+  })
+  describe('When a recall type already exists', () => {
+    it('The warning panel properties are added to the page data', async () => {
+      const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
+        recallType: 'any',
+        personOnProbation: true,
+      })
+      const res = mockRes({
+        locals: {
+          recommendation: recommendationWithSelectedRecallType,
+        },
+      })
+
+      await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+      expect(res.locals.page.warningPanel).toBeDefined()
+      expect(res.locals.page.warningPanel).toEqual({
+        title: 'Changes could affect your recall recommendation choices',
+        body: `Changing your answers could make ${recommendationWithSelectedRecallType.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+      })
+    })
+  })
 })
 
 describe('post', () => {
+  const expectedResolvedRedirectUrl = faker.internet.url()
   beforeEach(() => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(nextPagePreservingFromPageAndAnchor as jest.Mock).mockReturnValue(expectedResolvedRedirectUrl)
   })
   const basePath = `/recommendations/123/`
   describe('post with valid data', () => {
@@ -321,7 +367,7 @@ describe('post', () => {
         featureFlags: { flagFtr48Updates: true },
       })
 
-      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type`)
+      expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
       expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
     it('with FTR48 flag disabled', async () => {
@@ -360,7 +406,7 @@ describe('post', () => {
         featureFlags: {},
       })
 
-      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/recall-type`)
+      expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
       expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
   })

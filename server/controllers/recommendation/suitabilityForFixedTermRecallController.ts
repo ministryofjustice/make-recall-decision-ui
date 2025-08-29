@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
@@ -104,11 +104,20 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
   }
 
+  const warningPanel =
+    recommendation.recallType === null || recommendation.recallType === undefined
+      ? undefined
+      : {
+          title: 'Changes could affect your recall recommendation choices',
+          body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+        }
+
   res.locals = {
     ...res.locals,
     caseSummary,
     page: {
       id: pageId,
+      warningPanel,
     },
     inputDisplayValues,
   }
@@ -174,7 +183,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'recall-type', urlInfo }))
+  res.redirect(303, nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'recall-type', urlInfo }))
 }
 
 export default { get, post }
