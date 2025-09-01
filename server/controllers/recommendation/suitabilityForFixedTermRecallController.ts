@@ -6,7 +6,12 @@ import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { getCaseSection } from '../caseSummary/getCaseSection'
-import { NamedFormError } from '../../@types/pagesForms'
+import { NamedFormError, UrlInfo } from '../../@types/pagesForms'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import {
+  isFixedTermRecallMandatoryForValueKeys,
+  isFixedTermRecallMandatoryForRecommendation,
+} from '../../utils/fixedTermRecallUtils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -105,12 +110,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const warningPanel =
-    recommendation.recallType === null || recommendation.recallType === undefined
-      ? undefined
-      : {
+    recommendation.recallType !== null && !isFixedTermRecallMandatoryForRecommendation(recommendation)
+      ? {
           title: 'Changes could affect your recall recommendation choices',
           body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
         }
+      : undefined
 
   res.locals = {
     ...res.locals,
@@ -128,17 +133,23 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-
   const {
+    recommendation,
     flags,
     user: { token },
     urlInfo,
-  } = res.locals
+  } = res.locals as {
+    recommendation: RecommendationResponse
+    flags: Record<string, boolean>
+    user: { token: string }
+    urlInfo: UrlInfo
+  }
+  const ftr48Enabled = flags?.flagFtr48Updates ?? false
 
   const errors: NamedFormError[] = []
   const valuesToSave: Record<string, unknown> = {}
 
-  const fieldIds = flags.flagFtr48Updates
+  const fieldIds = ftr48Enabled
     ? [
         'isSentence48MonthsOrOver',
         'isUnder18',
@@ -169,6 +180,18 @@ async function post(req: Request, res: Response, _: NextFunction) {
       valuesToSave[key] = value === 'YES'
     }
   })
+
+  const ftrMandatoryPreviously = ftr48Enabled && isFixedTermRecallMandatoryForRecommendation(recommendation)
+  const ftrIsMandatoryUpdated =
+    ftr48Enabled && isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
+  if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
+    valuesToSave.recallType = {
+      ...recommendation.recallType,
+      selected: {
+        value: recommendation.recallType?.selected.value,
+      },
+    }
+  }
 
   if (errors.length > 0) {
     req.session.errors = errors
