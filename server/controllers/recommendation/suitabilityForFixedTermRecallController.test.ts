@@ -6,10 +6,15 @@ import suitabilityForFixedTermRecallController from './suitabilityForFixedTermRe
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
+import {
+  isFixedTermRecallMandatoryForValueKeys,
+  isFixedTermRecallMandatoryForRecommendation,
+} from '../../utils/fixedTermRecallUtils'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
 jest.mock('../recommendations/helpers/urls')
+jest.mock('../../utils/fixedTermRecallUtils')
 
 describe('get', () => {
   beforeEach(() => {
@@ -277,7 +282,10 @@ describe('get', () => {
     })
   })
 
-  describe('When a recall type does not already exists', () => {
+  describe('When the existing recommendation is fixed term recall mandatory', () => {
+    beforeEach(() => {
+      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValue(true)
+    })
     it('The warning panel properties are undefined', async () => {
       const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
         recallType: 'none',
@@ -294,7 +302,10 @@ describe('get', () => {
       expect(res.locals.page.warningPanel).toBeUndefined()
     })
   })
-  describe('When a recall type already exists', () => {
+  describe('When the existing recommendation is fixed term recall discretionary', () => {
+    beforeEach(() => {
+      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+    })
     it('The warning panel properties are added to the page data', async () => {
       const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
         recallType: 'any',
@@ -325,50 +336,98 @@ describe('post', () => {
   })
   const basePath = `/recommendations/123/`
   describe('post with valid data', () => {
-    it('with FTR48 flag enabled', async () => {
-      const req = mockReq({
-        params: { recommendationId: '123' },
-        body: {
-          isUnder18: 'YES',
-          isSentence48MonthsOrOver: 'YES',
-          isMappaCategory4: 'YES',
-          isMappaLevel2Or3: 'YES',
-          isRecalledOnNewChargedOffence: 'YES',
-          isServingFTSentenceForTerroristOffence: 'YES',
-          hasBeenChargedWithTerroristOrStateThreatOffence: 'YES',
+    describe('with FTR48 flag enabled', () => {
+      const testCases: {
+        name: string
+        previouslyMandatory: boolean
+        updatedMandatory: boolean
+        detailsExpected: boolean
+      }[] = [
+        {
+          name: 'previously discretionary - now discrestionary - details not updated',
+          previouslyMandatory: false,
+          updatedMandatory: false,
+          detailsExpected: false,
         },
-      })
-
-      const res = mockRes({
-        token: 'token1',
-        locals: {
-          recommendation: { personOnProbation: { name: faker.person.fullName() } },
-          urlInfo: { basePath },
-          statuses: [],
-          flags: { flagFtr48Updates: true },
+        {
+          name: 'previously discretionary - now mandatory - details not updated',
+          previouslyMandatory: false,
+          updatedMandatory: true,
+          detailsExpected: false,
         },
-      })
-      const next = mockNext()
-
-      await suitabilityForFixedTermRecallController.post(req, res, next)
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
-        valuesToSave: {
-          isUnder18: true,
-          isSentence48MonthsOrOver: true,
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          isRecalledOnNewChargedOffence: true,
-          isServingFTSentenceForTerroristOffence: true,
-          hasBeenChargedWithTerroristOrStateThreatOffence: true,
+        {
+          name: 'previously mandatory - now mandatory - details not updated',
+          previouslyMandatory: true,
+          updatedMandatory: true,
+          detailsExpected: false,
         },
-        featureFlags: { flagFtr48Updates: true },
-      })
+        {
+          name: 'previously mandatory - now discretionary - details updated to clear value',
+          previouslyMandatory: true,
+          updatedMandatory: false,
+          detailsExpected: true,
+        },
+      ]
+      testCases.forEach(({ name, previouslyMandatory, updatedMandatory, detailsExpected }) => {
+        it(name, async () => {
+          ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValue(previouslyMandatory)
+          ;(isFixedTermRecallMandatoryForValueKeys as jest.Mock).mockReturnValue(updatedMandatory)
+          const req = mockReq({
+            params: { recommendationId: '123' },
+            body: {
+              isUnder18: 'YES',
+              isSentence48MonthsOrOver: 'YES',
+              isMappaCategory4: 'YES',
+              isMappaLevel2Or3: 'YES',
+              isRecalledOnNewChargedOffence: 'YES',
+              isServingFTSentenceForTerroristOffence: 'YES',
+              hasBeenChargedWithTerroristOrStateThreatOffence: 'YES',
+            },
+          })
+          const priorRecommendation = RecommendationResponseGenerator.generate({
+            recallType: 'any',
+            personOnProbation: true,
+          })
+          const res = mockRes({
+            token: 'token1',
+            locals: {
+              recommendation: priorRecommendation,
+              urlInfo: { basePath },
+              statuses: [],
+              flags: { flagFtr48Updates: true },
+            },
+          })
+          const next = mockNext()
 
-      expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+          await suitabilityForFixedTermRecallController.post(req, res, next)
+
+          expect(updateRecommendation).toHaveBeenCalledWith({
+            recommendationId: '123',
+            token: 'token1',
+            valuesToSave: {
+              isUnder18: true,
+              isSentence48MonthsOrOver: true,
+              isMappaCategory4: true,
+              isMappaLevel2Or3: true,
+              isRecalledOnNewChargedOffence: true,
+              isServingFTSentenceForTerroristOffence: true,
+              hasBeenChargedWithTerroristOrStateThreatOffence: true,
+              ...(detailsExpected
+                ? {
+                    recallType: {
+                      selected: { value: priorRecommendation.recallType.selected.value },
+                      allOptions: priorRecommendation.recallType.allOptions,
+                    },
+                  }
+                : {}),
+            },
+            featureFlags: { flagFtr48Updates: true },
+          })
+
+          expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
+          expect(next).not.toHaveBeenCalled() // end of the line for posts.
+        })
+      })
     })
     it('with FTR48 flag disabled', async () => {
       const req = mockReq({

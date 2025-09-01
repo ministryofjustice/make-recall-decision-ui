@@ -8,6 +8,7 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
 
 function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, flags } = res.locals as {
@@ -15,18 +16,7 @@ function get(_: Request, res: Response, next: NextFunction) {
     flags: Record<string, boolean>
   }
   const ftr48Enabled = flags?.flagFtr48Updates ?? false
-
-  const ftrMandatory =
-    ftr48Enabled &&
-    !(
-      recommendation?.isSentence48MonthsOrOver ||
-      recommendation?.isUnder18 ||
-      recommendation?.isMappaCategory4 ||
-      recommendation?.isMappaLevel2Or3 ||
-      recommendation?.isRecalledOnNewChargedOffence ||
-      recommendation?.isServingFTSentenceForTerroristOffence ||
-      recommendation?.hasBeenChargedWithTerroristOrStateThreatOffence
-    )
+  const ftrMandatory = ftr48Enabled && isFixedTermRecallMandatoryForRecommendation(recommendation)
 
   res.locals = {
     ...res.locals,
