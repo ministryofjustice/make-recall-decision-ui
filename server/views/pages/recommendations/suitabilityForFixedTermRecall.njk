@@ -81,20 +81,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-                {% if flags.flagFtr48Updates %}
-                    <p class="govuk-body">Use the following information to answer the questions and assess which type of
-                        recall is appropriate.</p>
-                {% else %}
-                    <p class="govuk-body">For sentences under 12 months, recalls must be fixed term unless either:</p>
-                    <ul class='govuk-list govuk-list--bullet'>
-                        <li>the person has been charged with a serious offence (murder or an offence listed in
-                            <a href="https://www.legislation.gov.uk/ukpga/2020/17/schedule/18" target="_blank" rel="noopener noreferrer" class="govuk-link"/>
-                            Schedule 18 of the Sentencing Act 2020</a>)</li>
-                        <li>the MAPPA level is 2 or 3 at the point of recall</li>
-                    </ul>
-
-                    <p class="govuk-body">This applies to people aged 18 and over only.</p>
-                {% endif %}
+                <p class="govuk-body">Use the following information to answer the questions and assess which type of recall is appropriate.</p>
 
                 {{ appSummaryCard({
                     titleText: 'NDelius details for ' + recommendation.personOnProbation.name,
@@ -112,28 +99,26 @@
                     }) }}
                 {% endif %}
                 {% for key, field in inputDisplayValues %}
-                    {% if field.displayForFTR48 is not defined or field.displayForFTR48 == flags.flagFtr48Updates %}
-                        {{ govukRadios({
-                            classes: "govuk-radios--inline",
-                            idPrefix: key,
-                            name: key,
-                            hint: {
-                                text: field.hint
-                            },
-                            fieldset: {
-                                legend: {
-                                    text: field.label,
-                                    classes: "govuk-fieldset__legend--m",
-                                    isPageHeading: false
-                                }
-                            },
-                            items: radioCheckboxItems({
-                                items: formOptions.yesNo,
-                                currentValues: field.value
-                            }),
-                            errorMessage: errorMessage(errors[key])
-                        }) }}
-                    {% endif %}
+                    {{ govukRadios({
+                        classes: "govuk-radios--inline",
+                        idPrefix: key,
+                        name: key,
+                        hint: {
+                            text: field.hint
+                        },
+                        fieldset: {
+                            legend: {
+                                text: field.label,
+                                classes: "govuk-fieldset__legend--m",
+                                isPageHeading: false
+                            }
+                        },
+                        items: radioCheckboxItems({
+                            items: formOptions.yesNo,
+                            currentValues: field.value
+                        }),
+                        errorMessage: errorMessage(errors[key])
+                    }) }}
                 {% endfor %}
                 {{ formSubmitButton() }}
             </form>

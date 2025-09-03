@@ -37,31 +37,21 @@ describe('availableRecallTypes', () => {
       .filter(fieldName => ftr48SuitabilityFlags[fieldName])
       .join(', ')
 
-    describe('with FTR48 flag enabled', () => {
-      let actualAvailableRecallTypes: { value: string; text: string }[]
-      beforeEach(() => {
-        actualAvailableRecallTypes = availableRecallTypes(true, recommendation)
-      })
-      if (isEmptyStringOrWhitespace(fieldsSetToTrue)) {
-        it('only FTR and No Recall available when all fields are false', () => {
-          const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-            ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
-          )
-          expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-        })
-      } else {
-        it(`all types are available when the following fields are true: ${fieldsSetToTrue}`, () => {
-          expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
-        })
-      }
+    let actualAvailableRecallTypes: { value: string; text: string }[]
+    beforeEach(() => {
+      actualAvailableRecallTypes = availableRecallTypes(recommendation)
     })
-
-    describe('with FTR48 flag disabled', () => {
-      it(`all types are available when the following fields are true: ${fieldsSetToTrue ?? 'none'}`, () => {
-        const actualAvailableRecallTypes = availableRecallTypes(false, recommendation)
-
+    if (isEmptyStringOrWhitespace(fieldsSetToTrue)) {
+      it('only FTR and No Recall available when all fields are false', () => {
+        const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+          ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
+        )
+        expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+      })
+    } else {
+      it(`all types are available when the following fields are true: ${fieldsSetToTrue}`, () => {
         expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
       })
-    })
+    }
   }
 })

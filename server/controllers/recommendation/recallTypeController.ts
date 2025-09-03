@@ -11,12 +11,9 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation, flags } = res.locals as {
+  const { recommendation } = res.locals as {
     recommendation: RecommendationResponse
-    flags: Record<string, boolean>
   }
-  const ftr48Enabled = flags?.flagFtr48Updates ?? false
-  const ftrMandatory = ftr48Enabled && isFixedTermRecallMandatoryForRecommendation(recommendation)
 
   res.locals = {
     ...res.locals,
@@ -28,11 +25,9 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: availableRecallTypes(ftr48Enabled, recommendation),
+    availableRecallTypes: availableRecallTypes(recommendation),
     personOnProbationName: recommendation.personOnProbation.fullName,
-    // READY TO MERGE?? FTR48 flag must be added to the system in order for this to work
-    ftr48Enabled,
-    ftrMandatory,
+    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
   }
 
   res.render(`pages/recommendations/recallType`)

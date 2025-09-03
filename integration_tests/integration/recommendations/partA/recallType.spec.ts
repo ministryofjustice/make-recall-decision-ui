@@ -93,234 +93,211 @@ context('Recall Type Page', () => {
       cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
     })
 
-    describe('Given the FTR48 Feature is not enabled', () => {
+    describe('And the Person on Probation does not meet any of the exception criteria', () => {
+      const recommendationWithoutExceptionCriteria = RecommendationResponseGenerator.generate({
+        isSentence48MonthsOrOver: false,
+        isUnder18: false,
+        isMappaCategory4: false,
+        isMappaLevel2Or3: false,
+        isRecalledOnNewChargedOffence: false,
+        isServingFTSentenceForTerroristOffence: false,
+        hasBeenChargedWithTerroristOrStateThreatOffence: false,
+      })
+      const expectedName = recommendationWithoutExceptionCriteria.personOnProbation.name
+
       beforeEach(() => {
-        cy.setCookie('flagFtr48Updates', '0')
+        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
+        cy.visit(testPageUrl)
       })
 
-      it('The original FTR Conditions panel is displayed', () => {
+      it('The expected mandatory radio options are rendered', () => {
+        cy.get('.govuk-form-group').get('fieldset').get('legend').get('.govuk-radios').as('radiosGroup')
+        cy.get('@radiosGroup').get('div.govuk-radios__item').as('renderedRadios')
+        testRecallTypeRadioButton(
+          () => cy.get('@renderedRadios').eq(0),
+          () => cy.get('@radiosGroup'),
+          'recallType',
+          'Fixed term recall'
+        )
+        testRecallTypeRadioButton(
+          () => cy.get('@renderedRadios').eq(1),
+          () => cy.get('@radiosGroup'),
+          'recallType-2',
+          'No recall'
+        )
+      })
+
+      it('Then the mandatory suitability panel is displayed', () => {
+        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
         cy.visit(testPageUrl)
 
-        cy.get('.govuk-notification-banner')
-          .should('exist')
+        cy.get('.moj-ticket-panel').should('exist').as('panel')
+
+        cy.get('@panel')
           .find('h2')
           .should('exist')
-          .should('contain.text', 'Criminal Justice Act 2003 (Suitability for Fixed Term Recall) Order 2024')
+          .should('contain.text', `${expectedName} must be given a fixed term recall, if recalled`)
+
+        cy.get('@panel').find('.govuk-details').should('exist').as('details')
+
+        cy.get('@details')
+          .find('summary')
+          .should('exist')
+          .should('contain.text', 'Understanding mandatory fixed term recalls')
+
+        cy.get('@details').find('.govuk-details__text').should('exist').as('detailsText')
+
+        cy.get('@detailsText')
+          .should(
+            'contain.text',
+            'Sentences under 48 months must be given a fixed term recall unless the person being recalled is:'
+          )
+          .should('contain.text', 'This applies to people aged 18 and over.')
+        cy.get('@detailsText')
+          .find('li')
+          .should('exist')
+          .should('have.length', 5)
+          .should('contain.text', 'being managed at MAPPA level 2 or 3, or in category 4, at the point of recall')
+          .should('contain.text', 'on an extended determinate sentence')
+          .should('contain.text', 'being recalled for a new charged offence')
+          .should(
+            'contain.text',
+            'serving a fixed term sentence for an offence within section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners) (opens in new tab)'
+          )
+          .should('contain.text', 'serving a sentence for a terrorist or state threat offence')
+          .find('a')
+          .should('exist')
+          .should('have.class', 'govuk-link')
+          .should('have.attr', 'href', 'https://www.legislation.gov.uk/ukpga/2003/44/section/247A')
+          .should('have.attr', 'rel', 'noreferrer noopener')
+          .should('have.attr', 'target', '_blank')
       })
     })
 
-    describe('Given the FTR48 Feature is enabled', () => {
+    describe('And the Person on Probation meets any of the exception criteria', () => {
+      const randomCriteria = randomiseCriteria<{
+        isSentence48MonthsOrOver: boolean
+        isUnder18: boolean
+        isMappaCategory4: boolean
+        isMappaLevel2Or3: boolean
+        isRecalledOnNewChargedOffence: boolean
+        isServingFTSentenceForTerroristOffence: boolean
+        hasBeenChargedWithTerroristOrStateThreatOffence: boolean
+      }>(
+        [
+          { key: 'isSentence48MonthsOrOver', generate: 'boolean' },
+          { key: 'isUnder18', generate: 'boolean' },
+          { key: 'isMappaCategory4', generate: 'boolean' },
+          { key: 'isMappaLevel2Or3', generate: 'boolean' },
+          { key: 'isRecalledOnNewChargedOffence', generate: 'boolean' },
+          { key: 'isServingFTSentenceForTerroristOffence', generate: 'boolean' },
+          { key: 'hasBeenChargedWithTerroristOrStateThreatOffence', generate: 'boolean' },
+        ],
+        criteria => !Object.keys(criteria).every(k => criteria[k] ?? false)
+      )
+
+      const recommendationWithExceptionCriteria = RecommendationResponseGenerator.generate({
+        isSentence48MonthsOrOver: randomCriteria.isSentence48MonthsOrOver,
+        isUnder18: randomCriteria.isUnder18,
+        isMappaCategory4: randomCriteria.isMappaCategory4,
+        isMappaLevel2Or3: randomCriteria.isMappaLevel2Or3,
+        isRecalledOnNewChargedOffence: randomCriteria.isRecalledOnNewChargedOffence,
+        isServingFTSentenceForTerroristOffence: randomCriteria.isServingFTSentenceForTerroristOffence,
+        hasBeenChargedWithTerroristOrStateThreatOffence: randomCriteria.hasBeenChargedWithTerroristOrStateThreatOffence,
+      })
+      const expectedName = recommendationWithExceptionCriteria.personOnProbation.name
+
       beforeEach(() => {
-        cy.setCookie('flagFtr48Updates', '1')
+        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithExceptionCriteria })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
+        cy.visit(testPageUrl)
       })
 
-      describe('And the Person on Probation does not meet any of the exception criteria', () => {
-        const recommendationWithoutExceptionCriteria = RecommendationResponseGenerator.generate({
-          isSentence48MonthsOrOver: false,
-          isUnder18: false,
-          isMappaCategory4: false,
-          isMappaLevel2Or3: false,
-          isRecalledOnNewChargedOffence: false,
-          isServingFTSentenceForTerroristOffence: false,
-          hasBeenChargedWithTerroristOrStateThreatOffence: false,
-        })
-        const expectedName = recommendationWithoutExceptionCriteria.personOnProbation.name
+      it('The expected discretionary radio options are rendered', () => {
+        cy.get('.govuk-form-group').get('fieldset').get('legend').get('.govuk-radios').as('radiosGroup')
+        cy.get('@radiosGroup').get('div.govuk-radios__item').as('renderedRadios')
+        testRecallTypeRadioButton(
+          () => cy.get('@renderedRadios').eq(0),
+          () => cy.get('@radiosGroup'),
+          'recallType',
+          'Fixed term recall',
+          {
+            idSuffix: 'FixedTerm',
+          }
+        )
+        testRecallTypeRadioButton(
+          () => cy.get('@renderedRadios').eq(1),
+          () => cy.get('@radiosGroup'),
+          'recallType-2',
+          'Standard recall',
+          {
+            idSuffix: 'Standard',
+          }
+        )
+        testRecallTypeRadioButton(
+          () => cy.get('@renderedRadios').eq(2),
+          () => cy.get('@radiosGroup'),
+          'recallType-3',
+          'No recall'
+        )
+      })
 
-        beforeEach(() => {
-          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.visit(testPageUrl)
-        })
-
-        it('The expected mandatory radio options are rendered', () => {
-          cy.get('.govuk-form-group').get('fieldset').get('legend').get('.govuk-radios').as('radiosGroup')
-          cy.get('@radiosGroup').get('div.govuk-radios__item').as('renderedRadios')
-          testRecallTypeRadioButton(
-            () => cy.get('@renderedRadios').eq(0),
-            () => cy.get('@radiosGroup'),
-            'recallType',
-            'Fixed term recall'
-          )
-          testRecallTypeRadioButton(
-            () => cy.get('@renderedRadios').eq(1),
-            () => cy.get('@radiosGroup'),
-            'recallType-2',
-            'No recall'
-          )
-        })
-
-        it('Then the mandatory suitability panel is displayed', () => {
-          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.visit(testPageUrl)
-
+      describe(`Randomised Criteria: 48+:${randomCriteria.isSentence48MonthsOrOver} | 18+:${randomCriteria.isUnder18} | M4:${randomCriteria.isMappaCategory4} | M2/3:${randomCriteria.isMappaLevel2Or3} | New:${randomCriteria.isRecalledOnNewChargedOffence} | STerr:${randomCriteria.isServingFTSentenceForTerroristOffence} | CTerr:${randomCriteria.hasBeenChargedWithTerroristOrStateThreatOffence}`, () => {
+        it('Then the discretionary suitability panel is displayed', () => {
           cy.get('.moj-ticket-panel').should('exist').as('panel')
 
           cy.get('@panel')
             .find('h2')
             .should('exist')
-            .should('contain.text', `${expectedName} must be given a fixed term recall, if recalled`)
+            .should('contain.text', `${expectedName} can have either a fixed term or standard recall`)
 
-          cy.get('@panel').find('.govuk-details').should('exist').as('details')
-
-          cy.get('@details')
-            .find('summary')
+          cy.get('@panel')
+            .find('p')
             .should('exist')
-            .should('contain.text', 'Understanding mandatory fixed term recalls')
-
-          cy.get('@details').find('.govuk-details__text').should('exist').as('detailsText')
-
-          cy.get('@detailsText')
+            .should('have.class', 'govuk-body')
             .should(
-              'contain.text',
-              'Sentences under 48 months must be given a fixed term recall unless the person being recalled is:'
+              'have.text',
+              'Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.'
             )
-            .should('contain.text', 'This applies to people aged 18 and over.')
-          cy.get('@detailsText')
-            .find('li')
-            .should('exist')
-            .should('have.length', 5)
-            .should('contain.text', 'being managed at MAPPA level 2 or 3, or in category 4, at the point of recall')
-            .should('contain.text', 'on an extended determinate sentence')
-            .should('contain.text', 'being recalled for a new charged offence')
-            .should(
-              'contain.text',
-              'serving a fixed term sentence for an offence within section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners) (opens in new tab)'
-            )
-            .should('contain.text', 'serving a sentence for a terrorist or state threat offence')
-            .find('a')
-            .should('exist')
-            .should('have.class', 'govuk-link')
-            .should('have.attr', 'href', 'https://www.legislation.gov.uk/ukpga/2003/44/section/247A')
-            .should('have.attr', 'rel', 'noreferrer noopener')
-            .should('have.attr', 'target', '_blank')
         })
       })
+    })
 
-      describe('And the Person on Probation meets any of the exception criteria', () => {
-        const randomCriteria = randomiseCriteria<{
-          isSentence48MonthsOrOver: boolean
-          isUnder18: boolean
-          isMappaCategory4: boolean
-          isMappaLevel2Or3: boolean
-          isRecalledOnNewChargedOffence: boolean
-          isServingFTSentenceForTerroristOffence: boolean
-          hasBeenChargedWithTerroristOrStateThreatOffence: boolean
-        }>(
-          [
-            { key: 'isSentence48MonthsOrOver', generate: 'boolean' },
-            { key: 'isUnder18', generate: 'boolean' },
-            { key: 'isMappaCategory4', generate: 'boolean' },
-            { key: 'isMappaLevel2Or3', generate: 'boolean' },
-            { key: 'isRecalledOnNewChargedOffence', generate: 'boolean' },
-            { key: 'isServingFTSentenceForTerroristOffence', generate: 'boolean' },
-            { key: 'hasBeenChargedWithTerroristOrStateThreatOffence', generate: 'boolean' },
-          ],
-          criteria => !Object.keys(criteria).every(k => criteria[k] ?? false)
-        )
-
-        const recommendationWithExceptionCriteria = RecommendationResponseGenerator.generate({
-          isSentence48MonthsOrOver: randomCriteria.isSentence48MonthsOrOver,
-          isUnder18: randomCriteria.isUnder18,
-          isMappaCategory4: randomCriteria.isMappaCategory4,
-          isMappaLevel2Or3: randomCriteria.isMappaLevel2Or3,
-          isRecalledOnNewChargedOffence: randomCriteria.isRecalledOnNewChargedOffence,
-          isServingFTSentenceForTerroristOffence: randomCriteria.isServingFTSentenceForTerroristOffence,
-          hasBeenChargedWithTerroristOrStateThreatOffence:
-            randomCriteria.hasBeenChargedWithTerroristOrStateThreatOffence,
-        })
-        const expectedName = recommendationWithExceptionCriteria.personOnProbation.name
-
-        beforeEach(() => {
-          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithExceptionCriteria })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.visit(testPageUrl)
-        })
-
-        it('The expected discretionary radio options are rendered', () => {
-          cy.get('.govuk-form-group').get('fieldset').get('legend').get('.govuk-radios').as('radiosGroup')
-          cy.get('@radiosGroup').get('div.govuk-radios__item').as('renderedRadios')
-          testRecallTypeRadioButton(
-            () => cy.get('@renderedRadios').eq(0),
-            () => cy.get('@radiosGroup'),
-            'recallType',
-            'Fixed term recall',
-            {
-              idSuffix: 'FixedTerm',
-            }
-          )
-          testRecallTypeRadioButton(
-            () => cy.get('@renderedRadios').eq(1),
-            () => cy.get('@radiosGroup'),
-            'recallType-2',
-            'Standard recall',
-            {
-              idSuffix: 'Standard',
-            }
-          )
-          testRecallTypeRadioButton(
-            () => cy.get('@renderedRadios').eq(2),
-            () => cy.get('@radiosGroup'),
-            'recallType-3',
-            'No recall'
-          )
-        })
-
-        describe(`Randomised Criteria: 48+:${randomCriteria.isSentence48MonthsOrOver} | 18+:${randomCriteria.isUnder18} | M4:${randomCriteria.isMappaCategory4} | M2/3:${randomCriteria.isMappaLevel2Or3} | New:${randomCriteria.isRecalledOnNewChargedOffence} | STerr:${randomCriteria.isServingFTSentenceForTerroristOffence} | CTerr:${randomCriteria.hasBeenChargedWithTerroristOrStateThreatOffence}`, () => {
-          it('Then the discretionary suitability panel is displayed', () => {
-            cy.get('.moj-ticket-panel').should('exist').as('panel')
-
-            cy.get('@panel')
-              .find('h2')
-              .should('exist')
-              .should('contain.text', `${expectedName} can have either a fixed term or standard recall`)
-
-            cy.get('@panel')
-              .find('p')
-              .should('exist')
-              .should('have.class', 'govuk-body')
-              .should(
-                'have.text',
-                'Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.'
-              )
-          })
-        })
-      })
-
-      describe('Error message display', () => {
-        describe('When no Recall Type is selected', () => {
-          ;[true, false].forEach(ftrMandatory => {
-            describe(`FTR Mandatory: ${ftrMandatory}`, () => {
-              it('Then the expected error message is displayed', () => {
-                const recommendationForMandatoryValue = RecommendationResponseGenerator.generate({
-                  isSentence48MonthsOrOver: !ftrMandatory,
-                  isUnder18: !ftrMandatory,
-                  isMappaCategory4: !ftrMandatory,
-                  isMappaLevel2Or3: !ftrMandatory,
-                  isRecalledOnNewChargedOffence: !ftrMandatory,
-                  isServingFTSentenceForTerroristOffence: !ftrMandatory,
-                  hasBeenChargedWithTerroristOrStateThreatOffence: !ftrMandatory,
-                })
-                cy.task('getRecommendation', { statusCode: 200, response: recommendationForMandatoryValue })
-                cy.task('getStatuses', { statusCode: 200, response: [] })
-
-                cy.visit(testPageUrl)
-
-                cy.get('button.govuk-button').click()
-
-                testForErrorPageTitle()
-                testForErrorSummary([
-                  {
-                    href: 'recallType',
-                    message: ftrMandatory
-                      ? "Select if you're recommending a fixed term recall or no recall"
-                      : "Select if you're recommending a fixed term recall, standard recall or no recall",
-                  },
-                ])
+    describe('Error message display', () => {
+      describe('When no Recall Type is selected', () => {
+        ;[true, false].forEach(ftrMandatory => {
+          describe(`FTR Mandatory: ${ftrMandatory}`, () => {
+            it('Then the expected error message is displayed', () => {
+              const recommendationForMandatoryValue = RecommendationResponseGenerator.generate({
+                isSentence48MonthsOrOver: !ftrMandatory,
+                isUnder18: !ftrMandatory,
+                isMappaCategory4: !ftrMandatory,
+                isMappaLevel2Or3: !ftrMandatory,
+                isRecalledOnNewChargedOffence: !ftrMandatory,
+                isServingFTSentenceForTerroristOffence: !ftrMandatory,
+                hasBeenChargedWithTerroristOrStateThreatOffence: !ftrMandatory,
               })
+              cy.task('getRecommendation', { statusCode: 200, response: recommendationForMandatoryValue })
+              cy.task('getStatuses', { statusCode: 200, response: [] })
+
+              cy.visit(testPageUrl)
+
+              cy.get('button.govuk-button').click()
+
+              testForErrorPageTitle()
+              testForErrorSummary([
+                {
+                  href: 'recallType',
+                  message: ftrMandatory
+                    ? "Select if you're recommending a fixed term recall or no recall"
+                    : "Select if you're recommending a fixed term recall, standard recall or no recall",
+                },
+              ])
             })
           })
         })
