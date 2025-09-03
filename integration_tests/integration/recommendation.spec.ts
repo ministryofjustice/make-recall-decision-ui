@@ -845,7 +845,10 @@ context('Make a recommendation', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`)
-      cy.getElement('Suitability for standard or fixed term recall').should('exist')
+      cy.pageHeading().should(
+        'equals',
+        `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`
+      )
       cy.getElement('9 November 2000 (age 21)').should('exist')
       cy.getElement('Robbery (other than armed robbery)').should('exist')
       cy.getElement('Shoplifting Burglary').should('exist')

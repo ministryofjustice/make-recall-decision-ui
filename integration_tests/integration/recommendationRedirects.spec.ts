@@ -125,6 +125,9 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.selectRadio('Is Jane Bloggs on an extended sentence?', 'No')
     cy.clickButton('Continue')
 
-    cy.pageHeading().should('contain', 'Suitability for standard or fixed term recall')
+    cy.pageHeading().should(
+      'equals',
+      `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`
+    )
   })
 })

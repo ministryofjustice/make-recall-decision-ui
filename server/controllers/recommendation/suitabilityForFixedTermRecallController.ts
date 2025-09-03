@@ -42,11 +42,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...caseSummaryOverview,
     ...caseSummaryRisk,
   }
-
-  // We're adding fields for MRD-2774 as part of the FTR48 changes
-  // The FTR48 changes are conditionally hidden by the flagFtr48Updates feature flag
-  // TODO: can we remove any inputs with displayForFTR48: true after the rollout?
-  const pageId = flags.flagFtr48Updates ? 'ftr48SuitabilityForFixedTermRecall' : 'suitabilityForFixedTermRecall'
   const popName = recommendation.personOnProbation.name
 
   const inputDisplayValues = {
@@ -54,58 +49,35 @@ async function get(req: Request, res: Response, next: NextFunction) {
       label: `Is ${popName}'s sentence 48 months or over?`,
       hint: `Use the total length if ${popName} is serving consecutive sentences.`,
       value: unsavedValues?.isSentence48MonthsOrOver || booleanToYesNo(recommendation.isSentence48MonthsOrOver),
-      displayForFTR48: true,
     },
     isUnder18: {
       label: `Is ${popName} under 18?`,
       value: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
     },
-    isSentence12MonthsOrOver: {
-      label: `Is the sentence 12 months or over?`,
-      value: unsavedValues?.isSentence12MonthsOrOver || booleanToYesNo(recommendation.isSentence12MonthsOrOver),
-      displayForFTR48: false,
-    },
-    isMappaLevelAbove1: {
-      label: `Is the MAPPA level above 1?`,
-      value: unsavedValues?.isMappaLevelAbove1 || booleanToYesNo(recommendation.isMappaLevelAbove1),
-      displayForFTR48: false,
-    },
-    hasBeenConvictedOfSeriousOffence: {
-      label: `Has ${popName} been charged with a serious offence?`,
-      value:
-        unsavedValues?.hasBeenConvictedOfSeriousOffence ||
-        booleanToYesNo(recommendation.hasBeenConvictedOfSeriousOffence),
-      displayForFTR48: false,
-    },
     isMappaCategory4: {
       label: `Is ${popName} in MAPPA category 4?`,
       value: unsavedValues?.isMappaCategory4 || booleanToYesNo(recommendation.isMappaCategory4),
-      displayForFTR48: true,
     },
     isMappaLevel2Or3: {
       label: `Is ${popName}'s MAPPA level 2 or 3?`,
       value: unsavedValues?.isMappaLevel2Or3 || booleanToYesNo(recommendation.isMappaLevel2Or3),
-      displayForFTR48: true,
     },
     isRecalledOnNewChargedOffence: {
       label: `Is ${popName} being recalled on a new charged offence?`,
       value:
         unsavedValues?.isRecalledOnNewChargedOffence || booleanToYesNo(recommendation.isRecalledOnNewChargedOffence),
-      displayForFTR48: true,
     },
     isServingFTSentenceForTerroristOffence: {
       label: `Is ${popName} serving a fixed term sentence for a terrorist offence?`,
       value:
         unsavedValues?.isServingFTSentenceForTerroristOffence ||
         booleanToYesNo(recommendation.isServingFTSentenceForTerroristOffence),
-      displayForFTR48: true,
     },
     hasBeenChargedWithTerroristOrStateThreatOffence: {
       label: `Has ${popName} been charged with a terrorist or state threat offence?`,
       value:
         unsavedValues?.hasBeenChargedWithTerroristOrStateThreatOffence ||
         booleanToYesNo(recommendation.hasBeenChargedWithTerroristOrStateThreatOffence),
-      displayForFTR48: true,
     },
   }
 
@@ -121,7 +93,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     caseSummary,
     page: {
-      id: pageId,
+      id: 'suitabilityForFixedTermRecall',
       warningPanel,
     },
     inputDisplayValues,
@@ -144,22 +116,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
     user: { token: string }
     urlInfo: UrlInfo
   }
-  const ftr48Enabled = flags?.flagFtr48Updates ?? false
 
   const errors: NamedFormError[] = []
   const valuesToSave: Record<string, unknown> = {}
 
-  const fieldIds = ftr48Enabled
-    ? [
-        'isSentence48MonthsOrOver',
-        'isUnder18',
-        'isMappaCategory4',
-        'isMappaLevel2Or3',
-        'isRecalledOnNewChargedOffence',
-        'isServingFTSentenceForTerroristOffence',
-        'hasBeenChargedWithTerroristOrStateThreatOffence',
-      ]
-    : ['isUnder18', 'isSentence12MonthsOrOver', 'isMappaLevelAbove1', 'hasBeenConvictedOfSeriousOffence']
+  const fieldIds = [
+    'isSentence48MonthsOrOver',
+    'isUnder18',
+    'isMappaCategory4',
+    'isMappaLevel2Or3',
+    'isRecalledOnNewChargedOffence',
+    'isServingFTSentenceForTerroristOffence',
+    'hasBeenChargedWithTerroristOrStateThreatOffence',
+  ]
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
@@ -181,9 +150,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     }
   })
 
-  const ftrMandatoryPreviously = ftr48Enabled && isFixedTermRecallMandatoryForRecommendation(recommendation)
-  const ftrIsMandatoryUpdated =
-    ftr48Enabled && isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
+  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation)
+  const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
   if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
     valuesToSave.recallType = {
       ...recommendation.recallType,
