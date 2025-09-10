@@ -316,8 +316,8 @@ describe('isPreprodOrProd', () => {
     expect(isPreprodOrProd()).toEqual(false)
   })
 
-  it('returns false if given DEVELOPMENT', () => {
-    expect(isPreprodOrProd('DEVELOPMENT')).toEqual(false)
+  it('returns false if given dev', () => {
+    expect(isPreprodOrProd('dev')).toEqual(false)
   })
 
   productionEnvValues.forEach(val => {

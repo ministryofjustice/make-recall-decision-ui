@@ -37,7 +37,7 @@ const LOCALS_PAGE_TEMPLATE = {
   },
   urlInfo: { basePath: `/recommendations/1/` },
   flags: { xyz: true },
-  env: 'PRODUCTION',
+  env: 'prod',
 }
 
 describe('get', () => {
@@ -75,7 +75,7 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
-        env: 'PRODUCTION',
+        env: 'prod',
         user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
         urlInfo: { basePath },
         flags,

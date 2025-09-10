@@ -18,7 +18,7 @@ export default function createErrorHandler() {
     }
 
     logger.error(`Error handling request for '${req.originalUrl}', user '${res.locals.user?.username}'`, error)
-    res.locals.isProduction = res.locals.env === 'PRODUCTION'
+    res.locals.isProduction = res.locals.env === 'prod'
     if (!res.locals.isProduction) {
       res.locals.message = error.message
       res.locals.status = error.status

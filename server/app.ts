@@ -34,7 +34,7 @@ export default function createApp(userService: UserService): express.Application
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
   app.use((req, res, next) => {
-    res.locals.env = process.env.ENVIRONMENT // DEVELOPMENT/ PRE-PRODUCTION / PRODUCTION / TEST
+    res.locals.env = process.env.ENVIRONMENT // dev/ preprod / prod / TEST
     next()
   })
   app.use(cookieParser())

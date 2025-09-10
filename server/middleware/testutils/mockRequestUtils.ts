@@ -77,7 +77,7 @@ export const mockRes = ({
         ...((locals.user as object) || {}),
         token,
       },
-      env: locals.env || 'PRODUCTION',
+      env: locals.env || 'prod',
       flags: locals.flags || {},
       urlInfo: locals.urlInfo || {},
     },
