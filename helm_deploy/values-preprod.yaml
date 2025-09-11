@@ -13,7 +13,7 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-preprod.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PRE-PROD"
-    ENVIRONMENT: "PRE-PRODUCTION"
+    ENVIRONMENT: "preprod"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
   allowlist:

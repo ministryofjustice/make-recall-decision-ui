@@ -20,7 +20,7 @@ export default function authorisationMiddleware(req: Request, res: Response, nex
     res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
     res.locals.user.hasOdmRole = roles.includes(HMPPS_AUTH_ROLE.ODM)
 
-    if (res.locals.env === 'PRE-PRODUCTION') {
+    if (res.locals.env === 'preprod') {
       logger.info(`User roles: ${JSON.stringify(roles)} for path: ${req.path}`)
     }
   } else {

@@ -16,7 +16,7 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-dev.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-dev.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "DEV"
-    ENVIRONMENT: "DEVELOPMENT"
+    ENVIRONMENT: "dev"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
   scheduledDowntime:

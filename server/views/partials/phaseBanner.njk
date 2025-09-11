@@ -3,7 +3,7 @@
             <div class="govuk-grid-column-full">
                 <div class="govuk-phase-banner">
                     <p class="govuk-phase-banner__content">
-                        {% if env and env != 'PRODUCTION' %}
+                        {% if env and env != 'prod' %}
                             <span class='govuk-!-padding-right-2'>
                                 {{govukTag({
                                     text: env,
@@ -18,7 +18,7 @@
                             beta
                         </strong>
                         {% endif %}
-                        {% if env and env != 'PRODUCTION' %}
+                        {% if env and env != 'prod' %}
                         <span class="govuk-phase-banner__text" data-qa="banner-text">
                           This version of the service is for testing purposes only. It is a replica of the live service to help you get familiar with it.
                         </span>

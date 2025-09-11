@@ -178,7 +178,7 @@ export const normalizeCrn = (crn: string) => {
 }
 
 export const isPreprodOrProd = (env?: string) => {
-  return ['PREPRODUCTION', 'PRE-PRODUCTION', 'PRODUCTION'].includes(env?.toUpperCase())
+  return ['preprod', 'prod'].includes(env)
 }
 
 export const booleanToYesNo = (val: boolean) => {
