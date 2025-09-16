@@ -19,8 +19,13 @@ import { spoRecallTypeEnum } from './spoRecallTypeEnum'
 import { rationaleCheck } from '../rationaleCheck/formOptions'
 import { recallTypeExtended } from '../recallTypeExtended/formOptions'
 
+export type FormOption = {
+  value: string
+  text: string
+}
+
 type FormOptionsType = {
-  [key: string]: { value: string; text: string }[]
+  [key: string]: FormOption[]
 }
 
 export const formOptions: FormOptionsType = {

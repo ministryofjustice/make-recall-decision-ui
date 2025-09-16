@@ -6,7 +6,7 @@ import { inputDisplayValuesRecallType } from '../recommendations/recallType/inpu
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
 
@@ -25,7 +25,7 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: availableRecallTypes(recommendation),
+    availableRecallTypes: availableRecallTypesForRecommendation(recommendation),
     personOnProbationName: recommendation.personOnProbation.fullName,
     ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
   }

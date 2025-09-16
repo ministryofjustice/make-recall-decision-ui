@@ -1,57 +1,47 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import { availableRecallTypes } from './availableRecallTypes'
+import { availableRecallTypes, availableRecallTypesForRecommendation } from './availableRecallTypes'
 import { formOptions } from '../formOptions/formOptions'
-import { isEmptyStringOrWhitespace } from '../../../utils/utils'
+import { isFixedTermRecallMandatoryForRecommendation } from '../../../utils/fixedTermRecallUtils'
+
+jest.mock('../../../utils/fixedTermRecallUtils')
 
 describe('availableRecallTypes', () => {
-  const numberOfSuitabilityFlags = 7
-  // 1 << numberOfSuitabilityFlags shifts (bitwise) a 1 that number of bits, so we end up with
-  // i going from 0000000 to 1111111, interpreting 0 as false and 1 as true further down when
-  // we AND bitwise.
-  // eslint-disable-next-line no-bitwise,no-plusplus
-  for (let i = 0; i < 1 << numberOfSuitabilityFlags; i++) {
-    const booleanArray: boolean[] = []
+  it('only FTR and No Recall available when FTR is mandatory', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
+    )
 
-    // eslint-disable-next-line no-plusplus
-    for (let j = numberOfSuitabilityFlags - 1; j >= 0; j--) {
-      // eslint-disable-next-line no-bitwise
-      booleanArray.push(Boolean(i & (1 << j)))
-    }
+    const actualAvailableRecallTypes = availableRecallTypes(true)
 
-    const ftr48SuitabilityFlags: Record<string, boolean> = {
-      isUnder18: booleanArray[0],
-      isSentence48MonthsOrOver: booleanArray[1],
-      isMappaCategory4: booleanArray[2],
-      isMappaLevel2Or3: booleanArray[3],
-      isRecalledOnNewChargedOffence: booleanArray[4],
-      isServingFTSentenceForTerroristOffence: booleanArray[5],
-      hasBeenChargedWithTerroristOrStateThreatOffence: booleanArray[6],
-    }
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+  })
 
-    const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
-      ...ftr48SuitabilityFlags,
-    })
+  it(`all types are available when FTR is discretionary`, () => {
+    const actualAvailableRecallTypes = availableRecallTypes(false)
 
-    const fieldsSetToTrue = Object.getOwnPropertyNames(ftr48SuitabilityFlags)
-      .filter(fieldName => ftr48SuitabilityFlags[fieldName])
-      .join(', ')
+    expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
+  })
+})
 
-    let actualAvailableRecallTypes: { value: string; text: string }[]
-    beforeEach(() => {
-      actualAvailableRecallTypes = availableRecallTypes(recommendation)
-    })
-    if (isEmptyStringOrWhitespace(fieldsSetToTrue)) {
-      it('only FTR and No Recall available when all fields are false', () => {
-        const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-          ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
-        )
-        expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-      })
-    } else {
-      it(`all types are available when the following fields are true: ${fieldsSetToTrue}`, () => {
-        expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
-      })
-    }
-  }
+describe('availableRecallTypesForRecommendation', () => {
+  const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate()
+
+  it('only FTR and No Recall available when FTR is mandatory', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
+    )
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
+
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+  })
+  it('all types are available when FTR is discretionary', () => {
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+
+    expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
+  })
 })

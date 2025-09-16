@@ -3,7 +3,7 @@ import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/f
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateAlternativesTried = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   const { alternativesToRecallTried } = requestBody
@@ -15,7 +15,7 @@ export const validateAlternativesTried = async ({ requestBody }: FormValidatorAr
   )
   const missingDetails = alternativesList.filter(alternativeId => {
     const optionShouldHaveDetails = Boolean(
-      findListItemByValue<FormOption>({
+      findListItemByValue<UiFormOption>({
         items: formOptions.alternativesToRecallTried,
         value: alternativeId,
       })?.detailsLabel

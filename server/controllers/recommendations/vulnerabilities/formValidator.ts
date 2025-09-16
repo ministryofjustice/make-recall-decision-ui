@@ -4,7 +4,7 @@ import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/f
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 export const validateVulnerabilities = async ({
   requestBody,
@@ -15,7 +15,7 @@ export const validateVulnerabilities = async ({
   const invalidVulnerability = vulnerabilitiesList.some(id => !isValueValid(id, 'vulnerabilities'))
   const missingDetails = vulnerabilitiesList.filter(id => {
     const optionShouldHaveDetails = Boolean(
-      findListItemByValue<FormOption>({
+      findListItemByValue<UiFormOption>({
         items: formOptions.vulnerabilities,
         value: id,
       })?.detailsLabel
