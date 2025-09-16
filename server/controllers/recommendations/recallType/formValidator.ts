@@ -1,10 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { formOptions, isValueValid } from '../formOptions/formOptions'
+import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { EVENTS } from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
+import { availableRecallTypes } from './availableRecallTypes'
 
 export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsStandard, originalRecallType, ftrMandatory, personOnProbationName } = requestBody
@@ -70,7 +71,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
         value: recallType,
         details: isString(recallTypeDetails) ? stripHtmlTags(recallTypeDetails as string) : undefined,
       },
-      allOptions: formOptions.recallType,
+      allOptions: availableRecallTypes(ftrMandatory === 'true'),
     },
     isThisAnEmergencyRecall: false,
   }

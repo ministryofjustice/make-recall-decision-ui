@@ -149,7 +149,7 @@ export interface ValueWithDetails {
   details?: string
 }
 
-export interface FormOption extends UiListItem {
+export interface UiFormOption extends UiListItem {
   detailsLabel?: string
   behaviour?: string
 }

@@ -4,7 +4,7 @@ import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
-import { FormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
 const missingDetailsError = (optionId: string) => {
   switch (optionId) {
@@ -32,7 +32,7 @@ export const validateIndeterminateDetails = async ({
   )
   const missingDetails = selected.filter(selectionId => {
     const optionShouldHaveDetails = Boolean(
-      findListItemByValue<FormOption>({
+      findListItemByValue<UiFormOption>({
         items: formOptions.indeterminateOrExtendedSentenceDetails,
         value: selectionId,
       })?.detailsLabel

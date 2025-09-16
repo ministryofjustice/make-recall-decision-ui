@@ -8,7 +8,7 @@ import {
 import { sortListByDateField } from '../../../utils/dates'
 import { formOptions } from '../../recommendations/formOptions/formOptions'
 import { sortList } from '../../../utils/lists'
-import { FormOption } from '../../../@types/pagesForms'
+import { UiFormOption } from '../../../@types/pagesForms'
 
 const transformConviction = (conviction: Conviction) => {
   return {
@@ -33,7 +33,7 @@ export interface TransformedLicenceConditionsResponse {
     hasMultipleActiveCustodial: boolean
   }
   hasAllConvictionsReleasedOnLicence: boolean
-  standardLicenceConditions?: FormOption[]
+  standardLicenceConditions?: UiFormOption[]
 }
 
 export const transformLicenceConditions = (

@@ -1,10 +1,25 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import { availableRecallTypes } from './availableRecallTypes'
+import { availableRecallTypes, availableRecallTypesForRecommendation } from './availableRecallTypes'
 import { formOptions } from '../formOptions/formOptions'
 import { isEmptyStringOrWhitespace } from '../../../utils/utils'
 
 describe('availableRecallTypes', () => {
+  it('only FTR and No Recall available when FTR is mandatory', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
+    )
+    const actualAvailableRecallTypes = availableRecallTypes(true)
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+  })
+
+  it(`all types are available when FTR is discretionary`, () => {
+    const actualAvailableRecallTypes = availableRecallTypes(false)
+    expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
+  })
+})
+
+describe('availableRecallTypesForRecommendation', () => {
   const numberOfSuitabilityFlags = 7
   // 1 << numberOfSuitabilityFlags shifts (bitwise) a 1 that number of bits, so we end up with
   // i going from 0000000 to 1111111, interpreting 0 as false and 1 as true further down when
@@ -39,7 +54,7 @@ describe('availableRecallTypes', () => {
 
     let actualAvailableRecallTypes: { value: string; text: string }[]
     beforeEach(() => {
-      actualAvailableRecallTypes = availableRecallTypes(recommendation)
+      actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
     })
     if (isEmptyStringOrWhitespace(fieldsSetToTrue)) {
       it('only FTR and No Recall available when all fields are false', () => {

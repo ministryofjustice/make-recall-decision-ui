@@ -10,7 +10,7 @@ import { RecommendationResponseGenerator } from '../../../data/recommendations/r
 import { validateRecallType } from '../recommendations/recallType/formValidator'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { EVENTS } from '../../utils/constants'
-import { availableRecallTypes } from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { generateBooleanCombinations } from '../../testUtils/booleanUtils'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
@@ -57,7 +57,7 @@ describe('get', () => {
 
   const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
   beforeEach(async () => {
-    ;(availableRecallTypes as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
+    ;(availableRecallTypesForRecommendation as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
     ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
     recallTypeController.get(mockReq(), res, next)
   })
