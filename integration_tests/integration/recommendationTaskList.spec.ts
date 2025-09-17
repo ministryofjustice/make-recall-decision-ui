@@ -57,6 +57,7 @@ context('Recommendation - task list', () => {
     cy.getElement('Is there anything the police should know before they arrest Jane Bloggs?').should('not.exist')
     cy.getElement('Address').should('not.exist')
     // should not exist
+    cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
     cy.getElement('Is this an emergency recall?').should('not.exist')
 
     cy.getElement("Request line manager's countersignature To do").should('exist')
@@ -297,6 +298,10 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('Suitability for standard or fixed term recall').should(
+      'contain',
+      `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
+    )
     cy.getLinkHref('Add any additional licence conditions - fixed term recall').should(
       'contain',
       '/recommendations/123/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances'

@@ -14,7 +14,7 @@ set suitabilityForFixedTermRecall = hasData(recommendation.isUnder18) or
         {% if recommendation.isIndeterminateSentence == false and recommendation.isExtendedSentence == false %}
                     <li class="moj-task-list__item">
                         <span class="moj-task-list__task-name">
-                            <a aria-describedby='task-list-status-suitabilityForFixedTermRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'suitability-for-fixed-term-recall', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Suitability for standard or fixed term recall</a>
+                            <a aria-describedby='task-list-status-suitabilityForFixedTermRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'suitability-for-fixed-term-recall', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">Suitability for standard or fixed term recall</a>
                         </span>
                         <span id='task-list-status-suitabilityForFixedTermRecall'>{{ taskStatus({ hasData: suitabilityForFixedTermRecall }) }}</span>
                     </li>
