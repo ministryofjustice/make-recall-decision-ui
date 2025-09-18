@@ -279,6 +279,10 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.getLinkHref('Suitability for standard or fixed term recall').should(
+      'contain',
+      `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
+    )
     cy.getLinkHref('Is this an emergency recall?').should(
       'contain',
       '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
