@@ -1,7 +1,7 @@
 services:
 
   redis:
-    image: 'bitnami/redis:7.4'
+    image: 'cimg/redis:7.4.2'
     networks:
       - hmpps
     container_name: redis
