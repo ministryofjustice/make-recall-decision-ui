@@ -4,6 +4,7 @@ import { DataGenerator } from '../@generators/dataGenerators'
 
 export type PpudSentenceDataOptions = {
   offenceDescription?: string
+  offenceDescriptionComment?: string
   releaseDate?: Date
   sentencingCourt?: string
   dateOfSentence?: Date
@@ -12,6 +13,7 @@ export type PpudSentenceDataOptions = {
 export const PpudSentenceDataGenerator: DataGenerator<PpudSentenceData, PpudSentenceDataOptions> = {
   generate: (options?: PpudSentenceDataOptions) => ({
     offenceDescription: options.offenceDescription ?? faker.lorem.sentence(),
+    offenceDescriptionComment: options.offenceDescriptionComment ?? null,
     releaseDate: (options.releaseDate ?? faker.date.future()).toISOString(),
     sentencingCourt: options.sentencingCourt ?? `${faker.location.city()} Court`,
     dateOfSentence: (options.dateOfSentence ?? faker.date.past()).toISOString(),

@@ -1,0 +1,53 @@
+{% extends "../../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %} {# This is undefined #}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% set offenceSelectList = [] %}
+{% for offence in offencesList %}
+    {% set _ = offenceSelectList.push({ text: offence.description, value: offence.offenderChargeId }) %}
+{% endfor %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../../../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class="govuk-body">Update the information to record in PPUD.</p>
+            <h2 class="govuk-heading-m govuk-!-padding-top-2 govuk-!-margin-bottom-1">Currently in PPUD</h2>
+            <p class="govuk-body">{{ existingOffenceDescription }}</p>
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {{ accessibleAutocomplete({
+                    id: 'offenceDescription',
+                    label: {
+                        text: 'Select the offence',
+                        class: 'govuk-label--m '
+                    },
+                    class: 'govuk-!-margin-bottom-4 govuk-input--width-30',
+                    errorMessage: errorMessage(errors.offenceDescription),
+                    list: allOffences,
+                    placeholder: 'Search for an offence',
+                    nonce: cspNonce,
+                    value: offenceDescription
+                }) }}
+
+                {{ govukTextarea({
+                    name: "offenceDescriptionComment",
+                    id: "offenceDescriptionComment",
+                    label: {
+                        text: 'Add comments, including any additional offences (optional)',
+                        class: 'govuk-label--m'
+                    },
+                    value: offenceDescriptionComment
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
