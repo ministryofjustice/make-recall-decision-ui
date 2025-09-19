@@ -7,12 +7,13 @@ export type PpudSentenceOptions = {
   id?: string
   custodyType?: CustodyType
   releaseDate?: Date
+  dateOfSentence?: Date
 }
 
 const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (options?) => ({
   id: options.id ?? faker.number.int().toString(),
   sentenceExpiryDate: faker.date.future().toISOString(),
-  dateOfSentence: faker.date.past().toISOString(),
+  dateOfSentence: (options.dateOfSentence ?? faker.date.past()).toISOString(),
   custodyType: options?.custodyType ?? 'Determinate',
   mappaLevel: 'MAPPA_LEVEL',
   licenceExpiryDate: faker.date.future().toISOString(),
