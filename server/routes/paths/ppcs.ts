@@ -9,5 +9,6 @@ export const ppcsPaths = {
   sentenceToCommitIndeterminate: 'sentence-to-commit-indeterminate',
   indeterminateEdit: {
     releaseDate: 'edit-release-date',
+    dateOfSentence: 'edit-date-of-sentence',
   },
 }
