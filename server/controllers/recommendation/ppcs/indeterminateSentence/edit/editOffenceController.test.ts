@@ -45,27 +45,24 @@ describe('Indeterminate Sentence - Edit offence controller', () => {
       ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
       await editOffenceController.get(req, res, next)
     })
-    describe('Sets response locals correctly:', () => {
-      describe('Page Data', () => {
-        it('- is defined', async () => {
-          expect(res.locals.existingOffenceDescription).toBeDefined()
-          expect(res.locals.allOffences).toEqual([
-            {
-              text: 'one',
-              value: 'one',
-            },
-            {
-              text: 'two',
-              value: 'two',
-            },
-            {
-              text: 'three',
-              value: 'three',
-            },
-          ])
-        })
-      })
+    it('Sets response locals correctly', async () => {
+      expect(res.locals.existingOffenceDescription).toBeDefined()
+      expect(res.locals.allOffences).toEqual([
+        {
+          text: 'one',
+          value: 'one',
+        },
+        {
+          text: 'two',
+          value: 'two',
+        },
+        {
+          text: 'three',
+          value: 'three',
+        },
+      ])
     })
+
     it('Does not set any error message', async () => expect(res.locals.errorMessage).toBeUndefined())
     it('Calls render for the expected page', async () => expect(res.render).toHaveBeenCalledWith(expected.render.path))
     it('Executes the next function ', async () => expect(next).toHaveBeenCalled())
