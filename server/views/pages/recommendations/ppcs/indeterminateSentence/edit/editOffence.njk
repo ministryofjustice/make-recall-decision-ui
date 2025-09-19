@@ -1,6 +1,6 @@
 {% extends "../../../../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %} {# This is undefined #}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
     {{ backLink() }}
