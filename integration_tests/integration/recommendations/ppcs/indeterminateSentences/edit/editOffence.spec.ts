@@ -162,7 +162,7 @@ function testPageContent(
 
   cy.get('@offenceDescriptionCommentWrapper')
     .find('textarea')
-    .should('have.id', `${textAreaId}`)
+    .should('have.id', textAreaId)
     .should('have.attr', 'name', textAreaId)
 
   if (initial) {
