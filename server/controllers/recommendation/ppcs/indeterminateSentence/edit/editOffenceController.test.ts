@@ -77,9 +77,18 @@ describe('Indeterminate Sentence - Edit offence controller', () => {
       params: { recommendationId },
       body: {
         offenceDescription: updatedOffenceDescription,
+        offenceDescriptionComment: null,
+      },
+    })
+
+    const validReqWithComment = mockReq({
+      params: { recommendationId },
+      body: {
+        offenceDescription: updatedOffenceDescription,
         offenceDescriptionComment: updatedOffenceDescriptionComment,
       },
     })
+
     const res = mockRes({
       locals: {
         recommendation,
@@ -90,6 +99,31 @@ describe('Indeterminate Sentence - Edit offence controller', () => {
     describe('Given a valid offence description is submitted', () => {
       beforeEach(async () => {
         await editOffenceController.post(validReq, res, next)
+      })
+      it('Then there are no errors', async () => expect(validReq.session.errors).toBeUndefined())
+      it('Then the recommendation is updated with the expected details', async () =>
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId,
+          valuesToSave: {
+            bookRecallToPpud: {
+              ...recommendation.bookRecallToPpud,
+              ppudIndeterminateSentenceData: {
+                ...recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
+                offenceDescription: updatedOffenceDescription,
+                offenceDescriptionComment: null,
+              },
+            },
+          },
+          featureFlags: res.locals.flags,
+          token: res.locals.user.token,
+        }))
+      it('Then it redirects to the Sentence to Commit (Indeterminate page)', async () =>
+        expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}sentence-to-commit-indeterminate`))
+      it('Does not execute the next function ', async () => expect(next).not.toHaveBeenCalled())
+    })
+    describe('Given a valid offence description and offence description comment are submitted', () => {
+      beforeEach(async () => {
+        await editOffenceController.post(validReqWithComment, res, next)
       })
       it('Then there are no errors', async () => expect(validReq.session.errors).toBeUndefined())
       it('Then the recommendation is updated with the expected details', async () =>
