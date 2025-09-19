@@ -49,7 +49,20 @@ describe('Indeterminate Sentence - Edit offence controller', () => {
       describe('Page Data', () => {
         it('- is defined', async () => {
           expect(res.locals.existingOffenceDescription).toBeDefined()
-          expect(res.locals.allOffences).toBeDefined()
+          expect(res.locals.allOffences).toEqual([
+            {
+              text: 'one',
+              value: 'one',
+            },
+            {
+              text: 'two',
+              value: 'two',
+            },
+            {
+              text: 'three',
+              value: 'three',
+            },
+          ])
         })
       })
     })
