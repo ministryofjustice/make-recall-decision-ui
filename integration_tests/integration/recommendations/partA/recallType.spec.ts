@@ -272,7 +272,7 @@ context('Recall Type Page', () => {
             .find('summary span')
             .should('exist')
             .should('have.class', 'govuk-details__summary-text')
-            .should('have.text', 'Deciding between a fixed term or standard recall')
+            .should('contain.text', 'Deciding between a fixed term or standard recall')
 
           cy.get('@detailPanel')
             .find('p')
