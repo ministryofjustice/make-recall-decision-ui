@@ -20,6 +20,8 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
+  res.locals.fullName = recommendation.personOnProbation?.name
+
   res.render(`pages/recommendations/vulnerabilities`)
   next()
 }

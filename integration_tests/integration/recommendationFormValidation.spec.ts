@@ -207,10 +207,11 @@ context('Make a recommendation - form validation', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
+      fieldGroupId: 'option-1',
       fieldName: 'vulnerabilities',
-      errorText: 'Select if there are vulnerabilities or additional needs',
+      errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',
     })
-    cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
+    cy.selectCheckboxes('Consider if you think this recall affect any vulnerabilities or needs Jane Bloggs may have.', [
       'Relationship breakdown',
       'Physical disabilities',
     ])

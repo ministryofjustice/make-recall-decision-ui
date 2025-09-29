@@ -39,9 +39,9 @@ describe('validateVulnerabilities', () => {
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
-        href: '#vulnerabilities',
+        href: '#option-1',
         name: 'vulnerabilities',
-        text: 'Select if there are vulnerabilities or additional needs',
+        text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
         errorId: 'noVulnerabilitiesSelected',
       },
     ])

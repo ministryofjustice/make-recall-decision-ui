@@ -25,7 +25,10 @@ export const validateVulnerabilities = async ({
     }
     return false
   })
-  const hasError = !vulnerabilities || missingDetails.length
+
+  const missingExclusiveAnswers = vulnerabilities === 'NONE_OR_NOT_KNOWN'
+
+  const hasError = !vulnerabilities || missingDetails.length || missingExclusiveAnswers
   if (hasError) {
     const errors = []
     let errorId
@@ -33,7 +36,8 @@ export const validateVulnerabilities = async ({
       errorId = 'noVulnerabilitiesSelected'
       errors.push(
         makeErrorObject({
-          id: 'vulnerabilities',
+          id: 'option-1',
+          name: 'vulnerabilities',
           text: strings.errors[errorId],
           errorId,
         })
@@ -50,6 +54,17 @@ export const validateVulnerabilities = async ({
           })
         )
       })
+    }
+    if (missingExclusiveAnswers) {
+      errorId = 'vulnerabilities-exclusive'
+      errors.push(
+        makeErrorObject({
+          id: `exclusive-1`,
+          name: 'vulnerabilities-exclusive',
+          text: `${strings.errors.missingExclusive}`,
+          errorId,
+        })
+      )
     }
     const unsavedValues = {
       vulnerabilities: vulnerabilitiesList.map(id => ({
