@@ -51,7 +51,7 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
       cy.pageHeading().should('contain', 'Edit release date')
       cy.get('.govuk-body').should('contain.text', 'Update the information to record in PPUD')
 
-      cy.get('h2').should('have.class', 'govuk-heading-s').should('contain.text', 'Currently in PPUD')
+      cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Currently in PPUD')
 
       cy.get('p.govuk-body').should(
         'contain.text',
@@ -64,7 +64,7 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
       cy.get('@dateFieldset')
         .find('legend')
         .should('exist')
-        .should('have.class', 'govuk-fieldset__legend--s')
+        .should('have.class', 'govuk-fieldset__legend--m')
         .should('contain.text', 'Release date')
 
       cy.get('@dateFieldset')

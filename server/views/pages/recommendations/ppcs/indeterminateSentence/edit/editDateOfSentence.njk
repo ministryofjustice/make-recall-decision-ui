@@ -15,10 +15,10 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../../../../partials/error-summary.njk' %}
 
-            {{ heading(title, classes='govuk-!-margin-bottom-2') }}
+            {{ heading(title) }}
             {{ bodyParagraph('Update the information to record in PPUD') }}
 
-            {{ heading('Currently in PPUD', 2, 's', 'govuk-!-font-weight-bold govuk-!-margin-bottom-1') }}
+            {{ heading('Currently in PPUD', 2, 'm', 'govuk-!-padding-top-2 govuk-!-margin-bottom-1') }}
             {{ bodyParagraph(formatDateTimeFromIsoString({ isoDate: pageData.existingDateOfSentence, dateOnly: true })) }}
 
             <form novalidate method="post">
@@ -29,7 +29,7 @@
                     fieldset: {
                         legend: {
                             text: 'Date of sentence',
-                            classes: "govuk-fieldset__legend--s"
+                            classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {

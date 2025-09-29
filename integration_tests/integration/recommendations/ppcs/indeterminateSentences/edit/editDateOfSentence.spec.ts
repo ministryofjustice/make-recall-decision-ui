@@ -51,7 +51,7 @@ context('Indeterminate Sentence - Edit Date of Sentence Page', () => {
       cy.pageHeading().should('contain', 'Edit date of sentence')
       cy.get('.govuk-body').should('contain.text', 'Update the information to record in PPUD')
 
-      cy.get('h2').should('have.class', 'govuk-heading-s').should('contain.text', 'Currently in PPUD')
+      cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Currently in PPUD')
 
       cy.get('p.govuk-body').should(
         'contain.text',
@@ -64,7 +64,7 @@ context('Indeterminate Sentence - Edit Date of Sentence Page', () => {
       cy.get('@dateFieldset')
         .find('legend')
         .should('exist')
-        .should('have.class', 'govuk-fieldset__legend--s')
+        .should('have.class', 'govuk-fieldset__legend--m')
         .should('contain.text', 'Date of sentence')
 
       cy.get('@dateFieldset')
