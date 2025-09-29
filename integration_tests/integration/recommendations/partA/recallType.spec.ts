@@ -38,7 +38,7 @@ context('Recall Type Page', () => {
         .find('label')
         .should('exist')
         .should('have.attr', 'for', `recallTypeDetails${conditional.idSuffix}`)
-        .should('contain.text', 'Why do you recommend this recall type?')
+        .should('contain.text', 'Give details to justify your recall type recommendation')
       cy.get('@conditionalGroup')
         .find('textarea')
         .should('exist')
@@ -258,11 +258,66 @@ context('Recall Type Page', () => {
 
           cy.get('@panel')
             .find('p')
+            .first()
             .should('exist')
             .should('have.class', 'govuk-body')
             .should(
               'have.text',
               'Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.'
+            )
+
+          cy.get('@panel').find('details').as('detailPanel')
+
+          cy.get('@detailPanel')
+            .find('summary span')
+            .should('exist')
+            .should('have.class', 'govuk-details__summary-text')
+            .should('have.text', 'Deciding between a fixed term or standard recall')
+
+          cy.get('@detailPanel')
+            .find('p')
+            .eq(0)
+            .should('exist')
+            .should('have.class', 'govuk-body')
+            .should(
+              'have.text',
+              `You can recommend a fixed term recall if you think the risk ${expectedName} poses could be safely managed in the community when the fixed term period ends.`
+            )
+
+          cy.get('@detailPanel')
+            .find('p')
+            .eq(1)
+            .should('exist')
+            .should('have.class', 'govuk-body')
+            .should('contain.text', 'When deciding, think about:')
+
+          cy.get('@detailPanel')
+            .find('ul')
+            .should('exist')
+            .should('have.class', 'govuk-list--bullet')
+            .should('contain.text', 'the index offence – was it sexual or violent?')
+            .should('contain.text', 'any pattern of behaviour, including in previous offending')
+            .should('contain.text', 'current behaviours and attitudes')
+            .should('contain.text', 'how the risk will be managed on the first day of re-release')
+            .should('contain.text', 'any other risk factors')
+            .should('contain.text', 'the risk assessment')
+
+          cy.get('@detailPanel')
+            .find('p')
+            .eq(2)
+            .should('exist')
+            .should('have.class', 'govuk-body')
+            .should(
+              'contain.text',
+              `If you think the risk ${expectedName} poses could not be managed in the community at the end of the fixed term period, you can recommend a standard recall.`
+            )
+
+          cy.get('@detailPanel')
+            .find('.govuk-warning-text')
+            .should('exist')
+            .should(
+              'contain.text',
+              'You need to provide a clear justification for the recall type you recommend, explaining why you think the risk can or cannot be managed in the community.'
             )
         })
       })
