@@ -5,7 +5,7 @@ export const vulnerabilities = [
     detailsLabel: 'Give details',
     category: 'Suicide or self-harm',
     categoryHint:
-      'Consider if a history of a self-harm, sentense type, separation from family, or any other factor, could trigger a suicide or self-harm attempt',
+      'Consider if a history of self-harm, sentence type, separation from family, or any other factor, could trigger a suicide or self-harm attempt',
   },
   {
     value: 'DRUG_OR_ALCOHOL_USE',
