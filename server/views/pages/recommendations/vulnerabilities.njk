@@ -40,7 +40,7 @@
                         {% if item.category != lastCategory %}
                         {% set lastCategory = item.category %}
                         <h2 class="govuk-heading-s">{{ item.category }}</h2>
-                        {% if item.categoryHint != '' %}
+                        {% if item.categoryHint %}
                         <p id="vulnerabilities-category-hint" class="govuk-hint">
                             {{ item.categoryHint }}
                         </p>
@@ -81,7 +81,7 @@
                         =============================== #}
                         {% if exclusiveItems | length > 0 %}
                         <h2 class="govuk-heading-s">{{ exclusiveItems[0].category }}</h2>
-                        {% if exclusiveItems[0].categoryHint != '' %}
+                        {% if exclusiveItems[0].categoryHint %}
                         <p id="vulnerabilities-category-hint" class="govuk-hint">
                             {{ exclusiveItems[0].categoryHint }}
                         </p>
