@@ -41,7 +41,7 @@
                                 {% set lastCategory = item.category %}
                                 <h2 class="govuk-heading-s">{{ item.category }}</h2>
                                     {% if item.categoryHint %}
-                                        <p id="vulnerabilities-category-hint" class="govuk-hint">
+                                        <p id="vulnerabilities-{{item.value}}-hint" class="govuk-hint">
                                             {{ item.categoryHint }}
                                         </p>
                                     {% endif %}
@@ -82,7 +82,7 @@
                         {% if exclusiveItems | length > 0 %}
                             <h2 class="govuk-heading-s">{{ exclusiveItems[0].category }}</h2>
                             {% if exclusiveItems[0].categoryHint %}
-                                <p id="vulnerabilities-category-hint" class="govuk-hint">
+                                <p id="vulnerabilities-{{exclusiveItems[0].value}}-hint" class="govuk-hint">
                                     {{ exclusiveItems[0].categoryHint }}
                                 </p>
                             {% endif %}
