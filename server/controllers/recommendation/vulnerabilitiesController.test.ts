@@ -38,7 +38,7 @@ describe('get', () => {
               },
               {
                 value: 'DRUG_OR_ALCOHOL_USE',
-                text: 'Drug and alcohol abuse',
+                text: 'Drug or alcohol abuse',
               },
               {
                 value: 'MENTAL_HEALTH_CONCERNS',
@@ -121,7 +121,7 @@ describe('get', () => {
               },
               {
                 value: 'DRUG_OR_ALCOHOL_USE',
-                text: 'Drug and alcohol abuse',
+                text: 'Drug or alcohol abuse',
               },
               {
                 value: 'MENTAL_HEALTH_CONCERNS',
@@ -320,7 +320,7 @@ describe('post', () => {
             },
             {
               value: 'DRUG_OR_ALCOHOL_USE',
-              text: 'Drug and alcohol abuse',
+              text: 'Drug or alcohol abuse',
             },
             {
               value: 'MENTAL_HEALTH_CONCERNS',

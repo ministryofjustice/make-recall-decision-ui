@@ -9,7 +9,7 @@ export const vulnerabilities = [
   },
   {
     value: 'DRUG_OR_ALCOHOL_USE',
-    text: 'Drug and alcohol abuse',
+    text: 'Drug or alcohol abuse',
     detailsLabel: 'Give details',
     category: 'Health and wellbeing',
     categoryHint: '',
