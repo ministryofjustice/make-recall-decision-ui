@@ -30,7 +30,7 @@
                       <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         {# Normal vulnerabilities first #}
                         {% set lastCategory = '' %}
-                        {% for item in nonExclusiveVulnerabilities %}
+                        {% for item in nonExclusive %}
                             {% if item.category != lastCategory %}
                                 {% set lastCategory = item.category %}
                                 <h2 class="govuk-heading-s">{{ item.category }}</h2>
@@ -70,19 +70,17 @@
                             </div>
                         {% endfor %}
 
-                        {# ================================
-                        Exclusive vulnerabilities last
-                        =============================== #}
-                        {% if exclusiveVulnerabilities | length > 0 %}
-                            <h2 class="govuk-heading-s">{{ exclusiveVulnerabilities[0].category }}</h2>
-                            {% if exclusiveVulnerabilities[0].categoryHint %}
-                                <p id="vulnerabilities-{{exclusiveVulnerabilities[0].value}}-hint" class="govuk-hint">
-                                    {{ exclusiveVulnerabilities[0].categoryHint }}
+                        {# Exclusive last #}
+                        {% if exclusive %}
+                            <h2 class="govuk-heading-s">{{ exclusive.category }}</h2>
+                            {% if exclusive.categoryHint %}
+                                <p id="vulnerabilities-{{exclusive.value}}-hint" class="govuk-hint">
+                                    {{ exclusive.categoryHint }}
                                 </p>
                             {% endif %}
 
                             {# Work out if the main exclusive checkbox was selected #}
-                            {% set exclusiveSelected = findListItemByValue({ items: inputDisplayValues, value: exclusiveVulnerabilities[0].value }) %}
+                            {% set exclusiveSelected = findListItemByValue({ items: inputDisplayValues, value: exclusive.value }) %}
 
                             {# Main exclusive checkbox #}
                             <div class="govuk-checkboxes__item">
@@ -90,11 +88,11 @@
                                        id="vulnerabilities-none"
                                        name="vulnerabilities"
                                        type="checkbox"
-                                       value="{{ exclusiveVulnerabilities[0].value }}"
+                                       value="{{ exclusive.value }}"
                                        data-aria-controls="conditional-vulnerabilities-none"
                                        {% if exclusiveSelected %}checked{% endif %}>
                                 <label class="govuk-label govuk-checkboxes__label" for="vulnerabilities-none">
-                                    {{ exclusiveVulnerabilities[0].text }}
+                                    {{ exclusive.text }}
                                 </label>
                                 <div class="govuk-hint">
                                     Select this only if you have not selected any vulnerabilities or needs.
@@ -108,7 +106,7 @@
                             <div class="govuk-checkboxes__conditional {% if not exclusiveSelected %}govuk-checkboxes__conditional--hidden{% endif %}"
                                  id="conditional-vulnerabilities-none">
                                 <div class="govuk-radios govuk-radios--small">
-                                    {% for subitem in exclusiveVulnerabilities[0].items %}
+                                    {% for subitem in exclusive.items %}
                                         {% set selected = findListItemByValue({ items: inputDisplayValues, value: subitem.value }) %}
                                         <div class="govuk-radios__item">
                                             <input class="govuk-radios__input"

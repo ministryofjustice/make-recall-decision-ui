@@ -21,8 +21,8 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
-  res.locals.exclusiveVulnerabilities = vulnerabilities.filter(item => item.behaviour === 'exclusive')
-  res.locals.nonExclusiveVulnerabilities = vulnerabilities.filter(item => item.behaviour !== 'exclusive')
+  res.locals.exclusive = vulnerabilities.find(v => v.behaviour === 'exclusive')
+  res.locals.nonExclusive = vulnerabilities.filter(item => item.behaviour !== 'exclusive')
 
   res.locals.fullName = recommendation.personOnProbation?.name
 
