@@ -190,7 +190,7 @@ export const strings: Record<string, Record<string, string>> = {
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
-    vulnerabilities: 'Consider if you think this recall affect any vulnerabilities or needs {{ fullName }} may have.',
+    vulnerabilities: 'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
     taskList: 'Create a Part A form',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
