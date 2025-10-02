@@ -127,6 +127,7 @@ import { ppcsPaths } from './paths/ppcs'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
+import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 
 const recommendations = Router()
 
@@ -504,6 +505,9 @@ ppcsRouteBuilder.get('supporting-document-remove/:id', supportingDocumentRemoveC
 ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemoveController.post)
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
+
+ppcsRouteBuilder.get('edit-offence', editOffenceController.get)
+ppcsRouteBuilder.post('edit-offence', editOffenceController.post)
 
 const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(
