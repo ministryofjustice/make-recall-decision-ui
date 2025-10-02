@@ -1,7 +1,7 @@
 $(function () {
   const $form = $('form')
-  const $exclusiveCheckbox = $('#vulnerabilities-none')
-  const $exclusiveRadios = $('#conditional-vulnerabilities-none input[type="radio"]')
+  const $exclusiveCheckbox = $('#NONE_OR_NOT_KNOWN')
+  const $exclusiveRadios = $('#conditional-NONE_OR_NOT_KNOWN input[type="radio"]')
 
   // 1. On submit, if parent checkbox is not selected → clear radios
   $form.on('submit', function () {

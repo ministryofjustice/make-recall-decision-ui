@@ -62,6 +62,8 @@ export const strings: Record<string, Record<string, string>> = {
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
+    normalAndExclusiveSelected:
+      'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
     missingDetail: 'Enter more detail',
     missingExclusive:
       'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',

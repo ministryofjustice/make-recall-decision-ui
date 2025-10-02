@@ -39,7 +39,7 @@ describe('validateVulnerabilities', () => {
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
-        href: '#option-1',
+        href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
         name: 'vulnerabilities',
         text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
         errorId: 'noVulnerabilitiesSelected',
@@ -81,7 +81,7 @@ describe('validateVulnerabilities', () => {
   it('allows None to be selected without details required', async () => {
     const requestBody = {
       crn: 'X514364',
-      vulnerabilities: ['NONE'],
+      vulnerabilities: ['NONE_OR_NOT_KNOWN', 'NONE'],
     }
     const { errors, valuesToSave } = await validateVulnerabilities({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
@@ -89,6 +89,9 @@ describe('validateVulnerabilities', () => {
       vulnerabilities: {
         allOptions: cleanseUiList(formOptions.vulnerabilities),
         selected: [
+          {
+            value: 'NONE_OR_NOT_KNOWN',
+          },
           {
             value: 'NONE',
           },
@@ -97,10 +100,10 @@ describe('validateVulnerabilities', () => {
     })
   })
 
-  it('allows Unknown to be selected without details required', async () => {
+  it('allows NOT_KNOWN to be selected without details required', async () => {
     const requestBody = {
       crn: 'X514364',
-      vulnerabilities: ['UNKNOWN'],
+      vulnerabilities: ['NONE_OR_NOT_KNOWN', 'NOT_KNOWN'],
     }
     const { errors, valuesToSave } = await validateVulnerabilities({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
@@ -109,10 +112,96 @@ describe('validateVulnerabilities', () => {
         allOptions: cleanseUiList(formOptions.vulnerabilities),
         selected: [
           {
-            value: 'UNKNOWN',
+            value: 'NONE_OR_NOT_KNOWN',
+          },
+          {
+            value: 'NOT_KNOWN',
           },
         ],
       },
     })
+  })
+
+  it('should not allow None to be selected without NONE_OR_NOT_KNOWN selected', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      vulnerabilities: ['NONE'],
+    }
+    const { errors } = await validateVulnerabilities({ requestBody, recommendationId })
+    expect(errors).toEqual([
+      {
+        errorId: 'noVulnerabilitiesSelected',
+        href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+        name: 'vulnerabilities',
+        text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
+      },
+      {
+        errorId: 'NONE_OR_NOT_KNOWN',
+        href: '#NONE_OR_NOT_KNOWN',
+        name: 'NONE_OR_NOT_KNOWN',
+        text: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+      },
+    ])
+  })
+
+  it('should not allow NOT_KNOWN to be selected without NONE_OR_NOT_KNOWN selected', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      vulnerabilities: ['NOT_KNOWN'],
+    }
+    const { errors } = await validateVulnerabilities({ requestBody, recommendationId })
+    expect(errors).toEqual([
+      {
+        errorId: 'noVulnerabilitiesSelected',
+        href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+        name: 'vulnerabilities',
+        text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
+      },
+      {
+        errorId: 'NONE_OR_NOT_KNOWN',
+        href: '#NONE_OR_NOT_KNOWN',
+        name: 'NONE_OR_NOT_KNOWN',
+        text: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+      },
+    ])
+  })
+
+  it('should not allow NONE_OR_NOT_KNOWN to be selected without any radio buttons checked in', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      vulnerabilities: ['NONE_OR_NOT_KNOWN'],
+    }
+    const { errors } = await validateVulnerabilities({ requestBody, recommendationId })
+    expect(errors).toEqual([
+      {
+        errorId: 'NONE_OR_NOT_KNOWN',
+        href: '#NONE_OR_NOT_KNOWN',
+        name: 'NONE_OR_NOT_KNOWN',
+        text: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+      },
+    ])
+  })
+
+  it('should not allow both normal and exclusive checkbox selected', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      vulnerabilities: ['RISK_OF_SUICIDE_OR_SELF_HARM', 'NONE_OR_NOT_KNOWN'],
+      'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': 'Some details.',
+    }
+    const { errors } = await validateVulnerabilities({ requestBody, recommendationId })
+    expect(errors).toEqual([
+      {
+        errorId: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+        name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
+      },
+      {
+        errorId: 'NONE_OR_NOT_KNOWN',
+        href: '#NONE_OR_NOT_KNOWN',
+        name: 'NONE_OR_NOT_KNOWN',
+        text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
+      },
+    ])
   })
 })

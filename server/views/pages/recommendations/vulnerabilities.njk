@@ -24,9 +24,6 @@
                       <p id="vulnerabilities-body-text" class="govuk-body">
                          Think about what you have found out from {{ fullName }}'s assessments. Select all that apply. You can add more details in the next step.
                       </p>
-                      <p id="vulnerabilities-error" class="govuk-error-message">
-                          <span class="govuk-visually-hidden">Error:</span> {{ errors.vulnerabilities.text }}
-                      </p>
                       <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         {# Normal vulnerabilities first #}
                         {% set lastCategory = '' %}
@@ -43,30 +40,34 @@
 
                             {% set selected = findListItemByValue({ items: inputDisplayValues, value: item.value }) %}
 
-                            <div class="govuk-checkboxes__item">
+                          <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input"
-                                       id="option-{{ loop.index }}"
+                                       id="{{ item.value }}"
                                        name="vulnerabilities"
                                        type="checkbox"
                                        value="{{ item.value }}"
                                        data-aria-controls="conditional-{{ item.value }}"
                                        {% if selected %}checked{% endif %}>
-                                <label class="govuk-label govuk-checkboxes__label" for="option-{{ loop.index }}">
+                                <label class="govuk-label govuk-checkboxes__label" for="{{ item.value }}">
                                     {{ item.text }}
                                 </label>
+                              <p id="{{ item.value }}-error" class="govuk-error-message">
+                                  <span class="govuk-visually-hidden">Error:</span> {{ errors[item.value].text }}
+                              </p>
                             </div>
 
                             <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden"
                                  id="conditional-{{ item.value }}">
                                 {{ govukTextarea({
-                                name: "vulnerabilitiesDetail-" + item.value,
-                                id: "vulnerabilitiesDetail-" + item.value,
-                                label: {
-                                html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + "</span>"
-                                },
-                                value: selected.details if selected else '',
-                                errorMessage: errorMessage(errors["vulnerabilitiesDetail-" + item.value])
-                                }) }}
+                                    name: "vulnerabilitiesDetail-" + item.value,
+                                    id: "vulnerabilitiesDetail-" + item.value,
+                                    label: {
+                                        html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + "</span>"
+                                    },
+                                    value: selected.details if selected else '',
+                                    errorMessage: errorMessage(errors["vulnerabilitiesDetail-" + item.value])
+                                    })
+                                }}
                             </div>
                         {% endfor %}
 
@@ -85,38 +86,38 @@
                             {# Main exclusive checkbox #}
                             <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input"
-                                       id="vulnerabilities-none"
+                                       id="{{ exclusive.value }}"
                                        name="vulnerabilities"
                                        type="checkbox"
                                        value="{{ exclusive.value }}"
-                                       data-aria-controls="conditional-vulnerabilities-none"
+                                       data-aria-controls="conditional-{{ exclusive.value }}"
                                        {% if exclusiveSelected %}checked{% endif %}>
-                                <label class="govuk-label govuk-checkboxes__label" for="vulnerabilities-none">
+                                <label class="govuk-label govuk-checkboxes__label" for="{{ exclusive.value }}">
                                     {{ exclusive.text }}
                                 </label>
                                 <div class="govuk-hint">
                                     Select this only if you have not selected any vulnerabilities or needs.
                                 </div>
-                                <p id="vulnerabilities-exclusive-error" class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span> {{ errors["vulnerabilities-exclusive"].text }}
+                                <p id="{{ exclusive.value }}-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>  {{ errors[exclusive.value].text }}
                                 </p>
                             </div>
 
                             {# Conditional radios under the main checkbox #}
                             <div class="govuk-checkboxes__conditional {% if not exclusiveSelected %}govuk-checkboxes__conditional--hidden{% endif %}"
-                                 id="conditional-vulnerabilities-none">
+                                 id="conditional-{{ exclusive.value }}">
                                 <div class="govuk-radios govuk-radios--small">
                                     {% for subitem in exclusive.items %}
                                         {% set selected = findListItemByValue({ items: inputDisplayValues, value: subitem.value }) %}
                                         <div class="govuk-radios__item">
                                             <input class="govuk-radios__input"
-                                                   id="exclusive-{{ loop.index }}"
+                                                   id="{{ subitem.value }}"
                                                    name="vulnerabilities"
                                                    type="radio"
                                                    value="{{ subitem.value }}"
                                                    data-behaviour="exclusive"
                                                    {% if selected %}checked{% endif %}>
-                                            <label class="govuk-label govuk-radios__label" for="exclusive-{{ loop.index }}">
+                                            <label class="govuk-label govuk-radios__label" for="{{ subitem.value }}">
                                                 {{ subitem.text }}
                                             </label>
                                         </div>

@@ -26,46 +26,75 @@ export const validateVulnerabilities = async ({
     return false
   })
 
-  const missingExclusiveAnswers = vulnerabilities === 'NONE_OR_NOT_KNOWN'
+  const exclusiveList = ['NONE_OR_NOT_KNOWN', 'NONE', 'NOT_KNOWN']
 
-  const hasError = !vulnerabilities || missingDetails.length || missingExclusiveAnswers
+  const hasNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
+  const hasNone = vulnerabilitiesList.includes('NONE')
+  const hasNotKnown = vulnerabilitiesList.includes('NOT_KNOWN')
+
+  const missingExclusiveCheckboxSelection = (hasNone || hasNotKnown) && !hasNoneOrNotKnown
+  const missingExclusiveRadioSelection = hasNoneOrNotKnown && !hasNone && !hasNotKnown
+  const invalidExclusiveInput = missingExclusiveCheckboxSelection || missingExclusiveRadioSelection
+
+  const hasExclusive = vulnerabilitiesList.some(item => exclusiveList.includes(item))
+  const hasNormal = vulnerabilitiesList.some(item => !exclusiveList.includes(item))
+  const hasNormalAndExclusiveInputs = hasExclusive && hasNormal
+
+  const hasError = !vulnerabilities || missingDetails.length || invalidExclusiveInput || hasNormalAndExclusiveInputs
+
   if (hasError) {
     const errors = []
     let errorId
+
     if (!vulnerabilities || invalidVulnerability) {
       errorId = 'noVulnerabilitiesSelected'
       errors.push(
         makeErrorObject({
-          id: 'option-1',
+          id: 'RISK_OF_SUICIDE_OR_SELF_HARM',
           name: 'vulnerabilities',
           text: strings.errors[errorId],
           errorId,
         })
       )
     }
-    if (missingDetails.length) {
-      missingDetails.forEach(id => {
-        errorId = 'missingVulnerabilitiesDetail'
+
+    if (hasNormalAndExclusiveInputs) {
+      vulnerabilitiesList.forEach(id => {
+        errorId = id
         errors.push(
           makeErrorObject({
-            id: `vulnerabilitiesDetail-${id}`,
-            text: `${strings.errors.missingDetail} for ${optionTextFromValue(id, 'vulnerabilities').toLowerCase()}`,
+            id,
+            text: `${strings.errors.normalAndExclusiveSelected}`,
             errorId,
           })
         )
       })
-    }
-    if (missingExclusiveAnswers) {
-      errorId = 'vulnerabilities-exclusive'
-      errors.push(
-        makeErrorObject({
-          id: `exclusive-1`,
-          name: 'vulnerabilities-exclusive',
-          text: `${strings.errors.missingExclusive}`,
-          errorId,
+    } else {
+      if (missingDetails.length) {
+        missingDetails.forEach(id => {
+          errorId = 'missingVulnerabilitiesDetail'
+          errors.push(
+            makeErrorObject({
+              id: `vulnerabilitiesDetail-${id}`,
+              text: `${strings.errors.missingDetail} for ${optionTextFromValue(id, 'vulnerabilities').toLowerCase()}`,
+              errorId,
+            })
+          )
         })
-      )
+      }
+
+      if (invalidExclusiveInput) {
+        errorId = 'NONE_OR_NOT_KNOWN'
+        errors.push(
+          makeErrorObject({
+            id: `NONE_OR_NOT_KNOWN`,
+            text: `${strings.errors.missingExclusive}`,
+            errorId,
+          })
+        )
+      }
     }
+
     const unsavedValues = {
       vulnerabilities: vulnerabilitiesList.map(id => ({
         value: id,
