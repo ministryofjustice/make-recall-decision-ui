@@ -58,20 +58,6 @@
                                   <span class="govuk-visually-hidden">Error:</span> {{ errors[item.value].text }}
                               </p>
                             </div>
-
-                            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden"
-                                 id="conditional-{{ item.value }}">
-                                {{ govukTextarea({
-                                    name: "vulnerabilitiesDetail-" + item.value,
-                                    id: "vulnerabilitiesDetail-" + item.value,
-                                    label: {
-                                        html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + "</span>"
-                                    },
-                                    value: selected.details if selected else '',
-                                    errorMessage: errorMessage(errors["vulnerabilitiesDetail-" + item.value])
-                                    })
-                                }}
-                            </div>
                         {% endfor %}
 
                         {# Exclusive last #}

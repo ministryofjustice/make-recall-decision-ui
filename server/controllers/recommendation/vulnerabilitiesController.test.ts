@@ -30,7 +30,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           vulnerabilities: {
-            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
             allOptions: [
               {
                 value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
@@ -105,7 +105,7 @@ describe('get', () => {
     const next = mockNext()
     await vulnerabilitiesController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual([{ details: 'test', value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+    expect(res.locals.inputDisplayValues).toEqual([{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
   })
 
   it('load with existing data for radio buttons', async () => {
@@ -197,17 +197,12 @@ describe('get', () => {
         errors: {
           list: [
             {
-              name: 'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-              href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-              errorId: 'missingVulnerabilitiesDetail',
-              html: 'Enter more detail for risk of suicide or self-harm',
+              name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+              errorId: 'noVulnerabilitiesSelected',
+              html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
             },
           ],
-          'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': {
-            text: 'Enter more detail for risk of suicide or self-harm',
-            href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-            errorId: 'missingVulnerabilitiesDetail',
-          },
         },
         recommendation: {
           indeterminateOrExtendedSentenceDetails: [{}],
@@ -221,17 +216,12 @@ describe('get', () => {
     expect(res.locals.errors).toEqual({
       list: [
         {
-          name: 'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-          href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-          errorId: 'missingVulnerabilitiesDetail',
-          html: 'Enter more detail for risk of suicide or self-harm',
+          name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+          errorId: 'noVulnerabilitiesSelected',
+          html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
         },
       ],
-      'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': {
-        text: 'Enter more detail for risk of suicide or self-harm',
-        href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-        errorId: 'missingVulnerabilitiesDetail',
-      },
     })
   })
 })
@@ -279,21 +269,6 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-        'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': 'test',
-        'vulnerabilitiesDetail-RELATIONSHIP_BREAKDOWN': '',
-        'vulnerabilitiesDetail-DOMESTIC_ABUSE': '',
-        'vulnerabilitiesDetail-DRUG_OR_ALCOHOL_USE': '',
-        'vulnerabilitiesDetail-BULLYING_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_BULLIED_BY_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS': '',
-        'vulnerabilitiesDetail-ADULT_OR_CHILD_SAFEGUARDING_CONCERNS': '',
-        'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-PHYSICAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION': '',
-        'vulnerabilitiesDetail-BEREAVEMENT_ISSUES': '',
-        'vulnerabilitiesDetail-LEARNING_DIFFICULTIES': '',
-        'vulnerabilitiesDetail-PHYSICAL_DISABILITIES': '',
-        'vulnerabilitiesDetail-CULTURAL_OR_LANGUAGE_DIFFERENCES': '',
       },
     })
 
@@ -312,7 +287,7 @@ describe('post', () => {
       recommendationId: '123',
       valuesToSave: {
         vulnerabilities: {
-          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
           allOptions: [
             {
               value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
@@ -396,22 +371,7 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
-        vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-        'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': '',
-        'vulnerabilitiesDetail-RELATIONSHIP_BREAKDOWN': '',
-        'vulnerabilitiesDetail-DOMESTIC_ABUSE': '',
-        'vulnerabilitiesDetail-DRUG_OR_ALCOHOL_USE': '',
-        'vulnerabilitiesDetail-BULLYING_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_BULLIED_BY_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS': '',
-        'vulnerabilitiesDetail-ADULT_OR_CHILD_SAFEGUARDING_CONCERNS': '',
-        'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-PHYSICAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION': '',
-        'vulnerabilitiesDetail-BEREAVEMENT_ISSUES': '',
-        'vulnerabilitiesDetail-LEARNING_DIFFICULTIES': '',
-        'vulnerabilitiesDetail-PHYSICAL_DISABILITIES': '',
-        'vulnerabilitiesDetail-CULTURAL_OR_LANGUAGE_DIFFERENCES': '',
+        abc: 'INVALID_FORM_DATA',
       },
     })
 
@@ -426,16 +386,6 @@ describe('post', () => {
     await vulnerabilitiesController.post(req, res, mockNext())
 
     expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'missingVulnerabilitiesDetail',
-        href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-        text: 'Enter more detail for at risk of suicide or self-harm',
-        name: 'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-        invalidParts: undefined,
-        values: undefined,
-      },
-    ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 })

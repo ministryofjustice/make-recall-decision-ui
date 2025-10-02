@@ -216,10 +216,6 @@ context('Make a recommendation - form validation', () => {
       ['Relationship breakdown', 'Physical disabilities']
     )
     cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'vulnerabilitiesDetail-PHYSICAL_DISABILITIES',
-      errorText: 'Enter more detail for physical disabilities',
-    })
   })
 
   it('IOM', () => {
