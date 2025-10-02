@@ -9,7 +9,7 @@ generic-service:
     INGRESS_URL: "https://consider-a-recall-preprod.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
-    MAKE_RECALL_DECISION_API_URL: "https://make-recall-decision-api-preprod.hmpps.service.justice.gov.uk"
+    MAKE_RECALL_DECISION_API_URL: "http://make-recall-decision-api.make-recall-decision-preprod.svc.cluster.local"
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-preprod.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "PRE-PROD"
