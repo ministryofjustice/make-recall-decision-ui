@@ -4,6 +4,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesVulnerabilities } from '../recommendations/vulnerabilities/inputDisplayValues'
 import { validateVulnerabilities } from '../recommendations/vulnerabilities/formValidator'
 import { routeUrls } from '../../routes/routeUrls'
+import { vulnerabilities } from '../recommendations/vulnerabilities/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -19,6 +20,11 @@ function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+
+  res.locals.exclusive = vulnerabilities.find(v => v.behaviour === 'exclusive')
+  res.locals.nonExclusive = vulnerabilities.filter(item => item.behaviour !== 'exclusive')
+
+  res.locals.fullName = recommendation.personOnProbation?.name
 
   res.render(`pages/recommendations/vulnerabilities`)
   next()

@@ -25,50 +25,76 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('load with existing data', async () => {
+  it('load with existing data for checkboxes', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
           vulnerabilities: {
-            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
             allOptions: [
-              { value: 'NONE', text: 'None' },
-              { value: 'NOT_KNOWN', text: 'Not known' },
               {
                 value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-                text: 'Risk of suicide or self-harm',
+                text: 'At risk of suicide or self-harm',
               },
-              { value: 'RELATIONSHIP_BREAKDOWN', text: 'Relationship breakdown' },
-              { value: 'DOMESTIC_ABUSE', text: 'Domestic abuse' },
-              { value: 'DRUG_OR_ALCOHOL_USE', text: 'Drug or alcohol abuse' },
-              { value: 'BULLYING_OTHERS', text: 'Bullying others' },
               {
-                value: 'BEING_BULLIED_BY_OTHERS',
-                text: 'Being bullied by others',
+                value: 'DRUG_OR_ALCOHOL_USE',
+                text: 'Drug or alcohol abuse',
+              },
+              {
+                value: 'MENTAL_HEALTH_CONCERNS',
+                text: 'Mental health concerns',
+              },
+              {
+                value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
+                text: 'Medication taken, including compliance with medication',
+              },
+              {
+                value: 'PHYSICAL_HEALTH_CONCERNS',
+                text: 'Physical health concerns',
+              },
+              {
+                value: 'LEARNING_DIFFICULTIES',
+                text: 'Learning difficulties',
+              },
+              {
+                value: 'PHYSICAL_DISABILITIES',
+                text: 'Physical disabilities',
+              },
+              {
+                value: 'DOMESTIC_ABUSE',
+                text: 'Domestic abuse',
+              },
+              {
+                value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
+                text: 'Adult or child safeguarding concerns',
               },
               {
                 value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
                 text: 'Being at risk of serious harm from others',
               },
               {
-                value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
-                text: 'Adult or child safeguarding concerns',
-              },
-              { value: 'MENTAL_HEALTH_CONCERNS', text: 'Mental health concerns' },
-              {
-                value: 'PHYSICAL_HEALTH_CONCERNS',
-                text: 'Physical health concerns',
+                value: 'BEING_BULLIED_BY_OTHERS',
+                text: 'Being bullied by others',
               },
               {
-                value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
-                text: 'Medication taken, including compliance with medication',
+                value: 'BULLYING_OTHERS',
+                text: 'Bullying others',
               },
-              { value: 'BEREAVEMENT_ISSUES', text: 'Bereavement issues' },
-              { value: 'LEARNING_DIFFICULTIES', text: 'Learning difficulties' },
-              { value: 'PHYSICAL_DISABILITIES', text: 'Physical disabilities' },
+              {
+                value: 'RELATIONSHIP_BREAKDOWN',
+                text: 'Relationship breakdown',
+              },
+              {
+                value: 'BEREAVEMENT_ISSUES',
+                text: 'Bereavement issues',
+              },
               {
                 value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
                 text: 'Cultural or language differences',
+              },
+              {
+                value: 'NONE_OR_NOT_KNOWN',
+                text: 'No concerns or do not know',
               },
             ],
           },
@@ -79,7 +105,90 @@ describe('get', () => {
     const next = mockNext()
     await vulnerabilitiesController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual([{ details: 'test', value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+    expect(res.locals.inputDisplayValues).toEqual([{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+  })
+
+  it('load with existing data for radio buttons', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          vulnerabilities: {
+            selected: ['NONE_OR_NOT_KNOWN', 'NONE'],
+            allOptions: [
+              {
+                value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+                text: 'At risk of suicide or self-harm',
+              },
+              {
+                value: 'DRUG_OR_ALCOHOL_USE',
+                text: 'Drug or alcohol abuse',
+              },
+              {
+                value: 'MENTAL_HEALTH_CONCERNS',
+                text: 'Mental health concerns',
+              },
+              {
+                value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
+                text: 'Medication taken, including compliance with medication',
+              },
+              {
+                value: 'PHYSICAL_HEALTH_CONCERNS',
+                text: 'Physical health concerns',
+              },
+              {
+                value: 'LEARNING_DIFFICULTIES',
+                text: 'Learning difficulties',
+              },
+              {
+                value: 'PHYSICAL_DISABILITIES',
+                text: 'Physical disabilities',
+              },
+              {
+                value: 'DOMESTIC_ABUSE',
+                text: 'Domestic abuse',
+              },
+              {
+                value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
+                text: 'Adult or child safeguarding concerns',
+              },
+              {
+                value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
+                text: 'Being at risk of serious harm from others',
+              },
+              {
+                value: 'BEING_BULLIED_BY_OTHERS',
+                text: 'Being bullied by others',
+              },
+              {
+                value: 'BULLYING_OTHERS',
+                text: 'Bullying others',
+              },
+              {
+                value: 'RELATIONSHIP_BREAKDOWN',
+                text: 'Relationship breakdown',
+              },
+              {
+                value: 'BEREAVEMENT_ISSUES',
+                text: 'Bereavement issues',
+              },
+              {
+                value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
+                text: 'Cultural or language differences',
+              },
+              {
+                value: 'NONE_OR_NOT_KNOWN',
+                text: 'No concerns or do not know',
+              },
+            ],
+          },
+        },
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await vulnerabilitiesController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues).toEqual(['NONE_OR_NOT_KNOWN', 'NONE'])
   })
 
   it('initial load with error data', async () => {
@@ -88,17 +197,12 @@ describe('get', () => {
         errors: {
           list: [
             {
-              name: 'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-              href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-              errorId: 'missingVulnerabilitiesDetail',
-              html: 'Enter more detail for risk of suicide or self-harm',
+              name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+              errorId: 'noVulnerabilitiesSelected',
+              html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
             },
           ],
-          'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': {
-            text: 'Enter more detail for risk of suicide or self-harm',
-            href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-            errorId: 'missingVulnerabilitiesDetail',
-          },
         },
         recommendation: {
           indeterminateOrExtendedSentenceDetails: [{}],
@@ -112,18 +216,47 @@ describe('get', () => {
     expect(res.locals.errors).toEqual({
       list: [
         {
-          name: 'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-          href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-          errorId: 'missingVulnerabilitiesDetail',
-          html: 'Enter more detail for risk of suicide or self-harm',
+          name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+          errorId: 'noVulnerabilitiesSelected',
+          html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
         },
       ],
-      'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': {
-        text: 'Enter more detail for risk of suicide or self-harm',
-        href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-        errorId: 'missingVulnerabilitiesDetail',
-      },
     })
+  })
+})
+
+it('initial load with error data for exclusive radio buttons', async () => {
+  const res = mockRes({
+    locals: {
+      errors: {
+        list: [
+          {
+            name: 'vulnerabilities-exclusive',
+            href: '#exclusive-1',
+            errorId: 'vulnerabilities-exclusive',
+            html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+          },
+        ],
+      },
+      recommendation: {
+        indeterminateOrExtendedSentenceDetails: [{}],
+      },
+      token: 'token1',
+    },
+  })
+
+  await vulnerabilitiesController.get(mockReq(), res, mockNext())
+
+  expect(res.locals.errors).toEqual({
+    list: [
+      {
+        name: 'vulnerabilities-exclusive',
+        href: '#exclusive-1',
+        errorId: 'vulnerabilities-exclusive',
+        html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+      },
+    ],
   })
 })
 
@@ -136,21 +269,6 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-        'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': 'test',
-        'vulnerabilitiesDetail-RELATIONSHIP_BREAKDOWN': '',
-        'vulnerabilitiesDetail-DOMESTIC_ABUSE': '',
-        'vulnerabilitiesDetail-DRUG_OR_ALCOHOL_USE': '',
-        'vulnerabilitiesDetail-BULLYING_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_BULLIED_BY_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS': '',
-        'vulnerabilitiesDetail-ADULT_OR_CHILD_SAFEGUARDING_CONCERNS': '',
-        'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-PHYSICAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION': '',
-        'vulnerabilitiesDetail-BEREAVEMENT_ISSUES': '',
-        'vulnerabilitiesDetail-LEARNING_DIFFICULTIES': '',
-        'vulnerabilitiesDetail-PHYSICAL_DISABILITIES': '',
-        'vulnerabilitiesDetail-CULTURAL_OR_LANGUAGE_DIFFERENCES': '',
       },
     })
 
@@ -169,52 +287,28 @@ describe('post', () => {
       recommendationId: '123',
       valuesToSave: {
         vulnerabilities: {
-          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
           allOptions: [
-            { value: 'NONE', text: 'None' },
-            {
-              value: 'NOT_KNOWN',
-              text: 'Not known',
-            },
             {
               value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-              text: 'Risk of suicide or self-harm',
-            },
-            { value: 'RELATIONSHIP_BREAKDOWN', text: 'Relationship breakdown' },
-            {
-              value: 'DOMESTIC_ABUSE',
-              text: 'Domestic abuse',
-            },
-            { value: 'DRUG_OR_ALCOHOL_USE', text: 'Drug or alcohol abuse' },
-            {
-              value: 'BULLYING_OTHERS',
-              text: 'Bullying others',
+              text: 'At risk of suicide or self-harm',
             },
             {
-              value: 'BEING_BULLIED_BY_OTHERS',
-              text: 'Being bullied by others',
-            },
-            {
-              value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
-              text: 'Being at risk of serious harm from others',
-            },
-            {
-              value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
-              text: 'Adult or child safeguarding concerns',
+              value: 'DRUG_OR_ALCOHOL_USE',
+              text: 'Drug or alcohol abuse',
             },
             {
               value: 'MENTAL_HEALTH_CONCERNS',
               text: 'Mental health concerns',
             },
             {
-              value: 'PHYSICAL_HEALTH_CONCERNS',
-              text: 'Physical health concerns',
-            },
-            {
               value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
               text: 'Medication taken, including compliance with medication',
             },
-            { value: 'BEREAVEMENT_ISSUES', text: 'Bereavement issues' },
+            {
+              value: 'PHYSICAL_HEALTH_CONCERNS',
+              text: 'Physical health concerns',
+            },
             {
               value: 'LEARNING_DIFFICULTIES',
               text: 'Learning difficulties',
@@ -223,7 +317,42 @@ describe('post', () => {
               value: 'PHYSICAL_DISABILITIES',
               text: 'Physical disabilities',
             },
-            { value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES', text: 'Cultural or language differences' },
+            {
+              value: 'DOMESTIC_ABUSE',
+              text: 'Domestic abuse',
+            },
+            {
+              value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
+              text: 'Adult or child safeguarding concerns',
+            },
+            {
+              value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
+              text: 'Being at risk of serious harm from others',
+            },
+            {
+              value: 'BEING_BULLIED_BY_OTHERS',
+              text: 'Being bullied by others',
+            },
+            {
+              value: 'BULLYING_OTHERS',
+              text: 'Bullying others',
+            },
+            {
+              value: 'RELATIONSHIP_BREAKDOWN',
+              text: 'Relationship breakdown',
+            },
+            {
+              value: 'BEREAVEMENT_ISSUES',
+              text: 'Bereavement issues',
+            },
+            {
+              value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
+              text: 'Cultural or language differences',
+            },
+            {
+              value: 'NONE_OR_NOT_KNOWN',
+              text: 'No concerns or do not know',
+            },
           ],
         },
       },
@@ -242,22 +371,7 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
-        vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-        'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': '',
-        'vulnerabilitiesDetail-RELATIONSHIP_BREAKDOWN': '',
-        'vulnerabilitiesDetail-DOMESTIC_ABUSE': '',
-        'vulnerabilitiesDetail-DRUG_OR_ALCOHOL_USE': '',
-        'vulnerabilitiesDetail-BULLYING_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_BULLIED_BY_OTHERS': '',
-        'vulnerabilitiesDetail-BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS': '',
-        'vulnerabilitiesDetail-ADULT_OR_CHILD_SAFEGUARDING_CONCERNS': '',
-        'vulnerabilitiesDetail-MENTAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-PHYSICAL_HEALTH_CONCERNS': '',
-        'vulnerabilitiesDetail-MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION': '',
-        'vulnerabilitiesDetail-BEREAVEMENT_ISSUES': '',
-        'vulnerabilitiesDetail-LEARNING_DIFFICULTIES': '',
-        'vulnerabilitiesDetail-PHYSICAL_DISABILITIES': '',
-        'vulnerabilitiesDetail-CULTURAL_OR_LANGUAGE_DIFFERENCES': '',
+        abc: 'INVALID_FORM_DATA',
       },
     })
 
@@ -272,16 +386,6 @@ describe('post', () => {
     await vulnerabilitiesController.post(req, res, mockNext())
 
     expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'missingVulnerabilitiesDetail',
-        href: '#vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-        text: 'Enter more detail for risk of suicide or self-harm',
-        name: 'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM',
-        invalidParts: undefined,
-        values: undefined,
-      },
-    ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 })
