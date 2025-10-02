@@ -207,7 +207,7 @@ context('Make a recommendation - form validation', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldGroupId: 'option-1',
+      fieldGroupId: 'RISK_OF_SUICIDE_OR_SELF_HARM',
       fieldName: 'vulnerabilities',
       errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',
     })

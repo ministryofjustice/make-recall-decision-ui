@@ -24,6 +24,9 @@
                       <p id="vulnerabilities-body-text" class="govuk-body">
                          Think about what you have found out from {{ fullName }}'s assessments. Select all that apply. You can add more details in the next step.
                       </p>
+                      <p id="vulnerabilities-error" class="govuk-error-message">
+                          <span class="govuk-visually-hidden">Error:</span> {{ errors.vulnerabilities.text }}
+                      </p>
                       <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         {# Normal vulnerabilities first #}
                         {% set lastCategory = '' %}
