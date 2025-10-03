@@ -126,6 +126,7 @@ import editCustodyGroupController from '../controllers/recommendation/ppcs/custo
 import { ppcsPaths } from './paths/ppcs'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
+import editDateOfSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 
 const recommendations = Router()
@@ -555,6 +556,12 @@ ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.sentenceToCommitIndetermina
 
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.get)
 ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.post)
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.dateOfSentence, editDateOfSentenceController.get)
+ppcsIndeterminateSentenceRouteBuilder.post(
+  ppcsPaths.indeterminateEdit.dateOfSentence,
+  editDateOfSentenceController.post
+)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
