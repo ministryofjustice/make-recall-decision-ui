@@ -1,0 +1,40 @@
+{% extends "../../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../../../../partials/error-summary.njk' %}
+
+            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            <p class="govuk-body">Update the information to record in PPUD.</p>
+            <h2 class="govuk-heading-m govuk-!-padding-top-2 govuk-!-margin-bottom-1">Currently in PPUD</h2>
+            <p class="govuk-body">{{ existingSentencingCourt }}</p>
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ accessibleAutocomplete({
+                    id: 'sentencingCourt',
+                    label: {
+                        text: 'Select the sentencing court',
+                        class: 'govuk-label--m '
+                    },
+                    class: 'govuk-!-margin-bottom-4 govuk-input--width-30',
+                    errorMessage: errorMessage(errors.sentencingCourt),
+                    list: allCourts,
+                    value: sentencingCourt,
+                    placeholder: 'Search for a sentencing court',
+                    nonce: cspNonce
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

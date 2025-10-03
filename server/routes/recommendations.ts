@@ -126,6 +126,7 @@ import editCustodyGroupController from '../controllers/recommendation/ppcs/custo
 import { ppcsPaths } from './paths/ppcs'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
+import editSentencingCourtController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 
 const recommendations = Router()
@@ -504,6 +505,9 @@ ppcsRouteBuilder.get('supporting-document-remove/:id', supportingDocumentRemoveC
 ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemoveController.post)
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
+
+ppcsRouteBuilder.get('edit-sentencing-court', editSentencingCourtController.get)
+ppcsRouteBuilder.post('edit-sentencing-court', editSentencingCourtController.post)
 
 const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(
