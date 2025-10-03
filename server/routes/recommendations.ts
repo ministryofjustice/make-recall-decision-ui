@@ -55,6 +55,7 @@ import addressDetailsController from '../controllers/recommendation/addressDetai
 import indeterminateDetailsController from '../controllers/recommendation/indeterminateDetailsController'
 import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
 import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
+import vulnerabilitiesDetailsController from '../controllers/recommendation/vulnerabilitiesDetailsController'
 import iomController from '../controllers/recommendation/iomController'
 import policeDetailsController from '../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
@@ -219,6 +220,9 @@ ppRouteBuilder.post('indeterminate-details', indeterminateDetailsController.post
 
 ppRouteBuilder.get('vulnerabilities', vulnerabilitiesController.get)
 ppRouteBuilder.post('vulnerabilities', vulnerabilitiesController.post)
+
+ppRouteBuilder.get('vulnerabilities-details', vulnerabilitiesDetailsController.get)
+ppRouteBuilder.post('vulnerabilities-details', vulnerabilitiesDetailsController.post)
 
 ppRouteBuilder.get('task-list-no-recall', taskListNoRecallController.get)
 
