@@ -7,6 +7,7 @@ export type PpudSentenceOptions = {
   id?: string
   custodyType?: CustodyType
   releaseDate?: Date
+  sentencingCourt?: string
 }
 
 const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (options?) => ({
@@ -26,7 +27,7 @@ const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (optio
     partMonths: faker.number.int({ min: 1, max: 12 }),
     partDays: faker.number.int({ min: 1, max: 28 }),
   },
-  sentencingCourt: `${faker.location.city()} Court`,
+  sentencingCourt: options.sentencingCourt ?? `${faker.location.city()} Court`,
 })
 
 export const PpudSentenceGenerator: DataGeneratorWithSeries<PpudSentence, PpudSentenceOptions> = {
