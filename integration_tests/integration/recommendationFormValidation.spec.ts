@@ -207,6 +207,27 @@ context('Make a recommendation - form validation', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
+      fieldName: 'vulnerabilities',
+      errorText: 'Select if there are vulnerabilities or additional needs',
+    })
+    cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
+      'Relationship breakdown',
+      'Physical disabilities',
+    ])
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'vulnerabilitiesDetail-PHYSICAL_DISABILITIES',
+      errorText: 'Enter more detail for physical disabilities',
+    })
+  })
+
+  it('Vulnerabilities with RiskToSelf enabled', () => {
+    cy.signIn()
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities?flagRiskToSelfEnabled=1`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
       fieldGroupId: 'RISK_OF_SUICIDE_OR_SELF_HARM',
       fieldName: 'vulnerabilities',
       errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',

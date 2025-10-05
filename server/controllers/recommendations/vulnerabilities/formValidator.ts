@@ -1,17 +1,18 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { routeUrls } from '../../../routes/routeUrls'
-import { formOptions, isValueValid } from '../formOptions/formOptions'
+import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
-import { cleanseUiList } from '../../../utils/lists'
-import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
+import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
+import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateVulnerabilities = async ({
+export const validateVulnerabilitiesRiskToSelf = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
   const { vulnerabilities } = requestBody
   const vulnerabilitiesList = Array.isArray(vulnerabilities) ? vulnerabilities : [vulnerabilities]
-  const invalidVulnerability = vulnerabilitiesList.some(id => !isValueValid(id, 'vulnerabilities'))
+  const invalidVulnerability = vulnerabilitiesList.some(id => !isValueValid(id, 'vulnerabilitiesRiskToSelf'))
 
   const exclusiveList = ['NONE_OR_NOT_KNOWN', 'NONE', 'NOT_KNOWN']
 
@@ -39,7 +40,7 @@ export const validateVulnerabilities = async ({
         makeErrorObject({
           id: 'RISK_OF_SUICIDE_OR_SELF_HARM',
           name: 'vulnerabilities',
-          text: strings.errors[errorId],
+          text: strings.errors.noVulnerabilitiesSelectedRiskToSelf,
           errorId,
         })
       )
@@ -84,6 +85,82 @@ export const validateVulnerabilities = async ({
       selected: vulnerabilitiesList.map(alternative => {
         return {
           value: alternative,
+        }
+      }),
+      allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
+    },
+  }
+  return {
+    valuesToSave,
+    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
+  }
+}
+
+export const validateVulnerabilities = async ({
+  requestBody,
+  recommendationId,
+}: FormValidatorArgs): FormValidatorReturn => {
+  const { vulnerabilities } = requestBody
+  const vulnerabilitiesList = Array.isArray(vulnerabilities) ? vulnerabilities : [vulnerabilities]
+  const invalidVulnerability = vulnerabilitiesList.some(id => !isValueValid(id, 'vulnerabilities'))
+  const missingDetails = vulnerabilitiesList.filter(id => {
+    const optionShouldHaveDetails = Boolean(
+      findListItemByValue<UiFormOption>({
+        items: formOptions.vulnerabilities,
+        value: id,
+      })?.detailsLabel
+    )
+    if (optionShouldHaveDetails && isEmptyStringOrWhitespace(requestBody[`vulnerabilitiesDetail-${id}`])) {
+      return id
+    }
+    return false
+  })
+  const hasError = !vulnerabilities || missingDetails.length
+  if (hasError) {
+    const errors = []
+    let errorId
+    if (!vulnerabilities || invalidVulnerability) {
+      errorId = 'noVulnerabilitiesSelected'
+      errors.push(
+        makeErrorObject({
+          id: 'vulnerabilities',
+          text: strings.errors[errorId],
+          errorId,
+        })
+      )
+    }
+    if (missingDetails.length) {
+      missingDetails.forEach(id => {
+        errorId = 'missingVulnerabilitiesDetail'
+        errors.push(
+          makeErrorObject({
+            id: `vulnerabilitiesDetail-${id}`,
+            text: `${strings.errors.missingDetail} for ${optionTextFromValue(id, 'vulnerabilities').toLowerCase()}`,
+            errorId,
+          })
+        )
+      })
+    }
+    const unsavedValues = {
+      vulnerabilities: vulnerabilitiesList.map(id => ({
+        value: id,
+        details: requestBody[`vulnerabilitiesDetail-${id}`],
+      })),
+    }
+    return {
+      errors,
+      unsavedValues,
+    }
+  }
+
+  // valid
+  const valuesToSave = {
+    vulnerabilities: {
+      selected: vulnerabilitiesList.map(alternative => {
+        const details = requestBody[`vulnerabilitiesDetail-${alternative}`]
+        return {
+          value: alternative,
+          details: isString(details) ? stripHtmlTags(details as string) : undefined,
         }
       }),
       allOptions: cleanseUiList(formOptions.vulnerabilities),

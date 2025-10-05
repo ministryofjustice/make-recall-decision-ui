@@ -60,7 +60,8 @@ export const strings: Record<string, Record<string, string>> = {
     missingIndeterminateDetailSexualViolent:
       'Enter details about the behaviour that could lead to a sexual or violent offence',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
-    noVulnerabilitiesSelected:
+    noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
+    noVulnerabilitiesSelectedRiskToSelf:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
     normalAndExclusiveSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
@@ -192,7 +193,8 @@ export const strings: Record<string, Record<string, string>> = {
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
-    vulnerabilities:
+    vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
+    vulnerabilitiesRiskToSelf:
       'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
     taskList: 'Create a Part A form',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
