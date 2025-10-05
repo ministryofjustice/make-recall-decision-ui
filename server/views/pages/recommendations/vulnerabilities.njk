@@ -14,8 +14,8 @@
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                <div class="govuk-form-group{% if errors.option-1 %} govuk-form-group--error{% endif %}">
-                  <fieldset class="govuk-fieldset" aria-describedby="vulnerabilities-body-text{% if errors.option-1 %} vulnerabilities-error{% endif %}">
+                <div class="govuk-form-group{% if errors.vulnerabilities %} govuk-form-group--error{% endif %}">
+                  <fieldset class="govuk-fieldset" aria-describedby="vulnerabilities-body-text{% if errors.vulnerabilities %} vulnerabilities-error{% endif %}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
 
                         <h1 class="govuk-fieldset__heading">
@@ -162,14 +162,15 @@
                             </div>
                             <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-{{ item.value }}">
                                 {{ govukTextarea({
-                                name: "vulnerabilitiesDetail-" + item.value,
-                                id: "vulnerabilitiesDetail-" + item.value,
-                                label: {
-                                html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + '</span>'
-                                },
-                                value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
-                                errorMessage: errorMessage(errors["vulnerabilitiesDetail-" + item.value])
-                                }) }}
+                                        name: "vulnerabilitiesDetail-" + item.value,
+                                        id: "vulnerabilitiesDetail-" + item.value,
+                                        label: {
+                                            html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + '</span>'
+                                        },
+                                        value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
+                                        errorMessage: errorMessage(errors["vulnerabilitiesDetail-" + item.value])
+                                    })
+                                }}
                             </div>
                             {% endif %}
                             {% endfor %}
