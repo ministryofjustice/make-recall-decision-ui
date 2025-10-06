@@ -81,11 +81,12 @@
                                        type="checkbox"
                                        value="{{ exclusive.value }}"
                                        data-aria-controls="conditional-{{ exclusive.value }}"
-                                       {% if exclusiveSelected %}checked{% endif %}>
+                                       {% if exclusiveSelected %}checked{% endif %}
+                                       aria-describedby = "{{ exclusive.value }}-hint">
                                 <label class="govuk-label govuk-checkboxes__label" for="{{ exclusive.value }}">
                                     {{ exclusive.text }}
                                 </label>
-                                <div class="govuk-hint">
+                                <div id="{{ exclusive.value }}-hint" class="govuk-hint govuk-checkboxes__hint">
                                     Select this only if you have not selected any vulnerabilities or needs.
                                 </div>
                                 <p id="{{ exclusive.value }}-error" class="govuk-error-message">
