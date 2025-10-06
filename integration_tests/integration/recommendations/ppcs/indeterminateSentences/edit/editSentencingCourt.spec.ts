@@ -71,7 +71,7 @@ context('Indeterminate Sentence - Edit Sentencing Court Page', () => {
         cy.task('getReferenceList', {
           name: 'courts',
           statusCode: 200,
-          response: { values: [ppudSentencingCourt, ppudSentencingCourt, updatedPpudSentencingCourt] },
+          response: { values: [ppudSentencingCourt, updatedPpudSentencingCourt, `${faker.location.city()} Court`] },
         })
         cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
       })
