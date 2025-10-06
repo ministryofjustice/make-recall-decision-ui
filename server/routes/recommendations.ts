@@ -506,8 +506,8 @@ ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemove
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 
-ppcsRouteBuilder.get('edit-sentencing-court', editSentencingCourtController.get)
-ppcsRouteBuilder.post('edit-sentencing-court', editSentencingCourtController.post)
+ppcsRouteBuilder.get(ppcsPaths.indeterminateEdit.sentencingCourt, editSentencingCourtController.get)
+ppcsRouteBuilder.post(ppcsPaths.indeterminateEdit.sentencingCourt, editSentencingCourtController.post)
 
 const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(
