@@ -95,7 +95,7 @@
                             </div>
 
                             {# Conditional radios under the main checkbox #}
-                            <div class="govuk-checkboxes__conditional {% if not exclusiveSelected %}govuk-checkboxes__conditional--hidden{% endif %}"
+                            <div class="govuk-checkboxes__conditional {% if not exclusiveSelected %} govuk-checkboxes__conditional--hidden{% endif %}"
                                  id="conditional-{{ exclusive.value }}">
                                 <div class="govuk-radios govuk-radios--small">
                                     {% for subitem in exclusive.items %}
