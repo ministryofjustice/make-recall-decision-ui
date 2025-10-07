@@ -61,7 +61,13 @@ export const strings: Record<string, Record<string, string>> = {
       'Enter details about the behaviour that could lead to a sexual or violent offence',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
+    noVulnerabilitiesSelectedRiskToSelf:
+      'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
+    normalAndExclusiveSelected:
+      'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
     missingDetail: 'Enter more detail',
+    missingExclusive:
+      'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
     missingTriggerLeadingToRecall: 'Explain what has made you consider recalling {{ fullName }}',
     missingResponseToProbation: 'Explain how {{ fullName }} has responded to probation',
     missingWhatLedToRecall: 'Enter details of what has led to this recall',
@@ -189,6 +195,8 @@ export const strings: Record<string, Record<string, string>> = {
     custodyStatus: 'Is {{ fullName }} in custody now?',
     vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
+    vulnerabilitiesRiskToSelf:
+      'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
     taskList: 'Create a Part A form',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',

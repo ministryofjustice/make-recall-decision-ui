@@ -5,7 +5,7 @@ import { standardLicenceConditions } from './licenceConditions'
 import { hasVictimsInContactScheme } from '../victimContactScheme/formOptions'
 import { alternativesToRecallTried } from '../alternativesToRecallTried/formOptions'
 import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
-import { vulnerabilities } from '../vulnerabilities/formOptions'
+import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../vulnerabilities/formOptions'
 import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
 import { recallTypeIndeterminate, recallTypeIndeterminateApi } from '../recallTypeIndeterminate/formOptions'
 import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtendedSentenceDetails/formOptions'
@@ -39,6 +39,7 @@ export const formOptions: FormOptionsType = {
   custodyStatus,
   alternativesToRecallTried,
   vulnerabilities,
+  vulnerabilitiesRiskToSelf,
   indeterminateSentenceType,
   indeterminateOrExtendedSentenceDetails,
   whyConsideredRecall,
