@@ -1,6 +1,11 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
+import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
+import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
+import recallTypeValues = RecallTypeSelectedValue.value
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -156,6 +161,109 @@ context('Recommendation - task list', () => {
     cy.clickLink('When did the SPO agree this recall?')
   })
 
+  context('task list form links', () => {
+    function setUp(recResponse: RecommendationResponse) {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: recResponse,
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    }
+
+    function checkLink(linkText: string, url: string) {
+      cy.getLinkHref(linkText).should('contain', url)
+    }
+
+    function checkSuitabilityLink() {
+      checkLink(
+        'Suitability for standard or fixed term recall',
+        `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
+      )
+    }
+
+    function checkRecallTypeLink(recallTypePath: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended') {
+      checkLink(
+        'What you recommend',
+        `/recommendations/${recommendationId}/${recallTypePath}?fromPageId=task-list&fromAnchor=heading-recommendation`
+      )
+    }
+
+    function checkSpoAgreementLink() {
+      checkLink('When did the SPO agree this recall?', '/recommendations/123/spo-agree-to-recall')
+    }
+
+    context('recommendation decision details', () => {
+      context('recall for determinate, non-extended sentence', () => {
+        beforeEach(() => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              isIndeterminateSentence: false,
+              isExtendedSentence: false,
+              recallType: {
+                selected: {
+                  value: faker.helpers.arrayElement([recallTypeValues.STANDARD, recallTypeValues.FIXED_TERM]),
+                },
+              },
+            })
+          )
+        })
+        it('shows suitability link', () => {
+          checkSuitabilityLink()
+        })
+        it('shows recall type link', () => {
+          checkRecallTypeLink('recall-type')
+        })
+        it('shows SPO agreement link', () => {
+          checkSpoAgreementLink()
+        })
+      })
+
+      context('recall for determinate, extended sentence', () => {
+        beforeEach(() => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              isIndeterminateSentence: false,
+              isExtendedSentence: true,
+              recallType: {
+                selected: {
+                  value: faker.helpers.arrayElement([recallTypeValues.STANDARD, recallTypeValues.FIXED_TERM]),
+                },
+              },
+            })
+          )
+        })
+        it('shows recall type link', () => {
+          checkRecallTypeLink('recall-type-extended')
+        })
+        it('shows SPO agreement link', () => {
+          checkSpoAgreementLink()
+        })
+      })
+
+      context('recall for indeterminate sentence', () => {
+        beforeEach(() => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              isIndeterminateSentence: true,
+              recallType: {
+                selected: {
+                  value: faker.helpers.arrayElement([recallTypeValues.STANDARD, recallTypeValues.FIXED_TERM]),
+                },
+              },
+            })
+          )
+        })
+        it('shows recall type link', () => {
+          checkRecallTypeLink('recall-type-indeterminate')
+        })
+        it('shows SPO agreement link', () => {
+          checkSpoAgreementLink()
+        })
+      })
+    })
+  })
+
   it('task list - check links to forms', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
@@ -279,10 +387,6 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('Suitability for standard or fixed term recall').should(
-      'contain',
-      `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
-    )
     cy.getLinkHref('Is this an emergency recall?').should(
       'contain',
       '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
@@ -302,10 +406,6 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('Suitability for standard or fixed term recall').should(
-      'contain',
-      `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
-    )
     cy.getLinkHref('Add any additional licence conditions - fixed term recall').should(
       'contain',
       '/recommendations/123/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances'
