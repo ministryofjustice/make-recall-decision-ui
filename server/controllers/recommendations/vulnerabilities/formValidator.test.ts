@@ -102,7 +102,7 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
         href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
         name: 'vulnerabilities',
         text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
-      }
+      },
     ])
   })
 
@@ -118,7 +118,7 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
         href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
         name: 'vulnerabilities',
         text: 'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
-      }
+      },
     ])
   })
 
