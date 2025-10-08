@@ -153,9 +153,11 @@ context('Recommendation - task list', () => {
     }
 
     context('recommendation decision details', () => {
+      const suitabilityLinkText = 'Suitability for standard or fixed term recall'
+
       function checkSuitabilityLink() {
         checkLink(
-          'Suitability for standard or fixed term recall',
+          suitabilityLinkText,
           `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
         )
       }
@@ -203,7 +205,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show suitability link", () => {
-                    checkLinkDoesntExist('Suitability for standard or fixed term recall')
+                    checkLinkDoesntExist(suitabilityLinkText)
                   })
                 }
                 it('shows recall type link', () => {
@@ -220,6 +222,13 @@ context('Recommendation - task list', () => {
     })
 
     context('circumstances details', () => {
+      const whatHasLedToRecallLinkText = 'What has led to this recall?'
+      const emergencyRecallLinkText = 'Is this an emergency recall?'
+      const indeterminateTypeLinkText = 'Type of indeterminate sentence'
+      const ftrAdditionalLicenceConditionsLinkText = 'Add any additional licence conditions - fixed term recall'
+      const indeterminateOrExtendedDetailsLinkText =
+        'Confirm the recall criteria - indeterminate and extended sentences'
+
       function checkResponseToProbationLink(personOnProbationName: string) {
         checkLink(
           `How has ${personOnProbationName} responded to probation so far?`,
@@ -242,12 +251,12 @@ context('Recommendation - task list', () => {
       }
 
       function checkWhatLedToRecallLink() {
-        checkLink('What has led to this recall?', `/recommendations/${recommendationId}/what-led`)
+        checkLink(whatHasLedToRecallLinkText, `/recommendations/${recommendationId}/what-led`)
       }
 
       function checkEmergencyRecallLink() {
         checkLink(
-          'Is this an emergency recall?',
+          emergencyRecallLinkText,
           `/recommendations/${recommendationId}/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances`
         )
       }
@@ -261,7 +270,7 @@ context('Recommendation - task list', () => {
 
       function checkIndeterminateTypeLink() {
         checkLink(
-          'Type of indeterminate sentence',
+          indeterminateTypeLinkText,
           `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances`
         )
       }
@@ -275,14 +284,14 @@ context('Recommendation - task list', () => {
 
       function checkFTRAdditionalLicenceConditionsLink() {
         checkLink(
-          'Add any additional licence conditions - fixed term recall',
+          ftrAdditionalLicenceConditionsLinkText,
           `/recommendations/${recommendationId}/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances`
         )
       }
 
       function checkIndeterminateOrExtendedDetailsLink() {
         checkLink(
-          'Confirm the recall criteria - indeterminate and extended sentences',
+          indeterminateOrExtendedDetailsLinkText,
           `/recommendations/${recommendationId}/indeterminate-details?fromPageId=task-list&fromAnchor=heading-circumstances`
         )
       }
@@ -321,7 +330,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show what led to recall link", () => {
-                    checkLinkDoesntExist('What has led to this recall?')
+                    checkLinkDoesntExist(whatHasLedToRecallLinkText)
                   })
                 }
                 if (isRecall && !isIndeterminateSentence) {
@@ -330,7 +339,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show emergency recall link", () => {
-                    checkLinkDoesntExist('Is this an emergency recall?')
+                    checkLinkDoesntExist(emergencyRecallLinkText)
                   })
                 }
                 it('shows is indeterminate link', () => {
@@ -342,7 +351,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show indeterminate type link", () => {
-                    checkLinkDoesntExist('Type of indeterminate sentence')
+                    checkLinkDoesntExist(indeterminateTypeLinkText)
                   })
                 }
                 it('shows is extended link', () => {
@@ -358,7 +367,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show additional FTR licence conditions link", () => {
-                    checkLinkDoesntExist('Add any additional licence conditions - fixed term recall')
+                    checkLinkDoesntExist(ftrAdditionalLicenceConditionsLinkText)
                   })
                 }
                 if (isRecall && (isIndeterminateSentence || isExtendedSentence)) {
@@ -367,7 +376,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show indeterminate or extended details link", () => {
-                    checkLinkDoesntExist('Confirm the recall criteria - indeterminate and extended sentences')
+                    checkLinkDoesntExist(indeterminateOrExtendedDetailsLinkText)
                   })
                 }
               }
