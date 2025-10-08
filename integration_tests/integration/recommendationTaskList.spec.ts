@@ -1,4 +1,3 @@
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
@@ -174,71 +173,48 @@ context('Recommendation - task list', () => {
         checkLink('When did the SPO agree this recall?', `/recommendations/${recommendationId}/spo-agree-to-recall`)
       }
 
-      context('recall for determinate, non-extended sentence', () => {
-        beforeEach(() => {
-          setUp(
-            RecommendationResponseGenerator.generate({
-              isIndeterminateSentence: false,
-              isExtendedSentence: false,
-              recallType: {
-                selected: {
-                  value: faker.helpers.arrayElement([recallTypeValues.STANDARD, recallTypeValues.FIXED_TERM]),
-                },
-              },
-            })
-          )
-        })
-        it('shows suitability link', () => {
-          checkSuitabilityLink()
-        })
-        it('shows recall type link', () => {
-          checkRecallTypeLink('recall-type')
-        })
-        it('shows SPO agreement link', () => {
-          checkSpoAgreementLink()
-        })
-      })
-
-      context('recall for determinate, extended sentence', () => {
-        beforeEach(() => {
-          setUp(
-            RecommendationResponseGenerator.generate({
-              isIndeterminateSentence: false,
-              isExtendedSentence: true,
-              recallType: {
-                selected: {
-                  value: faker.helpers.arrayElement([recallTypeValues.STANDARD, recallTypeValues.FIXED_TERM]),
-                },
-              },
-            })
-          )
-        })
-        it('shows recall type link', () => {
-          checkRecallTypeLink('recall-type-extended')
-        })
-        it('shows SPO agreement link', () => {
-          checkSpoAgreementLink()
-        })
-      })
-
-      context('recall for indeterminate sentence', () => {
-        beforeEach(() => {
-          setUp(
-            RecommendationResponseGenerator.generate({
-              isIndeterminateSentence: true,
-              recallType: {
-                selected: {
-                  value: faker.helpers.arrayElement([recallTypeValues.STANDARD, recallTypeValues.FIXED_TERM]),
-                },
-              },
-            })
-          )
-        })
-        it('shows recall type link', () => {
-          checkRecallTypeLink('recall-type-indeterminate')
-        })
-        it('shows SPO agreement link', () => {
-          checkSpoAgreementLink()
+      Object.keys(recallTypeValues).forEach(recallTypeValue => {
+        ;[true, false].forEach(isIndeterminateSentence => {
+          ;[true, false].forEach(isExtendedSentence => {
+            context(
+              `${recallTypeValue.toString()} recall for ${isIndeterminateSentence ? 'in' : ''}determinate, ${isExtendedSentence ? '' : 'non-'}extended sentence`,
+              () => {
+                let expectedRecallTypeLink: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended'
+                if (isIndeterminateSentence) {
+                  expectedRecallTypeLink = 'recall-type-indeterminate'
+                } else {
+                  expectedRecallTypeLink = isExtendedSentence ? 'recall-type-extended' : 'recall-type'
+                }
+                const recommendation = RecommendationResponseGenerator.generate({
+                  isIndeterminateSentence,
+                  isExtendedSentence,
+                  recallType: {
+                    selected: {
+                      value: recallTypeValue as RecallTypeSelectedValue.value,
+                    },
+                  },
+                })
+                beforeEach(() => {
+                  setUp(recommendation)
+                })
+                if (!isIndeterminateSentence && !isExtendedSentence) {
+                  it('shows suitability link', () => {
+                    checkSuitabilityLink()
+                  })
+                } else {
+                  it("doesn't show suitability link", () => {
+                    checkLinkDoesntExist('Suitability for standard or fixed term recall')
+                  })
+                }
+                it('shows recall type link', () => {
+                  checkRecallTypeLink(expectedRecallTypeLink)
+                })
+                it('shows SPO agreement link', () => {
+                  checkSpoAgreementLink()
+                })
+              }
+            )
+          })
         })
       })
     })
