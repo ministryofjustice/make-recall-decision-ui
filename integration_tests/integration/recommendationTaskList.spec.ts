@@ -63,7 +63,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Address').should('not.exist')
     // should not exist
     cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
-    cy.getElement('Is this an emergency recall?').should('not.exist')
 
     cy.getElement("Request line manager's countersignature To do").should('exist')
   })
@@ -92,29 +91,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Address Completed').should('exist')
   })
 
-  it('task list - Completed - determinate sentence not extended', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, isIndeterminateSentence: false, isExtendedSentence: false },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Type of indeterminate sentence').should('not.exist')
-    cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
-  })
-
-  it('task list - Completed - determinate sentence is extended', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, isIndeterminateSentence: false, isExtendedSentence: true },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Type of indeterminate sentence').should('not.exist')
-    cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('exist')
-    cy.getElement('Is this an emergency recall?').should('exist')
-  })
-
   it('task list - To do - not in custody', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
@@ -134,8 +110,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
     cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
     cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
-    cy.getElement('Type of indeterminate sentence').should('not.exist')
-    cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
     cy.getElement('Personal details To review').should('exist')
     cy.getElement('Offence details To review').should('exist')
     cy.getElement('Offence analysis To do').should('exist')
@@ -175,25 +149,31 @@ context('Recommendation - task list', () => {
       cy.getLinkHref(linkText).should('contain', url)
     }
 
-    function checkSuitabilityLink() {
-      checkLink(
-        'Suitability for standard or fixed term recall',
-        `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
-      )
-    }
-
-    function checkRecallTypeLink(recallTypePath: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended') {
-      checkLink(
-        'What you recommend',
-        `/recommendations/${recommendationId}/${recallTypePath}?fromPageId=task-list&fromAnchor=heading-recommendation`
-      )
-    }
-
-    function checkSpoAgreementLink() {
-      checkLink('When did the SPO agree this recall?', '/recommendations/123/spo-agree-to-recall')
+    function checkLinkDoesntExist(linkText: string) {
+      cy.getElement(linkText).should('not.exist')
     }
 
     context('recommendation decision details', () => {
+      function checkSuitabilityLink() {
+        checkLink(
+          'Suitability for standard or fixed term recall',
+          `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
+        )
+      }
+
+      function checkRecallTypeLink(
+        recallTypePath: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended'
+      ) {
+        checkLink(
+          'What you recommend',
+          `/recommendations/${recommendationId}/${recallTypePath}?fromPageId=task-list&fromAnchor=heading-recommendation`
+        )
+      }
+
+      function checkSpoAgreementLink() {
+        checkLink('When did the SPO agree this recall?', `/recommendations/${recommendationId}/spo-agree-to-recall`)
+      }
+
       context('recall for determinate, non-extended sentence', () => {
         beforeEach(() => {
           setUp(
@@ -262,6 +242,164 @@ context('Recommendation - task list', () => {
         })
       })
     })
+
+    context('circumstances details', () => {
+      function checkResponseToProbationLink(personOnProbationName: string) {
+        checkLink(
+          `How has ${personOnProbationName} responded to probation so far?`,
+          `/recommendations/${recommendationId}/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkLicenceConditionsLink(personOnProbationName: string) {
+        checkLink(
+          `What licence conditions has ${personOnProbationName} breached?`,
+          `/recommendations/${recommendationId}/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkAlternativesTriedLink() {
+        checkLink(
+          'What alternatives to recall have been tried already?',
+          `/recommendations/${recommendationId}/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives`
+        )
+      }
+
+      function checkWhatLedToRecallLink() {
+        checkLink('What has led to this recall?', `/recommendations/${recommendationId}/what-led`)
+      }
+
+      function checkEmergencyRecallLink() {
+        checkLink(
+          'Is this an emergency recall?',
+          `/recommendations/${recommendationId}/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkIsIndeterminateLink(personOnProbationName: string) {
+        checkLink(
+          `Is ${personOnProbationName} on an indeterminate sentence?`,
+          `/recommendations/${recommendationId}/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkIndeterminateTypeLink() {
+        checkLink(
+          'Type of indeterminate sentence',
+          `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkIsExtendedLink(personOnProbationName: string) {
+        checkLink(
+          `Is ${personOnProbationName} on an extended sentence?`,
+          `/recommendations/${recommendationId}/is-extended?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkFTRAdditionalLicenceConditionsLink() {
+        checkLink(
+          'Add any additional licence conditions - fixed term recall',
+          `/recommendations/${recommendationId}/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      function checkIndeterminateOrExtendedDetailsLink() {
+        checkLink(
+          'Confirm the recall criteria - indeterminate and extended sentences',
+          `/recommendations/${recommendationId}/indeterminate-details?fromPageId=task-list&fromAnchor=heading-circumstances`
+        )
+      }
+
+      Object.keys(recallTypeValues).forEach(recallTypeValue => {
+        ;[true, false].forEach(isIndeterminateSentence => {
+          ;[true, false].forEach(isExtendedSentence => {
+            context(
+              `${recallTypeValue.toString()} recall for ${isIndeterminateSentence ? 'in' : ''}determinate, ${isExtendedSentence ? '' : 'non-'}extended sentence`,
+              () => {
+                const isRecall = recallTypeValue !== recallTypeValues.NO_RECALL
+                const recommendation = RecommendationResponseGenerator.generate({
+                  isIndeterminateSentence,
+                  isExtendedSentence,
+                  recallType: {
+                    selected: {
+                      value: recallTypeValue as RecallTypeSelectedValue.value,
+                    },
+                  },
+                })
+                beforeEach(() => {
+                  setUp(recommendation)
+                })
+                it('shows response to probation link', () => {
+                  checkResponseToProbationLink(recommendation.personOnProbation.name)
+                })
+                it('shows licence conditions link', () => {
+                  checkLicenceConditionsLink(recommendation.personOnProbation.name)
+                })
+                it('shows alternatives tried link', () => {
+                  checkAlternativesTriedLink()
+                })
+                if (isRecall) {
+                  it('shows what led to recall link', () => {
+                    checkWhatLedToRecallLink()
+                  })
+                } else {
+                  it("doesn't show what led to recall link", () => {
+                    checkLinkDoesntExist('What has led to this recall?')
+                  })
+                }
+                if (isRecall && !isIndeterminateSentence) {
+                  it('shows emergency recall link', () => {
+                    checkEmergencyRecallLink()
+                  })
+                } else {
+                  it("doesn't show emergency recall link", () => {
+                    checkLinkDoesntExist('Is this an emergency recall?')
+                  })
+                }
+                it('shows is indeterminate link', () => {
+                  checkIsIndeterminateLink(recommendation.personOnProbation.name)
+                })
+                if (isIndeterminateSentence) {
+                  it('shows indeterminate type link', () => {
+                    checkIndeterminateTypeLink()
+                  })
+                } else {
+                  it("doesn't show indeterminate type link", () => {
+                    checkLinkDoesntExist('Type of indeterminate sentence')
+                  })
+                }
+                it('shows is extended link', () => {
+                  checkIsExtendedLink(recommendation.personOnProbation.name)
+                })
+                if (
+                  recallTypeValue === recallTypeValues.FIXED_TERM &&
+                  !isIndeterminateSentence &&
+                  !isExtendedSentence
+                ) {
+                  it('shows additional FTR licence conditions link', () => {
+                    checkFTRAdditionalLicenceConditionsLink()
+                  })
+                } else {
+                  it("doesn't show additional FTR licence conditions link", () => {
+                    checkLinkDoesntExist('Add any additional licence conditions - fixed term recall')
+                  })
+                }
+                if (isRecall && (isIndeterminateSentence || isExtendedSentence)) {
+                  it('shows indeterminate or extended details link', () => {
+                    checkIndeterminateOrExtendedDetailsLink()
+                  })
+                } else {
+                  it("doesn't show indeterminate or extended details link", () => {
+                    checkLinkDoesntExist('Confirm the recall criteria - indeterminate and extended sentences')
+                  })
+                }
+              }
+            )
+          })
+        })
+      })
+    })
   })
 
   it('task list - check links to forms', () => {
@@ -272,31 +410,6 @@ context('Recommendation - task list', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('When did the SPO agree this recall?').should('contain', '/recommendations/123/spo-agree-to-recall')
-    cy.getLinkHref('What alternatives to recall have been tried already?').should(
-      'contain',
-      '/recommendations/123/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives'
-    )
-    cy.getLinkHref('Is Jane Bloggs on an indeterminate sentence?').should(
-      'contain',
-      '/recommendations/123/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('Is Jane Bloggs on an extended sentence?').should(
-      'contain',
-      '/recommendations/123/is-extended?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('Type of indeterminate sentence').should(
-      'contain',
-      '/recommendations/123/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('How has Jane Bloggs responded to probation so far?').should(
-      'contain',
-      '/recommendations/123/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('What licence conditions has Jane Bloggs breached?').should(
-      'contain',
-      '/recommendations/123/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('What has led to this recall?').should('contain', '/recommendations/123/what-led')
     cy.getLinkHref('Would recall affect vulnerability or additional needs?').should(
       'contain',
       '/recommendations/123/vulnerabilities'
@@ -373,64 +486,6 @@ context('Recommendation - task list', () => {
       response: licenceConditionsMultipleActiveCustodial,
     })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-  })
-
-  it('task list - determinate, not extended, standard recall', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...completeRecommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: false,
-        recallType: { selected: { value: 'STANDARD' } },
-      },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('Is this an emergency recall?').should(
-      'contain',
-      '/recommendations/123/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getElement('Add any additional licence conditions - fixed term recall').should('not.exist')
-  })
-
-  it('task list - determinate, not extended, fixed term recall', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...completeRecommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: false,
-        recallType: { selected: { value: 'FIXED_TERM' } },
-      },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('Add any additional licence conditions - fixed term recall').should(
-      'contain',
-      '/recommendations/123/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getElement('Is this an emergency recall?').should('exist')
-  })
-
-  it('task list - indeterminate type and details links visible if indeterminate sentence', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...completeRecommendationResponse,
-        isIndeterminateSentence: true,
-      },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('Type of indeterminate sentence').should(
-      'contain',
-      '/recommendations/123/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
-    cy.getLinkHref('Confirm the recall criteria - indeterminate and extended sentences').should(
-      'contain',
-      '/recommendations/123/indeterminate-details?fromPageId=task-list&fromAnchor=heading-circumstances'
-    )
   })
 
   it('task list - determinate, not extended, fixed term recall and FTR flag', () => {
