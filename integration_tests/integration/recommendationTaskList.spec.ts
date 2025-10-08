@@ -478,6 +478,18 @@ context('Recommendation - task list', () => {
         )
       })
     })
+
+    context('victims liaison', () => {
+      beforeEach(() => {
+        setUp(RecommendationResponseGenerator.generate())
+      })
+      it('shows victims liaison link', () => {
+        checkLink(
+          'Are there any victims in the victim contact scheme?',
+          `/recommendations/${recommendationId}/victim-contact-scheme`
+        )
+      })
+    })
   })
 
   it('task list - check links to forms', () => {
