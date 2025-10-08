@@ -18,7 +18,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
     vulnerabilitiesList = [vulnerabilities]
   }
 
-  const EXCLUSIVE = ['NONE_OR_NOT_KNOWN', 'NONE', 'NOT_KNOWN']
+  const exclusiveList = ['NONE_OR_NOT_KNOWN', 'NONE', 'NOT_KNOWN']
 
   // Keep NONE/NOT_KNOWN only if parent NONE_OR_NOT_KNOWN selected
   const hasParentNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
@@ -28,7 +28,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
 
   // Validation: any invalid vulnerability values
   const invalidVulnerability = vulnerabilitiesList
-    .filter(v => !EXCLUSIVE.includes(v))
+    .filter(v => !exclusiveList.includes(v))
     .some(id => !isValueValid(id, 'vulnerabilitiesRiskToSelf'))
 
   const hasNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
@@ -36,11 +36,11 @@ export const validateVulnerabilitiesRiskToSelf = async ({
   const hasNotKnown = vulnerabilitiesList.includes('NOT_KNOWN')
 
   const missingExclusiveRadioSelection = hasNoneOrNotKnown && !hasNone && !hasNotKnown
-  const hasExclusive = vulnerabilitiesList.some(v => EXCLUSIVE.includes(v))
-  const hasNormal = vulnerabilitiesList.some(v => !EXCLUSIVE.includes(v))
+  const hasExclusive = vulnerabilitiesList.some(v => exclusiveList.includes(v))
+  const hasNormal = vulnerabilitiesList.some(v => !exclusiveList.includes(v))
   const hasNormalAndExclusiveInputs = hasExclusive && hasNormal
 
-  const normalVulnerabilities = vulnerabilitiesList.filter(v => !EXCLUSIVE.includes(v))
+  const normalVulnerabilities = vulnerabilitiesList.filter(v => !exclusiveList.includes(v))
 
   const noVulnerabilities = vulnerabilitiesList.length === 0 || invalidVulnerability
   const hasError = noVulnerabilities || missingExclusiveRadioSelection || hasNormalAndExclusiveInputs
