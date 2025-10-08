@@ -466,6 +466,18 @@ context('Recommendation - task list', () => {
         })
       })
     })
+
+    context('vulnerabilities', () => {
+      beforeEach(() => {
+        setUp(RecommendationResponseGenerator.generate())
+      })
+      it('shows vulnerabilities link', () => {
+        checkLink(
+          'Would recall affect vulnerability or additional needs?',
+          `/recommendations/${recommendationId}/vulnerabilities`
+        )
+      })
+    })
   })
 
   it('task list - check links to forms', () => {
@@ -476,10 +488,6 @@ context('Recommendation - task list', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getLinkHref('When did the SPO agree this recall?').should('contain', '/recommendations/123/spo-agree-to-recall')
-    cy.getLinkHref('Would recall affect vulnerability or additional needs?').should(
-      'contain',
-      '/recommendations/123/vulnerabilities'
-    )
     cy.getLinkHref('Are there any victims in the victim contact scheme?').should(
       'contain',
       '/recommendations/123/victim-contact-scheme'
