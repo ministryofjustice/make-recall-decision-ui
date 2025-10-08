@@ -385,6 +385,87 @@ context('Recommendation - task list', () => {
         })
       })
     })
+
+    context('personal details', () => {
+      const addressDetailsLinkText = 'Address'
+
+      function checkPersonalDetailsLink() {
+        checkLink(
+          'Personal details',
+          `/recommendations/${recommendationId}/personal-details?fromPageId=task-list&fromAnchor=heading-person-details`
+        )
+      }
+
+      function checkOffenceDetailsLink() {
+        checkLink(
+          'Offence details',
+          `/recommendations/${recommendationId}/offence-details?fromPageId=task-list&fromAnchor=heading-person-details`
+        )
+      }
+
+      function checkOffenceAnalysisLink() {
+        checkLink(
+          'Offence analysis',
+          `/recommendations/${recommendationId}/offence-analysis?fromPageId=task-list&fromAnchor=heading-person-details`
+        )
+      }
+
+      function checkPreviousReleasesLink() {
+        checkLink(
+          'Previous releases',
+          `/recommendations/${recommendationId}/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details`
+        )
+      }
+
+      function checkPreviousRecallsLink() {
+        checkLink(
+          `Previous recalls`,
+          `/recommendations/${recommendationId}/previous-recalls?fromPageId=task-list&fromAnchor=heading-person-details`
+        )
+      }
+
+      function checkAddressDetailsLink() {
+        checkLink(
+          addressDetailsLinkText,
+          `/recommendations/${recommendationId}/address-details?fromPageId=task-list&fromAnchor=heading-person-details`
+        )
+      }
+
+      ;[true, false].forEach(isInCustody => {
+        context(`person on probations is ${isInCustody ? '' : ' not '}in custody`, () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            custodyStatus: isInCustody,
+          })
+          beforeEach(() => {
+            setUp(recommendation)
+          })
+          it('shows personal details link', () => {
+            checkPersonalDetailsLink()
+          })
+          it('shows offence details link', () => {
+            checkOffenceDetailsLink()
+          })
+          it('shows offence analysis link', () => {
+            checkOffenceAnalysisLink()
+          })
+          it('shows previous releases link', () => {
+            checkPreviousReleasesLink()
+          })
+          it('shows previous recalls link', () => {
+            checkPreviousRecallsLink()
+          })
+          if (!isInCustody) {
+            it('shows address details link', () => {
+              checkAddressDetailsLink()
+            })
+          } else {
+            it("doesn't show address details link", () => {
+              checkLinkDoesntExist(addressDetailsLinkText)
+            })
+          }
+        })
+      })
+    })
   })
 
   it('task list - check links to forms', () => {
@@ -408,7 +489,6 @@ context('Recommendation - task list', () => {
       '/recommendations/123/custody-status?fromPageId=task-list&fromAnchor=heading-custody'
     )
     cy.getLinkHref('Local police contact details').should('contain', '/recommendations/123/police-details')
-    cy.getLinkHref('Address').should('contain', '/recommendations/123/address-details')
     cy.getLinkHref('Is Jane Bloggs under Integrated Offender Management (IOM)?').should(
       'contain',
       '/recommendations/123/iom'
@@ -420,26 +500,6 @@ context('Recommendation - task list', () => {
     cy.getLinkHref('Do you think Jane Bloggs is using recall to bring contraband into prison?').should(
       'contain',
       '/recommendations/123/contraband'
-    )
-    cy.getLinkHref('Address').should(
-      'contain',
-      '/recommendations/123/address-details?fromPageId=task-list&fromAnchor=heading-person-details'
-    )
-    cy.getLinkHref('Personal details').should(
-      'contain',
-      '/recommendations/123/personal-details?fromPageId=task-list&fromAnchor=heading-person-details'
-    )
-    cy.getLinkHref('Offence details').should(
-      'contain',
-      '/recommendations/123/offence-details?fromPageId=task-list&fromAnchor=heading-person-details'
-    )
-    cy.getLinkHref('Offence analysis').should(
-      'contain',
-      '/recommendations/123/offence-analysis?fromPageId=task-list&fromAnchor=heading-person-details'
-    )
-    cy.getLinkHref('Previous releases').should(
-      'contain',
-      '/recommendations/123/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details'
     )
     cy.getLinkHref('MAPPA for Jane Bloggs').should(
       'contain',
