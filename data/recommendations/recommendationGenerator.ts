@@ -12,6 +12,7 @@ import { ConvictionDetailGenerator, ConvictionDetailOptions } from './conviction
 import { NomisIndexGenerator, NomisIndexOffenceOptions } from './nomisIndexOffenceGenerator'
 import { PpudOffenderGenerator, PpudOffenderOptions } from './ppudOffenderGenerator'
 import { recallTypeGenerator, RecallTypeOptions } from './recallTypeGenerator'
+import { personOnProbationGenerator, PersonOnProbationOptions } from './personOnProbationGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -35,7 +36,7 @@ export type RecommendationOptions = {
   isUnderIntegratedOffenderManagement?: boolean
   licenceConditionsBreached?: boolean
   localPoliceContact?: boolean
-  personOnProbation?: boolean
+  personOnProbation?: AnyNoneOrOption<PersonOnProbationOptions>
   convictionDetail?: ConvictionDetailOptions
   indexOffenceDetails?: boolean
   offenceAnalysis?: boolean
@@ -158,37 +159,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             emailAddress: faker.internet.email(),
           }
         : undefined,
-    personOnProbation:
-      options?.personOnProbation ?? true
-        ? {
-            name: faker.person.fullName(),
-            firstName: faker.person.firstName(),
-            surname: faker.person.lastName(),
-            middleNames: '',
-            fullName: faker.person.fullName(),
-            gender: faker.person.sex(),
-            ethnicity: 'White British',
-            croNumber: faker.helpers.replaceSymbols('####'),
-            mostRecentPrisonerNumber: faker.helpers.replaceSymbols('###'),
-            nomsNumber: faker.helpers.replaceSymbols('?#####'),
-            pncNumber: faker.helpers.replaceSymbols('####/#####'),
-            primaryLanguage: 'English',
-            mappa: {
-              level: 0,
-              category: 0,
-              lastUpdatedDate: faker.date.past().toDateString(),
-            },
-            addresses: [
-              {
-                line1: faker.location.streetAddress(),
-                town: faker.location.city(),
-                postcode: faker.location.zipCode(),
-                noFixedAbode: faker.datatype.boolean(),
-              },
-            ],
-            hasBeenReviewed: faker.datatype.boolean(),
-          }
-        : undefined,
+    personOnProbation: personOnProbationGenerator.generate(options?.personOnProbation ?? 'any'),
     convictionDetail:
       options?.convictionDetail ?? true ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
     indexOffenceDetails: options?.indexOffenceDetails ?? true ? faker.lorem.sentence() : undefined,
