@@ -11,59 +11,70 @@ export const validateVulnerabilitiesRiskToSelf = async ({
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
   const { vulnerabilities } = requestBody
-  const vulnerabilitiesList = Array.isArray(vulnerabilities) ? vulnerabilities : [vulnerabilities]
-  const invalidVulnerability = vulnerabilitiesList.some(id => !isValueValid(id, 'vulnerabilitiesRiskToSelf'))
+  let vulnerabilitiesList: string[] = []
+  if (Array.isArray(vulnerabilities)) {
+    vulnerabilitiesList = vulnerabilities
+  } else if (vulnerabilities) {
+    vulnerabilitiesList = [vulnerabilities]
+  }
 
   const exclusiveList = ['NONE_OR_NOT_KNOWN', 'NONE', 'NOT_KNOWN']
+
+  // Keep NONE/NOT_KNOWN only if parent NONE_OR_NOT_KNOWN selected
+  const hasParentNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
+  if (!hasParentNoneOrNotKnown) {
+    vulnerabilitiesList = vulnerabilitiesList.filter(v => !['NONE', 'NOT_KNOWN'].includes(v))
+  }
+
+  // Validation: any invalid vulnerability values
+  const invalidVulnerability = vulnerabilitiesList
+    .filter(v => !exclusiveList.includes(v))
+    .some(id => !isValueValid(id, 'vulnerabilitiesRiskToSelf'))
 
   const hasNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
   const hasNone = vulnerabilitiesList.includes('NONE')
   const hasNotKnown = vulnerabilitiesList.includes('NOT_KNOWN')
 
-  const missingExclusiveCheckboxSelection = (hasNone || hasNotKnown) && !hasNoneOrNotKnown
   const missingExclusiveRadioSelection = hasNoneOrNotKnown && !hasNone && !hasNotKnown
-  const invalidExclusiveInput = missingExclusiveCheckboxSelection || missingExclusiveRadioSelection
-
-  const hasExclusive = vulnerabilitiesList.some(item => exclusiveList.includes(item))
-  const hasNormal = vulnerabilitiesList.some(item => !exclusiveList.includes(item))
+  const hasExclusive = vulnerabilitiesList.some(v => exclusiveList.includes(v))
+  const hasNormal = vulnerabilitiesList.some(v => !exclusiveList.includes(v))
   const hasNormalAndExclusiveInputs = hasExclusive && hasNormal
 
-  const hasError = !vulnerabilities || invalidExclusiveInput || hasNormalAndExclusiveInputs
+  const normalVulnerabilities = vulnerabilitiesList.filter(v => !exclusiveList.includes(v))
+
+  const noVulnerabilities = vulnerabilitiesList.length === 0 || invalidVulnerability
+  const hasError = noVulnerabilities || missingExclusiveRadioSelection || hasNormalAndExclusiveInputs
 
   if (hasError) {
     const errors = []
-    let errorId
 
-    if (!vulnerabilities || invalidVulnerability) {
-      errorId = 'noVulnerabilitiesSelected'
+    if (noVulnerabilities) {
       errors.push(
         makeErrorObject({
           id: 'RISK_OF_SUICIDE_OR_SELF_HARM',
           name: 'vulnerabilities',
           text: strings.errors.noVulnerabilitiesSelectedRiskToSelf,
-          errorId,
+          errorId: 'noVulnerabilitiesSelected',
         })
       )
     }
 
     if (hasNormalAndExclusiveInputs) {
-      vulnerabilitiesList.forEach(id => {
-        errorId = id
+      ;[...normalVulnerabilities, 'NONE_OR_NOT_KNOWN'].forEach(id => {
         errors.push(
           makeErrorObject({
             id,
-            text: `${strings.errors.normalAndExclusiveSelected}`,
-            errorId,
+            text: strings.errors.normalAndExclusiveSelected,
+            errorId: id,
           })
         )
       })
-    } else if (invalidExclusiveInput) {
-      errorId = 'NONE_OR_NOT_KNOWN'
+    } else if (missingExclusiveRadioSelection) {
       errors.push(
         makeErrorObject({
-          id: `NONE_OR_NOT_KNOWN`,
-          text: `${strings.errors.missingExclusive}`,
-          errorId,
+          id: 'NONE_OR_NOT_KNOWN',
+          text: strings.errors.missingExclusive,
+          errorId: 'NONE_OR_NOT_KNOWN',
         })
       )
     }
