@@ -1,8 +1,8 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import type { PersonOnProbationDto } from '../../server/@types/make-recall-decision-api'
 import { AnyNoneOrOption, DataGenerator } from '../@generators/dataGenerators'
-import { mappaGenerator, MappaOptions } from '../common/mappaGenerator'
-import { addressGenerator, AddressOptions } from '../common/addressGenerator'
+import { MappaGenerator, MappaOptions } from '../common/mappaGenerator'
+import { AddressGenerator, AddressOptions } from '../common/addressGenerator'
 
 export type PersonOnProbationOptions = {
   fullName?: string
@@ -23,7 +23,7 @@ export type PersonOnProbationOptions = {
   hasBeenReviewed?: boolean
 }
 
-export const personOnProbationGenerator: DataGenerator<
+export const PersonOnProbationGenerator: DataGenerator<
   PersonOnProbationDto,
   AnyNoneOrOption<PersonOnProbationOptions>
 > = {
@@ -76,8 +76,8 @@ export const personOnProbationGenerator: DataGenerator<
       mostRecentPrisonerNumber: options.mostRecentPrisonerNumber,
       nomsNumber: options.nomsNumber,
       pncNumber: options.pncNumber,
-      mappa: mappaGenerator.generate(options.mappa ?? 'any'),
-      addresses: addressGenerator.generateSeries(options.addresses ?? ['any']),
+      mappa: MappaGenerator.generate(options.mappa ?? 'any'),
+      addresses: AddressGenerator.generateSeries(options.addresses ?? ['any']),
       primaryLanguage: options.primaryLanguage,
       hasBeenReviewed: options.hasBeenReviewed,
     }

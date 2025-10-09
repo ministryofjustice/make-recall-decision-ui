@@ -10,7 +10,7 @@ export type MappaOptions = {
   hasBeenReviewed?: boolean
 }
 
-export const mappaGenerator: DataGenerator<Mappa, AnyNoneOrOption<MappaOptions>> = {
+export const MappaGenerator: DataGenerator<Mappa, AnyNoneOrOption<MappaOptions>> = {
   generate: (options?: AnyNoneOrOption<MappaOptions>) => {
     if (options === 'any') {
       return {

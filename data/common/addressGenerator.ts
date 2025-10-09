@@ -33,7 +33,7 @@ const generateInternal: (options?: AnyNoneOrOption<AddressOptions>) => Address =
   }
 }
 
-export const addressGenerator: DataGeneratorWithSeries<Address, AnyNoneOrOption<AddressOptions>> = {
+export const AddressGenerator: DataGeneratorWithSeries<Address, AnyNoneOrOption<AddressOptions>> = {
   generate: generateInternal,
   generateSeries: optionSeries => optionSeries.map(options => generateInternal(options)),
 }

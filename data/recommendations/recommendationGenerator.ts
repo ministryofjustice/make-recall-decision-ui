@@ -12,7 +12,8 @@ import { ConvictionDetailGenerator, ConvictionDetailOptions } from './conviction
 import { NomisIndexGenerator, NomisIndexOffenceOptions } from './nomisIndexOffenceGenerator'
 import { PpudOffenderGenerator, PpudOffenderOptions } from './ppudOffenderGenerator'
 import { recallTypeGenerator, RecallTypeOptions } from './recallTypeGenerator'
-import { personOnProbationGenerator, PersonOnProbationOptions } from './personOnProbationGenerator'
+import { PersonOnProbationGenerator, PersonOnProbationOptions } from './personOnProbationGenerator'
+import { WhoCompletedPartAGenerator, WhoCompletedPartAOptions } from './whoCompletedPartAGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -55,7 +56,7 @@ export type RecommendationOptions = {
   spoCancelRecommendationRationale?: boolean
   spoDeleteRecommendationRationale?: boolean
   spoRecallType?: boolean
-  whoCompletedPartA?: boolean
+  whoCompletedPartA?: AnyNoneOrOption<WhoCompletedPartAOptions>
   practitionerForPartA?: boolean
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
@@ -159,7 +160,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             emailAddress: faker.internet.email(),
           }
         : undefined,
-    personOnProbation: personOnProbationGenerator.generate(options?.personOnProbation ?? 'any'),
+    personOnProbation: PersonOnProbationGenerator.generate(options?.personOnProbation ?? 'any'),
     convictionDetail:
       options?.convictionDetail ?? true ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
     indexOffenceDetails: options?.indexOffenceDetails ?? true ? faker.lorem.sentence() : undefined,
@@ -243,17 +244,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     spoDeleteRecommendationRationale:
       options?.spoDeleteRecommendationRationale ?? true ? faker.lorem.sentence() : undefined,
     spoRecallType: options?.spoRecallType ?? true ? faker.lorem.sentence() : undefined,
-    whoCompletedPartA:
-      options?.whoCompletedPartA ?? true
-        ? {
-            name: faker.person.fullName(),
-            email: faker.internet.email(),
-            telephone: faker.phone.number(),
-            region: faker.location.county(),
-            localDeliveryUnit: faker.location.city(),
-            isPersonProbationPractitionerForOffender: faker.datatype.boolean(),
-          }
-        : undefined,
+    whoCompletedPartA: WhoCompletedPartAGenerator.generate(options?.whoCompletedPartA ?? 'any'),
     practitionerForPartA:
       options?.practitionerForPartA ?? true
         ? {

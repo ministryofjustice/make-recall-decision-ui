@@ -589,19 +589,101 @@ context('Recommendation - task list', () => {
         checkMappaLink(recommendation.personOnProbation.name)
       })
     })
-  })
 
-  it('task list - review and send', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
+    context('contact information details', () => {
+      const personName = fakerEN.person.fullName()
+
+      const practitionerForPartALinkText = `Practitioner for ${personName}?`
+
+      function checkWhoCompletedPartALink() {
+        checkLink('Who completed this Part A?', `/recommendations/${recommendationId}/who-completed-part-a`)
+      }
+
+      function checkPractitionerForPartALink() {
+        checkLink(practitionerForPartALinkText, `/recommendations/${recommendationId}/practitioner-for-part-a`)
+      }
+
+      function checkRevocationOrderRecipientsLink() {
+        checkLink(
+          'Where should the revocation order be sent?',
+          `/recommendations/${recommendationId}/revocation-order-recipients`
+        )
+      }
+
+      function checkPPCSQueryEmailsLink() {
+        checkLink('Where should PPCS respond with questions?', `/recommendations/${recommendationId}/ppcs-query-emails`)
+      }
+
+      context('recommendation with no details completed for who completed part A', () => {
+        const recommendation = RecommendationResponseGenerator.generate({
+          personOnProbation: {
+            name: personName,
+          },
+          whoCompletedPartA: 'none',
+        })
+        beforeEach(() => setUp(recommendation))
+        it('shows who completed part A link', () => {
+          checkWhoCompletedPartALink()
+        })
+        it("doesn't show practitioner for part A link", () => {
+          checkLinkDoesntExist(practitionerForPartALinkText)
+        })
+        it('shows revocation order recipients link', () => {
+          checkRevocationOrderRecipientsLink()
+        })
+        it('shows PPCS query e-mails link', () => {
+          checkPPCSQueryEmailsLink()
+        })
+      })
+
+      context('recommendation with part A completed by practitioner', () => {
+        const recommendation = RecommendationResponseGenerator.generate({
+          personOnProbation: {
+            name: personName,
+          },
+          whoCompletedPartA: {
+            isPersonProbationPractitionerForOffender: true,
+          },
+        })
+        beforeEach(() => setUp(recommendation))
+        it('shows who completed part A link', () => {
+          checkWhoCompletedPartALink()
+        })
+        it("doesn't show practitioner for part A link", () => {
+          checkLinkDoesntExist(practitionerForPartALinkText)
+        })
+        it('shows revocation order recipients link', () => {
+          checkRevocationOrderRecipientsLink()
+        })
+        it('shows PPCS query e-mails link', () => {
+          checkPPCSQueryEmailsLink()
+        })
+      })
+
+      context('recommendation with part A not completed by practitioner', () => {
+        const recommendation = RecommendationResponseGenerator.generate({
+          personOnProbation: {
+            name: personName,
+          },
+          whoCompletedPartA: {
+            isPersonProbationPractitionerForOffender: false,
+          },
+        })
+        beforeEach(() => setUp(recommendation))
+        it('shows who completed part A link', () => {
+          checkWhoCompletedPartALink()
+        })
+        it('shows practitioner for part A link', () => {
+          checkPractitionerForPartALink()
+        })
+        it('shows revocation order recipients link', () => {
+          checkRevocationOrderRecipientsLink()
+        })
+        it('shows PPCS query e-mails link', () => {
+          checkPPCSQueryEmailsLink()
+        })
+      })
     })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-
-    cy.getElement('Who completed this Part A?').should('exist')
-    cy.getElement('Where should the revocation order be sent?').should('exist')
-    cy.getElement('Where should PPCS respond with questions?').should('exist')
   })
 
   it('task list - user can create Part A even if they have multiple active custodial convictions', () => {
