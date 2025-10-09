@@ -127,7 +127,9 @@ import editCustodyGroupController from '../controllers/recommendation/ppcs/custo
 import { ppcsPaths } from './paths/ppcs'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
+import editDateOfSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
+import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 
 const recommendations = Router()
 
@@ -509,6 +511,9 @@ ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemove
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 
+ppcsRouteBuilder.get('edit-offence', editOffenceController.get)
+ppcsRouteBuilder.post('edit-offence', editOffenceController.post)
+
 const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(
     statusIsActive(STATUSES.SENT_TO_PPCS),
@@ -559,6 +564,12 @@ ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.sentenceToCommitIndetermina
 
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.get)
 ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.post)
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.dateOfSentence, editDateOfSentenceController.get)
+ppcsIndeterminateSentenceRouteBuilder.post(
+  ppcsPaths.indeterminateEdit.dateOfSentence,
+  editDateOfSentenceController.post
+)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
