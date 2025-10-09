@@ -2,10 +2,213 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import vulnerabilitiesController from './vulnerabilitiesController'
+import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../recommendations/vulnerabilities/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
+describe('get with RiskToSelf enabled', () => {
+  const compactedListRiskToSelf = vulnerabilitiesRiskToSelf.map(({ value, text }) => ({ value, text }))
+  it('load with no data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          vulnerabilities: null,
+        },
+        token: 'token1',
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+    const next = mockNext()
+    await vulnerabilitiesController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'vulnerabilitiesRiskToSelf' })
+    expect(res.locals.inputDisplayValues).not.toBeDefined()
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/vulnerabilities')
+
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('load with existing data for checkboxes', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          vulnerabilities: {
+            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
+            allOptions: compactedListRiskToSelf,
+          },
+        },
+        token: 'token1',
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+    const next = mockNext()
+    await vulnerabilitiesController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues).toEqual([{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+  })
+
+  it('load with existing data for radio buttons', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          vulnerabilities: {
+            selected: ['NONE_OR_NOT_KNOWN', 'NONE'],
+            allOptions: compactedListRiskToSelf,
+          },
+        },
+        token: 'token1',
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+    const next = mockNext()
+    await vulnerabilitiesController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues).toEqual(['NONE_OR_NOT_KNOWN', 'NONE'])
+  })
+
+  it('initial load with error data', async () => {
+    const res = mockRes({
+      locals: {
+        errors: {
+          list: [
+            {
+              name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+              errorId: 'noVulnerabilitiesSelected',
+              html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+            },
+          ],
+        },
+        recommendation: {
+          indeterminateOrExtendedSentenceDetails: [{}],
+        },
+        token: 'token1',
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+
+    await vulnerabilitiesController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.errors).toEqual({
+      list: [
+        {
+          name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
+          errorId: 'noVulnerabilitiesSelected',
+          html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+        },
+      ],
+    })
+  })
+
+  it('initial load with error data for exclusive radio buttons', async () => {
+    const res = mockRes({
+      locals: {
+        errors: {
+          list: [
+            {
+              name: 'vulnerabilities-exclusive',
+              href: '#exclusive-1',
+              errorId: 'vulnerabilities-exclusive',
+              html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+            },
+          ],
+        },
+        recommendation: {
+          indeterminateOrExtendedSentenceDetails: [{}],
+        },
+        token: 'token1',
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+
+    await vulnerabilitiesController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.errors).toEqual({
+      list: [
+        {
+          name: 'vulnerabilities-exclusive',
+          href: '#exclusive-1',
+          errorId: 'vulnerabilities-exclusive',
+          html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
+        },
+      ],
+    })
+  })
+})
+
+describe('post with RiskToSelf enabled', () => {
+  const compactedListRiskToSelf = vulnerabilitiesRiskToSelf.map(({ value, text }) => ({ value, text }))
+  it('post with valid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath },
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+    const next = mockNext()
+
+    await vulnerabilitiesController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      valuesToSave: {
+        vulnerabilities: {
+          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
+          allOptions: compactedListRiskToSelf,
+        },
+      },
+      token: 'token1',
+      featureFlags: {
+        flagRiskToSelfEnabled: true,
+      },
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-vulnerability`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with invalid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        abc: 'INVALID_FORM_DATA',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+
+    await vulnerabilitiesController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+})
+
 describe('get', () => {
+  const compactedList = vulnerabilities.map(({ value, text }) => ({ value, text }))
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
@@ -31,46 +234,7 @@ describe('get', () => {
         recommendation: {
           vulnerabilities: {
             selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
-            allOptions: [
-              { value: 'NONE', text: 'None' },
-              { value: 'NOT_KNOWN', text: 'Not known' },
-              {
-                value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-                text: 'Risk of suicide or self-harm',
-              },
-              { value: 'RELATIONSHIP_BREAKDOWN', text: 'Relationship breakdown' },
-              { value: 'DOMESTIC_ABUSE', text: 'Domestic abuse' },
-              { value: 'DRUG_OR_ALCOHOL_USE', text: 'Drug or alcohol abuse' },
-              { value: 'BULLYING_OTHERS', text: 'Bullying others' },
-              {
-                value: 'BEING_BULLIED_BY_OTHERS',
-                text: 'Being bullied by others',
-              },
-              {
-                value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
-                text: 'Being at risk of serious harm from others',
-              },
-              {
-                value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
-                text: 'Adult or child safeguarding concerns',
-              },
-              { value: 'MENTAL_HEALTH_CONCERNS', text: 'Mental health concerns' },
-              {
-                value: 'PHYSICAL_HEALTH_CONCERNS',
-                text: 'Physical health concerns',
-              },
-              {
-                value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
-                text: 'Medication taken, including compliance with medication',
-              },
-              { value: 'BEREAVEMENT_ISSUES', text: 'Bereavement issues' },
-              { value: 'LEARNING_DIFFICULTIES', text: 'Learning difficulties' },
-              { value: 'PHYSICAL_DISABILITIES', text: 'Physical disabilities' },
-              {
-                value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
-                text: 'Cultural or language differences',
-              },
-            ],
+            allOptions: compactedList,
           },
         },
         token: 'token1',
@@ -128,6 +292,7 @@ describe('get', () => {
 })
 
 describe('post', () => {
+  const compactedList = vulnerabilities.map(({ value, text }) => ({ value, text }))
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
@@ -170,61 +335,7 @@ describe('post', () => {
       valuesToSave: {
         vulnerabilities: {
           selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
-          allOptions: [
-            { value: 'NONE', text: 'None' },
-            {
-              value: 'NOT_KNOWN',
-              text: 'Not known',
-            },
-            {
-              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-              text: 'Risk of suicide or self-harm',
-            },
-            { value: 'RELATIONSHIP_BREAKDOWN', text: 'Relationship breakdown' },
-            {
-              value: 'DOMESTIC_ABUSE',
-              text: 'Domestic abuse',
-            },
-            { value: 'DRUG_OR_ALCOHOL_USE', text: 'Drug or alcohol abuse' },
-            {
-              value: 'BULLYING_OTHERS',
-              text: 'Bullying others',
-            },
-            {
-              value: 'BEING_BULLIED_BY_OTHERS',
-              text: 'Being bullied by others',
-            },
-            {
-              value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
-              text: 'Being at risk of serious harm from others',
-            },
-            {
-              value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
-              text: 'Adult or child safeguarding concerns',
-            },
-            {
-              value: 'MENTAL_HEALTH_CONCERNS',
-              text: 'Mental health concerns',
-            },
-            {
-              value: 'PHYSICAL_HEALTH_CONCERNS',
-              text: 'Physical health concerns',
-            },
-            {
-              value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
-              text: 'Medication taken, including compliance with medication',
-            },
-            { value: 'BEREAVEMENT_ISSUES', text: 'Bereavement issues' },
-            {
-              value: 'LEARNING_DIFFICULTIES',
-              text: 'Learning difficulties',
-            },
-            {
-              value: 'PHYSICAL_DISABILITIES',
-              text: 'Physical disabilities',
-            },
-            { value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES', text: 'Cultural or language differences' },
-          ],
+          allOptions: compactedList,
         },
       },
       token: 'token1',

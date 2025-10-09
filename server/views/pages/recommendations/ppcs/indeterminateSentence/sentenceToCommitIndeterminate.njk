@@ -24,7 +24,7 @@
                     id: "indeterminate-sentence-to-commit",
                     rows: [
                         { key: "Custody type", value: hyphenForBlank(sentenceSummary.custodyType) },
-                        { key: "Offence",  value: hyphenForBlank(sentenceSummary.offenceDescription), actions: [{ id: editIdPrefix+'offence', text: editText, href: '#', visuallyHidden: 'offence' }] },
+                        { key: "Offence",  value: hyphenForBlank(sentenceSummary.offenceDescription), actions: [{ id: editIdPrefix+'offenceDescription', text: editText, href: editLinks.offenceDescription, visuallyHidden: 'offence' }] },
                         { key: "Release date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.releaseDate })), actions: [{ id: editIdPrefix+'releasedate', text: editText, href: editLinks.releaseDate, visuallyHidden: 'release date' }] },
                         { key: "Sentencing court", value: hyphenForBlank(sentenceSummary.sentencingCourt), actions: [{ id: editIdPrefix+'sentencingcourt', text: editText, href: '#', visuallyHidden: 'sentencing court' }] },
                         { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentenceSummary.dateOfSentence })), actions: [{ id: editIdPrefix+'dateofsentence', text: editText, href: editLinks.dateOfSentence, visuallyHidden: 'date of sentence' }] },

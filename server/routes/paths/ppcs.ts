@@ -10,5 +10,6 @@ export const ppcsPaths = {
   indeterminateEdit: {
     releaseDate: 'edit-release-date',
     dateOfSentence: 'edit-date-of-sentence',
+    offenceDescription: 'edit-offence',
   },
 }

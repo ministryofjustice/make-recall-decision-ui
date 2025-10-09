@@ -35,6 +35,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       editLinks: {
         releaseDate: ppcsPaths.indeterminateEdit.releaseDate,
         dateOfSentence: ppcsPaths.indeterminateEdit.dateOfSentence,
+        offenceDescription: ppcsPaths.indeterminateEdit.offenceDescription,
       },
     },
   }
