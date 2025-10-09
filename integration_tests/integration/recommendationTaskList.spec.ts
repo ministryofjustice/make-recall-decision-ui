@@ -562,25 +562,35 @@ context('Recommendation - task list', () => {
         })
       })
     })
+
+    context('risk profile details', () => {
+      function checkRoshLink() {
+        checkLink(
+          `Indicative risk assessment pending OASys review`,
+          `/recommendations/${recommendationId}/rosh?fromPageId=task-list&fromAnchor=heading-risk-profile`
+        )
+      }
+
+      function checkMappaLink(personOnProbationName: string) {
+        checkLink(
+          `MAPPA for ${personOnProbationName}`,
+          `/recommendations/${recommendationId}/mappa?fromPageId=task-list&fromAnchor=heading-risk-profile`
+        )
+      }
+
+      const recommendation = RecommendationResponseGenerator.generate()
+      beforeEach(() => {
+        return setUp(recommendation)
+      })
+      it('shows rosh link', () => {
+        checkRoshLink()
+      })
+      it('shows mappa link', () => {
+        checkMappaLink(recommendation.personOnProbation.name)
+      })
+    })
   })
 
-  it('task list - check links to forms', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: true, custodyStatus: { selected: 'NO' } },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.getLinkHref('When did the SPO agree this recall?').should('contain', '/recommendations/123/spo-agree-to-recall')
-    cy.getLinkHref('Are there any victims in the victim contact scheme?').should(
-      'contain',
-      '/recommendations/123/victim-contact-scheme'
-    )
-    cy.getLinkHref('MAPPA for Jane Bloggs').should(
-      'contain',
-      '/recommendations/123/mappa?fromPageId=task-list&fromAnchor=heading-risk-profile'
-    )
-  })
   it('task list - review and send', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
