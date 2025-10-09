@@ -2,7 +2,7 @@
 
 {% extends "../../../../../partials/layout.njk" %}
 
-{% set title = 'Edit release date' %}
+{% set title = 'Edit date of sentence' %}
 {% set pageTitle = makePageTitle({ pageHeading: title, hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -19,16 +19,16 @@
             {{ bodyParagraph('Update the information to record in PPUD') }}
 
             {{ heading('Currently in PPUD', 2, 'm', 'govuk-!-padding-top-2 govuk-!-margin-bottom-1') }}
-            {{ bodyParagraph(formatDateTimeFromIsoString({ isoDate: pageData.existingReleaseDate, dateOnly: true })) }}
+            {{ bodyParagraph(formatDateTimeFromIsoString({ isoDate: pageData.existingDateOfSentence, dateOnly: true })) }}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                {% set dateInputError = { text: errors.releaseDate } if errors.releaseDate else null %}
+                {% set dateInputError = { text: errors.dateOfSentence } if errors.dateOfSentence else null %}
                 {{ govukDateInput({
-                    id: "release-date",
+                    id: "date-of-sentence",
                     fieldset: {
                         legend: {
-                            text: 'Release date',
+                            text: 'Date of sentence',
                             classes: "govuk-fieldset__legend--m"
                         }
                     },
@@ -37,26 +37,26 @@
                     },
                     items: [
                         {
-                            id:'releaseDate-day',
+                            id:'dateOfSentence-day',
                             name: 'day',
                             value: pageData.day,
-                            classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('day', errors.releaseDate))
+                            classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('day', errors.dateOfSentence))
                         },
                         {
-                            id:'releaseDate-month',
+                            id:'dateOfSentence-month',
                             name: 'month',
                             value: pageData.month,
-                            classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('month', errors.releaseDate))
+                            classes: 'govuk-input--width-2' + (' govuk-input--error' if isDatePartInvalid('month', errors.dateOfSentence))
                         },
                         {
-                            id:'releaseDate-year',
+                            id:'dateOfSentence-year',
                             name: 'year',
                             value: pageData.year,
-                            classes: 'govuk-input--width-4' + (' govuk-input--error' if isDatePartInvalid('year', errors.releaseDate))
+                            classes: 'govuk-input--width-4' + (' govuk-input--error' if isDatePartInvalid('year', errors.dateOfSentence))
                         }
                     ]
                     ,
-                    errorMessage: { text: errors.releaseDate.text } if errors.releaseDate else null
+                    errorMessage: { text: errors.dateOfSentence.text } if errors.dateOfSentence else null
                 }) }}
                 {{ formSubmitButton() }}
             </form>
