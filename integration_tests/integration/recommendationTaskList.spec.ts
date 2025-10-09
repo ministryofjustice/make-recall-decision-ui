@@ -1,3 +1,4 @@
+import { fakerEN } from '@faker-js/faker'
 import { routeUrls } from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
@@ -490,6 +491,77 @@ context('Recommendation - task list', () => {
         )
       })
     })
+
+    context('custody details', () => {
+      const personName = fakerEN.person.fullName()
+
+      const arrestIssuesLinkText = `Is there anything the police should know before they arrest ${personName}?`
+
+      function checkCustodyStatusLink(personOnProbationName: string) {
+        checkLink(
+          `Is ${personOnProbationName} in custody now?`,
+          `/recommendations/${recommendationId}/custody-status?fromPageId=task-list&fromAnchor=heading-custody`
+        )
+      }
+
+      function checkPoliceDetailsLink() {
+        checkLink('Local police contact details', `/recommendations/${recommendationId}/police-details`)
+      }
+
+      function checkIsUnderIOMLink(personOnProbationName: string) {
+        checkLink(
+          `Is ${personOnProbationName} under Integrated Offender Management (IOM)?`,
+          `/recommendations/${recommendationId}/iom`
+        )
+      }
+
+      function checkArrestIssuesLink() {
+        checkLink(arrestIssuesLinkText, `/recommendations/${recommendationId}/arrest-issues`)
+      }
+
+      function checkContrabandLink(personOnProbationName: string) {
+        checkLink(
+          `Do you think ${personOnProbationName} is using recall to bring contraband into prison?`,
+          `/recommendations/${recommendationId}/contraband`
+        )
+      }
+
+      ;[true, false].forEach(isInCustody => {
+        context(`person on probations is ${isInCustody ? '' : ' not '}in custody`, () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            custodyStatus: isInCustody,
+            personOnProbation: {
+              name: personName,
+            },
+          })
+          recommendation.personOnProbation.name = personName
+          beforeEach(() => {
+            setUp(recommendation)
+          })
+          it('shows custody status link', () => {
+            checkCustodyStatusLink(recommendation.personOnProbation.name)
+          })
+          it('shows police details link', () => {
+            checkPoliceDetailsLink()
+          })
+          it('shows is under IOM link', () => {
+            checkIsUnderIOMLink(recommendation.personOnProbation.name)
+          })
+          if (!isInCustody) {
+            it('shows arrest issues link', () => {
+              checkArrestIssuesLink()
+            })
+          } else {
+            it("doesn't show arrest issues link", () => {
+              checkLinkDoesntExist(arrestIssuesLinkText)
+            })
+          }
+          it('shows contraband link', () => {
+            checkContrabandLink(recommendation.personOnProbation.name)
+          })
+        })
+      })
+    })
   })
 
   it('task list - check links to forms', () => {
@@ -503,23 +575,6 @@ context('Recommendation - task list', () => {
     cy.getLinkHref('Are there any victims in the victim contact scheme?').should(
       'contain',
       '/recommendations/123/victim-contact-scheme'
-    )
-    cy.getLinkHref('Is Jane Bloggs in custody now?').should(
-      'contain',
-      '/recommendations/123/custody-status?fromPageId=task-list&fromAnchor=heading-custody'
-    )
-    cy.getLinkHref('Local police contact details').should('contain', '/recommendations/123/police-details')
-    cy.getLinkHref('Is Jane Bloggs under Integrated Offender Management (IOM)?').should(
-      'contain',
-      '/recommendations/123/iom'
-    )
-    cy.getLinkHref('Is there anything the police should know before they arrest Jane Bloggs?').should(
-      'contain',
-      '/recommendations/123/arrest-issues'
-    )
-    cy.getLinkHref('Do you think Jane Bloggs is using recall to bring contraband into prison?').should(
-      'contain',
-      '/recommendations/123/contraband'
     )
     cy.getLinkHref('MAPPA for Jane Bloggs').should(
       'contain',
