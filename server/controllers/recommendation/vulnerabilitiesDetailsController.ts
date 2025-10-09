@@ -8,23 +8,30 @@ import { ValueWithDetails } from '../../@types/make-recall-decision-api'
 import { vulnerabilitiesToDisplay } from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, flags, urlInfo } = res.locals
+  const { recommendationId } = req.params
 
-  res.locals = {
-    ...res.locals,
-    page: {
-      id: 'vulnerabilitiesDetails',
-    },
-    vulnerabilitiesToDisplay: vulnerabilitiesToDisplay(recommendation.vulnerabilities),
+  if (!flags.flagRiskToSelfEnabled) {
+    const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`
+    res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  } else {
+    res.locals = {
+      ...res.locals,
+      page: {
+        id: 'vulnerabilitiesDetails',
+      },
+      vulnerabilitiesToDisplay: vulnerabilitiesToDisplay(recommendation.vulnerabilities),
+    }
+
+    res.locals.inputDisplayValues = inputDisplayValuesVulnerabilitiesDetails({
+      errors: res.locals.errors,
+      unsavedValues: res.locals.unsavedValues,
+      apiValues: recommendation,
+    })
+
+    res.render(`pages/recommendations/vulnerabilitiesDetails`)
   }
 
-  res.locals.inputDisplayValues = inputDisplayValuesVulnerabilitiesDetails({
-    errors: res.locals.errors,
-    unsavedValues: res.locals.unsavedValues,
-    apiValues: recommendation,
-  })
-
-  res.render(`pages/recommendations/vulnerabilitiesDetails`)
   next()
 }
 

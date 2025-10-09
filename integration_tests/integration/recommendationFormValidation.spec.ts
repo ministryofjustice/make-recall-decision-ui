@@ -262,7 +262,7 @@ context('Make a recommendation - form validation', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details?flagRiskToSelfEnabled=1`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',

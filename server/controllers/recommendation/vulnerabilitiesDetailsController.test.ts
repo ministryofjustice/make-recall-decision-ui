@@ -13,6 +13,9 @@ describe('get', () => {
           vulnerabilities: null,
         },
         token: 'token1',
+        flags: {
+          flagRiskToSelfEnabled: true,
+        },
       },
     })
     const next = mockNext()
@@ -74,6 +77,9 @@ describe('get', () => {
           },
         },
         token: 'token1',
+        flags: {
+          flagRiskToSelfEnabled: true,
+        },
       },
     })
 
@@ -102,6 +108,9 @@ describe('get', () => {
         },
         recommendation: {},
         token: 'token1',
+        flags: {
+          flagRiskToSelfEnabled: true,
+        },
       },
     })
 
@@ -145,6 +154,9 @@ describe('post', () => {
           },
         },
         urlInfo: { basePath },
+        flags: {
+          flagRiskToSelfEnabled: true,
+        },
       },
     })
     const next = mockNext()
@@ -229,7 +241,9 @@ describe('post', () => {
         },
       },
       token: 'token1',
-      featureFlags: {},
+      featureFlags: {
+        flagRiskToSelfEnabled: true,
+      },
     })
   })
 
