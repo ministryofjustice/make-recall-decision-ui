@@ -279,6 +279,7 @@ export const strings: Record<string, Record<string, string>> = {
     editCustodyGroup: 'Is the sentence determinate or indeterminate?',
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
+    editOffence: 'Edit offence',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:
