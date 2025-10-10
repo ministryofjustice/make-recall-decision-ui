@@ -176,7 +176,7 @@ describe('post with RiskToSelf enabled', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-vulnerability`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/vulnerabilities-details`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -204,6 +204,49 @@ describe('post with RiskToSelf enabled', () => {
 
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('redirect to the task list page after save when "none or unknown" is selected', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        vulnerabilities: ['NONE_OR_NOT_KNOWN', 'NONE'],
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath },
+        flags: { flagRiskToSelfEnabled: true },
+      },
+    })
+    const next = mockNext()
+
+    await vulnerabilitiesController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      valuesToSave: {
+        vulnerabilities: {
+          selected: [
+            { value: 'NONE_OR_NOT_KNOWN', details: undefined },
+            { value: 'NONE', details: undefined },
+          ],
+          allOptions: compactedListRiskToSelf,
+        },
+      },
+      token: 'token1',
+      featureFlags: {
+        flagRiskToSelfEnabled: true,
+      },
+    })
+    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list#heading-vulnerability')
+    expect(next).not.toHaveBeenCalled()
   })
 })
 

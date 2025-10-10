@@ -94,8 +94,10 @@ export const validateVulnerabilitiesRiskToSelf = async ({
   const valuesToSave = {
     vulnerabilities: {
       selected: vulnerabilitiesList.map(alternative => {
+        const details = requestBody[`vulnerabilitiesDetails-${alternative}`]
         return {
           value: alternative,
+          details: isString(details) ? stripHtmlTags(details as string) : undefined,
         }
       }),
       allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
