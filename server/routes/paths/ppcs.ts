@@ -11,5 +11,6 @@ export const ppcsPaths = {
     releaseDate: 'edit-release-date',
     dateOfSentence: 'edit-date-of-sentence',
     offenceDescription: 'edit-offence',
+    sentencingCourt: 'edit-sentencing-court',
   },
 }

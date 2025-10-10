@@ -135,6 +135,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingIndeterminatePpudSentence: 'Select an existing sentence or add a new one',
     invalidIndeterminatePpudSentenceSelected:
       "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
+    missingSentencingCourt: 'Select a sentencing court from the list',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -280,6 +281,7 @@ export const strings: Record<string, Record<string, string>> = {
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
     editOffence: 'Edit offence',
+    editSentencingCourt: 'Edit sentencing court',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:

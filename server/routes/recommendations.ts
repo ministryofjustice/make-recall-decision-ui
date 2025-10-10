@@ -127,6 +127,7 @@ import { ppcsPaths } from './paths/ppcs'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
 import editDateOfSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
+import editSentencingCourtController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 
@@ -507,8 +508,11 @@ ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemove
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 
-ppcsRouteBuilder.get('edit-offence', editOffenceController.get)
-ppcsRouteBuilder.post('edit-offence', editOffenceController.post)
+ppcsRouteBuilder.get(ppcsPaths.indeterminateEdit.offenceDescription, editOffenceController.get)
+ppcsRouteBuilder.post(ppcsPaths.indeterminateEdit.offenceDescription, editOffenceController.post)
+
+ppcsRouteBuilder.get(ppcsPaths.indeterminateEdit.sentencingCourt, editSentencingCourtController.get)
+ppcsRouteBuilder.post(ppcsPaths.indeterminateEdit.sentencingCourt, editSentencingCourtController.post)
 
 const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(
