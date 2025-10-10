@@ -16,6 +16,11 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
   },
+  flagRiskToSelfEnabled: {
+    label: 'Content updates for Risk to Self',
+    description: 'Content updates to vulnerabilities page',
+    default: false,
+  },
 }
 
 export const determineEnvFeatureOverride = (key: string) => {
@@ -26,10 +31,10 @@ export const determineEnvFeatureOverride = (key: string) => {
 /**
  * Performs the following checks:
  * - See if there is an environment variables of the format FEATURE_{flagKey}
- *   Intended for environemnt releases, specifically production where the feature needs setting globally
+ *   Intended for environment releases, specifically production where the feature needs setting globally
  * - Searches both query params and cookie to see if either has flag key that enabled and if these permitted
  *   Intended for feature development and testing
- * The former check takes precedence over the latter so an environment feature that is enabled is aboslute,
+ * The former check takes precedence over the latter so an environment feature that is enabled is absolute,
  * when it is disabled however the locals settings and their validity are considered
  */
 export const readFeatureFlags =

@@ -2,15 +2,20 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesVulnerabilities } from '../recommendations/vulnerabilities/inputDisplayValues'
-import { validateVulnerabilities } from '../recommendations/vulnerabilities/formValidator'
+import {
+  validateVulnerabilities,
+  validateVulnerabilitiesRiskToSelf,
+} from '../recommendations/vulnerabilities/formValidator'
 import { routeUrls } from '../../routes/routeUrls'
+import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../recommendations/vulnerabilities/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+  const pageId = res.locals.flags.flagRiskToSelfEnabled ? 'vulnerabilitiesRiskToSelf' : 'vulnerabilities'
   res.locals = {
     ...res.locals,
     page: {
-      id: 'vulnerabilities',
+      id: pageId,
     },
   }
 
@@ -19,6 +24,12 @@ function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+
+  const vulnerabilitiesToUse = res.locals.flags.flagRiskToSelfEnabled ? vulnerabilitiesRiskToSelf : vulnerabilities
+  res.locals.exclusive = vulnerabilitiesToUse.find(v => v.behaviour === 'exclusive')
+  res.locals.nonExclusive = vulnerabilitiesToUse.filter(item => item.behaviour !== 'exclusive')
+
+  res.locals.fullName = recommendation.personOnProbation?.name
 
   res.render(`pages/recommendations/vulnerabilities`)
   next()
@@ -32,7 +43,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { errors, valuesToSave, unsavedValues } = await validateVulnerabilities({
+  const validationToUse = res.locals.flags.flagRiskToSelfEnabled
+    ? validateVulnerabilitiesRiskToSelf
+    : validateVulnerabilities
+
+  const { errors, valuesToSave, unsavedValues } = await validationToUse({
     requestBody: req.body,
     recommendationId,
     urlInfo,

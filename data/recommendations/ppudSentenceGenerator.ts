@@ -6,19 +6,21 @@ import { CustodyType } from '../../server/helpers/ppudSentence/custodyTypes'
 export type PpudSentenceOptions = {
   id?: string
   custodyType?: CustodyType
+  offenceDescription?: string
   releaseDate?: Date
+  dateOfSentence?: Date
   sentencingCourt?: string
 }
 
 const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (options?) => ({
   id: options.id ?? faker.number.int().toString(),
   sentenceExpiryDate: faker.date.future().toISOString(),
-  dateOfSentence: faker.date.past().toISOString(),
+  dateOfSentence: (options.dateOfSentence ?? faker.date.past()).toISOString(),
   custodyType: options?.custodyType ?? 'Determinate',
   mappaLevel: 'MAPPA_LEVEL',
   licenceExpiryDate: faker.date.future().toISOString(),
   offence: {
-    indexOffence: faker.lorem.sentence(),
+    indexOffence: options.offenceDescription ?? faker.lorem.sentence(),
     dateOfIndexOffence: faker.date.past().toISOString(),
   },
   releaseDate: (options.releaseDate ?? faker.date.future()).toISOString(),

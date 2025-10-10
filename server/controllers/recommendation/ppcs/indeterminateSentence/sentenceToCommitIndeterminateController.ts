@@ -34,6 +34,8 @@ async function get(_: Request, res: Response, next: NextFunction) {
       sentenceSummary,
       editLinks: {
         releaseDate: ppcsPaths.indeterminateEdit.releaseDate,
+        dateOfSentence: ppcsPaths.indeterminateEdit.dateOfSentence,
+        offenceDescription: ppcsPaths.indeterminateEdit.offenceDescription,
         sentencingCourt: ppcsPaths.indeterminateEdit.sentencingCourt,
       },
     },

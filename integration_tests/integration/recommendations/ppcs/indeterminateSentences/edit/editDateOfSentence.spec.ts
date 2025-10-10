@@ -8,12 +8,12 @@ import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recom
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import { MIN_VALUE_YEAR } from '../../../../../../server/utils/dates/conversion'
 
-context('Indeterminate Sentence - Edit Release Date Page', () => {
+context('Indeterminate Sentence - Edit Date of Sentence Page', () => {
   const recommendationId = '123'
-  const inputName = 'release-date'
-  const inputId = 'releaseDate'
+  const inputName = 'date-of-sentence'
+  const inputId = 'dateOfSentence'
 
-  const testPageUrl = `/recommendations/${recommendationId}/edit-release-date`
+  const testPageUrl = `/recommendations/${recommendationId}/edit-date-of-sentence`
 
   beforeEach(() => {
     cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
@@ -22,18 +22,18 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
   })
 
   const sentenceId = faker.number.int().toString()
-  const ppudReleaseDate = faker.date.future()
-  const editedReleaseDate = faker.date.future()
+  const ppudDateOfSentence = faker.date.future()
+  const editedDateOfSentence = faker.date.future()
   const defaultRecommendationResponse = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
       custodyGroup: CUSTODY_GROUP.INDETERMINATE,
       ppudSentenceId: sentenceId,
       ppudIndeterminateSentenceData: {
-        releaseDate: editedReleaseDate,
+        dateOfSentence: editedDateOfSentence,
       },
     },
     ppudOffender: {
-      sentences: [{ id: sentenceId, releaseDate: ppudReleaseDate }],
+      sentences: [{ id: sentenceId, dateOfSentence: ppudDateOfSentence }],
     },
   })
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
@@ -48,14 +48,14 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
       cy.visit(testPageUrl)
 
       // Page Headings and body content
-      cy.pageHeading().should('contain', 'Edit release date')
+      cy.pageHeading().should('contain', 'Edit date of sentence')
       cy.get('.govuk-body').should('contain.text', 'Update the information to record in PPUD')
 
       cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Currently in PPUD')
 
       cy.get('p.govuk-body').should(
         'contain.text',
-        `${ppudReleaseDate.getDate()} ${ppudReleaseDate.toLocaleString('default', { month: 'long' })} ${ppudReleaseDate.getFullYear()}`
+        `${ppudDateOfSentence.getDate()} ${ppudDateOfSentence.toLocaleString('default', { month: 'long' })} ${ppudDateOfSentence.getFullYear()}`
       )
 
       // Date input surrounds
@@ -65,7 +65,7 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
         .find('legend')
         .should('exist')
         .should('have.class', 'govuk-fieldset__legend--m')
-        .should('contain.text', 'Release date')
+        .should('contain.text', 'Date of sentence')
 
       cy.get('@dateFieldset')
         .find(`div#${inputName}-hint`)
@@ -79,9 +79,9 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
 
       // Individual labels and input
       const inputTestCases = [
-        { suffix: 'day', label: 'Day', value: editedReleaseDate.getDate() },
-        { suffix: 'month', label: 'Month', value: editedReleaseDate.getMonth() + 1 },
-        { suffix: 'year', label: 'Year', value: editedReleaseDate.getFullYear() },
+        { suffix: 'day', label: 'Day', value: editedDateOfSentence.getDate() },
+        { suffix: 'month', label: 'Month', value: editedDateOfSentence.getMonth() + 1 },
+        { suffix: 'year', label: 'Year', value: editedDateOfSentence.getFullYear() },
       ]
       inputTestCases.forEach(({ suffix, label, value }, i) => {
         cy.get('@dateInputLabels')

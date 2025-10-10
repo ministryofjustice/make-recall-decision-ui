@@ -3,6 +3,32 @@
     {{ heading(panelHeadingText, 2, "m") }}
 
     {{ bodyParagraph("Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.") }}
+
+    {% set detailsPanelHtml %}
+        {% set detailPanelTopText = ["You can recommend a fixed term recall if you think the risk ", recommendation.personOnProbation.name , " poses could be safely managed in the community when the fixed term period ends."] | join %}
+        {{ bodyParagraph(detailPanelTopText) }}
+        {{ bodyParagraph("When deciding, think about:") }}
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>the index offence – was it sexual or violent?</li>
+            <li>any pattern of behaviour, including in previous offending</li>
+            <li>current behaviours and attitudes</li>
+            <li>how the risk will be managed on the first day of re-release</li>
+            <li>any other risk factors</li>
+            <li>the risk assessment</li>
+        </ul>
+        {{ bodyParagraph(["If you think the risk ", recommendation.personOnProbation.name, " poses could not be managed in the community at the end of the fixed term period, you can recommend a standard recall."] | join) }}
+
+        {{ govukWarningText({
+            text: "You need to provide a clear justification for the recall type you recommend, explaining why you think the risk can or cannot be managed in the community.",
+            iconFallbackText: "Warning"
+        }) }}
+    {% endset %}
+
+    {{ govukDetails({
+        summaryText: 'Deciding between a fixed term or standard recall',
+        html: detailsPanelHtml        
+    })}}
 {% endset %}
 
 {{ mojTicketPanel({
