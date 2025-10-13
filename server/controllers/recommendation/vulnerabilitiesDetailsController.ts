@@ -37,9 +37,8 @@ function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { recommendation } = res.locals
-
   const {
+    recommendation,
     flags,
     user: { token },
     urlInfo,

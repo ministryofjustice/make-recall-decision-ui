@@ -8,6 +8,7 @@ import {
 } from '../recommendations/vulnerabilities/formValidator'
 import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails, VulnerabilitiesRecommendation } from '../../@types/make-recall-decision-api'
+import { ppPaths } from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -31,7 +32,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals.fullName = recommendation.personOnProbation?.name
 
-  res.render(`pages/recommendations/vulnerabilities`)
+  res.render(`pages/recommendations/${ppPaths.vulnerabilities}`)
   next()
 }
 
@@ -90,7 +91,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
 
     if (vulnerabilitiesAreSelected.length) {
-      nextPageId = 'vulnerabilities-details'
+      nextPageId = ppPaths.vulnerabilitiesDetails
     }
   }
 

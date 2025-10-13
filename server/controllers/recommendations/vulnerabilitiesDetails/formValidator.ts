@@ -21,14 +21,12 @@ export const validateVulnerabilitiesDetails = async ({ requestBody }: FormValida
   // error
   if (missingDetails.length) {
     const errors: NamedFormError[] = []
-    let errorId
     missingDetails.forEach(id => {
-      errorId = 'missingVulnerabilitiesDetails'
       errors.push(
         makeErrorObject({
           id: `vulnerabilitiesDetails-${id}`,
           text: `${strings.errors.missingDetail} for ${optionTextFromValue(id, 'vulnerabilities').toLowerCase()}`,
-          errorId,
+          errorId: 'missingVulnerabilitiesDetails',
         })
       )
     })
