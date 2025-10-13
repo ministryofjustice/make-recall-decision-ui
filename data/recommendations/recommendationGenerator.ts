@@ -11,9 +11,10 @@ import { VictimsInContactScheme } from '../../server/@types/make-recall-decision
 import { ConvictionDetailGenerator, ConvictionDetailOptions } from './convictionDetailGenerator'
 import { NomisIndexGenerator, NomisIndexOffenceOptions } from './nomisIndexOffenceGenerator'
 import { PpudOffenderGenerator, PpudOffenderOptions } from './ppudOffenderGenerator'
-import { recallTypeGenerator, RecallTypeOptions } from './recallTypeGenerator'
+import { RecallTypeGenerator, RecallTypeOptions } from './recallTypeGenerator'
 import { PersonOnProbationGenerator, PersonOnProbationOptions } from './personOnProbationGenerator'
 import { WhoCompletedPartAGenerator, WhoCompletedPartAOptions } from './whoCompletedPartAGenerator'
+import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilitiesGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -47,7 +48,7 @@ export type RecommendationOptions = {
   recallType?: AnyNoneOrOption<RecallTypeOptions>
   decisionDateTime?: boolean
   responseToProbation?: boolean
-  vulnerabilities?: boolean
+  vulnerabilities?: AnyNoneOrOption<VulnerabilitiesOptions>
   triggerLeadingToRecall?: boolean
   whatLedToRecall?: boolean
   recallConsideredList?: boolean
@@ -186,16 +187,10 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             previousRecallDates: [faker.date.past().toDateString()],
           }
         : undefined,
-    recallType: recallTypeGenerator.generate(options?.recallType ?? 'none'),
+    recallType: RecallTypeGenerator.generate(options?.recallType ?? 'none'),
     decisionDateTime: options?.decisionDateTime ?? true ? faker.date.past().toISOString() : undefined,
     responseToProbation: options?.responseToProbation ?? true ? faker.lorem.sentence() : undefined,
-    vulnerabilities:
-      options?.vulnerabilities ?? true
-        ? {
-            selected: [{ value: faker.lorem.sentence(), details: faker.lorem.sentence() }],
-            allOptions: [],
-          }
-        : undefined,
+    vulnerabilities: VulnerabilitiesGenerator.generate(options?.vulnerabilities ?? 'any'),
     triggerLeadingToRecall: options?.triggerLeadingToRecall ?? true ? faker.lorem.word() : undefined,
     whatLedToRecall: options?.whatLedToRecall ?? true ? faker.lorem.sentence() : undefined,
     recallConsideredList: options?.recallConsideredList ?? true ? [] : undefined,

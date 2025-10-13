@@ -13,6 +13,19 @@ context('Recommendation - task list', () => {
     cy.signIn()
   })
 
+  function setUp(recResponse: RecommendationResponse, statusesResponse?: { name: string; active: boolean }[]) {
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: recResponse,
+    })
+    cy.task('getStatuses', { statusCode: 200, response: statusesResponse ?? [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+  }
+
+  const linkTexts = {
+    vulnerabilities: 'Would recall affect vulnerability or additional needs?',
+  }
+
   const crn = 'X34983'
   const recommendationId = '123'
   const recommendationResponse = {
@@ -136,16 +149,7 @@ context('Recommendation - task list', () => {
     cy.clickLink('When did the SPO agree this recall?')
   })
 
-  context('task list form links', () => {
-    function setUp(recResponse: RecommendationResponse, statusesResponse?: { name: string; active: boolean }[]) {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: recResponse,
-      })
-      cy.task('getStatuses', { statusCode: 200, response: statusesResponse ?? [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    }
-
+  context('form links', () => {
     function checkLink(linkText: string, url: string) {
       cy.getLinkHref(linkText).should('contain', url)
     }
@@ -474,10 +478,7 @@ context('Recommendation - task list', () => {
         setUp(RecommendationResponseGenerator.generate())
       })
       it('shows vulnerabilities link', () => {
-        checkLink(
-          'Would recall affect vulnerability or additional needs?',
-          `/recommendations/${recommendationId}/vulnerabilities`
-        )
+        checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
       })
     })
 
@@ -790,6 +791,44 @@ context('Recommendation - task list', () => {
         })
         it("ACO countersignature text doesn't have a link", () => {
           checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
+        })
+      })
+    })
+  })
+
+  context('form completion labels', () => {
+    function hasExpectedLabel(formElementText: string, labelText: string) {
+      cy.getElement(`${formElementText} ${labelText}`).should('exist')
+    }
+
+    function hasToDoLabel(formElementText: string) {
+      hasExpectedLabel(formElementText, 'To do')
+    }
+
+    function hasCompletedLabel(formElementText: string) {
+      hasExpectedLabel(formElementText, 'Completed')
+    }
+
+    context('vulnerabilities', () => {
+      context('no vulnerabilities selected', () => {
+        beforeEach(() => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: 'none',
+            })
+          )
+        })
+        it("shows vulnerabilities with 'To do' label", () => {
+          hasToDoLabel(linkTexts.vulnerabilities)
+        })
+      })
+
+      context('vulnerabilities selected', () => {
+        beforeEach(() => {
+          setUp(RecommendationResponseGenerator.generate())
+        })
+        it("shows vulnerabilities with 'Completed' label", () => {
+          hasCompletedLabel(linkTexts.vulnerabilities)
         })
       })
     })

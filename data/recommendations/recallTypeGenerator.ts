@@ -10,7 +10,7 @@ export type RecallTypeOptions = {
   }
 }
 
-export const recallTypeGenerator: DataGenerator<RecallType, AnyNoneOrOption<RecallTypeOptions>> = {
+export const RecallTypeGenerator: DataGenerator<RecallType, AnyNoneOrOption<RecallTypeOptions>> = {
   generate: (options?: AnyNoneOrOption<RecallTypeOptions>) => {
     if (options === 'any') {
       return {
