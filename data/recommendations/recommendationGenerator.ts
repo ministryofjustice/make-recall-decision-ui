@@ -26,6 +26,7 @@ export type RecommendationOptions = {
   alternativesToRecallTried?: boolean
   custodyStatus?: boolean
   hasArrestIssues?: SelectedWithDetailsOptions
+  fixedTermAdditionalLicenceConditions?: SelectedWithDetailsOptions
   hasContrabandRisk?: SelectedWithDetailsOptions
   hasVictimsInContactScheme?: boolean
   indeterminateOrExtendedSentenceDetails?: boolean
@@ -83,8 +84,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     alternativesToRecallTried:
       options?.alternativesToRecallTried ?? true
         ? {
-            selected: [],
-            allOptions: [],
+            selected: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
+            allOptions: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
           }
         : undefined,
     custodyStatus:
@@ -96,7 +97,10 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     dateVloInformed: faker.date.future().toDateString(),
-    fixedTermAdditionalLicenceConditions: null,
+    fixedTermAdditionalLicenceConditions:
+      options?.fixedTermAdditionalLicenceConditions ?? true
+        ? SelectedWithDetailsGenerator.generate(options?.fixedTermAdditionalLicenceConditions)
+        : undefined,
     hasArrestIssues:
       options?.hasArrestIssues ?? true ? SelectedWithDetailsGenerator.generate(options?.hasArrestIssues) : undefined,
     hasContrabandRisk:
@@ -142,11 +146,11 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
       options?.licenceConditionsBreached ?? true
         ? {
             standardLicenceConditions: {
-              selected: [],
+              selected: [faker.lorem.sentence()],
               allOptions: [],
             },
             additionalLicenceConditions: {
-              selected: [],
+              selected: [faker.lorem.sentence()],
               allOptions: [],
             },
           }
@@ -171,7 +175,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             lastReleaseDate: faker.date.past().toDateString(),
             lastReleasingPrisonOrCustodialEstablishment: `${faker.location.city()} UT Prison`,
             hasBeenReleasedPreviously: faker.datatype.boolean(),
-            previousReleaseDates: [],
+            previousReleaseDates: [faker.date.past().toDateString()],
           }
         : undefined,
     previousRecalls:
@@ -179,7 +183,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         ? {
             lastRecallDate: faker.date.past().toDateString(),
             hasBeenRecalledPreviously: faker.datatype.boolean(),
-            previousRecallDates: [],
+            previousRecallDates: [faker.date.past().toDateString()],
           }
         : undefined,
     recallType: recallTypeGenerator.generate(options?.recallType ?? 'none'),
@@ -188,7 +192,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     vulnerabilities:
       options?.vulnerabilities ?? true
         ? {
-            selected: [],
+            selected: [{ value: faker.lorem.sentence(), details: faker.lorem.sentence() }],
             allOptions: [],
           }
         : undefined,

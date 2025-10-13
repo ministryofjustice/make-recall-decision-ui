@@ -17,6 +17,7 @@ export const MappaGenerator: DataGenerator<Mappa, AnyNoneOrOption<MappaOptions>>
         level: 0,
         category: 0,
         lastUpdatedDate: faker.date.past().toDateString(),
+        hasBeenReviewed: faker.datatype.boolean(),
       }
     }
 

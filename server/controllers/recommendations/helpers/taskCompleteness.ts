@@ -94,8 +94,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     offenceAnalysis: hasValue(recommendation.offenceAnalysis),
     convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
     mappa: recommendation.personOnProbation?.mappa?.hasBeenReviewed === true,
-    previousReleases: isPreviousReleasesComplete(recommendation),
-    previousRecalls: isPreviousRecallsComplete(recommendation),
+    previousReleases: isPreviousReleasesComplete(recommendation), // TODO this looks like it's duplicate above. Remove?
+    previousRecalls: isPreviousRecallsComplete(recommendation), // TODO this looks like it's duplicate above. Remove?
     currentRoshForPartA: hasValue(recommendation.currentRoshForPartA),
     fixedTermAdditionalLicenceConditions:
       recommendation.recallType?.selected?.value !== 'FIXED_TERM' ||

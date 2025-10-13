@@ -5,6 +5,7 @@ import { setResponsePropertiesToNull } from '../support/commands'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
 import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
+import { RECOMMENDATION_STATUS } from '../../server/middleware/recommendationStatus'
 import recallTypeValues = RecallTypeSelectedValue.value
 
 context('Recommendation - task list', () => {
@@ -136,12 +137,12 @@ context('Recommendation - task list', () => {
   })
 
   context('task list form links', () => {
-    function setUp(recResponse: RecommendationResponse) {
+    function setUp(recResponse: RecommendationResponse, statusesResponse?: { name: string; active: boolean }[]) {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: recResponse,
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('getStatuses', { statusCode: 200, response: statusesResponse ?? [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     }
 
@@ -149,8 +150,8 @@ context('Recommendation - task list', () => {
       cy.getLinkHref(linkText).should('contain', url)
     }
 
-    function checkLinkDoesntExist(linkText: string) {
-      cy.getElement(linkText).should('not.exist')
+    function checkElementDoesntExist(elementText: string) {
+      cy.getElement(elementText).should('not.exist')
     }
 
     context('recommendation decision details', () => {
@@ -206,7 +207,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show suitability link", () => {
-                    checkLinkDoesntExist(suitabilityLinkText)
+                    checkElementDoesntExist(suitabilityLinkText)
                   })
                 }
                 it('shows recall type link', () => {
@@ -331,7 +332,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show what led to recall link", () => {
-                    checkLinkDoesntExist(whatHasLedToRecallLinkText)
+                    checkElementDoesntExist(whatHasLedToRecallLinkText)
                   })
                 }
                 if (isRecall && !isIndeterminateSentence) {
@@ -340,7 +341,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show emergency recall link", () => {
-                    checkLinkDoesntExist(emergencyRecallLinkText)
+                    checkElementDoesntExist(emergencyRecallLinkText)
                   })
                 }
                 it('shows is indeterminate link', () => {
@@ -352,7 +353,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show indeterminate type link", () => {
-                    checkLinkDoesntExist(indeterminateTypeLinkText)
+                    checkElementDoesntExist(indeterminateTypeLinkText)
                   })
                 }
                 it('shows is extended link', () => {
@@ -368,7 +369,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show additional FTR licence conditions link", () => {
-                    checkLinkDoesntExist(ftrAdditionalLicenceConditionsLinkText)
+                    checkElementDoesntExist(ftrAdditionalLicenceConditionsLinkText)
                   })
                 }
                 if (isRecall && (isIndeterminateSentence || isExtendedSentence)) {
@@ -377,7 +378,7 @@ context('Recommendation - task list', () => {
                   })
                 } else {
                   it("doesn't show indeterminate or extended details link", () => {
-                    checkLinkDoesntExist(indeterminateOrExtendedDetailsLinkText)
+                    checkElementDoesntExist(indeterminateOrExtendedDetailsLinkText)
                   })
                 }
               }
@@ -461,7 +462,7 @@ context('Recommendation - task list', () => {
             })
           } else {
             it("doesn't show address details link", () => {
-              checkLinkDoesntExist(addressDetailsLinkText)
+              checkElementDoesntExist(addressDetailsLinkText)
             })
           }
         })
@@ -553,7 +554,7 @@ context('Recommendation - task list', () => {
             })
           } else {
             it("doesn't show arrest issues link", () => {
-              checkLinkDoesntExist(arrestIssuesLinkText)
+              checkElementDoesntExist(arrestIssuesLinkText)
             })
           }
           it('shows contraband link', () => {
@@ -626,7 +627,7 @@ context('Recommendation - task list', () => {
           checkWhoCompletedPartALink()
         })
         it("doesn't show practitioner for part A link", () => {
-          checkLinkDoesntExist(practitionerForPartALinkText)
+          checkElementDoesntExist(practitionerForPartALinkText)
         })
         it('shows revocation order recipients link', () => {
           checkRevocationOrderRecipientsLink()
@@ -650,7 +651,7 @@ context('Recommendation - task list', () => {
           checkWhoCompletedPartALink()
         })
         it("doesn't show practitioner for part A link", () => {
-          checkLinkDoesntExist(practitionerForPartALinkText)
+          checkElementDoesntExist(practitionerForPartALinkText)
         })
         it('shows revocation order recipients link', () => {
           checkRevocationOrderRecipientsLink()
@@ -681,6 +682,114 @@ context('Recommendation - task list', () => {
         })
         it('shows PPCS query e-mails link', () => {
           checkPPCSQueryEmailsLink()
+        })
+      })
+    })
+
+    context('countersignature details', () => {
+      const requestSpoCountersignatureLinkText = "Request line manager's countersignature"
+      const requestAcoCountersignatureLinkText = "Request senior manager's countersignature"
+
+      function checkRequestSpoCountersignatureLink() {
+        checkLink(
+          requestSpoCountersignatureLinkText,
+          `/recommendations/${recommendationId}/request-spo-countersign?fromPageId=task-list&fromAnchor=countersign`
+        )
+      }
+
+      function checkRequestAcoCountersignatureLink() {
+        checkLink(
+          requestAcoCountersignatureLinkText,
+          `/recommendations/${recommendationId}/request-aco-countersign?fromPageId=task-list&fromAnchor=countersign`
+        )
+      }
+
+      function checkCountersignatureTextHasNoLink(elementText: string) {
+        // The text should still appear, it just shouldn't have a link to the countersignature page
+        cy.getElement(elementText).should('not.have.attr', 'href')
+      }
+
+      context('recommendation not ready for any countersignature', () => {
+        beforeEach(() => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              personOnProbation: {
+                hasBeenReviewed: false,
+              },
+            })
+          )
+        })
+        it("SPO countersignature text doesn't have a link", () => {
+          checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
+        })
+        it("ACO countersignature text doesn't have a link", () => {
+          checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
+        })
+      })
+
+      // The requirements for countersignature is a much longer list than the value set below, but most of them are
+      // satisfied by the default recommendation produced by the generator. We only set here the ones that aren't
+      // guaranteed (e.g. they are normally random boolean values)
+      const recommendationReadyForCountersignature = RecommendationResponseGenerator.generate({
+        recallType: {
+          selected: {
+            value: fakerEN.helpers.arrayElement([recallTypeValues.FIXED_TERM, recallTypeValues.STANDARD]),
+          },
+        },
+        personOnProbation: {
+          hasBeenReviewed: true,
+          mappa: {
+            hasBeenReviewed: true,
+          },
+        },
+        convictionDetail: {
+          hasBeenReviewed: true,
+        },
+      })
+
+      context('recommendation ready for SPO countersignature', () => {
+        beforeEach(() => {
+          setUp(recommendationReadyForCountersignature, [
+            {
+              name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
+              active: true,
+            },
+          ])
+        })
+        it('shows SPO countersignature link', () => {
+          checkRequestSpoCountersignatureLink()
+        })
+        it("ACO countersignature text doesn't have a link", () => {
+          checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
+        })
+      })
+
+      context('recommendation ready for ACO countersignature', () => {
+        beforeEach(() => {
+          setUp(recommendationReadyForCountersignature, [
+            {
+              name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
+              active: true,
+            },
+          ])
+        })
+        it("SPO countersignature text doesn't have a link", () => {
+          checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
+        })
+        it('shows ACO countersignature link', () => {
+          checkRequestAcoCountersignatureLink()
+        })
+      })
+
+      context('recommendation fully countersigned', () => {
+        beforeEach(() => {
+          setUp(recommendationReadyForCountersignature, [{ name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true }])
+        })
+        it("SPO countersignature text doesn't have a link", () => {
+          checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
+        })
+        it("ACO countersignature text doesn't have a link", () => {
+          checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
         })
       })
     })

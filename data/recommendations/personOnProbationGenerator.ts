@@ -46,6 +46,7 @@ export const PersonOnProbationGenerator: DataGenerator<
           level: 0,
           category: 0,
           lastUpdatedDate: faker.date.past().toDateString(),
+          hasBeenReviewed: faker.datatype.boolean(),
         },
         addresses: [
           {
