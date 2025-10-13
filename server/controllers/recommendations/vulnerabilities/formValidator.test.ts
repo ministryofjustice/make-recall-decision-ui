@@ -159,6 +159,30 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
       },
     ])
   })
+
+  it('should not remove existing details when adding a new vulnerability', async () => {
+    const requestBody = {
+      crn: 'X514364',
+      vulnerabilities: ['MENTAL_HEALTH_CONCERNS', 'BEING_BULLIED_BY_OTHERS'],
+      'vulnerabilitiesDetails-MENTAL_HEALTH_CONCERNS': 'test',
+    }
+
+    const { errors, valuesToSave } = await validateVulnerabilitiesRiskToSelf({
+      requestBody,
+      recommendationId,
+    })
+
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      vulnerabilities: {
+        allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
+        selected: [
+          { value: 'MENTAL_HEALTH_CONCERNS', details: 'test' },
+          { value: 'BEING_BULLIED_BY_OTHERS', details: undefined },
+        ],
+      },
+    })
+  })
 })
 
 describe('validateVulnerabilities', () => {
