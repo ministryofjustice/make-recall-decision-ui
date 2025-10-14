@@ -23,19 +23,12 @@
             <div id="contact-hint" class="govuk-hint">
               Add anything staff may need to be aware of when {{ recommendation.personOnProbation.name }} is in custody.
             </div>
-            
             {% for item in vulnerabilitiesToDisplay %}
-
-              {% if item.value === "RISK_OF_SUICIDE_OR_SELF_HARM" %}
-                {% set itemLabel = 'Give details, for example a history of self-harm' %}
-              {% else %}
-                {% set itemLabel = 'Give details' %}
-              {% endif %}
               {{ govukTextarea({ 
                   name: "vulnerabilitiesDetails-" + item.value,
                   id: "vulnerabilitiesDetails-" + item.value,
                   hint: {
-                    text: itemLabel
+                    text: item.detailsLabel | default('Give details')
                   },
                   label: {
                     text: item.text,

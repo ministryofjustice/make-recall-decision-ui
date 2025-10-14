@@ -4,7 +4,7 @@ export const vulnerabilitiesRiskToSelf = [
   {
     value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
     text: 'At risk of suicide or self-harm',
-    detailsLabel: 'Give details',
+    detailsLabel: 'Give details, for example a history of self-harm.',
     category: VulnerabilityCategory.SUICIDE_OR_SELF_HARM,
     categoryHint:
       'Consider if a history of self-harm, sentence type, separation from family, or any other factor, could trigger a suicide or self-harm attempt',

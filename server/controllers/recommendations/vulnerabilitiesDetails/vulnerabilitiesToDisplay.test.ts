@@ -10,6 +10,10 @@ describe('vulnerabilitiesToDisplay', () => {
           value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
           details: '',
         },
+        {
+          value: 'DRUG_OR_ALCOHOL_USE',
+          details: '',
+        },
       ],
       allOptions: formOptions.vulnerabilities,
     }
@@ -19,8 +23,13 @@ describe('vulnerabilitiesToDisplay', () => {
     expect(result).toEqual([
       {
         value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
-        detailsLabel: 'Give details',
+        detailsLabel: 'Give details, for example a history of self-harm.',
         text: 'Risk of suicide or self-harm',
+      },
+      {
+        value: 'DRUG_OR_ALCOHOL_USE',
+        detailsLabel: 'Give details',
+        text: 'Drug or alcohol abuse',
       },
     ])
   })
