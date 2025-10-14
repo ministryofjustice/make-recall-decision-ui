@@ -34,7 +34,13 @@ describe('get', () => {
     await vulnerabilitiesDetailsController.get(mockReq(), res, next)
 
     expect(vulnerabilitiesToDisplay).toHaveBeenCalledWith(null)
-    expect(inputDisplayValuesVulnerabilitiesDetails).toHaveBeenCalled()
+    expect(inputDisplayValuesVulnerabilitiesDetails).toHaveBeenCalledWith({
+      errors: undefined,
+      unsavedValues: undefined,
+      apiValues: {
+        vulnerabilities: null,
+      },
+    })
     expect(res.locals.page).toEqual({ id: 'vulnerabilitiesDetails' })
     expect(res.locals.inputDisplayValues).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/vulnerabilitiesDetails')
