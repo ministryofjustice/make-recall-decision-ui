@@ -22,6 +22,7 @@ import { recallTypeExtended } from '../recallTypeExtended/formOptions'
 export type FormOption = {
   value: string
   text: string
+  detailsLabel?: string
 }
 
 type FormOptionsType = {

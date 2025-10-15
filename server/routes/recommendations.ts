@@ -55,6 +55,7 @@ import addressDetailsController from '../controllers/recommendation/addressDetai
 import indeterminateDetailsController from '../controllers/recommendation/indeterminateDetailsController'
 import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
 import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
+import vulnerabilitiesDetailsController from '../controllers/recommendation/vulnerabilitiesDetailsController'
 import iomController from '../controllers/recommendation/iomController'
 import policeDetailsController from '../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
@@ -124,6 +125,7 @@ import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/Cu
 import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
 import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
 import { ppcsPaths } from './paths/ppcs'
+import { ppPaths } from './paths/pp'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
 import editDateOfSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
@@ -220,8 +222,11 @@ ppRouteBuilder.post('fixed-licence', fixedTermLicenceConditionsController.post)
 ppRouteBuilder.get('indeterminate-details', indeterminateDetailsController.get)
 ppRouteBuilder.post('indeterminate-details', indeterminateDetailsController.post)
 
-ppRouteBuilder.get('vulnerabilities', vulnerabilitiesController.get)
-ppRouteBuilder.post('vulnerabilities', vulnerabilitiesController.post)
+ppRouteBuilder.get(ppPaths.vulnerabilities, vulnerabilitiesController.get)
+ppRouteBuilder.post(ppPaths.vulnerabilities, vulnerabilitiesController.post)
+
+ppRouteBuilder.get(ppPaths.vulnerabilitiesDetails, vulnerabilitiesDetailsController.get)
+ppRouteBuilder.post(ppPaths.vulnerabilitiesDetails, vulnerabilitiesDetailsController.post)
 
 ppRouteBuilder.get('task-list-no-recall', taskListNoRecallController.get)
 

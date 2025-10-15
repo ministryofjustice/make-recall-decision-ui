@@ -6,8 +6,9 @@ import {
   validateVulnerabilities,
   validateVulnerabilitiesRiskToSelf,
 } from '../recommendations/vulnerabilities/formValidator'
-import { routeUrls } from '../../routes/routeUrls'
 import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../recommendations/vulnerabilities/formOptions'
+import { ValueWithDetails, VulnerabilitiesRecommendation } from '../../@types/make-recall-decision-api'
+import { ppPaths } from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -31,7 +32,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals.fullName = recommendation.personOnProbation?.name
 
-  res.render(`pages/recommendations/vulnerabilities`)
+  res.render(`pages/recommendations/${ppPaths.vulnerabilities}`)
   next()
 }
 
@@ -41,14 +42,27 @@ async function post(req: Request, res: Response, _: NextFunction) {
     flags,
     user: { token },
     urlInfo,
+    recommendation,
   } = res.locals
 
-  const validationToUse = res.locals.flags.flagRiskToSelfEnabled
-    ? validateVulnerabilitiesRiskToSelf
-    : validateVulnerabilities
+  const { vulnerabilities: existingVulnerabilities } = recommendation
+  const validationToUse = flags.flagRiskToSelfEnabled ? validateVulnerabilitiesRiskToSelf : validateVulnerabilities
+
+  let requestBody = req.body
+
+  if (flags.flagRiskToSelfEnabled) {
+    requestBody = {
+      ...req.body,
+      ...(existingVulnerabilities &&
+        existingVulnerabilities.selected.reduce((acc: Record<string, string>, val: ValueWithDetails) => {
+          acc[`vulnerabilitiesDetails-${val.value}`] = val.details
+          return acc
+        }, {})),
+    }
+  }
 
   const { errors, valuesToSave, unsavedValues } = await validationToUse({
-    requestBody: req.body,
+    requestBody,
     recommendationId,
     urlInfo,
     token,
@@ -66,8 +80,22 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+
+  const valuesToSaveVulnerabilities: VulnerabilitiesRecommendation = valuesToSave.vulnerabilities
+
+  let nextPageId = 'task-list#heading-vulnerability'
+
+  if (flags.flagRiskToSelfEnabled) {
+    const vulnerabilitiesAreSelected = valuesToSaveVulnerabilities.selected.filter(
+      vulnerability => !['NONE_OR_NOT_KNOWN', 'NOT_KNOWN', 'NONE'].includes(vulnerability.value)
+    )
+
+    if (vulnerabilitiesAreSelected.length) {
+      nextPageId = ppPaths.vulnerabilitiesDetails
+    }
+  }
+
+  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

@@ -195,6 +195,7 @@ export const strings: Record<string, Record<string, string>> = {
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
     vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
+    vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
     vulnerabilitiesRiskToSelf:
       'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
     taskList: 'Create a Part A form',

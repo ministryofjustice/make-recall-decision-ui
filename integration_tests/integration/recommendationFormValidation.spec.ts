@@ -239,6 +239,37 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
   })
 
+  it('Vulnerabilities Details', () => {
+    cy.signIn()
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        ...recommendationResponse,
+        vulnerabilities: {
+          selected: [
+            {
+              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              details: '',
+            },
+          ],
+          allOptions: [
+            {
+              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              text: 'Risk of suicide or self-harm',
+            },
+          ],
+        },
+      },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details?flagRiskToSelfEnabled=1`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
+      errorText: 'Enter more detail for risk of suicide or self-harm',
+    })
+  })
+
   it('IOM', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
