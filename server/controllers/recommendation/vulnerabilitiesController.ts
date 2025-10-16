@@ -6,7 +6,11 @@ import {
   validateVulnerabilities,
   validateVulnerabilitiesRiskToSelf,
 } from '../recommendations/vulnerabilities/formValidator'
-import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../recommendations/vulnerabilities/formOptions'
+import {
+  vulnerabilities,
+  vulnerabilitiesRiskToSelf,
+  VULNERABILITY,
+} from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails, VulnerabilitiesRecommendation } from '../../@types/make-recall-decision-api'
 import { ppPaths } from '../../routes/paths/pp'
 
@@ -87,7 +91,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (flags.flagRiskToSelfEnabled) {
     const vulnerabilitiesAreSelected = valuesToSaveVulnerabilities.selected.filter(
-      vulnerability => !['NONE_OR_NOT_KNOWN', 'NOT_KNOWN', 'NONE'].includes(vulnerability.value)
+      vulnerability =>
+        ![VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NOT_KNOWN, VULNERABILITY.NONE].includes(
+          vulnerability.value as VULNERABILITY
+        )
     )
 
     if (vulnerabilitiesAreSelected.length) {

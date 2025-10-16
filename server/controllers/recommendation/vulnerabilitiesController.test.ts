@@ -2,7 +2,11 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import vulnerabilitiesController from './vulnerabilitiesController'
-import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../recommendations/vulnerabilities/formOptions'
+import {
+  vulnerabilities,
+  vulnerabilitiesRiskToSelf,
+  VULNERABILITY,
+} from '../recommendations/vulnerabilities/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -33,7 +37,7 @@ describe('get with RiskToSelf enabled', () => {
       locals: {
         recommendation: {
           vulnerabilities: {
-            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
+            selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM }],
             allOptions: compactedListRiskToSelf,
           },
         },
@@ -44,7 +48,7 @@ describe('get with RiskToSelf enabled', () => {
     const next = mockNext()
     await vulnerabilitiesController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual([{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+    expect(res.locals.inputDisplayValues).toEqual([{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM }])
   })
 
   it('load with existing data for radio buttons', async () => {
@@ -52,7 +56,7 @@ describe('get with RiskToSelf enabled', () => {
       locals: {
         recommendation: {
           vulnerabilities: {
-            selected: ['NONE_OR_NOT_KNOWN', 'NONE'],
+            selected: [VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NONE],
             allOptions: compactedListRiskToSelf,
           },
         },
@@ -63,7 +67,7 @@ describe('get with RiskToSelf enabled', () => {
     const next = mockNext()
     await vulnerabilitiesController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual(['NONE_OR_NOT_KNOWN', 'NONE'])
+    expect(res.locals.inputDisplayValues).toEqual([VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NONE])
   })
 
   it('initial load with error data', async () => {
@@ -72,7 +76,7 @@ describe('get with RiskToSelf enabled', () => {
         errors: {
           list: [
             {
-              name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              name: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
               href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
               errorId: 'noVulnerabilitiesSelected',
               html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
@@ -92,7 +96,7 @@ describe('get with RiskToSelf enabled', () => {
     expect(res.locals.errors).toEqual({
       list: [
         {
-          name: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          name: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
           href: '#RISK_OF_SUICIDE_OR_SELF_HARM',
           errorId: 'noVulnerabilitiesSelected',
           html: 'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
@@ -146,7 +150,7 @@ describe('post with RiskToSelf enabled', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        vulnerabilities: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
       },
     })
 
@@ -166,7 +170,7 @@ describe('post with RiskToSelf enabled', () => {
       recommendationId: '123',
       valuesToSave: {
         vulnerabilities: {
-          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }],
+          selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM }],
           allOptions: compactedListRiskToSelf,
         },
       },
@@ -213,7 +217,7 @@ describe('post with RiskToSelf enabled', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        vulnerabilities: ['NONE_OR_NOT_KNOWN', 'NONE'],
+        vulnerabilities: [VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NONE],
       },
     })
 
@@ -234,8 +238,8 @@ describe('post with RiskToSelf enabled', () => {
       valuesToSave: {
         vulnerabilities: {
           selected: [
-            { value: 'NONE_OR_NOT_KNOWN', details: undefined },
-            { value: 'NONE', details: undefined },
+            { value: VULNERABILITY.NONE_OR_NOT_KNOWN, details: undefined },
+            { value: VULNERABILITY.NONE, details: undefined },
           ],
           allOptions: compactedListRiskToSelf,
         },
@@ -276,7 +280,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           vulnerabilities: {
-            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+            selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, details: 'test' }],
             allOptions: compactedList,
           },
         },
@@ -286,7 +290,9 @@ describe('get', () => {
     const next = mockNext()
     await vulnerabilitiesController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual([{ details: 'test', value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+    expect(res.locals.inputDisplayValues).toEqual([
+      { details: 'test', value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM },
+    ])
   })
 
   it('initial load with error data', async () => {
@@ -343,7 +349,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        vulnerabilities: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
         'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': 'test',
         'vulnerabilitiesDetail-RELATIONSHIP_BREAKDOWN': '',
         'vulnerabilitiesDetail-DOMESTIC_ABUSE': '',
@@ -377,7 +383,7 @@ describe('post', () => {
       recommendationId: '123',
       valuesToSave: {
         vulnerabilities: {
-          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+          selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, details: 'test' }],
           allOptions: compactedList,
         },
       },
@@ -396,7 +402,7 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
-        vulnerabilities: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        vulnerabilities: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
         'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': '',
         'vulnerabilitiesDetail-RELATIONSHIP_BREAKDOWN': '',
         'vulnerabilitiesDetail-DOMESTIC_ABUSE': '',

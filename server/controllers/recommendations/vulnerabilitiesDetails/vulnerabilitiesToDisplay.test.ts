@@ -1,17 +1,18 @@
 import { VulnerabilitiesRecommendation } from '../../../@types/make-recall-decision-api'
 import { formOptions } from '../formOptions/formOptions'
 import { vulnerabilitiesToDisplay } from './vulnerabilitiesToDisplay'
+import { VULNERABILITY } from '../vulnerabilities/formOptions'
 
 describe('vulnerabilitiesToDisplay', () => {
   it('returns a list of selected vulnerabilities', () => {
     const vulnerabilities: VulnerabilitiesRecommendation = {
       selected: [
         {
-          value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
           details: '',
         },
         {
-          value: 'DRUG_OR_ALCOHOL_USE',
+          value: VULNERABILITY.DRUG_OR_ALCOHOL_USE,
           details: '',
         },
       ],
@@ -22,12 +23,12 @@ describe('vulnerabilitiesToDisplay', () => {
 
     expect(result).toEqual([
       {
-        value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
         detailsLabel: 'Give details, for example a history of self-harm.',
         text: 'Risk of suicide or self-harm',
       },
       {
-        value: 'DRUG_OR_ALCOHOL_USE',
+        value: VULNERABILITY.DRUG_OR_ALCOHOL_USE,
         detailsLabel: 'Give details',
         text: 'Drug or alcohol abuse',
       },

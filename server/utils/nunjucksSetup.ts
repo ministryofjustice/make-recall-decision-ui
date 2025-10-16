@@ -24,6 +24,7 @@ import { getDisplayValueForOption } from '../controllers/recommendations/helpers
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 import { defaultName } from '../monitoring/azureAppInsights'
+import { hasAllRequiredVulnerabilityDetails } from '../controllers/recommendations/helpers/taskCompleteness'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -99,4 +100,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('isObjectInArray', isObjectInArray)
   njkEnv.addGlobal('countLabelSuffix', countLabelSuffix)
   njkEnv.addGlobal('formatTerm', formatTerm)
+  njkEnv.addGlobal('hasRequiredVulnerabilitiesDetails', hasAllRequiredVulnerabilityDetails)
 }

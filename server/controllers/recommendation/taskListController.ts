@@ -5,6 +5,9 @@ import { isInCustody } from '../recommendations/helpers/isInCustody'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
+import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
+import { ValueWithDetails } from '../../@types/make-recall-decision-api'
+import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -110,6 +113,16 @@ async function get(req: Request, res: Response, next: NextFunction) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-extended'
   } else {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
+  }
+
+  if (featureFlags.flagRiskToSelfEnabled) {
+    const selectedVulnerabilities =
+      recommendation.vulnerabilities?.selected?.map(
+        (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value
+      ) || []
+    res.locals.selectedVulnerabilitiesRequireDetails = selectedVulnerabilities.some(
+      (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability)
+    )
   }
 
   res.render(`pages/recommendations/taskList`)
