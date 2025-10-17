@@ -237,10 +237,7 @@ describe('post with RiskToSelf enabled', () => {
       recommendationId: '123',
       valuesToSave: {
         vulnerabilities: {
-          selected: [
-            { value: VULNERABILITY.NONE_OR_NOT_KNOWN, details: undefined },
-            { value: VULNERABILITY.NONE, details: undefined },
-          ],
+          selected: [{ value: VULNERABILITY.NONE, details: undefined }],
           allOptions: compactedListRiskToSelf,
         },
       },

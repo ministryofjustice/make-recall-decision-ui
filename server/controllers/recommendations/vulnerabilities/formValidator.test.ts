@@ -50,7 +50,7 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
     expect(valuesToSave).toEqual({
       vulnerabilities: {
         allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
-        selected: [{ value: VULNERABILITY.NONE_OR_NOT_KNOWN }, { value: VULNERABILITY.NONE }],
+        selected: [{ value: VULNERABILITY.NONE }],
       },
     })
   })
@@ -65,14 +65,7 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
     expect(valuesToSave).toEqual({
       vulnerabilities: {
         allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
-        selected: [
-          {
-            value: VULNERABILITY.NONE_OR_NOT_KNOWN,
-          },
-          {
-            value: VULNERABILITY.NOT_KNOWN,
-          },
-        ],
+        selected: [{ value: VULNERABILITY.NOT_KNOWN }],
       },
     })
   })

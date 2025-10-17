@@ -24,15 +24,19 @@ function get(req: Request, res: Response, next: NextFunction) {
     },
   }
 
-  res.locals.inputDisplayValues = inputDisplayValuesVulnerabilities({
+  const inputDisplayValues = inputDisplayValuesVulnerabilities({
     errors: res.locals.errors,
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+  res.locals.inputDisplayValues = inputDisplayValues
 
   const vulnerabilitiesToUse = res.locals.flags.flagRiskToSelfEnabled ? vulnerabilitiesRiskToSelf : vulnerabilities
   res.locals.exclusive = vulnerabilitiesToUse.find(v => v.behaviour === 'exclusive')
   res.locals.nonExclusive = vulnerabilitiesToUse.filter(item => item.behaviour !== 'exclusive')
+  res.locals.exclusiveSelected = Array.isArray(inputDisplayValues)
+    ? inputDisplayValues.filter(vuln => vuln.value === 'NOT_KNOWN' || vuln.value === 'NONE').length > 0
+    : false
 
   res.locals.fullName = recommendation.personOnProbation?.name
 

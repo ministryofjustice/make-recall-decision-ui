@@ -94,13 +94,16 @@ export const validateVulnerabilitiesRiskToSelf = async ({
   // valid
   const valuesToSave = {
     vulnerabilities: {
-      selected: vulnerabilitiesList.map(alternative => {
-        const details = requestBody[`vulnerabilitiesDetails-${alternative}`]
-        return {
-          value: alternative,
-          details: isString(details) ? stripHtmlTags(details as string) : undefined,
-        }
-      }),
+      selected: vulnerabilitiesList
+        // prevent NONE_OR_NOT_KNOWN from being persisted to the database
+        .filter(val => val !== 'NONE_OR_NOT_KNOWN')
+        .map(alternative => {
+          const details = requestBody[`vulnerabilitiesDetails-${alternative}`]
+          return {
+            value: alternative,
+            details: isString(details) ? stripHtmlTags(details as string) : undefined,
+          }
+        }),
       allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
     },
   }
