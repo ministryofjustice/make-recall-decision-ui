@@ -506,97 +506,72 @@ context('Recommendation - task list', () => {
           (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
         )
 
-        context('with no vulnerabilities selected', () => {
-          beforeEach(() => {
+        it('with no vulnerabilities selected', () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [],
+              },
+            }),
+            [],
+            [riskToSelfFlag]
+          )
+          checkLink(
+            linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
+            `/recommendations/${recommendationId}/vulnerabilities`
+          )
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+        })
+
+        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+          it(`with vulnerability ${vulnerabilityRequiringDetails} selected (which requires details)`, () => {
             setUp(
               RecommendationResponseGenerator.generate({
                 vulnerabilities: {
-                  selected: [],
+                  selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
                 },
               }),
               [],
               [riskToSelfFlag]
             )
-          })
-          it('shows vulnerabilities link', () => {
             checkLink(
               linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
               `/recommendations/${recommendationId}/vulnerabilities`
             )
-          })
-          it("doesn't show vulnerabilities details link", () => {
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
-        })
-
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          context(`with vulnerability ${vulnerabilityRequiringDetails} selected (which requires details)`, () => {
-            beforeEach(() => {
-              setUp(
-                RecommendationResponseGenerator.generate({
-                  vulnerabilities: {
-                    selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
-                  },
-                }),
-                [],
-                [riskToSelfFlag]
-              )
-            })
-            it('shows vulnerabilities link', () => {
-              checkLink(
-                linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-                `/recommendations/${recommendationId}/vulnerabilities`
-              )
-            })
-            it('shows vulnerabilities details link', () => {
-              checkLink(
-                linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled,
-                `/recommendations/${recommendationId}/vulnerabilities-details`
-              )
-            })
+            checkLink(
+              linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled,
+              `/recommendations/${recommendationId}/vulnerabilities-details`
+            )
           })
         })
 
         vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
-          context(
-            `with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`,
-            () => {
-              beforeEach(() => {
-                setUp(
-                  RecommendationResponseGenerator.generate({
-                    vulnerabilities: {
-                      selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
-                    },
-                  }),
-                  [],
-                  [riskToSelfFlag]
-                )
-              })
-              it('shows vulnerabilities link', () => {
-                checkLink(
-                  linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-                  `/recommendations/${recommendationId}/vulnerabilities`
-                )
-              })
-              it("doesn't show vulnerabilities details link", () => {
-                checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-              })
-            }
-          )
+          it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
+            setUp(
+              RecommendationResponseGenerator.generate({
+                vulnerabilities: {
+                  selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
+                },
+              }),
+              [],
+              [riskToSelfFlag]
+            )
+            checkLink(
+              linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
+              `/recommendations/${recommendationId}/vulnerabilities`
+            )
+            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+          })
         })
       })
     })
 
-    context('victims liaison', () => {
-      beforeEach(() => {
-        setUp(RecommendationResponseGenerator.generate())
-      })
-      it('shows victims liaison link', () => {
-        checkLink(
-          'Are there any victims in the victim contact scheme?',
-          `/recommendations/${recommendationId}/victim-contact-scheme`
-        )
-      })
+    it('victims liaison', () => {
+      setUp(RecommendationResponseGenerator.generate())
+      checkLink(
+        'Are there any victims in the victim contact scheme?',
+        `/recommendations/${recommendationId}/victim-contact-scheme`
+      )
     })
 
     context('custody details', () => {
@@ -634,7 +609,7 @@ context('Recommendation - task list', () => {
       }
 
       ;[true, false].forEach(isInCustody => {
-        context(`person on probations is ${isInCustody ? '' : ' not '}in custody`, () => {
+        it(`person on probations is ${isInCustody ? '' : ' not '}in custody`, () => {
           const recommendation = RecommendationResponseGenerator.generate({
             custodyStatus: isInCustody,
             personOnProbation: {
@@ -642,35 +617,22 @@ context('Recommendation - task list', () => {
             },
           })
           recommendation.personOnProbation.name = personName
-          beforeEach(() => {
-            setUp(recommendation)
-          })
-          it('shows custody status link', () => {
-            checkCustodyStatusLink(recommendation.personOnProbation.name)
-          })
-          it('shows police details link', () => {
-            checkPoliceDetailsLink()
-          })
-          it('shows is under IOM link', () => {
-            checkIsUnderIOMLink(recommendation.personOnProbation.name)
-          })
+
+          setUp(recommendation)
+          checkCustodyStatusLink(recommendation.personOnProbation.name)
+          checkPoliceDetailsLink()
+          checkIsUnderIOMLink(recommendation.personOnProbation.name)
           if (!isInCustody) {
-            it('shows arrest issues link', () => {
-              checkArrestIssuesLink()
-            })
+            checkArrestIssuesLink()
           } else {
-            it("doesn't show arrest issues link", () => {
-              checkElementDoesntExist(arrestIssuesLinkText)
-            })
+            checkElementDoesntExist(arrestIssuesLinkText)
           }
-          it('shows contraband link', () => {
-            checkContrabandLink(recommendation.personOnProbation.name)
-          })
+          checkContrabandLink(recommendation.personOnProbation.name)
         })
       })
     })
 
-    context('risk profile details', () => {
+    it('risk profile details', () => {
       function checkRoshLink() {
         checkLink(
           `Indicative risk assessment pending OASys review`,
@@ -686,15 +648,10 @@ context('Recommendation - task list', () => {
       }
 
       const recommendation = RecommendationResponseGenerator.generate()
-      beforeEach(() => {
-        return setUp(recommendation)
-      })
-      it('shows rosh link', () => {
-        checkRoshLink()
-      })
-      it('shows mappa link', () => {
-        checkMappaLink(recommendation.personOnProbation.name)
-      })
+
+      setUp(recommendation)
+      checkRoshLink()
+      checkMappaLink(recommendation.personOnProbation.name)
     })
 
     context('contact information details', () => {
@@ -721,29 +678,21 @@ context('Recommendation - task list', () => {
         checkLink('Where should PPCS respond with questions?', `/recommendations/${recommendationId}/ppcs-query-emails`)
       }
 
-      context('recommendation with no details completed for who completed part A', () => {
+      it('recommendation with no details completed for who completed part A', () => {
         const recommendation = RecommendationResponseGenerator.generate({
           personOnProbation: {
             name: personName,
           },
           whoCompletedPartA: 'none',
         })
-        beforeEach(() => setUp(recommendation))
-        it('shows who completed part A link', () => {
-          checkWhoCompletedPartALink()
-        })
-        it("doesn't show practitioner for part A link", () => {
-          checkElementDoesntExist(practitionerForPartALinkText)
-        })
-        it('shows revocation order recipients link', () => {
-          checkRevocationOrderRecipientsLink()
-        })
-        it('shows PPCS query e-mails link', () => {
-          checkPPCSQueryEmailsLink()
-        })
+        setUp(recommendation)
+        checkWhoCompletedPartALink()
+        checkElementDoesntExist(practitionerForPartALinkText)
+        checkRevocationOrderRecipientsLink()
+        checkPPCSQueryEmailsLink()
       })
 
-      context('recommendation with part A completed by practitioner', () => {
+      it('recommendation with part A completed by practitioner', () => {
         const recommendation = RecommendationResponseGenerator.generate({
           personOnProbation: {
             name: personName,
@@ -752,22 +701,14 @@ context('Recommendation - task list', () => {
             isPersonProbationPractitionerForOffender: true,
           },
         })
-        beforeEach(() => setUp(recommendation))
-        it('shows who completed part A link', () => {
-          checkWhoCompletedPartALink()
-        })
-        it("doesn't show practitioner for part A link", () => {
-          checkElementDoesntExist(practitionerForPartALinkText)
-        })
-        it('shows revocation order recipients link', () => {
-          checkRevocationOrderRecipientsLink()
-        })
-        it('shows PPCS query e-mails link', () => {
-          checkPPCSQueryEmailsLink()
-        })
+        setUp(recommendation)
+        checkWhoCompletedPartALink()
+        checkElementDoesntExist(practitionerForPartALinkText)
+        checkRevocationOrderRecipientsLink()
+        checkPPCSQueryEmailsLink()
       })
 
-      context('recommendation with part A not completed by practitioner', () => {
+      it('recommendation with part A not completed by practitioner', () => {
         const recommendation = RecommendationResponseGenerator.generate({
           personOnProbation: {
             name: personName,
@@ -776,19 +717,11 @@ context('Recommendation - task list', () => {
             isPersonProbationPractitionerForOffender: false,
           },
         })
-        beforeEach(() => setUp(recommendation))
-        it('shows who completed part A link', () => {
-          checkWhoCompletedPartALink()
-        })
-        it('shows practitioner for part A link', () => {
-          checkPractitionerForPartALink()
-        })
-        it('shows revocation order recipients link', () => {
-          checkRevocationOrderRecipientsLink()
-        })
-        it('shows PPCS query e-mails link', () => {
-          checkPPCSQueryEmailsLink()
-        })
+        setUp(recommendation)
+        checkWhoCompletedPartALink()
+        checkPractitionerForPartALink()
+        checkRevocationOrderRecipientsLink()
+        checkPPCSQueryEmailsLink()
       })
     })
 
@@ -815,22 +748,16 @@ context('Recommendation - task list', () => {
         cy.getElement(elementText).should('not.have.attr', 'href')
       }
 
-      context('recommendation not ready for any countersignature', () => {
-        beforeEach(() => {
-          setUp(
-            RecommendationResponseGenerator.generate({
-              personOnProbation: {
-                hasBeenReviewed: false,
-              },
-            })
-          )
-        })
-        it("SPO countersignature text doesn't have a link", () => {
-          checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
-        })
-        it("ACO countersignature text doesn't have a link", () => {
-          checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
-        })
+      it('recommendation not ready for any countersignature', () => {
+        setUp(
+          RecommendationResponseGenerator.generate({
+            personOnProbation: {
+              hasBeenReviewed: false,
+            },
+          })
+        )
+        checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
+        checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
       })
 
       // The requirements for countersignature is a much longer list than the value set below, but most of them are
@@ -853,50 +780,33 @@ context('Recommendation - task list', () => {
         },
       })
 
-      context('recommendation ready for SPO countersignature', () => {
-        beforeEach(() => {
-          setUp(recommendationReadyForCountersignature, [
-            {
-              name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
-              active: true,
-            },
-          ])
-        })
-        it('shows SPO countersignature link', () => {
-          checkRequestSpoCountersignatureLink()
-        })
-        it("ACO countersignature text doesn't have a link", () => {
-          checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
-        })
+      it('recommendation ready for SPO countersignature', () => {
+        setUp(recommendationReadyForCountersignature, [
+          {
+            name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
+            active: true,
+          },
+        ])
+        checkRequestSpoCountersignatureLink()
+        checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
       })
 
-      context('recommendation ready for ACO countersignature', () => {
-        beforeEach(() => {
-          setUp(recommendationReadyForCountersignature, [
-            {
-              name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
-              active: true,
-            },
-          ])
-        })
-        it("SPO countersignature text doesn't have a link", () => {
-          checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
-        })
-        it('shows ACO countersignature link', () => {
-          checkRequestAcoCountersignatureLink()
-        })
+      it('recommendation ready for ACO countersignature', () => {
+        setUp(recommendationReadyForCountersignature, [
+          {
+            name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
+            active: true,
+          },
+        ])
+
+        checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
+        checkRequestAcoCountersignatureLink()
       })
 
-      context('recommendation fully countersigned', () => {
-        beforeEach(() => {
-          setUp(recommendationReadyForCountersignature, [{ name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true }])
-        })
-        it("SPO countersignature text doesn't have a link", () => {
-          checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
-        })
-        it("ACO countersignature text doesn't have a link", () => {
-          checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
-        })
+      it('recommendation fully countersigned', () => {
+        setUp(recommendationReadyForCountersignature, [{ name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true }])
+        checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
+        checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
       })
     })
   })
@@ -916,32 +826,20 @@ context('Recommendation - task list', () => {
 
     context('vulnerabilities', () => {
       context('with risk to self flag disabled', () => {
-        context('no vulnerabilities selected', () => {
-          beforeEach(() => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: 'none',
-              })
-            )
-          })
-          it("shows vulnerabilities with 'To do' label", () => {
-            hasToDoLabel(linkTexts.vulnerabilities)
-          })
-          it("doesn't show vulnerabilities details link", () => {
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+        it('no vulnerabilities selected', () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: 'none',
+            })
+          )
+          hasToDoLabel(linkTexts.vulnerabilities)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
         })
 
-        context('vulnerabilities selected', () => {
-          beforeEach(() => {
-            setUp(RecommendationResponseGenerator.generate())
-          })
-          it("shows vulnerabilities with 'Completed' label", () => {
-            hasCompletedLabel(linkTexts.vulnerabilities)
-          })
-          it("doesn't show vulnerabilities details link", () => {
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+        it('vulnerabilities selected', () => {
+          setUp(RecommendationResponseGenerator.generate())
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
         })
       })
 
@@ -957,93 +855,67 @@ context('Recommendation - task list', () => {
           (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
         )
 
-        context('with no vulnerabilities selected', () => {
-          beforeEach(() => {
+        it('with no vulnerabilities selected', () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [],
+              },
+            }),
+            [],
+            [riskToSelfFlag]
+          )
+          hasToDoLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+        })
+
+        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+          it(`with vulnerability ${vulnerabilityRequiringDetails} selected but missing mandatory details`, () => {
             setUp(
               RecommendationResponseGenerator.generate({
                 vulnerabilities: {
-                  selected: [],
+                  selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
                 },
               }),
               [],
               [riskToSelfFlag]
             )
-          })
-          it('shows vulnerabilities link', () => {
-            hasToDoLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-          })
-          it("doesn't show vulnerabilities details link", () => {
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+
+            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
+            hasToDoLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
           })
         })
 
         vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          context(`with vulnerability ${vulnerabilityRequiringDetails} selected but missing mandatory details`, () => {
-            beforeEach(() => {
-              setUp(
-                RecommendationResponseGenerator.generate({
-                  vulnerabilities: {
-                    selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
-                  },
-                }),
-                [],
-                [riskToSelfFlag]
-              )
-            })
-            it('shows vulnerabilities link', () => {
-              hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            })
-            it('shows vulnerabilities details link', () => {
-              hasToDoLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-            })
-          })
-        })
-
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          context(`with vulnerability ${vulnerabilityRequiringDetails} selected and details set`, () => {
-            beforeEach(() => {
-              setUp(
-                RecommendationResponseGenerator.generate({
-                  vulnerabilities: {
-                    selected: [{ value: vulnerabilityRequiringDetails, details: faker.lorem.sentence() }],
-                  },
-                }),
-                [],
-                [riskToSelfFlag]
-              )
-            })
-            it('shows vulnerabilities link', () => {
-              hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            })
-            it('shows vulnerabilities details link', () => {
-              hasCompletedLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-            })
+          it(`with vulnerability ${vulnerabilityRequiringDetails} selected and details set`, () => {
+            setUp(
+              RecommendationResponseGenerator.generate({
+                vulnerabilities: {
+                  selected: [{ value: vulnerabilityRequiringDetails, details: faker.lorem.sentence() }],
+                },
+              }),
+              [],
+              [riskToSelfFlag]
+            )
+            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
+            hasCompletedLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
           })
         })
 
         vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
-          context(
-            `with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`,
-            () => {
-              beforeEach(() => {
-                setUp(
-                  RecommendationResponseGenerator.generate({
-                    vulnerabilities: {
-                      selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
-                    },
-                  }),
-                  [],
-                  [riskToSelfFlag]
-                )
-              })
-              it('shows vulnerabilities link', () => {
-                hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-              })
-              it("doesn't show vulnerabilities details link", () => {
-                checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-              })
-            }
-          )
+          it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
+            setUp(
+              RecommendationResponseGenerator.generate({
+                vulnerabilities: {
+                  selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
+                },
+              }),
+              [],
+              [riskToSelfFlag]
+            )
+            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
+            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+          })
         })
       })
     })
