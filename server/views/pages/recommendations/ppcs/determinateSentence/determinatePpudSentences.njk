@@ -1,0 +1,42 @@
+{% extends "../../../../partials/layout.njk" %}
+{% from "components/summary-list/macro.njk" import summaryList %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+        <h1 class='govuk-heading-l'>{{ pageTitles[page.id] }}</h1>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <p class="govuk-body govuk-!-margin-bottom-8">
+                    {{ determinatePpudSentencesPageData.fullName }} has indeterminate and determinate sentences in PPUD. View the determinate sentences and then return to the indeterminate sentences to continue your booking.
+                </p>
+               {% for group in determinatePpudSentencesPageData.determinateSentencesByCourt %}
+                    <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Court case: {{ group.court }}</h3>
+
+                    {% for dateGroup in group.sentencesByDate %}
+                        <p class="govuk-body govuk-!-margin-bottom-0">Date of sentence: {{ dateGroup.dateOfSentence }}</p>
+
+                        {% for sentence in dateGroup.sentences %}
+                            <h4 class="govuk-heading-s">{{ sentence.offence.indexOffence }}</h4>
+                            {{
+                                summaryList({
+                                    id: 'determinate-ppud-sentences-' + (dateGroup.dateOfSentence | replace(" ", "-")) + '-' + 'sentence-' + loop.index,
+                                    rows: [
+                                        { key: 'Sentence expiry date', value: formatJSDate(sentence.sentenceExpiryDate) },
+                                        { key: 'Sentence length', value: formatSentenceLength(sentence.sentenceLength) }
+                                    ]
+                                })
+                            }}
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+
+                <a class="govuk-button govuk-button--secondary" href="/recommendations/{{ recommendation.id }}/select-indeterminate-ppud-sentence">Return to indeterminate sentences</a>
+            </div>
+        </div>
+{% endblock %}

@@ -281,6 +281,7 @@ export const strings: Record<string, Record<string, string>> = {
     editCustodyGroup: 'Is the sentence determinate or indeterminate?',
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
+    determinatePpudSentences: 'Determinate sentences in PPUD',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
   },

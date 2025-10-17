@@ -3,6 +3,7 @@ export const ppcsPaths = {
   selectIndexOffence: 'select-index-offence',
   consecutiveSentenceDetails: 'consecutive-sentence-details',
   matchIndexOffence: 'match-index-offence',
+  determinatePpudSentences: 'determinate-ppud-sentences',
 
   // indeterminate
   selectIndeterminatePpudSentence: 'select-indeterminate-ppud-sentence',

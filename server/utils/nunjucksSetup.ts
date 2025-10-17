@@ -4,7 +4,7 @@ import express from 'express'
 import * as pathModule from 'path'
 import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
-import { formatDateTimeFromIsoString, formatTerm } from './dates/formatting'
+import { formatDateTimeFromIsoString, formatJSDate, formatSentenceLength, formatTerm } from './dates/formatting'
 import {
   dateTimeItems,
   possessiveSuffix,
@@ -99,4 +99,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('isObjectInArray', isObjectInArray)
   njkEnv.addGlobal('countLabelSuffix', countLabelSuffix)
   njkEnv.addGlobal('formatTerm', formatTerm)
+  njkEnv.addGlobal('formatJSDate', formatJSDate)
+  njkEnv.addGlobal('formatSentenceLength', formatSentenceLength)
 }

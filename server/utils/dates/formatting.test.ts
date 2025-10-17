@@ -1,4 +1,4 @@
-import { formatDateRange, formatDateTimeFromIsoString } from './formatting'
+import { formatDateRange, formatDateTimeFromIsoString, formatJSDate, formatSentenceLength } from './formatting'
 
 describe('formatDateTimeFromIsoString', () => {
   it('formats a date', () => {
@@ -67,5 +67,58 @@ describe('formatDateRange', () => {
       dateToIso: '2021-07-22T23:43:00.000Z',
     })
     expect(formatted).toEqual('22 May 2021 to 23 Jul 2021')
+  })
+})
+
+describe('formatJSDate', () => {
+  it('returns empty string when input is null', () => {
+    expect(formatJSDate(null as unknown as string)).toBe('')
+  })
+
+  it('returns empty string when input is undefined', () => {
+    expect(formatJSDate(undefined as unknown as string)).toBe('')
+  })
+
+  it('formats a valid Date object correctly', () => {
+    const date = new Date(2025, 0, 15) // 15 Jan 2025 (month is 0-indexed)
+    expect(formatJSDate(date)).toBe('15 January 2025')
+  })
+
+  it('formats a valid ISO string correctly', () => {
+    expect(formatJSDate('2025-06-30')).toBe('30 June 2025')
+  })
+
+  it('formats a full datetime string correctly (ignores time)', () => {
+    expect(formatJSDate('2025-12-25T10:30:00Z')).toBe('25 December 2025')
+  })
+
+  it('returns "Invalid Date" for invalid string', () => {
+    expect(formatJSDate('not-a-date')).toBe('Invalid Date')
+  })
+
+  it('returns "Invalid Date" for an invalid Date object', () => {
+    expect(formatJSDate(new Date('not-a-date'))).toBe('Invalid Date')
+  })
+})
+
+describe('formatSentenceLength', () => {
+  it('returns em dash if all parts are 0', () => {
+    expect(formatSentenceLength({ partYears: 0, partMonths: 0, partDays: 0 })).toBe('—')
+  })
+
+  it('formats only years', () => {
+    expect(formatSentenceLength({ partYears: 2, partMonths: 0, partDays: 0 })).toBe('2 years')
+  })
+
+  it('formats only months', () => {
+    expect(formatSentenceLength({ partYears: 0, partMonths: 5, partDays: 0 })).toBe('5 months')
+  })
+
+  it('formats only days', () => {
+    expect(formatSentenceLength({ partYears: 0, partMonths: 0, partDays: 1 })).toBe('1 day')
+  })
+
+  it('formats years, months, and days', () => {
+    expect(formatSentenceLength({ partYears: 2, partMonths: 3, partDays: 4 })).toBe('2 years 3 months 4 days')
   })
 })
