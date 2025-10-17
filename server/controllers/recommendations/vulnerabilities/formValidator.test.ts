@@ -267,12 +267,10 @@ describe('validateVulnerabilities', () => {
     })
   })
 
-  // TODO is this test out of date? Should I be removing it with my changes? If you read this, please ask me, as I've
-  //  forgotten to address it before checking in
-  it('allows Unknown to be selected without details required', async () => {
+  it('allows NOT_KNOWN to be selected without details required', async () => {
     const requestBody = {
       crn: 'X514364',
-      vulnerabilities: ['UNKNOWN'],
+      vulnerabilities: [VULNERABILITY.NOT_KNOWN],
     }
     const { errors, valuesToSave } = await validateVulnerabilities({ requestBody, recommendationId })
     expect(errors).toBeUndefined()
@@ -281,7 +279,7 @@ describe('validateVulnerabilities', () => {
         allOptions: cleanseUiList(formOptions.vulnerabilities),
         selected: [
           {
-            value: 'UNKNOWN',
+            value: VULNERABILITY.NOT_KNOWN,
           },
         ],
       },
