@@ -2,7 +2,11 @@ import { randomUUID } from 'node:crypto'
 import { randomInt } from 'crypto'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
-import { getCustodyGroup, getIndeterminateSentences } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import {
+  getCustodyGroup,
+  getDeterminateSentences,
+  getIndeterminateSentences,
+} from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
@@ -48,7 +52,9 @@ describe('get', () => {
     ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
 
     const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
+    const determinateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     ;(getIndeterminateSentences as jest.Mock).mockReturnValueOnce(indeterminateSentences)
+    ;(getDeterminateSentences as jest.Mock).mockReturnValueOnce(determinateSentences)
 
     const expectedPageData = {
       nomisSentence: {
@@ -58,6 +64,8 @@ describe('get', () => {
         sentenceExpiryDate: recommendation.convictionDetail.sentenceExpiryDate,
       },
       ppudSentences: indeterminateSentences,
+      determinateSentencesCount: determinateSentences.length,
+      fullName: recommendation.personOnProbation.name,
     }
 
     // when
@@ -69,6 +77,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
+    expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getCustodyGroup).toHaveBeenCalledWith(recommendation)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
@@ -97,7 +106,9 @@ describe('get', () => {
     ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
 
     const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
+    const determinateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     ;(getIndeterminateSentences as jest.Mock).mockReturnValueOnce(indeterminateSentences)
+    ;(getDeterminateSentences as jest.Mock).mockReturnValueOnce(determinateSentences)
 
     const expectedPageData = {
       nomisSentence: {
@@ -107,7 +118,9 @@ describe('get', () => {
         sentenceExpiryDate: recommendation.convictionDetail.sentenceExpiryDate,
       },
       ppudSentences: indeterminateSentences,
+      determinateSentencesCount: determinateSentences.length,
       selectedSentenceId: recommendation.bookRecallToPpud.ppudSentenceId,
+      fullName: recommendation.personOnProbation.name,
     }
 
     // when
@@ -119,6 +132,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
+    expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getCustodyGroup).toHaveBeenCalledWith(recommendation)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'

@@ -2,6 +2,7 @@ import { DateTime, Settings } from 'luxon'
 import { isDefined, isNumber } from '../utils'
 import { europeLondon, getDateTimeInEuropeLondon } from './index'
 import { Term } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { PpudDetailsSentenceLength } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 
 Settings.throwOnInvalid = true
 Settings.defaultZone = 'utc'
@@ -93,6 +94,28 @@ export const formatTerm = (term: Term) => {
     result = `${result + term.days} days`
   }
   return result
+}
+
+export function formatJSDate(dateInput: string | Date): string {
+  if (!dateInput) return ''
+  const jsDate = dateInput instanceof Date ? dateInput : new Date(dateInput)
+  if (Number.isNaN(jsDate.getTime())) {
+    return 'Invalid Date'
+  }
+  const dt = DateTime.fromJSDate(jsDate)
+  if (!dt.isValid) return 'Invalid Date'
+  return dt.toFormat('d MMMM yyyy')
+}
+
+export function formatSentenceLength(length: PpudDetailsSentenceLength): string {
+  if (!length) return ''
+
+  const parts: string[] = []
+  if (length.partYears) parts.push(`${length.partYears} year${length.partYears > 1 ? 's' : ''}`)
+  if (length.partMonths) parts.push(`${length.partMonths} month${length.partMonths > 1 ? 's' : ''}`)
+  if (length.partDays) parts.push(`${length.partDays} day${length.partDays > 1 ? 's' : ''}`)
+
+  return parts.length ? parts.join(' ') : '—'
 }
 
 export const pluralise = (text: string, numericValue: number): string => {
