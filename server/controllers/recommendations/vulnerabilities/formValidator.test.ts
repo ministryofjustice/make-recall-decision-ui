@@ -58,9 +58,6 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
         allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
         selected: [
           {
-            value: 'NONE_OR_NOT_KNOWN',
-          },
-          {
             value: 'NONE',
           },
         ],
@@ -79,9 +76,6 @@ describe('validateVulnerabilitiesRiskToSelf', () => {
       vulnerabilities: {
         allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
         selected: [
-          {
-            value: 'NONE_OR_NOT_KNOWN',
-          },
           {
             value: 'NOT_KNOWN',
           },
