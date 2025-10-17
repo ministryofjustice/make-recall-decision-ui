@@ -1,11 +1,11 @@
 import { inputDisplayValuesVulnerabilities } from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
-import { ValueWithDetails } from '../../../@types/make-recall-decision-api'
+import { VULNERABILITY } from './formOptions'
 
 describe('inputDisplayValuesVulnerabilities', () => {
   const apiValues = {
     vulnerabilities: {
-      selected: ['ADULT_OR_CHILD_SAFEGUARDING_CONCERNS'] as ValueWithDetails[],
+      selected: [{ value: VULNERABILITY.ADULT_OR_CHILD_SAFEGUARDING_CONCERNS }],
       allOptions: formOptions.vulnerabilities,
     },
   }
@@ -34,6 +34,6 @@ describe('inputDisplayValuesVulnerabilities', () => {
       unsavedValues,
       apiValues,
     })
-    expect(inputDisplayValues).toEqual(['ADULT_OR_CHILD_SAFEGUARDING_CONCERNS'])
+    expect(inputDisplayValues).toEqual(apiValues.vulnerabilities.selected)
   })
 })

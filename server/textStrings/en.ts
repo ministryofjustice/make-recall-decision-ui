@@ -284,6 +284,11 @@ export const strings: Record<string, Record<string, string>> = {
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
   },
+  taskListLinkTexts: {
+    vulnerabilities: 'Would recall affect vulnerability or additional needs?',
+    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Could recall affect vulnerabilities or needs?',
+    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Give details about the vulnerabilities or needs',
+  },
   automatedFieldValues: {
     mandatoryFTRRationale:
       '{{ personOnProbationName }} must get an automatic fixed term recall as they do not meet the exemption criteria.',

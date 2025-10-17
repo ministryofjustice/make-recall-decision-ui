@@ -1,7 +1,9 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { hasData, hasValue } from '../../../utils/utils'
+import { hasData, hasValue, isEmptyStringOrWhitespace } from '../../../utils/utils'
 import { FeatureFlags } from '../../../@types/featureFlags'
+import { VULNERABILITY } from '../vulnerabilities/formOptions'
+import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -31,6 +33,29 @@ const isPreviousRecallsComplete = (recommendation: RecommendationResponse) => {
     return recommendation.previousRecalls?.previousRecallDates?.length > 0
   }
   return recommendation.previousRecalls?.hasBeenRecalledPreviously === false
+}
+
+const isVulnerabilitiesComplete = (recommendation: RecommendationResponse, _featureFlags?: FeatureFlags) => {
+  if (recommendation.vulnerabilities === null || typeof recommendation.vulnerabilities === 'undefined') {
+    return false
+  }
+  if (!!_featureFlags?.flagRiskToSelfEnabled === true) {
+    return recommendation.vulnerabilities?.selected?.length > 0 && hasAllRequiredVulnerabilityDetails(recommendation)
+  }
+
+  return recommendation.vulnerabilities?.selected?.length > 0
+}
+
+export const hasAllRequiredVulnerabilityDetails = (recommendation: RecommendationResponse): boolean => {
+  const selectedVulnerabilities = recommendation.vulnerabilities?.selected
+  return (
+    !selectedVulnerabilities ||
+    !selectedVulnerabilities.some(
+      valueWithDetails =>
+        vulnerabilityRequiresDetails(valueWithDetails.value as VULNERABILITY) &&
+        isEmptyStringOrWhitespace(valueWithDetails?.details)
+    )
+  )
 }
 
 export const taskCompleteness = (recommendation: RecommendationResponse, _featureFlags?: FeatureFlags) => {
@@ -86,7 +111,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     custodyStatus: hasValue(recommendation.custodyStatus),
     whatLedToRecall: hasValue(recommendation.whatLedToRecall),
     isThisAnEmergencyRecall: hasValue(recommendation.isThisAnEmergencyRecall),
-    vulnerabilities: recommendation.vulnerabilities?.selected?.length > 0,
+    vulnerabilities: isVulnerabilitiesComplete(recommendation, _featureFlags),
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
     isUnderIntegratedOffenderManagement: hasValue(recommendation.isUnderIntegratedOffenderManagement?.selected),
     hasContrabandRisk: hasValue(recommendation.hasContrabandRisk),
@@ -94,8 +119,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     offenceAnalysis: hasValue(recommendation.offenceAnalysis),
     convictionDetail: recommendation.convictionDetail?.hasBeenReviewed === true,
     mappa: recommendation.personOnProbation?.mappa?.hasBeenReviewed === true,
-    previousReleases: isPreviousReleasesComplete(recommendation),
-    previousRecalls: isPreviousRecallsComplete(recommendation),
     currentRoshForPartA: hasValue(recommendation.currentRoshForPartA),
     fixedTermAdditionalLicenceConditions:
       recommendation.recallType?.selected?.value !== 'FIXED_TERM' ||

@@ -1,10 +1,11 @@
 import { formOptions } from '../formOptions/formOptions'
 import { inputDisplayValuesVulnerabilitiesDetails } from './inputDisplayValues'
+import { VULNERABILITY } from '../vulnerabilities/formOptions'
 
 describe('inputDisplayValuesVulnerabilitiesDetails', () => {
   const apiValues = {
     vulnerabilities: {
-      selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'foo' }],
+      selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, details: 'foo' }],
       allOptions: formOptions.vulnerabilities,
     },
   }
@@ -43,7 +44,7 @@ describe('inputDisplayValuesVulnerabilitiesDetails', () => {
       unsavedValues: {
         vulnerabilities: [
           {
-            value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
+            value: VULNERABILITY.ADULT_OR_CHILD_SAFEGUARDING_CONCERNS,
             details: 'foo',
           },
         ],
@@ -53,7 +54,7 @@ describe('inputDisplayValuesVulnerabilitiesDetails', () => {
 
     expect(inputDisplayValues).toEqual([
       {
-        value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
+        value: VULNERABILITY.ADULT_OR_CHILD_SAFEGUARDING_CONCERNS,
         details: 'foo',
       },
     ])
@@ -68,7 +69,7 @@ describe('inputDisplayValuesVulnerabilitiesDetails', () => {
 
     expect(inputDisplayValues).toEqual([
       {
-        value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
         details: 'foo',
       },
     ])

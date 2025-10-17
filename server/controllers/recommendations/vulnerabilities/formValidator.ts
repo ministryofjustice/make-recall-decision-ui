@@ -4,36 +4,37 @@ import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/f
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { FormValidatorArgs, FormValidatorReturn, UiFormOption } from '../../../@types/pagesForms'
+import { VULNERABILITY } from './formOptions'
 
 export const validateVulnerabilitiesRiskToSelf = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
   const { vulnerabilities } = requestBody
-  let vulnerabilitiesList: string[] = []
+  let vulnerabilitiesList: VULNERABILITY[] = []
   if (Array.isArray(vulnerabilities)) {
-    vulnerabilitiesList = vulnerabilities
+    vulnerabilitiesList = vulnerabilities as VULNERABILITY[]
   } else if (vulnerabilities) {
-    vulnerabilitiesList = [vulnerabilities]
+    vulnerabilitiesList = [vulnerabilities as VULNERABILITY]
   }
 
-  const exclusiveList = ['NONE_OR_NOT_KNOWN', 'NONE', 'NOT_KNOWN']
+  const exclusiveList = [VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NONE, VULNERABILITY.NOT_KNOWN]
 
   // Keep NONE/NOT_KNOWN only if parent NONE_OR_NOT_KNOWN selected
-  const hasParentNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
+  const hasParentNoneOrNotKnown = vulnerabilitiesList.includes(VULNERABILITY.NONE_OR_NOT_KNOWN)
   if (!hasParentNoneOrNotKnown) {
-    vulnerabilitiesList = vulnerabilitiesList.filter(v => !['NONE', 'NOT_KNOWN'].includes(v))
+    vulnerabilitiesList = vulnerabilitiesList.filter(v => ![VULNERABILITY.NONE, VULNERABILITY.NOT_KNOWN].includes(v))
   }
 
   // Validation: any invalid vulnerability values
   const invalidVulnerability = vulnerabilitiesList
     .filter(v => !exclusiveList.includes(v))
-    .some(id => !isValueValid(id, 'vulnerabilitiesRiskToSelf'))
+    .some(id => !isValueValid(id as string, 'vulnerabilitiesRiskToSelf'))
 
-  const hasNoneOrNotKnown = vulnerabilitiesList.includes('NONE_OR_NOT_KNOWN')
-  const hasNone = vulnerabilitiesList.includes('NONE')
-  const hasNotKnown = vulnerabilitiesList.includes('NOT_KNOWN')
+  const hasNoneOrNotKnown = vulnerabilitiesList.includes(VULNERABILITY.NONE_OR_NOT_KNOWN)
+  const hasNone = vulnerabilitiesList.includes(VULNERABILITY.NONE)
+  const hasNotKnown = vulnerabilitiesList.includes(VULNERABILITY.NOT_KNOWN)
 
   const missingExclusiveRadioSelection = hasNoneOrNotKnown && !hasNone && !hasNotKnown
   const hasExclusive = vulnerabilitiesList.some(v => exclusiveList.includes(v))
@@ -51,7 +52,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
     if (noVulnerabilities) {
       errors.push(
         makeErrorObject({
-          id: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          id: formOptions.vulnerabilitiesRiskToSelf[0].value, // so the error shows on the first field on the screen
           name: 'vulnerabilities',
           text: strings.errors.noVulnerabilitiesSelectedRiskToSelf,
           errorId: 'noVulnerabilitiesSelected',
@@ -60,7 +61,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
     }
 
     if (hasNormalAndExclusiveInputs) {
-      ;[...normalVulnerabilities, 'NONE_OR_NOT_KNOWN'].forEach(id => {
+      ;[...normalVulnerabilities, VULNERABILITY.NONE_OR_NOT_KNOWN].forEach(id => {
         errors.push(
           makeErrorObject({
             id,
@@ -72,9 +73,9 @@ export const validateVulnerabilitiesRiskToSelf = async ({
     } else if (missingExclusiveRadioSelection) {
       errors.push(
         makeErrorObject({
-          id: 'NONE_OR_NOT_KNOWN',
+          id: VULNERABILITY.NONE_OR_NOT_KNOWN,
           text: strings.errors.missingExclusive,
-          errorId: 'NONE_OR_NOT_KNOWN',
+          errorId: VULNERABILITY.NONE_OR_NOT_KNOWN,
         })
       )
     }

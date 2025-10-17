@@ -7,6 +7,7 @@ import { inputDisplayValuesVulnerabilitiesDetails } from '../recommendations/vul
 import { validateVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 import { cleanseUiList } from '../../utils/lists'
 import { formOptions } from '../recommendations/formOptions/formOptions'
+import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay')
@@ -49,10 +50,10 @@ describe('get', () => {
 
   it('load with existing data', async () => {
     ;(vulnerabilitiesToDisplay as jest.Mock).mockReturnValueOnce([
-      { value: 'RISK_OF_SUICIDE_OR_SELF_HARM', text: 'Risk of suicide or self-harm' },
+      { value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, text: 'Risk of suicide or self-harm' },
     ])
     ;(inputDisplayValuesVulnerabilitiesDetails as jest.Mock).mockReturnValueOnce([
-      { details: '', value: 'RISK_OF_SUICIDE_OR_SELF_HARM' },
+      { details: '', value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM },
     ])
     const res = mockRes({
       locals: {
@@ -79,12 +80,12 @@ describe('get', () => {
     })
     expect(res.locals.vulnerabilitiesToDisplay).toEqual([
       {
-        value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+        value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
         text: 'Risk of suicide or self-harm',
       },
     ])
     expect(res.locals.page).toEqual({ id: 'vulnerabilitiesDetails' })
-    expect(res.locals.inputDisplayValues).toEqual([{ details: '', value: 'RISK_OF_SUICIDE_OR_SELF_HARM' }])
+    expect(res.locals.inputDisplayValues).toEqual([{ details: '', value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM }])
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/vulnerabilitiesDetails')
     expect(next).toHaveBeenCalled()
   })
@@ -112,7 +113,7 @@ describe('get', () => {
         },
         unsavedValues: [
           {
-            value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+            value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
             details: '',
           },
         ],
@@ -147,7 +148,7 @@ describe('get', () => {
       },
       unsavedValues: [
         {
-          value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
           details: '',
         },
       ],
@@ -181,7 +182,7 @@ describe('post', () => {
         vulnerabilities: {
           selected: [
             {
-              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
               details: 'test',
             },
           ],
@@ -202,8 +203,8 @@ describe('post', () => {
         recommendation: {
           vulnerabilities: {
             selected: [
-              { value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: '' },
-              { value: 'RELATIONSHIP_BREAKDOWN', details: 'test' },
+              { value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, details: '' },
+              { value: VULNERABILITY.RELATIONSHIP_BREAKDOWN, details: 'test' },
             ],
           },
         },
@@ -220,7 +221,7 @@ describe('post', () => {
     expect(validateVulnerabilitiesDetails).toHaveBeenCalledWith({
       requestBody: {
         'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM': 'test',
-        selectedVulnerabilities: ['RISK_OF_SUICIDE_OR_SELF_HARM', 'RELATIONSHIP_BREAKDOWN'],
+        selectedVulnerabilities: [VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, VULNERABILITY.RELATIONSHIP_BREAKDOWN],
       },
       recommendationId: '123',
       urlInfo: { basePath },
@@ -232,75 +233,75 @@ describe('post', () => {
         vulnerabilities: {
           allOptions: [
             {
-              value: 'NONE',
+              value: VULNERABILITY.NONE,
               text: 'None',
             },
             {
-              value: 'NOT_KNOWN',
+              value: VULNERABILITY.NOT_KNOWN,
               text: 'Not known',
             },
             {
-              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
               text: 'Risk of suicide or self-harm',
             },
             {
-              value: 'RELATIONSHIP_BREAKDOWN',
+              value: VULNERABILITY.RELATIONSHIP_BREAKDOWN,
               text: 'Relationship breakdown',
             },
             {
-              value: 'DOMESTIC_ABUSE',
+              value: VULNERABILITY.DOMESTIC_ABUSE,
               text: 'Domestic abuse',
             },
             {
-              value: 'DRUG_OR_ALCOHOL_USE',
+              value: VULNERABILITY.DRUG_OR_ALCOHOL_USE,
               text: 'Drug or alcohol abuse',
             },
             {
-              value: 'BULLYING_OTHERS',
+              value: VULNERABILITY.BULLYING_OTHERS,
               text: 'Bullying others',
             },
             {
-              value: 'BEING_BULLIED_BY_OTHERS',
+              value: VULNERABILITY.BEING_BULLIED_BY_OTHERS,
               text: 'Being bullied by others',
             },
             {
-              value: 'BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS',
+              value: VULNERABILITY.BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS,
               text: 'Being at risk of serious harm from others',
             },
             {
-              value: 'ADULT_OR_CHILD_SAFEGUARDING_CONCERNS',
+              value: VULNERABILITY.ADULT_OR_CHILD_SAFEGUARDING_CONCERNS,
               text: 'Adult or child safeguarding concerns',
             },
             {
-              value: 'MENTAL_HEALTH_CONCERNS',
+              value: VULNERABILITY.MENTAL_HEALTH_CONCERNS,
               text: 'Mental health concerns',
             },
             {
-              value: 'PHYSICAL_HEALTH_CONCERNS',
+              value: VULNERABILITY.PHYSICAL_HEALTH_CONCERNS,
               text: 'Physical health concerns',
             },
             {
-              value: 'MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION',
+              value: VULNERABILITY.MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION,
               text: 'Medication taken, including compliance with medication',
             },
             {
-              value: 'BEREAVEMENT_ISSUES',
+              value: VULNERABILITY.BEREAVEMENT_ISSUES,
               text: 'Bereavement issues',
             },
             {
-              value: 'LEARNING_DIFFICULTIES',
+              value: VULNERABILITY.LEARNING_DIFFICULTIES,
               text: 'Learning difficulties',
             },
             {
-              value: 'PHYSICAL_DISABILITIES',
+              value: VULNERABILITY.PHYSICAL_DISABILITIES,
               text: 'Physical disabilities',
             },
             {
-              value: 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
+              value: VULNERABILITY.CULTURAL_OR_LANGUAGE_DIFFERENCES,
               text: 'Cultural or language differences',
             },
           ],
-          selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', details: 'test' }],
+          selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, details: 'test' }],
         },
       },
       token: 'token1',
@@ -339,7 +340,7 @@ describe('post', () => {
         user: { token: 'token1' },
         recommendation: {
           vulnerabilities: {
-            selected: [{ value: 'RISK_OF_SUICIDE_OR_SELF_HARM', detail: '' }],
+            selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, detail: '' }],
           },
         },
       },
@@ -350,7 +351,7 @@ describe('post', () => {
     expect(validateVulnerabilitiesDetails).toHaveBeenCalledWith({
       requestBody: {
         'vulnerabilitiesDetail-RISK_OF_SUICIDE_OR_SELF_HARM': '',
-        selectedVulnerabilities: ['RISK_OF_SUICIDE_OR_SELF_HARM'],
+        selectedVulnerabilities: [VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM],
       },
       recommendationId: '123',
       urlInfo: {},

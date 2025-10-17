@@ -3,6 +3,7 @@ import completeRecommendationResponse from '../../api/responses/get-recommendati
 import { setResponsePropertiesToNull } from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
+import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 
 context('Make a recommendation - form validation', () => {
   const crn = 'X34983'
@@ -228,7 +229,7 @@ context('Make a recommendation - form validation', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities?flagRiskToSelfEnabled=1`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldGroupId: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+      fieldGroupId: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
       fieldName: 'vulnerabilities',
       errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',
     })
@@ -248,13 +249,13 @@ context('Make a recommendation - form validation', () => {
         vulnerabilities: {
           selected: [
             {
-              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
               details: '',
             },
           ],
           allOptions: [
             {
-              value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+              value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
               text: 'Risk of suicide or self-harm',
             },
           ],

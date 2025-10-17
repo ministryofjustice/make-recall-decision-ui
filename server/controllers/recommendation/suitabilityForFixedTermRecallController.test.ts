@@ -201,7 +201,6 @@ describe('get', () => {
     it('The warning panel properties are undefined', async () => {
       const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
         recallType: 'none',
-        personOnProbation: true,
       })
       const res = mockRes({
         locals: {
@@ -221,7 +220,6 @@ describe('get', () => {
     it('The warning panel properties are added to the page data', async () => {
       const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
         recallType: 'any',
-        personOnProbation: true,
       })
       const res = mockRes({
         locals: {
@@ -297,7 +295,6 @@ describe('post', () => {
         })
         const priorRecommendation = RecommendationResponseGenerator.generate({
           recallType: 'any',
-          personOnProbation: true,
         })
         const res = mockRes({
           token: 'token1',

@@ -6,6 +6,7 @@ import { ConvictionDetail } from '../../server/@types/make-recall-decision-api'
 export type ConvictionDetailOptions = {
   custodialTerm?: IncludeNoneOrOption<string>
   extendedTerm?: IncludeNoneOrOption<string>
+  hasBeenReviewed?: boolean
 }
 
 export const ConvictionDetailGenerator: DataGenerator<ConvictionDetail, ConvictionDetailOptions> = {
@@ -26,6 +27,6 @@ export const ConvictionDetailGenerator: DataGenerator<ConvictionDetail, Convicti
       options?.extendedTerm ?? 'none',
       () => `${faker.number.int({ min: 1, max: 12 })} years`
     ),
-    hasBeenReviewed: faker.datatype.boolean(),
+    hasBeenReviewed: options?.hasBeenReviewed ?? faker.datatype.boolean(),
   }),
 }

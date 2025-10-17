@@ -1,10 +1,14 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import taskListController from './taskListController'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
+import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
+import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
 
 describe('get', () => {
   const recommendationTemplate = {
@@ -46,7 +50,7 @@ describe('get', () => {
     },
     isUnderIntegratedOffenderManagement: { selected: 'NO' },
     vulnerabilities: {
-      selected: [{ value: 'NONE' }],
+      selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
     },
     convictionDetail: { hasBeenReviewed: true },
     offenceAnalysis: 'text',
@@ -135,6 +139,8 @@ describe('get', () => {
     })
     expect(next).toHaveBeenCalled()
 
+    expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
     expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
@@ -144,6 +150,7 @@ describe('get', () => {
     expect(res.locals.isSpo).toEqual(false)
     expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type`)
+    expect(res.locals.selectedVulnerabilitiesRequireDetails).not.toBeDefined()
   })
 
   it('present for indeterminate', async () => {
@@ -367,5 +374,109 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.isSpo).toEqual(true)
+  })
+  describe('when riskToSelf flag enabled', () => {
+    ;[true, false].forEach(expectedSelectedVulnerabilitiesRequireDetails => {
+      it(`selectedVulnerabilitiesRequireDetails value set to result of vulnerabilityRequiresDetails call (${expectedSelectedVulnerabilitiesRequireDetails})`, async () => {
+        ;(getStatuses as jest.Mock).mockResolvedValue([])
+        // the controller calls taskCompleteness, which also uses vulnerabilityRequiresDetails, so we cannot use
+        // mockReturnValueOnce here or the calls relevant to this test will return undefined. This can be changed once
+        // the controller test is set up to mock taskCompleteness
+        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValue(expectedSelectedVulnerabilitiesRequireDetails)
+
+        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+        const res = mockRes({
+          locals: {
+            recommendation: {
+              ...recommendationTemplate,
+              vulnerabilities: {
+                selected: [{ value: vulnerability, details: faker.lorem.sentence() }],
+              },
+            },
+            user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
+            flags: { flagRiskToSelfEnabled: true },
+          },
+        })
+        const next = mockNext()
+        await taskListController.get(mockReq(), res, next)
+
+        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+
+        expect(res.locals.selectedVulnerabilitiesRequireDetails).toEqual(expectedSelectedVulnerabilitiesRequireDetails)
+      })
+    })
+    it('selectedVulnerabilitiesRequireDetails value set to combination of results of vulnerabilityRequiresDetails calls', async () => {
+      ;(getStatuses as jest.Mock).mockResolvedValue([])
+
+      const vulnerability1 = faker.helpers.enumValue(VULNERABILITY)
+      let vulnerability2: VULNERABILITY
+      do {
+        vulnerability2 = faker.helpers.enumValue(VULNERABILITY)
+      } while (vulnerability1 === vulnerability2)
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockImplementation(
+        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1
+      )
+
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            ...recommendationTemplate,
+            vulnerabilities: {
+              selected: [
+                { value: vulnerability1, details: faker.lorem.sentence() },
+                { value: vulnerability2, details: faker.lorem.sentence() },
+              ],
+            },
+          },
+          user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
+          flags: { flagRiskToSelfEnabled: true },
+        },
+      })
+      const next = mockNext()
+      await taskListController.get(mockReq(), res, next)
+
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability1)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability2)
+
+      expect(res.locals.selectedVulnerabilitiesRequireDetails).toEqual(true)
+    })
+    it('selectedVulnerabilitiesRequireDetails value set to false if no vulnerabilities selected', async () => {
+      ;(getStatuses as jest.Mock).mockResolvedValue([])
+
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            ...recommendationTemplate,
+            vulnerabilities: {
+              selected: [],
+            },
+          },
+          user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
+          flags: { flagRiskToSelfEnabled: true },
+        },
+      })
+      const next = mockNext()
+      await taskListController.get(mockReq(), res, next)
+
+      expect(res.locals.selectedVulnerabilitiesRequireDetails).toEqual(false)
+    })
+    it('selectedVulnerabilitiesRequireDetails value set to false if vulnerabilities field not set', async () => {
+      ;(getStatuses as jest.Mock).mockResolvedValue([])
+
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            ...recommendationTemplate,
+            vulnerabilities: undefined,
+          },
+          user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
+          flags: { flagRiskToSelfEnabled: true },
+        },
+      })
+      const next = mockNext()
+      await taskListController.get(mockReq(), res, next)
+
+      expect(res.locals.selectedVulnerabilitiesRequireDetails).toEqual(false)
+    })
   })
 })
