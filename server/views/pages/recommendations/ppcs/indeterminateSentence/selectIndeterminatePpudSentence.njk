@@ -83,7 +83,7 @@
                 {% if determinateSentencesCount | int > 0 %}
                     {% set summaryText = determinateSentencesCount + " determinate sentence" + ("s" if determinateSentencesCount > 1 else "") %}
                     {% set html %}
-                        You can <a class="govuk-link" href="/recommendations/{{ recommendation.id }}/determinate-ppud-sentences">view the {{ "determinate sentence" + ("s" if determinateSentencesCount > 1 else "") }}</a> for {{ selectIndeterminatePpudSentencePageData.fullName }}
+                        You can <a id="determinate-sentences-link" class="govuk-link" href="/recommendations/{{ recommendation.id }}/determinate-ppud-sentences">view the {{ "determinate sentence" + ("s" if determinateSentencesCount > 1 else "") }}</a> for {{ selectIndeterminatePpudSentencePageData.fullName }}
                     {% endset %}
                     {{ govukDetails({
                             id: 'determinateSentencesDetails',
