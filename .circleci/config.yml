@@ -149,7 +149,7 @@ jobs:
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: << pipeline.parameters.redis-version >>
 
-    parallelism: << pipeline.parameters.e2e-parallelism-env >>
+    parallelism: << pipeline.parameters.e2e-parallelism >>
 
     steps:
       - checkout
