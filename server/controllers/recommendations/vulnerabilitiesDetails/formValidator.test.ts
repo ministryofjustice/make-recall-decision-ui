@@ -1,12 +1,38 @@
 import { cleanseUiList } from '../../../utils/lists'
 import { formOptions } from '../formOptions/formOptions'
-import { validateVulnerabilitiesDetails } from './formValidator'
+import { VULNERABILITY } from '../vulnerabilities/formOptions'
+import { validateVulnerabilitiesDetails, vulnerabilityRequiresDetails } from './formValidator'
+
+describe('vulnerabilityRequiresDetails', () => {
+  const vulnerabilitiesNotRequiringDetails = [
+    VULNERABILITY.NONE_OR_NOT_KNOWN,
+    VULNERABILITY.NONE,
+    VULNERABILITY.NOT_KNOWN,
+  ]
+  const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
+    (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
+  ) as VULNERABILITY[]
+
+  vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+    it(`vulnerability ${vulnerabilityRequiringDetails} requires details`, async () => {
+      const actualRequiresDetails = vulnerabilityRequiresDetails(vulnerabilityRequiringDetails)
+      expect(actualRequiresDetails).toEqual(true)
+    })
+  })
+
+  vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
+    it(`vulnerability ${vulnerabilityNotRequiringDetails} doesn't require details`, async () => {
+      const actualRequiresDetails = vulnerabilityRequiresDetails(vulnerabilityNotRequiringDetails)
+      expect(actualRequiresDetails).toEqual(false)
+    })
+  })
+})
 
 describe('validateVulnerabilitiesDetails', () => {
   it('return valuesToSave and no errors if valid', async () => {
     const requestBody = {
       crn: 'X123456',
-      selectedVulnerabilities: ['RISK_OF_SUICIDE_OR_SELF_HARM'],
+      selectedVulnerabilities: [VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM],
       'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM': 'Foo',
     }
 
@@ -19,7 +45,7 @@ describe('validateVulnerabilitiesDetails', () => {
         selected: [
           {
             details: 'Foo',
-            value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+            value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
           },
         ],
       },
@@ -30,7 +56,11 @@ describe('validateVulnerabilitiesDetails', () => {
   it('return an error if any details are missing', async () => {
     const requestBody = {
       crn: 'X123456',
-      selectedVulnerabilities: ['RISK_OF_SUICIDE_OR_SELF_HARM', 'MENTAL_HEALTH_CONCERNS', 'BEING_BULLIED_BY_OTHERS'],
+      selectedVulnerabilities: [
+        VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
+        VULNERABILITY.MENTAL_HEALTH_CONCERNS,
+        VULNERABILITY.BEING_BULLIED_BY_OTHERS,
+      ],
       'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM': 'foo',
       'vulnerabilitiesDetails-MENTAL_HEALTH_CONCERNS': '',
     }
@@ -60,15 +90,15 @@ describe('validateVulnerabilitiesDetails', () => {
     expect(unsavedValues).toEqual({
       vulnerabilities: [
         {
-          value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
           details: 'foo',
         },
         {
-          value: 'MENTAL_HEALTH_CONCERNS',
+          value: VULNERABILITY.MENTAL_HEALTH_CONCERNS,
           details: '',
         },
         {
-          value: 'BEING_BULLIED_BY_OTHERS',
+          value: VULNERABILITY.BEING_BULLIED_BY_OTHERS,
           details: undefined,
         },
       ],
@@ -78,7 +108,7 @@ describe('validateVulnerabilitiesDetails', () => {
   it('return an error if any details are blank strings', async () => {
     const requestBody = {
       crn: 'X123456',
-      selectedVulnerabilities: ['RISK_OF_SUICIDE_OR_SELF_HARM'],
+      selectedVulnerabilities: [VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM],
       'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM': ' ',
     }
 
@@ -98,7 +128,7 @@ describe('validateVulnerabilitiesDetails', () => {
     expect(unsavedValues).toEqual({
       vulnerabilities: [
         {
-          value: 'RISK_OF_SUICIDE_OR_SELF_HARM',
+          value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
           details: ' ',
         },
       ],
