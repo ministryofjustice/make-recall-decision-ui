@@ -188,7 +188,7 @@ jobs:
           # glob taken from specPattern property in integration_tests/cypress.config.ts
           command: |
             TESTS=$(circleci tests glob "integration_tests/integration/**/*.spec.ts" | circleci tests split --split-by=timings | paste -sd ',')
-            npm run int-test -- --parallel --spec=$TESTS
+            npm run int-test -- --spec=$TESTS
       - store_test_results:
           path: test_results
       - store_artifacts:
