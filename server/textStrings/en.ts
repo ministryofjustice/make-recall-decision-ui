@@ -128,7 +128,7 @@ export const strings: Record<string, Record<string, string>> = {
     titleLengthExceeded: 'The title must be less than 250 characters',
     /// PPCS ///
     // custody group
-    missingCustodyGroup: 'Select a determinate/indeterminate value',
+    missingCustodyGroup: 'Select the correct sentence type',
     invalidCustodyGroup:
       "Something went wrong. The determinate/indeterminate value you've selected wasn't recognised. Refresh the page and try again. If the problem continues, contact the support team.",
     // indeterminate sentence selection

@@ -2325,6 +2325,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/edit-custody-group`)
       cy.pageHeading().should('contain', 'Is the sentence determinate or indeterminate?')
+      cy.get('p.govuk-body').contains('Make sure you select the correct sentence type.').should('exist')
     })
 
     it('edit Current Establishment', () => {
