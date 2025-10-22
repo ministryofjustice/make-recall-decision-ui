@@ -523,7 +523,7 @@ describe('post', () => {
         errorId: 'missingCustodyGroup',
         href: '#custodyGroup',
         name: 'custodyGroup',
-        text: 'Select a determinate/indeterminate value',
+        text: 'Select the correct sentence type',
         invalidParts: undefined,
         values: undefined,
       },
