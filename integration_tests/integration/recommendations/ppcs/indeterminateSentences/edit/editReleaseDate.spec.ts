@@ -1,4 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
+import { DateTime } from 'luxon'
 import { setDateInput, verifyInputs } from '../../../../../componentTests/date.tests'
 import searchMappedUserResponse from '../../../../../../api/responses/searchMappedUsers.json'
 import searchActiveUsersResponse from '../../../../../../api/responses/ppudSearchActiveUsers.json'
@@ -53,9 +54,14 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
 
       cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Currently in PPUD')
 
+      // It is possible for the test to run on a machine on a timezone other than Europe/London (which the production
+      // code uses). Therefore, we convert the date to Europe/London here to ensure the date shown on the page is as
+      // expected.
+      const ppudReleaseDateTime = DateTime.fromISO(ppudReleaseDate.toISOString(), { zone: 'Europe/London' })
+      ppudReleaseDateTime.setLocale('en-GB')
       cy.get('p.govuk-body').should(
         'contain.text',
-        `${ppudReleaseDate.getDate()} ${ppudReleaseDate.toLocaleString('default', { month: 'long' })} ${ppudReleaseDate.getFullYear()}`
+        `${ppudReleaseDateTime.day} ${ppudReleaseDateTime.monthLong} ${ppudReleaseDateTime.year}`
       )
 
       // Date input surrounds
