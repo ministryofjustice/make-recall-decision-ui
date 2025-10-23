@@ -6,6 +6,7 @@ import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting
 context('Search for a person', () => {
   beforeEach(() => {
     cy.signIn()
+    cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
     cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
     cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: getCaseRiskResponse })
     cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: getCasePersonalDetailsResponse })
