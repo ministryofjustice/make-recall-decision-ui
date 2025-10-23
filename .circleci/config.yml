@@ -148,6 +148,9 @@ jobs:
       name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: << pipeline.parameters.redis-version >>
+
+    parallelism: << pipeline.parameters.e2e-parallelism >>
+
     steps:
       - checkout
       - run: sudo apt-get update
@@ -182,7 +185,10 @@ jobs:
             done
       - run:
           name: integration tests
-          command: npm run int-test
+          # glob taken from specPattern property in integration_tests/cypress.config.ts
+          command: |
+            TESTS=$(circleci tests glob "integration_tests/integration/**/*.spec.ts" | circleci tests split --split-by=timings | paste -sd ',')
+            npm run int-test -- --spec=$TESTS
       - store_test_results:
           path: test_results
       - store_artifacts:
