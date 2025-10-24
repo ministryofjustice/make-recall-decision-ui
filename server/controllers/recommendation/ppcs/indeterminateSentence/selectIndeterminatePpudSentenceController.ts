@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
-import { getCustodyGroup, getIndeterminateSentences } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import {
+  getCustodyGroup,
+  getDeterminateSentences,
+  getIndeterminateSentences,
+} from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { makeErrorObject } from '../../../../utils/errors'
 import { strings } from '../../../../textStrings/en'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
@@ -11,6 +15,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const custodyGroup = getCustodyGroup(recommendation)
   const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender.sentences)
+  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender.sentences)
 
   const pageData = {
     nomisSentence: {
@@ -21,6 +26,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     ppudSentences: indeterminateSentences,
     selectedSentenceId: recommendation.bookRecallToPpud.ppudSentenceId,
+    determinateSentencesCount: determinateSentences?.length ?? 0,
+    fullName: recommendation.personOnProbation.name,
   }
 
   res.locals = {

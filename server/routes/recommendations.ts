@@ -123,6 +123,7 @@ import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/Documen
 import editCurrentEstablishmentController from '../controllers/recommendation/ppcs/currentEstablishment/editCurrentEstablishmentController'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
+import determinateSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/determinateSentenceDetailsController'
 import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
 import { ppcsPaths } from './paths/ppcs'
 import { ppPaths } from './paths/pp'
@@ -575,6 +576,8 @@ ppcsIndeterminateSentenceRouteBuilder.post(
   ppcsPaths.indeterminateEdit.dateOfSentence,
   editDateOfSentenceController.post
 )
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.determinatePpudSentences, determinateSentenceDetailsController.get)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
