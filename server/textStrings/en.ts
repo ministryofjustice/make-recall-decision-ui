@@ -128,13 +128,14 @@ export const strings: Record<string, Record<string, string>> = {
     titleLengthExceeded: 'The title must be less than 250 characters',
     /// PPCS ///
     // custody group
-    missingCustodyGroup: 'Select a determinate/indeterminate value',
+    missingCustodyGroup: 'Select the correct sentence type',
     invalidCustodyGroup:
       "Something went wrong. The determinate/indeterminate value you've selected wasn't recognised. Refresh the page and try again. If the problem continues, contact the support team.",
     // indeterminate sentence selection
     missingIndeterminatePpudSentence: 'Select an existing sentence or add a new one',
     invalidIndeterminatePpudSentenceSelected:
       "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
+    missingSentencingCourt: 'Select a sentencing court from the list',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -194,6 +195,7 @@ export const strings: Record<string, Record<string, string>> = {
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
     vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
+    vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
     vulnerabilitiesRiskToSelf:
       'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
     taskList: 'Create a Part A form',
@@ -279,6 +281,14 @@ export const strings: Record<string, Record<string, string>> = {
     editCustodyGroup: 'Is the sentence determinate or indeterminate?',
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
+    determinatePpudSentences: 'Determinate sentences in PPUD',
+    editOffence: 'Edit offence',
+    editSentencingCourt: 'Edit sentencing court',
+  },
+  taskListLinkTexts: {
+    vulnerabilities: 'Would recall affect vulnerability or additional needs?',
+    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Could recall affect vulnerabilities or needs?',
+    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Give details about the vulnerabilities or needs',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:

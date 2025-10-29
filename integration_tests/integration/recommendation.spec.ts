@@ -2325,6 +2325,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/edit-custody-group`)
       cy.pageHeading().should('contain', 'Is the sentence determinate or indeterminate?')
+      cy.get('p.govuk-body').contains('Make sure you select the correct sentence type.').should('exist')
     })
 
     it('edit Current Establishment', () => {
@@ -2815,6 +2816,79 @@ context('Make a recommendation', () => {
       cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
       cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
       cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1969')
+      // check the determinate sentence content is not present
+      cy.get('#determinateSentencesDetails').should('not.exist')
+    })
+
+    it('select indeterminate ppud sentence - show determinate sentence details', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          isIndeterminateSentence: true,
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [
+              {
+                id: '1',
+                dateOfSentence: '2003-06-12',
+                custodyType: 'Mandatory (MLP)',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+              {
+                id: '2',
+                dateOfSentence: '2004-06-12',
+                custodyType: 'Determinate', // determinate sentences
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+              {
+                id: '3',
+                dateOfSentence: '2004-06-12',
+                custodyType: 'EDS', // determinate sentences
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'another offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+            ],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Select or add a sentence for your booking')
+      cy.get('#determinateSentencesDetails')
+        .find('.govuk-details__summary-text')
+        .should('contain.text', '2 determinate sentences')
+
+      cy.get('#determinateSentencesDetails')
+        .find('.govuk-details__text')
+        .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
     })
 
     it('book to ppud - create offender', () => {

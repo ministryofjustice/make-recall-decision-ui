@@ -55,6 +55,7 @@ import addressDetailsController from '../controllers/recommendation/addressDetai
 import indeterminateDetailsController from '../controllers/recommendation/indeterminateDetailsController'
 import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
 import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
+import vulnerabilitiesDetailsController from '../controllers/recommendation/vulnerabilitiesDetailsController'
 import iomController from '../controllers/recommendation/iomController'
 import policeDetailsController from '../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
@@ -122,11 +123,16 @@ import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/Documen
 import editCurrentEstablishmentController from '../controllers/recommendation/ppcs/currentEstablishment/editCurrentEstablishmentController'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
+import determinateSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/determinateSentenceDetailsController'
 import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
 import { ppcsPaths } from './paths/ppcs'
+import { ppPaths } from './paths/pp'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
+import editDateOfSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
+import editSentencingCourtController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
+import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 
 const recommendations = Router()
 
@@ -217,8 +223,11 @@ ppRouteBuilder.post('fixed-licence', fixedTermLicenceConditionsController.post)
 ppRouteBuilder.get('indeterminate-details', indeterminateDetailsController.get)
 ppRouteBuilder.post('indeterminate-details', indeterminateDetailsController.post)
 
-ppRouteBuilder.get('vulnerabilities', vulnerabilitiesController.get)
-ppRouteBuilder.post('vulnerabilities', vulnerabilitiesController.post)
+ppRouteBuilder.get(ppPaths.vulnerabilities, vulnerabilitiesController.get)
+ppRouteBuilder.post(ppPaths.vulnerabilities, vulnerabilitiesController.post)
+
+ppRouteBuilder.get(ppPaths.vulnerabilitiesDetails, vulnerabilitiesDetailsController.get)
+ppRouteBuilder.post(ppPaths.vulnerabilitiesDetails, vulnerabilitiesDetailsController.post)
 
 ppRouteBuilder.get('task-list-no-recall', taskListNoRecallController.get)
 
@@ -505,6 +514,12 @@ ppcsRouteBuilder.post('supporting-document-remove/:id', supportingDocumentRemove
 
 ppcsRouteBuilder.get('supporting-document-download/:id', supportingDocumentDownloadController.get)
 
+ppcsRouteBuilder.get(ppcsPaths.indeterminateEdit.offenceDescription, editOffenceController.get)
+ppcsRouteBuilder.post(ppcsPaths.indeterminateEdit.offenceDescription, editOffenceController.post)
+
+ppcsRouteBuilder.get(ppcsPaths.indeterminateEdit.sentencingCourt, editSentencingCourtController.get)
+ppcsRouteBuilder.post(ppcsPaths.indeterminateEdit.sentencingCourt, editSentencingCourtController.post)
+
 const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(
     statusIsActive(STATUSES.SENT_TO_PPCS),
@@ -555,6 +570,14 @@ ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.sentenceToCommitIndetermina
 
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.get)
 ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.indeterminateEdit.releaseDate, editReleaseDateController.post)
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.dateOfSentence, editDateOfSentenceController.get)
+ppcsIndeterminateSentenceRouteBuilder.post(
+  ppcsPaths.indeterminateEdit.dateOfSentence,
+  editDateOfSentenceController.post
+)
+
+ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.determinatePpudSentences, determinateSentenceDetailsController.get)
 
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 

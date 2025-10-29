@@ -15,6 +15,7 @@ export default function customizeMessages(req: Request, res: Response, next: Nex
     ...res.locals,
     pageHeadings: renderStrings(strings.pageHeadings, stringRenderParams),
     pageTitles: renderStrings(strings.pageHeadings, { fullName: 'the person' }),
+    taskListLinkTexts: renderStrings(strings.taskListLinkTexts, stringRenderParams),
     errors: renderErrorMessages(res.locals.errors, stringRenderParams),
     formOptions: renderFormOptions(stringRenderParams),
   }

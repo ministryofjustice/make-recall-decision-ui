@@ -133,7 +133,7 @@
     "jquery": "^3.6.3",
     "jwt-decode": "^4.0.0",
     "luxon": "^3.2.1",
-    "mammoth": "^1.7.1",
+    "mammoth": "^1.11.0",
     "multer": "^2.0.2",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.3",

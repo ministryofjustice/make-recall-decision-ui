@@ -1,0 +1,34 @@
+<li>
+    <h2 class="moj-task-list__section" id='heading-vulnerability'>
+        Confirm any vulnerability and additional needs
+    </h2>
+    <ul class="moj-task-list__items">
+        {% if flags.flagRiskToSelfEnabled %}
+            <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-vulnerabilities'
+                   href="{{ urlInfo.basePath }}vulnerabilities">{{ taskListLinkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled }}</a>
+            </span>
+                <span id='task-list-status-vulnerabilities'>{{ taskStatus({ hasData: hasData(recommendation.vulnerabilities.selected) }) }}</span>
+            </li>
+            {% if selectedVulnerabilitiesRequireDetails %}
+                <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-vulnerabilities-details'
+                   href="{{ urlInfo.basePath }}vulnerabilities-details">{{ taskListLinkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled }}</a>
+            </span>
+                    <span id='task-list-status-vulnerabilities-details'>{{ taskStatus({ hasData: hasRequiredVulnerabilitiesDetails(recommendation) }) }}</span>
+                </li>
+            {% endif %}
+
+        {% else %}
+            <li class="moj-task-list__item">
+            <span class="moj-task-list__task-name">
+                <a aria-describedby='task-list-status-vulnerabilities'
+                   href="{{ urlInfo.basePath }}vulnerabilities">{{ taskListLinkTexts.vulnerabilities }}</a>
+            </span>
+                <span id='task-list-status-vulnerabilities'>{{ taskStatus({ hasData: hasData(recommendation.vulnerabilities.selected) }) }}</span>
+            </li>
+        {% endif %}
+    </ul>
+</li>

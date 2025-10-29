@@ -17,7 +17,6 @@
                 <div class="govuk-form-group{% if errors.vulnerabilities %} govuk-form-group--error{% endif %}">
                   <fieldset class="govuk-fieldset" aria-describedby="vulnerabilities-body-text{% if errors.vulnerabilities %} vulnerabilities-error{% endif %}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-
                         <h1 class="govuk-fieldset__heading">
                             {{ pageHeadings[page.id] }}
                         </h1>
@@ -69,9 +68,6 @@
                                     {{ exclusive.categoryHint }}
                                 </p>
                             {% endif %}
-
-                            {# Work out if the main exclusive checkbox was selected #}
-                            {% set exclusiveSelected = findListItemByValue({ items: inputDisplayValues, value: exclusive.value }) %}
 
                             {# Main exclusive checkbox #}
                             <div class="govuk-checkboxes__item">
@@ -184,10 +180,4 @@
         </div>
     </div>
 {% endif %}
-{% endblock %}
-
-
-{% block bodyEnd %}
-    {{ super() }}
-    <script src="/assets/vulnerabilities.js" defer></script>
 {% endblock %}

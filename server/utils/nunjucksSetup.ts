@@ -4,7 +4,7 @@ import express from 'express'
 import * as pathModule from 'path'
 import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
-import { formatDateTimeFromIsoString, formatTerm } from './dates/formatting'
+import { formatDateTimeFromIsoString, formatJSDate, formatSentenceLength, formatTerm } from './dates/formatting'
 import {
   dateTimeItems,
   possessiveSuffix,
@@ -24,6 +24,7 @@ import { getDisplayValueForOption } from '../controllers/recommendations/helpers
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 import { defaultName } from '../monitoring/azureAppInsights'
+import { hasAllRequiredVulnerabilityDetails } from '../controllers/recommendations/helpers/taskCompleteness'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -99,4 +100,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('isObjectInArray', isObjectInArray)
   njkEnv.addGlobal('countLabelSuffix', countLabelSuffix)
   njkEnv.addGlobal('formatTerm', formatTerm)
+  njkEnv.addGlobal('hasRequiredVulnerabilitiesDetails', hasAllRequiredVulnerabilityDetails)
+  njkEnv.addGlobal('formatJSDate', formatJSDate)
+  njkEnv.addGlobal('formatSentenceLength', formatSentenceLength)
 }
