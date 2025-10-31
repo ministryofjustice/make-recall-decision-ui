@@ -221,21 +221,13 @@ async function post(req: Request, res: Response, next: NextFunction) {
   const { bookRecallToPpud } = await getRecommendation(recommendationId, token)
 
   validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'legislationReleasedUnder', 'missingLegislationReleasedUnder', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'policeForce', 'missingPoliceForce', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'releasingPrison', 'missingReleasingPrison', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'mappaLevel', 'missingMappaLevel', errors)
 
   if (errors.length > 0) {
