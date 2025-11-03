@@ -33,7 +33,7 @@
                         {% for item in nonExclusive %}
                             {% if item.category != lastCategory %}
                                 {% set lastCategory = item.category %}
-                                <h2 class="govuk-heading-s">{{ item.category }}</h2>
+                                <h2 class="govuk-heading-s govuk-!-margin-top-7">{{ item.category }}</h2>
                                     {% if item.categoryHint %}
                                         <p id="vulnerabilities-{{item.value}}-hint" class="govuk-hint">
                                             {{ item.categoryHint }}
@@ -62,7 +62,7 @@
 
                         {# Exclusive last #}
                         {% if exclusive %}
-                            <h2 class="govuk-heading-s">{{ exclusive.category }}</h2>
+                            <h2 class="govuk-heading-s govuk-!-margin-top-7">{{ exclusive.category }}</h2>
                             {% if exclusive.categoryHint %}
                                 <p id="vulnerabilities-{{exclusive.value}}-hint" class="govuk-hint">
                                     {{ exclusive.categoryHint }}
