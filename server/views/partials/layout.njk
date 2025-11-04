@@ -60,9 +60,6 @@
   <script nonce="{{ cspNonce }}">
     window.applicationInsights.init('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}');
   </script>
-  {# <script nonce='{{ cspNonce }}'>
-    window.MOJFrontend = window.MOJFrontend || {};
-  </script> #}
   <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script src="/assets/js/vStyleDropdownArrow.js"></script>
