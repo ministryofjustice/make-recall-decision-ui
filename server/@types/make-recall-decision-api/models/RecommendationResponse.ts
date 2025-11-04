@@ -193,10 +193,10 @@ export type BookRecallToPpud = {
 }
 
 export type PpudSentenceData = {
-  offenceDescription: string,
-  offenceDescriptionComment: string,
-  releaseDate: string,
-  sentencingCourt: string,
+  offenceDescription?: string,
+  offenceDescriptionComment?: string,
+  releaseDate?: string,
+  sentencingCourt?: string,
   dateOfSentence: string
 }
 
