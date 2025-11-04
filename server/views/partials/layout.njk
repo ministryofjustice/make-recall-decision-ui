@@ -56,13 +56,13 @@
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
   <script src="/assets/applicationinsights-web.min.js"></script>
   <script src="/assets/applicationinsights.js"></script>
-  <script src="/assets/js/jquery.min.js"></script>
   <script nonce="{{ cspNonce }}">
     window.applicationInsights.init('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}');
   </script>
-  <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
+  <script src="/assets/js/jquery.min.js"></script>
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script src="/assets/js/vStyleDropdownArrow.js"></script>
+  <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
   {% block headEnd %}{% endblock %}
 {% endblock %}
 {% block pageTitle %}
