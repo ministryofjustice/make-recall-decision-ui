@@ -62,7 +62,8 @@ fi
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev,seed-test-data
-docker compose build
+export POSTGRES_OPTIONS=sslmode=disable
+docker compose build 
 docker compose up -d
 popd
 
