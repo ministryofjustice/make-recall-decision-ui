@@ -16,10 +16,12 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../../../../partials/error-summary.njk' %}
 
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-            <p class="govuk-body">Update the information to record in PPUD.</p>
-            <h2 class="govuk-heading-m govuk-!-padding-top-2 govuk-!-margin-bottom-1">Currently in PPUD</h2>
-            <p class="govuk-body">{{ existingOffenceDescription }}</p>
+            {{ heading(pageHeadings[page.id]) }}
+            {{ bodyParagraph('Update the information to record in PPUD') }}
+
+            {{ heading('Currently in PPUD', 2, 'm', 'govuk-!-padding-top-2 govuk-!-margin-bottom-1') }}
+            {{ bodyParagraph(existingOffenceDescription, 'govuk-!-margin-bottom-6') }}
+
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {{ accessibleAutocomplete({
@@ -39,6 +41,9 @@
                 {{ govukTextarea({
                     name: "offenceDescriptionComment",
                     id: "offenceDescriptionComment",
+                    formGroup: {
+                        classes: 'govuk-!-margin-bottom-7'
+                    },
                     label: {
                         text: 'Add comments, including any additional offences (optional)',
                         class: 'govuk-label--m'

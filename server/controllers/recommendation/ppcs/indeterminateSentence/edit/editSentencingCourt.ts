@@ -17,7 +17,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
     s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
-  const existingSentencingCourt = ppudSentence.sentencingCourt
+  const existingSentencingCourt = ppudSentence.sentencingCourt ?? 'Not specified'
   const pendingSentenceData = recommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData
 
   const list = await ppudReferenceList(token, 'courts')
