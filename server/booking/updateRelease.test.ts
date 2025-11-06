@@ -27,7 +27,7 @@ function testSuccessfulReleaseUpdateAlternatives(
 ) {
   describe('probation practitioner completed the part A', () => {
     const recommendationCompletedByProbationPractitioner = RecommendationResponseGenerator.generate({
-      whoCompletedPartA: true,
+      whoCompletedPartA: 'any',
       bookRecallToPpud: { custodyGroup },
     })
     recommendationCompletedByProbationPractitioner.whoCompletedPartA.isPersonProbationPractitionerForOffender = true
@@ -43,7 +43,7 @@ function testSuccessfulReleaseUpdateAlternatives(
   })
   describe('probation practitioner did not complete the part A', () => {
     const recommendationCompletedByAdminWorker = RecommendationResponseGenerator.generate({
-      whoCompletedPartA: true,
+      whoCompletedPartA: 'any',
       bookRecallToPpud: { custodyGroup },
     })
     recommendationCompletedByAdminWorker.whoCompletedPartA.isPersonProbationPractitionerForOffender = false
