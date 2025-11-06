@@ -39,12 +39,12 @@ function buildIndeterminateSentenceRequest(recommendation: RecommendationRespons
   const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
     sentence => sentence.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
+  const editedIndeterminateSentenceData = recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
 
   return {
     custodyType: selectedPpudSentence.custodyType,
-    dateOfSentence: selectedPpudSentence.dateOfSentence,
-    releaseDate: selectedPpudSentence.releaseDate,
-    sentencingCourt: selectedPpudSentence.sentencingCourt,
+    dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
+    sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
   }
 }
 

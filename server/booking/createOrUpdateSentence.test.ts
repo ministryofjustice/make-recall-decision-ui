@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { StageEnum } from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudCreateSentence, ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
@@ -18,6 +18,7 @@ import {
   BookRecallToPpud,
   OfferedOffence,
   PpudSentence,
+  PpudSentenceData,
 } from '../@types/make-recall-decision-api/models/RecommendationResponse'
 
 jest.mock('../data/makeDecisionApiClient')
@@ -43,12 +44,14 @@ function expectedDeterminateSentenceRequest(
   }
 }
 
-function expectedIndeterminateSentenceRequest(selectedPpudSentence: PpudSentence): PpudUpdateSentenceRequest {
+function expectedIndeterminateSentenceRequest(
+  selectedPpudSentence: PpudSentence,
+  editedIndeterminateSentenceData: PpudSentenceData
+): PpudUpdateSentenceRequest {
   return {
     custodyType: selectedPpudSentence.custodyType,
-    dateOfSentence: selectedPpudSentence.dateOfSentence,
-    releaseDate: selectedPpudSentence.releaseDate,
-    sentencingCourt: selectedPpudSentence.sentencingCourt,
+    dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
+    sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
   }
 }
 
@@ -65,12 +68,12 @@ function testSentenceCreation(
     },
   }
 
-  const expectedMemento = {
+  const expectedMemento: BookingMemento = {
     ...bookingMemento,
     stage: StageEnum.SENTENCE_BOOKED,
+    failed: undefined,
+    failedMessage: undefined,
   }
-  delete expectedMemento.failed
-  delete expectedMemento.failedMessage
 
   let returnedMemento: BookingMemento
 
@@ -109,12 +112,12 @@ function testSentenceUpdate(
   expectedSentenceRequest: PpudUpdateSentenceRequest
 ) {
   describe('- updating existing PPUD sentence', () => {
-    const expectedMemento = {
+    const expectedMemento: BookingMemento = {
       ...bookingMemento,
       stage: StageEnum.SENTENCE_BOOKED,
+      failed: undefined,
+      failedMessage: undefined,
     }
-    delete expectedMemento.failed
-    delete expectedMemento.failedMessage
 
     let returnedMemento: BookingMemento
     beforeEach(async () => {
@@ -230,11 +233,17 @@ describe('update sentence', () => {
 
     describe('for indeterminate sentence', () => {
       const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
-        bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+        bookRecallToPpud: {
+          custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+          ppudIndeterminateSentenceData: { offenceDescriptionComment: faker.lorem.sentence() },
+        },
       })
       const selectedPpudSentence = recommendation.ppudOffender.sentences[0]
       recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
-      const expectedSentenceRequest = expectedIndeterminateSentenceRequest(selectedPpudSentence)
+      const expectedSentenceRequest = expectedIndeterminateSentenceRequest(
+        selectedPpudSentence,
+        recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
+      )
 
       testSentenceUpdate(recommendation, bookingMemento, expectedSentenceRequest)
     })

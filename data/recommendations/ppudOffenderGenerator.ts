@@ -12,7 +12,7 @@ export type PpudOffenderOptions = {
 
 export const PpudOffenderGenerator: DataGenerator<PpudOffender, PpudOffenderOptions> = {
   generate: (options?: PpudOffenderOptions) => ({
-    id: options.id ?? faker.number.int().toString(),
+    id: options?.id ?? faker.number.int().toString(),
     croOtherNumber: faker.number.int().toString(),
     dateOfBirth: faker.date.past().toDateString(),
     ethnicity: EthnicityGenerator.generate(options?.ethnicity),
