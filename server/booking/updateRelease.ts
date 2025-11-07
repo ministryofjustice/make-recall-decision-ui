@@ -17,11 +17,7 @@ function calculateReleaseDate(recommendation: RecommendationResponse) {
       )
       return nomisOffence.releaseDate
     case CUSTODY_GROUP.INDETERMINATE:
-      // eslint-disable-next-line no-case-declarations
-      const selectedSentence = recommendation.ppudOffender.sentences.find(
-        s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
-      )
-      return selectedSentence.releaseDate
+      return recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate
     default:
       custodyGroup satisfies never
   }

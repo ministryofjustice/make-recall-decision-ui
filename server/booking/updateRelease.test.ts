@@ -15,48 +15,36 @@ import {
 import { RecommendationStatusResponseGenerator } from '../../data/recommendationStatus/recommendationStatusResponseGenerator'
 import { PpudUpdateReleaseResponseGenerator } from '../../data/ppud/updateRelease/ppudUpdateReleaseResponseGenerator'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import {
+  PractitionerForPartA,
+  WhoCompletedPartA,
+} from '../@types/make-recall-decision-api/models/RecommendationResponse'
 
 jest.mock('../data/makeDecisionApiClient')
 
 const token = 'token'
 const featureFlags = { xyz: true }
 
-function testSuccessfulReleaseUpdateAlternatives(
-  custodyGroup: CUSTODY_GROUP,
-  calculateExpectedDateOfRelease: (recommendation: RecommendationResponse) => string
-) {
-  describe('probation practitioner completed the part A', () => {
-    const recommendationCompletedByProbationPractitioner = RecommendationResponseGenerator.generate({
-      whoCompletedPartA: 'any',
-      bookRecallToPpud: { custodyGroup },
-    })
-    recommendationCompletedByProbationPractitioner.whoCompletedPartA.isPersonProbationPractitionerForOffender = true
-    recommendationCompletedByProbationPractitioner.bookRecallToPpud.ppudSentenceId =
-      recommendationCompletedByProbationPractitioner.ppudOffender.sentences[0].id
-    const offenderManager: PpudContactWithTelephone = {
-      name: recommendationCompletedByProbationPractitioner.whoCompletedPartA.name,
-      faxEmail: recommendationCompletedByProbationPractitioner.whoCompletedPartA.email,
-      telephone: recommendationCompletedByProbationPractitioner.whoCompletedPartA.telephone,
-    }
-    const dateOfRelease = calculateExpectedDateOfRelease(recommendationCompletedByProbationPractitioner)
-    testSuccessfulReleaseUpdate(recommendationCompletedByProbationPractitioner, offenderManager, dateOfRelease)
-  })
-  describe('probation practitioner did not complete the part A', () => {
-    const recommendationCompletedByAdminWorker = RecommendationResponseGenerator.generate({
-      whoCompletedPartA: 'any',
-      bookRecallToPpud: { custodyGroup },
-    })
-    recommendationCompletedByAdminWorker.whoCompletedPartA.isPersonProbationPractitionerForOffender = false
-    recommendationCompletedByAdminWorker.bookRecallToPpud.ppudSentenceId =
-      recommendationCompletedByAdminWorker.ppudOffender.sentences[0].id
-    const offenderManager = {
-      name: recommendationCompletedByAdminWorker.practitionerForPartA.name,
-      faxEmail: recommendationCompletedByAdminWorker.practitionerForPartA.email,
-      telephone: recommendationCompletedByAdminWorker.practitionerForPartA.telephone,
-    }
-    const dateOfRelease = calculateExpectedDateOfRelease(recommendationCompletedByAdminWorker)
-    testSuccessfulReleaseUpdate(recommendationCompletedByAdminWorker, offenderManager, dateOfRelease)
-  })
+function buildExpectedUpdateReleaseRequest(
+  recommendation: RecommendationResponse,
+  dateOfRelease: string,
+  assistantChiefOfficer: PpudContact,
+  offenderManager: PpudContactWithTelephone
+): PpudUpdateReleaseRequest {
+  return {
+    dateOfRelease,
+    postRelease: {
+      assistantChiefOfficer,
+      offenderManager,
+      spoc: {
+        name: recommendation.bookRecallToPpud.policeForce,
+        faxEmail: '',
+      },
+      probationService: recommendation.bookRecallToPpud.probationArea,
+    },
+    releasedFrom: recommendation.bookRecallToPpud.releasingPrison,
+    releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
+  }
 }
 
 function testSuccessfulReleaseUpdate(
@@ -70,13 +58,13 @@ function testSuccessfulReleaseUpdate(
 
   const releaseResponse = PpudUpdateReleaseResponseGenerator.generate()
 
-  const expectedMemento = {
+  const expectedMemento: BookingMemento = {
     ...bookingMemento,
     releaseId: releaseResponse.release.id,
     stage: StageEnum.RELEASE_BOOKED,
+    failed: undefined,
+    failedMessage: undefined,
   }
-  delete expectedMemento.failed
-  delete expectedMemento.failedMessage
 
   const recommendationStatuses = RecommendationStatusResponseGenerator.generateSeries([
     {
@@ -136,26 +124,30 @@ function testSuccessfulReleaseUpdate(
   })
 }
 
-function buildExpectedUpdateReleaseRequest(
-  recommendation: RecommendationResponse,
-  dateOfRelease: string,
-  assistantChiefOfficer: PpudContact,
-  offenderManager: PpudContactWithTelephone
-): PpudUpdateReleaseRequest {
-  return {
-    dateOfRelease,
-    postRelease: {
-      assistantChiefOfficer,
-      offenderManager,
-      spoc: {
-        name: recommendation.bookRecallToPpud.policeForce,
-        faxEmail: '',
-      },
-      probationService: recommendation.bookRecallToPpud.probationArea,
-    },
-    releasedFrom: recommendation.bookRecallToPpud.releasingPrison,
-    releasedUnder: recommendation.bookRecallToPpud.legislationReleasedUnder,
-  }
+function testSuccessfulReleaseUpdateAlternatives(
+  custodyGroup: CUSTODY_GROUP,
+  calculateExpectedDateOfRelease: (recommendation: RecommendationResponse) => string
+) {
+  ;[true, false].forEach(isPersonProbationPractitionerForOffender => {
+    describe(`probation practitioner ${isPersonProbationPractitionerForOffender ? 'completed' : 'did not complete'} the part A`, () => {
+      const recommendation = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: { custodyGroup },
+      })
+      recommendation.whoCompletedPartA.isPersonProbationPractitionerForOffender =
+        isPersonProbationPractitionerForOffender
+      recommendation.bookRecallToPpud.ppudSentenceId = recommendation.ppudOffender.sentences[0].id
+      const partACompleter: WhoCompletedPartA | PractitionerForPartA = isPersonProbationPractitionerForOffender
+        ? recommendation.whoCompletedPartA
+        : recommendation.practitionerForPartA
+      const offenderManager: PpudContactWithTelephone = {
+        name: partACompleter.name || '',
+        faxEmail: partACompleter.email || '',
+        telephone: partACompleter.telephone || '',
+      }
+      const dateOfRelease = calculateExpectedDateOfRelease(recommendation)
+      testSuccessfulReleaseUpdate(recommendation, offenderManager, dateOfRelease)
+    })
+  })
 }
 
 describe('update release', () => {
@@ -190,7 +182,7 @@ describe('update release', () => {
     })
     describe('for indeterminate sentence', () => {
       const calculateExpectedDateOfRelease = (recommendation: RecommendationResponse): string => {
-        return recommendation.ppudOffender.sentences[0].releaseDate
+        return recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate
       }
 
       testSuccessfulReleaseUpdateAlternatives(CUSTODY_GROUP.INDETERMINATE, calculateExpectedDateOfRelease)
