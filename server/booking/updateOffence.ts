@@ -19,7 +19,6 @@ export default async function updateOffence(
 
   const { custodyGroup } = recommendation.bookRecallToPpud
 
-  // The user has no options to change offence values, so we don't need to update anything in PPUD here
   if (custodyGroup === CUSTODY_GROUP.DETERMINATE) {
     const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
       o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
@@ -30,10 +29,17 @@ export default async function updateOffence(
       indexOffenceComment: recommendation.bookRecallToPpud?.indexOffenceComment,
       dateOfIndexOffence: nomisOffence.offenceDate,
     })
+  } else if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
+    const selectedSentence = recommendation.ppudOffender.sentences.find(
+      s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    )
+    await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
+      indexOffence: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescription,
+      indexOffenceComment: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescriptionComment,
+      dateOfIndexOffence: selectedSentence.offence.dateOfIndexOffence,
+    })
   }
 
-  // Although technically nothing is booked for indeterminate cases, the purpose of the stage is
-  // to avoid running the same stage twice, so it's acceptable to mark as if the offence was booked
   memento.stage = StageEnum.OFFENCE_BOOKED
   memento.failed = undefined
   memento.failedMessage = undefined

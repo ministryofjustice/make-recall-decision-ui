@@ -38,12 +38,12 @@ describe('update offence', () => {
       stage: StageEnum.SENTENCE_BOOKED,
     })
 
-    const expectedMemento = {
+    const expectedMemento: BookingMemento = {
       ...bookingMemento,
       stage: StageEnum.OFFENCE_BOOKED,
+      failed: undefined,
+      failedMessage: undefined,
     }
-    delete expectedMemento.failed
-    delete expectedMemento.failedMessage
 
     describe('determinate sentence', () => {
       const recommendation = RecommendationResponseGenerator.generate({
@@ -83,6 +83,9 @@ describe('update offence', () => {
       const recommendation = RecommendationResponseGenerator.generate({
         bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
       })
+      recommendation.bookRecallToPpud.ppudSentenceId = faker.helpers.arrayElement(
+        recommendation.ppudOffender.sentences
+      ).id
 
       let returnedMemento: BookingMemento
       beforeEach(async () => {
@@ -90,8 +93,15 @@ describe('update offence', () => {
 
         returnedMemento = await updateOffence(bookingMemento, recommendation, token, featureFlags)
       })
-      it('does not update the offence (nothing to update)', () => {
-        expect(ppudUpdateOffence).not.toHaveBeenCalled()
+      it('updates the PPUD offence', () => {
+        const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
+          s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+        )
+        expect(ppudUpdateOffence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
+          indexOffence: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescription,
+          indexOffenceComment: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescriptionComment,
+          dateOfIndexOffence: selectedPpudSentence.offence.dateOfIndexOffence,
+        })
       })
       it('updates the recommendation', () => {
         expect(updateRecommendation).toHaveBeenCalledWith({
