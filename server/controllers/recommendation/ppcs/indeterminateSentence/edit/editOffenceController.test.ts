@@ -25,7 +25,9 @@ describe('Indeterminate Sentence - Edit offence controller', () => {
       sentences: [
         {
           id: sentenceId,
-          offenceDescription: originalOffence,
+          offence: {
+            indexOffence: originalOffence,
+          },
         },
       ],
     },

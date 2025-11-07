@@ -8,7 +8,6 @@ import { PpudSentenceLengthGenerator, PpudSentenceLengthOptions } from './ppudSe
 export type PpudSentenceOptions = {
   id?: string
   custodyType?: CustodyType
-  offenceDescription?: string
   offence?: PpudOffenceOptions
   releaseDate?: Date
   sentenceLength?: PpudSentenceLengthOptions
