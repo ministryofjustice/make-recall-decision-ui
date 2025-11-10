@@ -58,6 +58,7 @@ popd
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev
+export POSTGRES_OPTIONS=sslmode=disable
 docker compose up -d --scale=${API_NAME}=0
 ./gradlew --stop
 

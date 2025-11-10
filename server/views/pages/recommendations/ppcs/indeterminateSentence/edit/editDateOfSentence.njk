@@ -19,13 +19,16 @@
             {{ bodyParagraph('Update the information to record in PPUD') }}
 
             {{ heading('Currently in PPUD', 2, 'm', 'govuk-!-padding-top-2 govuk-!-margin-bottom-1') }}
-            {{ bodyParagraph(formatDateTimeFromIsoString({ isoDate: pageData.existingDateOfSentence, dateOnly: true })) }}
+            {{ bodyParagraph(formatDateTimeFromIsoString({ isoDate: pageData.existingDateOfSentence, dateOnly: true }), 'govuk-!-margin-bottom-6') }}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% set dateInputError = { text: errors.dateOfSentence } if errors.dateOfSentence else null %}
                 {{ govukDateInput({
                     id: "date-of-sentence",
+                    formGroup: {
+                        classes: 'govuk-!-margin-bottom-7'
+                    },
                     fieldset: {
                         legend: {
                             text: 'Date of sentence',
