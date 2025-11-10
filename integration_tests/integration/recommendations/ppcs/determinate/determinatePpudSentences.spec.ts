@@ -103,13 +103,13 @@ context('Determinate Ppud Sentences', () => {
       )
 
       // verify court case header and date of sentence for Court case: Glasgow
-      cy.get('h3[class="govuk-heading-m govuk-!-margin-bottom-2"]')
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
         .filter(':contains("Court case: Glasgow")')
         .should('have.length', 1)
       cy.get('p[class="govuk-body govuk-!-margin-bottom-0"]').should('contain.text', 'Date of sentence: 12 June 2004')
 
       // verify court case header and date of sentence for Court case: Clydesdale
-      cy.get('h3[class="govuk-heading-m govuk-!-margin-bottom-2"]')
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
         .filter(':contains("Court case: Clydesdale")')
         .should('have.length', 1)
       cy.get('p[class="govuk-body govuk-!-margin-bottom-0"]').should('contain.text', 'Date of sentence: 13 June 2004')
@@ -210,7 +210,7 @@ context('Determinate Ppud Sentences', () => {
       cy.pageHeading().should('equals', 'Determinate sentences in PPUD')
 
       // should group sentences are same court
-      cy.get('h3[class="govuk-heading-m govuk-!-margin-bottom-2"]')
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
         .filter(`:contains('Court case: ${courtName}')`)
         .should('have.length', 1)
     })
@@ -285,7 +285,7 @@ context('Determinate Ppud Sentences', () => {
       cy.pageHeading().should('equals', 'Determinate sentences in PPUD')
 
       // should group sentences by same court
-      cy.get('h3[class="govuk-heading-m govuk-!-margin-bottom-2"]')
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
         .filter(`:contains('Court case: ${courtName}')`)
         .should('have.length', 1)
 
