@@ -133,6 +133,7 @@ import editDateOfSentenceController from '../controllers/recommendation/ppcs/ind
 import editSentencingCourtController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
+import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
 
 const recommendations = Router()
 
@@ -540,6 +541,9 @@ ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndex
 // TODO change to select-determinate-ppud-sentence
 ppcsDeterminateSentenceRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
+
+ppcsDeterminateSentenceRouteBuilder.get('custody-type', editCustodyTypeController.get)
+ppcsDeterminateSentenceRouteBuilder.post('custody-type', editCustodyTypeController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
 ppcsDeterminateSentenceRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)

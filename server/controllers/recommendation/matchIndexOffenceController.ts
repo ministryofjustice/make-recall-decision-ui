@@ -80,7 +80,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: offenderExistsAndHasSentences ? 'select-ppud-sentence' : 'sentence-to-commit',
+    nextPageId: offenderExistsAndHasSentences ? 'select-ppud-sentence' : 'custody-type',
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

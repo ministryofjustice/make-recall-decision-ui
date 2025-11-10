@@ -53,7 +53,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     return res.redirect(303, req.originalUrl)
   }
 
-  const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
+  const recommendation = await getRecommendation(recommendationId, token)
 
   await updateRecommendation({
     recommendationId,
@@ -68,7 +68,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppudSentenceId === 'ADD_NEW' ? 'sentence-to-commit' : 'sentence-to-commit-existing-offender',
+    nextPageId: ppudSentenceId === 'ADD_NEW' ? 'custody-type' : 'sentence-to-commit-existing-offender',
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
