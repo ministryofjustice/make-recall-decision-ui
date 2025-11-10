@@ -1,8 +1,8 @@
 export type PpudUpdateReleaseRequest = {
   dateOfRelease: string,
   postRelease: PpudUpdatePostReleaseRequest,
-  releasedFrom: string,
-  releasedUnder: string,
+  releasedFrom?: string,
+  releasedUnder?: string,
 };
 
 export type PpudUpdatePostReleaseRequest = {

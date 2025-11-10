@@ -39,7 +39,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
           },
         },
         ppudOffender: {
-          sentences: [{ id: sentenceId, offenceDescription: ppudOffenceDescription }],
+          sentences: [{ id: sentenceId, offence: { indexOffence: ppudOffenceDescription } }],
         },
       })
       beforeEach(() => {
@@ -74,7 +74,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
           },
         },
         ppudOffender: {
-          sentences: [{ id: sentenceId, offenceDescription: ppudOffenceDescription }],
+          sentences: [{ id: sentenceId, offence: { indexOffence: ppudOffenceDescription } }],
         },
       })
       beforeEach(() => {
