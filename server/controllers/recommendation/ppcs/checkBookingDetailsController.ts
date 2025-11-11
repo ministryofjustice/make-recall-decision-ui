@@ -7,6 +7,7 @@ import {
   BookRecallToPpud,
   PpudOffender,
   PrisonOffender,
+  RecommendationResponse,
 } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { convertToTitleCase, hasValue, isDefined } from '../../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
@@ -110,25 +111,37 @@ async function get(_: Request, res: Response, next: NextFunction) {
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   } else {
+    const { bookRecallToPpud, prisonOffender } = recommendation as RecommendationResponse
+
     if (
-      recommendation.bookRecallToPpud.firstNames !==
-      `${convertToTitleCaseIfRequired(recommendation.prisonOffender?.firstName)} ${convertToTitleCaseIfRequired(recommendation.prisonOffender?.middleName)}`.trim()
+      bookRecallToPpud.firstNames !==
+      `${convertToTitleCaseIfRequired(prisonOffender?.firstName)} ${convertToTitleCaseIfRequired(prisonOffender?.middleName)}`.trim()
     ) {
       edited.firstNames = true
     }
 
-    if (
-      recommendation.bookRecallToPpud.lastName !== convertToTitleCaseIfRequired(recommendation.prisonOffender?.lastName)
-    ) {
+    if (bookRecallToPpud.lastName !== convertToTitleCaseIfRequired(prisonOffender?.lastName)) {
       edited.lastName = true
     }
 
-    if (recommendation.bookRecallToPpud.dateOfBirth !== recommendation.prisonOffender?.dateOfBirth) {
+    if (bookRecallToPpud.dateOfBirth !== prisonOffender?.dateOfBirth) {
       edited.dateOfBirth = true
     }
 
-    if (recommendation.bookRecallToPpud.prisonNumber !== recommendation.prisonOffender?.bookingNo) {
+    if (bookRecallToPpud.prisonNumber !== prisonOffender?.bookingNo) {
       edited.prisonNumber = true
+    }
+
+    if (bookRecallToPpud.gender !== prisonOffender?.gender) {
+      edited.gender = true
+    }
+
+    if (bookRecallToPpud.ethnicity !== prisonOffender?.ethnicity) {
+      edited.ethnicity = true
+    }
+
+    if (bookRecallToPpud.cro !== prisonOffender?.cro) {
+      edited.cro = true
     }
   }
 
