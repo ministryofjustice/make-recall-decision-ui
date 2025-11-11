@@ -3,19 +3,10 @@ import { FeatureFlags } from '../@types/featureFlags'
 import { ppudCreateSentence, ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
+import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
-export default async function createOrUpdateSentence(
-  bookingMemento: BookingMemento,
-  recommendation: RecommendationResponse,
-  token: string,
-  featureFlags: FeatureFlags
-) {
-  const memento = { ...bookingMemento }
-
-  if (memento.stage !== StageEnum.OFFENDER_BOOKED) {
-    return memento
-  }
-
+function buildDeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
   const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
   )
@@ -31,7 +22,7 @@ export default async function createOrUpdateSentence(
         }
       : null
 
-  const sentence = {
+  return {
     custodyType: recommendation.bookRecallToPpud?.custodyType,
     mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
     dateOfSentence: nomisOffence.sentenceDate,
@@ -42,6 +33,46 @@ export default async function createOrUpdateSentence(
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
   }
+}
+
+function buildIndeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
+  const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
+    sentence => sentence.id === recommendation.bookRecallToPpud.ppudSentenceId
+  )
+  const editedIndeterminateSentenceData = recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
+
+  return {
+    custodyType: selectedPpudSentence.custodyType,
+    dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
+    sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
+  }
+}
+
+export default async function createOrUpdateSentence(
+  bookingMemento: BookingMemento,
+  recommendation: RecommendationResponse,
+  token: string,
+  featureFlags: FeatureFlags
+) {
+  const memento = { ...bookingMemento }
+
+  if (memento.stage !== StageEnum.OFFENDER_BOOKED) {
+    return memento
+  }
+
+  const { custodyGroup } = recommendation.bookRecallToPpud
+  let sentence: PpudUpdateSentenceRequest
+  switch (custodyGroup) {
+    case CUSTODY_GROUP.DETERMINATE:
+      sentence = buildDeterminateSentenceRequest(recommendation)
+      break
+    case CUSTODY_GROUP.INDETERMINATE:
+      sentence = buildIndeterminateSentenceRequest(recommendation)
+      break
+    default:
+      custodyGroup satisfies never
+  }
+
   if (recommendation.bookRecallToPpud.ppudSentenceId === 'ADD_NEW') {
     const createSentenceResponse = await ppudCreateSentence(token, memento.offenderId, sentence)
 

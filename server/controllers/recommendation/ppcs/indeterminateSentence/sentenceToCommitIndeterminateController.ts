@@ -19,7 +19,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       releaseDate: ppudSentence.releaseDate,
       sentencingCourt: ppudSentence.sentencingCourt,
       dateOfSentence: ppudSentence.dateOfSentence,
-      tariffExpiryDate: ppudSentence.sentenceExpiryDate,
+      tariffExpiryDate: ppudSentence.tariffExpiryDate,
       fullPunishment: formatPpudSentenceLength(ppudSentence.sentenceLength),
     },
     ...(recommendationResponse?.bookRecallToPpud?.ppudIndeterminateSentenceData ?? {}),

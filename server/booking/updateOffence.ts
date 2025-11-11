@@ -3,6 +3,7 @@ import { FeatureFlags } from '../@types/featureFlags'
 import { ppudUpdateOffence, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
 import { StageEnum } from './StageEnum'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 export default async function updateOffence(
   bookingMemento: BookingMemento,
@@ -16,15 +17,28 @@ export default async function updateOffence(
     return memento
   }
 
-  const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
-  )
+  const { custodyGroup } = recommendation.bookRecallToPpud
 
-  await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
-    indexOffence: recommendation.bookRecallToPpud?.indexOffence,
-    indexOffenceComment: recommendation.bookRecallToPpud?.indexOffenceComment,
-    dateOfIndexOffence: nomisOffence.offenceDate,
-  })
+  if (custodyGroup === CUSTODY_GROUP.DETERMINATE) {
+    const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
+      o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+    )
+
+    await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
+      indexOffence: recommendation.bookRecallToPpud?.indexOffence,
+      indexOffenceComment: recommendation.bookRecallToPpud?.indexOffenceComment,
+      dateOfIndexOffence: nomisOffence.offenceDate,
+    })
+  } else if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
+    const selectedSentence = recommendation.ppudOffender.sentences.find(
+      s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    )
+    await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
+      indexOffence: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescription,
+      indexOffenceComment: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescriptionComment,
+      dateOfIndexOffence: selectedSentence.offence.dateOfIndexOffence,
+    })
+  }
 
   memento.stage = StageEnum.OFFENCE_BOOKED
   memento.failed = undefined

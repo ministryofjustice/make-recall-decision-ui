@@ -22,7 +22,12 @@ function getSentencesByCustodyType(sentences: PpudDetailsSentence[], custodyType
   return sentences?.filter(sentence => custodyTypes.includes(sentence.custodyType)) ?? []
 }
 
-export function getCustodyGroup(recommendation: RecommendationResponse): CUSTODY_GROUP {
+/**
+ * Determines the custody group of the sentence based on the Part A information, i.e. what the Probation Practitioner
+ * has responded (NOT what the PPCS worker responds).
+ * @param recommendation
+ */
+export function calculatePartACustodyGroup(recommendation: RecommendationResponse): CUSTODY_GROUP {
   return recommendation.isIndeterminateSentence ? CUSTODY_GROUP.INDETERMINATE : CUSTODY_GROUP.DETERMINATE
 }
 
