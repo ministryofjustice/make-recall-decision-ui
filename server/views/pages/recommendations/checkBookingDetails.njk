@@ -268,7 +268,7 @@
             <form novalidate method="post" class="govuk-!-margin-top-3">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
-                {{ govukAccordion({
+                {{ accordion({
                     id: "check-booking-details",
                     items: [
                         {
@@ -281,7 +281,9 @@
                             content: {
                                 html: personalDetailsHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         },
                         {
                             heading: {
@@ -293,7 +295,9 @@
                             content: {
                                 html: custodyDetailsHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         },
                         {
                             heading: {
@@ -305,7 +309,9 @@
                             content: {
                                 html: prisonAndlicenceInformationHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         },
                         {
                             heading: {
@@ -317,7 +323,9 @@
                             content: {
                                 html: addressHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         },
                         {
                             heading: {
@@ -329,7 +337,9 @@
                             content: {
                                 html: recallInformationHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         },
                         {
                             heading: {
@@ -341,7 +351,9 @@
                             content: {
                                 html: probationDetailsHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         },
                         {
                             heading: {
@@ -353,7 +365,9 @@
                             content: {
                                 html: riskLevelsHtml
                             },
-                            expanded: true
+                            expanded: true,
+                            sectionClasses: "govuk-!-static-padding-top-0",
+                            buttonClasses: "govuk-!-static-padding-top-8 govuk-!-static-padding-bottom-6"
                         }
                     ]
                 })
