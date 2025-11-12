@@ -2524,6 +2524,31 @@ context('Make a recommendation', () => {
       cy.getText('sentenceEndDate').should('contain', '15 November 3022')
     })
 
+    it('edit custody type', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
+        },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+      cy.task('getReferenceList', {
+        name: 'determinate-custody-types',
+        statusCode: 200,
+        response: {
+          values: ['one', 'two', 'three'],
+        },
+      })
+
+      cy.visit(`/recommendations/252523937/custody-type`)
+      cy.pageHeading().should('contain', 'Which custody type is Jane Bloggs subject to?')
+    })
+
     it('select determinate ppud sentence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

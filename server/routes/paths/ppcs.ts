@@ -5,6 +5,8 @@ export const ppcsPaths = {
   matchIndexOffence: 'match-index-offence',
   determinatePpudSentences: 'determinate-ppud-sentences',
   editCustodyType: 'custody-type',
+  selectPpudSentence: 'select-ppud-sentence',
+  sentenceToCommitExistingOffender: 'sentence-to-commit-existing-offender',
 
   // indeterminate
   selectIndeterminatePpudSentence: 'select-indeterminate-ppud-sentence',

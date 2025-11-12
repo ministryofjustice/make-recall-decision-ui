@@ -56,12 +56,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
         bookRecallToPpud,
       }
 
-      // TODO MRD-2703 This is a temporary measure to ensure we can still go through the determinate path
-      //      and create new determinate sentences. Otherwise, the user would be unable to set the custody
-      //      type. To be removed once custody type editing is possible for new determinate sentences
-      if (custodyGroup === CUSTODY_GROUP.DETERMINATE) {
-        valuesToSave.bookRecallToPpud.custodyType = custodyGroup
-      }
+      ///
 
       valuesToSave.bookRecallToPpud.custodyGroup = custodyGroup
 

@@ -5,6 +5,7 @@ import { NamedFormError } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { ppcsPaths } from '../../routes/paths/ppcs'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -54,6 +55,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   }
 
   const recommendation = await getRecommendation(recommendationId, token)
+  const ppudSentence = recommendation.ppudOffender.sentences?.find(sentence => sentence.id === ppudSentenceId)
 
   await updateRecommendation({
     recommendationId,
@@ -61,6 +63,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         ppudSentenceId,
+        custodyType: ppudSentence.custodyType,
       },
     },
     token,
@@ -68,7 +71,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppudSentenceId === 'ADD_NEW' ? 'custody-type' : 'sentence-to-commit-existing-offender',
+    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.editCustodyType : ppcsPaths.sentenceToCommitExistingOffender,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
