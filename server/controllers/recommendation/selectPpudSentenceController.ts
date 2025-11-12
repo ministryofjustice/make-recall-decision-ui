@@ -55,7 +55,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   }
 
   const recommendation = await getRecommendation(recommendationId, token)
-  const ppudSentence = recommendation.ppudOffender.sentences?.find(sentence => sentence.id === ppudSentenceId)
+  const ppudSentence = recommendation.ppudOffender?.sentences?.find(sentence => sentence.id === ppudSentenceId)
 
   await updateRecommendation({
     recommendationId,
@@ -63,7 +63,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         ppudSentenceId,
-        custodyType: ppudSentence.custodyType,
+        custodyType: ppudSentence?.custodyType,
       },
     },
     token,
