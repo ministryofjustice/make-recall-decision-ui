@@ -1,5 +1,7 @@
 # UI for "Decide if someone should be recalled or not" (`make-recall-decision-ui`)
 
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/make-recall-decision-ui/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/make-recall-decision-ui)
+
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/make-recall-decision-ui/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/make-recall-decision-ui/tree/main)
 
 If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a
