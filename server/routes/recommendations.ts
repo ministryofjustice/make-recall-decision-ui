@@ -538,7 +538,6 @@ ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, co
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.matchIndexOffence, matchIndexOffenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndexOffenceController.post)
 
-// TODO change to select-determinate-ppud-sentence
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.selectPpudSentence, selectPpudSentenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.selectPpudSentence, selectPpudSentenceController.post)
 

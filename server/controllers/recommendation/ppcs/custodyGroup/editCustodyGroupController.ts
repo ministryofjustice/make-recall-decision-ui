@@ -56,8 +56,6 @@ async function post(req: Request, res: Response, next: NextFunction) {
         bookRecallToPpud,
       }
 
-      ///
-
       valuesToSave.bookRecallToPpud.custodyGroup = custodyGroup
 
       await updateRecommendation({
