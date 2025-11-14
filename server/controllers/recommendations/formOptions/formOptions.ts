@@ -18,6 +18,7 @@ import { UiListItem } from '../../../@types/pagesForms'
 import { spoRecallTypeEnum } from './spoRecallTypeEnum'
 import { rationaleCheck } from '../rationaleCheck/formOptions'
 import { recallTypeExtended } from '../recallTypeExtended/formOptions'
+import { determinateCustodyType } from '../custody-type/formOptions'
 
 export type FormOption = {
   value: string
@@ -49,6 +50,7 @@ export const formOptions: FormOptionsType = {
   hasVictimsInContactScheme,
   isUnderIntegratedOffenderManagement,
   roshLevels,
+  determinateCustodyType,
 }
 
 export const isValueValid = (val: string, optionId: string) =>
