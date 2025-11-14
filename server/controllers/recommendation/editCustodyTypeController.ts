@@ -4,6 +4,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { determinateCustodyTypeLabels } from '../recommendations/custody-type/formOptions'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -14,7 +15,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   const custodyTypes = list.values.map(value => {
     return {
-      text: value,
+      text: determinateCustodyTypeLabels[value] ?? value,
       value,
     }
   })

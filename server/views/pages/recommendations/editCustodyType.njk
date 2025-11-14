@@ -20,7 +20,7 @@
                         idPrefix: "custodyType",
                         name: "custodyType",
                         items: radioCheckboxItems({
-                            items: formOptions.determinateCustodyType,
+                            items: custodyTypes,
                             currentValues: recommendation.bookRecallToPpud.custodyType
                         }),
                         errorMessage: errorMessage(errors.custodyType)
