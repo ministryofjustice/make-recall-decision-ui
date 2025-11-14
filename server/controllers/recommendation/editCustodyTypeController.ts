@@ -4,28 +4,20 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { determinateCustodyTypeLabels } from '../recommendations/custody-type/formOptions'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
     user: { token },
   } = res.locals
 
-  const { custodyGroup } = res.locals.recommendation.bookRecallToPpud
-
-  const referenceEndpoint =
-    custodyGroup === CUSTODY_GROUP.DETERMINATE ? 'determinate-custody-types' : 'indeterminate-custody-types'
-  const list = await ppudReferenceList(token, referenceEndpoint)
+  const list = await ppudReferenceList(token, 'determinate-custody-types')
 
   const custodyTypes = list.values.map(value => {
     return {
-      text: value,
+      text: determinateCustodyTypeLabels[value] ?? value,
       value,
     }
-  })
-  custodyTypes.unshift({
-    text: 'Enter custody type',
-    value: '',
   })
 
   res.locals = {
@@ -78,7 +70,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sentence-to-commit', urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

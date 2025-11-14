@@ -149,6 +149,9 @@ const ppcsUrls = [
   recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
+  recommendationEndpoint('custody-type', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
   recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),

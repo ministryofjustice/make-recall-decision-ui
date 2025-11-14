@@ -133,6 +133,7 @@ import editDateOfSentenceController from '../controllers/recommendation/ppcs/ind
 import editSentencingCourtController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
+import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
 
 const recommendations = Router()
 
@@ -537,15 +538,23 @@ ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, co
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.matchIndexOffence, matchIndexOffenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndexOffenceController.post)
 
-// TODO change to select-determinate-ppud-sentence
-ppcsDeterminateSentenceRouteBuilder.get('select-ppud-sentence', selectPpudSentenceController.get)
-ppcsDeterminateSentenceRouteBuilder.post('select-ppud-sentence', selectPpudSentenceController.post)
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.selectPpudSentence, selectPpudSentenceController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.selectPpudSentence, selectPpudSentenceController.post)
+
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.editCustodyType, editCustodyTypeController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.editCustodyType, editCustodyTypeController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get('sentence-to-commit', sentenceToCommitController.get)
 ppcsDeterminateSentenceRouteBuilder.post('sentence-to-commit', sentenceToCommitController.post)
 
-ppcsDeterminateSentenceRouteBuilder.get('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.get)
-ppcsDeterminateSentenceRouteBuilder.post('sentence-to-commit-existing-offender', sentenceToCommitExistingOffender.post)
+ppcsDeterminateSentenceRouteBuilder.get(
+  ppcsPaths.sentenceToCommitExistingOffender,
+  sentenceToCommitExistingOffender.get
+)
+ppcsDeterminateSentenceRouteBuilder.post(
+  ppcsPaths.sentenceToCommitExistingOffender,
+  sentenceToCommitExistingOffender.post
+)
 
 const ppcsIndeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
   and(

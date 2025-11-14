@@ -246,7 +246,7 @@ export const strings: Record<string, Record<string, string>> = {
     sentenceToCommitIndeterminate: 'Your recall booking for {{ fullName }}',
     bookToPpud: 'Book {{ fullName }} onto PPUD',
     bookedToPpud: 'Case created and booked onto PPUD',
-    editCustodyType: 'Edit custody type',
+    editCustodyType: 'Which custody type is {{ fullName }} subject to?',
     editCurrentEstablishment: 'Edit current establishment',
     editPoliceContact: 'Edit police local contact details',
     editMappaLevel: 'Edit MAPPA level',

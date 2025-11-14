@@ -137,11 +137,7 @@ describe('post', () => {
       ...recommendation.bookRecallToPpud,
       custodyGroup: req.body.custodyGroup,
     }
-    // TODO temporary expectation until the temporary measure in the
-    //      controller is removed as part of MRD-2703
-    if (req.body.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
-      expectedBookRecallToPpud.custodyType = req.body.custodyGroup
-    }
+
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: recommendation.id,
       featureFlags: res.locals.flags,
@@ -226,13 +222,8 @@ describe('post', () => {
     delete expectedBookRecallToPpud.indexOffenceComment
     delete expectedBookRecallToPpud.ppudSentenceId
     delete expectedBookRecallToPpud.ppudIndeterminateSentenceData
-    // TODO temporary expectation until the temporary measure in the
-    //      controller is removed as part of MRD-2703
-    if (req.body.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
-      expectedBookRecallToPpud.custodyType = req.body.custodyGroup
-    } else {
-      delete expectedBookRecallToPpud.custodyType
-    }
+    delete expectedBookRecallToPpud.custodyType
+
     expect(updateRecommendation).toHaveBeenCalledWith({
       featureFlags: res.locals.flags,
       recommendationId: res.locals.recommendation.id,

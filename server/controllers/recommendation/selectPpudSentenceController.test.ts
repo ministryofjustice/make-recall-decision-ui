@@ -111,7 +111,7 @@ describe('post', () => {
         },
       },
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sentence-to-commit`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/custody-type`)
     expect(next).toHaveBeenCalled()
   })
   it('missing ppud sentence', async () => {

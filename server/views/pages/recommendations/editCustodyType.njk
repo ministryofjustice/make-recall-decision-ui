@@ -10,21 +10,22 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            {{ heading(pageHeadings[page.id]) }}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                {{ govukSelect({
-                  id: "custodyType",
-                  name: "custodyType",
-                  label: {
-                    text: "List of custody types"
-                  },
-                  errorMessage: errorMessage(errors.custodyType),
-                  value: recommendation.bookRecallToPpud.custodyType,
-                  items: custodyTypes
-                }) }}
+                {{
+                    govukRadios({
+                        idPrefix: "custodyType",
+                        name: "custodyType",
+                        items: radioCheckboxItems({
+                            items: custodyTypes,
+                            currentValues: recommendation.bookRecallToPpud.custodyType
+                        }),
+                        errorMessage: errorMessage(errors.custodyType)
+                    })
+                }}
 
                 {{ formSubmitButton() }}
             </form>

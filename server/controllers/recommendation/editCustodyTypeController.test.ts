@@ -7,15 +7,7 @@ import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load determinate custody types', async () => {
-    await testGet(CUSTODY_GROUP.DETERMINATE, 'determinate-custody-types')
-  })
-
-  it('load indeterminate custody types', async () => {
-    await testGet(CUSTODY_GROUP.INDETERMINATE, 'indeterminate-custody-types')
-  })
-
-  async function testGet(custodyGroup: CUSTODY_GROUP, referenceEndpoint: string) {
+  it('load custody types', async () => {
     ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
 
     const req = mockReq({
@@ -28,7 +20,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: {
-            custodyGroup,
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
           },
         },
       },
@@ -36,18 +28,17 @@ describe('get', () => {
     const next = mockNext()
     await editCustodyTypeController.get(req, res, next)
 
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', referenceEndpoint)
+    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'determinate-custody-types')
 
     expect(res.locals.page).toEqual({ id: 'editCustodyType' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editCustodyType')
     expect(res.locals.custodyTypes).toEqual([
-      { text: 'Enter custody type', value: '' },
       { text: 'one', value: 'one' },
       { text: 'two', value: 'two' },
       { text: 'three', value: 'three' },
     ])
     expect(next).toHaveBeenCalled()
-  }
+  })
 })
 
 describe('post', () => {
@@ -94,7 +85,7 @@ describe('post', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/sentence-to-commit`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with invalid data', async () => {
