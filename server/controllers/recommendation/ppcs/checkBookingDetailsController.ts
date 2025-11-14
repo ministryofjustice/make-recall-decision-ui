@@ -132,14 +132,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       edited.prisonNumber = true
     }
 
-    if (bookRecallToPpud.gender !== prisonOffender?.gender) {
-      edited.gender = true
-    }
-
-    if (bookRecallToPpud.ethnicity !== prisonOffender?.ethnicity) {
-      edited.ethnicity = true
-    }
-
     if (bookRecallToPpud.cro !== prisonOffender?.cro) {
       edited.cro = true
     }
