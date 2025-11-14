@@ -5,6 +5,7 @@ import { RecommendationResponseGenerator } from '../../../../../../data/recommen
 import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
 import { determinateCustodyTypes } from '../../../../../../server/helpers/ppudSentence/custodyTypes'
+import { determinateCustodyTypeLabels } from '../../../../../../server/controllers/recommendations/custody-type/formOptions'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 
 context('Determinate sentence - edit custody type page', () => {
@@ -55,7 +56,9 @@ context('Determinate sentence - edit custody type page', () => {
 
         // Radios
         determinateCustodyTypes.forEach((val, i) => {
-          cy.get('.govuk-radios__item label').eq(i).should('contain.text', val)
+          cy.get('.govuk-radios__item label')
+            .eq(i)
+            .should('contain.text', determinateCustodyTypeLabels[val] ?? val)
         })
 
         // Continue Button
