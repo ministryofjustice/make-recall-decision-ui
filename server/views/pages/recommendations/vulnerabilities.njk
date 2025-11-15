@@ -49,7 +49,6 @@
                                        name="vulnerabilities"
                                        type="checkbox"
                                        value="{{ item.value }}"
-                                       data-aria-controls="conditional-{{ item.value }}"
                                        {% if selected %}checked{% endif %}>
                                 <label class="govuk-label govuk-checkboxes__label" for="{{ item.value }}">
                                     {{ item.text }}
