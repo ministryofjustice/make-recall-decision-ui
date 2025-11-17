@@ -2789,6 +2789,7 @@ context('Make a recommendation', () => {
                   dateOfIndexOffence: null,
                 },
                 sentenceExpiryDate: '1969-03-02',
+                tariffExpiryDate: '1970-03-02',
               },
             ],
           },
@@ -2815,7 +2816,7 @@ context('Make a recommendation', () => {
       cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
       cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
       cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
-      cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1969')
+      cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
       // check the determinate sentence content is not present
       cy.get('#determinateSentencesDetails').should('not.exist')
     })
