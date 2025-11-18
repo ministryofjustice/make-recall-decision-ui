@@ -14,8 +14,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const custodyGroup = calculatePartACustodyGroup(recommendation)
-  const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender.sentences)
-  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender.sentences)
+  const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender?.sentences)
+  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
 
   const pageData = {
     nomisSentence: {
