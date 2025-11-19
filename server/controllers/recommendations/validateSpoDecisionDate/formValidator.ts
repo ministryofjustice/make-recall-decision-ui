@@ -17,7 +17,7 @@ export const validateDateTime = async ({ requestBody }: FormValidatorArgs): Form
   const dateTimeIso = convertGmtDatePartsToUtc(dateTimeParts as Record<string, string>, {
     includeTime: true,
     dateMustBeInFuture: false,
-    dateMustBeInPast: false,
+    dateMustBeInPast: true,
     validatePartLengths: false,
   })
 
