@@ -197,7 +197,7 @@ context('Recall Type Page', () => {
           { key: 'isServingFTSentenceForTerroristOffence', generate: 'boolean' },
           { key: 'hasBeenChargedWithTerroristOrStateThreatOffence', generate: 'boolean' },
         ],
-        criteria => !Object.keys(criteria).every(k => criteria[k] ?? false)
+        criteria => Object.keys(criteria).some(k => criteria[k] ?? false)
       )
 
       const recommendationWithExceptionCriteria = RecommendationResponseGenerator.generate({
