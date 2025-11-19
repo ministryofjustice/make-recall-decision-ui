@@ -1,0 +1,19 @@
+.js-enabled {
+    .car-accordion {
+        .govuk-accordion__section-content {
+            padding-top: govuk-spacing(0);
+        }
+
+        .govuk-accordion__section-button
+        {
+            padding-top: govuk-spacing(8);
+            padding-bottom: govuk-spacing(6);
+        }
+    }
+}
+
+.car-accordion {
+    .govuk-accordion__section-summary {
+        margin-bottom: govuk-spacing(6)
+    }
+}

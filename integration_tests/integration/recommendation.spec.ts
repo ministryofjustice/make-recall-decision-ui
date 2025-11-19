@@ -2072,6 +2072,10 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.visit(`/recommendations/252523937/check-booking-details`)
       cy.pageHeading().should('contain', 'Check booking details for Jane Bloggs')
+      cy.clickButton('Hide all sections')
+      cy.get('#check-booking-details-content-1').should('contain', 'NOMIS number').should('not.be.visible')
+      cy.clickButton('Show all sections')
+      cy.get('#check-booking-details-content-1').should('contain', 'NOMIS number').should('be.visible')
     })
 
     it('edit name', () => {

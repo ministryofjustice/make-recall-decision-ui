@@ -53,51 +53,7 @@
 
 {% block content %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
-
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
-
-            <p class="govuk-body">
-                These details will go into a PPUD record. You should:
-            </p>
-
-            <div class='govuk-list govuk-list--number'>
-
-                <div>Uploading supporting documents.</div>
-
-                <a class='govuk-button govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3'
-                   href='/recommendations/{{ recommendation.id }}/supporting-documents'>Upload documents</a>
-
-                <div>Double-check everything is correct.</div>
-                <div>Edit anything that's wrong.</div>
-
-                {% if warnings|length %}
-                    {% set html %}
-                        <p class="govuk-body-m govuk-!-margin-bottom-0">
-                            These details are different in PPUD. Edit anything that's wrong.
-
-                        <div class="govuk-list govuk-!-margin-bottom-0">
-                            {% for key, val in warnings %}
-                                <div>
-                                    <span class="govuk-body govuk-!-font-weight-bold">{{ key | replace("-", " - ") }}:</span>
-                                    <span class="govuk-body">{{ blankSafe(val) }}</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        </p>
-                    {% endset %}
-
-                    {{ govukNotificationBanner({
-                        titleText: 'Some NOMIS information is different to PPUD',
-                        html: html,
-                        classes: "govuk-notification-banner--info govuk-!-margin-top-2 govuk-!-margin-bottom-2"
-                    }) }}
-                {% endif %}
-
-                <div>Continue to the next page and select the index offence.</div>
-            </div>
-
+        <div class="govuk-grid-column-full">
             {% if errorMessage %}
                 {% set html %}
                     <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
@@ -110,113 +66,300 @@
                     iconFallbackText: 'none'
                 }) }}
             {% endif %}
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                    {% include '../../partials/error-summary.njk' %}
+                        <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
 
+                        <p class="govuk-body">
+                        These details will go into a PPUD record. You should check everything is correct and edit anything that's missing or wrong.
+                        </p>
+
+                        <h2 class="govuk-heading-m">Supporting documents</h2>
+                        <p class="govuk-body">
+                        Upload the Part A, licence and reports to add them to PPUD.
+                        </p>
+
+
+                        {{ govukButton({
+                            text: "Upload Documents",
+                            classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
+                            href: "/recommendations/" + recommendation.id + "/supporting-documents"
+                        }) }}
+                </div>
+            </div>
+            
+            <hr class="govuk-section-break govuk-section-break--visible" />
         </div>
-        <div class="govuk-grid-column-full-from-desktop">
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
+    </div>
 
-                <h2 class='govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4'>
-                    Personal details
-                    <span class="govuk-caption-m">Taken from NOMIS</span>
-                </h2>
+    {% set personalDetailsHtml %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                {{
+                    summaryList({
+                        id: "check-booking-personal-details-list",
+                        rows: [
+                            { key: 'NOMIS number', value: blankSafe(recommendation.personOnProbation.nomsNumber) },
+                            { key: "First name\(s\)", value: editedBadge(edited.firstNames) + blankSafe(recommendation.bookRecallToPpud.firstNames), actions: [{ id: editIdPrefix+'firstnames', text: editText, href: 'edit-name', visuallyHidden: 'first names' }] },
+                            { key: 'Last name', value: editedBadge(edited.lastName) + blankSafe(recommendation.bookRecallToPpud.lastName), actions: [{ id: editIdPrefix+'lastname', text: editText, href: 'edit-name', visuallyHidden: 'last name' }] },
+                            { key: 'Gender', value: '<span id="gender"></span>' + blankSafe(recommendation.bookRecallToPpud.gender, true, 'You must enter a gender'), actions: [{ id: editIdPrefix+'gender', text: editText, href: 'edit-gender', visuallyHidden: 'gender' }], error: errors.gender },
+                            { key: 'Ethnicity', value: '<span id="ethnicity"></span>' + blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'Enter an ethnicity'), actions: [{ id: editIdPrefix+'ethnicity', text: editText, href: 'edit-ethnicity', visuallyHidden: 'ethnicity' }], error: errors.ethnicity },
+                            { key: 'Date of birth', value: editedBadge(edited.dateOfBirth) + blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })), actions: [{ id: editIdPrefix+'dateofbirth', text: editText, href: 'edit-date-of-birth', visuallyHidden: 'date of birth' }] },
+                            { key: 'CRO', value:  editedBadge(edited.cro) + blankSafe(recommendation.bookRecallToPpud.cro), actions: [{ id: editIdPrefix+'cro', text: editText, href: 'edit-cro' , visuallyHidden: 'CRO' }] }
+                        ]
+                    })
+                }}
+            </div>
 
-                {% set offenderImage %}
-                    {% if recommendation.prisonOffender.image %}
-                        <img src="{{ recommendation.prisonOffender.image }}" />
-                    {% else %}
-                        - <span class="govuk-visually-hidden">no value</span>
-                    {% endif %}
-                {% endset %}
-                {% set firstNamesBlock %}{{ editedBadge(edited.firstNames) }}{{ blankSafe(recommendation.bookRecallToPpud.firstNames) }}{% endset %}
-                {% set lastNameBlock %}{{ editedBadge(edited.lastName) }}{{ blankSafe(recommendation.bookRecallToPpud.lastName) }}{% endset %}
-                {% set dateOfBirthBlock %}{{ editedBadge(edited.dateOfBirth) }}{{ blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })) }}{% endset %}
-                {% set prisonNumberBlock %}{{ editedBadge(edited.prisonNumber) }}{{ blankSafe(recommendation.bookRecallToPpud.prisonNumber) }}{% endset %}
-                {% set custodyStatusBlock %}
-                    {% if recommendation.prisonOffender.status == "ACTIVE IN" %}
-                        In custody
-                    {% elseif recommendation.prisonOffender.status == "INACTIVE OUT" %}
-                        Unlawfully at large (UAL)
-                    {% elseif recommendation.prisonOffender.status == "INACTIVE TRN" %}
-                        In transit - Unlawfully at large (UAL)
-                    {% else %}
-                        - <span class="govuk-visually-hidden">no value</span>
-                    {% endif %}
-                {% endset %}
-                {% set addressBlock %}
-                    {% if not hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
-                        <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span>
-                        </div>
-                    {% else %}
-                        {% if not hasLastKnownAddress %}
+            <div class="govuk-grid-column-one-third-from-desktop">
+                <div class="govuk-!-margin-left-2">
+                    <div class="govuk-summary-list__value">
+                        <h2 class="govuk-heading-s">Image</h2>
+                        {% if recommendation.prisonOffender.image %}
+                            <img src="{{ recommendation.prisonOffender.image }}" alt="image of {{ recommendation.bookRecallToPpud.firstNames + recommendation.bookRecallToPpud.lastName }}" />
+                        {% else %}
                             - <span class="govuk-visually-hidden">no value</span>
                         {% endif %}
-                        {% for address in recommendation.personOnProbation.addresses %}
-                            {{ formatAddress(address) }}
-                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endset %}
 
-                        {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
-                            <p class="govuk-body govuk-!-font-weight-bold">
-                                Additional address
-                            </p>
-                            <span class="govuk-body">
-                                <pre class="govuk-body">
-                                {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
-                                </pre>
-                            </span>
-                        {% endif %}
+    {% set custodyDetailsHtml %}
+        {% set custodyStatusBlock %}
+            {% if recommendation.prisonOffender.status == "ACTIVE IN" %}
+                In custody
+            {% elseif recommendation.prisonOffender.status == "INACTIVE OUT" %}
+                Unlawfully at large (UAL)
+            {% elseif recommendation.prisonOffender.status == "INACTIVE TRN" %}
+                In transit - Unlawfully at large (UAL)
+            {% else %}
+                - <span class="govuk-visually-hidden">no value</span>
+            {% endif %}
+        {% endset %}
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                {{
+                    summaryList({
+                        id: "check-booking-custody-details-list",
+                        rows: [
+                            { key: "Custody status", value: custodyStatusBlock },
+                            { key: 'Determinate or indeterminate', value: '<span id="custodyGroup"></span>' + blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'), actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }], error: errors.custodyGroup },
+                            { key: 'Current establishment', value: '<span id="currentEstablishment"></span>' + blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment'), actions: [{ id: editIdPrefix+'currentestablishment', text: editText, href: 'edit-current-establishment', visuallyHidden: 'current establishment' }], error: errors.currentEstablishment }
+                        ]
+                    })
+                }}
+            </div>
+        </div>
+    {% endset %}
+
+    {% set prisonAndlicenceInformationHtml %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                {{ 
+                    summaryList({
+                        id: "check-booking-prison-and-licence-details-list",
+                        rows: [
+                            { key: 'PNC', value: blankSafe(recommendation.personOnProbation.pncNumber) },
+                            { key: 'Prison booking number', value: editedBadge(edited.prisonNumber) + blankSafe(recommendation.bookRecallToPpud.prisonNumber), actions: [{ id: editIdPrefix+'prisonbookingnumber', text: editText, href: 'edit-prison-booking-number' , visuallyHidden: 'prison booking number' }], error: errors.prisonNumber },
+                            { key: 'Release date', value: blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.prisonOffender.releaseDate, dateOnly: true })) },
+                            { key: 'Releasing prison', value: '<span id="releasingPrison"></span>' + blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison'), actions: [{ id: editIdPrefix+'releasingprison', text: editText, href: 'edit-releasing-prison' , visuallyHidden: 'releasing prison' }], error: errors.releasingPrison },
+                            { key: 'Legislation released under', value: '<span id="legislationReleasedUnder"></span>' + blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under'), actions: [{ id: editIdPrefix+'legislationreleasedunder', text: editText, href: 'edit-legislation-released-under', visuallyHidden: 'legislation released under' }], error: errors.legislationReleasedUnder }
+                        ]
+                    })
+                }}
+            </div>
+        </div>
+    {% endset %}
+
+    {% set addressHtml %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third">
+                <p class="govuk-body govuk-!-font-weight-bold">Last known address</p>
+            </div>
+            <div class="govuk-grid-column-two-thirds">
+                {% if not hasLastKnownAddress and not recommendation.isMainAddressWherePersonCanBeFound.details %}
+                    <div class="govuk-summary-list__value_middle"><br />- <span class="govuk-visually-hidden">no value</span>
+                    </div>
+                {% else %}
+                    {% if not hasLastKnownAddress %}
+                        - <span class="govuk-visually-hidden">no value</span>
                     {% endif %}
-                {% endset %}
-                {{ summaryList({
-                    id: 'personal-details-list',
-                    rows: [
-                        { key: 'Image', value: offenderImage },
-                        { key: 'NOMIS number', value: blankSafe(recommendation.personOnProbation.nomsNumber) },
-                        { key: 'First names', value: firstNamesBlock, actions: [{ id: editIdPrefix+'firstnames', text: editText, href: 'edit-name', visuallyHidden: 'first names' }] },
-                        { key: 'Last name', value: lastNameBlock, actions: [{ id: editIdPrefix+'lastname', text: editText, href: 'edit-name', visuallyHidden: 'last name' }] },
-                        { key: 'Gender', value: blankSafe(recommendation.bookRecallToPpud.gender, true, 'Enter a gender'), actions: [{ id: editIdPrefix+'gender', text: editText, href: 'edit-gender', visuallyHidden: 'gender' }], error: errors.gender},
-                        { key: 'Ethnicity', value: blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'Enter an ethnicity'), actions: [{ id: editIdPrefix+'ethnicity', text: editText, href: 'edit-ethnicity', visuallyHidden: 'ethnicity' }], error: errors.ethnicity },
-                        { key: 'Date of birth', value: dateOfBirthBlock, actions: [{ id: editIdPrefix+'dateofbirth', text: editText, href: 'edit-date-of-birth', visuallyHidden: 'date of birth' }] },
-                        { key: 'CRO', value: blankSafe(recommendation.bookRecallToPpud.cro), actions: [{ id: editIdPrefix+'cro', text: editText, href: 'edit-cro' , visuallyHidden: 'CRO' }] },
-                        { key: 'Prison booking number', value: prisonNumberBlock, actions: [{ id: editIdPrefix+'prisonbookingnumber', text: editText, href: 'edit-prison-booking-number' , visuallyHidden: 'prison booking number' }], error: errors.prisonNumber },
-                        { key: 'Releasing prison', value: blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison'), actions: [{ id: editIdPrefix+'releasingprison', text: editText, href: 'edit-releasing-prison' , visuallyHidden: 'releasing prison' }], error: errors.releasingPrison },
-                        { key: 'Legislation released under', value: blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under'), actions: [{ id: editIdPrefix+'legislationreleasedunder', text: editText, href: 'edit-legislation-released-under', visuallyHidden: 'legislation released under' }], error: errors.legislationReleasedUnder },
-                        { key: 'Custody status', value: custodyStatusBlock },
-                        { key: 'Determinate or indeterminate', value: blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'), actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }], error: errors.custodyGroup },
-                        { key: 'Current establishment', value: blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment'), actions: [{ id: editIdPrefix+'currentestablishment', text: editText, href: 'edit-current-establishment', visuallyHidden: 'current establishment' }], error: errors.currentEstablishment },
-                        { key: 'Last known address', value: addressBlock }
-                    ],
-                    borderTop: true
-                }) }}
+                    {% for address in recommendation.personOnProbation.addresses %}
+                        {{ formatAddress(address) }}
+                    {% endfor %}
 
+                    {% if recommendation.isMainAddressWherePersonCanBeFound.details %}
+                        <p class="govuk-body govuk-!-font-weight-bold">
+                            Additional address
+                        </p>
+                        <span class="govuk-body">
+                            <pre class="govuk-body">
+                            {{ recommendation.isMainAddressWherePersonCanBeFound.details }}
+                            </pre>
+                        </span>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endset %}
 
-                <h2 class='govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4'>
-                    Probation details
-                    <span class="govuk-caption-m">Taken from the Part A</span>
-                </h2>
+    {% set recallInformationHtml %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                {{
+                    summaryList({
+                        id: "check-booking-recall-information-list",
+                        rows: [
+                            { key: 'Recall received date', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }), actions: [{ id: editIdPrefix+'recallreceiveddate', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date' }] },
+                            { key: 'Recall received time', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }), actions: [{ id: editIdPrefix+'recallreceivedtime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received time' }] },
+                            { key: 'Recall decision date', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) },
+                            { key: 'Recall decision time', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) }
+                        ]
+                    })
+                }}
+            </div>
+        </div>
+    {% endset %}
 
-                {{ summaryList({
-                    id: 'probation-details-list',
-                    rows: [
-                        { key: 'Recall received date', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }), actions: [{ id: editIdPrefix+'recallreceiveddate', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date' }] },
-                        { key: 'Recall received time', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }), actions: [{ id: editIdPrefix+'recallreceivedtime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received time' }] },
-                        { key: 'Recall decision date', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) },
-                        { key: 'Recall decision time', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) },
-                        { key: 'Probation area', value: blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'Enter a probation area'), actions: [{ id: editIdPrefix+'probationarea', text: editText, href: 'edit-probation-area', visuallyHidden: 'probation area' }], error: errors.probationArea },
-                        { key: 'Probation practitioner', value: blankSafe(practitioner.name) },
-                        { key: 'Probation practitioner email', value: blankSafe(practitioner.email) },
-                        { key: 'Probation practitioner phone number', value: blankSafe(practitioner.telephone) },
-                        { key: 'Local police contact', value: blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'Enter a local police force'), actions: [{ id: editIdPrefix+'policecontact', text: editText, href: 'edit-police-contact', visuallyHidden: 'local police contact' }], error: errors.policeForce },
-                        { key: 'Senior manager (ACO)', value: acoSigned.createdByUserFullName },
-                        { key: 'Senior manager (ACO) email', value: acoSigned.emailAddress },
-                        { key: 'MAPPA level', value: blankSafe(recommendation.bookRecallToPpud.mappaLevel,true, 'Enter a MAPPA level'), actions: [{ id: editIdPrefix+'mappalevel', text: editText, href: 'edit-mappa-level', visuallyHidden: 'MAPPA level' }], error: errors.mappaLevel },
-                        { key: 'Current risk of serious harm', value: currentHighestRosh }
-                    ],
-                    borderTop: true
-                })}}
+    {% set probationDetailsHtml %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                {{ 
+                    summaryList({ 
+                        id: "check-booking-probation-details-list",
+                        rows: [
+                            { key: 'Probation area', value: '<span id="probationArea"></span>' + blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'Enter a probation area'), actions: [{ id: editIdPrefix+'probationarea', text: editText, href: 'edit-probation-area', visuallyHidden: 'probation area' }], error: errors.probationArea },
+                            { key: 'Probation practitioner', value: blankSafe(practitioner.name) },
+                            { key: 'Probation practitioner email', value: blankSafe(practitioner.email) },
+                            { key: 'Probation practitioner phone number', value: blankSafe(practitioner.telephone) },
+                            { key: 'Local police force', value: '<span id="policeForce"></span>' + blankSafe(recommendation.bookRecallToPpud.policeForce, true, 'Enter a local police force'), actions: [{ id: editIdPrefix+'policecontact', text: editText, href: 'edit-police-contact', visuallyHidden: 'local police contact' }], error: errors.policeForce },
+                            { key: 'Senior manager (ACO)', value: acoSigned.createdByUserFullName },
+                            { key: 'Senior manager (ACO) email', value: acoSigned.emailAddress }
+                        ]
+                    })
+                }}
+            </div>
+        </div>
+    {% endset %}
 
-                {{ formSubmitButton({ label: 'Accept and continue' }) }}
+    {% set riskLevelsHtml %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                {{
+                    summaryList({
+                        id: "check-booking-risk-levels-list",
+                        rows: [
+                            { key: 'MAPPA level', value: '<span id="mappaLevel"></span>' + blankSafe(recommendation.bookRecallToPpud.mappaLevel,true, 'Enter a MAPPA level'), actions: [{ id: editIdPrefix+'mappalevel', text: editText, href: 'edit-mappa-level', visuallyHidden: 'MAPPA level' }], error: errors.mappaLevel },
+                            { key: 'Current risk of serious harm', value: currentHighestRosh }
+                        ],
+                        borderTop: true
+                    })
+                }}
+            </div>
+        </div>
+    {% endset %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <form novalidate method="post" class="govuk-!-margin-top-3">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="ppudRecordPresent" value="{{ recommendation.ppudRecordPresent }}" />
+                {{ accordion({
+                    id: "check-booking-details",
+                    items: [
+                        {
+                            heading: {
+                                html: "Personal Details"
+                            },
+                            summary: {
+                                text: "From NOMIS"
+                            },
+                            content: {
+                                html: personalDetailsHtml
+                            },
+                            expanded: true
+                        },
+                        {
+                            heading: {
+                                html: "Custody Details"
+                            },
+                            summary: {
+                                text: "From NOMIS"
+                            },
+                            content: {
+                                html: custodyDetailsHtml
+                            },
+                            expanded: true
+                        },
+                        {
+                            heading: {
+                                html: "Prison and licence information"
+                            },
+                            summary: {
+                                text: "From NOMIS"
+                            },
+                            content: {
+                                html: prisonAndlicenceInformationHtml
+                            },
+                            expanded: true
+                        },
+                        {
+                            heading: {
+                                html: "Address"
+                            },
+                            summary: {
+                                text: "From Part A"
+                            },
+                            content: {
+                                html: addressHtml
+                            },
+                            expanded: true
+                        },
+                        {
+                            heading: {
+                                html: "Recall information"
+                            },
+                            summary: {
+                                text: "From Part A"
+                            },
+                            content: {
+                                html: recallInformationHtml
+                            },
+                            expanded: true
+                        },
+                        {
+                            heading: {
+                                html: "Probation details"
+                            },
+                            summary: {
+                                text: "From Part A"
+                            },
+                            content: {
+                                html: probationDetailsHtml
+                            },
+                            expanded: true
+                        },
+                        {
+                            heading: {
+                                html: "Risk Levels"
+                            },
+                            summary: {
+                                text: "From Part A"
+                            },
+                            content: {
+                                html: riskLevelsHtml
+                            },
+                            expanded: true
+                        }
+                    ]
+                })
+                }}
+
+                {{ formSubmitButton({ label: 'Continue' }) }}
             </form>
         </div>
     </div>
