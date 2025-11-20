@@ -21,7 +21,7 @@ describe('get', () => {
     const sentenceId = faker.number.int().toString()
     const recommendation = RecommendationResponseGenerator.generate({
       ppudOffender: {
-        sentences: [{ id: sentenceId, custodyType: 'EDS' }, { custodyType: 'EDS (non parole)' }],
+        sentences: [{ id: sentenceId, custodyType: 'EDS' }, { custodyType: 'EPP' }],
       },
     })
 
@@ -40,7 +40,7 @@ describe('get', () => {
     })
     const determinateSentences: PpudDetailsSentence[] = [
       ppudDetailsSentence({ custodyType: 'EDS', dateOfSentence: new Date(2020, 1, 1) }),
-      ppudDetailsSentence({ custodyType: 'EDS (non parole)', dateOfSentence: new Date(2020, 1, 2) }),
+      ppudDetailsSentence({ custodyType: 'EPP', dateOfSentence: new Date(2020, 1, 2) }),
     ]
     const next = mockNext()
 
