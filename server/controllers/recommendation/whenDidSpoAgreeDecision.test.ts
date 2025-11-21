@@ -180,14 +180,14 @@ describe('post', () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const futureDate = faker.date.future()
+    const futureDate = faker.date.future({ refDate: new Date() })
 
     const req = mockReq({
       originalUrl: 'some-url',
       params: { recommendationId: '1' },
       body: {
-        'dateTime-day': futureDate.getDay().toString(),
-        'dateTime-month': futureDate.getMonth().toString(),
+        'dateTime-day': (futureDate.getDay() + 1).toString(),
+        'dateTime-month': (futureDate.getMonth() + 1).toString(),
         'dateTime-year': futureDate.getFullYear().toString(),
         'dateTime-hour': futureDate.getHours().toString(),
         'dateTime-minute': futureDate.getMinutes().toString(),
@@ -213,10 +213,10 @@ describe('post', () => {
         name: 'dateTime',
         invalidParts: ['day', 'month', 'year'],
         values: {
-          day: futureDate.getDay().toString(),
+          day: (futureDate.getDay() + 1).toString(),
           hour: futureDate.getHours().toString(),
           minute: futureDate.getMinutes().toString(),
-          month: futureDate.getMonth().toString(),
+          month: (futureDate.getMonth() + 1).toString(),
           year: futureDate.getFullYear().toString(),
         },
       },
