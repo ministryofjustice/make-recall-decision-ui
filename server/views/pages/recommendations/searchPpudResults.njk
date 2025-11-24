@@ -53,21 +53,29 @@
                 </tbody>
             </table>
             <br><br>
-            <h2 class='govuk-heading-m'>What to do if you cannot find the right PPUD record</h2>
 
-            <p class="govuk-body-m govuk-!-margin-bottom-0">
-                You can either <a href="/ppcs-search" class="govuk-body govuk-link">start a new search</a> or use this
-                service to:<br><br>
-            </p>
-            <ol class="govuk-list">
-                <li>1. Check the details from NOMIS and the Part A.</li>
-                <li>2. Use these details to create a new PPUD record.</li>
-                <li>3. Book the recall on to the new PPUD record.</li>
-            </ol>
+            {% set detailsHtml %}
+                <p class="govuk-body">You can either search for another CRN or:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>use this service to create a PPUD record for a determinate sentence</li>
+                    <li>go to PPUD to complete the booking for an indeterminate sentence</li>
+                </ul>
+                
+                {{ 
+                    govukButton({
+                        text: "Create a determinate PPUD record",
+                        classes: "govuk-button--secondary",
+                        href: urlInfo.basePath + "check-booking-details"
+                    })
+                }}
+            {% endset %}
 
-            <span>
-                <a href='{{ urlInfo.basePath }}check-booking-details' class='govuk-button govuk'>Continue and create PPUD record</a>
-            </span>
+            {{ 
+                govukDetails({ 
+                    summaryText: 'What to do if you cannot find the right PPUD record',
+                    html: detailsHtml
+                })
+            }}
         </div>
     </div>
 {% endblock %}
