@@ -61,12 +61,9 @@
     window.applicationInsights.init('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}');
   </script>
   <script src="/assets/js/jquery.min.js"></script>
-  <script nonce='{{ cspNonce }}'>
-    window.MOJFrontend = window.MOJFrontend || {};
-  </script>
-  <script src='/assets/moj/components/filter-toggle-button/filter-toggle-button.js'></script>
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script src="/assets/js/vStyleDropdownArrow.js"></script>
+  <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
   {% block headEnd %}{% endblock %}
 {% endblock %}
 {% block pageTitle %}
@@ -91,9 +88,8 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the
       <body>, to avoid blocking the initial render. #}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
-  <script src="/assets/moj/all.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/mojFrontendInit.js"></script>
   <script src="/assets/web-vitals.iife.js" defer></script>
   <script src="/assets/analytics.js" defer></script>
   <script src="/assets/accessibility.js" defer></script>

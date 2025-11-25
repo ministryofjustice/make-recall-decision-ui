@@ -63,9 +63,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors.length > 0) {
     req.session.errors = errors
     req.session.unsavedValues = {
-      day: Number(dateOfSentenceParts.day),
-      month: Number(dateOfSentenceParts.month),
-      year: Number(dateOfSentenceParts.year),
+      day: Number(dateOfSentenceParts.day) || '',
+      month: Number(dateOfSentenceParts.month) || '',
+      year: Number(dateOfSentenceParts.year) || '',
     }
     return res.redirect(303, req.originalUrl)
   }
