@@ -571,4 +571,105 @@ describe('post', () => {
 
     expect(next).not.toHaveBeenCalled()
   })
+  // Indeterminate sentences derive legislationReleasedUnder via the custodyGroup in the PPUD automation API - MRD-2979
+  it('does not validate legislation released under when custody group is indeterminate', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      bookRecallToPpud: {
+        dateOfBirth: '1970-03-15',
+        decisionDateTime: '2023-11-13T09:49:31',
+        firstNames: 'Jane J',
+        lastName: 'Bloggs',
+        cro: '1234/2345',
+        prisonNumber: '1234',
+        receivedDateTime: '2023-11-13T09:49:31',
+        releaseDate: null,
+        riskOfContrabandDetails: '',
+        riskOfSeriousHarmLevel: undefined,
+        sentenceDate: null,
+        image: undefined,
+        custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+      },
+    })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '1' },
+      body: {},
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    const next = mockNext()
+
+    await checkBookingDetailsController.post(req, res, next)
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+
+    expect(req.session.errors).toStrictEqual([
+      {
+        errorId: 'missingGender',
+        href: '#gender',
+        name: 'gender',
+        text: 'Enter gender',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingEthnicity',
+        href: '#ethnicity',
+        name: 'ethnicity',
+        text: 'Enter ethnicity',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingCurrentEstablishment',
+        href: '#currentEstablishment',
+        name: 'currentEstablishment',
+        text: 'Select an establishment from the list',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingProbationArea',
+        href: '#probationArea',
+        name: 'probationArea',
+        text: 'Enter probation area',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingPoliceForce',
+        href: '#policeForce',
+        name: 'policeForce',
+        text: 'Enter police force',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingReleasingPrison',
+        href: '#releasingPrison',
+        name: 'releasingPrison',
+        text: 'Select a releasing prison from the list',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        errorId: 'missingMappaLevel',
+        href: '#mappaLevel',
+        name: 'mappaLevel',
+        text: 'Enter MAPPA level',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+
+    expect(next).not.toHaveBeenCalled()
+  })
 })

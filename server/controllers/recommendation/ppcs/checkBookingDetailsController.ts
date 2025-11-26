@@ -20,6 +20,7 @@ import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
 import { getRoute } from './custodyGroupRouter'
+import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -227,7 +228,14 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
-  validateBookRecallToPpudField(bookRecallToPpud, 'legislationReleasedUnder', 'missingLegislationReleasedUnder', errors)
+  if (!bookRecallToPpud.custodyGroup || bookRecallToPpud.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
+    validateBookRecallToPpudField(
+      bookRecallToPpud,
+      'legislationReleasedUnder',
+      'missingLegislationReleasedUnder',
+      errors
+    )
+  }
   validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
