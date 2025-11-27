@@ -177,6 +177,8 @@ describe('post', () => {
     const expectedBookRecallToPpud = {
       ...initialBookRecallToPpud,
       custodyGroup: req.body.custodyGroup,
+      legislationReleasedUnder:
+        req.body.custodyGroup === CUSTODY_GROUP.DETERMINATE ? initialBookRecallToPpud.legislationReleasedUnder : null,
     }
     // Assert that these properties all exist so that we can see they are removed
     // before we call updateRecommendation with the result
@@ -303,5 +305,46 @@ describe('post', () => {
     expect(determineErrorId).toHaveBeenCalledWith(req.body.custodyGroup, custodyGroupFieldName, validCustodyGroups)
     expect(reloadPageWithError).toHaveBeenCalledWith(errorId, 'custodyGroup', req, res)
     expect(next).not.toHaveBeenCalled()
+  })
+
+  it('legislationReleasedUnder is set to null when custody group is indeterminate', async () => {
+    const req = mockReq({
+      originalUrl: randomUUID(),
+      body: {
+        custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+      },
+    })
+    const mockBookRecallToPpud = bookRecallToPpud({
+      custodyGroup: CUSTODY_GROUP.DETERMINATE,
+      legislationReleasedUnder: randomUUID(),
+    })
+    const recommendationId = randomInt(0, 10000).toString()
+    const recommendation = {
+      id: recommendationId,
+      bookRecallToPpud: mockBookRecallToPpud,
+    }
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath: randomUUID() },
+        recommendation,
+      },
+    })
+    const next = mockNext()
+    ;(updateRecommendation as jest.Mock).mockReturnValue({})
+
+    await editCustodyGroupController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId,
+      valuesToSave: {
+        bookRecallToPpud: {
+          ...mockBookRecallToPpud,
+          legislationReleasedUnder: null,
+        },
+        nomisIndexOffence: {},
+      },
+      featureFlags: {},
+      token: 'token',
+    })
   })
 })

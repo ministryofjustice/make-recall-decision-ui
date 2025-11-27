@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import editLegislationReleasedUnderController from './editLegislationReleasedUnderController'
+import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -15,7 +16,13 @@ describe('get', () => {
       },
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...recommendationApiResponse,
+        },
+      },
+    })
     const next = mockNext()
     await editLegislationReleasedUnderController.get(req, res, next)
 
@@ -30,6 +37,31 @@ describe('get', () => {
       { text: 'three', value: 'three' },
     ])
     expect(next).toHaveBeenCalled()
+  })
+
+  it('redirects if custodyGroup is indeterminate', async () => {
+    const req = mockReq({
+      params: {
+        recommendationId: '123',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...recommendationApiResponse,
+          bookRecallToPpud: {
+            custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+          },
+        },
+      },
+    })
+    const next = mockNext()
+
+    await editLegislationReleasedUnderController.get(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith('/recommendations/123/check-booking-details')
+    expect(next).not.toHaveBeenCalled()
   })
 })
 

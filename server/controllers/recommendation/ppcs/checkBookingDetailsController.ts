@@ -228,7 +228,9 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
-  if (!bookRecallToPpud.custodyGroup || bookRecallToPpud.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
+  validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
+
+  if (bookRecallToPpud.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
     validateBookRecallToPpudField(
       bookRecallToPpud,
       'legislationReleasedUnder',
@@ -236,7 +238,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
       errors
     )
   }
-  validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
+
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'policeForce', 'missingPoliceForce', errors)
