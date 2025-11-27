@@ -55,6 +55,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
       // in the PPUD automation API, so we can just set it to null here
       if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
         bookRecallToPpud.legislationReleasedUnder = null
+        bookRecallToPpud.legislationSentencedUnder = null
       }
 
       valuesToSave = {

@@ -7,7 +7,7 @@ import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load', async () => {
+  it('loads when custody group is determinate', async () => {
     ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
 
     const req = mockReq({
@@ -20,6 +20,9 @@ describe('get', () => {
       locals: {
         recommendation: {
           ...recommendationApiResponse,
+          bookRecallToPpud: {
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
+          },
         },
       },
     })

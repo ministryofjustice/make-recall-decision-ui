@@ -174,11 +174,13 @@ describe('post', () => {
       ppudIndeterminateSentenceData: {},
       sentenceDate: 'include',
     })
-    const expectedBookRecallToPpud = {
+    const expectedBookRecallToPpud: BookRecallToPpud = {
       ...initialBookRecallToPpud,
       custodyGroup: req.body.custodyGroup,
       legislationReleasedUnder:
         req.body.custodyGroup === CUSTODY_GROUP.DETERMINATE ? initialBookRecallToPpud.legislationReleasedUnder : null,
+      legislationSentencedUnder:
+        req.body.custodyGroup === CUSTODY_GROUP.DETERMINATE ? initialBookRecallToPpud.legislationSentencedUnder : null,
     }
     // Assert that these properties all exist so that we can see they are removed
     // before we call updateRecommendation with the result

@@ -14,7 +14,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const { recommendationId } = req.params
 
-  if (recommendation?.bookRecallToPpud?.custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
+  if (recommendation?.bookRecallToPpud?.custodyGroup !== CUSTODY_GROUP.DETERMINATE) {
     return res.redirect(`/recommendations/${recommendationId}/check-booking-details`)
   }
 
