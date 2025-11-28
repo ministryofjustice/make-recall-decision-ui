@@ -51,6 +51,13 @@ async function post(req: Request, res: Response, next: NextFunction) {
         }
       }
 
+      // Indeterminate sentences have their legislationReleasedUnder value calculated
+      // in the PPUD automation API, so we can just set it to null here
+      if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
+        bookRecallToPpud.legislationReleasedUnder = null
+        bookRecallToPpud.legislationSentencedUnder = null
+      }
+
       valuesToSave = {
         ...valuesToSave,
         bookRecallToPpud,

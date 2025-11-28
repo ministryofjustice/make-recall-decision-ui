@@ -48,6 +48,14 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       ])
     }
 
+    let legislationReleasedUnder: string = null
+    let legislationSentencedUnder: string = null
+
+    if (options?.custodyTypeBasedOnGroup === CUSTODY_GROUP.DETERMINATE) {
+      legislationReleasedUnder = faker.string.alpha(10)
+      legislationSentencedUnder = faker.string.alpha(10)
+    }
+
     return {
       firstNames: options?.firstName ?? faker.person.firstName(),
       lastName: options?.lastName ?? faker.person.lastName(),
@@ -62,6 +70,8 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
         options?.ppudIndeterminateSentenceData ?? 'any'
       ),
       sentenceDate: resolveIncludeNoneOrOption(options?.sentenceDate, faker.date.anytime)?.toISOString(),
+      legislationReleasedUnder,
+      legislationSentencedUnder,
     }
   },
 }

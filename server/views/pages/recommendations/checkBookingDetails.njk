@@ -157,18 +157,26 @@
     {% endset %}
 
     {% set prisonAndlicenceInformationHtml %}
+
+        {% set prisonAndLicenceInformationRows = [
+            { key: 'PNC', value: blankSafe(recommendation.personOnProbation.pncNumber) },
+            { key: 'Prison booking number', value: editedBadge(edited.prisonNumber) + blankSafe(recommendation.bookRecallToPpud.prisonNumber), actions: [{ id: editIdPrefix+'prisonbookingnumber', text: editText, href: 'edit-prison-booking-number' , visuallyHidden: 'prison booking number' }], error: errors.prisonNumber },
+            { key: 'Release date', value: blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.prisonOffender.releaseDate, dateOnly: true })) },
+            { key: 'Releasing prison', value: '<span id="releasingPrison"></span>' + blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison'), actions: [{ id: editIdPrefix+'releasingprison', text: editText, href: 'edit-releasing-prison' , visuallyHidden: 'releasing prison' }], error: errors.releasingPrison }
+        ]%}
+
+        {% if recommendation.bookRecallToPpud.custodyGroup == "Determinate" %}
+            {% set prisonAndLicenceInformationRows = (prisonAndLicenceInformationRows.push(
+                { key: 'Legislation released under', value: '<span id="legislationReleasedUnder"></span>' + blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under'), actions: [{ id: editIdPrefix+'legislationreleasedunder', text: editText, href: 'edit-legislation-released-under', visuallyHidden: 'legislation released under' }], error: errors.legislationReleasedUnder }
+            ), prisonAndLicenceInformationRows) %}
+        {% endif %}
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 {{ 
                     summaryList({
                         id: "check-booking-prison-and-licence-details-list",
-                        rows: [
-                            { key: 'PNC', value: blankSafe(recommendation.personOnProbation.pncNumber) },
-                            { key: 'Prison booking number', value: editedBadge(edited.prisonNumber) + blankSafe(recommendation.bookRecallToPpud.prisonNumber), actions: [{ id: editIdPrefix+'prisonbookingnumber', text: editText, href: 'edit-prison-booking-number' , visuallyHidden: 'prison booking number' }], error: errors.prisonNumber },
-                            { key: 'Release date', value: blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.prisonOffender.releaseDate, dateOnly: true })) },
-                            { key: 'Releasing prison', value: '<span id="releasingPrison"></span>' + blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'Enter a releasing prison'), actions: [{ id: editIdPrefix+'releasingprison', text: editText, href: 'edit-releasing-prison' , visuallyHidden: 'releasing prison' }], error: errors.releasingPrison },
-                            { key: 'Legislation released under', value: '<span id="legislationReleasedUnder"></span>' + blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'Enter legislation released under'), actions: [{ id: editIdPrefix+'legislationreleasedunder', text: editText, href: 'edit-legislation-released-under', visuallyHidden: 'legislation released under' }], error: errors.legislationReleasedUnder }
-                        ]
+                        rows: prisonAndLicenceInformationRows
                     })
                 }}
             </div>

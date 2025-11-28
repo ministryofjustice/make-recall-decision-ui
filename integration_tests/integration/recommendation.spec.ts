@@ -2290,6 +2290,8 @@ context('Make a recommendation', () => {
           ...completeRecommendationResponse,
           prisonOffender: {},
           bookRecallToPpud: {
+            // Can only edit legislation released under for determinate sentences
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
             legislationReleasedUnder: 'CJA1',
             legislationSentencedUnder: 'CJA1',
           },
