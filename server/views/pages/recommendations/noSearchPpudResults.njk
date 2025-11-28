@@ -6,28 +6,29 @@
 {% endblock %}
 {% block content %}
 
-    <h1 class='govuk-heading-l'>No PPUD record found for {{ fullName }}</h1>
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class='govuk-heading-l'>No PPUD record found for {{ fullName }}</h1>
 
-    <p class="govuk-body-l govuk-!-margin-bottom-5">
-        <span class='govuk-body govuk-!-font-weight-bold'>Case reference number (CRN):</span>
-        <span>{{ crn }}</span>
-    </p>
+        <p class="govuk-body-l govuk-!-margin-bottom-5">
+            <span class='govuk-body govuk-!-font-weight-bold'>Case reference number (CRN):</span>
+            <span>{{ crn }}</span>
+        </p>
 
-    <p>You can:</p>
-    <ul class="govuk-list govuk-list--bullet">
-       <li>Use this service to create a PPUD record for a determinate sentence</li>
-       <li>Go to PPUD to complete the booking for an indeterminate sentence</li>
-    </ul>
+        <p>You can:</p>
+        <ul class="govuk-list govuk-list--bullet">
+           <li>Use this service to create a PPUD record for a determinate sentence</li>
+           <li>Go to PPUD to complete the booking for an indeterminate sentence</li>
+        </ul>
 
-    {{ mojBanner({
-         type: "information",
-         html: 'You can only create a new record for a determinate sentence in this service.'
-      })
-    }}
+        {{ mojBanner({
+             type: "information",
+             html: 'You can only create a new record for a determinate sentence in this service.'
+          })
+        }}
 
-    <span>
-        <a href='{{ urlInfo.basePath }}check-booking-details' class='govuk-button govuk'>Create a determinate PPUD record</a>
-        <a class="govuk-button govuk-button--secondary govuk-!-margin-left-2" href="/ppcs-search">Search for another CRN</a>
-    </span>
-
+        <span>
+            <a href='{{ urlInfo.basePath }}check-booking-details' class='govuk-button govuk'>Create a determinate PPUD record</a>
+            <a class="govuk-button govuk-button--secondary govuk-!-margin-left-2" href="/ppcs-search">Search for another CRN</a>
+        </span>
+    </div>
 {% endblock %}
