@@ -12,6 +12,8 @@ declare module 'express-session' {
     unsavedValues?: Record<string, unknown>
     confirmationMessage?: ConfirmationMessage
     ppudSearchResults?: PpudSearchResult[]
+    crn?: string
+    fullName?: string
   }
 }
 
