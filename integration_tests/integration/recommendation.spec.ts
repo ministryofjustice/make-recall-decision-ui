@@ -2025,6 +2025,33 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'PPUD record found')
     })
 
+    it('no ppud search results', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+      cy.task('searchPpud', {
+        statusCode: 200,
+        response: {
+          results: [], // no ppud results
+        },
+      })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`/recommendations/${recommendationId}/no-search-ppud-results`)
+      cy.pageHeading().should('contain', 'No PPUD record found')
+      cy.get('p.govuk-body-l').contains('Case reference number (CRN):').should('exist')
+      cy.get('div.moj-banner__message')
+        .contains('You can only create a new record for a determinate sentence in this service.')
+        .should('exist')
+      cy.getLinkHref('Create a determinate PPUD record').should('contain', 'check-booking-details')
+      cy.getLinkHref('Search for another CRN').should('contain', '/ppcs-search')
+    })
+
     it('check booking details', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

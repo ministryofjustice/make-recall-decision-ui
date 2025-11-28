@@ -38,8 +38,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
       },
       flags
     )
-    const name = fullName.replace(/\s/g, '%20') as string
-    const nextPagePath = `${nextPageLinkUrl({ nextPageId: 'no-search-ppud-results', urlInfo })}?fullName=${name}`
+
+    req.session.fullName = fullName.replace(/\s/g, ' ') as string
+    req.session.crn = crn
+    const nextPagePath = `${nextPageLinkUrl({ nextPageId: 'no-search-ppud-results', urlInfo })}`
     res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
     return
   }

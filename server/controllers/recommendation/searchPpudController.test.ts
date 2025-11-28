@@ -114,7 +114,9 @@ describe('post', () => {
       { xyz: true }
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/no-search-ppud-results?fullName=Joe`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/no-search-ppud-results`)
+    expect(req.session.fullName).toEqual('Joe')
+    expect(req.session.crn).toEqual('X123')
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })
