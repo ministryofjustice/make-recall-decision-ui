@@ -77,7 +77,7 @@ jobs:
           name: Update npm
           # Temporarily pinning the node version to allow pipeline builds to run.
           # Can move back to npm@latest after upgrading to v10
-          command: 'sudo npm install -g npm@9'
+          command: 'npm install -g npm@9'
       - node/install-packages
       - run:
           command: |
@@ -108,8 +108,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: install-npm
-          command: 'npm ci --no-audit'
+          name: setup-npm
+          command: 'npm run setup:no-audit'
       - run:
           name: Check version
           command: 'npm --version'
@@ -277,7 +277,7 @@ jobs:
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Install packages
-          command: 'npm install'
+          command: 'npm run setup'
       - run:
           working_directory: make-recall-decision-e2e-tests
           environment:
@@ -341,7 +341,7 @@ jobs:
           name: Run E2E tests
           working_directory: make-recall-decision-e2e-tests
           command: |
-            npm ci --no-audit
+            npm run setup:no-audit
             echo PWD:: $PWD
             shopt -s globstar
 
