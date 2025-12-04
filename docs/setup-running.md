@@ -3,7 +3,7 @@
 ## Setup
 
 Use the version of Node specified in the package.json 'engines' property.
-Install dependencies using `npm install`.
+Install dependencies using `npm run setup`.
 
 Take a copy of the .env.dev.sample file in the root of this repo.
 Name the copy as .env, then set API_CLIENT_ID to your client ID and API_CLIENT_SECRET to your client secret.  NOTE - don't wrap client secrets in quotes.

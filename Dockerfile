@@ -29,7 +29,7 @@ ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
 COPY package*.json ./
-RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
+RUN CYPRESS_INSTALL_BINARY=0 npm run setup:no-audit
 
 COPY . .
 RUN npm run build

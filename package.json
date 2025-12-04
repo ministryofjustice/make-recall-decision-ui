@@ -32,7 +32,9 @@
     "int-test-ui": "cypress open --config-file integration_tests/cypress.config.ts",
     "accessibility-test": "cypress run --browser chrome --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "accessibility-test-ui": "cypress open --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
-    "clean": "rm -rf dist build node_modules stylesheets"
+    "clean": "rm -rf dist build node_modules stylesheets",
+    "setup": "npm ci && hmpps-npm-script-run-allowlist",
+    "setup:no-audit": "npm ci --no-audit && hmpps-npm-script-run-allowlist"
   },
   "engines": {
     "node": "^20",
@@ -150,6 +152,7 @@
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.667.0",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
