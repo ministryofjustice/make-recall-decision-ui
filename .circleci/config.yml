@@ -73,11 +73,7 @@ jobs:
       tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
-      - run:
-          name: Update npm
-          # Temporarily pinning the node version to allow pipeline builds to run.
-          # Can move back to npm@latest after upgrading to v10
-          command: 'npm install -g npm@9'
+      - node/install
       - node/install-packages
       - run:
           command: |
@@ -131,6 +127,7 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
+      - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages
       - run:
           name: unit tests
@@ -156,6 +153,7 @@ jobs:
       - run: sudo apt-get update
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
+      - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages
       - attach_workspace:
           at: ~/app
@@ -206,6 +204,7 @@ jobs:
       - run: sudo apt-get update
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
+      - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages
       - attach_workspace:
           at: ~/app
@@ -270,10 +269,7 @@ jobs:
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
             cd make-recall-decision-e2e-tests 
             git checkout main
-      - run:
-          working_directory: make-recall-decision-e2e-tests
-          name: Update npm
-          command: 'npm install -g npm@10'
+      - node/install
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Install packages
