@@ -2839,7 +2839,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select or add a sentence for your booking')
+      cy.pageHeading().should('contain', 'Select a sentence for your booking')
 
       cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
       cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
@@ -2850,6 +2850,13 @@ context('Make a recommendation', () => {
       cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
       cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
       cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
+
+      cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
+      cy.get('p.govuk-body')
+        .contains(
+          'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.'
+        )
+        .should('exist')
       // check the determinate sentence content is not present
       cy.get('#determinateSentencesDetails').should('not.exist')
     })
@@ -2915,7 +2922,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select or add a sentence for your booking')
+      cy.pageHeading().should('contain', 'Select a sentence for your booking')
       cy.get('#determinateSentencesDetails')
         .find('.govuk-details__summary-text')
         .should('contain.text', '2 determinate sentences')
@@ -2923,6 +2930,47 @@ context('Make a recommendation', () => {
       cy.get('#determinateSentencesDetails')
         .find('.govuk-details__text')
         .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
+    })
+
+    it('select indeterminate ppud sentence - show notification banner when there are no indeterminate sentences', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          isIndeterminateSentence: true,
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Select a sentence for your booking')
+
+      cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
+      cy.get('.govuk-notification-banner__content').should(
+        'contain.text',
+        'The sentence needs to be added to PPUD and the booking on completed there.'
+      )
+
+      cy.get('#return-to-booking-details-button')
+        .should('have.attr', 'href', '/recommendations/1/check-booking-details')
+        .invoke('text')
+        .then(text => {
+          const normalized = text.replace(/\s+/g, ' ').trim()
+          expect(normalized).to.eq('Return to booking details')
+        })
     })
 
     it('book to ppud - create offender', () => {
