@@ -74,7 +74,8 @@ jobs:
     steps:
       - checkout
       - node/install
-      - node/install-packages
+      - node/install-packages:
+          override-ci-command: npm run setup
       - run:
           command: |
             npm run build
@@ -128,7 +129,8 @@ jobs:
     steps:
       - checkout
       - node/install # this way we make sure we are aligned with the version used for the build
-      - node/install-packages
+      - node/install-packages:
+          override-ci-command: npm run setup
       - run:
           name: unit tests
           command: npm run test:coverage
@@ -154,7 +156,8 @@ jobs:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
-      - node/install-packages
+      - node/install-packages:
+          override-ci-command: npm run setup
       - attach_workspace:
           at: ~/app
       - run:
@@ -205,7 +208,8 @@ jobs:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
-      - node/install-packages
+      - node/install-packages:
+          override-ci-command: npm run setup
       - attach_workspace:
           at: ~/app
       - run:
