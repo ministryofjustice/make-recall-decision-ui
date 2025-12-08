@@ -1,283 +1,200 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import matchIndexOffenceController from './matchIndexOffenceController'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { ppcsPaths } from '../../routes/paths/ppcs'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../utils/utils')
 
-describe('get', () => {
-  it('load', async () => {
-    ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: ['one', 'two', 'three'] })
+describe('Match Index Offence Controller', () => {
+  describe('get', () => {
+    const referenceListValues = ['one', 'two', 'three']
 
     const req = mockReq({
-      params: {
-        recommendationId: '123',
-      },
+      params: { recommendationId: faker.number.int().toString() },
+    })
+    const recommendation = RecommendationResponseGenerator.generate()
+    const res = mockRes({
+      locals: { recommendation },
     })
 
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          nomisIndexOffence: {
-            allOptions: [
+    const next = mockNext()
+
+    beforeEach(async () => {
+      ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: referenceListValues })
+      await matchIndexOffenceController.get(req, res, next)
+    })
+    it('PPUD Reference list retrieved', () => {
+      expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
+    })
+    it('- Calls render for the expected page', async () =>
+      expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence'))
+    it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
+    describe('Res locals:', () => {
+      describe('Page:', () => {
+        it('Is provided', async () => expect(res.locals.page).toBeDefined())
+        it('Correct id', async () => {
+          expect(res.locals.page).toBeDefined()
+          expect(res.locals.page.id).toEqual('matchIndexOffence')
+        })
+      })
+      describe('Index offences', () => {
+        it('Are provided', async () => expect(res.locals.indexOffences).toBeDefined())
+        it('Correct values', async () => {
+          expect(res.locals.indexOffences).toEqual([
+            { text: referenceListValues[0], value: referenceListValues[0] },
+            { text: referenceListValues[1], value: referenceListValues[1] },
+            { text: referenceListValues[2], value: referenceListValues[2] },
+          ])
+        })
+      })
+      describe('Selected NOMIS offence', () => {
+        it('Is provided', async () => expect(res.locals.offence).toBeDefined())
+        it('Is correct', async () => {
+          const selectedNomisOffenceId = recommendation.nomisIndexOffence.selected
+          const expectedOffence = recommendation.nomisIndexOffence.allOptions.find(
+            o => o.offenderChargeId === selectedNomisOffenceId
+          )
+          expect(res.locals.offence).toEqual(expectedOffence)
+        })
+      })
+    })
+  })
+
+  describe('post', () => {
+    describe('with valid data', () => {
+      const testCases: {
+        useCaseDescription: string
+        recommendation: RecommendationResponse
+        redirectionPageId: string
+      }[] = [
+        {
+          useCaseDescription: 'with no PPUD offender selected',
+          recommendation: RecommendationResponseGenerator.generate({
+            ppudOffender: 'none',
+          }),
+          redirectionPageId: ppcsPaths.editCustodyType,
+        },
+        {
+          useCaseDescription: 'with PPUD offender with no sentences selected',
+          recommendation: RecommendationResponseGenerator.generate({
+            ppudOffender: {
+              sentences: [],
+            },
+          }),
+          redirectionPageId: ppcsPaths.editCustodyType,
+        },
+        {
+          useCaseDescription: 'with PPUD offender with sentences selected',
+          recommendation: RecommendationResponseGenerator.generate(),
+          redirectionPageId: ppcsPaths.selectPpudSentence,
+        },
+      ]
+      testCases.forEach(testCase => {
+        describe(testCase.useCaseDescription, () => {
+          ;[true, false].forEach(hasBlankComment => {
+            describe(`with ${hasBlankComment ? 'no ' : ''}index offence comment`, () => {
+              const basePath = `/recommendations/1/`
+              const req = mockReq({
+                params: { recommendationId: '1' },
+                body: {
+                  indexOffence: faker.lorem.sentence(),
+                  indexOffenceComment: faker.lorem.sentence(),
+                },
+              })
+              const res = mockRes({
+                token: 'token1',
+                locals: {
+                  urlInfo: { basePath },
+                  flags: { xyz: true },
+                },
+              })
+              const next = mockNext()
+              beforeEach(async () => {
+                ;(isDefined as jest.Mock).mockReturnValue(true)
+                ;(getRecommendation as jest.Mock).mockResolvedValue(testCase.recommendation)
+                ;(isEmptyStringOrWhitespace as jest.Mock).mockReturnValue(hasBlankComment)
+                ;(updateRecommendation as jest.Mock).mockResolvedValue(testCase.recommendation)
+                await matchIndexOffenceController.post(req, res, next)
+              })
+              it('Checks if index offence is defined', () =>
+                expect(isDefined).toHaveBeenCalledWith(req.body.indexOffence))
+              it('Checks if comment is blank', () =>
+                expect(isEmptyStringOrWhitespace).toHaveBeenCalledWith(req.body.indexOffenceComment))
+              it('Updates the recommendation as expected', () => {
+                expect(updateRecommendation).toHaveBeenCalledWith({
+                  recommendationId: testCase.recommendation.id.toString(),
+                  valuesToSave: {
+                    bookRecallToPpud: {
+                      ...testCase.recommendation.bookRecallToPpud,
+                      indexOffence: req.body.indexOffence,
+                      indexOffenceComment: hasBlankComment ? null : req.body.indexOffenceComment,
+                    },
+                  },
+                  token: res.locals.user.token,
+                  featureFlags: {
+                    xyz: true,
+                  },
+                })
+              })
+              it('Does not call next function', () => expect(next).not.toHaveBeenCalled())
+              it('redirects to Custody Type page', () =>
+                expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${testCase.redirectionPageId}`))
+            })
+          })
+        })
+      })
+    })
+
+    describe('with invalid data', () => {
+      ;[true, false].forEach(indexOffenceDefined => {
+        describe(`and index offence ${indexOffenceDefined ? 'defined but blank' : 'not defined'}`, () => {
+          const basePath = `/recommendations/1/`
+          const req = mockReq({
+            originalUrl: 'some-url',
+            params: { recommendationId: '1' },
+            body: {
+              indexOffence: '',
+            },
+          })
+
+          const res = mockRes({
+            token: 'token1',
+            locals: {
+              user: { token: 'token1' },
+              urlInfo: { basePath },
+              flags: { xyz: true },
+            },
+          })
+          const next = mockNext()
+
+          beforeEach(async () => {
+            ;(isDefined as jest.Mock).mockReturnValue(indexOffenceDefined)
+            await matchIndexOffenceController.post(req, res, next)
+          })
+          it('Checks if index offence is defined', () => expect(isDefined).toHaveBeenCalledWith(req.body.indexOffence))
+          it('Logs expected error', () => {
+            expect(req.session.errors).toEqual([
               {
-                bookingId: 13,
-                courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA12345',
-                offenceDescription: 'Attack / assault / batter a member of the public',
-                offenceStatute: 'SA96',
-                offenderChargeId: 3934369,
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                sentenceStartDate: '2023-11-16',
-                sentenceTypeDescription: 'Adult Mandatory Life',
-                terms: [],
-                releaseDate: '2025-11-16',
-                licenceExpiryDate: '2025-11-17',
-                releasingPrison: 'Broad Moor',
+                errorId: 'missingIndexOffence',
+                invalidParts: undefined,
+                href: '#indexOffence',
+                name: 'indexOffence',
+                text: 'Select a matching index offence from the list',
+                values: undefined,
               },
-            ],
-            selected: 3934369,
-          },
-        },
-      },
+            ])
+          })
+          it('Redirects to original URL', () => expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl))
+          it('Does not retrieve recommendation', () => expect(getRecommendation).not.toHaveBeenCalled())
+          it('Does not update recommendation', () => expect(updateRecommendation).not.toHaveBeenCalled())
+          it('Does not call next function', () => expect(next).not.toHaveBeenCalled())
+        })
+      })
     })
-    const next = mockNext()
-    await matchIndexOffenceController.get(req, res, next)
-
-    expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
-
-    expect(res.locals.page).toEqual({ id: 'matchIndexOffence' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence')
-    expect(res.locals.indexOffences).toEqual([
-      { text: 'one', value: 'one' },
-      { text: 'two', value: 'two' },
-      { text: 'three', value: 'three' },
-    ])
-    expect(next).toHaveBeenCalled()
-  })
-})
-
-describe('post', () => {
-  it('post with valid data', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        policeForce: 'Kent',
-      },
-    })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        indexOffence: 'some offence',
-        indexOffenceComment: 'some comment',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await matchIndexOffenceController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        bookRecallToPpud: {
-          policeForce: 'Kent',
-          indexOffence: 'some offence',
-          indexOffenceComment: 'some comment',
-        },
-      },
-      token: 'token1',
-      featureFlags: {
-        xyz: true,
-      },
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/custody-type`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-  it('post with valid data - sentences', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        policeForce: 'Kent',
-      },
-      ppudOffender: {
-        sentences: [{}],
-      },
-    })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        indexOffence: 'some offence',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await matchIndexOffenceController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        bookRecallToPpud: {
-          policeForce: 'Kent',
-          indexOffence: 'some offence',
-          indexOffenceComment: null,
-        },
-      },
-      token: 'token1',
-      featureFlags: {
-        xyz: true,
-      },
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/select-ppud-sentence`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-  it('post with valid data - whitespace index comment', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        policeForce: 'Kent',
-      },
-    })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        indexOffence: 'some offence',
-        indexOffenceComment: '  ',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await matchIndexOffenceController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        bookRecallToPpud: {
-          policeForce: 'Kent',
-          indexOffence: 'some offence',
-          indexOffenceComment: null,
-        },
-      },
-      token: 'token1',
-      featureFlags: {
-        xyz: true,
-      },
-    })
-  })
-  it('post with valid data - empty string index comment', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        policeForce: 'Kent',
-      },
-    })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        indexOffence: 'some offence',
-        indexOffenceComment: '',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await matchIndexOffenceController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '1',
-      valuesToSave: {
-        bookRecallToPpud: {
-          policeForce: 'Kent',
-          indexOffence: 'some offence',
-          indexOffenceComment: null,
-        },
-      },
-      token: 'token1',
-      featureFlags: {
-        xyz: true,
-      },
-    })
-  })
-  it('post with invalid data', async () => {
-    const basePath = `/recommendations/1/`
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '1' },
-      body: {},
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await matchIndexOffenceController.post(req, res, next)
-
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'missingIndexOffence',
-        invalidParts: undefined,
-        href: '#indexOffence',
-        name: 'indexOffence',
-        text: 'Select a matching index offence from the list',
-        values: undefined,
-      },
-    ])
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 })

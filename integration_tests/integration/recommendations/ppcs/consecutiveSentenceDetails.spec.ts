@@ -25,7 +25,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     bookRecallToPpud: {
       custodyGroup: CUSTODY_GROUP.DETERMINATE,
     },
-    nomisOffenceIndex: {
+    nomisIndexOffence: {
       selectedIndex: 0,
     },
   })

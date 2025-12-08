@@ -27,7 +27,7 @@ type SentenceInfo = {
 describe('Consecutive Sentence Details Controller', () => {
   describe('get', () => {
     const defaultGetRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: {
+      nomisIndexOffence: {
         selectedIndex: 0,
       },
     })

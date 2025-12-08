@@ -63,7 +63,7 @@ const next = mockNext()
 describe('Select Index Offence Controller', () => {
   describe('get', () => {
     const defaultGetRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: 'none',
+      nomisIndexOffence: 'none',
     })
     const defaultGetSentence = PrisonSentenceGenerator.generate()
     const defaultGetSentenceSequence: PrisonSentenceSequence = {
@@ -430,7 +430,7 @@ describe('Select Index Offence Controller', () => {
 
   describe('post', () => {
     const defaultPostRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: { selectedIndex: 'none' },
+      nomisIndexOffence: { selectedIndex: 'none' },
     })
     const expectedSelectedOffence = defaultPostRecommendation.nomisIndexOffence.allOptions.at(0)
     const expectedSelectedOffenceIndex = expectedSelectedOffence.offenderChargeId
@@ -512,7 +512,7 @@ describe('Select Index Offence Controller', () => {
       describe('Navigation:', () => {
         const selectedOffenceIndex = faker.number.int()
         const recommonendationResponseForNavigationTests = RecommendationResponseGenerator.generate({
-          nomisOffenceIndex: {
+          nomisIndexOffence: {
             selectedIndex: 'none',
             offeredOffenceOptions: [{ offenderChargeId: selectedOffenceIndex }, {}, {}],
           },
