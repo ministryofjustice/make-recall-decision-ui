@@ -273,6 +273,14 @@ jobs:
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
             cd make-recall-decision-e2e-tests 
             git checkout main
+      # the credentials need to be updated before running apt-get update
+      - run:
+          name: Update credentials
+          command: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc >/dev/null
+      # curl is needed by the node/install command with the node-version parameter, but isn't in the cypress image
+      - run:
+          name: Install curl
+          command: 'apt-get update && apt-get install curl -y'
       - node/install:
           node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
                              # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
