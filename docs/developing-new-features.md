@@ -1,8 +1,14 @@
 # Developing a new feature
 
 ## Generate Typescript definitions
- Ensure the Typescript definitions for make-recall-decision-api responses are up-to-date.
+Ensure the Typescript definitions for make-recall-decision-api responses are up-to-date.
 [Update typescript definitions](./docs/lint-typescript.md), which are drawn from Swagger.
+
+## Installing new packages
+Installation of new packages, including new versions of existing packages, should be done using `npm run setup`, and not
+`npm install` or `npm ci`. This ensures dependencies with post-installation scripts aren't unknowingly added to the
+service. The `setup` script makes use of the [npm-script-allowlist](https://github.com/ministryofjustice/hmpps-typescript-lib/tree/main/packages/npm-script-allowlist)
+package. See that project's page for more details.
 
 ## E2E tests
 These are used for 'happy path' testing only. To test error validation or detailed interactions, use integration tests.
