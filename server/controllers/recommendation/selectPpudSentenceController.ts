@@ -71,7 +71,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.editCustodyType : ppcsPaths.sentenceToCommitExistingOffender,
+    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.matchIndexOffence : ppcsPaths.sentenceToCommitExistingOffender,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

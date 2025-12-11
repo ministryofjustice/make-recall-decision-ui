@@ -86,8 +86,8 @@ describe('Select Determinate PPUD Sentence Controller', () => {
               featureFlags: res.locals.flags,
             })
           })
-          it('- Redirects to Edit Custody Type page', () => {
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.editCustodyType}`)
+          it('- Redirects to Match Index Offence page', () => {
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`)
           })
         })
         describe('Existing PPUD sentence selected', () => {

@@ -78,10 +78,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
-
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: offenderExistsAndHasSentences ? ppcsPaths.selectPpudSentence : ppcsPaths.editCustodyType,
+    nextPageId: ppcsPaths.editCustodyType,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
