@@ -73,12 +73,9 @@ jobs:
       tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
-      - run:
-          name: Update npm
-          # Temporarily pinning the node version to allow pipeline builds to run.
-          # Can move back to npm@latest after upgrading to v10
-          command: 'sudo npm install -g npm@9'
-      - node/install-packages
+      - node/install
+      - node/install-packages:
+          override-ci-command: npm run setup
       - run:
           command: |
             npm run build
@@ -108,8 +105,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: install-npm
-          command: 'npm ci --no-audit'
+          name: setup-npm
+          command: 'npm run setup:no-audit'
       - run:
           name: Check version
           command: 'npm --version'
@@ -131,7 +128,9 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - node/install-packages
+      - node/install # this way we make sure we are aligned with the version used for the build
+      - node/install-packages:
+          override-ci-command: npm run setup
       - run:
           name: unit tests
           command: npm run test:coverage
@@ -156,7 +155,9 @@ jobs:
       - run: sudo apt-get update
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - node/install-packages
+      - node/install # this way we make sure we are aligned with the version used for the build
+      - node/install-packages:
+          override-ci-command: npm run setup
       - attach_workspace:
           at: ~/app
       - run:
@@ -206,7 +207,9 @@ jobs:
       - run: sudo apt-get update
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - node/install-packages
+      - node/install # this way we make sure we are aligned with the version used for the build
+      - node/install-packages:
+          override-ci-command: npm run setup
       - attach_workspace:
           at: ~/app
       - run:
@@ -270,14 +273,21 @@ jobs:
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
             cd make-recall-decision-e2e-tests 
             git checkout main
+      # the credentials need to be updated before running apt-get update
       - run:
-          working_directory: make-recall-decision-e2e-tests
-          name: Update npm
-          command: 'npm install -g npm@10'
+          name: Update credentials
+          command: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc >/dev/null
+      # curl is needed by the node/install command with the node-version parameter, but isn't in the cypress image
+      - run:
+          name: Install curl
+          command: 'apt-get update && apt-get install curl -y'
+      - node/install:
+          node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
+                             # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
       - run:
           working_directory: make-recall-decision-e2e-tests
           name: Install packages
-          command: 'npm install'
+          command: 'npm run setup'
       - run:
           working_directory: make-recall-decision-e2e-tests
           environment:
@@ -333,6 +343,9 @@ jobs:
       - run:
           name: Checkout/clone make-recall-decision-ui
           command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
+      - node/install:
+          node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
+                             # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
       - run:
           name: Start components
           working_directory: make-recall-decision-ui
@@ -341,7 +354,7 @@ jobs:
           name: Run E2E tests
           working_directory: make-recall-decision-e2e-tests
           command: |
-            npm ci --no-audit
+            npm run setup:no-audit
             echo PWD:: $PWD
             shopt -s globstar
 
