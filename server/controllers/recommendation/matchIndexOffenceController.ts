@@ -13,7 +13,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     user: { token },
   } = res.locals
 
-  const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
+  const nomisIndexOffence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
   )
 
@@ -32,7 +32,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       id: 'matchIndexOffence',
     },
     indexOffences,
-    offence,
+    nomisIndexOffence,
     errors: res.locals.errors,
   }
 

@@ -275,3 +275,10 @@ pre {
   display: block;
   padding-top: 0;
 }
+
+// Customisation in order to render Inset Text (Highlighted), as described in the MoJ
+// Design System - https://design-patterns.service.justice.gov.uk/components/inset-text-highlighted/#code-tab
+.guidance-panel {
+  border-left-color: govuk-colour('blue');
+  background-color: #eaf4f9;
+}

@@ -23,6 +23,7 @@ import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilit
 */
 
 export type RecommendationOptions = {
+  id?: number
   crn?: string
   alternativesToRecallTried?: boolean
   custodyStatus?: boolean
@@ -76,7 +77,7 @@ export type RecommendationOptions = {
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
   generate: options => ({
-    id: faker.number.int({ min: 1, max: 99 }),
+    id: options?.id ?? faker.number.int({ min: 1, max: 99 }),
     status: RecommendationResponse.status.DRAFT,
     crn: options?.crn ?? faker.helpers.replaceSymbols('?######'),
     createdByUserFullName: 'Integration test data generator',

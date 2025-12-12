@@ -52,13 +52,13 @@ describe('Match Index Offence Controller', () => {
         })
       })
       describe('Selected NOMIS offence', () => {
-        it('Is provided', async () => expect(res.locals.offence).toBeDefined())
+        it('Is provided', async () => expect(res.locals.nomisIndexOffence).toBeDefined())
         it('Is correct', async () => {
           const selectedNomisOffenceId = recommendation.nomisIndexOffence.selected
           const expectedOffence = recommendation.nomisIndexOffence.allOptions.find(
             o => o.offenderChargeId === selectedNomisOffenceId
           )
-          expect(res.locals.offence).toEqual(expectedOffence)
+          expect(res.locals.nomisIndexOffence).toEqual(expectedOffence)
         })
       })
     })

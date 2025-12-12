@@ -1,0 +1,19 @@
+{% from "components/heading/macro.njk" import heading %}
+
+<div class="govuk-text-list">
+    {% if params.heading %}
+        {{ heading(
+            params.heading,
+            params.headingLevel if params.headingLevel else 2,
+            params.headingSize if params.headingSize else 's',
+            params.headingClasses)
+        }}
+    {% endif %}
+
+    {% for row in params.rows %}
+        <div class="govuk-text-list__row">
+            <div class="govuk-text-list__key">{{ row.key }}</div>
+            <div class="govuk-text-list__value">{{ row.value }}</div>
+        </div>
+    {% endfor %}
+</div>
