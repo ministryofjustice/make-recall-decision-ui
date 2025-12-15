@@ -10,9 +10,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            {{ heading(pageHeadings[page.id]) }}
 
             {% if selectedPpudSentence %}
+                {{ heading(pageHeadings[page.id]) }}
+
                 {{ textList({
                     heading: 'From NOMIS',
                     headingSize: 's',
@@ -30,6 +31,8 @@
                     classes: 'govuk-!-margin-bottom-7'
                 }) }}
             {% else %}
+                {{ heading(pageHeadings[page.id], 1, "l", classes="govuk-!-margin-bottom-3") }}
+
                 {{ bodyParagraph('You need to select an offence because the offences listed in PPUD and NOMIS do not match.') }}
 
                 {% call govukInsetText({ classes: "guidance-panel" }) %}
