@@ -259,6 +259,7 @@ export const strings: Record<string, Record<string, string>> = {
     editReleasingPrison: 'Edit releasing prison',
     editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
+    changeIndexOffence: 'Change index offence or add a comment',
     deleteRecommendationRationale: 'Delete recommendation for {{ fullName }}',
     deletePartARationale: 'Delete Part A for {{ fullName }}',
     deleteDntrRationale: 'Delete decision not to recall for {{ fullName }}',

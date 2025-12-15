@@ -16,6 +16,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const nomisIndexOffence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
   )
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender.sentences.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+  )
 
   const list = await ppudReferenceList(token, 'index-offences')
 
@@ -29,10 +32,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {
     ...res.locals,
     page: {
-      id: 'matchIndexOffence',
+      id: selectedPpudSentence ? 'changeIndexOffence' : 'matchIndexOffence',
     },
     indexOffences,
     nomisIndexOffence,
+    selectedPpudSentence,
     errors: res.locals.errors,
   }
 
@@ -78,8 +82,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender.sentences.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+  )
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppcsPaths.editCustodyType,
+    nextPageId: selectedPpudSentence ? ppcsPaths.sentenceToCommitExistingOffender : ppcsPaths.editCustodyType,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

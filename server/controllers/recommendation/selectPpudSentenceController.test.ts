@@ -39,7 +39,14 @@ describe('Select Determinate PPUD Sentence Controller', () => {
 
   describe('post', () => {
     describe('Valid data', () => {
-      const recommendation = RecommendationResponseGenerator.generate()
+      // We create a recommendation with index offence data included to test that it is
+      // cleared when adding a new sentence and overwritten when selecting an existing sentence
+      const recommendation = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: {
+          indexOffence: 'include',
+          indexOffenceComment: 'include',
+        },
+      })
 
       const basePath = `/recommendations/123/`
       const res = mockRes({
@@ -80,6 +87,9 @@ describe('Select Determinate PPUD Sentence Controller', () => {
                 bookRecallToPpud: {
                   ...recommendation.bookRecallToPpud,
                   ppudSentenceId: req.body.ppudSentenceId,
+                  custodyType: undefined,
+                  indexOffence: undefined,
+                  indexOffenceComment: undefined,
                 },
               },
               token: res.locals.user.token,
@@ -109,6 +119,8 @@ describe('Select Determinate PPUD Sentence Controller', () => {
                   ...recommendation.bookRecallToPpud,
                   ppudSentenceId: req.body.ppudSentenceId,
                   custodyType: selectedSentence.custodyType,
+                  indexOffence: selectedSentence.offence.indexOffence,
+                  indexOffenceComment: selectedSentence.offence.indexOffenceComment,
                 },
               },
               token: res.locals.user.token,
@@ -116,7 +128,7 @@ describe('Select Determinate PPUD Sentence Controller', () => {
             })
           })
           it('- Redirects to Sentence to Commit Existing Offender page', () => {
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`)
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`)
           })
         })
       })

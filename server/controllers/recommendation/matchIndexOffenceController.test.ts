@@ -3,8 +3,8 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import matchIndexOffenceController from './matchIndexOffenceController'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { ppcsPaths } from '../../routes/paths/ppcs'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
+import { ppcsPaths } from '../../routes/paths/ppcs'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../utils/utils')
@@ -16,49 +16,103 @@ describe('Match Index Offence Controller', () => {
     const req = mockReq({
       params: { recommendationId: faker.number.int().toString() },
     })
-    const recommendation = RecommendationResponseGenerator.generate()
-    const res = mockRes({
-      locals: { recommendation },
-    })
 
     const next = mockNext()
 
     beforeEach(async () => {
       ;(ppudReferenceList as jest.Mock).mockResolvedValue({ values: referenceListValues })
-      await matchIndexOffenceController.get(req, res, next)
     })
-    it('PPUD Reference list retrieved', () => {
-      expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
-    })
-    it('- Calls render for the expected page', async () =>
-      expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence'))
-    it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
-    describe('Res locals:', () => {
-      describe('Page:', () => {
-        it('Is provided', async () => expect(res.locals.page).toBeDefined())
-        it('Correct id', async () => {
-          expect(res.locals.page).toBeDefined()
-          expect(res.locals.page.id).toEqual('matchIndexOffence')
+
+    describe('Non conditional logic:', () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      const res = mockRes({
+        locals: { recommendation },
+      })
+
+      beforeEach(async () => {
+        await matchIndexOffenceController.get(req, res, next)
+      })
+      it('PPUD Reference list retrieved', () => {
+        expect(ppudReferenceList).toHaveBeenCalledWith('token', 'index-offences')
+      })
+      it('- Calls render for the expected page', async () =>
+        expect(res.render).toHaveBeenCalledWith('pages/recommendations/matchIndexOffence'))
+      it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
+      describe('Res locals:', () => {
+        describe('Index offences', () => {
+          it('Are provided', async () => expect(res.locals.indexOffences).toBeDefined())
+          it('Correct values', async () => {
+            expect(res.locals.indexOffences).toEqual([
+              { text: referenceListValues[0], value: referenceListValues[0] },
+              { text: referenceListValues[1], value: referenceListValues[1] },
+              { text: referenceListValues[2], value: referenceListValues[2] },
+            ])
+          })
+        })
+        describe('Selected NOMIS offence', () => {
+          it('Is provided', async () => expect(res.locals.nomisIndexOffence).toBeDefined())
+          it('Is correct', async () => {
+            const selectedNomisOffenceId = recommendation.nomisIndexOffence.selected
+            const expectedOffence = recommendation.nomisIndexOffence.allOptions.find(
+              o => o.offenderChargeId === selectedNomisOffenceId
+            )
+            expect(res.locals.nomisIndexOffence).toEqual(expectedOffence)
+          })
         })
       })
-      describe('Index offences', () => {
-        it('Are provided', async () => expect(res.locals.indexOffences).toBeDefined())
-        it('Correct values', async () => {
-          expect(res.locals.indexOffences).toEqual([
-            { text: referenceListValues[0], value: referenceListValues[0] },
-            { text: referenceListValues[1], value: referenceListValues[1] },
-            { text: referenceListValues[2], value: referenceListValues[2] },
-          ])
+    })
+
+    describe('Conditional logic:', () => {
+      describe('No PPUD sentence was selected', () => {
+        const recommendation = RecommendationResponseGenerator.generate()
+        const res = mockRes({
+          locals: { recommendation },
+        })
+
+        beforeEach(async () => {
+          await matchIndexOffenceController.get(req, res, next)
+        })
+
+        describe('Res locals:', () => {
+          describe('Page:', () => {
+            it('Is provided', async () => expect(res.locals.page).toBeDefined())
+            it('Correct id', async () => {
+              expect(res.locals.page).toBeDefined()
+              expect(res.locals.page.id).toEqual('matchIndexOffence')
+            })
+          })
+          describe('Selected PPUD sentence', () => {
+            it('Is not provided', async () => expect(res.locals.selectedPpudSentence).not.toBeDefined())
+          })
         })
       })
-      describe('Selected NOMIS offence', () => {
-        it('Is provided', async () => expect(res.locals.nomisIndexOffence).toBeDefined())
-        it('Is correct', async () => {
-          const selectedNomisOffenceId = recommendation.nomisIndexOffence.selected
-          const expectedOffence = recommendation.nomisIndexOffence.allOptions.find(
-            o => o.offenderChargeId === selectedNomisOffenceId
-          )
-          expect(res.locals.nomisIndexOffence).toEqual(expectedOffence)
+      describe('PPUD sentence was selected', () => {
+        const recommendation = RecommendationResponseGenerator.generate()
+        const selectedPpudSentence = faker.helpers.arrayElement(recommendation.ppudOffender.sentences)
+        recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
+
+        const res = mockRes({
+          locals: { recommendation },
+        })
+
+        beforeEach(async () => {
+          await matchIndexOffenceController.get(req, res, next)
+        })
+
+        describe('Res locals:', () => {
+          describe('Page:', () => {
+            it('Is provided', async () => expect(res.locals.page).toBeDefined())
+            it('Correct id', async () => {
+              expect(res.locals.page).toBeDefined()
+              expect(res.locals.page.id).toEqual('changeIndexOffence')
+            })
+          })
+          describe('Selected PPUD sentence', () => {
+            it('Is provided', async () => expect(res.locals.selectedPpudSentence).toBeDefined())
+            it('Is correct', async () => {
+              expect(res.locals.selectedPpudSentence).toEqual(selectedPpudSentence)
+            })
+          })
         })
       })
     })
@@ -82,41 +136,73 @@ describe('Match Index Offence Controller', () => {
         },
       })
       const next = mockNext()
-      const recommendation = RecommendationResponseGenerator.generate()
-      describe('with PPUD offender with sentences selected', () => {
-        ;[true, false].forEach(hasBlankComment => {
-          describe(`with ${hasBlankComment ? 'no ' : ''}index offence comment`, () => {
-            beforeEach(async () => {
-              ;(isDefined as jest.Mock).mockReturnValue(true)
-              ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
-              ;(isEmptyStringOrWhitespace as jest.Mock).mockReturnValue(hasBlankComment)
-              ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
-              await matchIndexOffenceController.post(req, res, next)
-            })
-            it('Checks if index offence is defined', () =>
-              expect(isDefined).toHaveBeenCalledWith(req.body.indexOffence))
-            it('Checks if comment is blank', () =>
-              expect(isEmptyStringOrWhitespace).toHaveBeenCalledWith(req.body.indexOffenceComment))
-            it('Updates the recommendation as expected', () => {
-              expect(updateRecommendation).toHaveBeenCalledWith({
-                recommendationId: recommendation.id.toString(),
-                valuesToSave: {
-                  bookRecallToPpud: {
-                    ...recommendation.bookRecallToPpud,
-                    indexOffence: req.body.indexOffence,
-                    indexOffenceComment: hasBlankComment ? null : req.body.indexOffenceComment,
-                  },
-                },
-                token: res.locals.user.token,
-                featureFlags: {
-                  xyz: true,
-                },
+      describe('Non-conditional logic:', () => {
+        const recommendation = RecommendationResponseGenerator.generate()
+        describe('with PPUD offender with sentences selected', () => {
+          ;[true, false].forEach(hasBlankComment => {
+            describe(`with ${hasBlankComment ? 'no ' : ''}index offence comment`, () => {
+              beforeEach(async () => {
+                ;(isDefined as jest.Mock).mockReturnValue(true)
+                ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+                ;(isEmptyStringOrWhitespace as jest.Mock).mockReturnValue(hasBlankComment)
+                ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
+                await matchIndexOffenceController.post(req, res, next)
               })
+              it('Checks if index offence is defined', () =>
+                expect(isDefined).toHaveBeenCalledWith(req.body.indexOffence))
+              it('Checks if comment is blank', () =>
+                expect(isEmptyStringOrWhitespace).toHaveBeenCalledWith(req.body.indexOffenceComment))
+              it('Updates the recommendation as expected', () => {
+                expect(updateRecommendation).toHaveBeenCalledWith({
+                  recommendationId: recommendation.id.toString(),
+                  valuesToSave: {
+                    bookRecallToPpud: {
+                      ...recommendation.bookRecallToPpud,
+                      indexOffence: req.body.indexOffence,
+                      indexOffenceComment: hasBlankComment ? null : req.body.indexOffenceComment,
+                    },
+                  },
+                  token: res.locals.user.token,
+                  featureFlags: {
+                    xyz: true,
+                  },
+                })
+              })
+              it('Does not call next function', () => expect(next).not.toHaveBeenCalled())
             })
-            it('Does not call next function', () => expect(next).not.toHaveBeenCalled())
-            it('redirects to Custody Type page', () =>
-              expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.editCustodyType}`))
           })
+        })
+      })
+      describe('Conditional logic:', () => {
+        describe('Adding a new sentence to PPUD', () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            bookRecallToPpud: {
+              ppudSentenceId: 'ADD_NEW',
+            },
+          })
+          beforeEach(async () => {
+            ;(isDefined as jest.Mock).mockReturnValue(true)
+            ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+            ;(isEmptyStringOrWhitespace as jest.Mock).mockReturnValue(false)
+            ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
+            await matchIndexOffenceController.post(req, res, next)
+          })
+          it('redirects to Custody Type page', () =>
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.editCustodyType}`))
+        })
+        describe('Updating an existing PPUD sentence', () => {
+          const recommendation = RecommendationResponseGenerator.generate()
+          const selectedPpudSentence = faker.helpers.arrayElement(recommendation.ppudOffender.sentences)
+          recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
+          beforeEach(async () => {
+            ;(isDefined as jest.Mock).mockReturnValue(true)
+            ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+            ;(isEmptyStringOrWhitespace as jest.Mock).mockReturnValue(false)
+            ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
+            await matchIndexOffenceController.post(req, res, next)
+          })
+          it('redirects to Sentence to Commit Existing page', () =>
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`))
         })
       })
     })

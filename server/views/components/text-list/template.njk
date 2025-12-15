@@ -1,6 +1,6 @@
 {% from "components/heading/macro.njk" import heading %}
 
-<div class="govuk-text-list">
+<div class="govuk-text-list{{ " " + params.classes if params.classes else ""}}">
     {% if params.heading %}
         {{ heading(
             params.heading,

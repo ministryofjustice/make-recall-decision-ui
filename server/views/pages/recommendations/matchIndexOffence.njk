@@ -10,12 +10,27 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+            {{ heading(pageHeadings[page.id]) }}
 
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-                {{ bodyParagraph('You need to select an offence because the offences listed in PPUD and NOMIS do not match.')}}
+            {% if selectedPpudSentence %}
+                {{ textList({
+                    heading: 'From NOMIS',
+                    headingSize: 's',
+                    rows: [
+                        { key: 'Offence', value: nomisIndexOffence.offenceDescription }
+                    ],
+                    classes: 'govuk-!-margin-top-7'
+                }) }}
+                {{ textList({
+                    heading: 'From PPUD',
+                    headingSize: 's',
+                    rows: [
+                        { key: 'Offence', value: selectedPpudSentence.offence.indexOffence }
+                    ],
+                    classes: 'govuk-!-margin-bottom-7'
+                }) }}
+            {% else %}
+                {{ bodyParagraph('You need to select an offence because the offences listed in PPUD and NOMIS do not match.') }}
 
                 {% call govukInsetText({ classes: "guidance-panel" }) %}
                     {{ bodyParagraph('You selected this offence from NOMIS:') }}
@@ -28,11 +43,15 @@
                         ]
                     }) }}
                 {% endcall %}
+            {% endif %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 {{ accessibleAutocomplete({
                     id: 'indexOffence',
                     label: {
-                        text: 'Now select the nearest matching offence from the list in PPUD'
+                        text: 'Select the nearest matching offence from the list in PPUD' if selectedPpudSentence else 'Now select the nearest matching offence from the list in PPUD'
                     },
                     errorMessage: errorMessage(errors.indexOffence),
                     list: indexOffences,
