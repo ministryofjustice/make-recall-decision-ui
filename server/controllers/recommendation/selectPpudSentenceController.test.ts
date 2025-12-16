@@ -127,8 +127,8 @@ describe('Select Determinate PPUD Sentence Controller', () => {
               featureFlags: res.locals.flags,
             })
           })
-          it('- Redirects to Sentence to Commit Existing Offender page', () => {
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`)
+          it('- Redirects to Are Offence Changes Needed page', () => {
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.areOffenceChangesNeeded}`)
           })
         })
       })

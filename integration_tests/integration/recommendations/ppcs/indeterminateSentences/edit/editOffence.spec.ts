@@ -1,10 +1,9 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import searchMappedUserResponse from '../../../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
 import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
+import { setUpSessionForPpcs } from '../../util'
 
 context('Indeterminate Sentence - Edit Offence Page', () => {
   const recommendationId = '123'
@@ -14,11 +13,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
   const testPageUrl = `/recommendations/${recommendationId}/edit-offence`
 
   beforeEach(() => {
-    cy.session('login', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
-    })
+    setUpSessionForPpcs()
   })
 
   const sentenceId = faker.number.int().toString()

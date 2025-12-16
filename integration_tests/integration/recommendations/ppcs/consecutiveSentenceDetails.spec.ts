@@ -1,6 +1,4 @@
 import { testSummaryList } from '../../../componentTests/summaryList.tests'
-import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
 import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
 import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
@@ -8,6 +6,7 @@ import { defaultUpdateRecommendationResponse } from '../_data'
 import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { PrisonSentenceOptions } from '../../../../data/prisonSentences/prisonSentenceGenerator'
+import { setUpSessionForPpcs } from './util'
 
 context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', () => {
   const crn = 'X34983'
@@ -16,9 +15,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
   const testPageUrl = `/recommendations/${recommendationId}/consecutive-sentence-details`
 
   beforeEach(() => {
-    cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-    cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+    setUpSessionForPpcs()
   })
 
   const defaultRecommendationResponse = RecommendationResponseGenerator.generate({

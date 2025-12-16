@@ -1,0 +1,57 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../../../partials/error-summary.njk' %}
+
+            {{ heading(pageHeadings[page.id]) }}
+
+            {% call govukInsetText({ classes: "guidance-panel" }) %}
+                {{ bodyParagraph('You selected this offence from PPUD:') }}
+                {{ textList({
+                    heading: selectedPpudSentence.offence.indexOffence,
+                    headingSize: 's',
+                    rows: [
+                        { key: 'Additional comments', value: selectedPpudSentence.offence.indexOffenceComment or 'None' },
+                        { key: 'Date of sentence', value: formatDateTimeFromIsoString({isoDate: selectedPpudSentence.dateOfSentence, dateOnly: true}) },
+                        { key: 'Sentence expiry date', value: formatDateTimeFromIsoString({isoDate: selectedPpudSentence.sentenceExpiryDate, dateOnly: true}) }
+                    ]
+                }) }}
+            {% endcall %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {# Normally we would use isPageHeading: true, but that would render it immediately above the radio
+                   buttons, while we want it above the inset text. Having the question repeated in the heading and the
+                   label is not ideal, as it may be read out twice by screen readers, but it's the best option available #}
+                {{
+                govukRadios({
+                    idPrefix: "changeOffenceOrAddComment",
+                    name: "changeOffenceOrAddComment",
+                    fieldset: {
+                        legend: {
+                            text: pageHeadings[page.id],
+                            classes: "govuk-visually-hidden"
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: allOptions,
+                        currentValues: selectedOption
+                    }),
+                    errorMessage: errorMessage(errors.changeOffenceOrAddComment)
+                })
+                }}
+
+                {{ formSubmitButton({ marginTop: 7 }) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
