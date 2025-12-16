@@ -16,7 +16,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const nomisIndexOffence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
   )
-  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender.sentences.find(
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender?.sentences?.find(
     s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
 
@@ -82,7 +82,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender.sentences.find(
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender?.sentences?.find(
     s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
   const nextPagePath = nextPageLinkUrl({
