@@ -304,7 +304,31 @@ describe('get', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(res.locals.edited).toStrictEqual({})
   })
+  it('default to determinate custody type if ppud record not found', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
 
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: {},
+          prisonOffender: {},
+          ppudOffender: null,
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    // PPUD offender should be unchanged
+    expect(res.locals.recommendation.ppudOffender).toEqual(null)
+    // Custody group should default to Determinate as we can only create new PPUD records for determinate sentences
+    expect(res.locals.recommendation.bookRecallToPpud?.custodyGroup).toEqual(CUSTODY_GROUP.DETERMINATE)
+  })
   it('load present blanks and banner for no nomis record found.', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(undefined)
 
