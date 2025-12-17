@@ -241,7 +241,7 @@ describe('Match Index Offence Controller', () => {
                 invalidParts: undefined,
                 href: '#indexOffence',
                 name: 'indexOffence',
-                text: 'Select a matching index offence from the list',
+                text: 'Select the nearest matching offence from the list in PPUD',
                 values: undefined,
               },
             ])

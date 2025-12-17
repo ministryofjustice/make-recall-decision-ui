@@ -137,7 +137,12 @@ context('Determinate sentence - match index offence page', () => {
         cy.get('@offenceDescriptionSelectWrapper').find('input').clear()
         cy.get('button').click()
         testForErrorPageTitle()
-        testForErrorSummary([{ href: `${autocompleteId}` }])
+        testForErrorSummary([
+          {
+            href: autocompleteId,
+            message: 'Select the nearest matching offence from the list in PPUD',
+          },
+        ])
       })
     })
   })

@@ -16,7 +16,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingLegislationReleasedUnder: 'Enter legislation',
     missingReleasingPrison: 'Select a releasing prison from the list',
     missingProbationArea: 'Enter probation area',
-    missingIndexOffence: 'Select a matching index offence from the list',
+    missingIndexOffence: 'Select the nearest matching offence from the list in PPUD',
     missingSpoNoRecallRationale: 'Explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
