@@ -131,3 +131,7 @@ export const isObjectInArray = ({
 
 export const countLabelSuffix = ({ count, label }: { count: number; label: string }) =>
   `${label}${count === 1 ? '' : 's'}`
+
+export const renderString = (template: string, context: Record<string, string>) => {
+  return nunjucks.renderString(template, context)
+}

@@ -19,6 +19,7 @@ import {
   isObjectInArray,
   countLabelSuffix,
   merge,
+  renderString,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
@@ -105,4 +106,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('hasRequiredVulnerabilitiesDetails', hasAllRequiredVulnerabilityDetails)
   njkEnv.addGlobal('formatJSDate', formatJSDate)
   njkEnv.addGlobal('formatSentenceLength', formatSentenceLength)
+  njkEnv.addGlobal('renderString', renderString)
 }

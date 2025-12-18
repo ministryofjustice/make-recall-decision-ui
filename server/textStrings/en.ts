@@ -197,7 +197,7 @@ export const strings: Record<string, Record<string, string>> = {
     vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
     vulnerabilitiesRiskToSelf:
-      'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
+      'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     taskList: 'Create a Part A form',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',

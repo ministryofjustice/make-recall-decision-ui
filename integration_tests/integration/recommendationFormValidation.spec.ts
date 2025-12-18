@@ -233,10 +233,10 @@ context('Make a recommendation - form validation', () => {
       fieldName: 'vulnerabilities',
       errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',
     })
-    cy.selectCheckboxes(
-      'Consider if you think this recall could affect any vulnerabilities or needs Jane Bloggs may have.',
-      ['Relationship breakdown', 'Physical disabilities']
-    )
+    cy.selectCheckboxes('Consider if this recall could affect any vulnerabilities or needs Jane Bloggs may have', [
+      'Relationship breakdown',
+      'Physical disabilities',
+    ])
     cy.clickButton('Continue')
   })
 

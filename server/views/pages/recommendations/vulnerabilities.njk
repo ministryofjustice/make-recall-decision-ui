@@ -22,7 +22,7 @@
                         </h1>
                     </legend>
                       <p id="vulnerabilities-body-text" class="govuk-body">
-                         Think about what you have found out from {{ fullName }}'s assessments. Select all that apply. You can add more details in the next step.
+                         Think about if the recall, or the circumstances that led to it, could affect vulnerabilities or needs. Select all that apply.
                       </p>
                       <p id="vulnerabilities-error" class="govuk-error-message">
                           <span class="govuk-visually-hidden">Error:</span> {{ errors.vulnerabilities.text }}
@@ -36,7 +36,7 @@
                                 <h2 class="govuk-heading-s govuk-!-margin-top-7">{{ item.category }}</h2>
                                     {% if item.categoryHint %}
                                         <p id="vulnerabilities-{{item.value}}-hint" class="govuk-hint">
-                                            {{ item.categoryHint }}
+                                            {{ renderString(item.categoryHint, { fullName: fullName }) }}
                                         </p>
                                     {% endif %}
                             {% endif %}
@@ -115,7 +115,7 @@
                     </div>
                 </fieldset>
                 </div>
-                {{ formSubmitButton() }}
+                {{ formSubmitButton({ label: "Continue to the next step" }) }}
             </form>
         </div>
     </div>
