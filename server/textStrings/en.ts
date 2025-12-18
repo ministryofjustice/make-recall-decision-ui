@@ -287,8 +287,8 @@ export const strings: Record<string, Record<string, string>> = {
   },
   taskListLinkTexts: {
     vulnerabilities: 'Would recall affect vulnerability or additional needs?',
-    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Could recall affect vulnerabilities or needs?',
-    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Give details about the vulnerabilities or needs',
+    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Consider if recall could affect vulnerabilities or needs',
+    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Add more details about vulnerabilities or needs',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:
