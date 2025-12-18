@@ -18,6 +18,7 @@ import {
   formatDateFilterQueryString,
   isObjectInArray,
   countLabelSuffix,
+  merge,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
 import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
@@ -72,6 +73,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     return `${array[0][0]}. ${array.reverse()[0]}`
   })
   njkEnv.addFilter('defaultValue', defaultValue)
+  njkEnv.addFilter('merge', merge)
 
   // globals
   njkEnv.addGlobal('formatDateTimeFromIsoString', formatDateTimeFromIsoString)

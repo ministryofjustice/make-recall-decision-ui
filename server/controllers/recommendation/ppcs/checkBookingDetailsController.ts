@@ -138,6 +138,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   }
 
+  // We only create new records for determinate sentences, so default to determinate if ppudOffender isn't present
+  if (!hasValue(recommendation.ppudOffender)) {
+    recommendation.bookRecallToPpud.custodyGroup = CUSTODY_GROUP.DETERMINATE
+  }
+
   if (isDefined(valuesToSave.bookRecallToPpud) || isDefined(valuesToSave.prisonOffender)) {
     await updateRecommendation({
       recommendationId: recommendation.id,
