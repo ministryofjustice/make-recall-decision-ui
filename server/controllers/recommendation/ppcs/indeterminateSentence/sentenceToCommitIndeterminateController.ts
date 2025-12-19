@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import { ppcsPaths } from '../../../../routes/paths/ppcs.routes'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals

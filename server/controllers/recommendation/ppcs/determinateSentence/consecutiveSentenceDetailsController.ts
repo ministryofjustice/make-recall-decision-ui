@@ -3,7 +3,7 @@ import { prisonSentences } from '../../../../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
 import { Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import { ppcsPaths } from '../../../../routes/paths/ppcs.routes'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(_: Request, res: Response, next: NextFunction) {

@@ -7,7 +7,7 @@ import { makeErrorObject } from '../../../../utils/errors'
 import { strings } from '../../../../textStrings/en'
 import { isDefined, isEmptyStringOrWhitespace } from '../../../../utils/utils'
 import { OfferedOffence, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import { ppcsPaths } from '../../../../routes/paths/ppcs.routes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params

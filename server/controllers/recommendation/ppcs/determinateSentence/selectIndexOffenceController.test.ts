@@ -10,7 +10,7 @@ import {
 } from '../../../../../data/prisonSentences/prisonSentenceGenerator'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
 import { TermGenerator } from '../../../../../data/common/termGenerator'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import { ppcsPaths } from '../../../../routes/paths/ppcs.routes'
 import { PrisonSentenceSequenceGenerator } from '../../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 import { OfferedOffence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'

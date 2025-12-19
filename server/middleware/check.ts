@@ -1,3 +1,4 @@
+import { RequestHandler } from 'express'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
@@ -8,6 +9,20 @@ export function statusIsActive(name: string): Check {
   return (locals: Record<string, unknown>) => {
     const statuses = locals.statuses as RecommendationStatusResponse[]
     return !!statuses.find(status => status.name === name && status.active)
+  }
+}
+
+export function checkRole(name: string): RequestHandler {
+  return authorisationCheck(hasRole(name))
+}
+
+function authorisationCheck(statusCheck?: Check): RequestHandler {
+  return (req, res, next) => {
+    if (statusCheck && !statusCheck(res.locals)) {
+      return res.redirect('/authError')
+    }
+
+    return next()
   }
 }
 

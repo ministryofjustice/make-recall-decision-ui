@@ -5,7 +5,7 @@ import { NamedFormError } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
-import { ppcsPaths } from '../../routes/paths/ppcs'
+import { ppcsPaths } from '../../routes/paths/ppcs.routes'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
