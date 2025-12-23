@@ -9,6 +9,7 @@ import { makeErrorObject } from '../../../../utils/errors'
 import { strings } from '../../../../textStrings/en'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
+import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -48,7 +49,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const { ppudSentenceId } = req.body
   const { recommendation } = res.locals
 
-  const sentences: PpudDetailsSentence[] = getIndeterminateSentences(recommendation.ppudOffender.sentences)
+  const sentences: PpudDetailsSentence[] = getIndeterminateSentences(
+    (recommendation as RecommendationResponse).ppudOffender.sentences
+  )
 
   let errorId
   if (ppudSentenceId === undefined) {
@@ -79,6 +82,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         ppudSentenceId,
         ppudIndeterminateSentenceData: {
           offenceDescription: sentence.offence.indexOffence,
+          offenceDescriptionComment: sentence.offence.offenceComment,
           releaseDate: sentence.releaseDate,
           sentencingCourt: sentence.sentencingCourt,
           dateOfSentence: sentence.dateOfSentence,

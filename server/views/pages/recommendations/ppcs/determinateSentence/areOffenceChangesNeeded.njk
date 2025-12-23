@@ -19,7 +19,7 @@
                     heading: selectedPpudSentence.offence.indexOffence,
                     headingSize: 's',
                     rows: [
-                        { key: 'Additional comments', value: selectedPpudSentence.offence.indexOffenceComment or 'None' },
+                        { key: 'Additional comments', value: selectedPpudSentence.offence.offenceComment or 'None' },
                         { key: 'Date of sentence', value: formatDateTimeFromIsoString({isoDate: selectedPpudSentence.dateOfSentence, dateOnly: true}) },
                         { key: 'Sentence expiry date', value: formatDateTimeFromIsoString({isoDate: selectedPpudSentence.sentenceExpiryDate, dateOnly: true}) }
                     ]

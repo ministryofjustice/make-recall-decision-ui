@@ -219,6 +219,10 @@ export type PrisonOffender = {
   pnc: string,
 }
 
+// The PPUD types below are aligned with those defined in PpudDetailsResponse.ts
+// I don't know why they are defined separately, and not one based on the other
+// (or just one type used throughout). Maybe worth looking into at some point to
+// prevent divergence.
 export type PpudOffender = {
   id: string,
   croOtherNumber: string,
@@ -253,7 +257,7 @@ export type PpudSentence = {
 
 export type PpudOffence = {
   indexOffence?: string,
-  indexOffenceComment?: string,
+  offenceComment?: string,
   dateOfIndexOffence?: string,
 }
 

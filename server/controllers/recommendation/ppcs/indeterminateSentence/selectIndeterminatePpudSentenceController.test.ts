@@ -176,6 +176,7 @@ describe('post', () => {
           ppudSentenceId: req.body.ppudSentenceId,
           ppudIndeterminateSentenceData: {
             offenceDescription: expectedSentence.offence.indexOffence,
+            offenceDescriptionComment: expectedSentence.offence.offenceComment,
             releaseDate: expectedSentence.releaseDate,
             sentencingCourt: expectedSentence.sentencingCourt,
             dateOfSentence: expectedSentence.dateOfSentence,

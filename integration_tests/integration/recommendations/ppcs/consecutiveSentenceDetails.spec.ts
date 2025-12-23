@@ -134,7 +134,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
           .should('exist')
           .should('have.class', 'govuk-button')
           .should('have.attr', 'role', 'button')
-          .should('have.attr', 'href', `/recommendations/${recommendationId}/match-index-offence`)
+          .should('have.attr', 'href', `/recommendations/${recommendationId}/select-ppud-sentence`)
       })
 
       describe('Sentence details', () => {

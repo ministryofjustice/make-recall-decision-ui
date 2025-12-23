@@ -242,6 +242,11 @@ pre {
 
 .govuk-summary-list__actions {
   width: 4em;
+  // We believe this was overridden to bottom to handle the case where an error is
+  // displayed on the row. Our implementation for this is to display the error message
+  // within the key element, before the key itself, so the error is the first line of
+  // the row. With the default vertical-align value of top, the action link was aligned
+  // with the error message, which looked odd.
   vertical-align: bottom;
 }
 
