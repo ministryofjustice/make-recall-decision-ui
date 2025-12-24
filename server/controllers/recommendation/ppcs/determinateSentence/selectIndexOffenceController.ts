@@ -192,8 +192,17 @@ async function post(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
+  const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
+  let nextPageId: string
+  if (sentenceHasConsecutive) {
+    nextPageId = ppcsPaths.consecutiveSentenceDetails
+  } else if (offenderExistsAndHasSentences) {
+    nextPageId = ppcsPaths.selectPpudSentence
+  } else {
+    nextPageId = ppcsPaths.matchIndexOffence
+  }
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: sentenceHasConsecutive ? ppcsPaths.consecutiveSentenceDetails : ppcsPaths.matchIndexOffence,
+    nextPageId,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

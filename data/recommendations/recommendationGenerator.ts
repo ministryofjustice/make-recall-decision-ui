@@ -23,6 +23,7 @@ import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilit
 */
 
 export type RecommendationOptions = {
+  id?: number
   crn?: string
   alternativesToRecallTried?: boolean
   custodyStatus?: boolean
@@ -63,7 +64,7 @@ export type RecommendationOptions = {
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
-  nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
+  nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   isUnder18?: boolean
   isSentence48MonthsOrOver?: boolean
@@ -76,7 +77,7 @@ export type RecommendationOptions = {
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
   generate: options => ({
-    id: faker.number.int({ min: 1, max: 99 }),
+    id: options?.id ?? faker.number.int({ min: 1, max: 99 }),
     status: RecommendationResponse.status.DRAFT,
     crn: options?.crn ?? faker.helpers.replaceSymbols('?######'),
     createdByUserFullName: 'Integration test data generator',
@@ -258,7 +259,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     ppcsQueryEmails: options?.ppcsQueryEmails ?? true ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
-      options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
+      options?.nomisIndexOffence === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisIndexOffence),
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     isUnder18: options?.isUnder18,
     isSentence48MonthsOrOver: options?.isSentence48MonthsOrOver,

@@ -7,6 +7,7 @@ import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { ppcsPaths } from '../../server/routes/paths/ppcs'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -140,25 +141,28 @@ const ppcsUrls = [
   recommendationEndpoint('edit-recall-received-date-and-time', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-probation-area', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-mappa-level', ['SENT_TO_PPCS']),
-  recommendationEndpoint('select-index-offence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectIndexOffence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectPpudSentence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.areOffenceChangesNeeded, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('custody-type', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.matchIndexOffence, ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint(ppcsPaths.editCustodyType, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
   recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.sentenceToCommitExistingOffender, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('select-indeterminate-ppud-sentence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectIndeterminatePpudSentence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.INDETERMINATE,
   }),
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),

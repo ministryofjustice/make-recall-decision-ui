@@ -2506,57 +2506,6 @@ context('Make a recommendation', () => {
       cy.getText('mappaLevel').should('contain', 'Unknown')
     })
 
-    it('match index offence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
-          ppudOffender: {},
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                bookingId: 13,
-                courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA12345',
-                offenceDescription: 'Attack / assault / batter a member of the public',
-                offenceStatute: 'SA96',
-                offenderChargeId: 3934369,
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                sentenceStartDate: '2023-11-16',
-                sentenceTypeDescription: 'Adult Mandatory Life',
-                terms: [],
-                releaseDate: '2025-11-16',
-                licenceExpiryDate: '2025-11-17',
-                releasingPrison: 'Broad Moor',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'index-offences',
-        statusCode: 200,
-        response: {
-          values: ['Abscond', 'Abstracting electricity'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/match-index-offence`)
-      cy.pageHeading().should('contain', 'Select a matching index offence in PPUD')
-
-      cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
-      cy.getText('sentenceStartDate').should('contain', '16 November 2023')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
-    })
-
     it('select determinate ppud sentence', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

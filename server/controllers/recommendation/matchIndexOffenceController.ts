@@ -13,8 +13,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
     user: { token },
   } = res.locals
 
-  const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
+  const nomisIndexOffence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+  )
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender?.sentences?.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
   )
 
   const list = await ppudReferenceList(token, 'index-offences')
@@ -29,10 +32,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {
     ...res.locals,
     page: {
-      id: 'matchIndexOffence',
+      id: selectedPpudSentence ? 'changeIndexOffence' : 'matchIndexOffence',
     },
     indexOffences,
-    offence,
+    nomisIndexOffence,
+    selectedPpudSentence,
     errors: res.locals.errors,
   }
 
@@ -78,10 +82,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
-
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender?.sentences?.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+  )
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: offenderExistsAndHasSentences ? ppcsPaths.selectPpudSentence : ppcsPaths.editCustodyType,
+    nextPageId: selectedPpudSentence ? ppcsPaths.sentenceToCommitExistingOffender : ppcsPaths.editCustodyType,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
