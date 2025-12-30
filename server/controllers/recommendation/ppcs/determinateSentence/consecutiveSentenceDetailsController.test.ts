@@ -333,28 +333,21 @@ describe('Consecutive Sentence Details Controller', () => {
                 redirectionPageId: ppcsPaths.selectPpudSentence,
               },
             ]
-            testCases.forEach(testCase => {
-              describe(testCase.useCaseDescription, () => {
-                const basePath = '/recommendations/123/'
-                let resForTestCase: Response
-                beforeEach(async () => {
-                  ;(prisonSentences as jest.Mock).mockResolvedValue(defaultGetSentenceSequence)
-                  resForTestCase = mockRes({
-                    locals: {
-                      recommendation: testCase.recommendation,
-                      urlInfo: {
-                        basePath,
-                      },
-                    },
-                  })
-                  await consecutiveSentenceDetailsController.get(req, resForTestCase, next)
-                })
-                it('- Is provided', async () => expect(resForTestCase.locals.pageData.nextPagePath).toBeDefined())
-                it('- Is the expected path', async () =>
-                  expect(resForTestCase.locals.pageData.nextPagePath).toEqual(
-                    `${basePath}${testCase.redirectionPageId}`
-                  ))
+            const basePath = '/recommendations/123/'
+            it.each(testCases)('$useCaseDescription', async ({ recommendation, redirectionPageId }) => {
+              ;(prisonSentences as jest.Mock).mockResolvedValue(defaultGetSentenceSequence)
+              const resForTestCase = mockRes({
+                locals: {
+                  recommendation,
+                  urlInfo: {
+                    basePath,
+                  },
+                },
               })
+              await consecutiveSentenceDetailsController.get(req, resForTestCase, next)
+
+              expect(resForTestCase.locals.pageData.nextPagePath).toBeDefined()
+              expect(resForTestCase.locals.pageData.nextPagePath).toEqual(`${basePath}${redirectionPageId}`)
             })
           })
         })
