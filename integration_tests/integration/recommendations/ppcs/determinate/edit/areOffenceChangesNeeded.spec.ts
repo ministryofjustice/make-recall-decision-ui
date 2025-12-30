@@ -112,7 +112,7 @@ function testPageContent(recommendationId: string, selectedPpudSentence: PpudSen
     .should('contain.text', 'You selected this offence from PPUD:')
     .should('contain.text', selectedPpudSentence.offence.indexOffence)
     .should('contain.text', 'Additional comments')
-    .should('contain.text', selectedPpudSentence.offence.offenceComment ?? 'None')
+    .should('contain.text', selectedPpudSentence.offence.indexOffenceComment ?? 'None')
     .should('contain.text', 'Date of sentence')
     .should(
       'contain.text',

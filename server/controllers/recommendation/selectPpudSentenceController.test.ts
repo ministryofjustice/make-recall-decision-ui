@@ -120,7 +120,7 @@ describe('Select Determinate PPUD Sentence Controller', () => {
                   ppudSentenceId: req.body.ppudSentenceId,
                   custodyType: selectedSentence.custodyType,
                   indexOffence: selectedSentence.offence.indexOffence,
-                  indexOffenceComment: selectedSentence.offence.offenceComment,
+                  indexOffenceComment: selectedSentence.offence.indexOffenceComment,
                 },
               },
               token: res.locals.user.token,

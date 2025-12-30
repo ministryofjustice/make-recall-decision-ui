@@ -65,7 +65,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
         ppudSentenceId,
         custodyType: ppudSentence?.custodyType,
         indexOffence: ppudSentence?.offence.indexOffence,
-        indexOffenceComment: ppudSentence?.offence.offenceComment,
+        indexOffenceComment: ppudSentence?.offence.indexOffenceComment,
       },
     },
     token,

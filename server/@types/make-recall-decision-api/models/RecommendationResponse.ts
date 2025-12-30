@@ -257,7 +257,7 @@ export type PpudSentence = {
 
 export type PpudOffence = {
   indexOffence?: string,
-  offenceComment?: string,
+  indexOffenceComment?: string,
   dateOfIndexOffence?: string,
 }
 

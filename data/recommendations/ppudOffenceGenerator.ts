@@ -4,14 +4,14 @@ import { PpudOffence } from '../../server/@types/make-recall-decision-api/models
 
 export type PpudOffenceOptions = {
   indexOffence?: string
-  offenceComment?: string
+  indexOffenceComment?: string
   dateOfIndexOffence?: string
 }
 
 export const PpudOffenceGenerator: DataGenerator<PpudOffence, PpudOffenceOptions> = {
   generate: (options: PpudOffenceOptions) => ({
     indexOffence: options?.indexOffence ?? faker.lorem.sentence(),
-    offenceComment: options?.offenceComment ?? faker.lorem.sentences(),
+    indexOffenceComment: options?.indexOffenceComment ?? faker.lorem.sentences(),
     dateOfIndexOffence: options?.dateOfIndexOffence ?? faker.date.past().toISOString(),
   }),
 }

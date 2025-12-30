@@ -82,7 +82,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         ppudSentenceId,
         ppudIndeterminateSentenceData: {
           offenceDescription: sentence.offence.indexOffence,
-          offenceDescriptionComment: sentence.offence.offenceComment,
+          offenceDescriptionComment: sentence.offence.indexOffenceComment,
           releaseDate: sentence.releaseDate,
           sentencingCourt: sentence.sentencingCourt,
           dateOfSentence: sentence.dateOfSentence,

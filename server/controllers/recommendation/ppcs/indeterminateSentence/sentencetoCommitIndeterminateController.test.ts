@@ -40,7 +40,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
                 custodyType: expected.sentence.custodyType,
                 offence: {
                   indexOffence: expected.sentence.indexOffence,
-                  offenceComment: expected.sentence.indexOffenceComment,
+                  indexOffenceComment: expected.sentence.indexOffenceComment,
                 },
                 releaseDate: expected.sentence.releaseDate,
                 sentencingCourt: expected.sentence.sentencingCourt,
