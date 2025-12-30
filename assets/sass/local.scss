@@ -133,7 +133,7 @@ pre {
   flex-wrap: wrap-reverse;
 }
 
-.govuk-text-list {
+.car-text-list {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -157,22 +157,22 @@ pre {
     margin-bottom: unset;
   }
 
-  .govuk-text-list__row {
+  .car-text-list__row {
     display: block;
   }
 
-  .govuk-text-list__key {
+  .car-text-list__key {
     display: inline;
     overflow-wrap: break-word;
     vertical-align: top;
     width: 30%;
   }
 
-  .govuk-text-list__key:after {
+  .car-text-list__key:after {
     content: ": "
   }
 
-  .govuk-text-list__value {
+  .car-text-list__value {
     display: inline;
     overflow-wrap: break-word;
     margin-inline-start: unset;

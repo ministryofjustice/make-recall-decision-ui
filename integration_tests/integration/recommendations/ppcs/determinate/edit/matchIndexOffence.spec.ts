@@ -210,13 +210,13 @@ function testPageContent(
 
     cy.get('@nomisOffenceDetailsList').find('h2').should('contain.text', 'From NOMIS')
     cy.get('@nomisOffenceDetailsList')
-      .find('.govuk-text-list__row')
+      .find('.car-text-list__row')
       .should('contain.text', 'Offence')
       .should('contain.text', selectedNomisOffence.offenceDescription)
 
     cy.get('@ppudOffenceDetailsList').find('h2').should('contain.text', 'From PPUD')
     cy.get('@ppudOffenceDetailsList')
-      .find('.govuk-text-list__row')
+      .find('.car-text-list__row')
       .should('contain.text', 'Offence')
       .should('contain.text', selectedPpudSentence.offence.indexOffence)
   }
@@ -271,7 +271,7 @@ function testPageContent(
  * Get all the text lists on the page and assign them appropriate aliases
  */
 function setTextListAliases() {
-  cy.get('.govuk-text-list').each((textList, index) => {
+  cy.get('.car-text-list').each((textList, index) => {
     if (index === 0) {
       cy.wrap(textList).as('nomisOffenceDetailsList')
     } else if (index === 1) {
