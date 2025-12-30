@@ -1,4 +1,5 @@
 import { validateFixedTermLicenceConditions } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateFixedTermLicenceConditions', () => {
   const recommendationId = '456'
@@ -11,7 +12,7 @@ describe('validateFixedTermLicenceConditions', () => {
   describe('valid', () => {
     it('returns valuesToSave and no errors if Yes is selected, with details', async () => {
       const requestBody = {
-        hasFixedTermLicenceConditions: 'YES',
+        hasFixedTermLicenceConditions: YesNoValues.YES,
         hasFixedTermLicenceConditionsDetails: 'Details...',
         crn: 'X34534',
       }
@@ -31,7 +32,7 @@ describe('validateFixedTermLicenceConditions', () => {
 
     it('strips HTML tags from details', async () => {
       const requestBody = {
-        hasFixedTermLicenceConditions: 'YES',
+        hasFixedTermLicenceConditions: YesNoValues.YES,
         hasFixedTermLicenceConditionsDetails: '<style></style>Details...',
         crn: 'X34534',
       }
@@ -44,7 +45,7 @@ describe('validateFixedTermLicenceConditions', () => {
 
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
-        hasFixedTermLicenceConditions: 'NO',
+        hasFixedTermLicenceConditions: YesNoValues.NO,
         crn: 'X34534',
       }
       const { errors, valuesToSave, nextPagePath } = await validateFixedTermLicenceConditions({
@@ -64,7 +65,7 @@ describe('validateFixedTermLicenceConditions', () => {
 
   it('if "from page" is set to recall task list, redirect to it', async () => {
     const requestBody = {
-      hasFixedTermLicenceConditions: 'NO',
+      hasFixedTermLicenceConditions: YesNoValues.NO,
       crn: 'X34534',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }
@@ -98,7 +99,7 @@ describe('validateFixedTermLicenceConditions', () => {
 
     it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
-        hasFixedTermLicenceConditions: 'YES',
+        hasFixedTermLicenceConditions: YesNoValues.YES,
         hasFixedTermLicenceConditionsDetails: ' ', // whitespace
         crn: 'X34534',
       }
@@ -108,7 +109,7 @@ describe('validateFixedTermLicenceConditions', () => {
       })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
-        hasFixedTermLicenceConditions: 'YES',
+        hasFixedTermLicenceConditions: YesNoValues.YES,
       })
       expect(errors).toEqual([
         {

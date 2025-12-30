@@ -1,4 +1,5 @@
 import { inputDisplayValuesIsIndeterminateSentence } from './inputDisplayValues'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesIsIndeterminateSentence', () => {
   const apiValues = {
@@ -24,7 +25,7 @@ describe('inputDisplayValuesIsIndeterminateSentence', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesIsIndeterminateSentence({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'YES',
+      value: YesNoValues.YES,
     })
   })
 })

@@ -4,6 +4,7 @@ import { strings } from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
 export const validateFixedTermLicenceConditions = async ({
   requestBody,
@@ -12,7 +13,7 @@ export const validateFixedTermLicenceConditions = async ({
   const { hasFixedTermLicenceConditions, hasFixedTermLicenceConditionsDetails } = requestBody
   const invalid = !isValueValid(hasFixedTermLicenceConditions as string, 'yesNo')
   const missingYesDetail =
-    hasFixedTermLicenceConditions === 'YES' && isEmptyStringOrWhitespace(hasFixedTermLicenceConditionsDetails)
+    hasFixedTermLicenceConditions === YesNoValues.YES && isEmptyStringOrWhitespace(hasFixedTermLicenceConditionsDetails)
   const hasError = !hasFixedTermLicenceConditions || invalid || missingYesDetail
   if (hasError) {
     const errors = []
@@ -49,9 +50,11 @@ export const validateFixedTermLicenceConditions = async ({
   // valid
   const valuesToSave = {
     fixedTermAdditionalLicenceConditions: {
-      selected: hasFixedTermLicenceConditions === 'YES',
+      selected: hasFixedTermLicenceConditions === YesNoValues.YES,
       details:
-        hasFixedTermLicenceConditions === 'YES' ? stripHtmlTags(hasFixedTermLicenceConditionsDetails as string) : null,
+        hasFixedTermLicenceConditions === YesNoValues.YES
+          ? stripHtmlTags(hasFixedTermLicenceConditionsDetails as string)
+          : null,
     },
   }
   return {

@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { routeUrls } from '../../routes/routeUrls'
-import { booleanToYesNo, isDefined } from '../../utils/utils'
+import { isDefined } from '../../utils/utils'
 import { validatePreviousReleases } from '../recommendations/previousReleases/formValidator'
 import { splitIsoDateToParts } from '../../utils/dates/conversion'
+import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params

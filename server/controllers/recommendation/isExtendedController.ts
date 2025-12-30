@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { YesNoValues, booleanToYesNo } from '../recommendations/formOptions/yesNo'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -55,10 +55,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
   )
 
   const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
-  const isNo = isExtendedSentence === 'NO'
-  const isYes = isExtendedSentence === 'YES'
-  const changedToNo = isNo && currentSavedValue === 'YES'
-  const changedToYes = isYes && currentSavedValue === 'NO'
+  const isNo = isExtendedSentence === YesNoValues.NO
+  const isYes = isExtendedSentence === YesNoValues.YES
+  const changedToNo = isNo && currentSavedValue === YesNoValues.YES
+  const changedToYes = isYes && currentSavedValue === YesNoValues.NO
 
   let valuesToSave
 

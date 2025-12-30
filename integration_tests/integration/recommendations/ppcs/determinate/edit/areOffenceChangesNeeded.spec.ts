@@ -3,15 +3,17 @@ import { routes } from '../../../../../../api/routes'
 import { ppcsPaths } from '../../../../../../server/routes/paths/ppcs'
 import { setUpSessionForPpcs } from '../../util'
 import {
-  booleanToYesNoOffenceChanges,
-  yesNoOffenceChanges,
-} from '../../../../../../server/controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/yesNoOffenceChanges'
+  booleanToYesNo,
+  yesNoOptions,
+  YesNoValues,
+} from '../../../../../../server/controllers/recommendations/formOptions/yesNo'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
 import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
 import { formatDateTimeFromIsoString } from '../../../../../../server/utils/dates/formatting'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import { PpudSentence } from '../../../../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { strings } from '../../../../../../server/textStrings/en'
 
 context('Determinate Sentence - Are Offence Changes Needed Page', () => {
   const recommendationId = '123'
@@ -54,7 +56,7 @@ context('Determinate Sentence - Are Offence Changes Needed Page', () => {
         })
         const selectedPpudSentence = faker.helpers.arrayElement(recommendationWithOptionSelected.ppudOffender.sentences)
         recommendationWithOptionSelected.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
-        const selectedOption = booleanToYesNoOffenceChanges(
+        const selectedOption = booleanToYesNo(
           recommendationWithOptionSelected.bookRecallToPpud.changeOffenceOrAddComment
         )
 
@@ -131,6 +133,10 @@ function testPageContent(recommendationId: string, selectedPpudSentence: PpudSen
     )
 
   // Radios
+  const yesNoOffenceChanges = yesNoOptions({
+    [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+    [YesNoValues.NO]: strings.labels.no,
+  })
   yesNoOffenceChanges.forEach((radioOption, i) => {
     cy.get('.govuk-radios__item label')
       .eq(i)

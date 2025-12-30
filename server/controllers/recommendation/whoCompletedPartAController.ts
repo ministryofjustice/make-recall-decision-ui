@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { booleanToYesNo, isDefined, isMandatoryTextValue } from '../../utils/utils'
+import { isDefined, isMandatoryTextValue } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
@@ -7,6 +7,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { regionEnum } from '../recommendations/formOptions/region'
 import { isEmailValid } from '../../utils/validate-formats'
+import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals

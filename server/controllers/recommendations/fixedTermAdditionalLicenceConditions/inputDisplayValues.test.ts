@@ -1,4 +1,5 @@
 import { inputDisplayValuesFixedTermLicenceConditions } from './inputDisplayValues'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesFixedTermLicenceConditions', () => {
   const apiValues = {
@@ -31,11 +32,11 @@ describe('inputDisplayValuesFixedTermLicenceConditions', () => {
       },
     }
     const unsavedValues = {
-      hasFixedTermLicenceConditions: 'NO',
+      hasFixedTermLicenceConditions: YesNoValues.NO,
     }
     const inputDisplayValues = inputDisplayValuesFixedTermLicenceConditions({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'NO',
+      value: YesNoValues.NO,
       details: '',
     })
   })
@@ -45,7 +46,7 @@ describe('inputDisplayValuesFixedTermLicenceConditions', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesFixedTermLicenceConditions({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'YES',
+      value: YesNoValues.YES,
       details: 'Details...',
     })
   })

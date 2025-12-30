@@ -1,4 +1,5 @@
 import { validateAddress } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateAddress', () => {
   const recommendationId = '456'
@@ -35,7 +36,7 @@ describe('validateAddress', () => {
 
     it('returns valuesToSave and no errors if Yes selected, and resets details', async () => {
       const requestBody = {
-        isMainAddressWherePersonCanBeFound: 'YES',
+        isMainAddressWherePersonCanBeFound: YesNoValues.YES,
         addressCount: '1',
         crn: 'X34534',
       }
@@ -90,7 +91,7 @@ describe('validateAddress', () => {
 
     it('errors if No is selected but no detail sent', async () => {
       const requestBody = {
-        isMainAddressWherePersonCanBeFound: 'NO',
+        isMainAddressWherePersonCanBeFound: YesNoValues.NO,
         isMainAddressWherePersonCanBeFoundDetailsNo: ' ', // whitespace
         addressCount: '1',
         crn: 'X34534',
@@ -98,7 +99,7 @@ describe('validateAddress', () => {
       const { errors, valuesToSave, unsavedValues } = await validateAddress({ requestBody, recommendationId })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
-        isMainAddressWherePersonCanBeFound: 'NO',
+        isMainAddressWherePersonCanBeFound: YesNoValues.NO,
       })
       expect(errors).toEqual([
         {

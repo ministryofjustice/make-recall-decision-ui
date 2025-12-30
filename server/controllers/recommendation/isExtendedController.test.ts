@@ -3,6 +3,7 @@ import isExtendedSentenceController from './isExtendedController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { YesNoValues } from '../recommendations/formOptions/yesNo'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -37,7 +38,7 @@ describe('get', () => {
     const next = mockNext()
     await isExtendedSentenceController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'YES' })
+    expect(res.locals.inputDisplayValues).toEqual({ value: YesNoValues.YES })
   })
 
   it('initial load with error data', async () => {
@@ -94,8 +95,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        currentSavedValue: 'NO',
-        isExtendedSentence: 'YES',
+        currentSavedValue: YesNoValues.NO,
+        isExtendedSentence: YesNoValues.YES,
         isIndeterminateSentence: '0',
       },
     })
@@ -137,8 +138,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        currentSavedValue: 'YES',
-        isExtendedSentence: 'NO',
+        currentSavedValue: YesNoValues.YES,
+        isExtendedSentence: YesNoValues.NO,
         isIndeterminateSentence: '1',
       },
     })
@@ -176,8 +177,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        currentSavedValue: 'NO',
-        isExtendedSentence: 'YES',
+        currentSavedValue: YesNoValues.NO,
+        isExtendedSentence: YesNoValues.YES,
         isIndeterminateSentence: '0',
       },
     })
@@ -255,8 +256,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        currentSavedValue: 'NO',
-        isExtendedSentence: 'YES',
+        currentSavedValue: YesNoValues.NO,
+        isExtendedSentence: YesNoValues.YES,
         isIndeterminateSentence: '0',
       },
     })
@@ -283,8 +284,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        currentSavedValue: 'YES',
-        isExtendedSentence: 'NO',
+        currentSavedValue: YesNoValues.YES,
+        isExtendedSentence: YesNoValues.NO,
         isIndeterminateSentence: '0',
       },
     })

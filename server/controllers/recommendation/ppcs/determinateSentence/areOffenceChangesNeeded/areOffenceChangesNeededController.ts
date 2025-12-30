@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import {
-  booleanToYesNoOffenceChanges,
-  yesNoOffenceChanges,
-  yesNoOffenceChangesToBoolean,
-  yesNoOffenceChangesValues,
-} from './yesNoOffenceChanges'
+  booleanToYesNo,
+  yesNoOptions,
+  yesNoToBoolean,
+  YesNoValues,
+} from '../../../../recommendations/formOptions/yesNo'
 import { RecommendationResponse } from '../../../../../@types/make-recall-decision-api'
 import { isDefined } from '../../../../../utils/utils'
 import { makeErrorObject } from '../../../../../utils/errors'
@@ -27,8 +27,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
       id: 'areOffenceChangesNeeded',
     },
     selectedPpudSentence,
-    selectedOption: booleanToYesNoOffenceChanges(recommendation.bookRecallToPpud.changeOffenceOrAddComment),
-    allOptions: yesNoOffenceChanges,
+    selectedOption: booleanToYesNo(recommendation.bookRecallToPpud.changeOffenceOrAddComment),
+    allOptions: yesNoOptions({
+      [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+      [YesNoValues.NO]: strings.labels.no,
+    }),
     errors: res.locals.errors,
   }
 
@@ -66,7 +69,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
-        changeOffenceOrAddComment: yesNoOffenceChangesToBoolean(changeOffenceOrAddComment),
+        changeOffenceOrAddComment: yesNoToBoolean(changeOffenceOrAddComment),
       },
     },
     token,
@@ -74,7 +77,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPageId =
-    changeOffenceOrAddComment === yesNoOffenceChangesValues.YES
+    changeOffenceOrAddComment === YesNoValues.YES
       ? ppcsPaths.matchIndexOffence
       : ppcsPaths.sentenceToCommitExistingOffender
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })

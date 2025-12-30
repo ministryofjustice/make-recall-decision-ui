@@ -288,6 +288,11 @@ export const strings: Record<string, Record<string, string>> = {
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
   },
+  labels: {
+    yes: 'Yes',
+    no: 'No',
+    yesOffenceChanges: 'Yes, change index offence or add a comment',
+  },
   taskListLinkTexts: {
     vulnerabilities: 'Would recall affect vulnerability or additional needs?',
     vulnerabilitiesWithRiskToSelfFlagEnabled: 'Could recall affect vulnerabilities or needs?',

@@ -1,4 +1,5 @@
 import { inputDisplayValuesArrestIssues } from './inputDisplayValues'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesArrestIssues', () => {
   const apiValues = {
@@ -31,11 +32,11 @@ describe('inputDisplayValuesArrestIssues', () => {
       },
     }
     const unsavedValues = {
-      hasArrestIssues: 'NO',
+      hasArrestIssues: YesNoValues.NO,
     }
     const inputDisplayValues = inputDisplayValuesArrestIssues({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'NO',
+      value: YesNoValues.NO,
       details: '',
     })
   })
@@ -45,7 +46,7 @@ describe('inputDisplayValuesArrestIssues', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesArrestIssues({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'YES',
+      value: YesNoValues.YES,
       details: 'Details...',
     })
   })

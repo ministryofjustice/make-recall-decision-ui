@@ -12,13 +12,13 @@ import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtend
 import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
 import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
 import { renderTemplateString } from '../../../utils/nunjucks'
-import { yesNo } from './yesNo'
+import { yesNoOptions, YesNoValues } from './yesNo'
 import { roshLevels } from '../rosh/formOptions'
 import { UiListItem } from '../../../@types/pagesForms'
 import { spoRecallTypeEnum } from './spoRecallTypeEnum'
 import { rationaleCheck } from '../rationaleCheck/formOptions'
 import { recallTypeExtended } from '../recallTypeExtended/formOptions'
-import { yesNoOffenceChanges } from '../../recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/yesNoOffenceChanges'
+import { strings } from '../../../textStrings/en'
 
 export type FormOption = {
   value: string
@@ -46,11 +46,14 @@ export const formOptions: FormOptionsType = {
   indeterminateOrExtendedSentenceDetails,
   whyConsideredRecall,
   howWillAppointmentHappen,
-  yesNo,
+  yesNo: yesNoOptions(),
   hasVictimsInContactScheme,
   isUnderIntegratedOffenderManagement,
   roshLevels,
-  yesNoOffenceChanges,
+  yesNoOffenceChanges: yesNoOptions({
+    [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+    [YesNoValues.NO]: strings.labels.no,
+  }),
 }
 
 export const isValueValid = (val: string, optionId: string) =>

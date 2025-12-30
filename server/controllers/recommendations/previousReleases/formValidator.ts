@@ -8,6 +8,7 @@ import { convertGmtDatePartsToUtc, extractDateFieldsToDateParts } from '../../..
 import { dateHasError } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { ValidationError } from '../../../@types/dates'
+import { YesNoValues } from '../formOptions/yesNo'
 
 export const validatePreviousReleases = async ({
   requestBody,
@@ -129,7 +130,7 @@ export const validatePreviousReleases = async ({
     }
   }
 
-  const isReleaseUnderECSL = releaseUnderECSL === 'YES'
+  const isReleaseUnderECSL = releaseUnderECSL === YesNoValues.YES
 
   return {
     valuesToSave: {

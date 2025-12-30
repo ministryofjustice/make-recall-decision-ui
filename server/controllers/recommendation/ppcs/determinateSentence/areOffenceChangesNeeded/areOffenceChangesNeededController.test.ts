@@ -2,15 +2,21 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../../middleware/testutils/mockRequestUtils'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
 import areOffenceChangesNeededController from './areOffenceChangesNeededController'
-import { yesNoOffenceChanges, yesNoOffenceChangesToBoolean, yesNoOffenceChangesValues } from './yesNoOffenceChanges'
+import { yesNoOptions, yesNoToBoolean, YesNoValues } from '../../../../recommendations/formOptions/yesNo'
 import { isDefined } from '../../../../../utils/utils'
 import { ppcsPaths } from '../../../../../routes/paths/ppcs'
 import { getRecommendation, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
+import { strings } from '../../../../../textStrings/en'
 
 jest.mock('../../../../../data/makeDecisionApiClient')
 jest.mock('../../../../../utils/utils')
 
 describe('Are Offence Changes Needed Controller', () => {
+  const yesNoOffenceChanges = yesNoOptions({
+    [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+    [YesNoValues.NO]: strings.labels.no,
+  })
+
   describe('get', () => {
     const req = mockReq({
       params: { recommendationId: faker.number.int().toString() },
@@ -73,7 +79,7 @@ describe('Are Offence Changes Needed Controller', () => {
           describe(`Option ${optionValue} selected`, () => {
             const recommendation = RecommendationResponseGenerator.generate({
               bookRecallToPpud: {
-                changeOffenceOrAddComment: yesNoOffenceChangesToBoolean(optionValue),
+                changeOffenceOrAddComment: yesNoToBoolean(optionValue),
               },
             })
 
@@ -150,7 +156,7 @@ describe('Are Offence Changes Needed Controller', () => {
                   valuesToSave: {
                     bookRecallToPpud: {
                       ...recommendation.bookRecallToPpud,
-                      changeOffenceOrAddComment: yesNoOffenceChangesToBoolean(req.body.changeOffenceOrAddComment),
+                      changeOffenceOrAddComment: yesNoToBoolean(req.body.changeOffenceOrAddComment),
                     },
                   },
                   token: res.locals.user.token,
@@ -160,7 +166,7 @@ describe('Are Offence Changes Needed Controller', () => {
                 })
               })
 
-              if (optionValue === yesNoOffenceChangesValues.YES) {
+              if (optionValue === YesNoValues.YES) {
                 it('Redirects to the Match Index Offence page', () =>
                   expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`))
               } else {
