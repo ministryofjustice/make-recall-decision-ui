@@ -54,7 +54,7 @@
                 {{ accessibleAutocomplete({
                     id: 'indexOffence',
                     label: {
-                        text: 'Select the nearest matching offence from the list in PPUD' if selectedPpudSentence else 'Now select the nearest matching offence from the list in PPUD'
+                        text: {{ 'S' if selectedPpudSentence else 'Now s' }}elect the nearest matching offence from the list
                     },
                     errorMessage: errorMessage(errors.indexOffence),
                     list: indexOffences,
