@@ -17,9 +17,10 @@ export const yesNoOptions = (
   ]
 }
 
-export function booleanToYesNo(value?: boolean): YesNoValues {
-  if (typeof value === 'undefined') return undefined
-  return value ? YesNoValues.YES : YesNoValues.NO
+export function booleanToYesNo(val: boolean) {
+  if (val === true) return 'YES'
+  if (val === false) return 'NO'
+  return undefined
 }
 
 export function yesNoToBoolean(value: string) {
