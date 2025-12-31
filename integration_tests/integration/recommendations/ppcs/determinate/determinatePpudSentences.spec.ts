@@ -2,15 +2,12 @@ import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision
 import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
 import completeRecommendationResponse from '../../../../../api/responses/get-recommendation.json'
 import { testSummaryList } from '../../../../componentTests/summaryList.tests'
-import searchMappedUserResponse from '../../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../../api/responses/ppudSearchActiveUsers.json'
+import { setUpSessionForPpcs } from '../util'
 
 context('Determinate Ppud Sentences', () => {
   describe('Standard page load', () => {
     beforeEach(() => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+      setUpSessionForPpcs()
     })
 
     it('should load the page as expected', () => {

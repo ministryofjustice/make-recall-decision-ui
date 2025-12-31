@@ -16,7 +16,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingLegislationReleasedUnder: 'Enter legislation',
     missingReleasingPrison: 'Select a releasing prison from the list',
     missingProbationArea: 'Enter probation area',
-    missingIndexOffence: 'Select a matching index offence from the list',
+    missingIndexOffence: 'Select the nearest matching offence from the list in PPUD',
     missingSpoNoRecallRationale: 'Explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
@@ -136,6 +136,7 @@ export const strings: Record<string, Record<string, string>> = {
     invalidIndeterminatePpudSentenceSelected:
       "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
     missingSentencingCourt: 'Select a sentencing court from the list',
+    missingChangeOffenceOrAddComment: 'Select an option',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -259,6 +260,7 @@ export const strings: Record<string, Record<string, string>> = {
     editReleasingPrison: 'Edit releasing prison',
     editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
+    changeIndexOffence: 'Change index offence or add a comment',
     deleteRecommendationRationale: 'Delete recommendation for {{ fullName }}',
     deletePartARationale: 'Delete Part A for {{ fullName }}',
     deleteDntrRationale: 'Delete decision not to recall for {{ fullName }}',
@@ -282,8 +284,14 @@ export const strings: Record<string, Record<string, string>> = {
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select a sentence for your booking',
     determinatePpudSentences: 'Determinate sentences in PPUD',
+    areOffenceChangesNeeded: 'Do you need to change the index offence or add a comment?',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
+  },
+  labels: {
+    yes: 'Yes',
+    no: 'No',
+    yesOffenceChanges: 'Yes, change index offence or add a comment',
   },
   taskListLinkTexts: {
     vulnerabilities: 'Would recall affect vulnerability or additional needs?',

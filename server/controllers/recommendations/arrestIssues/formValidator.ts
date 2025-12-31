@@ -4,6 +4,7 @@ import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
 export const validateArrestIssues = async ({
   requestBody,
@@ -11,7 +12,7 @@ export const validateArrestIssues = async ({
 }: FormValidatorArgs): FormValidatorReturn => {
   const { hasArrestIssues, hasArrestIssuesDetailsYes } = requestBody
   const invalidArrestIssues = !isValueValid(hasArrestIssues as string, 'yesNo')
-  const missingYesDetail = hasArrestIssues === 'YES' && isEmptyStringOrWhitespace(hasArrestIssuesDetailsYes)
+  const missingYesDetail = hasArrestIssues === YesNoValues.YES && isEmptyStringOrWhitespace(hasArrestIssuesDetailsYes)
   const hasError = !hasArrestIssues || invalidArrestIssues || missingYesDetail
   if (hasError) {
     const errors = []
@@ -48,8 +49,8 @@ export const validateArrestIssues = async ({
   // valid
   const valuesToSave = {
     hasArrestIssues: {
-      selected: hasArrestIssues === 'YES',
-      details: hasArrestIssues === 'YES' ? stripHtmlTags(hasArrestIssuesDetailsYes as string) : null,
+      selected: hasArrestIssues === YesNoValues.YES,
+      details: hasArrestIssues === YesNoValues.YES ? stripHtmlTags(hasArrestIssuesDetailsYes as string) : null,
     },
   }
   return {

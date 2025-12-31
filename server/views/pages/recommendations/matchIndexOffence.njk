@@ -10,37 +10,52 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
-            <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+            {% if selectedPpudSentence %}
+                {{ heading(pageHeadings[page.id]) }}
+
+                {{ textList({
+                    heading: 'From NOMIS',
+                    headingSize: 's',
+                    rows: [
+                        { key: 'Offence', value: nomisIndexOffence.offenceDescription }
+                    ],
+                    classes: 'govuk-!-margin-top-7'
+                }) }}
+                {{ textList({
+                    heading: 'From PPUD',
+                    headingSize: 's',
+                    rows: [
+                        { key: 'Offence', value: selectedPpudSentence.offence.indexOffence }
+                    ],
+                    classes: 'govuk-!-margin-bottom-7'
+                }) }}
+            {% else %}
+                {{ heading(pageHeadings[page.id], 1, "l", classes="govuk-!-margin-bottom-3") }}
+
+                {{ bodyParagraph('You need to select an offence because the offences listed in PPUD and NOMIS do not match.') }}
+
+                {% call govukInsetText({ classes: "guidance-panel" }) %}
+                    {{ bodyParagraph('You selected this offence from NOMIS:') }}
+                    {{ textList({
+                        heading: nomisIndexOffence.offenceDescription,
+                        headingSize: 's',
+                        rows: [
+                            { key: 'Date of sentence', value: formatDateTimeFromIsoString({isoDate: nomisIndexOffence.sentenceStartDate, dateOnly: true}) },
+                            { key: 'Sentence expiry date', value: formatDateTimeFromIsoString({isoDate: nomisIndexOffence.sentenceEndDate, dateOnly: true}) }
+                        ]
+                    }) }}
+                {% endcall %}
+            {% endif %}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                <p class='govuk-body'>You selected this index offence. Now select the nearest match from the list in
-                    PPUD.</p>
-
-                <div class="govuk-inset-text">
-                    <div class="govuk-text-list">
-                        <h2 class='govuk-heading-s' data-qa="offenceDescription">{{ offence.offenceDescription }}A</h2>
-                        <div class="govuk-text-list__row">
-                            <div class="govuk-text-list__key">Start date</div>
-                            <div class="govuk-text-list__value"
-                                 data-qa="sentenceStartDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </div>
-                        </div>
-                        <div class="govuk-text-list__row">
-                            <div class="govuk-text-list__key">Sentence expiry date</div>
-                            <div class="govuk-text-list__value"
-                                 data-qa="sentenceEndDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </div>
-                        </div>
-                    </div>
-                </div>
-
                 {{ accessibleAutocomplete({
                     id: 'indexOffence',
                     label: {
-                        text: 'PPUD list of offences',
-                        class: 'govuk-label--m'
+                        text: ('S' if selectedPpudSentence else 'Now s') + 'elect the nearest matching offence from the list in PPUD'
                     },
-                    class: 'govuk-!-margin-bottom-4 govuk-input--width-30',
                     errorMessage: errorMessage(errors.indexOffence),
                     list: indexOffences,
                     value: recommendation.bookRecallToPpud.indexOffence,
@@ -52,13 +67,12 @@
                     name: "indexOffenceComment",
                     id: "indexOffenceComment",
                     label: {
-                        text: 'Add comments, including any additional offences (optional)',
-                        class: 'govuk-label--m'
+                        text: 'Add comments, including any additional offences (optional)'
                     },
                     value: recommendation.bookRecallToPpud.indexOffenceComment
                 }) }}
 
-                {{ formSubmitButton() }}
+                {{ formSubmitButton({ marginTop: 7 }) }}
             </form>
         </div>
     </div>

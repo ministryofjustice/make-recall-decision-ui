@@ -1,4 +1,5 @@
 import { validateContraband } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateContraband', () => {
   const recommendationId = '456'
@@ -33,7 +34,7 @@ describe('validateContraband', () => {
 
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
-        hasContrabandRisk: 'NO',
+        hasContrabandRisk: YesNoValues.NO,
         crn: 'X34534',
       }
       const { errors, valuesToSave, nextPagePath } = await validateContraband({ requestBody, recommendationId })
@@ -68,14 +69,14 @@ describe('validateContraband', () => {
 
     it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
-        hasContrabandRisk: 'YES',
+        hasContrabandRisk: YesNoValues.YES,
         hasContrabandRiskDetailsYes: ' ', // whitespace
         crn: 'X34534',
       }
       const { errors, valuesToSave, unsavedValues } = await validateContraband({ requestBody, recommendationId })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
-        hasContrabandRisk: 'YES',
+        hasContrabandRisk: YesNoValues.YES,
       })
       expect(errors).toEqual([
         {

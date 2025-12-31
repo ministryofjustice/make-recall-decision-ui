@@ -189,6 +189,7 @@ describe('post', () => {
     expect(expectedBookRecallToPpud.indexOffenceComment).toBeDefined()
     expect(expectedBookRecallToPpud.ppudSentenceId).toBeDefined()
     expect(expectedBookRecallToPpud.ppudIndeterminateSentenceData).toBeDefined()
+    expect(expectedBookRecallToPpud.changeOffenceOrAddComment).toBeDefined()
     // These values will be set managed so also need to exist for future expectations
     expect(expectedBookRecallToPpud.custodyGroup).toBeDefined()
     expect(expectedBookRecallToPpud.custodyType).toBeDefined()
@@ -227,6 +228,7 @@ describe('post', () => {
     delete expectedBookRecallToPpud.ppudSentenceId
     delete expectedBookRecallToPpud.ppudIndeterminateSentenceData
     delete expectedBookRecallToPpud.custodyType
+    delete expectedBookRecallToPpud.changeOffenceOrAddComment
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       featureFlags: res.locals.flags,

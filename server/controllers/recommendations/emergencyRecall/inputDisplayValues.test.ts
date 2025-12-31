@@ -1,4 +1,5 @@
 import { inputDisplayValuesEmergencyRecall } from './inputDisplayValues'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesEmergencyRecall', () => {
   const apiValues = {
@@ -24,7 +25,7 @@ describe('inputDisplayValuesEmergencyRecall', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesEmergencyRecall({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'YES',
+      value: YesNoValues.YES,
     })
   })
 })
