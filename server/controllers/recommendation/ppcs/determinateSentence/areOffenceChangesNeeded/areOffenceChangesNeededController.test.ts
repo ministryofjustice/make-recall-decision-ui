@@ -102,7 +102,15 @@ describe('Are Offence Changes Needed Controller', () => {
   })
   describe('post', () => {
     describe('with valid data', () => {
-      const recommendation = RecommendationResponseGenerator.generate()
+      const recommendation = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: {
+          // we set these so we can check they are reset when "No" is selected
+          indexOffence: faker.lorem.words(),
+          indexOffenceComment: faker.lorem.sentence(),
+        },
+      })
+      const selectedPpudSentence = faker.helpers.arrayElement(recommendation.ppudOffender.sentences)
+      recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
       const basePath = faker.lorem.slug()
       const res = mockRes({
         locals: {
@@ -150,14 +158,19 @@ describe('Are Offence Changes Needed Controller', () => {
                 await areOffenceChangesNeededController.post(req, res, next)
               })
 
+              const expectedBookRecallToPpud = {
+                ...recommendation.bookRecallToPpud,
+                changeOffenceOrAddComment: yesNoToBoolean(req.body.changeOffenceOrAddComment),
+              }
+              if (optionValue === YesNoValues.NO) {
+                expectedBookRecallToPpud.indexOffence = selectedPpudSentence.offence.indexOffence
+                expectedBookRecallToPpud.indexOffenceComment = selectedPpudSentence.offence.indexOffenceComment
+              }
               it('Updates the recommendation with the selected option', () => {
                 expect(updateRecommendation).toHaveBeenCalledWith({
                   recommendationId: recommendation.id.toString(),
                   valuesToSave: {
-                    bookRecallToPpud: {
-                      ...recommendation.bookRecallToPpud,
-                      changeOffenceOrAddComment: yesNoToBoolean(req.body.changeOffenceOrAddComment),
-                    },
+                    bookRecallToPpud: expectedBookRecallToPpud,
                   },
                   token: res.locals.user.token,
                   featureFlags: {

@@ -13,6 +13,36 @@ import { getRecommendation, updateRecommendation } from '../../../../../data/mak
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
 import { isValueValid } from '../../../../recommendations/formOptions/formOptions'
 import { ppcsPaths } from '../../../../../routes/paths/ppcs'
+import { BookRecallToPpud } from '../../../../../@types/make-recall-decision-api/models/RecommendationResponse'
+
+function resetOffenceInfo(
+  bookRecallToPpud: BookRecallToPpud,
+  recommendation: RecommendationResponse
+): BookRecallToPpud {
+  const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+  )
+  return {
+    ...bookRecallToPpud,
+    indexOffence: selectedPpudSentence.offence.indexOffence,
+    indexOffenceComment: selectedPpudSentence.offence.indexOffenceComment,
+  }
+}
+
+function buildNewBookRecallToPpud(
+  recommendation: RecommendationResponse,
+  changeOffenceOrAddComment: string
+): BookRecallToPpud {
+  const changeOffenceOrAddCommentBoolean = yesNoToBoolean(changeOffenceOrAddComment)
+  let bookRecallToPpud: BookRecallToPpud = {
+    ...recommendation.bookRecallToPpud,
+    changeOffenceOrAddComment: changeOffenceOrAddCommentBoolean,
+  }
+  if (!changeOffenceOrAddCommentBoolean) {
+    bookRecallToPpud = resetOffenceInfo(bookRecallToPpud, recommendation)
+  }
+  return bookRecallToPpud
+}
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -67,10 +97,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   await updateRecommendation({
     recommendationId: String(recommendation.id),
     valuesToSave: {
-      bookRecallToPpud: {
-        ...recommendation.bookRecallToPpud,
-        changeOffenceOrAddComment: yesNoToBoolean(changeOffenceOrAddComment),
-      },
+      bookRecallToPpud: buildNewBookRecallToPpud(recommendation, changeOffenceOrAddComment),
     },
     token,
     featureFlags: flags,
