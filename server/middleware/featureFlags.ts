@@ -19,7 +19,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagRiskToSelfEnabled: {
     label: 'Content updates for Risk to Self',
     description: 'Content updates to vulnerabilities page',
-    default: false,
+    default: true,
   },
 }
 
