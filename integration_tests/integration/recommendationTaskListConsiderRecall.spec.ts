@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
 
@@ -21,7 +21,7 @@ context('Recommendation - task list consider recall', () => {
   it('task list - To do ', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-consider-recall`)
     cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
@@ -33,7 +33,7 @@ context('Recommendation - task list consider recall', () => {
   it('task list - Complete ', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-consider-recall`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-consider-recall`)
     cy.getElement('What has made you consider recalling Jane Bloggs? Completed').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')

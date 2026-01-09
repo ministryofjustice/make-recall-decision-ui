@@ -1,9 +1,9 @@
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 export const getExistingRecallDates = (previousRecallDates?: string) => {
   if (!previousRecallDates) return []
@@ -58,7 +58,7 @@ export const validateAddPreviousRecall = async ({
         previousRecallDates,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-recalls`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/previous-recalls`
     return {
       valuesToSave,
       nextPagePath,

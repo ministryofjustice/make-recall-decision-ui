@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import { formOptions } from '../../server/controllers/recommendations/formOptions/formOptions'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import {
@@ -45,7 +45,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     // Additional licence conditions
     cy.getElement('Burglary - 05714').should('exist')
     cy.getElement('Robbery - 05727').should('exist')
@@ -80,7 +80,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
@@ -104,7 +104,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
@@ -130,7 +130,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
@@ -153,7 +153,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
@@ -181,7 +181,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
     // Standard licence conditions
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
@@ -208,7 +208,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
     // Standard licence conditions
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
@@ -237,7 +237,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
     cy.get('[data-qa="bespoke"]').should('not.exist')
   })
@@ -257,7 +257,7 @@ context('Licence conditions', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/X34983/licence-conditions`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
     cy.get('[data-qa="additional"]').should('not.exist')
   })

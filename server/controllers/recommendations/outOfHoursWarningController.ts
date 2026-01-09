@@ -7,12 +7,12 @@ import {
   updateRecommendation,
   updateStatuses,
 } from '../../data/makeDecisionApiClient'
-import { routeUrls } from '../../routes/routeUrls'
 import { getCaseSection } from '../caseSummary/getCaseSection'
 import { CaseSectionId } from '../../@types/pagesForms'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { crn } = req.params
@@ -112,7 +112,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
     if (!isPPDocumentCreated) {
-      res.redirect(303, `${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions`)
+      res.redirect(303, `${sharedPaths.recommendations}/${recommendationId}/ap-licence-conditions`)
       return
     }
   }
@@ -125,7 +125,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     deActivate: [],
   })
 
-  res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/ap-licence-conditions`)
+  res.redirect(303, `${sharedPaths.recommendations}/${recommendation.id}/ap-licence-conditions`)
 
   appInsightsEvent(
     EVENTS.MRD_RECOMMENDATION_STARTED,

@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import getLastCompletedRecommendationsResponse from '../../api/responses/get-case-last-completed.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
@@ -34,7 +34,7 @@ context('Recommendations tab in case summary', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/last-completed`)
+    cy.visit(`${sharedPaths.cases}/${crn}/last-completed`)
     cy.pageHeading().should('equal', 'Completed for Joe Bloggs')
 
     checkValuesInTable([['31 Jul 2023', 'Part A', 'This is the most recent completed document. It is not a draft.']])
@@ -55,7 +55,7 @@ context('Recommendations tab in case summary', () => {
         recommendations: null,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/last-completed`)
+    cy.visit(`${sharedPaths.cases}/${crn}/last-completed`)
     cy.getElement('There are no documents to download').should('exist')
     cy.getElement(
       'There are no documents to download. This is because this service has not been used to make a recommendation for Joe Bloggs yet. Check NDelius if you need an old Part A or decision not to recall letter.'

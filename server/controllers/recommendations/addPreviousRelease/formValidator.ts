@@ -1,9 +1,9 @@
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 export const getExistingReleaseDates = (previousReleaseDates?: string) => {
   if (!previousReleaseDates) return []
@@ -58,7 +58,7 @@ export const validateAddPreviousRelease = async ({
         previousReleaseDates,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/previous-releases`
     return {
       valuesToSave,
       nextPagePath,

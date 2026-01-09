@@ -5,7 +5,7 @@ import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { ppcsPaths } from '../../routes/paths/ppcs.routes'
+import { ppcsPaths } from '../../routes/paths/ppcs.paths'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {

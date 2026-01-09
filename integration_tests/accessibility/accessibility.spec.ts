@@ -1,7 +1,7 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
 import searchMappedUserResponse from '../../api/responses/searchMappedUsers.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
@@ -20,20 +20,20 @@ const urls = [
   { url: '/search-results-by-crn?crn=123' },
   { url: '/search-results-by-crn?crn=123&page=0' },
   { url: '/search-results-by-name?crn=123&page=0' },
-  { url: `${routeUrls.cases}/123/overview` },
-  { url: `${routeUrls.cases}/123/risk` },
-  { url: `${routeUrls.cases}/123/vulnerabilities` },
-  { url: `${routeUrls.cases}/123/personal-details` },
-  { url: `${routeUrls.cases}/123/licence-conditions` },
-  { url: `${routeUrls.cases}/123/contact-history` },
-  { url: `${routeUrls.cases}/123/recommendations` },
+  { url: `${sharedPaths.cases}/123/overview` },
+  { url: `${sharedPaths.cases}/123/risk` },
+  { url: `${sharedPaths.cases}/123/vulnerabilities` },
+  { url: `${sharedPaths.cases}/123/personal-details` },
+  { url: `${sharedPaths.cases}/123/licence-conditions` },
+  { url: `${sharedPaths.cases}/123/contact-history` },
+  { url: `${sharedPaths.cases}/123/recommendations` },
   // contact filter with valid dates
   {
-    url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
+    url: `${sharedPaths.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
   },
   // contact filter with invalid dates and errors
   {
-    url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
+    url: `${sharedPaths.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
   },
   // recommendation flow
   recommendationEndpoint('already-existing', [], true),
@@ -91,9 +91,9 @@ const urls = [
   recommendationEndpoint('confirmation-part-a'),
   recommendationEndpoint('preview-part-a'),
   recommendationEndpoint('task-list'),
-  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
-  { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
-  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
+  { url: `${sharedPaths.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
+  { url: `${sharedPaths.recommendations}/456/alternatives-tried`, validationError: true },
+  { url: `${sharedPaths.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
 
 const spoUrls = [
@@ -189,7 +189,7 @@ function recommendationEndpoint(
   bookRecallToPpud = {}
 ) {
   return {
-    url: `${routeUrls.recommendations}/456/${resource}`,
+    url: `${sharedPaths.recommendations}/456/${resource}`,
     fullRecommendationData,
     validationError: false,
     noRecallData: false,

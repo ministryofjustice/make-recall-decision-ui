@@ -12,7 +12,7 @@ export function statusIsActive(name: string): Check {
   }
 }
 
-export function checkRole(name: string): RequestHandler {
+export function checkAllowedRole(name: string): RequestHandler {
   return authorisationCheck(hasRole(name))
 }
 

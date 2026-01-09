@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import getCaseVulnerabilitiesResponse from '../../api/responses/get-case-vulnerabilities.json'
 
 context('Vulnerabilities page', () => {
@@ -16,7 +16,7 @@ context('Vulnerabilities page', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
+    cy.visit(`${sharedPaths.cases}/${crn}/vulnerabilities`)
     cy.pageHeading().should('equal', 'Vulnerabilities for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-vulnerabilities' }).should(
       'contain',
@@ -80,7 +80,7 @@ context('Vulnerabilities page', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
+    cy.visit(`${sharedPaths.cases}/${crn}/vulnerabilities`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
       expect(text).to.contain('Current concerns: No value - check OASys')
       expect(text).to.contain('Previous concerns: No value - check OASys')
@@ -125,7 +125,7 @@ context('Vulnerabilities page', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
+    cy.visit(`${sharedPaths.cases}/${crn}/vulnerabilities`)
     cy.viewDetails('View more detail on Concerns about vulnerability').then(text => {
       expect(text).to.contain("Current concerns: Don't know")
       expect(text).to.contain("Previous concerns: Don't know")
@@ -157,7 +157,7 @@ context('Vulnerabilities page', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
+    cy.visit(`${sharedPaths.cases}/${crn}/vulnerabilities`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-SERVER_ERROR' }).should('exist')
   })
 
@@ -174,7 +174,7 @@ context('Vulnerabilities page', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: {} })
 
-    cy.visit(`${routeUrls.cases}/${crn}/vulnerabilities`)
+    cy.visit(`${sharedPaths.cases}/${crn}/vulnerabilities`)
     cy.getElement({ qaAttr: 'banner-vulnerabilities-NOT_FOUND_LATEST_COMPLETE' }).should('exist')
   })
 })

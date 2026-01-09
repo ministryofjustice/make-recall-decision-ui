@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
@@ -20,7 +20,7 @@ context('Personal details', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
+    cy.visit(`${sharedPaths.cases}/${crn}/personal-details`)
     cy.pageHeading().should('equal', 'Personal details for Jane Bloggs')
 
     cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
@@ -58,7 +58,7 @@ context('Personal details', () => {
       response: { ...completeRecommendationResponse },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
+    cy.visit(`${sharedPaths.cases}/${crn}/personal-details`)
     cy.getDefinitionListValue('Main address').should('contain', 'None')
   })
 })
