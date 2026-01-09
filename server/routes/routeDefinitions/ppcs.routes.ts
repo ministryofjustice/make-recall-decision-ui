@@ -697,7 +697,7 @@ const ppcsIndeterminateSentenceRoutes: RouteDefinition[] = [
     method: 'get',
     handler: editOffenceController.get,
     roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...indeterminateSentenceMiddleware],
+    additionalMiddleware: [...indeterminateSentenceMiddleware],
     afterMiddleware: [audit],
   },
   {
@@ -713,7 +713,7 @@ const ppcsIndeterminateSentenceRoutes: RouteDefinition[] = [
     method: 'get',
     handler: editSentencingCourt.get,
     roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...indeterminateSentenceMiddleware],
+    additionalMiddleware: [...indeterminateSentenceMiddleware],
     afterMiddleware: [audit],
   },
   {
