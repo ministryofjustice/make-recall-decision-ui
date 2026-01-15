@@ -153,8 +153,8 @@ describe('get', () => {
 
     const res = mockRes({
       locals: {
-        recommendation: RECOMMENDATION_TEMPLATE,
-        statuses: STATUSES_TEMPLATE,
+        recommendation: { ...RECOMMENDATION_TEMPLATE },
+        statuses: [...STATUSES_TEMPLATE],
         flags: {
           xyz: 1,
         },
@@ -169,6 +169,15 @@ describe('get', () => {
     expect(determinePpudEstablishment).toHaveBeenCalledWith(
       {
         ...RECOMMENDATION_TEMPLATE,
+        bookRecallToPpud: {
+          cro: '1234/2345',
+          currentEstablishment: 'HMP Brixton in PPUD',
+          dateOfBirth: '1970-03-15',
+          firstNames: 'Jane C',
+          lastName: 'Doe',
+          prisonNumber: '1234',
+          receivedDateTime: '2023-11-13T09:49:31.371Z',
+        },
         prisonOffender: expectedPrisonOffender,
       },
       'token'
@@ -424,7 +433,8 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
     expect(next).toHaveBeenCalled()
   })
-  it.only('uses recall decision date and time as recall received date and time when loading an out of hours recall', async () => {
+
+  it('uses recall decision date and time as recall received date and time when loading an out of hours recall', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
     const res = mockRes({
       locals: {
