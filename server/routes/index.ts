@@ -23,6 +23,7 @@ import ppcsSearchResultsController from '../controllers/personSearch/ppcsSearchR
 import noPpcsSearchResultsController from '../controllers/personSearch/noPpcsSearchResultsController'
 import outOfHoursWarningController from '../controllers/recommendations/outOfHoursWarningController'
 import setUpMaintenance from '../middleware/setUpMaintenance'
+import { ppcsPaths } from './paths/ppcs'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
@@ -44,8 +45,8 @@ export default function routes(router: Router): Router {
   get(routeUrls.searchByName, personSearchByName)
   get(routeUrls.searchResultsByCRN, personSearchResults)
   get(routeUrls.searchResultsByName, personSearchResultsByName)
-  get('/ppcs-search', ppcsSearch.get)
-  get('/ppcs-search-results', ppcsSearchResultsController.get)
+  get(`/${ppcsPaths.ppcsSearch}`, ppcsSearch.get)
+  get(`/${ppcsPaths.ppcsSearchResults}`, ppcsSearchResultsController.get)
   get('/no-ppcs-search-results', noPpcsSearchResultsController.get)
 
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
