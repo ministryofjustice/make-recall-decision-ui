@@ -3,7 +3,7 @@ import { randomInt } from 'crypto'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import {
-  getCustodyGroup,
+  calculatePartACustodyGroup,
   getDeterminateSentences,
   getIndeterminateSentences,
 } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
@@ -49,7 +49,7 @@ describe('get', () => {
     const next = mockNext()
 
     const custodyGroup: CUSTODY_GROUP = randomEnum(CUSTODY_GROUP)
-    ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
+    ;(calculatePartACustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
 
     const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     const determinateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
@@ -78,7 +78,7 @@ describe('get', () => {
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(getCustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
     )
@@ -103,7 +103,7 @@ describe('get', () => {
     const next = mockNext()
 
     const custodyGroup: CUSTODY_GROUP = randomEnum(CUSTODY_GROUP)
-    ;(getCustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
+    ;(calculatePartACustodyGroup as jest.Mock).mockReturnValueOnce(custodyGroup)
 
     const indeterminateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     const determinateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
@@ -133,7 +133,7 @@ describe('get', () => {
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(getCustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
     )

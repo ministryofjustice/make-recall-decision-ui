@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import {
-  getCustodyGroup,
+  calculatePartACustodyGroup,
   getDeterminateSentences,
   getIndeterminateSentences,
 } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
@@ -13,9 +13,9 @@ import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const custodyGroup = getCustodyGroup(recommendation)
-  const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender.sentences)
-  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender.sentences)
+  const custodyGroup = calculatePartACustodyGroup(recommendation)
+  const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender?.sentences)
+  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
 
   const pageData = {
     nomisSentence: {

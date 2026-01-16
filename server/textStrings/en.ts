@@ -197,7 +197,7 @@ export const strings: Record<string, Record<string, string>> = {
     vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
     vulnerabilitiesRiskToSelf:
-      'Consider if you think this recall could affect any vulnerabilities or needs {{ fullName }} may have.',
+      'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     taskList: 'Create a Part A form',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
@@ -246,7 +246,7 @@ export const strings: Record<string, Record<string, string>> = {
     sentenceToCommitIndeterminate: 'Your recall booking for {{ fullName }}',
     bookToPpud: 'Book {{ fullName }} onto PPUD',
     bookedToPpud: 'Case created and booked onto PPUD',
-    editCustodyType: 'Edit custody type',
+    editCustodyType: 'Which custody type is {{ fullName }} subject to?',
     editCurrentEstablishment: 'Edit current establishment',
     editPoliceContact: 'Edit police local contact details',
     editMappaLevel: 'Edit MAPPA level',
@@ -280,15 +280,15 @@ export const strings: Record<string, Record<string, string>> = {
     // custody group
     editCustodyGroup: 'Is the sentence determinate or indeterminate?',
     // indeterminate sentence selection
-    selectIndeterminatePpudSentence: 'Select or add a sentence for your booking',
+    selectIndeterminatePpudSentence: 'Select a sentence for your booking',
     determinatePpudSentences: 'Determinate sentences in PPUD',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
   },
   taskListLinkTexts: {
     vulnerabilities: 'Would recall affect vulnerability or additional needs?',
-    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Could recall affect vulnerabilities or needs?',
-    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Give details about the vulnerabilities or needs',
+    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Consider if recall could affect vulnerabilities or needs',
+    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Add more details about vulnerabilities or needs',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:

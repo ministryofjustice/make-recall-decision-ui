@@ -7,6 +7,7 @@ import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { ppcsPaths } from '../../server/routes/paths/ppcs'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -115,7 +116,13 @@ const spoUrls = [
 ]
 
 const ppcsUrls = [
-  { url: '/ppcs-search', validationError: false, fullRecommendationData: false, statuses: [], bookRecallToPpud: {} },
+  {
+    url: `/${ppcsPaths.ppcsSearch}`,
+    validationError: false,
+    fullRecommendationData: false,
+    statuses: [],
+    bookRecallToPpud: {},
+  },
   {
     url: '/ppcs-search-results?crn=X098092',
     validationError: false,
@@ -147,6 +154,9 @@ const ppcsUrls = [
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
   recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint('custody-type', ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
   recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS'], false, {

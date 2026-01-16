@@ -233,10 +233,10 @@ context('Make a recommendation - form validation', () => {
       fieldName: 'vulnerabilities',
       errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',
     })
-    cy.selectCheckboxes(
-      'Consider if you think this recall could affect any vulnerabilities or needs Jane Bloggs may have.',
-      ['Relationship breakdown', 'Physical disabilities']
-    )
+    cy.selectCheckboxes('Consider if this recall could affect any vulnerabilities or needs Jane Bloggs may have', [
+      'Relationship breakdown',
+      'Physical disabilities',
+    ])
     cy.clickButton('Continue')
   })
 
@@ -264,7 +264,7 @@ context('Make a recommendation - form validation', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details?flagRiskToSelfEnabled=1`)
-    cy.clickButton('Continue')
+    cy.clickButton('Save and continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
       errorText: 'Enter more detail for risk of suicide or self-harm',

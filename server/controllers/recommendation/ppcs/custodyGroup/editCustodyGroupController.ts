@@ -3,14 +3,14 @@ import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { getCustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
+import { calculatePartACustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { determineErrorId, reloadPageWithError } from '../validation/fieldValidation'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const pageData = {
     custodyGroups: Object.values(CUSTODY_GROUP),
     selectedCustodyGroup: res.locals.recommendation.bookRecallToPpud.custodyGroup,
-    partACustodyGroup: getCustodyGroup(res.locals.recommendation),
+    partACustodyGroup: calculatePartACustodyGroup(res.locals.recommendation),
   }
 
   res.locals = {
@@ -51,16 +51,16 @@ async function post(req: Request, res: Response, next: NextFunction) {
         }
       }
 
+      // Indeterminate sentences have their legislationReleasedUnder value calculated
+      // in the PPUD automation API, so we can just set it to null here
+      if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
+        bookRecallToPpud.legislationReleasedUnder = null
+        bookRecallToPpud.legislationSentencedUnder = null
+      }
+
       valuesToSave = {
         ...valuesToSave,
         bookRecallToPpud,
-      }
-
-      // TODO MRD-2703 This is a temporary measure to ensure we can still go through the determinate path
-      //      and create new determinate sentences. Otherwise, the user would be unable to set the custody
-      //      type. To be removed once custody type editing is possible for new determinate sentences
-      if (custodyGroup === CUSTODY_GROUP.DETERMINATE) {
-        valuesToSave.bookRecallToPpud.custodyType = custodyGroup
       }
 
       valuesToSave.bookRecallToPpud.custodyGroup = custodyGroup

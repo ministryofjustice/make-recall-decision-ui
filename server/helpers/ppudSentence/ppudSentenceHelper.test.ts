@@ -1,5 +1,5 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
-import { getDeterminateSentences, getIndeterminateSentences, getCustodyGroup } from './ppudSentenceHelper'
+import { getDeterminateSentences, getIndeterminateSentences, calculatePartACustodyGroup } from './ppudSentenceHelper'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
@@ -14,47 +14,69 @@ const EDS_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
   custodyType: 'EDS',
 })
 
-const EDS_NON_PAROLE_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
+const DCR_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
   id: '3',
-  custodyType: 'EDS (non parole)',
+  custodyType: 'DCR',
+})
+
+const EPP_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
+  id: '4',
+  custodyType: 'EPP',
+})
+
+const SOPC_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
+  id: '5',
+  custodyType: 'SOPC',
+})
+
+const SDOPC_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
+  id: '6',
+  custodyType: 'SDOPC',
 })
 
 const IPP_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '4',
+  id: '7',
   custodyType: 'IPP',
 })
 
 const DPP_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '5',
+  id: '8',
   custodyType: 'DPP',
 })
 
 const MANDATORY_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '6',
+  id: '9',
   custodyType: 'Mandatory (MLP)',
 })
 
 const DISCRETIONARY_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '7',
+  id: '10',
   custodyType: 'Discretionary',
 })
 
 const DISCRETIONARY_TARIFF_EXPIRED_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '8',
+  id: '11',
   custodyType: 'Discretionary (Tariff Expired)',
 })
 
 const AUTOMATIC_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '9',
+  id: '12',
   custodyType: 'Automatic',
 })
 
 const OTHER_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
-  id: '10',
+  id: '13',
   custodyType: 'Other',
 })
 
-const determinateSentences: PpudDetailsSentence[] = [DETERMINATE_SENTENCE, EDS_SENTENCE, EDS_NON_PAROLE_SENTENCE]
+const determinateSentences: PpudDetailsSentence[] = [
+  DETERMINATE_SENTENCE,
+  EDS_SENTENCE,
+  DCR_SENTENCE,
+  EPP_SENTENCE,
+  SOPC_SENTENCE,
+  SDOPC_SENTENCE,
+]
 
 const indeterminateSentences: PpudDetailsSentence[] = [
   IPP_SENTENCE,
@@ -124,7 +146,7 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: false,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
@@ -133,14 +155,14 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: true,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
   })
 
   it('returns DETERMINATE when indeterminate flag not present', () => {
     const recommendation: RecommendationResponse = {}
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
@@ -149,7 +171,7 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: null,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
@@ -158,7 +180,7 @@ describe('getSentenceType', () => {
     const recommendation: RecommendationResponse = {
       isIndeterminateSentence: undefined,
     }
-    const actualSentenceType = getCustodyGroup(recommendation)
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })

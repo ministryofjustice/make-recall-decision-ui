@@ -4,11 +4,19 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
+import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
-async function get(_: Request, res: Response, next: NextFunction) {
+async function get(req: Request, res: Response, next: NextFunction) {
   const {
     user: { token },
+    recommendation,
   } = res.locals
+
+  const { recommendationId } = req.params
+
+  if (recommendation?.bookRecallToPpud?.custodyGroup !== CUSTODY_GROUP.DETERMINATE) {
+    return res.redirect(`/recommendations/${recommendationId}/check-booking-details`)
+  }
 
   const list = await ppudReferenceList(token, 'released-unders')
 

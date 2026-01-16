@@ -1,3 +1,4 @@
+import { fakerEN_GB as faker } from '@faker-js/faker/.'
 import whenDidSpoAgreeDecisionController from './whenDidSpoAgreeDecision'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
@@ -170,6 +171,54 @@ describe('post', () => {
         name: 'dateTime',
         invalidParts: ['day', 'month'],
         values: { day: '', hour: '12', minute: '59', month: '', year: '2023' },
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with invalid data - date is in the future', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const futureDate = faker.date.future({ refDate: new Date() })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '1' },
+      body: {
+        'dateTime-day': (futureDate.getDay() + 1).toString(),
+        'dateTime-month': (futureDate.getMonth() + 1).toString(),
+        'dateTime-year': futureDate.getFullYear().toString(),
+        'dateTime-hour': futureDate.getHours().toString(),
+        'dateTime-minute': futureDate.getMinutes().toString(),
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/1/` },
+      },
+    })
+    const next = mockNext()
+    await whenDidSpoAgreeDecisionController.post(req, res, next)
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'dateMustBeInPast',
+        href: '#dateTime-day',
+        text: 'The date the SPO agreed the recall must be today or in the past',
+        name: 'dateTime',
+        invalidParts: ['day', 'month', 'year'],
+        values: {
+          day: (futureDate.getDay() + 1).toString(),
+          hour: futureDate.getHours().toString(),
+          minute: futureDate.getMinutes().toString(),
+          month: (futureDate.getMonth() + 1).toString(),
+          year: futureDate.getFullYear().toString(),
+        },
       },
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)

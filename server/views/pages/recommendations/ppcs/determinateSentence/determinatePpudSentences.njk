@@ -12,17 +12,17 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <p class="govuk-body govuk-!-margin-bottom-8">
+                <p class="govuk-body">
                     {{ determinatePpudSentencesPageData.fullName }} has indeterminate and determinate sentences in PPUD. View the determinate sentences and then return to the indeterminate sentences to continue your booking.
                 </p>
                {% for group in determinatePpudSentencesPageData.determinateSentencesByCourt %}
-                    <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Court case: {{ group.court }}</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-top-8">Court case: {{ group.court }}</h3>
 
                     {% for dateGroup in group.sentencesByDate %}
                         <p class="govuk-body govuk-!-margin-bottom-0">Date of sentence: {{ dateGroup.dateOfSentence }}</p>
 
                         {% for sentence in dateGroup.sentences %}
-                            <h4 class="govuk-heading-s">{{ sentence.offence.indexOffence }}</h4>
+                            <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-3">{{ sentence.offence.indexOffence }}</h4>
                             {{
                                 summaryList({
                                     id: 'determinate-ppud-sentences-' + (dateGroup.dateOfSentence | replace(" ", "-")) + '-' + 'sentence-' + loop.index,
@@ -36,7 +36,7 @@
                     {% endfor %}
                 {% endfor %}
 
-                <a class="govuk-button govuk-button--secondary" href="/recommendations/{{ recommendation.id }}/select-indeterminate-ppud-sentence">Return to indeterminate sentences</a>
+                <a class="govuk-button govuk-button--secondary govuk-!-margin-top-2" href="/recommendations/{{ recommendation.id }}/select-indeterminate-ppud-sentence">Return to indeterminate sentences</a>
             </div>
         </div>
 {% endblock %}

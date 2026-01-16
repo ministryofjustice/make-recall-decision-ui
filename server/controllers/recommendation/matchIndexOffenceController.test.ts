@@ -104,7 +104,7 @@ describe('post', () => {
       },
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/sentence-to-commit`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/custody-type`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
   it('post with valid data - sentences', async () => {

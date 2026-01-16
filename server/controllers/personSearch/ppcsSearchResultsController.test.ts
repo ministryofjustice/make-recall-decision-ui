@@ -1,5 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation, searchForPpcs } from '../../data/makeDecisionApiClient'
+import { getRecommendation, ppcsSearch } from '../../data/makeDecisionApiClient'
 import ppcsSearchResultsController from './ppcsSearchResultsController'
 import { StageEnum } from '../../booking/StageEnum'
 
@@ -7,7 +7,7 @@ jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load', async () => {
-    ;(searchForPpcs as jest.Mock).mockResolvedValue({
+    ;(ppcsSearch as jest.Mock).mockResolvedValue({
       results: [
         {
           name: 'Joe Bloggs',
@@ -39,7 +39,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
   it('load - with booking on started', async () => {
-    ;(searchForPpcs as jest.Mock).mockResolvedValue({
+    ;(ppcsSearch as jest.Mock).mockResolvedValue({
       results: [
         {
           name: 'Joe Bloggs',
@@ -62,7 +62,7 @@ describe('get', () => {
     expect(res.locals.bookingOnStarted).toEqual(true)
   })
   it('redirect if no results', async () => {
-    ;(searchForPpcs as jest.Mock).mockResolvedValue({
+    ;(ppcsSearch as jest.Mock).mockResolvedValue({
       results: [],
     })
 
@@ -78,7 +78,7 @@ describe('get', () => {
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '' } }), res, next)
 
-    expect(searchForPpcs).not.toHaveBeenCalled()
+    expect(ppcsSearch).not.toHaveBeenCalled()
     expect(res.redirect).toHaveBeenCalledWith(303, 'no-ppcs-search-results?crn=')
     expect(next).not.toHaveBeenCalled()
   })

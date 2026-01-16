@@ -20,8 +20,8 @@
                 {{ pageHeadings[page.id] }}
               </h1>
             </legend>
-            <div id="contact-hint" class="govuk-hint">
-              Add anything staff may need to be aware of when {{ recommendation.personOnProbation.name }} is in custody.
+            <div id="contact-hint" class="govuk-hint govuk-!-margin-bottom-6">
+              Explain how being in prison could affect {{ recommendation.personOnProbation.name }}'s vulnerabilities. Police and prison reception staff will see this information.
             </div>
             {% for item in vulnerabilitiesToDisplay %}
               {{ govukTextarea({ 
@@ -40,7 +40,7 @@
             {% endfor %}
           </fieldset>
         </div>
-        {{ formSubmitButton() }}
+        {{ formSubmitButton({ label: "Save and continue"}) }}
       </form>
     </div>
   </div>

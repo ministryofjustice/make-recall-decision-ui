@@ -1,25 +1,35 @@
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: 'No recall request found' }) %}
+{% set pageTitle = makePageTitle({ pageHeading: 'No PPUD record found' }) %}
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
 {% block content %}
 
-    <h1 class='govuk-heading-l'>No PPUD record found for {{ name }}</h1>
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class='govuk-heading-l'>No PPUD record found for {{ fullName }}</h1>
 
-    <p class="govuk-body-m govuk-!-margin-bottom-0">
-        You can either <a href="/ppcs-search" class="govuk-body govuk-link">start a new search</a> or use this
-        service to:<br><br>
-    </p>
-    <ol class="govuk-list">
-        <li>1. Check the details from NOMIS and the Part A.</li>
-        <li>2. Use these details to create a new PPUD record.</li>
-        <li>3. Book the recall on to the new PPUD record.</li>
-    </ol>
-    <span>
-        <a href='{{ urlInfo.basePath }}check-booking-details'
-           class='govuk-button govuk'>Continue and create PPUD record</a>
-    </span>
+        <p class="govuk-body-l govuk-!-margin-bottom-5">
+            <span class='govuk-body govuk-!-font-weight-bold'>Case reference number (CRN):</span>
+            <span>{{ crn }}</span>
+        </p>
 
+        <p>You can:</p>
+        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
+           <li>Use this service to create a PPUD record for a determinate sentence</li>
+           <li>Go to PPUD to complete the booking for an indeterminate sentence</li>
+        </ul>
+
+        {{ mojBanner({
+             type: "information",
+             html: 'You can only create a new record for a determinate sentence in this service.',
+             classes: "govuk-!-margin-bottom-8"
+          })
+        }}
+
+        <span>
+            <a href='{{ urlInfo.basePath }}check-booking-details' class='govuk-button govuk'>Create a determinate PPUD record</a>
+            <a class="govuk-button govuk-button--secondary govuk-!-margin-left-2" href="/ppcs-search">Search for another CRN</a>
+        </span>
+    </div>
 {% endblock %}

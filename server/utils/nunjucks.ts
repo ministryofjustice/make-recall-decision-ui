@@ -98,6 +98,18 @@ export const roshYesNoLabel = (level: string | null) => {
 export const defaultValue = (val?: string) =>
   val || '-<span class="govuk-visually-hidden">This is information missing from NDelius.</span>'
 
+/*
+ * Performs a shallow merge of multiple objects into a new object.
+ * Properties from later objects will overwrite those from earlier objects.
+ *
+ * @typeParam T - The type of the objects to merge.
+ * @param objects - The objects to merge.
+ * @returns A new object containing the merged properties.
+ */
+export const merge = <T extends object[]>(...objects: T): T[number] => {
+  return Object.assign({}, ...objects)
+}
+
 export const formatDateFilterQueryString = (isoDate: string) => {
   const dateParts = DateTime.fromISO(isoDate).toObject()
   return `dateFrom-day=${dateParts.day}&dateFrom-month=${dateParts.month}&dateFrom-year=${dateParts.year}&dateTo-day=${dateParts.day}&dateTo-month=${dateParts.month}&dateTo-year=${dateParts.year}`
@@ -119,3 +131,7 @@ export const isObjectInArray = ({
 
 export const countLabelSuffix = ({ count, label }: { count: number; label: string }) =>
   `${label}${count === 1 ? '' : 's'}`
+
+export const renderString = (template: string, context: Record<string, string>) => {
+  return nunjucks.renderString(template, context)
+}

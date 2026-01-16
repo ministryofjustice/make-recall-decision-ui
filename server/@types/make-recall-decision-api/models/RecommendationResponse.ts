@@ -193,10 +193,10 @@ export type BookRecallToPpud = {
 }
 
 export type PpudSentenceData = {
-  offenceDescription: string,
-  offenceDescriptionComment: string,
-  releaseDate: string,
-  sentencingCourt: string,
+  offenceDescription?: string,
+  offenceDescriptionComment?: string,
+  releaseDate?: string,
+  sentencingCourt?: string,
   dateOfSentence: string
 }
 
@@ -237,27 +237,28 @@ export type PpudOffender = {
 }
 
 export type PpudSentence = {
-  id: string,
-  sentenceExpiryDate: string,
-  dateOfSentence: string,
-  custodyType: string,
-  mappaLevel: string,
-  licenceExpiryDate: string,
-  offence: PpudOffence,
-  releaseDate: string,
-  sentenceLength: PpudSentenceLength,
-  sentencingCourt: string,
+  id?: string,
+  sentenceExpiryDate?: string,
+  dateOfSentence?: string,
+  custodyType?: string,
+  mappaLevel?: string,
+  licenceExpiryDate?: string,
+  tariffExpiryDate?: string,
+  offence?: PpudOffence,
+  releaseDate?: string,
+  sentenceLength?: PpudSentenceLength,
+  sentencingCourt?: string,
 }
 
 export type PpudOffence = {
-  indexOffence: string,
-  dateOfIndexOffence: string,
+  indexOffence?: string,
+  dateOfIndexOffence?: string,
 }
 
 export type PpudSentenceLength = {
-  partYears: number,
-  partMonths: number,
-  partDays: number,
+  partYears?: number,
+  partMonths?: number,
+  partDays?: number,
 }
 
 export type PpudUser = {

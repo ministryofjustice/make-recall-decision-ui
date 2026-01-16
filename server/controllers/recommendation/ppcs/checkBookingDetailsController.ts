@@ -7,6 +7,7 @@ import {
   BookRecallToPpud,
   PpudOffender,
   PrisonOffender,
+  RecommendationResponse,
 } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { convertToTitleCase, hasValue, isDefined } from '../../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
@@ -19,6 +20,7 @@ import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
 import { getRoute } from './custodyGroupRouter'
+import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -110,26 +112,35 @@ async function get(_: Request, res: Response, next: NextFunction) {
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
   } else {
+    const { bookRecallToPpud, prisonOffender } = recommendation as RecommendationResponse
+
     if (
-      recommendation.bookRecallToPpud.firstNames !==
-      `${convertToTitleCaseIfRequired(recommendation.prisonOffender?.firstName)} ${convertToTitleCaseIfRequired(recommendation.prisonOffender?.middleName)}`.trim()
+      bookRecallToPpud.firstNames !==
+      `${convertToTitleCaseIfRequired(prisonOffender?.firstName)} ${convertToTitleCaseIfRequired(prisonOffender?.middleName)}`.trim()
     ) {
       edited.firstNames = true
     }
 
-    if (
-      recommendation.bookRecallToPpud.lastName !== convertToTitleCaseIfRequired(recommendation.prisonOffender?.lastName)
-    ) {
+    if (bookRecallToPpud.lastName !== convertToTitleCaseIfRequired(prisonOffender?.lastName)) {
       edited.lastName = true
     }
 
-    if (recommendation.bookRecallToPpud.dateOfBirth !== recommendation.prisonOffender?.dateOfBirth) {
+    if (bookRecallToPpud.dateOfBirth !== prisonOffender?.dateOfBirth) {
       edited.dateOfBirth = true
     }
 
-    if (recommendation.bookRecallToPpud.prisonNumber !== recommendation.prisonOffender?.bookingNo) {
+    if (bookRecallToPpud.prisonNumber !== prisonOffender?.bookingNo) {
       edited.prisonNumber = true
     }
+
+    if (bookRecallToPpud.cro !== prisonOffender?.cro) {
+      edited.cro = true
+    }
+  }
+
+  // We only create new records for determinate sentences, so default to determinate if ppudOffender isn't present
+  if (!hasValue(recommendation.ppudOffender)) {
+    recommendation.bookRecallToPpud.custodyGroup = CUSTODY_GROUP.DETERMINATE
   }
 
   if (isDefined(valuesToSave.bookRecallToPpud) || isDefined(valuesToSave.prisonOffender)) {
@@ -221,21 +232,22 @@ async function post(req: Request, res: Response, next: NextFunction) {
   const { bookRecallToPpud } = await getRecommendation(recommendationId, token)
 
   validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
-
-  validateBookRecallToPpudField(bookRecallToPpud, 'legislationReleasedUnder', 'missingLegislationReleasedUnder', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
 
+  if (bookRecallToPpud.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
+    validateBookRecallToPpudField(
+      bookRecallToPpud,
+      'legislationReleasedUnder',
+      'missingLegislationReleasedUnder',
+      errors
+    )
+  }
+
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'policeForce', 'missingPoliceForce', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'releasingPrison', 'missingReleasingPrison', errors)
-
   validateBookRecallToPpudField(bookRecallToPpud, 'mappaLevel', 'missingMappaLevel', errors)
 
   if (errors.length > 0) {

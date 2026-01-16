@@ -55,14 +55,15 @@ if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
   printf "\n\nBuilding hmpps-auth\n\n"
   pushd "${AUTH_DIR}"
   git pull origin main
-  docker build . --tag quay.io/hmpps/hmpps-auth:latest
+  docker build . --tag ghcr.io/ministryofjustice/hmpps-auth:latest
   popd
 fi
 
 pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev,seed-test-data
-docker compose build
+export POSTGRES_OPTIONS=sslmode=disable
+docker compose build 
 docker compose up -d
 popd
 

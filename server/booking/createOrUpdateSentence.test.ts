@@ -1,184 +1,251 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { StageEnum } from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudCreateSentence, ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
 import createOrUpdateSentence from './createOrUpdateSentence'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
+import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
+import BookingMemento from './BookingMemento'
+import { PpudCreateSentenceResponseGenerator } from '../../data/ppud/createSentenceResponse/ppudCreateSentenceResponseGenerator'
+import { TermOptions } from '../../data/common/termGenerator'
+import { OfferedOffenceGenerator } from '../../data/recommendations/offeredOffenceGenerator'
+import {
+  PpudUpdateSentenceRequest,
+  SentenceLength,
+} from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
+import {
+  BookRecallToPpud,
+  OfferedOffence,
+  PpudSentence,
+  PpudSentenceData,
+} from '../@types/make-recall-decision-api/models/RecommendationResponse'
 
 jest.mock('../data/makeDecisionApiClient')
 
-describe('update sentence', () => {
-  it('happy path - stage has passed', async () => {
-    const bookingMemento = {
+const token = 'token'
+const featureFlags = { xyz: true }
+
+function expectedDeterminateSentenceRequest(
+  bookRecallToPpud: BookRecallToPpud,
+  nomisOffence: OfferedOffence,
+  sentenceLength: SentenceLength
+): PpudUpdateSentenceRequest {
+  return {
+    custodyType: bookRecallToPpud?.custodyType,
+    mappaLevel: bookRecallToPpud?.mappaLevel,
+    dateOfSentence: nomisOffence.sentenceDate,
+    licenceExpiryDate: nomisOffence.licenceExpiryDate,
+    releaseDate: nomisOffence.releaseDate,
+    sentenceLength,
+    sentenceExpiryDate: nomisOffence.sentenceEndDate,
+    sentencingCourt: nomisOffence.courtDescription,
+    sentencedUnder: bookRecallToPpud?.legislationSentencedUnder,
+  }
+}
+
+function expectedIndeterminateSentenceRequest(
+  selectedPpudSentence: PpudSentence,
+  editedIndeterminateSentenceData: PpudSentenceData
+): PpudUpdateSentenceRequest {
+  return {
+    custodyType: selectedPpudSentence.custodyType,
+    dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
+    sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
+  }
+}
+
+function testSentenceCreation(
+  recommendation: RecommendationResponse,
+  bookingMemento: BookingMemento,
+  expectedSentenceRequest: PpudUpdateSentenceRequest
+) {
+  const recommendationForCreation = {
+    ...recommendation,
+    bookRecallToPpud: {
+      ...recommendation.bookRecallToPpud,
+      ppudSentenceId: 'ADD_NEW',
+    },
+  }
+
+  const expectedMemento: BookingMemento = {
+    ...bookingMemento,
+    stage: StageEnum.SENTENCE_BOOKED,
+    failed: undefined,
+    failedMessage: undefined,
+  }
+
+  let returnedMemento: BookingMemento
+
+  describe('- adding new sentence to PPUD', () => {
+    beforeEach(async () => {
+      const createPpudSentenceResponse = PpudCreateSentenceResponseGenerator.generate()
+      ;(ppudCreateSentence as jest.Mock).mockResolvedValue(createPpudSentenceResponse)
+      expectedMemento.sentenceId = createPpudSentenceResponse.sentence.id
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationForCreation)
+
+      returnedMemento = await createOrUpdateSentence(bookingMemento, recommendationForCreation, token, featureFlags)
+    })
+
+    it('calls ppudCreateSentence', () => {
+      expect(ppudCreateSentence).toHaveBeenCalledWith(token, bookingMemento.offenderId, expectedSentenceRequest)
+    })
+    it('updates the recommendation', () => {
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        recommendationId: recommendationForCreation.id.toString(),
+        valuesToSave: {
+          bookingMemento: expectedMemento,
+        },
+        token,
+        featureFlags,
+      })
+    })
+    it('returns an updated memento', () => {
+      expect(returnedMemento).toEqual(expectedMemento)
+    })
+  })
+}
+
+function testSentenceUpdate(
+  recommendation: RecommendationResponse,
+  bookingMemento: BookingMemento,
+  expectedSentenceRequest: PpudUpdateSentenceRequest
+) {
+  describe('- updating existing PPUD sentence', () => {
+    const expectedMemento: BookingMemento = {
+      ...bookingMemento,
       stage: StageEnum.SENTENCE_BOOKED,
+      failed: undefined,
+      failedMessage: undefined,
     }
 
-    const result = await createOrUpdateSentence(bookingMemento, {}, 'token', { xyz: true })
+    let returnedMemento: BookingMemento
+    beforeEach(async () => {
+      ;(ppudUpdateSentence as jest.Mock).mockImplementationOnce(() => Promise.resolve())
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
-    expect(ppudUpdateSentence).not.toHaveBeenCalled()
-    expect(bookingMemento).toEqual(result)
-  })
-
-  it('happy path - update sentence', async () => {
-    const bookingMemento = {
-      stage: StageEnum.OFFENDER_BOOKED,
-      offenderId: '767',
-      sentenceId: '444',
-      failed: true,
-      failedMessage: '{}',
-    }
-
-    const recommendation: RecommendationResponse = {
-      id: '1',
-      bookRecallToPpud: {
-        custodyType: 'Determinate',
-        mappaLevel: 'Level 2 - local inter-agency management',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            sentenceDate: '2016-01-01',
-            offenceDate: '2016-01-05',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            sentenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
-              {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
-              },
-            ],
-          },
-        ],
-        selected: 3934369,
-      },
-    } as unknown as RecommendationResponse
-
-    const token = 'token'
-
-    const featureFlags = { xyz: true }
-
-    const result = await createOrUpdateSentence(bookingMemento, recommendation, token, featureFlags)
-
-    expect(ppudUpdateSentence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
-      custodyType: recommendation.bookRecallToPpud.custodyType,
-      mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
-      dateOfSentence: recommendation.nomisIndexOffence.allOptions[0].sentenceDate,
-      licenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].licenceExpiryDate,
-      releaseDate: recommendation.nomisIndexOffence.allOptions[0].releaseDate,
-      sentenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].sentenceEndDate,
-      sentencingCourt: recommendation.nomisIndexOffence.allOptions[0].courtDescription,
-      sentenceLength: {
-        partDays: recommendation.nomisIndexOffence.allOptions[0].terms[0].days,
-        partMonths: recommendation.nomisIndexOffence.allOptions[0].terms[0].months,
-        partYears: recommendation.nomisIndexOffence.allOptions[0].terms[0].years,
-      },
+      returnedMemento = await createOrUpdateSentence(bookingMemento, recommendation, token, featureFlags)
     })
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: recommendation.id,
-      valuesToSave: {
-        bookingMemento: {
-          offenderId: bookingMemento.offenderId,
-          sentenceId: bookingMemento.sentenceId,
-          stage: 'SENTENCE_BOOKED',
+    it('calls ppudUpdateSentence', () => {
+      expect(ppudUpdateSentence).toHaveBeenCalledWith(
+        token,
+        bookingMemento.offenderId,
+        bookingMemento.sentenceId,
+        expectedSentenceRequest
+      )
+    })
+    it('updates the recommendation', () => {
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        recommendationId: recommendation.id.toString(),
+        valuesToSave: {
+          bookingMemento: expectedMemento,
         },
-      },
-      token,
-      featureFlags,
+        token,
+        featureFlags,
+      })
     })
-    expect(result).toEqual({
-      offenderId: bookingMemento.offenderId,
-      sentenceId: bookingMemento.sentenceId,
-      stage: 'SENTENCE_BOOKED',
+    it('returns an updated memento', () => {
+      expect(returnedMemento).toEqual(expectedMemento)
+    })
+  })
+}
+
+describe('update sentence', () => {
+  describe('not in expected stage', () => {
+    const bookingMemento = BookingMementoGenerator.generate({
+      stage: faker.helpers.arrayElement(
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENDER_BOOKED)
+      ),
+    })
+    let returnedMemento: BookingMemento
+    beforeEach(async () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      returnedMemento = await createOrUpdateSentence(bookingMemento, recommendation, token, featureFlags)
+    })
+    it('- returns booking memento', () => {
+      expect(returnedMemento).toEqual(bookingMemento)
+    })
+    it('- makes no calls', () => {
+      expect(ppudCreateSentence).not.toHaveBeenCalled()
+      expect(ppudUpdateSentence).not.toHaveBeenCalled()
+      expect(updateRecommendation).not.toHaveBeenCalled()
     })
   })
 
-  it('happy path - create sentence', async () => {
-    const bookingMemento = {
+  describe('in expected stage', () => {
+    const bookingMemento = BookingMementoGenerator.generate({
       stage: StageEnum.OFFENDER_BOOKED,
-      offenderId: '767',
-      sentenceId: 'ADD_NEW',
-      failed: true,
-      failedMessage: '{}',
-    }
+    })
+    describe('for determinate sentence', () => {
+      const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
+      })
+      describe('with a selected index offence with no custodial term', () => {
+        const recommendationWithoutCustodialTerm = {
+          ...recommendation,
+        }
+        const expectedSentenceRequest = expectedDeterminateSentenceRequest(
+          recommendationWithoutCustodialTerm.bookRecallToPpud,
+          recommendationWithoutCustodialTerm.nomisIndexOffence.allOptions[0],
+          null
+        )
 
-    const recommendation: RecommendationResponse = {
-      id: '1',
-      bookRecallToPpud: {
-        custodyType: 'Determinate',
-        mappaLevel: 'Level 2 - local inter-agency management',
-        ppudSentenceId: 'ADD_NEW',
-        legislationReleasedUnder: 'CJA 2023',
-        legislationSentencedUnder: 'CJA 2023',
-      },
-      nomisIndexOffence: {
-        allOptions: [
-          {
-            offenderChargeId: 3934369,
-            sentenceDate: '2016-01-01',
-            offenceDate: '2016-01-05',
-            licenceExpiryDate: '2018-02-02',
-            releaseDate: '2017-03-03',
-            sentenceEndDate: '2019-04-04',
-            courtDescription: 'court desc',
-            terms: [
+        testSentenceCreation(recommendationWithoutCustodialTerm, bookingMemento, expectedSentenceRequest)
+
+        testSentenceUpdate(recommendationWithoutCustodialTerm, bookingMemento, expectedSentenceRequest)
+      })
+
+      describe('with a selected index offence with a custodial term', () => {
+        const custodialTermCode = 'IMP'
+        const termOptions: TermOptions[] = [{ chronos: 'all', code: custodialTermCode }, {}, {}]
+        const recommendationWithCustodialTerm = {
+          ...recommendation,
+          nomisIndexOffence: {
+            ...recommendation.nomisIndexOffence,
+            allOptions: OfferedOffenceGenerator.generateSeries([
               {
-                days: 1,
-                months: 2,
-                years: 3,
-                code: 'IMP',
+                offenderChargeId: recommendation.nomisIndexOffence.selected,
+                terms: termOptions,
               },
-            ],
+              {},
+              {},
+            ]),
           },
-        ],
-        selected: 3934369,
-      },
-    } as unknown as RecommendationResponse
+        }
+        const selectedOffence = recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0]
+        const custodialTerm = selectedOffence.terms[0]
+        const expectedSentenceLength = {
+          partDays: custodialTerm.days,
+          partMonths: custodialTerm.months,
+          partYears: custodialTerm.years,
+        }
+        const expectedSentenceRequest = expectedDeterminateSentenceRequest(
+          recommendationWithCustodialTerm.bookRecallToPpud,
+          recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0],
+          expectedSentenceLength
+        )
 
-    const sentence = { id: '445' }
-    ;(ppudCreateSentence as jest.Mock).mockResolvedValue({ sentence })
+        testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
 
-    const token = 'token'
-
-    const featureFlags = { xyz: true }
-
-    const result = await createOrUpdateSentence(bookingMemento, recommendation, token, featureFlags)
-
-    expect(ppudCreateSentence).toHaveBeenCalledWith(token, bookingMemento.offenderId, {
-      custodyType: recommendation.bookRecallToPpud.custodyType,
-      mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
-      dateOfSentence: recommendation.nomisIndexOffence.allOptions[0].sentenceDate,
-      licenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].licenceExpiryDate,
-      releaseDate: recommendation.nomisIndexOffence.allOptions[0].releaseDate,
-      sentenceExpiryDate: recommendation.nomisIndexOffence.allOptions[0].sentenceEndDate,
-      sentencingCourt: recommendation.nomisIndexOffence.allOptions[0].courtDescription,
-      sentencedUnder: recommendation.bookRecallToPpud.legislationSentencedUnder,
-      sentenceLength: {
-        partDays: recommendation.nomisIndexOffence.allOptions[0].terms[0].days,
-        partMonths: recommendation.nomisIndexOffence.allOptions[0].terms[0].months,
-        partYears: recommendation.nomisIndexOffence.allOptions[0].terms[0].years,
-      },
+        testSentenceUpdate(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
+      })
     })
 
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: recommendation.id,
-      valuesToSave: {
-        bookingMemento: {
-          offenderId: bookingMemento.offenderId,
-          sentenceId: sentence.id,
-          stage: 'SENTENCE_BOOKED',
+    describe('for indeterminate sentence', () => {
+      const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: {
+          custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+          ppudIndeterminateSentenceData: { offenceDescriptionComment: faker.lorem.sentence() },
         },
-      },
-      token,
-      featureFlags,
-    })
-    expect(result).toEqual({
-      offenderId: bookingMemento.offenderId,
-      sentenceId: sentence.id,
-      stage: 'SENTENCE_BOOKED',
+      })
+      const selectedPpudSentence = recommendation.ppudOffender.sentences[0]
+      recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
+      const expectedSentenceRequest = expectedIndeterminateSentenceRequest(
+        selectedPpudSentence,
+        recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
+      )
+
+      testSentenceUpdate(recommendation, bookingMemento, expectedSentenceRequest)
     })
   })
 })

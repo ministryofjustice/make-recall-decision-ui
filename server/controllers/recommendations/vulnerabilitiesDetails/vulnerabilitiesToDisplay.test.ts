@@ -24,7 +24,7 @@ describe('vulnerabilitiesToDisplay', () => {
     expect(result).toEqual([
       {
         value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
-        detailsLabel: 'Give details, for example a history of self-harm.',
+        detailsLabel: 'Give full details, including any past or recent attempts',
         text: 'Risk of suicide or self-harm',
       },
       {

@@ -55,7 +55,7 @@ const featureFlagHeaders = (featureFlags?: FeatureFlags) =>
 export const getPersonsByCrn = (crn: string, token: string): Promise<PersonDetails[]> =>
   restClient(token).get({ path: `${routes.personSearch}?crn=${crn}` }) as Promise<PersonDetails[]>
 
-export const searchForPpcs = (token: string, crn: string): Promise<PpcsSearchResponse> => {
+export const ppcsSearch = (token: string, crn: string): Promise<PpcsSearchResponse> => {
   const body: Record<string, unknown> = {}
   if (crn) {
     body.crn = crn

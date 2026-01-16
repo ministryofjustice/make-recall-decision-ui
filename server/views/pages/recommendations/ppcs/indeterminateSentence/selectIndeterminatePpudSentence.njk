@@ -28,7 +28,7 @@
                         { key: 'Offence', value: hyphenForBlank(sentence.offence.indexOffence) },
                         { key: 'Custody type', value: hyphenForBlank(sentence.custodyType) },
                         { key: 'Date of sentence', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.dateOfSentence })) },
-                        { key: 'Tariff expiry date', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate })) }
+                        { key: 'Tariff expiry date', value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.tariffExpiryDate })) }
                     ]
                 })
             })
@@ -41,7 +41,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../../../partials/error-summary.njk' %}
 
-            <p class='govuk-body govuk-!-margin-bottom-8'>Check the details of your booking then add it to the correct sentence in PPUD.</p>
+            <p class='govuk-body govuk-!-margin-bottom-5'>Check the details of your booking then add it to the correct sentence in PPUD.</p>
 
             <h2 class='govuk-heading-m'>Booking details from Part A</h2>
 
@@ -55,47 +55,67 @@
                 ]
             }) }}
 
-            <hr class="govuk-section-break govuk-section-break--l">
-
             <h2 class='govuk-heading-m'>Add your booking to PPUD</h2>
 
             {# Increase the bottom margin, as otherwise it's too crowded and close to the radio button legend #}
-            <p class='govuk-body govuk-!-margin-bottom-7'>Select an existing PPUD sentence for this booking. If something is not right, you can
-                edit it in the next step. If the correct sentence is not listed, select add a sentence to create
-                one. </p>
+            <p class='govuk-body govuk-!-margin-bottom-4'>Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.</p>
 
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            {% if ppudSentenceRadioButtonList and (ppudSentenceRadioButtonList | length > 0) %}
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                {# Increase the bottom margin for the legend, as with table items it otherwise looks too close #}
-                {{ govukRadios({
-                    name: "ppudSentenceId",
-                    fieldset: {
-                        legend: {
-                            text: "Indeterminate sentences in PPUD",
-                            classes: "govuk-fieldset__legend--m govuk-!-margin-bottom-6"
-                        }
-                    },
-                    value: selectedSentenceId,
-                    items: ppudSentenceRadioButtonList
-                }) }}
+                        {# Increase the bottom margin for the legend, as with table items it otherwise looks too close #}
+                        {{ govukRadios({
+                            name: "ppudSentenceId",
+                            fieldset: {
+                                legend: {
+                                    text: "Indeterminate sentences in PPUD",
+                                    classes: "govuk-fieldset__legend--m govuk-!-margin-bottom-6"
+                                }
+                            },
+                            value: selectedSentenceId,
+                            items: ppudSentenceRadioButtonList,
+                            formGroup: {
+                               classes: 'govuk-!-margin-bottom-2'
+                            }
+                        }) }}
 
-                {% if determinateSentencesCount | int > 0 %}
-                    {% set summaryText = determinateSentencesCount + " determinate sentence" + ("s" if determinateSentencesCount > 1 else "") %}
-                    {% set html %}
-                        You can <a id="determinate-sentences-link" class="govuk-link" href="/recommendations/{{ recommendation.id }}/determinate-ppud-sentences">view the {{ "determinate sentence" + ("s" if determinateSentencesCount > 1 else "") }}</a> for {{ selectIndeterminatePpudSentencePageData.fullName }}
-                    {% endset %}
-                    {{ govukDetails({
-                            id: 'determinateSentencesDetails',
-                            summaryText: summaryText,
-                            html: html
-                           })
-                    }}
-                {% endif %}
+                    {{ determinateSentencesDetails(determinateSentencesCount, recommendation, selectIndeterminatePpudSentencePageData.fullName) }}
 
-                {{ formSubmitButton() }}
-            </form>
+                    {{ formSubmitButton() }}
+                </form>
+             {% else %}
+                <h2 class='govuk-heading-m'>Indeterminate sentences in PPUD</h2>
+
+                {{ govukNotificationBanner({
+                    titleText: 'No indeterminate sentences found in PPUD',
+                    html: 'The sentence needs to be added to PPUD and the booking on completed there.',
+                    classes: "govuk-notification-banner--info govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+                 }) }}
+
+                {{ determinateSentencesDetails(determinateSentencesCount, recommendation, selectIndeterminatePpudSentencePageData.fullName) }}
+
+                <a id="return-to-booking-details-button" class="govuk-button govuk-!-margin-top-2" href="/recommendations/{{ recommendation.id }}/check-booking-details">
+                   Return to booking details
+                </a>
+
+             {% endif %}
 
         </div>
     </div>
 {% endblock %}
+
+{% macro determinateSentencesDetails(determinateSentencesCount, recommendation, userFullName) %}
+    {% if determinateSentencesCount | int > 0 %}
+        {% set summaryText = determinateSentencesCount ~ " determinate sentence" ~ ("s" if determinateSentencesCount > 1 else "") %}
+        {% set html %}
+           You can <a id="determinate-sentences-link" class="govuk-link" href="/recommendations/{{ recommendation.id }}/determinate-ppud-sentences">view the {{ "determinate sentence" ~ ("s" if determinateSentencesCount > 1 else "") }}</a> for {{ userFullName }}
+        {% endset %}
+        {{ govukDetails({
+                id: 'determinateSentencesDetails',
+                summaryText: summaryText,
+                html: html
+               })
+        }}
+    {% endif %}
+{% endmacro %}
