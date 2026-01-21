@@ -1,0 +1,109 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set predictorScore = params.predictorScore %}
+{% set includeVeryHigh = params.includeVeryHigh %}
+{% set includePercentage = params.includePercentage %}
+{% set includeScore = params.includeScore %}
+
+{% set scaleMarkerClass = '' %}
+{% set staticOrDynamic = '' %}
+
+{% macro predictorScaleMarker(predictorScore, includeScore) %}
+  <div class="scale-marker__card">
+    <div class="scale-marker__card-top">
+      <h3>{{ predictorScore.level | replace("_", " ") }}</h3>
+    </div>
+    {% if includeScore and predictorScore.score %}
+      <div class="scale-marker__card-bottom">
+        <p>{{ predictorScore.score }}%</p>
+      </div>
+      <div class="scale-marker__card-pointer"></div>
+    {% else %}
+      <div class="scale-marker__card-pointer scale-marker__card-pointer--white"></div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% switch predictorScore.staticOrDynamic %}
+  {% case 'STATIC' %}
+    {% set staticOrDynamic = 'Static' %}
+  {% case 'DYNAMIC' %}
+    {% set staticOrDynamic = 'Dynamic' %}
+  {% default %}
+{% endswitch %}
+
+{% if includeVeryHigh !== true %}
+  {% switch predictorScore.level %}
+  {% case 'LOW' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-three' %}
+  {% case 'MEDIUM' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-three' %}
+  {% case 'HIGH' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-three' %}
+  {% endswitch %}
+  {% else %}
+  {% switch predictorScore.level %}
+  {% case 'LOW' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-four' %}
+  {% case 'MEDIUM' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-four' %}
+  {% case 'HIGH' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-four' %}
+  {% case 'VERY_HIGH' %}{% case 'VERY HIGH' %}
+    {% set scaleMarkerClass = 'scale-marker-wrapper--very-high scale-marker-wrapper--position-four-of-four' %}
+  {% endswitch %}
+{% endif %}
+
+{% set barTypeClass = '' %}
+
+{% if includeVeryHigh !== true and includePercentage !== true %}
+  {% set barTypeClass = 'scale-bar--small' %}
+{% elif includeVeryHigh === true and includePercentage !== true %}
+  {% set barTypeClass = 'scale-bar--small scale-bar--small-fourths' %}
+{% elif includeVeryHigh === true and includePercentage === true %}
+  {% set barTypeClass = 'scale-bar scale-bar--fourths' %}
+{% elif includeVeryHigh !== true and includePercentage === true %}
+  {% set barTypeClass = 'scale-bar' %}
+{% endif %}
+
+{% if predictorScore.level === 'NOT_APPLICABLE' %}
+  <div class="predictor-scale govuk-body">
+    <h2 class="govuk-heading-m">{{ predictorScore.type }}</h2>
+    <p class="govuk-body">Not applicable</p>
+  </div>
+{% else %}
+  <div class="predictor-scale govuk-body">
+    <div class="predictor-scale-header-wrapper">
+      <div>
+        <h2 class="govuk-heading-m">{{ predictorScore.type }}</h2>
+        <p class="govuk-hint">Last updated: {{ predictorScore.lastUpdated }}</p>
+      </div>
+      {% if staticOrDynamic !== '' %}
+      <div>{{ govukTag({ text: staticOrDynamic, classes: "govuk-tag--lower govuk-tag--grey"}) }}</div>
+      {%  endif %}
+    </div>
+
+    <div class="scale-marker">
+      <div class="{{ scaleMarkerClass }}">
+        {{ predictorScaleMarker(predictorScore, includeScore) }}
+      </div>
+    </div>
+
+    <div class="{{ barTypeClass }}">
+      <div data-band-persentage-start="{{ predictorScore.bandPercentages[0] }}" data-band-persentage="{{ predictorScore.bandPercentages[1] }}">
+        <span></span>
+      </div>
+      <div data-band-persentage="{{ predictorScore.bandPercentages[2] }}">
+        <span></span>
+      </div>
+      <div data-band-persentage="{{ predictorScore.bandPercentages[3] }}">
+        <span></span>
+      </div>
+      {% if includeVeryHigh === true %}
+        <div data-band-persentage="{{ predictorScore.bandPercentages[4] }}">
+          <span></span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
