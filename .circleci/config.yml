@@ -240,7 +240,6 @@ jobs:
           name: accessibility tests
           command: |
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
               --config-file integration_tests/cypress.config.ts \
               --config specPattern=integration_tests/accessibility/*.spec.ts \
               --browser chrome \
