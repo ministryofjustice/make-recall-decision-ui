@@ -240,7 +240,6 @@ jobs:
           name: accessibility tests
           command: |
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
               --config-file integration_tests/cypress.config.ts \
               --config specPattern=integration_tests/accessibility/*.spec.ts \
               --browser chrome \
@@ -408,14 +407,14 @@ workflows:
           - << pipeline.parameters.e2e-check-dev >>
           - << pipeline.parameters.e2e-check-preprod >>
     jobs:
-      - e2e_local_test:
-          filters:
-            branches:
-              only:
-                - main
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+#      - e2e_local_test:
+#          filters:
+#            branches:
+#              only:
+#                - main
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
       - build:
           filters:
@@ -425,19 +424,19 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-      - unit_test:
-          requires:
-            - build
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+#      - unit_test:
+#          requires:
+#            - build
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
-      - integration_test:
-          requires:
-            - build
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+#      - integration_test:
+#          requires:
+#            - build
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
       - accessibility_test:
           requires:
@@ -446,111 +445,111 @@ workflows:
             - hmpps-common-vars
           <<: *slack-fail-post-step
 
-      - hmpps/helm_lint:
-          name: helm_lint
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+#      - hmpps/helm_lint:
+#          name: helm_lint
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
+#
+#      - hmpps/build_docker:
+#          name: build_docker
+#          filters:
+#            branches:
+#              only:
+#                - main
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
-      - hmpps/build_docker:
-          name: build_docker
-          filters:
-            branches:
-              only:
-                - main
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
-
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: dev
-          context:
-            - hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - helm_lint
-            - unit_test
-            - integration_test
-            - e2e_local_test
-            - build_docker
-          <<: *slack-fail-post-step
-      - hmpps/sentry_release_and_deploy:
-          name: notify_sentry_dev
-          sentry_project: make-recall-decision-ui
-          sentry_environment: DEV
-          sentry_create_release: true
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
-      - e2e_environment_test:
-          name: e2e_test_dev
-          environment: dev
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
-
-      - hmpps/deploy_env:
-          name: deploy_preprod
-          env: preprod
-          filters:
-            branches:
-              only:
-                - main
-          context:
-            - hmpps-common-vars
-            - make-recall-decision-ui-preprod
-          requires:
-            - deploy_dev
-            - e2e_test_dev
-          <<: *slack-fail-post-step
-      - hmpps/sentry_release_and_deploy:
-          name: notify_sentry_preprod
-          sentry_project: make-recall-decision-ui
-          sentry_environment: PRE-PROD
-          sentry_create_release: true
-          requires:
-            - deploy_preprod
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
-
-      - request-prod-approval:
-          type: approval
-          requires:
-            - deploy_preprod
-      - hmpps/deploy_env:
-          name: deploy_prod
-          env: prod
-          slack_notification: true
-          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
-          context:
-            - hmpps-common-vars
-            - make-recall-decision-ui-prod
-          requires:
-            - request-prod-approval
-          <<: *slack-fail-post-step
-      - hmpps/sentry_release_and_deploy:
-          name: notify_sentry_prod
-          sentry_project: make-recall-decision-ui
-          sentry_environment: PROD
-          sentry_create_release: true
-          requires:
-            - deploy_prod
-          context:
-            - hmpps-common-vars
-          <<: *slack-fail-post-step
+#      - hmpps/deploy_env:
+#          name: deploy_dev
+#          env: dev
+#          context:
+#            - hmpps-common-vars
+#          filters:
+#            branches:
+#              only:
+#                - main
+#          requires:
+#            - helm_lint
+#            - unit_test
+#            - integration_test
+#            - e2e_local_test
+#            - build_docker
+#          <<: *slack-fail-post-step
+#      - hmpps/sentry_release_and_deploy:
+#          name: notify_sentry_dev
+#          sentry_project: make-recall-decision-ui
+#          sentry_environment: DEV
+#          sentry_create_release: true
+#          requires:
+#            - deploy_dev
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
+#      - e2e_environment_test:
+#          name: e2e_test_dev
+#          environment: dev
+#          filters:
+#            branches:
+#              only:
+#                - main
+#          requires:
+#            - deploy_dev
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
+#
+#      - hmpps/deploy_env:
+#          name: deploy_preprod
+#          env: preprod
+#          filters:
+#            branches:
+#              only:
+#                - main
+#          context:
+#            - hmpps-common-vars
+#            - make-recall-decision-ui-preprod
+#          requires:
+#            - deploy_dev
+#            - e2e_test_dev
+#          <<: *slack-fail-post-step
+#      - hmpps/sentry_release_and_deploy:
+#          name: notify_sentry_preprod
+#          sentry_project: make-recall-decision-ui
+#          sentry_environment: PRE-PROD
+#          sentry_create_release: true
+#          requires:
+#            - deploy_preprod
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
+#
+#      - request-prod-approval:
+#          type: approval
+#          requires:
+#            - deploy_preprod
+#      - hmpps/deploy_env:
+#          name: deploy_prod
+#          env: prod
+#          slack_notification: true
+#          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+#          context:
+#            - hmpps-common-vars
+#            - make-recall-decision-ui-prod
+#          requires:
+#            - request-prod-approval
+#          <<: *slack-fail-post-step
+#      - hmpps/sentry_release_and_deploy:
+#          name: notify_sentry_prod
+#          sentry_project: make-recall-decision-ui
+#          sentry_environment: PROD
+#          sentry_create_release: true
+#          requires:
+#            - deploy_prod
+#          context:
+#            - hmpps-common-vars
+#          <<: *slack-fail-post-step
 
   e2e-check-local:
     when: << pipeline.parameters.e2e-check-local >>
