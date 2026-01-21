@@ -1,13 +1,27 @@
-{% from "govuk/components/details/macro.njk"             import govukDetails %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-{% from "components/summary-card/macro.njk"             import appSummaryCard %}
 
-{% set sectionHtml %}
-  <div class="govuk-!-margin-bottom-2 text-secondary">
-    {{ params.oasysHeading }}
+<section class="moj-summary-section">
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0" data-qa="{{ params.dataQaAttr }}-cardHeading">
+    {{ params.cardHeading }}
+  </h2>
+
+  <div class="moj-summary-meta">
+
+    <p class="govuk-body govuk-!-margin-bottom-2 moj-question text-secondary" data-qa="{{ params.dataQaAttr }}-oasysHeading">
+      {{ params.oasysHeading }}
+    </p>
+
+    {% if not params.error %}
+        <div class="text-secondary govuk-body-s govuk-!-margin-bottom-0" data-qa="{{ params.dataQaAttr }}-lastUpdatedDate">
+            Last updated: {{ formatDateTimeFromIsoString({ isoDate: params.lastUpdated, dateOnly: true }) }}
+         </div>
+    {% endif %}
+
   </div>
+
   {% if params.error %}
-    <div class='govuk-!-padding-bottom-2 govuk-!-margin-bottom-4 govuk-section-break--visible'></div>
+
     {% if params.error == 'NOT_FOUND_LATEST_COMPLETE' %}
       {% set message = params.notifications.oasysNotFoundLatestComplete %}
       {% set bannerId = 'oasysNotFoundLatestComplete' %}
@@ -17,48 +31,40 @@
     {% else %}
       {% set message = params.notifications.oasysApiError %}
     {% endif %}
+
     {% set html %}
-      <p class="govuk-notification-banner__heading">
+      <p class="govuk-notification-banner__heading" data-qa="{{ params.dataQaAttr }}-not-found-error">
         {{ message }}
       </p>
     {% endset %}
+
     {{ govukNotificationBanner({
       html: html,
-      classes: ("govuk-notification-banner--error" if params.error !== 'MISSING_DATA' else "") + " govuk-!-margin-bottom-0",
+      classes: ("govuk-notification-banner--error" if params.error !== 'MISSING_DATA' else ""),
       attributes: {
         'data-analytics-event': 'notification_banner',
         'data-analytics-event-category': bannerId
       } if bannerId else undefined
     }) }}
-  {% else %}
-    <div class="govuk-!-padding-bottom-4 govuk-!-margin-bottom-4 govuk-section-break--visible text-secondary">
-      Last updated: {{ formatDateTimeFromIsoString({ isoDate: params.lastUpdated, dateOnly: true }) }}
-    </div>
-    {% if params.content %}
-      <details class="govuk-details" data-module="govuk-details"{{ " open" if params.open }}>
-        <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text" data-analytics-event-category="{{ params.attributes['data-analytics-event-category'] }}" data-analytics-event-label="{{ params.attributes['data-analytics-event-label'] }}">View more detail<span class="govuk-visually-hidden"> on {{ params.cardHeading }}</span></span>
-        </summary>
-        <div class="govuk-details__text">
-          {% if params.content.text %}
-          <pre class='govuk-body'>{{ params.content.text }}</pre>
-          {% else %}
-            {{ params.content.html | safe }}
-          {% endif %}
-        </div>
-      </details>
-    {% else %}
-      <p class='govuk-body'>Not available</p>
-    {% endif %}
-  {% endif %}
-{% endset %}
 
-{{ appSummaryCard({
-  titleHtml: params.cardHeading,
-  classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
-  html: sectionHtml,
-  attributes: {
-    'data-qa': params.dataQaAttr,
-    'data-analytics-event-scroll': params.oasysHeading
-  }
-}) }}
+  {% else %}
+
+    {% if params.content %}
+      {% if params.content.text %}
+        <p class="govuk-body" data-qa="{{ params.dataQaAttr }}-details">
+          {{ params.content.text }}
+        </p>
+      {% else %}
+        {{ params.content.html | safe }}
+      {% endif %}
+    {% else %}
+      <p class="govuk-body">
+        Not available
+      </p>
+    {% endif %}
+
+  {% endif %}
+
+</section>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">

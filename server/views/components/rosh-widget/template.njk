@@ -84,7 +84,7 @@ rosh-widget__risk--low
     <div class="rosh-widget rosh-widget--unknown">
         <h3 class="govuk-heading-m govuk-!-margin-bottom-0 text-uppercase"><strong>Unknown</strong> RoSH</h3>
         <p class="govuk-body-m govuk-!-margin-bottom-1">Risk of serious harm</p>
-        <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0">
+        <p class="text-secondary govuk-body-s govuk-!-margin-bottom-0" data-qa="{{ params.dataQaAttr }}-not-found-error">
             {% if riskOfSeriousHarm.error == 'NOT_FOUND_LATEST_COMPLETE' %}
                 {{ params.notifications.oasysNotFoundLatestComplete }}
             {% elseif riskOfSeriousHarm.error == 'MISSING_DATA' %}

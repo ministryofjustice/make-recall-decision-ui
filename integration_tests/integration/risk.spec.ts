@@ -1,7 +1,6 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
 import { routeUrls } from '../../server/routes/routeUrls'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
-import { ospdcLevelLabel, riskLevelLabel } from '../../server/utils/nunjucks'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
 context('Risk page', () => {
@@ -25,41 +24,60 @@ context('Risk page', () => {
   it('shows RoSH, MAPPA and predictor scores', () => {
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
-    cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
+    // Banner message
+    cy.get('.moj-banner__message').should(
+      'contain.text',
+      'This information is from the latest complete OASys assessmentCheck OASys for new information. There may be a more recent assessment that’s not completed.'
+    )
 
     // Content panels
     const { whoIsAtRisk, natureOfRisk, riskIncreaseFactors, riskImminence, riskMitigationFactors } =
       getCaseRiskResponse.roshSummary
-    cy.viewDetails('View more detail on Who is at risk').should('contain', whoIsAtRisk)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on Details of the risk').should('contain', natureOfRisk)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on When the risk will be highest').should('contain', riskImminence)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskImminence"]' }).should('exist')
-    cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
+    // who is At risk section
+    cy.getText('whoIsAtRisk-cardHeading').should('contain', 'Who is at risk')
+    cy.getText('whoIsAtRisk-oasysHeading').should('contain', 'OASys R10.1 Who is at risk?')
+    cy.getText('whoIsAtRisk-lastUpdatedDate').should('contain', 'Last updated: 9 October 2021')
+    cy.getText('whoIsAtRisk-details').should('contain', whoIsAtRisk)
+
+    // nature of a risk section
+    cy.getText('natureOfRisk-cardHeading').should('contain', 'Details of the risk')
+    cy.getText('natureOfRisk-oasysHeading').should('contain', 'OASys R10.2 What is the nature of the risk?')
+    cy.getText('natureOfRisk-lastUpdatedDate').should('contain', 'Last updated: 9 October 2021')
+    cy.getText('natureOfRisk-details').should('contain', natureOfRisk)
+
+    // When the risk will be highest
+    cy.getText('riskImminence-cardHeading').should('contain', 'When the risk will be highest')
+    cy.getText('riskImminence-oasysHeading').should('contain', 'OASys R10.3 When is the risk likely to be greatest?')
+    cy.getText('riskImminence-lastUpdatedDate').should('contain', 'Last updated: 9 October 2021')
+    cy.getText('riskImminence-details').should('contain', riskImminence)
+
+    // Circumstances that will increase the risk
+    cy.getText('riskIncreaseFactors-cardHeading').should('contain', 'Circumstances that will increase the risk')
+    cy.getText('riskIncreaseFactors-oasysHeading').should(
       'contain',
-      riskIncreaseFactors
+      'OASys R10.4 What circumstances are likely to increase the risk?'
     )
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
-    cy.viewDetails('View more detail on Factors that will reduce the risk').should('contain', riskMitigationFactors)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
+    cy.getText('riskIncreaseFactors-lastUpdatedDate').should('contain', 'Last updated: 9 October 2021')
+    cy.getText('riskIncreaseFactors-details').should('contain', riskIncreaseFactors)
+
+    // Factors that will reduce the risk
+    cy.getText('riskMitigationFactors-cardHeading').should('contain', 'Factors that will reduce the risk')
+    cy.getText('riskMitigationFactors-oasysHeading').should(
+      'contain',
+      'OASys R10.5 What factors are likely to reduce the risk?'
+    )
+    cy.getText('riskMitigationFactors-lastUpdatedDate').should('contain', 'Last updated: 9 October 2021')
+    cy.getText('riskMitigationFactors-details').should('contain', riskMitigationFactors)
 
     // predictor scores
-    const currentScores = getCaseRiskResponse.predictorScores.current.scores
-    cy.getElement(`RSR (risk of serious recidivism) score - ${currentScores.RSR.score}%`).should('exist')
-    cy.getElement('scale-ospc').should('not.exist')
-    cy.getElement('scale-ospi').should('not.exist')
-    cy.getText('scale-ospdc').should('contain', ospdcLevelLabel(currentScores.OSPDC.level))
-    cy.getText('scale-ospiic').should('contain', currentScores.OSPIIC.level)
-    cy.getText('ogrs-1yr').should('equal', `${currentScores.OGRS.oneYear}%`)
-    cy.getText('ogrs-2yr').should('equal', `${currentScores.OGRS.twoYears}%`)
-    cy.getText('ogrs-level').should('equal', riskLevelLabel(currentScores.OGRS.level))
-    cy.getText('ogp-1yr').should('equal', `${currentScores.OGP.oneYear}%`)
-    cy.getText('ogp-2yr').should('equal', `${currentScores.OGP.twoYears}%`)
-    cy.getText('ogp-level').should('equal', riskLevelLabel(currentScores.OGP.level))
-    cy.getText('ovp-1yr').should('equal', `${currentScores.OVP.oneYear}%`)
-    cy.getText('ovp-2yr').should('equal', `${currentScores.OVP.twoYears}%`)
-    cy.getText('ovp-level').should('equal', riskLevelLabel(currentScores.OVP.level))
+    const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
+
+    v1Predictors.forEach(predictor => {
+      assertPredictorScale(predictor)
+    })
+
+    cy.contains('.predictor-scale', 'OSPI').should('not.exist')
+    cy.contains('.predictor-scale', 'OSPC').should('not.exist')
 
     // RoSH table
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
@@ -84,23 +102,43 @@ context('Risk page', () => {
     cy.getElement('Last updated: 24 September 2022', { parent: '[data-qa="mappa"]' }).should('exist')
   })
 
-  it('displays VERY_HIGH OSPDC predictor score correctly', () => {
-    const currentScore = {
-      date: '2021-10-24',
-      scores: {
-        OSPDC: {
-          level: 'VERY_HIGH',
-          type: 'OSP/DC',
-        },
-        OSPIIC: {
-          level: 'MEDIUM',
-          type: 'OSP/IIC',
+  it('shows v2 predictor scores correctly', () => {
+    const predictorScores = {
+      current: {
+        date: '2026-10-24',
+        scores: {
+          allReoffendingPredictor: {
+            score: 12.5,
+            band: 'MEDIUM',
+            staticOrDynamic: 'STATIC',
+          },
+          violentReoffendingPredictor: {
+            score: 8.0,
+            band: 'LOW',
+            staticOrDynamic: 'DYNAMIC',
+          },
+          seriousViolentReoffendingPredictor: {
+            score: 15.2,
+            band: 'HIGH',
+            staticOrDynamic: 'STATIC',
+          },
+          directContactSexualReoffendingPredictor: {
+            score: 6.3,
+            band: 'LOW',
+          },
+          indirectImageContactSexualReoffendingPredictor: {
+            score: 9.8,
+            band: 'MEDIUM',
+          },
+          combinedSeriousReoffendingPredictor: {
+            score: 18.7,
+            band: 'VERY_HIGH',
+            staticOrDynamic: 'DYNAMIC',
+            algorithmVersion: 'v2.1.0',
+          },
         },
       },
-    }
-    const predictorScores = {
-      current: currentScore,
-      historical: [currentScore],
+      historical: [],
     }
     cy.task('getCase', {
       sectionId: 'risk',
@@ -111,12 +149,20 @@ context('Risk page', () => {
       },
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
 
-    // predictor scores
-    cy.getText('scale-ospdc').should('contain', ospdcLevelLabel(currentScore.scores.OSPDC.level))
-    cy.getText('scale-ospiic').should('contain', currentScore.scores.OSPIIC.level)
-    cy.getElement('scale-ospc').should('not.exist')
-    cy.getElement('scale-ospi').should('not.exist')
+    const v2Predictors = [
+      ALL_REOFFENDING_EXPECTED,
+      VIOLENT_REOFFENDING_EXPECTED,
+      SERIOUS_VIOLENT_REOFFENDING_EXPECTED,
+      DIRECT_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      INDIRECT_IMAGE_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      COMBINED_SERIOUS_REOFFENDING_EXPECTED,
+    ]
+
+    v2Predictors.forEach(predictor => {
+      assertPredictorScale(predictor)
+    })
   })
 
   it('shows predictor scores with old OSP values', () => {
@@ -147,11 +193,10 @@ context('Risk page', () => {
     })
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
-    // predictor scores
-    cy.getText('scale-ospc').should('contain', ospdcLevelLabel(currentScore.scores.OSPC.level))
-    cy.getText('scale-ospi').should('contain', currentScore.scores.OSPI.level)
-    cy.getElement('scale-ospdc').should('not.exist')
-    cy.getElement('scale-ospiic').should('not.exist')
+    assertPredictorScale(OSPC_EXPECTED)
+    assertPredictorScale(OSPI_EXPECTED)
+    cy.contains('.predictor-scale', 'OSP/IIC').should('not.exist')
+    cy.contains('.predictor-scale', 'OSP/DC').should('not.exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
@@ -177,20 +222,18 @@ context('Risk page', () => {
     cy.getText('ovp-missing').should('contain', 'Data not available.')
 
     // RoSH content boxes & table
-    ;[
-      'whoIsAtRisk',
-      'natureOfRisk',
-      'riskImminence',
-      'riskIncreaseFactors',
-      'riskMitigationFactors',
-      'roshTable',
-    ].forEach(id =>
+    ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
       cy
         .getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
-          parent: `[data-qa="${id}"]`,
+          parent: `[data-qa="${id}-not-found-error"]`,
         })
         .should('exist')
     )
+
+    cy.getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
+      parent: `[data-qa="roshTable"]`,
+    }).should('exist')
+
     cy.getElement('Unknown RoSH').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement('No MAPPA data found in NDelius.', {
@@ -228,7 +271,7 @@ context('Risk page', () => {
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
       cy
         .getElement('This information cannot be retrieved from OASys.', {
-          parent: `[data-qa="${id}"]`,
+          parent: `[data-qa="${id}-not-found-error"]`,
         })
         .should('exist')
     )
@@ -270,7 +313,7 @@ context('Risk page', () => {
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
       cy
         .getElement('The latest complete OASys assessment does not have full RoSH information.', {
-          parent: `[data-qa="${id}"]`,
+          parent: `[data-qa="${id}-not-found-error"]`,
         })
         .should('exist')
     )
@@ -430,3 +473,186 @@ context('Risk page', () => {
     )
   })
 })
+
+type PredictorScaleExpectation = {
+  name: string
+  level: string
+  score: string
+  lastUpdated: string
+  positionClass: string
+  bandPercentages: string[]
+  staticOrDynamic?: string
+}
+
+const ALL_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
+  name: 'All Reoffending Predictor (2 years)',
+  level: 'MEDIUM',
+  score: '12.5%',
+  lastUpdated: '24 October 2026',
+  positionClass: 'scale-marker-wrapper--position-two-of-four',
+  bandPercentages: ['50%', '75%', '90%', '100%'],
+  staticOrDynamic: 'Static',
+}
+
+const VIOLENT_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
+  name: 'Violent Reoffending Predictor (2 years)',
+  level: 'LOW',
+  score: '8%',
+  lastUpdated: '24 October 2026',
+  positionClass: 'scale-marker-wrapper--position-one-of-four',
+  bandPercentages: ['30%', '60%', '80%', '100%'],
+  staticOrDynamic: 'Dynamic',
+}
+
+const SERIOUS_VIOLENT_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
+  name: 'Serious Violent Reoffending Predictor (2 years)',
+  level: 'HIGH',
+  score: '',
+  lastUpdated: '24 October 2026',
+  positionClass: 'scale-marker-wrapper--position-three-of-four',
+  bandPercentages: ['0.99%', '2.99%', '6.89%', '99%'],
+  staticOrDynamic: 'Static',
+}
+
+const DIRECT_CONTACT_SEXUAL_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
+  name: 'Direct Contact - Sexual Reoffending Predictor',
+  level: 'LOW',
+  score: '',
+  lastUpdated: '24 October 2026',
+  positionClass: 'scale-marker-wrapper--position-one-of-four',
+  bandPercentages: ['', '', '', ''],
+}
+
+const INDIRECT_IMAGE_CONTACT_SEXUAL_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
+  name: 'Images and Indirect Contact - Sexual Reoffending Predictor',
+  level: 'MEDIUM',
+  score: '',
+  lastUpdated: '24 October 2026',
+  positionClass: 'scale-marker-wrapper--position-two-of-three',
+  bandPercentages: ['', '', ''],
+  staticOrDynamic: undefined,
+}
+
+const COMBINED_SERIOUS_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
+  name: 'Combined Serious Reoffending Predictor',
+  level: 'VERY HIGH',
+  score: '18.7%',
+  lastUpdated: '24 October 2026',
+  positionClass: 'scale-marker-wrapper--position-four-of-four',
+  bandPercentages: ['1%', '3%', '6.9%', '25%'],
+  staticOrDynamic: 'Dynamic',
+}
+
+const OGRS3_EXPECTED: PredictorScaleExpectation = {
+  name: 'OGRS3',
+  level: 'MEDIUM',
+  score: '20%',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-two-of-four',
+  bandPercentages: ['50%', '75%', '90%', '100%'],
+}
+
+const RSR_EXPECTED: PredictorScaleExpectation = {
+  name: 'RSR',
+  level: 'HIGH',
+  score: '18%',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-three-of-four',
+  bandPercentages: ['3%', '6.9%', '25%', ''],
+}
+
+const OGP_EXPECTED: PredictorScaleExpectation = {
+  name: 'OGP',
+  level: 'HIGH',
+  score: '22%',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-three-of-four',
+  bandPercentages: ['34%', '67%', '85%', '100%'],
+}
+
+const OVP_EXPECTED: PredictorScaleExpectation = {
+  name: 'OVP',
+  level: 'VERY HIGH',
+  score: '64%',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-four-of-four',
+  bandPercentages: ['30%', '60%', '80%', '100%'],
+}
+
+const OSP_IIC_EXPECTED: PredictorScaleExpectation = {
+  name: 'OSP/IIC',
+  level: 'MEDIUM',
+  score: '',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-two-of-three',
+  bandPercentages: ['', '', ''],
+}
+
+const OSP_DC_EXPECTED: PredictorScaleExpectation = {
+  name: 'OSP/DC',
+  level: 'LOW',
+  score: '',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-one-of-three',
+  bandPercentages: ['', '', ''],
+}
+
+const OSPC_EXPECTED: PredictorScaleExpectation = {
+  name: 'OSPC',
+  level: 'LOW',
+  score: '',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-one-of-four',
+  bandPercentages: ['', '', '', ''],
+}
+
+const OSPI_EXPECTED: PredictorScaleExpectation = {
+  name: 'OSPI',
+  level: 'MEDIUM',
+  score: '',
+  lastUpdated: '24 October 2021',
+  positionClass: 'scale-marker-wrapper--position-two-of-three',
+  bandPercentages: ['', '', ''],
+}
+
+const assertPredictorScale = ({
+  name,
+  level,
+  score,
+  lastUpdated,
+  positionClass,
+  bandPercentages,
+  staticOrDynamic,
+}: PredictorScaleExpectation) => {
+  cy.contains('.predictor-scale', name).within(() => {
+    cy.get('h2.govuk-heading-m').should('have.text', name)
+
+    cy.get('.govuk-hint').should('have.text', `Last updated: ${lastUpdated}`)
+
+    if (staticOrDynamic) {
+      cy.get('.govuk-tag')
+        .invoke('text')
+        .then(text => {
+          expect(text.trim()).to.equal(staticOrDynamic)
+        })
+    } else {
+      cy.get('.govuk-tag').should('not.exist')
+    }
+
+    cy.get(`.${positionClass}`).should('exist')
+
+    cy.get('.scale-marker__card').within(() => {
+      cy.get('h3').should('have.text', level)
+      if (score) {
+        cy.get('.scale-marker__card-bottom p').should('have.text', score)
+      } else {
+        cy.get('.scale-marker__card-bottom').should('not.exist')
+      }
+    })
+
+    cy.get('[class*="scale-bar"] > div').then($bands => {
+      const values = [...$bands].map(el => el.getAttribute('data-band-persentage'))
+      expect(values).to.deep.equal(bandPercentages)
+    })
+  })
+}
