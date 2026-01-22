@@ -50,7 +50,7 @@ export const filterContactsBySearch = ({
     } else {
       const patterns = selectedFilters.map(filter => new RegExp(`.*\\b${filter}.*`, 'i'))
       filteredContacts = contacts
-        .map(contact => {
+        .map((contact): DecoratedContact => {
           return {
             ...contact,
             startDate: null,
