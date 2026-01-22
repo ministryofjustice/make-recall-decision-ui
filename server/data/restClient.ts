@@ -1,4 +1,4 @@
-import superagent from 'superagent'
+import superagent, { Response } from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
 
@@ -158,13 +158,9 @@ export default class RestClient {
     }
   }
 
-  async patch<T>({
-    path = null,
-    headers = {},
-    responseType = '',
-    data = {},
-    raw = false,
-  }: PostRequest = {}): Promise<T> {
+  async patch<T>({ path = null, headers = {}, responseType = '', data = {}, raw = false }: PostRequest = {}): Promise<
+    T | Response
+  > {
     try {
       const result = await superagent
         .patch(`${this.apiUrl()}${path}`)
