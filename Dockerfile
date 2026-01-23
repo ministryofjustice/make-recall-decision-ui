@@ -1,6 +1,7 @@
 # Stage: base image
 FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS base
 
+# BUILD_NUMBER, GIT_REF and GIT_BRANCH are provided as build arguments by build_docker.yml
 ARG BUILD_NUMBER
 ARG GIT_REF
 ARG GIT_BRANCH
@@ -29,10 +30,6 @@ ENV NODE_ENV='production'
 COPY . .
 RUN npm run build
 
-RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
-        export GIT_REF=${GIT_REF} && \
-        npm run record-build-info
-
 RUN npm prune --no-audit --production --omit=dev --no-fund
 
 # Stage: copy production assets and dependencies
@@ -44,9 +41,6 @@ COPY --from=build --chown=appuser:appgroup \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
-        /app/build-info.json ./dist/build-info.json
-
-COPY --from=build --chown=appuser:appgroup \
         /app/assets ./assets
 
 COPY --from=build --chown=appuser:appgroup \
@@ -55,8 +49,7 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
-ARG BUILD_NUMBER
-ENV SENTRY_RELEASE ${BUILD_NUMBER:-1_0_0}
+ENV SENTRY_RELEASE ${BUILD_NUMBER}
 
 EXPOSE 3000 3001
 ENV NODE_ENV='production'
