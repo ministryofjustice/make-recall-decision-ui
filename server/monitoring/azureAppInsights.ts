@@ -1,19 +1,20 @@
 import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
 import { performance } from 'perf_hooks'
-import applicationVersion from '../applicationVersion'
+import applicationPackageInfo from '../applicationPackageInfo'
+import appConfig from '../config'
 
 import { FeatureFlags } from '../@types/featureFlags'
 
 export function defaultName(): string {
   const {
     packageData: { name },
-  } = applicationVersion
+  } = applicationPackageInfo
   return name
 }
 
 function version(): string {
-  const { buildNumber } = applicationVersion
+  const { buildNumber } = appConfig
   return buildNumber
 }
 

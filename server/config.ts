@@ -39,6 +39,8 @@ export interface PpudApiConfig extends ApiConfig {
 }
 
 export default {
+  buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   https: production,
   applicationName: 'Consider a recall',
   staticResourceCacheDuration: 20,

@@ -1,6 +1,7 @@
 # Stage: base image
 FROM node:20.17-bookworm-slim as base
 
+# BUILD_NUMBER and GIT_REF are provided as build arguments by build_docker.yml
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
@@ -15,7 +16,8 @@ RUN addgroup --gid 2000 --system appgroup && \
 WORKDIR /app
 
 # Cache breaking
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+ENV GIT_REF=${GIT_REF}
 
 RUN apt-get update && \
         apt-get upgrade -y && \
@@ -25,18 +27,11 @@ RUN apt-get update && \
 # Stage: build assets
 FROM base as build
 
-ARG BUILD_NUMBER=1_0_0
-ARG GIT_REF=not-available
-
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm run setup:no-audit
 
 COPY . .
 RUN npm run build
-
-RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
-        export GIT_REF=${GIT_REF} && \
-        npm run record-build-info
 
 RUN npm prune --no-audit --production
 
@@ -49,9 +44,6 @@ COPY --from=build --chown=appuser:appgroup \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
-        /app/build-info.json ./dist/build-info.json
-
-COPY --from=build --chown=appuser:appgroup \
         /app/assets ./assets
 
 COPY --from=build --chown=appuser:appgroup \
@@ -60,8 +52,7 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
-ARG BUILD_NUMBER
-ENV SENTRY_RELEASE ${BUILD_NUMBER:-1_0_0}
+ENV SENTRY_RELEASE ${BUILD_NUMBER}
 
 EXPOSE 3000 3001
 ENV NODE_ENV='production'
