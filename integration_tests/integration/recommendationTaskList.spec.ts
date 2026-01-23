@@ -70,7 +70,7 @@ context('Recommendation - task list', () => {
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? Completed').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
     cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('exist')
@@ -128,7 +128,7 @@ context('Recommendation - task list', () => {
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? To do').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs To do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
@@ -487,7 +487,10 @@ context('Recommendation - task list', () => {
           setUp(RecommendationResponseGenerator.generate())
         })
         it('shows vulnerabilities link', () => {
-          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+          checkLink(
+            linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
+            `/recommendations/${recommendationId}/vulnerabilities`
+          )
         })
         it("doesn't show vulnerabilities details link", () => {
           checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
@@ -832,13 +835,13 @@ context('Recommendation - task list', () => {
               vulnerabilities: 'none',
             })
           )
-          hasToDoLabel(linkTexts.vulnerabilities)
+          hasToDoLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
           checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
         })
 
         it('vulnerabilities selected', () => {
           setUp(RecommendationResponseGenerator.generate())
-          hasCompletedLabel(linkTexts.vulnerabilities)
+          hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
           checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
         })
       })
