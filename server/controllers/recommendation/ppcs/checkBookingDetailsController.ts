@@ -38,6 +38,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
     .filter(s => s.active)
     .find(s => s.name === STATUSES.ACO_SIGNED)
 
+  // Out of hours recalls should have the AP_ statuses
+  const isOutOfHoursRecall = !!(statuses as RecommendationStatusResponse[])
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.AP_RECORDED_RATIONALE)
+
   let errorMessage
   const valuesToSave = {
     prisonOffender: undefined,
@@ -83,6 +88,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   // if recommendation does not have working values for book to ppud, add them.
   if (!hasValue(recommendation.bookRecallToPpud)) {
+    const { decisionDateTime } = recommendation as RecommendationResponse
     let firstName = ''
     let middleName = ''
     let lastName = ''
@@ -107,7 +113,10 @@ async function get(_: Request, res: Response, next: NextFunction) {
       dateOfBirth,
       prisonNumber: recommendation.prisonOffender?.bookingNo,
       cro: recommendation.prisonOffender?.cro,
-      receivedDateTime: sentToPpcs?.created,
+      // When a recall is OOH, the recall received and recall decision date/time need to
+      // match, so we use the decision date provided by the PP during the recommendation process
+      // see: https://dsdmoj.atlassian.net/browse/MRD-3015
+      receivedDateTime: isOutOfHoursRecall ? decisionDateTime : sentToPpcs?.created,
       currentEstablishment,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
