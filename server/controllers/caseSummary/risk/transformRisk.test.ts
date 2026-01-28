@@ -1,6 +1,11 @@
 import { transformRisk } from './transformRisk'
 import { RiskResponse } from '../../../@types/make-recall-decision-api'
-import { StaticOrDynamicPredictor } from '../../../@types/make-recall-decision-api/models/Scores'
+import {
+  FourBandRiskScoreBand,
+  StaticOrDynamic,
+  StaticOrDynamicPredictor,
+  ThreeBandRiskScoreBand,
+} from '../../../@types/make-recall-decision-api/models/Scores'
 
 const riskResponse = {
   roshHistory: {
@@ -181,8 +186,7 @@ describe('transformRisk predictorScales', () => {
   })
 
   it('transforms V1 predictors including OSPDC and OSPIIC', () => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const riskResponseWithNewV1 = {
+    const riskResponseWithNewV1: RiskResponse = {
       predictorScores: {
         error: '',
         current: {
@@ -270,8 +274,8 @@ describe('transformRisk predictorScales', () => {
               score: 3,
               staticOrDynamic: 'DYNAMIC',
             } as StaticOrDynamicPredictor,
-            directContactSexualReoffendingPredictor: { band: 'LOW', score: '1' },
-            indirectImageContactSexualReoffendingPredictor: { band: 'VERY_HIGH', score: '10' },
+            directContactSexualReoffendingPredictor: { band: FourBandRiskScoreBand.LOW, score: 1 },
+            indirectImageContactSexualReoffendingPredictor: { band: ThreeBandRiskScoreBand.HIGH, score: 10 },
             seriousViolentReoffendingPredictor: {
               band: 'HIGH',
               score: 4,
@@ -306,24 +310,40 @@ describe('transformRisk predictorScales', () => {
     expect(predictorScales?.violentReoffending?.staticOrDynamic).toBe('DYNAMIC')
 
     expect(predictorScales?.directContactSexual?.level).toBe('LOW')
-    expect(predictorScales?.indirectImageContactSexual?.level).toBe('VERY_HIGH')
+    expect(predictorScales?.indirectImageContactSexual?.level).toBe('HIGH')
 
     expect(predictorScales?.combinedSerious?.level).toBe('MEDIUM')
   })
 
   it('transforms V2 predictors including StaticOrDynamic, FourBand, and ThreeBand', () => {
-    const riskResponseV2 = {
+    const riskResponseV2: RiskResponse = {
       predictorScores: {
         error: '',
         current: {
           date: '2026-01-01',
           scores: {
-            allReoffendingPredictor: { band: 'HIGH', score: 7, staticOrDynamic: 'STATIC' },
-            violentReoffendingPredictor: { band: 'MEDIUM', score: 5, staticOrDynamic: 'DYNAMIC' },
-            seriousViolentReoffendingPredictor: { band: 'VERY_HIGH', score: 9, staticOrDynamic: 'STATIC' },
-            directContactSexualReoffendingPredictor: { band: 'LOW', score: '2' },
-            indirectImageContactSexualReoffendingPredictor: { band: 'MEDIUM', score: '4' },
-            combinedSeriousReoffendingPredictor: { band: 'HIGH', score: 8, staticOrDynamic: 'DYNAMIC' },
+            allReoffendingPredictor: {
+              band: FourBandRiskScoreBand.HIGH,
+              score: 7,
+              staticOrDynamic: StaticOrDynamic.STATIC,
+            },
+            violentReoffendingPredictor: {
+              band: FourBandRiskScoreBand.MEDIUM,
+              score: 5,
+              staticOrDynamic: StaticOrDynamic.DYNAMIC,
+            },
+            seriousViolentReoffendingPredictor: {
+              band: FourBandRiskScoreBand.VERY_HIGH,
+              score: 9,
+              staticOrDynamic: StaticOrDynamic.STATIC,
+            },
+            directContactSexualReoffendingPredictor: { band: FourBandRiskScoreBand.LOW, score: 2 },
+            indirectImageContactSexualReoffendingPredictor: { band: ThreeBandRiskScoreBand.MEDIUM, score: 4 },
+            combinedSeriousReoffendingPredictor: {
+              band: FourBandRiskScoreBand.HIGH,
+              score: 8,
+              staticOrDynamic: StaticOrDynamic.DYNAMIC,
+            },
           },
         },
         historical: [],
