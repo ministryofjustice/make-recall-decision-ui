@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { FeatureFlagDefault } from '../@types/featureFlags'
-import { isDateTimeAfterCurrent, isPreprodOrProd } from '../utils/utils'
+import { isPastDateTime, isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagRecommendationsPage: {
@@ -25,7 +25,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
 
 export const determineEnvFeatureOverride = (key: string) => {
   const envFeatureFlag = process.env[`FEATURE_${key.toUpperCase()}`]
-  return isDateTimeAfterCurrent(envFeatureFlag)
+  return isPastDateTime(envFeatureFlag)
 }
 
 /**
@@ -46,10 +46,10 @@ export const readFeatureFlags =
     Object.keys(flags).forEach(key => {
       const flag = req.query[key] || req.cookies[key]
       const featureOverride = determineEnvFeatureOverride(key)
-      const featureFlagEnabledDefaultvalue = !isPreprodOrProd(process.env.ENVIRONMENT)
+      const featureFlagEnabledDefaultValue = !isPreprodOrProd(process.env.ENVIRONMENT)
       const userFeatureFlagSettingAllowed =
         typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
-          ? featureFlagEnabledDefaultvalue
+          ? featureFlagEnabledDefaultValue
           : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
       const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
       if (featureOverride) {

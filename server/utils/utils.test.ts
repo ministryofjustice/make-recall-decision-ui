@@ -4,7 +4,7 @@ import {
   convertToTitleCase,
   getProperty,
   hasData,
-  isDateTimeAfterCurrent,
+  isPastDateTime,
   isDateTimeRangeCurrent,
   isPreprodOrProd,
   listToString,
@@ -289,25 +289,25 @@ describe('isDateTimeRangeCurrent', () => {
   })
 })
 
-describe('isDateTimeAfterCurrent', () => {
+describe('isPastDateTime', () => {
   describe('returns false when no value is provided', () => {
     ;[undefined, null, ''].forEach(falsyValue => {
       it(`- Falsy value: ${falsyValue}`, () => {
-        expect(isDateTimeAfterCurrent(falsyValue)).toEqual(false)
+        expect(isPastDateTime(falsyValue)).toEqual(false)
       })
     })
   })
   const invalidDate = faker.string.alphanumeric({ length: { min: 5, max: 10 } })
   it(`returns false when input is not a valid date - test value: ${invalidDate}`, () => {
-    expect(isDateTimeAfterCurrent(invalidDate)).toBeFalsy()
+    expect(isPastDateTime(invalidDate)).toBeFalsy()
   })
-  it('returns false when the input date is ahead of the current date', () => {
+  it('returns false when the input date is in the future', () => {
     const futureDate = faker.date.future().toISOString()
-    expect(isDateTimeAfterCurrent(futureDate)).toBeFalsy()
+    expect(isPastDateTime(futureDate)).toBeFalsy()
   })
-  it('returns true when the input date is prior of the current date', () => {
+  it('returns true when the input date is in the past', () => {
     const pastDate = faker.date.past().toISOString()
-    expect(isDateTimeAfterCurrent(pastDate)).toBeTruthy()
+    expect(isPastDateTime(pastDate)).toBeTruthy()
   })
 })
 
