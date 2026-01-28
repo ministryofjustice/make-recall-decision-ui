@@ -18,6 +18,7 @@ generic-service:
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "dev"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+    FEATURE_FLAGRISKTOSELFENABLED: "2026-01-28T08:00Z" # same time in GMT
 
   scheduledDowntime:
     enabled: true
