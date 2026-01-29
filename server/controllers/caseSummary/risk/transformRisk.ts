@@ -2,7 +2,6 @@ import { RiskResponse } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
 import { StaticOrDynamicPredictor } from '../../../@types/make-recall-decision-api/models/Scores'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
-import logger from '../../../../logger'
 
 export type PredictorScaleViewModel = {
   type?: string
@@ -135,8 +134,6 @@ export const transformRisk = (caseSummary: RiskResponse) => {
     dateOnly: true,
   })
   const scores = currentPredictors?.scores
-
-  logger.info(`scores: ${JSON.stringify(scores)}`)
 
   const predictorScales: PredictorScaleSet | undefined = scores
     ? {

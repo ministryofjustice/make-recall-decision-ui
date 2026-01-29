@@ -53,26 +53,6 @@ export enum StaticOrDynamic {
   DYNAMIC = "DYNAMIC",
 }
 
-export enum AssessmentStatus {
-  COMPLETE = "COMPLETE",
-  LOCKED_INCOMPLETE = "LOCKED_INCOMPLETE",
-}
-
-export enum FourLevelRiskScoreLevel {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
-  VERY_HIGH = "VERY_HIGH",
-  NOT_APPLICABLE = "NOT_APPLICABLE",
-}
-
-export enum ThreeLevelRiskScoreLevel {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
-  NOT_APPLICABLE = "NOT_APPLICABLE",
-}
-
 export enum FourBandRiskScoreBand {
   LOW = "LOW",
   MEDIUM = "MEDIUM",
