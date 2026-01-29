@@ -34,23 +34,23 @@
 
 {% if includeVeryHigh !== true %}
   {% switch predictorScore.level %}
-  {% case 'LOW' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-three' %}
-  {% case 'MEDIUM' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-three' %}
-  {% case 'HIGH' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-three' %}
+    {% case 'LOW' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-three' %}
+    {% case 'MEDIUM' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-three' %}
+    {% case 'HIGH' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-three' %}
   {% endswitch %}
-  {% else %}
+{% else %}
   {% switch predictorScore.level %}
-  {% case 'LOW' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-four' %}
-  {% case 'MEDIUM' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-four' %}
-  {% case 'HIGH' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-four' %}
-  {% case 'VERY_HIGH' %}{% case 'VERY HIGH' %}
-    {% set scaleMarkerClass = 'scale-marker-wrapper--very-high scale-marker-wrapper--position-four-of-four' %}
+    {% case 'LOW' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-four' %}
+    {% case 'MEDIUM' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-four' %}
+    {% case 'HIGH' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-four' %}
+    {% case 'VERY_HIGH' %}{% case 'VERY HIGH' %}
+      {% set scaleMarkerClass = 'scale-marker-wrapper--very-high scale-marker-wrapper--position-four-of-four' %}
   {% endswitch %}
 {% endif %}
 
@@ -79,8 +79,8 @@
         <p class="govuk-hint">Last updated: {{ predictorScore.lastUpdated }}</p>
       </div>
       {% if staticOrDynamic !== '' %}
-      <div>{{ govukTag({ text: staticOrDynamic, classes: "govuk-tag--lower govuk-tag--grey"}) }}</div>
-      {%  endif %}
+        <div>{{ govukTag({ text: staticOrDynamic, classes: "govuk-tag--lower govuk-tag--grey"}) }}</div>
+      {% endif %}
     </div>
 
     <div class="scale-marker">
