@@ -55,7 +55,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     [
       path.join(__dirname, '../../server/views'),
       'node_modules/govuk-frontend/dist',
-      'node_modules/govuk-frontend/distcomponents/',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/frontend/moj/components/',
     ],

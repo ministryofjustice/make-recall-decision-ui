@@ -6,6 +6,7 @@ import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
 import { ppcsPaths } from '../../../../../routes/paths/ppcs'
 import { RecommendationResponse } from '../../../../../@types/make-recall-decision-api'
 import { updateRecommendation } from '../../../../../data/makeDecisionApiClient'
+import { parseDatePartsAsNumbers } from '../../../../../utils/dates'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, unsavedValues } = res.locals
@@ -63,9 +64,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   if (errors.length > 0) {
     req.session.errors = errors
     req.session.unsavedValues = {
-      day: Number(releaseDateParts.day) || '',
-      month: Number(releaseDateParts.month) || '',
-      year: Number(releaseDateParts.year) || '',
+      ...parseDatePartsAsNumbers(releaseDateParts),
     }
     return res.redirect(303, req.originalUrl)
   }
