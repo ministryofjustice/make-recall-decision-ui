@@ -38,8 +38,8 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 
 * Display a notification info box on the homepage to make users aware of any planned outages four environment variables
   are required. These are available for each environment in the helm_deploy folder -
-    * **MAINTENANCE_HEADER** - optional header of the banner
-    * **MAINTENANCE_BODY** - mandatory text in the body of the banner. This must conform to GDS
+    * **MAINTENANCE_BANNER_HEADER** - optional header of the banner
+    * **MAINTENANCE_BANNER_BODY** - mandatory text in the body of the banner. This must conform to GDS
       standards [see link](https://design-system.service.gov.uk/components/notification-banner/)
     * **MAINTENANCE_BANNER_START_DATE_TIME** - must be written in ISO format eg/YYYY-MM-DDTHH:MM:SS, the banner will
       only be

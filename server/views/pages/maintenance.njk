@@ -4,16 +4,9 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            <h1 class="govuk-heading-xl">
-                Service temporarily unavailable
-            </h1>
-            <p class="govuk-body">
-                {{ maintenancePageBody }}
-            </p>
-            <p class="govuk-body">
-                The system will be undergoing maintenance between {{ maintenancePageStartDateTime }}
-                and {{ maintenancePageEndDateTime }}
-            <p>
+            {{ heading('Service temporarily unavailable', size = 'xl') }}
+            {{ bodyParagraph('The system will be undergoing maintenance between ' + maintenancePageStartDateTime + ' and ' + maintenancePageEndDateTime) }}
+            {{ bodyParagraph(maintenancePageBody) }}
         </div>
     </div>
 {% endblock %}
