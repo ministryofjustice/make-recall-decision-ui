@@ -297,7 +297,7 @@ describe('transformRisk predictorScales', () => {
     const { predictorScales } = transformed
 
     expect(predictorScales?.allReoffending).toEqual({
-      type: 'All Reoffending Predictor (2 years)',
+      type: 'All Reoffending Predictor',
       level: 'HIGH',
       score: '5', // score converted to string inside buildV2StaticOrDynamicPredictor
       staticOrDynamic: 'STATIC',
@@ -355,7 +355,7 @@ describe('transformRisk predictorScales', () => {
     const predictorScales = transformed.predictorScales!
 
     expect(predictorScales?.allReoffending).toEqual({
-      type: 'All Reoffending Predictor (2 years)',
+      type: 'All Reoffending Predictor',
       level: 'HIGH',
       score: '7',
       staticOrDynamic: 'STATIC',
@@ -364,7 +364,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.violentReoffending).toEqual({
-      type: 'Violent Reoffending Predictor (2 years)',
+      type: 'Violent Reoffending Predictor',
       level: 'MEDIUM',
       score: '5',
       staticOrDynamic: 'DYNAMIC',
@@ -373,7 +373,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.seriousViolentReoffending).toEqual({
-      type: 'Serious Violent Reoffending Predictor (2 years)',
+      type: 'Serious Violent Reoffending Predictor',
       level: 'VERY_HIGH',
       score: '9',
       staticOrDynamic: 'STATIC',

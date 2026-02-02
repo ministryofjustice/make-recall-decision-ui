@@ -459,7 +459,7 @@ type PredictorScaleExpectation = {
 }
 
 const ALL_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
-  name: 'All Reoffending Predictor (2 years)',
+  name: 'All Reoffending Predictor',
   level: 'MEDIUM',
   score: '12.5%',
   lastUpdated: '24 October 2026',
@@ -469,7 +469,7 @@ const ALL_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
 }
 
 const VIOLENT_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
-  name: 'Violent Reoffending Predictor (2 years)',
+  name: 'Violent Reoffending Predictor',
   level: 'LOW',
   score: '8%',
   lastUpdated: '24 October 2026',
@@ -479,7 +479,7 @@ const VIOLENT_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
 }
 
 const SERIOUS_VIOLENT_REOFFENDING_EXPECTED: PredictorScaleExpectation = {
-  name: 'Serious Violent Reoffending Predictor (2 years)',
+  name: 'Serious Violent Reoffending Predictor',
   level: 'HIGH',
   score: '',
   lastUpdated: '24 October 2026',

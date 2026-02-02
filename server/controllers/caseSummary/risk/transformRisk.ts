@@ -139,17 +139,18 @@ export const transformRisk = (caseSummary: RiskResponse) => {
     ? {
         // V2 scores
         allReoffending: scores.allReoffendingPredictor
-          ? buildV2StaticOrDynamicPredictor(
-              'All Reoffending Predictor (2 years)',
-              scores.allReoffendingPredictor,
-              lastUpdated,
-              ['0%', '50%', '75%', '90%', '100%']
-            )
+          ? buildV2StaticOrDynamicPredictor('All Reoffending Predictor', scores.allReoffendingPredictor, lastUpdated, [
+              '0%',
+              '50%',
+              '75%',
+              '90%',
+              '100%',
+            ])
           : undefined,
 
         violentReoffending: scores.violentReoffendingPredictor
           ? buildV2StaticOrDynamicPredictor(
-              'Violent Reoffending Predictor (2 years)',
+              'Violent Reoffending Predictor',
               scores.violentReoffendingPredictor,
               lastUpdated,
               ['0%', '30%', '60%', '80%', '100%']
@@ -176,7 +177,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
 
         seriousViolentReoffending: scores.seriousViolentReoffendingPredictor
           ? buildV2StaticOrDynamicPredictor(
-              'Serious Violent Reoffending Predictor (2 years)',
+              'Serious Violent Reoffending Predictor',
               scores.seriousViolentReoffendingPredictor,
               lastUpdated,
               ['0%', '0.99%', '2.99%', '6.89%', '99%']
