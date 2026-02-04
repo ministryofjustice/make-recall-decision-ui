@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
 import { validateVictimLiaisonOfficer } from '../recommendations/victimLiaisonOfficer/formValidator'
 import { inputDisplayValuesVictimLiaisonOfficer } from '../recommendations/victimLiaisonOfficer/inputDisplayValues'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -53,7 +53,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-victim-liaison`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-victim-liaison`
 
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }

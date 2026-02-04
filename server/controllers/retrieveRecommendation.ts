@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationDecorated } from '../@types/api'
 import { isCaseRestrictedOrExcluded } from '../utils/utils'
-import { routeUrls } from '../routes/routeUrls'
+import { sharedPaths } from '../routes/paths/shared.paths'
 
 export default async function retrieveRecommendation(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -19,7 +19,7 @@ export default async function retrieveRecommendation(req: Request, res: Response
   }
 
   if (recommendation.status === 'DOCUMENT_DOWNLOADED') {
-    return res.redirect(301, `${routeUrls.cases}/${recommendation.crn}/overview`)
+    return res.redirect(301, `${sharedPaths.cases}/${recommendation.crn}/overview`)
   }
 
   res.locals.recommendation = recommendation

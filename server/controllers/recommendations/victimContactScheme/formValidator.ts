@@ -1,8 +1,8 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 export const validateVictimContactScheme = async ({
   requestBody,
@@ -33,7 +33,7 @@ export const validateVictimContactScheme = async ({
     }
     const nextPageId =
       hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'task-list#heading-victim-liaison'
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/${nextPageId}`
   }
   return {
     errors,

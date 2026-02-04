@@ -1,0 +1,18 @@
+export const spoPaths = {
+  spoTaskListConsiderRecall: 'spo-task-list-consider-recall',
+  reviewCase: 'review-case/:crn/:sectionId',
+  reviewPractitionersConcerns: 'review-practitioners-concerns',
+  spoRationale: 'spo-rationale',
+  spoWhyNoRecall: 'spo-why-no-recall',
+  spoSeniorManagerEndorsement: 'spo-senior-manager-endorsement',
+  spoRecordDecision: 'spo-record-decision',
+  spoRationaleConfirmation: 'spo-rationale-confirmation',
+  rationaleCheck: 'rationale-check',
+  countersigningTelephone: 'countersigning-telephone',
+  spoCountersignature: 'spo-countersignature',
+  acoCountersignature: 'aco-countersignature',
+  countersignConfirmation: 'countersign-confirmation',
+  spoDeleteRecommendationRationale: 'spo-delete-recommendation-rationale',
+  recordDeleteRationale: 'record-delete-rationale',
+  spoDeleteConfirmation: 'spo-delete-confirmation',
+}

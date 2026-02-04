@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { routeUrls } from '../../routes/routeUrls'
 import { AuditService } from '../../services/auditService'
 import { isEmptyStringOrWhitespace, isInvalidName, isPreprodOrProd } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
@@ -7,6 +6,7 @@ import { EVENTS } from '../../utils/constants'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
 import { searchPersons } from '../../data/makeDecisionApiClient'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 const auditService = new AuditService()
 
@@ -44,7 +44,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
   if (errors.length) {
     req.session.errors = errors
     req.session.unsavedValues = { lastName, firstName }
-    return res.redirect(303, routeUrls.searchByName)
+    return res.redirect(303, sharedPaths.searchByName)
   }
   res.locals.persons = []
   res.locals.firstName = firstName

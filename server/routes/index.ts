@@ -1,59 +1,56 @@
-import { RequestHandler, Router } from 'express'
+import { Router } from 'express'
 import bodyParser from 'body-parser'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { personSearchByCRN } from '../controllers/personSearch/personSearchByCRN'
-import { personSearchByName } from '../controllers/personSearch/personSearchByName'
-import { personSearchResults } from '../controllers/personSearch/personSearchResults'
-import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import { getStoredSessionData } from '../middleware/getStoredSessionData'
-import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
-import { getFeatureFlags } from '../controllers/featureFlags'
-import { downloadDocument } from '../controllers/downloadDocument'
-import { routeUrls } from './routeUrls'
 import { parseUrl } from '../middleware/parseUrl'
-import { getCreateRecommendationWarning } from '../controllers/recommendations/getCreateRecommendationWarning'
-import recommendations from './recommendations'
-import { isPreprodOrProd } from '../utils/utils'
-import replaceCurrentRecommendationController from '../controllers/recommendations/replaceCurrentRecommendationController'
-import { personSearchResultsByName } from '../controllers/personSearch/personSearchResultsByName'
-import ppcsSearch from '../controllers/personSearch/ppcsSearchController'
 import { nothingMore } from './nothing-more'
-import ppcsSearchResultsController from '../controllers/personSearch/ppcsSearchResultsController'
-import noPpcsSearchResultsController from '../controllers/personSearch/noPpcsSearchResultsController'
-import outOfHoursWarningController from '../controllers/recommendations/outOfHoursWarningController'
 import setUpMaintenance from '../middleware/setUpMaintenance'
-import { ppcsPaths } from './paths/ppcs'
+import { authorisationCheck, hasRole, not, or } from '../middleware/check'
+import type { RouteDefinition } from './standardRouter'
+import { spoRoutes } from './routeDefinitions/spo.routes'
+import { sharedRoutes } from './routeDefinitions/shared.routes'
+import { ppcsRoutes } from './routeDefinitions/ppcs.routes'
+import { ppRoutes } from './routeDefinitions/pp.routes'
+import { apRoutes } from './routeDefinitions/ap.routes'
 
 export default function routes(router: Router): Router {
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler), nothingMore)
-
   router.use(setUpMaintenance())
-
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
   router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
 
-  router.use(`${routeUrls.recommendations}`, recommendations)
-  get('/', startPage)
-  get(routeUrls.accessibility, (req, res) => res.render('pages/accessibility'))
-  if (!isPreprodOrProd(process.env.ENVIRONMENT)) {
-    get(routeUrls.flags, getFeatureFlags)
-  }
-  get(routeUrls.searchByCRN, personSearchByCRN)
-  get(routeUrls.searchByName, personSearchByName)
-  get(routeUrls.searchResultsByCRN, personSearchResults)
-  get(routeUrls.searchResultsByName, personSearchResultsByName)
-  get(`/${ppcsPaths.ppcsSearch}`, ppcsSearch.get)
-  get(`/${ppcsPaths.ppcsSearchResults}`, ppcsSearchResultsController.get)
-  get('/no-ppcs-search-results', noPpcsSearchResultsController.get)
+  const route = ({
+    path,
+    method,
+    handler,
+    roles = {},
+    additionalMiddleware = [],
+    afterMiddleware = [],
+  }: RouteDefinition) => {
+    const roleChecks = []
 
-  get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)
-  get(`${routeUrls.cases}/:crn/create-recommendation-warning`, getCreateRecommendationWarning)
-  get(`${routeUrls.cases}/:crn/out-of-hours-warning`, outOfHoursWarningController.get)
-  post(`${routeUrls.cases}/:crn/out-of-hours-warning`, outOfHoursWarningController.post)
-  get(`${routeUrls.cases}/:crn/:sectionId`, caseSummaryController.get)
-  get(`${routeUrls.cases}/:crn/replace-recommendation/:recommendationId`, replaceCurrentRecommendationController.get)
+    if (roles.allow && roles.allow.length > 0) {
+      // Checks that *any* of the "allow" roles are present
+      roleChecks.push(authorisationCheck(or(...roles.allow.map(role => hasRole(role)))))
+    }
+
+    if (roles.deny && roles.deny.length > 0) {
+      roleChecks.push(...roles.deny.map(role => authorisationCheck(not(hasRole(role)))))
+    }
+
+    router[method](
+      path,
+      ...roleChecks,
+      ...additionalMiddleware.map(callback => asyncMiddleware(callback)),
+      asyncMiddleware(handler),
+      ...(afterMiddleware?.map(callback => asyncMiddleware(callback)) || []),
+      nothingMore
+    )
+  }
+
+  const routeSets = [sharedRoutes, ppcsRoutes, ppRoutes, spoRoutes, apRoutes]
+  routeSets.map(routeSet => routeSet.map(routeDetails => route(routeDetails)))
+
   return router
 }

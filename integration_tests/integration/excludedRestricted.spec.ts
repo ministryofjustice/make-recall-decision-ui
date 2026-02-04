@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../api/responses/get-case-restricted.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
@@ -22,7 +22,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -36,7 +36,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -50,7 +50,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
+      cy.visit(`${sharedPaths.cases}/${crn}/personal-details`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -64,7 +64,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+      cy.visit(`${sharedPaths.cases}/${crn}/licence-conditions`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -78,7 +78,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: excludedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Excluded case')
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -94,7 +94,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'Restricted case')
       cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -108,7 +108,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
       cy.pageHeading().should('equal', 'Restricted case')
       cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -122,7 +122,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'personal-details', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/personal-details`)
+      cy.visit(`${sharedPaths.cases}/${crn}/personal-details`)
       cy.pageHeading().should('equal', 'Restricted case')
       cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -136,7 +136,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
+      cy.visit(`${sharedPaths.cases}/${crn}/licence-conditions`)
       cy.pageHeading().should('equal', 'Restricted case')
       cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -150,7 +150,7 @@ context('Excluded and restricted cases', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('getCase', { sectionId: 'contact-history', statusCode: 200, response: restrictedResponse })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Restricted case')
       cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
@@ -174,7 +174,7 @@ context('Excluded and restricted cases', () => {
         },
       })
       const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'User not found')
       cy.contains(
         'There is a problem with your NDelius account. Contact support on the HMPPS Technology Portal for help.'

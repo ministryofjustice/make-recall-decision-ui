@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { setResponsePropertiesToNull } from '../support/commands'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
@@ -29,7 +29,7 @@ context('Recommendation - task list', () => {
     })
     cy.task('getStatuses', { statusCode: 200, response: statusesResponse ?? [] })
     const flagPostfix = enabledFlags?.map(flag => `?${flag}=1`).join('&') ?? ''
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list${flagPostfix}`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list${flagPostfix}`)
   }
 
   function checkElementDoesntExist(elementText: string) {
@@ -64,7 +64,7 @@ context('Recommendation - task list', () => {
   it('task list - Completed - in custody', () => {
     cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
@@ -99,7 +99,7 @@ context('Recommendation - task list', () => {
       response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? Completed').should('exist')
@@ -113,7 +113,7 @@ context('Recommendation - task list', () => {
       response: { ...completeRecommendationResponse, custodyStatus: { selected: undefined } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Address Completed').should('exist')
   })
 
@@ -123,7 +123,7 @@ context('Recommendation - task list', () => {
       response: recommendationResponse,
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
@@ -148,7 +148,7 @@ context('Recommendation - task list', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.clickLink('How has Jane Bloggs responded to probation so far?')
     cy.log('============= Back link')
     cy.clickLink('Back')
@@ -932,7 +932,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: licenceConditionsMultipleActiveCustodial,
     })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
   })
 
   it('task list - determinate, not extended, fixed term recall and FTR flag', () => {
@@ -946,7 +946,7 @@ context('Recommendation - task list', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
   })
   it('task list - determinate, not extended, fixed term recall and FTR flag and suitability completed', () => {
@@ -961,7 +961,7 @@ context('Recommendation - task list', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
   })
 
@@ -972,7 +972,7 @@ context('Recommendation - task list', () => {
         response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
-      cy.visit(`${routeUrls.recommendations}/1/task-list`)
+      cy.visit(`${sharedPaths.recommendations}/1/task-list`)
       cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
 
@@ -982,7 +982,7 @@ context('Recommendation - task list', () => {
         response: { ...recommendationResponse, recallType: { selected: { value: 'FIXED_TERM' } } },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/1/task-list-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/1/task-list-no-recall`)
       cy.pageHeading().should('equal', 'Create a Part A form')
     })
   })
@@ -999,7 +999,7 @@ context('Recommendation - task list', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list/`)
 
       cy.getElement('Share this Part A').should('exist')
     })
@@ -1011,7 +1011,7 @@ context('Recommendation - task list', () => {
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list/?flagPreviewPartA=1`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list/?flagPreviewPartA=1`)
 
       cy.getElement('Preview this Part A').should('exist')
     })

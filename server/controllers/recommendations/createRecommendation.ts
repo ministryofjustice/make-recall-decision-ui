@@ -6,10 +6,10 @@ import {
   updateStatuses,
 } from '../../data/makeDecisionApiClient'
 import { validateCrn } from '../../utils/utils'
-import { routeUrls } from '../../routes/routeUrls'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { EVENTS } from '../../utils/constants'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 export const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
   const normalizedCrn = validateCrn(req.body.crn)
@@ -28,7 +28,7 @@ export const createRecommendationController = async (req: Request, res: Response
 
       const isPPDocumentCreated = statuses.find(status => status.name === STATUSES.PP_DOCUMENT_CREATED)
       if (!isPPDocumentCreated) {
-        res.redirect(303, `${routeUrls.recommendations}/${activeRecommendation.recommendationId}/already-existing`)
+        res.redirect(303, `${sharedPaths.recommendations}/${activeRecommendation.recommendationId}/already-existing`)
         return
       }
     }
@@ -39,7 +39,7 @@ export const createRecommendationController = async (req: Request, res: Response
       activate: [STATUSES.PO_START_RECALL],
       deActivate: [],
     })
-    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/`)
+    res.redirect(303, `${sharedPaths.recommendations}/${recommendation.id}/`)
 
     appInsightsEvent(
       EVENTS.MRD_RECOMMENDATION_STARTED,
@@ -58,6 +58,6 @@ export const createRecommendationController = async (req: Request, res: Response
         text: 'An error occurred creating a new recommendation',
       },
     ]
-    res.redirect(303, `${routeUrls.cases}/${normalizedCrn}/overview`)
+    res.redirect(303, `${sharedPaths.cases}/${normalizedCrn}/overview`)
   }
 }

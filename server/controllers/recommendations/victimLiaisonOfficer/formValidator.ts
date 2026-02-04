@@ -1,9 +1,9 @@
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 export const validateVictimLiaisonOfficer = async ({
   requestBody,
@@ -49,7 +49,7 @@ export const validateVictimLiaisonOfficer = async ({
     valuesToSave = {
       dateVloInformed: dateVloInformedIso,
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-victim-liaison`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-victim-liaison`
     return {
       valuesToSave,
       nextPagePath,

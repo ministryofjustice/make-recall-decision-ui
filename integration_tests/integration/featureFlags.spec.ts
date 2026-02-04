@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 
 context('Feature flags', () => {
   beforeEach(() => {
@@ -6,7 +6,7 @@ context('Feature flags', () => {
   })
 
   it('override a flag', () => {
-    cy.visit(routeUrls.flags)
+    cy.visit(sharedPaths.flags)
     cy.pageHeading().should('equal', 'Feature flags')
     cy.getSelectableOptionByLabel('Recommendations tab', 'On').should('not.be.checked')
     cy.selectRadio('Recommendations tab', 'On')

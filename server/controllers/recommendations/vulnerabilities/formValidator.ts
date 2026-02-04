@@ -1,11 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
 import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn, UiFormOption } from '../../../@types/pagesForms'
 import { VULNERABILITY } from './formOptions'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 export const validateVulnerabilitiesRiskToSelf = async ({
   requestBody,
@@ -109,7 +109,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
   }
 }
 
@@ -185,6 +185,6 @@ export const validateVulnerabilities = async ({
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
   }
 }

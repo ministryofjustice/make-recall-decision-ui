@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import noRecallResponse from '../../api/responses/get-recommendation-no-recall.json'
 import { setResponsePropertiesToNull } from '../support/commands'
 
@@ -24,7 +24,7 @@ context('No recall', () => {
     it('form validation - why you considered recall', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/why-considered-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/why-considered-recall`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'whyConsideredRecall',
@@ -35,7 +35,7 @@ context('No recall', () => {
     it('form validation - reasons for no recall', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/reasons-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/reasons-no-recall`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'licenceBreach',
@@ -58,7 +58,7 @@ context('No recall', () => {
     it('form validation - next appointment', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/appointment-no-recall`)
       cy.clickButton('Continue')
       cy.assertErrorMessage({
         fieldName: 'howWillAppointmentHappen',
@@ -80,7 +80,7 @@ context('No recall', () => {
     it('To do', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
@@ -97,7 +97,7 @@ context('No recall', () => {
     it('Completed', () => {
       cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
       cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
@@ -114,7 +114,7 @@ context('No recall', () => {
     it('task list - check links to forms', () => {
       cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getLinkHref('Why you considered recall').should(
         'contain',
         '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter'
@@ -133,7 +133,7 @@ context('No recall', () => {
     it('task list - hide preview letter link if other tasks not complete', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...noRecallResponse, nextAppointment: null } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('Preview of the letter').should('not.exist')
     })
   })
@@ -151,7 +151,7 @@ context('No recall', () => {
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/appointment-no-recall`)
       const nextYear = DateTime.now().year + 1
       cy.enterDateTime({
         day: '1',
@@ -171,7 +171,7 @@ context('No recall', () => {
       })
       cy.task('updateRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/appointment-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/appointment-no-recall`)
       const nextYear = DateTime.now().year + 1
       cy.enterDateTime({
         day: '1',
@@ -191,7 +191,7 @@ context('No recall', () => {
       })
       cy.createNoRecallLetter()
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/preview-no-recall`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/preview-no-recall`)
       cy.getText('pop-address').should('equal', 'Jane Bloggs\n123 Oak Avenue\nBirmingham\nB23 1BC')
       cy.getText('probation-address').should('equal', 'Probation office address')
       cy.getText('pop-salutation').should('equal', 'Dear Jane')

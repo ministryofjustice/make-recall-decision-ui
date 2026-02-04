@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 
 context('Overview', () => {
@@ -13,7 +13,7 @@ context('Overview', () => {
   it('shows licence and offence information', () => {
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.visit(`${sharedPaths.cases}/${crn}/overview`)
     cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
     // licence info
     const { lastRelease, activeConvictions, risk } = getCaseOverviewResponse
@@ -64,7 +64,7 @@ context('Overview', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.visit(`${sharedPaths.cases}/${crn}/overview`)
     cy.getElement('No risks').should('exist')
   })
 
@@ -88,7 +88,7 @@ context('Overview', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.visit(`${sharedPaths.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(`OASys was last updated in ${date}`).should('exist')
   })
@@ -111,7 +111,7 @@ context('Overview', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.visit(`${sharedPaths.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(`OASys was last updated in ${date}.`).should('exist')
   })
@@ -134,7 +134,7 @@ context('Overview', () => {
     })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
+    cy.visit(`${sharedPaths.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(
       `OASys was last updated in ${date}. There's a more recent assessment in OASys that's not complete. Double-check this for any new information.`
@@ -168,7 +168,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       const opts = { parent: '[data-qa="conviction-1"]' }
       cy.getDefinitionListValue('Sentence expiry date', opts).should('contain', '17 June 2023')
       cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Not available')
@@ -196,7 +196,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
     })
@@ -217,7 +217,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getElement(
         'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
       ).should('exist')
@@ -241,7 +241,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('lastReleaseDate').should('equal', 'Not available')
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
 
@@ -265,7 +265,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
 
       // banner
       cy.getElement(
@@ -288,7 +288,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getElement('This person has no active offences or convictions.').should('exist')
       cy.getText('lastReleaseDate').should('equal', 'Not available')
       cy.getText('licenceExpiryDate').should('equal', 'Not available')
@@ -309,7 +309,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('banner-latest-complete-assessment').should(
         'contain',
         'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
@@ -327,7 +327,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('banner-offence-mismatch').should(
         'contain',
         'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
@@ -345,7 +345,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('offence-analysis-error').should(
         'contain',
         'This information cannot be found in OASys. Double-check OASys for the latest description of the index offence.'
@@ -371,7 +371,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getElement('Started on: 1 September 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
       cy.getText('banner-contingency-incomplete-assessment').should(
         'contain',
@@ -394,7 +394,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
         'This information cannot be found in OASys. Double-check OASys for the latest contingency plan.'
@@ -417,7 +417,7 @@ context('Overview', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
         'This information cannot be found in OASys. Double-check OASys.'

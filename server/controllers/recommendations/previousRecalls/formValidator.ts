@@ -1,8 +1,8 @@
-import { routeUrls } from '../../../routes/routeUrls'
 import { strings } from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { getExistingRecallDates } from '../addPreviousRecall/formValidator'
 import { isDefined, isNumber } from '../../../utils/utils'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 export const validatePreviousRecalls = async ({
   requestBody,
@@ -42,7 +42,7 @@ export const validatePreviousRecalls = async ({
         previousRecallDates: newDates,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-recalls`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/previous-recalls`
     return {
       valuesToSave,
       nextPagePath,
@@ -56,6 +56,6 @@ export const validatePreviousRecalls = async ({
         hasBeenRecalledPreviously: continueButton === '1',
       },
     },
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }

@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { ppcsPaths } from '../../../../server/routes/paths/ppcs'
+import { ppcsPaths } from '../../../../server/routes/paths/ppcs.paths'
 import { testTable } from '../../../componentTests/table.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
@@ -10,7 +10,7 @@ context('PPCS Search Results Page', () => {
   const crn = faker.string.alphanumeric({ length: 6, casing: 'upper' })
   const recommendationId = faker.number.int()
 
-  const testPageUrl = `${ppcsPaths.ppcsSearchResults}?crn=${crn}`
+  const testPageUrl = `${ppcsPaths.searchResults}?crn=${crn}`
 
   beforeEach(() => {
     cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
@@ -76,7 +76,7 @@ context('PPCS Search Results Page', () => {
             .eq(1)
             .should('have.class', 'govuk-button--secondary')
             .should('contain.text', 'Search for another CRN')
-            .and('have.attr', 'href', `/${ppcsPaths.ppcsSearch}`)
+            .and('have.attr', 'href', `/${ppcsPaths.search}`)
         })
       })
     })

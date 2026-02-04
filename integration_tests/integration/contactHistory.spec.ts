@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import { europeLondon, sortListByDateField } from '../../server/utils/dates'
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 import { dedupeList } from '../../server/utils/lists'
 import { removeSystemGenerated } from '../../server/controllers/caseSummary/contactHistory/filterContactsBySystemGenerated'
@@ -25,7 +25,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.pageHeading().should('equal', 'Contact history for Joe Bloggs')
       // contacts
       const filtered = removeSystemGenerated(getCaseContactHistoryResponse.contactSummary)
@@ -75,7 +75,7 @@ context('Contact history', () => {
       })
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
     })
 
@@ -86,7 +86,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
 
       // contacts
       const systemGeneratedRemoved = getCaseContactHistoryResponse.contactSummary.filter(
@@ -117,7 +117,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
 
       cy.log('Documents sorted by last modified date (newest first)')
       cy.getListLabels('contact-document-label', { parent: '[data-qa="contact-2"]' }).should('deep.equal', [
@@ -158,7 +158,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
 
       // apply filters without entering dates
       cy.clickButton('Apply filters')
@@ -221,7 +221,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.fillInput('Search term', 'letter')
       cy.clickButton('Apply filters')
       cy.getElement('4 contacts').should('exist')
@@ -247,7 +247,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.contains('Appointments (5 contacts)').click()
       cy.selectCheckboxes('Appointments', ['Responsible Officer Change (1 contact)'])
       cy.clickButton('Apply filters')
@@ -261,7 +261,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
       cy.selectCheckboxes('NDelius automatic contacts', ['Show NDelius automatic contacts'])
       cy.clickButton('Apply filters')
@@ -278,7 +278,7 @@ context('Contact history', () => {
         response: { ...completeRecommendationResponse },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/contact-history`)
+      cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
       cy.getElement('12 contacts').should('exist')
 
       // include system generated contacts

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { routeUrls } from '../routes/routeUrls'
+import { sharedPaths } from '../routes/paths/shared.paths'
 
 export function guardAgainstModifyingClosedRecommendation(req: Request, res: Response, next: NextFunction) {
   const {
@@ -16,7 +16,7 @@ export function guardAgainstModifyingClosedRecommendation(req: Request, res: Res
   }
 
   if (recommendation.status === 'DOCUMENT_DOWNLOADED') {
-    res.redirect(301, `${routeUrls.cases}/${recommendation.crn}/overview`)
+    res.redirect(301, `${sharedPaths.cases}/${recommendation.crn}/overview`)
   }
   next()
 }

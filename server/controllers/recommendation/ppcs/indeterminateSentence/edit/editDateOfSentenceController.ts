@@ -3,7 +3,7 @@ import { convertGmtDatePartsToUtc, dateHasError } from '../../../../../utils/dat
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../../../utils/errors'
 import { ValidationError } from '../../../../../@types/dates'
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
-import { ppcsPaths } from '../../../../../routes/paths/ppcs'
+import { ppcsPaths } from '../../../../../routes/paths/ppcs.paths'
 import { RecommendationResponse } from '../../../../../@types/make-recall-decision-api'
 import { updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import { parseDatePartsAsNumbers } from '../../../../../utils/dates'
