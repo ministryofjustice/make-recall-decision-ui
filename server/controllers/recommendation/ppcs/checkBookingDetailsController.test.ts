@@ -99,6 +99,11 @@ const SENT_TO_PPCS_STATUS_TEMPLATE = {
   active: true,
   created: '2023-11-13T09:49:31.371Z',
 }
+const AP_RECORDED_RATIONALE = {
+  name: 'AP_RECORDED_RATIONALE',
+  active: true,
+  created: '2023-11-13T09:49:31.371Z',
+}
 const STATUSES_TEMPLATE = [
   SPO_SIGNED_STATUS_TEMPLATE,
   ACO_SIGNED_STATUS_TEMPLATE,
@@ -148,8 +153,8 @@ describe('get', () => {
 
     const res = mockRes({
       locals: {
-        recommendation: RECOMMENDATION_TEMPLATE,
-        statuses: STATUSES_TEMPLATE,
+        recommendation: { ...RECOMMENDATION_TEMPLATE },
+        statuses: [...STATUSES_TEMPLATE],
         flags: {
           xyz: 1,
         },
@@ -164,6 +169,15 @@ describe('get', () => {
     expect(determinePpudEstablishment).toHaveBeenCalledWith(
       {
         ...RECOMMENDATION_TEMPLATE,
+        bookRecallToPpud: {
+          cro: '1234/2345',
+          currentEstablishment: 'HMP Brixton in PPUD',
+          dateOfBirth: '1970-03-15',
+          firstNames: 'Jane C',
+          lastName: 'Doe',
+          prisonNumber: '1234',
+          receivedDateTime: '2023-11-13T09:49:31.371Z',
+        },
         prisonOffender: expectedPrisonOffender,
       },
       'token'
@@ -418,6 +432,35 @@ describe('get', () => {
 
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
     expect(next).toHaveBeenCalled()
+  })
+
+  it('uses recall decision date and time as recall received date and time when loading an out of hours recall', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          decisionDateTime: '2026-01-01T08:00:00',
+        },
+        statuses: [...STATUSES_TEMPLATE, AP_RECORDED_RATIONALE],
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          bookRecallToPpud: expect.objectContaining({
+            receivedDateTime: '2026-01-01T08:00:00',
+          }),
+        }),
+      })
+    )
   })
 })
 

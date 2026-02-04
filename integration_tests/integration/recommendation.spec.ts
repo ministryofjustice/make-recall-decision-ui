@@ -10,6 +10,7 @@ import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTe
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 import { RECOMMENDATION_STATUS } from '../../server/middleware/recommendationStatus'
 import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { ppcsPaths } from '../../server/routes/paths/ppcs.paths'
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -1935,7 +1936,7 @@ context('Make a recommendation', () => {
 
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`/ppcs-search`)
+      cy.visit(`/${ppcsPaths.search}`)
 
       cy.pageHeading().should('contain', 'Find a person to book on')
     })
@@ -2049,7 +2050,7 @@ context('Make a recommendation', () => {
         .contains('You can only create a new record for a determinate sentence in this service.')
         .should('exist')
       cy.getLinkHref('Create a determinate PPUD record').should('contain', 'check-booking-details')
-      cy.getLinkHref('Search for another CRN').should('contain', '/ppcs-search')
+      cy.getLinkHref('Search for another CRN').should('contain', `/${ppcsPaths.search}`)
     })
 
     it('check booking details', () => {

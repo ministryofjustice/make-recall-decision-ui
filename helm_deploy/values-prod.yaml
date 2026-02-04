@@ -15,6 +15,7 @@ generic-service:
     SENTRY_ENVIRONMENT: "PROD"
     ENVIRONMENT: "prod"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: false
+    FEATURE_FLAGRISKTOSELFENABLED: "2026-02-02T08:00Z" # same time in GMT
 
   allowlist:
     north_shields_user: 194.33.192.1/24

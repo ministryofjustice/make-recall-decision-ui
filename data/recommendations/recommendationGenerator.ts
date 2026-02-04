@@ -15,6 +15,7 @@ import { RecallTypeGenerator, RecallTypeOptions } from './recallTypeGenerator'
 import { PersonOnProbationGenerator, PersonOnProbationOptions } from './personOnProbationGenerator'
 import { WhoCompletedPartAGenerator, WhoCompletedPartAOptions } from './whoCompletedPartAGenerator'
 import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilitiesGenerator'
+import { BookingMementoGenerator, BookingMementoOptions } from './bookingMementoGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -65,6 +66,7 @@ export type RecommendationOptions = {
   bookRecallToPpud?: BookRecallToPpudOptions
   nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
+  bookingMemento?: NoneOrOption<BookingMementoOptions>
   isUnder18?: boolean
   isSentence48MonthsOrOver?: boolean
   isMappaCategory4?: boolean
@@ -260,6 +262,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     nomisIndexOffence:
       options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
+    bookingMemento:
+      options?.bookingMemento === 'none' ? undefined : BookingMementoGenerator.generate(options?.bookingMemento),
     isUnder18: options?.isUnder18,
     isSentence48MonthsOrOver: options?.isSentence48MonthsOrOver,
     isMappaCategory4: options?.isMappaCategory4,
