@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "copy-views": "cp -R server/views dist/server/",
-    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css ./assets/sass/application-ie8.sass:./assets/stylesheets/application-ie8.css --style compressed",
+    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css --style compressed",
     "watch-ts": "tsc -w",
     "watch-views": "nodemon --watch server/views -e html,njk -x npm run copy-views",
     "watch-node": "DEBUG=gov-starter-server* nodemon --watch dist/ --inspect=0.0.0.0 dist/server.js | bunyan -o short",
@@ -103,10 +103,10 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.624.0",
+    "@aws-sdk/client-sqs": "3.982.0",
     "@faker-js/faker": "^9.7.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
-    "@ministryofjustice/frontend": "^1.8.1",
+    "@ministryofjustice/frontend": "8.0.0",
     "@sentry/node": "^7.109.0",
     "@sentry/tracing": "^7.109.0",
     "@types/express-serve-static-core": "^4.19.0",
@@ -129,7 +129,7 @@
     "express-prom-bundle": "^7.0.0",
     "express-session": "^1.18.1",
     "google-libphonenumber": "^3.2.34",
-    "govuk-frontend": "^4.8.0",
+    "govuk-frontend": "5.14.0",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.3",
@@ -206,7 +206,7 @@
     "prettier": "^3.2.5",
     "sass": "^1.74.1",
     "supertest": "^7.0.0",
-    "ts-jest": "~29.1.2",
+    "ts-jest": "29.1.5",
     "typescript": "^5.6.3",
     "wait-for-expect": "^3.0.2",
     "xml2js": "^0.6.0"
