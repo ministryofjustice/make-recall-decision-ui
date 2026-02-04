@@ -10,7 +10,7 @@
   border: $govuk-border-width solid transparent;
 
   color: govuk-colour("white");
-  background: govuk-colour("blue", $variant: "tint-25"); // tint to turquoise
+  background: govuk-colour("blue");
 
   @include govuk-media-query($media-type: print) {
     border-color: currentcolor;
