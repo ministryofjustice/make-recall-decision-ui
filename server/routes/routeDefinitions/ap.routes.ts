@@ -1,111 +1,78 @@
 import { RouteDefinition } from '../standardRouter'
-import audit from '../../controllers/audit'
-import customizeMessages from '../../controllers/customizeMessages'
 import apRationaleConfirmationController from '../../controllers/recommendation/apRationaleConfirmationController'
 import apRecallRationaleController from '../../controllers/recommendation/apRecallRationaleController'
 import apRecordDecisionController from '../../controllers/recommendation/apRecordDecisionController'
 import apWhyNoRecallController from '../../controllers/recommendation/apWhyNoRecallController'
 import licenceConditionsController from '../../controllers/recommendation/licenceConditionsController'
-import retrieveRecommendation from '../../controllers/retrieveRecommendation'
-import retrieveStatuses from '../../controllers/retrieveStatuses'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { not, statusIsActive } from '../../middleware/check'
-import { guardAgainstModifyingClosedRecommendation } from '../../middleware/guardAgainstModifyingClosedRecommendation'
-import { parseRecommendationUrl } from '../../middleware/parseRecommendationUrl'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { recommendationPrefix } from '../recommendations'
+import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
 import { apPaths } from '../paths/ap.paths'
-
-const apRouteMiddleware = [
-  retrieveStatuses,
-  retrieveRecommendation,
-  recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
-  parseRecommendationUrl,
-  guardAgainstModifyingClosedRecommendation,
-  customizeMessages,
-]
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.RW, HMPPS_AUTH_ROLE.ODM],
 }
 
+const apGetTemplate = createRecommendationRouteTemplate(
+  'get',
+  [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
+  roles
+)
+const apPostTemplate = createRecommendationRouteTemplate(
+  'post',
+  [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
+  roles
+)
+
 export const apRoutes: RouteDefinition[] = [
   {
-    path: `${recommendationPrefix}/${apPaths.apLicenceConditions}`,
-    method: 'get',
+    ...apGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apLicenceConditions}`,
     handler: licenceConditionsController.get,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apLicenceConditions}`,
-    method: 'post',
+    ...apPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apLicenceConditions}`,
     handler: licenceConditionsController.post,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apRecallRationale}`,
-    method: 'get',
+    ...apGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apRecallRationale}`,
     handler: apRecallRationaleController.get,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apRecallRationale}`,
-    method: 'post',
+    ...apPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apRecallRationale}`,
     handler: apRecallRationaleController.post,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apRecordDecision}`,
-    method: 'get',
+    ...apGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apRecordDecision}`,
     handler: apRecordDecisionController.get,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apRecordDecision}`,
-    method: 'post',
+    ...apPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apRecordDecision}`,
     handler: apRecordDecisionController.post,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apWhyNoRecall}`,
-    method: 'get',
+    ...apGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apWhyNoRecall}`,
     handler: apWhyNoRecallController.get,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apWhyNoRecall}`,
-    method: 'post',
+    ...apPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apWhyNoRecall}`,
     handler: apWhyNoRecallController.post,
-    roles,
-    additionalMiddleware: apRouteMiddleware,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${apPaths.apRationaleConfirmation}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(statusIsActive(STATUSES.AP_RECORDED_RATIONALE))],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${apPaths.apRationaleConfirmation}`,
     handler: apRationaleConfirmationController.get,
-    roles,
-    additionalMiddleware: [
-      retrieveStatuses,
-      retrieveRecommendation,
-      recommendationStatusCheck(statusIsActive(STATUSES.AP_RECORDED_RATIONALE)),
-      parseRecommendationUrl,
-      guardAgainstModifyingClosedRecommendation,
-      customizeMessages,
-    ],
   },
 ]

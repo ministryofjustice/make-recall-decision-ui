@@ -11,17 +11,11 @@ import { getCreateRecommendationWarning } from '../../controllers/recommendation
 import outOfHoursWarningController from '../../controllers/recommendations/outOfHoursWarningController'
 import caseSummaryController from '../../controllers/caseSummary/caseSummaryController'
 import replaceCurrentRecommendationController from '../../controllers/recommendations/replaceCurrentRecommendationController'
-import retrieveStatuses from '../../controllers/retrieveStatuses'
-import retrieveRecommendation from '../../controllers/retrieveRecommendation'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { and, hasRole, not, or, statusIsActive } from '../../middleware/check'
-import { parseRecommendationUrl } from '../../middleware/parseRecommendationUrl'
-import { guardAgainstModifyingClosedRecommendation } from '../../middleware/guardAgainstModifyingClosedRecommendation'
-import customizeMessages from '../../controllers/customizeMessages'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
-import { recommendationPrefix } from '../recommendations'
+import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
 import redirectController from '../../controllers/recommendation/redirectController'
-import audit from '../../controllers/audit'
 import taskListController from '../../controllers/recommendation/taskListController'
 import { createRecommendationController } from '../../controllers/recommendations/createRecommendation'
 import { createAndDownloadDocument } from '../../controllers/recommendations/createAndDownloadDocument'
@@ -45,32 +39,29 @@ const allEnvsRoutes: RouteDefinition[] = [
   { path: casePaths.replaceRecommendation, method: 'get', handler: replaceCurrentRecommendationController.get },
   // Recommendation shared routes
   {
-    path: `${recommendationPrefix}`,
+    // recommendationStatusCheck is basically a RequestHandler function
+    // which just has access to the recommendation object, so it's fine to
+    // mix role checks in here too for now
+    ...createRecommendationRouteTemplate(
+      'get',
+      [
+        recommendationStatusCheck(
+          or(
+            and(not(hasRole(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
+            and(
+              hasRole(HMPPS_AUTH_ROLE.SPO),
+              or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
+            )
+          )
+        ),
+      ],
+      {
+        allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
+      }
+    ),
+    path: `${RECOMMENDATION_PREFIX}`,
     method: 'get',
     handler: redirectController.get,
-    roles: {
-      allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-    },
-    additionalMiddleware: [
-      retrieveStatuses,
-      retrieveRecommendation,
-      // recommendationStatusCheck is basically a RequestHandler function
-      // which just has access to the recommendation object, so it's fine to
-      // mix role checks in here too for now
-      recommendationStatusCheck(
-        or(
-          and(not(hasRole(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
-          and(
-            hasRole(HMPPS_AUTH_ROLE.SPO),
-            or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
-          )
-        )
-      ),
-      parseRecommendationUrl,
-      guardAgainstModifyingClosedRecommendation,
-      customizeMessages,
-    ],
-    afterMiddleware: [audit],
   },
   {
     path: `${sharedPaths.recommendations}`,
@@ -78,55 +69,52 @@ const allEnvsRoutes: RouteDefinition[] = [
     handler: createRecommendationController,
   },
   {
-    path: `${recommendationPrefix}/${sharedPaths.taskList}`,
-    method: 'get',
-    handler: taskListController.get,
-    roles: {
-      allow: [HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO],
-    },
-    additionalMiddleware: [
-      retrieveStatuses,
-      retrieveRecommendation,
-      recommendationStatusCheck(
-        and(
-          not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
-          or(
-            not(hasRole(HMPPS_AUTH_ROLE.SPO)),
-            and(
-              hasRole(HMPPS_AUTH_ROLE.SPO),
-              or(
-                statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
-                statusIsActive(STATUSES.SPO_SIGNED),
-                statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
-                statusIsActive(STATUSES.ACO_SIGNED)
+    ...createRecommendationRouteTemplate(
+      'get',
+      [
+        recommendationStatusCheck(
+          and(
+            not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
+            or(
+              not(hasRole(HMPPS_AUTH_ROLE.SPO)),
+              and(
+                hasRole(HMPPS_AUTH_ROLE.SPO),
+                or(
+                  statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
+                  statusIsActive(STATUSES.SPO_SIGNED),
+                  statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
+                  statusIsActive(STATUSES.ACO_SIGNED)
+                )
               )
             )
           )
-        )
-      ),
-      parseRecommendationUrl,
-      guardAgainstModifyingClosedRecommendation,
-      customizeMessages,
-    ],
-    afterMiddleware: [audit],
+        ),
+      ],
+      {
+        allow: [HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO],
+      }
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${sharedPaths.taskList}`,
+    method: 'get',
+    handler: taskListController.get,
   },
   {
-    path: `${recommendationPrefix}/${sharedPaths.downloadPartA}`,
+    path: `${RECOMMENDATION_PREFIX}/${sharedPaths.downloadPartA}`,
     method: 'get',
     handler: createAndDownloadDocument(DOCUMENT_TYPE.PART_A),
   },
   {
-    path: `${recommendationPrefix}/${sharedPaths.downloadPreviewPartA}`,
+    path: `${RECOMMENDATION_PREFIX}/${sharedPaths.downloadPreviewPartA}`,
     method: 'get',
     handler: createAndDownloadDocument(DOCUMENT_TYPE.PREVIEW_PART_A),
   },
   {
-    path: `${recommendationPrefix}/${sharedPaths.downloadNoRecallLetter}`,
+    path: `${RECOMMENDATION_PREFIX}/${sharedPaths.downloadNoRecallLetter}`,
     method: 'get',
     handler: createAndDownloadDocument(DOCUMENT_TYPE.NO_RECALL_LETTER),
   },
   {
-    path: `${recommendationPrefix}/${sharedPaths.recommendationStatus}`,
+    path: `${RECOMMENDATION_PREFIX}/${sharedPaths.recommendationStatus}`,
     method: 'post',
     handler: updateRecommendationStatus,
   },

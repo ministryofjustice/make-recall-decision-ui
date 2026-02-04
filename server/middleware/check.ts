@@ -2,8 +2,20 @@ import { RequestHandler } from 'express'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
+import logger from '../../logger'
 
 export type Check = (locals: Record<string, unknown>) => boolean
+
+export function authorisationCheck(statusCheck?: Check): RequestHandler {
+  return (req, res, next) => {
+    if (statusCheck && !statusCheck(res.locals)) {
+      logger.error(`User ${req.user?.username} is not authorised to access this: ${req.originalUrl}`)
+      return res.redirect('/authError')
+    }
+
+    return next()
+  }
+}
 
 export function statusIsActive(name: string): Check {
   return (locals: Record<string, unknown>) => {
@@ -14,16 +26,6 @@ export function statusIsActive(name: string): Check {
 
 export function checkAllowedRole(name: string): RequestHandler {
   return authorisationCheck(hasRole(name))
-}
-
-function authorisationCheck(statusCheck?: Check): RequestHandler {
-  return (req, res, next) => {
-    if (statusCheck && !statusCheck(res.locals)) {
-      return res.redirect('/authError')
-    }
-
-    return next()
-  }
 }
 
 export function hasRole(name: string): Check {

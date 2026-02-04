@@ -1,7 +1,8 @@
-import { flagIsActive, hasRole, ppcsCustodyGroup, statusIsActive } from './check'
+import { authorisationCheck, flagIsActive, hasRole, ppcsCustodyGroup, statusIsActive } from './check'
 import { STATUSES } from './recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
 import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { mockNext, mockReq, mockRes } from './testutils/mockRequestUtils'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -104,5 +105,51 @@ describe('ppcsCustodyGroup', () => {
     })
 
     expect(result).toBe(false)
+  })
+})
+
+describe('authorisationCheck', () => {
+  it('should allow as role is present', async () => {
+    const res = mockRes({
+      locals: {
+        user: {
+          roles: ['XYZ'],
+        },
+      },
+    })
+    const next = mockNext()
+
+    await authorisationCheck(hasRole('XYZ'))(
+      mockReq({
+        params: { recommendationId: '123' },
+      }),
+      res,
+      next
+    )
+
+    expect(res.redirect).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('should disallow as role is not present', async () => {
+    const res = mockRes({
+      locals: {
+        user: {
+          roles: [],
+        },
+      },
+    })
+    const next = mockNext()
+
+    await authorisationCheck(hasRole('XYZ'))(
+      mockReq({
+        params: { recommendationId: '123' },
+      }),
+      res,
+      next
+    )
+
+    expect(res.redirect).toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
   })
 })

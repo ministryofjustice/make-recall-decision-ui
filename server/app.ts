@@ -24,8 +24,7 @@ import { metricsMiddleware } from './monitoring/metricsApp'
 import { appInsightsOperationId } from './middleware/appInsightsOperationId'
 import setUpCsrf from './middleware/setUpCsrf'
 import { setupRecommendationStatusCheck } from './middleware/recommendationStatusCheck'
-import { authorisationCheck } from './middleware/authorisationCheck'
-import { hasRole } from './middleware/check'
+import { authorisationCheck, hasRole } from './middleware/check'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()

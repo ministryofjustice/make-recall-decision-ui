@@ -1,34 +1,43 @@
 import { RequestHandler } from 'express'
-import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
-import recommendationStatusCheck, { STATUSES } from '../middleware/recommendationStatusCheck'
-import { and, hasRole, not, or, statusIsActive } from '../middleware/check'
 import retrieveStatuses from '../controllers/retrieveStatuses'
 import retrieveRecommendation from '../controllers/retrieveRecommendation'
 import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
 import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
+import audit from '../controllers/audit'
+import { RouteDefinition } from './standardRouter'
 
-export const recommendationPrefix = '/recommendations/:recommendationId'
+export const RECOMMENDATION_PREFIX = '/recommendations/:recommendationId'
 
-export const defaultRecommendationGetMiddleware: RequestHandler[] = [
-  retrieveStatuses,
-  retrieveRecommendation,
-  recommendationStatusCheck(
-    or(
-      and(not(hasRole(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
-      and(
-        hasRole(HMPPS_AUTH_ROLE.SPO),
-        or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
-      )
-    )
-  ),
-  parseRecommendationUrl,
-  guardAgainstModifyingClosedRecommendation,
-  customizeMessages,
-]
+function generateDefaultRecommendationGetMiddleware(additionalMiddleware: RequestHandler[]): RequestHandler[] {
+  return [
+    retrieveStatuses,
+    retrieveRecommendation,
+    ...additionalMiddleware,
+    parseRecommendationUrl,
+    guardAgainstModifyingClosedRecommendation,
+    customizeMessages,
+  ]
+}
 
-export const defaultRecommendationPostMiddleware: RequestHandler[] = [
-  retrieveStatuses,
-  retrieveRecommendation,
-  parseRecommendationUrl,
-]
+function generateDefaultRecommendationPostMiddleware(additionalMiddleware: RequestHandler[]): RequestHandler[] {
+  return [retrieveStatuses, retrieveRecommendation, ...additionalMiddleware, parseRecommendationUrl]
+}
+
+export function createRecommendationRouteTemplate(
+  method: RouteDefinition['method'],
+  additionalMiddleware: RouteDefinition['additionalMiddleware'],
+  roles: RouteDefinition['roles']
+): Pick<RouteDefinition, 'method' | 'roles' | 'additionalMiddleware' | 'afterMiddleware'> {
+  return {
+    method,
+    roles,
+    /// Only run an audit on get requests
+    afterMiddleware: [...(method === 'get' ? [audit] : [])],
+    additionalMiddleware: [
+      ...(method === 'get'
+        ? generateDefaultRecommendationGetMiddleware(additionalMiddleware)
+        : generateDefaultRecommendationPostMiddleware(additionalMiddleware)),
+    ],
+  }
+}

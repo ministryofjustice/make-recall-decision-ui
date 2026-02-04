@@ -1,7 +1,5 @@
 import { RouteDefinition } from '../standardRouter'
-import audit from '../../controllers/audit'
 import caseSummaryController from '../../controllers/caseSummary/caseSummaryController'
-import customizeMessages from '../../controllers/customizeMessages'
 import countersignConfirmationController from '../../controllers/recommendation/countersignConfirmationController'
 import countersigningTelephoneController from '../../controllers/recommendation/countersigningTelephoneController'
 import managerCountersignatureController from '../../controllers/recommendation/managerCountersignatureController'
@@ -16,18 +14,10 @@ import spoRecordDeleteRationaleController from '../../controllers/recommendation
 import spoSeniorManagerEndorsementController from '../../controllers/recommendation/spoSeniorManagerEndorsementController'
 import spoTaskListConsiderRecallController from '../../controllers/recommendation/spoTaskListConsiderRecallController'
 import spoWhyNoRecallController from '../../controllers/recommendation/spoWhyNoRecallController'
-import retrieveRecommendation from '../../controllers/retrieveRecommendation'
-import retrieveStatuses from '../../controllers/retrieveStatuses'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { and, not, or, statusIsActive } from '../../middleware/check'
-import { guardAgainstModifyingClosedRecommendation } from '../../middleware/guardAgainstModifyingClosedRecommendation'
-import { parseRecommendationUrl } from '../../middleware/parseRecommendationUrl'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import {
-  defaultRecommendationGetMiddleware,
-  defaultRecommendationPostMiddleware,
-  recommendationPrefix,
-} from '../recommendations'
+import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
 import { spoPaths } from '../paths/spo.paths'
 
 const roles = {
@@ -38,120 +28,78 @@ const roles = {
  * This section contains the route for the Senior Probation Officer during the SPO Rationale journey.
  */
 const spoRationaleMiddleware = [recommendationStatusCheck(statusIsActive(STATUSES.SPO_CONSIDER_RECALL))]
+const spoRouteGetTemplate = createRecommendationRouteTemplate('get', spoRationaleMiddleware, roles)
+const spoRoutePostTemplate = createRecommendationRouteTemplate('post', spoRationaleMiddleware, roles)
 
 const spoRationaleRoutes: RouteDefinition[] = [
   {
-    path: `${recommendationPrefix}/${spoPaths.spoTaskListConsiderRecall}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoTaskListConsiderRecall}`,
     handler: spoTaskListConsiderRecallController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.reviewCase}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.reviewCase}`,
     handler: caseSummaryController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.reviewCase}`,
-    method: 'post',
+    ...spoRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.reviewCase}`,
     handler: caseSummaryController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.reviewPractitionersConcerns}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.reviewPractitionersConcerns}`,
     handler: reviewPractitionersConcernsController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.reviewPractitionersConcerns}`,
-    method: 'post',
+    ...spoRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.reviewPractitionersConcerns}`,
     handler: reviewPractitionersConcernsController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoRationale}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoRationale}`,
     handler: spoRecallRationaleController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoRationale}`,
-    method: 'post',
+    ...spoRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoRationale}`,
     handler: spoRecallRationaleController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoWhyNoRecall}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoWhyNoRecall}`,
     handler: spoWhyNoRecallController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoWhyNoRecall}`,
-    method: 'post',
+    ...spoRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoWhyNoRecall}`,
     handler: spoWhyNoRecallController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoSeniorManagerEndorsement}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoSeniorManagerEndorsement}`,
     handler: spoSeniorManagerEndorsementController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoRecordDecision}`,
-    method: 'get',
+    ...spoRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoRecordDecision}`,
     handler: spoRecordDecisionController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoRecordDecision}`,
-    method: 'post',
+    ...spoRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoRecordDecision}`,
     handler: spoRecordDecisionController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoRationaleMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoRationaleConfirmation}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoRationaleConfirmation}`,
     handler: spoRationaleConfirmationController.get,
-    roles,
-    // This one is a particularly strange route as it's actively working against
-    // a lot of the other checks for recommendations, which previously wasn't obvious
-    additionalMiddleware: [
-      retrieveStatuses,
-      retrieveRecommendation,
-      recommendationStatusCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE)),
-      parseRecommendationUrl,
-      guardAgainstModifyingClosedRecommendation,
-      customizeMessages,
-    ],
-    afterMiddleware: [audit],
   },
 ]
 
@@ -161,30 +109,30 @@ const spoRationaleRoutes: RouteDefinition[] = [
  */
 const spoCounterSigningCheckRoutes: RouteDefinition[] = [
   {
-    path: `${recommendationPrefix}/${spoPaths.rationaleCheck}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [
+        recommendationStatusCheck(
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+        ),
+      ],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.rationaleCheck}`,
     handler: rationaleCheckController.get,
-    roles,
-    additionalMiddleware: [
-      ...defaultRecommendationGetMiddleware,
-      recommendationStatusCheck(
-        and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
-      ),
-    ],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.rationaleCheck}`,
-    method: 'post',
+    ...createRecommendationRouteTemplate(
+      'post',
+      [
+        recommendationStatusCheck(
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+        ),
+      ],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.rationaleCheck}`,
     handler: rationaleCheckController.post,
-    roles,
-    additionalMiddleware: [
-      ...defaultRecommendationPostMiddleware,
-      recommendationStatusCheck(
-        and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
-      ),
-    ],
-    afterMiddleware: [audit],
   },
 ]
 
@@ -197,75 +145,64 @@ const spoCounterSigningMiddleware = [
   ),
 ]
 
+const spoCountersigingRouteGetTemplate = createRecommendationRouteTemplate('get', spoCounterSigningMiddleware, roles)
+const spoCountersigingRoutePostTemplate = createRecommendationRouteTemplate('post', spoCounterSigningMiddleware, roles)
+
 const spoCounterSigningRoutes: RouteDefinition[] = [
   {
-    path: `${recommendationPrefix}/${spoPaths.countersigningTelephone}`,
-    method: 'get',
+    ...spoCountersigingRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.countersigningTelephone}`,
     handler: countersigningTelephoneController.get,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoCounterSigningMiddleware],
-    roles,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.countersigningTelephone}`,
-    method: 'post',
+    ...spoCountersigingRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.countersigningTelephone}`,
     handler: countersigningTelephoneController.post,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoCounterSigningMiddleware],
-    roles,
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoCountersignature}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [
+        recommendationStatusCheck(
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+        ),
+      ],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoCountersignature}`,
     handler: managerCountersignatureController.get,
-    roles,
-    additionalMiddleware: [
-      ...defaultRecommendationGetMiddleware,
-      recommendationStatusCheck(
-        and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
-      ),
-    ],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoCountersignature}`,
-    method: 'post',
+    ...spoCountersigingRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoCountersignature}`,
     handler: managerCountersignatureController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoCounterSigningMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.acoCountersignature}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [
+        recommendationStatusCheck(
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
+        ),
+      ],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.acoCountersignature}`,
     handler: managerCountersignatureController.get,
-    roles,
-    additionalMiddleware: [
-      ...defaultRecommendationGetMiddleware,
-      recommendationStatusCheck(
-        and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
-      ),
-    ],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.acoCountersignature}`,
-    method: 'post',
+    ...spoCountersigingRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.acoCountersignature}`,
     handler: managerCountersignatureController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoCounterSigningMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.countersignConfirmation}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED)))],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.countersignConfirmation}`,
     handler: countersignConfirmationController.get,
-    roles,
-    additionalMiddleware: [
-      ...defaultRecommendationGetMiddleware,
-      recommendationStatusCheck(or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED))),
-    ],
-    afterMiddleware: [audit],
   },
 ]
 
@@ -273,54 +210,42 @@ const spoCounterSigningRoutes: RouteDefinition[] = [
  * This section contains the route for the Senior Probation Officer during the SPO Delete Recommendation
  * Rationale journey.
  */
-
 const spoDeleteMiddleware = [
   recommendationStatusCheck(or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))),
 ]
 
+const spoDeleteRouteGetTemplate = createRecommendationRouteTemplate('get', spoDeleteMiddleware, roles)
+const spoDeleteRoutePostTemplate = createRecommendationRouteTemplate('post', spoDeleteMiddleware, roles)
+
 const spoDeleteRoutes: RouteDefinition[] = [
   {
-    path: `${recommendationPrefix}/${spoPaths.spoDeleteRecommendationRationale}`,
-    method: 'get',
+    ...spoDeleteRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoDeleteRecommendationRationale}`,
     handler: spoDeleteRecommendationController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoDeleteMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoDeleteRecommendationRationale}`,
-    method: 'post',
+    ...spoDeleteRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoDeleteRecommendationRationale}`,
     handler: spoDeleteRecommendationController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoDeleteMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.recordDeleteRationale}`,
-    method: 'get',
+    ...spoDeleteRouteGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.recordDeleteRationale}`,
     handler: spoRecordDeleteRationaleController.get,
-    roles,
-    additionalMiddleware: [...defaultRecommendationGetMiddleware, ...spoDeleteMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.recordDeleteRationale}`,
-    method: 'post',
+    ...spoDeleteRoutePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.recordDeleteRationale}`,
     handler: spoRecordDeleteRationaleController.post,
-    roles,
-    additionalMiddleware: [...defaultRecommendationPostMiddleware, ...spoDeleteMiddleware],
-    afterMiddleware: [audit],
   },
   {
-    path: `${recommendationPrefix}/${spoPaths.spoDeleteConfirmation}`,
-    method: 'get',
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(or(statusIsActive(STATUSES.REC_DELETED), statusIsActive(STATUSES.REC_CLOSED)))],
+      roles
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoDeleteConfirmation}`,
     handler: spoDeleteConfirmationController.get,
-    roles,
-    additionalMiddleware: [
-      ...defaultRecommendationGetMiddleware,
-      recommendationStatusCheck(or(statusIsActive(STATUSES.REC_DELETED), statusIsActive(STATUSES.REC_CLOSED))),
-    ],
-    afterMiddleware: [audit],
   },
 ]
 
