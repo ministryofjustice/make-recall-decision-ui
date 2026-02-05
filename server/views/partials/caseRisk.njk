@@ -1,4 +1,5 @@
 {% from "components/predictor-scale/macro.njk" import predictorScale %}
+{% from "components/predictor-v2-timeline/macro.njk" import predictorV2Timeline %}
 
 <h1 class='govuk-heading-m govuk-visually-hidden'>
   Risk<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span>
@@ -318,7 +319,6 @@
     </div>
 
     <div class="govuk-body predictor-timeline__heading">
-      <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Scores history</h2>
       {% if caseSummary.predictorScores.error and caseSummary.roshHistory.error %}
         <p class='govuk-body' data-qa='timeline-missing'>
           RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.
@@ -332,18 +332,10 @@
           Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.
         </p>
       {% endif %}
-
-      {% if caseSummary.timeline.length %}
-        <div>
-          <button type='button' data-js="predictor-timeline__toggle-all" class="reset-button link-button govuk-link">
-            Open all<span class='govuk-visually-hidden'> scores in timeline</span>
-          </button>
-        </div>
-      {% endif %}
     </div>
 
     {% if caseSummary.timeline.length %}
-      {{ predictorTimeline(caseSummary.timeline, pageUrlBase) }}
+      {{ predictorV2Timeline(caseSummary.timeline, pageUrlBase) }}
     {% endif %}
   </div>
 </div>
