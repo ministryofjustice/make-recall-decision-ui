@@ -1,37 +1,17 @@
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitExistingOffenderController from './sentenceToCommitExistingOffenderController'
+import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('load - with existing ppud user and selected sentence', async () => {
+    const recommendation = RecommendationResponseGenerator.generate()
+    const selectedPpudSentence = recommendation.ppudOffender.sentences[0]
+    recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
     const res = mockRes({
       locals: {
-        recommendation: {
-          bookRecallToPpud: {
-            ppudSentenceId: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                offenderChargeId: 3934369,
-              },
-            ],
-            selected: 3934369,
-          },
-          ppudOffender: {
-            sentences: [
-              {
-                id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-                releaseDate: '2024-01-01',
-              },
-              {
-                id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313238393334G1375H1387',
-                releaseDate: '2028-01-01',
-              },
-            ],
-          },
-        },
+        recommendation,
       },
     })
     const next = mockNext()
@@ -39,13 +19,11 @@ describe('get', () => {
     await sentenceToCommitExistingOffenderController.get(mockReq(), res, next)
 
     expect(res.locals.page.id).toEqual('sentenceToCommitExistingOffender')
-    expect(res.locals.offence).toEqual({
-      offenderChargeId: 3934369,
-    })
-    expect(res.locals.ppudSentence).toEqual({
-      id: '4F6666656E64657249643D3136323931342653656E74656E636549643D313231303334G1366H1380',
-      releaseDate: '2024-01-01',
-    })
+    const selectedIndexOffence = recommendation.nomisIndexOffence.allOptions.find(
+      offence => offence.offenderChargeId === recommendation.nomisIndexOffence.selected
+    )
+    expect(res.locals.offence).toEqual(selectedIndexOffence)
+    expect(res.locals.ppudSentence).toEqual(selectedPpudSentence)
     expect(res.locals.errorMessage).toBeUndefined()
     expect(res.render).toHaveBeenCalledWith(
       `pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`

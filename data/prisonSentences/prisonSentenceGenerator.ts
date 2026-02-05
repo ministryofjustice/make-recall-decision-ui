@@ -43,7 +43,7 @@ const generateInternal = (options?: PrisonSentenceOptions): PrisonSentence => ({
   sentenceTypeDescription: resolveSentenceType(options?.sentenceType),
   sentenceDate: faker.date.past().toDateString(),
   sentenceStartDate: faker.date.past().toDateString(),
-  sentenceEndDate: faker.date.future().toDateString(),
+  sentenceSequenceExpiryDate: faker.date.future().toDateString(),
   terms: TermGenerator.generateSeries(options?.terms ?? [{ chronos: 'all' }]),
   offences: SentenceOffenceGenerator.generateSeries(options?.offences ?? [{}]),
   releaseDate: faker.date.future().toDateString(),

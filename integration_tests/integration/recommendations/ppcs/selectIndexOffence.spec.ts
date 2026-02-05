@@ -117,7 +117,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
             { key: 'Court', value: expectedSentence.courtDescription },
             { key: 'Date of sentence', value: expectedSentence.sentenceDate },
             { key: 'Start date', value: expectedSentence.sentenceStartDate },
-            { key: 'Sentence expiry date', value: expectedSentence.sentenceEndDate },
+            { key: 'Latest sentence expiry date', value: expectedSentence.sentenceSequenceExpiryDate },
             { key: 'Sentence length', value: expectedTermText },
           ],
         })
@@ -170,7 +170,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
             { key: 'Court', value: sentence.courtDescription },
             { key: 'Date of sentence', value: sentence.sentenceDate },
             { key: 'Start date', value: sentence.sentenceStartDate },
-            { key: 'Sentence expiry date', value: sentence.sentenceEndDate },
+            { key: 'Latest sentence expiry date', value: sentence.sentenceSequenceExpiryDate },
             ...termsRows,
           ],
         })

@@ -47,7 +47,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     court: sentence.courtDescription,
     dateOfSentence: sentence.sentenceDate,
     startDate: sentence.sentenceStartDate,
-    sentenceExpiryDate: sentence.sentenceEndDate,
+    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceLength:
       sentence.terms && sentence.terms.length < 2
         ? [{ key: 'Sentence length', value: sentence.terms.at(0) ?? {} }]

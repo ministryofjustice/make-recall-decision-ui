@@ -2527,7 +2527,7 @@ context('Make a recommendation', () => {
                 offenceStatute: 'SA96',
                 offenderChargeId: 3934369,
                 sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
+                sentenceSequenceExpiryDate: '3022-11-15',
                 sentenceStartDate: '2023-11-16',
                 sentenceTypeDescription: 'Adult Mandatory Life',
                 terms: [],
@@ -2557,7 +2557,7 @@ context('Make a recommendation', () => {
 
       cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
       cy.getText('sentenceStartDate').should('contain', '16 November 2023')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
+      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
     })
 
     it('select determinate ppud sentence', () => {
@@ -2590,7 +2590,7 @@ context('Make a recommendation', () => {
                 offenceDescription: 'Attack / assault / batter a member of the public',
                 offenderChargeId: 3934369,
                 sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
+                sentenceSequenceExpiryDate: '3022-11-15',
               },
             ],
             selected: 3934369,
@@ -2607,7 +2607,7 @@ context('Make a recommendation', () => {
 
       cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
       cy.getText('sentenceDate').should('contain', '16 November 2023')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
+      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
 
       cy.getText('1-indexOffence').should('contain', 'some offence')
       cy.getText('1-dateOfSentence').should('contain', '12 June 2003')
@@ -2634,7 +2634,7 @@ context('Make a recommendation', () => {
                 offenderChargeId: 3934369,
                 offenceDate: '2023-11-17',
                 sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
+                sentenceSequenceExpiryDate: '3022-11-15',
                 releaseDate: '2025-01-01',
                 licenceExpiryDate: '2025-01-02',
                 releasingPrison: 'releasing prison',
@@ -2676,7 +2676,7 @@ context('Make a recommendation', () => {
       cy.getText('courtDescription').should('contain', 'court description')
       cy.getText('sentenceDate').should('contain', '16 November 2023')
       cy.getText('licenceExpiryDate').should('contain', '2 January 2025')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3022')
+      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
 
       cy.getText('1-termType').should('contain', 'Custodial term')
       cy.getText('1-term').should('contain', '4 years')
@@ -2698,7 +2698,7 @@ context('Make a recommendation', () => {
                 offenderChargeId: 3934369,
                 offenceDate: '2023-11-17',
                 sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
+                sentenceSequenceExpiryDate: '3022-11-15',
                 releaseDate: '2025-01-01',
                 licenceExpiryDate: '2025-01-02',
                 releasingPrison: 'releasing prison',
@@ -2775,7 +2775,7 @@ context('Make a recommendation', () => {
                 offenderChargeId: 3934369,
                 offenceDate: '2023-11-17',
                 sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
+                sentenceSequenceExpiryDate: '3022-11-15',
                 releaseDate: '2025-01-01',
                 licenceExpiryDate: '2025-01-02',
                 releasingPrison: 'releasing prison',
@@ -2802,6 +2802,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/sentence-to-commit-existing-offender`)
       cy.pageHeading().should('contain', 'Double check your booking')
+      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
     })
 
     it('select indeterminate ppud sentence', () => {
@@ -2981,34 +2982,7 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          prisonOffender: {},
           bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
         },
       })
       cy.task('getStatuses', {
@@ -3024,51 +2998,8 @@ context('Make a recommendation', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          prisonOffender: {},
           bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-          ppudOffender: {
-            id: '4F6666656E64657249643D3136323931342652656C6561736549643D313135333230G1329H1302',
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Determinate',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-            ],
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
+          ppudOffender: {},
         },
       })
       cy.task('getStatuses', {
@@ -3113,7 +3044,7 @@ context('Make a recommendation', () => {
                 offenderChargeId: 3934369,
                 offenceDate: '2023-11-17',
                 sentenceDate: '2023-11-16',
-                sentenceEndDate: '3022-11-15',
+                sentenceSequenceExpiryDate: '3022-11-15',
                 releaseDate: '2025-01-01',
                 licenceExpiryDate: '2025-01-02',
                 releasingPrison: 'releasing prison',
@@ -3143,6 +3074,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/booking-summary`)
       cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
+      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
     })
 
     it('supporting documents', () => {

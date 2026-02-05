@@ -40,7 +40,7 @@
                                 { key: "Court", value: offence.court },
                                 { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.dateOfSentence })) },
                                 { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.startDate })) },
-                                { key: "Sentence expiry date", value: hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.endDate })) }
+                                { key: "Latest sentence expiry date", value: hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate })) }
                             ] %}
                             {% for term in offence.terms %}
                                 {% set sentenceRows = (sentenceRows.push({ key: term.key, value: hyphenForBlank(formatTerm(term.value)) }), sentenceRows) %}
@@ -95,7 +95,7 @@
                     </form>
                 </div>
 
-                
+
                 <div class="govuk-grid-column-one-half">
                     <div id="part-A-details">
                         <h2 class='govuk-heading-m'>Part A</h2>
@@ -117,7 +117,7 @@
                             rows: offenceRows
                         })}}
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
