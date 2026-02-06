@@ -112,6 +112,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_TIMEOUT_RESPONSE', 5000))),
     },
+    probationApi: {
+      url: get(
+        'COMPONENT_API_URL',
+        'https://probation-frontend-components-dev.hmpps.service.justice.gov.uk',
+        requiredInProduction
+      ),
+      healthPath: '/health/ping',
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   maintenancePage: {

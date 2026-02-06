@@ -55,6 +55,9 @@
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  {% for css in feComponents.cssIncludes %}
+    <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
+  {% endfor %}
   <script src="/assets/applicationinsights-web.min.js"></script>
   <script src="/assets/applicationinsights.js"></script>
   <script nonce="{{ cspNonce }}">
@@ -64,26 +67,20 @@
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script src="/assets/js/vStyleDropdownArrow.js"></script>
   <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
+  {% for js in feComponents.jsIncludes %}
+    <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
+  {% endfor %}
   {% block headEnd %}{% endblock %}
 {% endblock %}
 {% block pageTitle %}
   {{ pageTitle | default(applicationName) }}
 {% endblock %}
 {% block header %}
-  {% include "./header.njk" %}
+  {{ feComponents.header | safe }}
   {% include "./phaseBanner.njk" %}
 {% endblock %}
 {% block footer %}
-  {{ govukFooter({
-        meta: {
-          items: [
-            {
-              href: "/accessibility",
-              text: "Accessibility"
-            }
-          ]
-        }
-      }) }}
+  {{ feComponents.footer | safe }}
 {% endblock %}
 {% block bodyEnd %}
   {# Run JavaScript at end of the
