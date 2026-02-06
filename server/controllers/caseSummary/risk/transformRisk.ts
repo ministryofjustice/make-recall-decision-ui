@@ -102,6 +102,77 @@ const buildV2Predictor = (
   }
 }
 
+export type TimelinePredictor = {
+  level: string
+  type: string
+  score?: string
+  staticOrDynamic?: string
+}
+
+export type TimelineItem = {
+  date: string
+  scores: Record<string, TimelinePredictor>
+}
+
+const V1_PREDICTOR_LABELS: Record<string, string> = {
+  OGRS: 'OGRS3',
+  OSPDC: 'OSP-DC',
+  OSPIIC: 'OSP-IIC',
+}
+
+const V2_PREDICTOR_LABELS: Record<string, string> = {
+  allReoffendingPredictor: 'All Reoffending Predictor',
+  violentReoffendingPredictor: 'Violent Reoffending Predictor',
+  directContactSexualReoffendingPredictor: 'Direct Contact – Sexual Reoffending Predictor',
+  indirectImageContactSexualReoffendingPredictor: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+  seriousViolentReoffendingPredictor: 'Serious Violent Reoffending Predictor',
+  combinedSeriousReoffendingPredictor: 'Combined Serious Reoffending Predictor',
+}
+
+export const normaliseTimelineScores = (scores: Record<string, unknown>): Record<string, TimelinePredictor> => {
+  const normalised: Record<string, TimelinePredictor> = {}
+
+  Object.entries(scores).forEach(([key, value]) => {
+    if (!value) return
+
+    // V1 predictors
+    if (['RSR', 'OSPC', 'OSPI', 'OSPDC', 'OSPIIC', 'OGRS', 'OGP', 'OVP', 'SNSV'].includes(key)) {
+      const v1 = value as {
+        level: string
+        type: string
+        score?: string | number
+        twoYears?: string | number
+      }
+
+      normalised[key] = {
+        level: v1.level,
+        type: V1_PREDICTOR_LABELS[key] ?? v1.type,
+        score: key === 'OGRS' || key === 'OGP' || key === 'OVP' ? v1.twoYears?.toString() : v1.score?.toString(),
+      }
+
+      return
+    }
+
+    // V2 predictors
+    if (key in V2_PREDICTOR_LABELS) {
+      const v2 = value as {
+        band: string
+        score?: number
+        staticOrDynamic?: string
+      }
+
+      normalised[key] = {
+        level: v2.band,
+        type: V2_PREDICTOR_LABELS[key],
+        score: v2.score?.toString(),
+        staticOrDynamic: v2.staticOrDynamic,
+      }
+    }
+  })
+
+  return normalised
+}
+
 export const transformRisk = (caseSummary: RiskResponse) => {
   let timeline: unknown[] = []
 
@@ -110,6 +181,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
       .filter(item => ['RHRH', 'RVHR'].includes(item.type.code))
       .map(({ startDate, notes, type }) => ({
         date: startDate,
+        formattedDate: formatDateTimeFromIsoString({ isoDate: startDate }),
         notes,
         level: type.code === 'RHRH' ? 'HIGH' : 'VERY_HIGH',
         type: 'RoSH',
@@ -117,7 +189,14 @@ export const transformRisk = (caseSummary: RiskResponse) => {
   }
 
   if (!caseSummary.predictorScores?.error) {
-    timeline = [...timeline, ...(caseSummary.predictorScores?.historical ?? [])]
+    timeline = [
+      ...timeline,
+      ...(caseSummary.predictorScores?.historical ?? []).map(item => ({
+        date: item.date,
+        formattedDate: formatDateTimeFromIsoString({ isoDate: item.date }),
+        scores: normaliseTimelineScores(item.scores),
+      })),
+    ]
   }
 
   if (timeline.length) {

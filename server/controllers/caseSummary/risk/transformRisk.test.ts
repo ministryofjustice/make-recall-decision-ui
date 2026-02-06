@@ -1,4 +1,4 @@
-import { transformRisk } from './transformRisk'
+import { normaliseTimelineScores, transformRisk } from './transformRisk'
 import { RiskResponse } from '../../../@types/make-recall-decision-api'
 import {
   FourBandRiskScoreBand,
@@ -50,16 +50,19 @@ describe('transformRisk', () => {
       {
         type: 'RoSH',
         date: '2021-06-05',
+        formattedDate: '5 June 2021',
         level: 'VERY_HIGH',
         notes: null,
       },
       {
         date: '2021-06-04',
+        formattedDate: '4 June 2021',
         scores: {},
       },
       {
         type: 'RoSH',
         date: '2021-06-03',
+        formattedDate: '3 June 2021',
         level: 'HIGH',
         notes: 'Registering Staff ID re-assigned in TR Migration',
       },
@@ -72,6 +75,7 @@ describe('transformRisk', () => {
     expect(transformed.timeline).toEqual([
       {
         date: '2021-06-04',
+        formattedDate: '4 June 2021',
         scores: {},
       },
     ])
@@ -82,6 +86,7 @@ describe('transformRisk', () => {
     expect(transformed.timeline).toEqual([
       {
         date: '2021-06-04',
+        formattedDate: '4 June 2021',
         scores: {},
       },
     ])
@@ -93,12 +98,14 @@ describe('transformRisk', () => {
     expect(transformed.timeline).toEqual([
       {
         date: '2021-06-05',
+        formattedDate: '5 June 2021',
         level: 'VERY_HIGH',
         notes: null,
         type: 'RoSH',
       },
       {
         date: '2021-06-03',
+        formattedDate: '3 June 2021',
         level: 'HIGH',
         notes: 'Registering Staff ID re-assigned in TR Migration',
         type: 'RoSH',
@@ -106,6 +113,7 @@ describe('transformRisk', () => {
     ])
   })
 })
+
 describe('transformRisk predictorScales', () => {
   const baseDate = '2026-01-01T00:00:00.000Z'
 
@@ -429,5 +437,114 @@ describe('transformRisk predictorScales', () => {
 
     expect(predictorScales?.rsr?.level).toBe('NOT_APPLICABLE')
     expect(predictorScales?.allReoffending?.level).toBe('NOT_APPLICABLE')
+  })
+})
+
+describe('normaliseTimelineScores', () => {
+  it('normalises V1 predictors and uses correct score fields', () => {
+    const input = {
+      OGRS: { level: 'HIGH', type: 'OGRS', twoYears: 4.5 },
+      OSPDC: { level: 'MEDIUM', type: 'OSP/DC', score: 3 },
+      RSR: { level: 'LOW', type: 'RSR', score: 1 },
+    }
+
+    const result = normaliseTimelineScores(input)
+
+    expect(result).toEqual({
+      OGRS: {
+        level: 'HIGH',
+        type: 'OGRS3',
+        score: '4.5',
+      },
+      OSPDC: {
+        level: 'MEDIUM',
+        type: 'OSP-DC',
+        score: '3',
+      },
+      RSR: {
+        level: 'LOW',
+        type: 'RSR',
+        score: '1',
+      },
+    })
+  })
+
+  it('normalises V2 predictors with static/dynamic', () => {
+    const input = {
+      allReoffendingPredictor: {
+        band: 'HIGH',
+        score: 6,
+        staticOrDynamic: 'STATIC',
+      },
+      violentReoffendingPredictor: {
+        band: 'MEDIUM',
+        score: 3,
+        staticOrDynamic: 'DYNAMIC',
+      },
+    }
+
+    const result = normaliseTimelineScores(input)
+
+    expect(result).toEqual({
+      allReoffendingPredictor: {
+        level: 'HIGH',
+        type: 'All Reoffending Predictor',
+        score: '6',
+        staticOrDynamic: 'STATIC',
+      },
+      violentReoffendingPredictor: {
+        level: 'MEDIUM',
+        type: 'Violent Reoffending Predictor',
+        score: '3',
+        staticOrDynamic: 'DYNAMIC',
+      },
+    })
+  })
+
+  it('ignores unknown predictor keys', () => {
+    const input = {
+      UNKNOWN: {
+        level: 'HIGH',
+        score: 5,
+      },
+    }
+
+    const result = normaliseTimelineScores(input)
+
+    expect(result).toEqual({})
+  })
+
+  it('skips null or undefined values', () => {
+    const input: Record<string, string> = {
+      OGRS: null,
+      allReoffendingPredictor: undefined,
+    }
+
+    const result = normaliseTimelineScores(input)
+
+    expect(result).toEqual({})
+  })
+
+  it('handles missing scores safely', () => {
+    const input = {
+      OGRS: { level: 'HIGH', type: 'OGRS' }, // no twoYears
+      allReoffendingPredictor: { band: 'LOW' }, // no score
+    }
+
+    const result = normaliseTimelineScores(input)
+
+    expect(result).toEqual({
+      OGRS: {
+        level: 'HIGH',
+        type: 'OGRS3',
+        score: undefined,
+      },
+      allReoffendingPredictor: {
+        level: 'LOW',
+        type: 'All Reoffending Predictor',
+        score: undefined,
+        staticOrDynamic: undefined,
+      },
+    })
   })
 })

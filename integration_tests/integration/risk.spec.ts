@@ -303,6 +303,7 @@ context('Risk page', () => {
         statusCode: 200,
         response: getCaseRiskResponse,
       })
+
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
       // RoSH history
@@ -319,35 +320,109 @@ context('Risk page', () => {
         'contain',
         'Registering Staff ID re-assigned in TR Migration'
       )
+      //  Step 0: Open all hidden sections
+      cy.get('#predictor-timeline__toggle-all').click()
 
-      // predictor score history
-      cy.clickButton('Open all scores in timeline')
-      let opts = { parent: '[data-qa="timeline-item-2"]' }
+      //  Timeline Item 1: 17 October 2022 (RoSH, always visible)
+      let opts = { parent: '[data-qa="timeline-item-1"]' }
+      cy.getElement('17 October 2022', opts).should('be.visible')
+      cy.get(opts.parent).contains('span.predictor-timeline-item__level', 'RoSH').should('be.visible')
+      cy.get(opts.parent).contains('span.predictor-timeline-item__level', 'VERY HIGH').should('be.visible')
+      cy.get(opts.parent).contains('from NDelius', { matchCase: false }).should('be.visible')
+      cy.get(opts.parent).contains('View contacts from 17 October 2022').should('be.visible')
+
+      //  Timeline Item 2: 13 July 2021 (Legacy + new predictors)
+      opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.getElement('13 July 2021', opts).should('be.visible')
-      cy.getElement('RSR HIGH 18', opts).should('be.visible')
-      cy.getElement('OSP/DC LOW', opts).should('be.visible')
-      cy.getElement('OSP/IIC MEDIUM', opts).should('be.visible')
-      cy.getElement('OGRS 1YR MEDIUM 10', opts).should('be.visible')
-      cy.getElement('OGRS 2YR MEDIUM 20', opts).should('be.visible')
-      cy.getElement('OGP 1YR HIGH 56', opts).should('be.visible')
-      cy.getElement('OGP 2YR HIGH 63', opts).should('be.visible')
-      cy.getElement('OVP 1YR VERY HIGH 34', opts).should('be.visible')
-      cy.getElement('OVP 2YR VERY HIGH 64', opts).should('be.visible')
 
+      // RSR
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'RSR').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'HIGH').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '18%').should('be.visible')
+
+      // OSP-DC
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP-DC').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'LOW').should('be.visible')
+
+      // OSP-IIC
+      cy.get(opts.parent)
+        .contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP-IIC')
+        .should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
+
+      // OGRS3
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OGRS3').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '20%').should('be.visible')
+
+      // OGP
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OGP').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'HIGH').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '63%').should('be.visible')
+
+      // OVP
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OVP').should('be.visible')
+      cy.get(opts.parent)
+        .contains('span.legacy-predictor-timeline-item__type_and_level', 'VERY HIGH')
+        .should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '64%').should('be.visible')
+
+      //  Timeline Item 3: 23 June 2021 (RoSH, always visible)
+      opts = { parent: '[data-qa="timeline-item-3"]' }
+      cy.getElement('23 June 2021', opts).should('be.visible')
+      cy.get(opts.parent).contains('span.predictor-timeline-item__level', 'RoSH').should('be.visible')
+      cy.get(opts.parent).contains('span.predictor-timeline-item__level', 'HIGH').should('be.visible')
+      cy.get(opts.parent).contains('from NDelius', { matchCase: false }).should('be.visible')
+      cy.get(opts.parent).contains('View contacts from 23 June 2021').should('be.visible')
+      cy.get(opts.parent).contains('Registering Staff ID re-assigned in TR Migration').should('be.visible')
+
+      //  Timeline Item 4: 4 May 2019 (Legacy + new predictors)
       opts = { parent: '[data-qa="timeline-item-4"]' }
       cy.getElement('4 May 2019', opts).should('be.visible')
-      cy.getElement('RSR MEDIUM 12', opts).should('be.visible')
-      cy.getElement('OSP/C MEDIUM', opts).should('be.visible')
-      cy.getElement('OSP/I LOW', opts).should('be.visible')
-      cy.getElement('OGRS 1YR HIGH 45', opts).should('be.visible')
-      cy.getElement('OGRS 2YR HIGH 55', opts).should('be.visible')
-      cy.getElement('OGP 1YR VERY HIGH 77', opts).should('be.visible')
-      cy.getElement('OGP 2YR VERY HIGH 85', opts).should('be.visible')
-      // scores missing a level
-      cy.getElement('OVP 1YR 82', opts).should('be.visible')
-      cy.getElement('OVP 2YR 91', opts).should('be.visible')
-      // close button
-      cy.clickButton('Close scores for 13 July 2021')
+
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'RSR').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '12%').should('be.visible')
+
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP/C').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
+
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP/I').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'LOW').should('be.visible')
+
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OGRS3').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'HIGH').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '55%').should('be.visible')
+
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OGP').should('be.visible')
+      cy.get(opts.parent)
+        .contains('span.legacy-predictor-timeline-item__type_and_level', 'VERY HIGH')
+        .should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '85%').should('be.visible')
+
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OVP').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '91%').should('be.visible')
+
+      cy.get('.predictor-timeline__item')
+        .contains('.predictor-timeline__byline', '23 February 2026 at 09:00')
+        .parents('.predictor-timeline__item')
+        .as('item2026')
+
+      cy.get('@item2026').contains('23 February 2026 at 09:00').should('be.visible')
+
+      cy.get('@item2026').find('div.govuk-warning-text.predictor-timeline__warning').should('be.visible')
+
+      cy.get('@item2026').find('span.govuk-warning-text__icon').should('be.visible').and('contain.text', '!')
+
+      cy.get('@item2026')
+        .find('strong.govuk-warning-text__text')
+        .should('be.visible')
+        .and('contain.text', 'All assessments started after this date use updated risk predictor tools')
+
+      cy.get('@item2026')
+        .find('details.govuk-details.predictor-timeline__details summary span.govuk-details__summary-text')
+        .should('be.visible')
+        .and('contain.text', 'How the risk predictor tools have changed')
     })
 
     it('errors fetching both predictor and RoSH history', () => {
@@ -428,7 +503,7 @@ context('Risk page', () => {
       })
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       const opts = { parent: '[data-qa="timeline-item-2"]' }
-      cy.clickButton('Open all scores in timeline')
+      cy.get('#predictor-timeline__toggle-all').click()
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
       cy.getElement('OSP/C LOW', opts).should('be.visible')
     })

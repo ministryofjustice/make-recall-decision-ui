@@ -1,0 +1,301 @@
+$very-high-score-colour: #942514;
+$very-high-score-colour--light: #ffac9f;
+$very-high-score-colour__text: #711a0d;
+$high-score-colour: #d4351c;
+$high-score-colour--light: #f6d7d2;
+$high-score-colour__text: #942514;
+$medium-score-colour: #f47738;
+$medium-score-colour--light: #f9e8bd;
+$medium-score-colour__text: #a34e00;
+$low-score-colour: #85994b;
+$low-score-colour--light: #dee9bd;
+$low-score-colour__text: #485b10;
+
+.predictor-timeline {
+  margin-bottom: govuk-spacing(4);
+  overflow: hidden;
+  position: relative;
+
+  &:before {
+    background-color: $govuk-brand-colour;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: govuk-spacing(2);
+    width: 5px;
+  }
+
+}
+
+.predictor-timeline--full {
+  margin-bottom: 0;
+  &:before {
+    height: calc(100% - 75px);
+  }
+}
+
+.predictor-timeline__item {
+  padding-bottom: govuk-spacing(6);
+  padding-left: govuk-spacing(4);
+  position: relative;
+
+  &:before {
+    background-color: $govuk-brand-colour;
+    content: "";
+    height: 5px;
+    left: 0;
+    position: absolute;
+    top: govuk-spacing(2);
+    width: 15px;
+  }
+
+}
+
+.predictor-timeline__title {
+  @include govuk-font($size: 19, $weight: bold);
+  display: inline;
+}
+
+.predictor-timeline__byline {
+  @include govuk-font($size: 19);
+  color: $govuk-text-colour;
+  display: inline;
+  margin: 0;
+}
+
+.predictor-timeline__date {
+  @include govuk-font($size: 16);
+  margin-top: govuk-spacing(1);
+  margin-bottom: 0;
+}
+
+.predictor-timeline__description {
+  @include govuk-font($size: 19);
+  margin-top: govuk-spacing(4);
+}
+
+.predictor-timeline-section--hidden {
+  visibility: hidden;
+  display: none;
+}
+
+.predictor-timeline__heading {
+  margin-bottom: 30px;
+}
+
+.predictor-timeline__warning {
+  margin-bottom: 10px !important;
+}
+
+.predictor-timeline__details {
+  margin-bottom: 0px !important;
+}
+
+@mixin predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
+  display: inline-flex;
+  flex-direction: column;
+  outline: 2px solid $primary-colour;
+  width: 259px;
+  margin-bottom: 5px;
+
+  & .predictor-timeline-item__type {
+    @include govuk-font(19, "bold");
+    color: govuk-colour("black");
+
+    padding: 10px 10px 2px 10px;
+  }
+
+  & .predictor-timeline-item__stats {
+    padding: 2px 10px 10px 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  & .predictor-timeline-item__level {
+    @include govuk-font(19, "bold");
+    color: $text-colour;
+
+    padding: 0px;
+
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  & .predictor-timeline-item__score {
+    @include govuk-font(19, "bold");
+    color: govuk-colour("black");
+
+    background-color: $secondary-colour;
+
+    padding: 2px 2px;
+
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+
+  }
+
+  & .predictor-timeline-item__static_or_dynamic {
+    @include govuk-font(19, "regular");
+    color: #282D30;
+
+    background-color: #E5E6E7;
+
+    padding: 2px 5px;
+
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  & .predictor-timeline-item__wrapped_static_or_dynamic {
+    margin-top: 3px;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.predictor-timeline-item--very-high {
+  @include predictor-timeline-item-base(
+                  $very-high-score-colour,
+                  $very-high-score-colour--light,
+                  $very-high-score-colour__text
+  );
+}
+
+.predictor-timeline-item--high {
+  @include predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+}
+
+.predictor-timeline-item--medium {
+  @include predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+}
+
+.predictor-timeline-item--low {
+  @include predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+}
+
+.predictor-timeline-link-btn {
+  @include govuk-font($size: 19);
+  text-decoration-thickness: max(3px,.1875rem,.12em);
+  text-underline-offset: 3px;
+  background: none;
+  border: none;
+  color: $govuk-link-colour;
+  padding: 0 !important;
+  text-decoration: underline;
+  cursor: pointer;
+  text-decoration-skip-ink: none;
+  text-decoration-skip: none
+}
+
+.predictor-timeline-link-btn:focus {
+  outline: 3px solid transparent;
+  background-color: $govuk-focus-colour;
+  box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-link-active-colour;
+  text-decoration: none;
+  color: $govuk-link-active-colour;
+}
+
+@mixin legacy-predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
+  display: inline-flex;
+  outline: 2px solid $primary-colour;
+  margin-bottom: 5px;
+
+  & .legacy-predictor-timeline-item__type_and_level {
+    @include govuk-font(19, "regular");
+    color: $text-colour;
+
+    padding: 2px 10px;
+  }
+
+  & .legacy-predictor-timeline-item__score {
+    @include govuk-font(19, "bold");
+    color: govuk-colour("black");
+
+    background-color: $secondary-colour;
+    border-left: 2px solid $primary-colour;
+
+    padding: 2px 2px;
+    align-content: center;
+  }
+
+  & .legacy-predictor-timeline-item__static_or_dynamic {
+    @include govuk-font(19, "regular");
+    color: #282D30;
+
+    background-color: #E5E6E7;
+    border-left: 2px solid $primary-colour;
+
+    padding: 2px 2px;
+    align-content: center;
+  }
+}
+
+.legacy-predictor-timeline-item--very-high {
+  @include legacy-predictor-timeline-item-base(
+                  $very-high-score-colour,
+                  $very-high-score-colour--light,
+                  $very-high-score-colour__text
+  );
+}
+
+.legacy-predictor-timeline-item--high {
+  @include legacy-predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+}
+
+.legacy-predictor-timeline-item--medium {
+  @include legacy-predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+}
+
+.legacy-predictor-timeline-item--low {
+  @include legacy-predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+}
+
+.predictor-timeline__description > .flex--align-center .predictor-timeline-item {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: auto;
+}
+
+.predictor-timeline__description > .flex.flex--align-center.govuk-\!-margin-bottom-2 {
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Alternative - target any flex container in RoSH timeline items */
+.predictor-timeline__item .flex {
+  border: none !important;
+  background: none !important;
+  outline: none !important;
+}
+
+.predictor-timeline__item .flex.flex--align-center {
+  display: block !important;
+}
+
+/* Make items inline and align at the same level */
+.predictor-timeline__description .predictor-timeline-item {
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.predictor-timeline__description .govuk-\!-padding-left-2 {
+  display: inline;
+  padding-left: 0 !important;
+  vertical-align: middle;
+}
+
+/* Add space between "RoSH" and "VERY HIGH" */
+.predictor-timeline__item .predictor-timeline-item__level strong {
+  margin-right: 0.25rem;
+}
