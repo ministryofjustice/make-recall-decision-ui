@@ -1,84 +1,99 @@
 /* eslint-disable */
-var openText = 'Open';
-var closeText = 'Close';
-var openAllText = 'Open all';
-var closeAllText = 'Close all';
+const allHidden = true;
 
-function attachToggleSection(button, section) {
-  if (!button || !section) return;
+const openText = 'Open';
+const closeText = 'Close';
+const openAllText = 'Open all';
+const closeAllText = 'Close all';
 
-  section.classList.add('predictor-timeline-section--hidden');
-  button.setAttribute('data-section-is-hidden', 'true');
-  button.innerText = openText;
+const toggleAllButton = document.getElementById('predictor-timeline__toggle-all');
+const individualToggleButtons = document.getElementsByClassName('predictor-timeline__toggle-section');
+const timelineSections = document.getElementsByClassName('predictor-timeline-section');
+
+function attachListenerForToggleSectionButton(button, section, initiallyHidden) {
+  button.setAttribute('aria-expanded', !initiallyHidden);
 
   button.onclick = function (e) {
     e.preventDefault();
-    var isHidden = section.classList.contains('predictor-timeline-section--hidden');
 
-    if (isHidden) {
-      section.classList.remove('predictor-timeline-section--hidden');
+    if (button.getAttribute('aria-expanded') === 'false') {
       button.innerText = closeText;
+      this.setAttribute('aria-label', this.getAttribute('aria-label').replace('View', 'Hide'));
+      this.setAttribute('aria-expanded', 'true');
+      section.classList.remove('predictor-timeline-section--hidden');
     } else {
-      section.classList.add('predictor-timeline-section--hidden');
       button.innerText = openText;
+      this.setAttribute('aria-label', this.getAttribute('aria-label').replace('Hide', 'View'));
+      this.setAttribute('aria-expanded', 'false');
+      section.classList.add('predictor-timeline-section--hidden');
     }
 
-    button.setAttribute('data-section-is-hidden', String(!isHidden));
-    updateOpenAllButton();
-  };
+    syncToggleAllButton();
+  }
 }
 
-function updateOpenAllButton() {
-  var openAllButton = document.getElementById('predictor-timeline__toggle-all');
-  if (!openAllButton) return;
-
-  var collapsibleSections = document.querySelectorAll('.predictor-timeline-section');
-  var isAnyHidden = Array.from(collapsibleSections).some(section =>
-    section.classList.contains('predictor-timeline-section--hidden')
+function syncToggleAllButton() {
+  const allOpen = Array.from(individualToggleButtons).every(btn =>
+    btn.getAttribute('aria-expanded') === 'true'
   );
 
-  openAllButton.innerText = isAnyHidden ? openAllText : closeAllText;
+  if (allOpen) {
+    toggleAllButton.setAttribute('aria-expanded', 'true');
+    toggleAllButton.innerText = closeAllText;
+  } else {
+    toggleAllButton.setAttribute('aria-expanded', 'false');
+    toggleAllButton.innerText = openAllText;
+  }
+}
+
+function attachListenerForToggleAllButton(button, sections, individualButtons, initiallyHidden) {
+  button.setAttribute('aria-expanded', !initiallyHidden);
+
+  button.onclick = function (e) {
+    e.preventDefault();
+
+    let sectionButtons;
+
+    if (button.getAttribute('aria-expanded') === 'false') {
+      button.innerText = closeAllText;
+      button.setAttribute('aria-label', 'Close all score history');
+      button.setAttribute('aria-expanded', 'true');
+
+      for (let i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('predictor-timeline-section--hidden');
+
+        individualButtons[i].innerText = closeText;
+        individualButtons[i].setAttribute('aria-label', individualButtons[i].getAttribute('aria-label').replace('View', 'Hide'));
+        individualButtons[i].setAttribute('aria-expanded', 'true');
+      }
+
+    } else {
+      button.innerText = openAllText;
+      button.setAttribute('aria-label', 'Open all score history');
+      button.setAttribute('aria-expanded', 'false');
+
+      for (let i = 0; i < sections.length; i++) {
+        sections[i].classList.add('predictor-timeline-section--hidden');
+        individualButtons[i].innerText = openText;
+        individualButtons[i].setAttribute('aria-label', individualButtons[i].getAttribute('aria-label').replace('Hide', 'View'));
+        individualButtons[i].setAttribute('aria-expanded', 'false');
+      }
+    }
+  }
 }
 
 function addPredictorTimelineListeners() {
-  var sections = document.querySelectorAll('.predictor-timeline-section');
 
-  sections.forEach(function (section) {
-    var button = section.parentElement.querySelector('.predictor-timeline__toggle-section');
-    attachToggleSection(button, section);
-  });
+  for (let i = 0; i < timelineSections.length; i++) {
+    if (allHidden) {
+      timelineSections[i].classList.add('predictor-timeline-section--hidden');
+    }
+    attachListenerForToggleSectionButton(individualToggleButtons[i], timelineSections[i], allHidden);
+  }
 
-  var openAllButton = document.getElementById('predictor-timeline__toggle-all');
-  if (!openAllButton) return;
-
-  openAllButton.onclick = function (e) {
-    e.preventDefault();
-
-    var collapsibleSections = document.querySelectorAll('.predictor-timeline-section');
-    var isAnyHidden = Array.from(collapsibleSections).some(section =>
-      section.classList.contains('predictor-timeline-section--hidden')
-    );
-
-    collapsibleSections.forEach(function (section) {
-      var button = section.parentElement.querySelector('.predictor-timeline__toggle-section');
-      if (!button) return;
-
-      if (isAnyHidden) {
-        section.classList.remove('predictor-timeline-section--hidden');
-        button.innerText = closeText;
-      } else {
-        section.classList.add('predictor-timeline-section--hidden');
-        button.innerText = openText;
-      }
-
-      button.setAttribute('data-section-is-hidden', String(section.classList.contains('predictor-timeline-section--hidden')));
-    });
-
-    // Update Open All / Close All
-    updateOpenAllButton();
-  };
-
-  updateOpenAllButton();
+  attachListenerForToggleAllButton(toggleAllButton, timelineSections, individualToggleButtons, allHidden);
 }
 
-document.addEventListener('DOMContentLoaded', addPredictorTimelineListeners);
+;(function () {
+  addPredictorTimelineListeners();
+})();
