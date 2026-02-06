@@ -700,7 +700,7 @@ const assertPredictorScale = ({
     })
 
     cy.get('[class*="scale-bar"] > div').then($bands => {
-      const values = [...$bands].map(el => el.getAttribute('data-band-persentage'))
+      const values = $bands.toArray().map(el => el.getAttribute('data-band-persentage'))
       expect(values).to.deep.equal(bandPercentages)
     })
   })
