@@ -135,3 +135,10 @@ export const countLabelSuffix = ({ count, label }: { count: number; label: strin
 export const renderString = (template: string, context: Record<string, string>) => {
   return nunjucks.renderString(template, context)
 }
+
+export function isBeforeDate(dateStr: string, targetDateStr: string | null = null): boolean {
+  const formattedDate = dateStr.replace(' at ', ' ')
+  const date = new Date(formattedDate)
+  const target = targetDateStr ? new Date(targetDateStr.replace(' at ', ' ')) : new Date()
+  return date < target
+}

@@ -1,294 +1,341 @@
-<h1 class='govuk-heading-m govuk-visually-hidden'>Risk<span
-            class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span></h1>
+{% from "components/predictor-scale/macro.njk" import predictorScale %}
+{% from "components/predictor-v2-timeline/macro.njk" import predictorV2Timeline %}
+
+<h1 class='govuk-heading-m govuk-visually-hidden'>
+  Risk<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span>
+</h1>
+
 <div class="flex flex--col-reverse-mobile">
-    <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
-        {% if caseSummary.assessmentStatus === 'INCOMPLETE' %}
-            <div class='govuk-!-margin-bottom-6'>
-                {% include './notificationBanners/latestCompleteAssessment.njk' %}
-            </div>
-        {% endif %}
-        <div class='govuk-!-margin-bottom-8'>
-        {{ oasysCard({
-            cardHeading: 'Who is at risk',
-            oasysHeading: 'OASys R10.1 Who is at risk?',
-            error: caseSummary.roshSummary.error,
-            notifications: notifications,
-            content: { text: caseSummary.roshSummary.whoIsAtRisk },
-            lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-            attributes: {
-                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-                'data-analytics-event-label': 'Who is at risk'
-            },
-            dataQaAttr: 'whoIsAtRisk'
-        }) }}
-        {{ oasysCard({
-            cardHeading: 'Details of the risk',
-            oasysHeading: 'OASys R10.2 What is the nature of the risk?',
-            error: caseSummary.roshSummary.error,
-            notifications: notifications,
-            content: { text: caseSummary.roshSummary.natureOfRisk },
-            lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-            attributes: {
-                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-                'data-analytics-event-label': 'Details of the risk'
-            },
-            dataQaAttr: 'natureOfRisk'
-        }) }}
-        {{ oasysCard({
-            cardHeading: 'When the risk will be highest',
-            oasysHeading: 'OASys R10.3 When is the risk likely to be greatest?',
-            error: caseSummary.roshSummary.error,
-            notifications: notifications,
-            content: { text: caseSummary.roshSummary.riskImminence },
-            lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-            attributes: {
-                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-                'data-analytics-event-label': 'When the risk will be highest'
-            },
-            dataQaAttr: 'riskImminence'
-        }) }}
-        {{ oasysCard({
-            cardHeading: 'Circumstances that will increase the risk',
-            oasysHeading: 'OASys R10.4 What circumstances are likely to increase the risk?',
-            error: caseSummary.roshSummary.error,
-            notifications: notifications,
-            content: { text: caseSummary.roshSummary.riskIncreaseFactors },
-            lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-            attributes: {
-                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-                'data-analytics-event-label': 'Circumstances that will increase the risk'
-            },
-            dataQaAttr: 'riskIncreaseFactors'
-        }) }}
-        {{ oasysCard({
-            cardHeading: 'Factors that will reduce the risk',
-            oasysHeading: 'OASys R10.5 What factors are likely to reduce the risk?',
-            error: caseSummary.roshSummary.error,
-            notifications: notifications,
-            content: { text: caseSummary.roshSummary.riskMitigationFactors },
-            lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-            attributes: {
-                'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-                'data-analytics-event-label': 'Factors that will reduce the risk'
-            },
-            dataQaAttr: 'riskMitigationFactors'
-        }) }}
-        </div>
-        <div class='govuk-!-margin-bottom-4 govuk-section-break--visible'>
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="RSR score">
-            RSR (risk of serious recidivism) score{% if caseSummary.predictorScores.current.scores.RSR.score %} - {{ caseSummary.predictorScores.current.scores.RSR.score }}%{% endif %}
-        </h2>
-        {% if caseSummary.predictorScores.current.scores.RSR %}
-            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-            </div>
-            <div aria-hidden="true">
-            {{ predictorScore(caseSummary.predictorScores.current.scores.RSR) }}
-            </div>
-            <div class='govuk-visually-hidden'>Score: {{ caseSummary.predictorScores.current.scores.RSR.score }}%</div>
+  <div class="flex__item-two-thirds-desktop govuk-!-padding-right-4">
+    {% if caseSummary.assessmentStatus === 'INCOMPLETE' %}
+      <div class='govuk-!-margin-bottom-6'>
+        {% include './notificationBanners/latestCompleteAssessment.njk' %}
+      </div>
+    {% endif %}
+
+    <div class='govuk-!-margin-bottom-8'>
+      {{ oasysCard({
+        cardHeading: 'Who is at risk',
+        oasysHeading: 'OASys R10.1 Who is at risk?',
+        error: caseSummary.roshSummary.error,
+        notifications: notifications,
+        content: { text: caseSummary.roshSummary.whoIsAtRisk },
+        lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
+        attributes: {
+          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+          'data-analytics-event-label': 'Who is at risk'
+        },
+        dataQaAttr: 'whoIsAtRisk'
+      }) }}
+
+      {{ oasysCard({
+        cardHeading: 'Details of the risk',
+        oasysHeading: 'OASys R10.2 What is the nature of the risk?',
+        error: caseSummary.roshSummary.error,
+        notifications: notifications,
+        content: { text: caseSummary.roshSummary.natureOfRisk },
+        lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
+        attributes: {
+          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+          'data-analytics-event-label': 'Details of the risk'
+        },
+        dataQaAttr: 'natureOfRisk'
+      }) }}
+
+      {{ oasysCard({
+        cardHeading: 'When the risk will be highest',
+        oasysHeading: 'OASys R10.3 When is the risk likely to be greatest?',
+        error: caseSummary.roshSummary.error,
+        notifications: notifications,
+        content: { text: caseSummary.roshSummary.riskImminence },
+        lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
+        attributes: {
+          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+          'data-analytics-event-label': 'When the risk will be highest'
+        },
+        dataQaAttr: 'riskImminence'
+      }) }}
+
+      {{ oasysCard({
+        cardHeading: 'Circumstances that will increase the risk',
+        oasysHeading: 'OASys R10.4 What circumstances are likely to increase the risk?',
+        error: caseSummary.roshSummary.error,
+        notifications: notifications,
+        content: { text: caseSummary.roshSummary.riskIncreaseFactors },
+        lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
+        attributes: {
+          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+          'data-analytics-event-label': 'Circumstances that will increase the risk'
+        },
+        dataQaAttr: 'riskIncreaseFactors'
+      }) }}
+
+      {{ oasysCard({
+        cardHeading: 'Factors that will reduce the risk',
+        oasysHeading: 'OASys R10.5 What factors are likely to reduce the risk?',
+        error: caseSummary.roshSummary.error,
+        notifications: notifications,
+        content: { text: caseSummary.roshSummary.riskMitigationFactors },
+        lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
+        attributes: {
+          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
+          'data-analytics-event-label': 'Factors that will reduce the risk'
+        },
+        dataQaAttr: 'riskMitigationFactors'
+      }) }}
+    </div>
+
+    <div class='govuk-!-margin-bottom-4'>
+      {% set hasV2 =
+        caseSummary.predictorScales.allReoffending
+        or caseSummary.predictorScales.violentReoffending
+        or caseSummary.predictorScales.seriousViolentReoffending
+        or caseSummary.predictorScales.directContactSexual
+        or caseSummary.predictorScales.indirectImageContactSexual
+        or caseSummary.predictorScales.combinedSerious
+      %}
+
+      {% if hasV2 %}
+        <!-- V2 scores-->
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.allReoffending %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.allReoffending,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
         {% else %}
-            <p class='govuk-body' data-qa='rsr-missing'>Data not available.</p>
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            All Reoffending Predictor
+          </h2>
+          <p class='govuk-body' data-qa='allReoffending-missing'>Data not available.</p>
         {% endif %}
 
-        <div class="govuk-grid-row">
-            {# If no OSP values of any kind are available, we want the labels for the new type of OSP values (i.e.
-               OSP/DC and OSP/IIC) to show above the "Data not avilable" messages. This is why we check old and new values
-               at this point. #}
-            {% if caseSummary.predictorScores.current.scores.OSPDC or caseSummary.predictorScores.current.scores.OSPIIC
-                or not (caseSummary.predictorScores.current.scores.OSPC or caseSummary.predictorScores.current.scores.OSPI) %}
-                <div class="govuk-grid-column-one-half-from-desktop">
-                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0"
-                        data-analytics-event-scroll="OSP/DC score">
-                        OSP/DC
-                    </h2>
-                    <div data-qa='scale-ospdc'>
-                        {% if caseSummary.predictorScores.current.scores.OSPDC %}
-                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-                            </div>
-                            <div aria-hidden="true">
-                                {{ predictorScore(caseSummary.predictorScores.current.scores.OSPDC) }}
-                            </div>
-                            <div class='govuk-visually-hidden'>Level: {{ ospdcLevelLabel(caseSummary.predictorScores.current.scores.OSPDC.level) }}</div>
-                        {% else %}
-                            <p class='govuk-body' data-qa='ospdc-missing'>Data not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="govuk-grid-column-one-half-from-desktop">
-                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0"
-                        data-analytics-event-scroll="OSP/IIC score">
-                        OSP/IIC
-                    </h2>
-                    <div data-qa='scale-ospiic'>
-                        {% if caseSummary.predictorScores.current.scores.OSPIIC %}
-                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-                            </div>
-                            <div aria-hidden="true">
-                                {{ predictorScore(caseSummary.predictorScores.current.scores.OSPIIC) }}
-                            </div>
-                            <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPIIC.level }}</div>
-                        {% else %}
-                            <p class='govuk-body' data-qa='ospiic-missing'>Data not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% else %}
-                <div class="govuk-grid-column-one-half-from-desktop">
-                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/C score">
-                        OSP/C
-                    </h2>
-                    <div data-qa='scale-ospc'>
-                        {% if caseSummary.predictorScores.current.scores.OSPC %}
-                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-                            </div>
-                        <div aria-hidden="true">
-                            {{ predictorScore(caseSummary.predictorScores.current.scores.OSPC) }}
-                        </div>
-                        <div class='govuk-visually-hidden'>Level: {{ ospdcLevelLabel(caseSummary.predictorScores.current.scores.OSPC.level) }}</div>
-                        {% else %}
-                            <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="govuk-grid-column-one-half-from-desktop">
-                    <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0" data-analytics-event-scroll="OSP/I score">
-                        OSP/I
-                    </h2>
-                    <div data-qa='scale-ospi'>
-                        {% if caseSummary.predictorScores.current.scores.OSPI %}
-                            <div class="text-secondary govuk-body govuk-!-margin-bottom-2">
-                                Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-                            </div>
-                        <div aria-hidden="true">
-                            {{ predictorScore(caseSummary.predictorScores.current.scores.OSPI) }}
-                        </div>
-                            <div class='govuk-visually-hidden'>Level: {{ caseSummary.predictorScores.current.scores.OSPI.level }}</div>
-                        {% else %}
-                            <p class='govuk-body' data-qa='ospi-missing'>Data not available.</p>
-                        {% endif %}</div>
-                </div>
-            {% endif %}
-        </div>
-        </div>
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.violentReoffending %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.violentReoffending,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            Violent Reoffending Predictor
+          </h2>
+          <p class='govuk-body' data-qa='violentReoffending-missing'>Data not available.</p>
+        {% endif %}
 
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1" data-analytics-event-scroll="OGRS score">
-            OGRS (offender group reconviction scale)
-        </h2>
-        {% if caseSummary.predictorScores.current.scores.OGRS %}
-        <div class="text-secondary govuk-body govuk-!-margin-bottom-6">
-            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-        </div>
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.directContactSexual %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.directContactSexual,
+            includeScore: false,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            Direct Contact - Sexual Reoffending Predictor
+          </h2>
+          <p class='govuk-body' data-qa='directContactSexual-missing'>Data not available.</p>
         {% endif %}
-        <div class="govuk-grid-row  govuk-!-margin-bottom-4 govuk-section-break--visible">
-            <div class="govuk-grid-column-three-quarters-from-desktop">
-                {% if caseSummary.predictorScores.current.scores.OGRS %}
-                <div class="flex-mobile">
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>1 year</h3>
-                        <div class='govuk-body' data-qa='ogrs-1yr'>{{ caseSummary.predictorScores.current.scores.OGRS.oneYear }}%</div>
-                    </div>
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>2 year</h3>
-                        <div class='govuk-body' data-qa='ogrs-2yr'>{{ caseSummary.predictorScores.current.scores.OGRS.twoYears }}%</div>
-                    </div>
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>Level</h3>
-                        <div class='govuk-body' data-qa='ogrs-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.scores.OGRS.level) }}</div>
-                    </div>
-                </div>
-                {% else %}
-                    <p class='govuk-body' data-qa='ogrs-missing'>Data not available.</p>
-                {% endif %}
-            </div>
-        </div>
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1" data-analytics-event-scroll="OGP score">
-            OGP (OASys general reoffending predictor)
-        </h2>
-        {% if caseSummary.predictorScores.current.scores.OGP %}
-        <div class="text-secondary govuk-body govuk-!-margin-bottom-6">
-            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-        </div>
+
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.indirectImageContactSexual %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.indirectImageContactSexual,
+            includeScore: false,
+            includeVeryHigh: false,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            Images and Indirect Contact - Sexual Reoffending Predictor
+          </h2>
+          <p class='govuk-body' data-qa='indirectImageContactSexual-missing'>Data not available.</p>
         {% endif %}
-        <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-section-break--visible">
-            <div class="govuk-grid-column-three-quarters-from-desktop">
-                {% if caseSummary.predictorScores.current.scores.OGP %}
-                <div class="flex-mobile">
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>1 year</h3>
-                        <div class='govuk-body' data-qa='ogp-1yr'>{{ caseSummary.predictorScores.current.scores.OGP.oneYear }}%</div>
-                    </div>
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>2 year</h3>
-                        <div class='govuk-body' data-qa='ogp-2yr'>{{ caseSummary.predictorScores.current.scores.OGP.twoYears }}%</div>
-                    </div>
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>Level</h3>
-                        <div class='govuk-body' data-qa='ogp-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.scores.OGP.level) }}</div>
-                    </div>
-                </div>
-                {% else %}
-                    <p class='govuk-body' data-qa='ogp-missing'>Data not available.</p>
-                {% endif %}
-            </div>
-        </div>
-        <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-1" data-analytics-event-scroll="OVP score">
-            OVP (OASys violence predictor)
-        </h2>
-        {% if caseSummary.predictorScores.current.scores.OVP %}
-        <div class="text-secondary govuk-body govuk-!-margin-bottom-6">
-            Last updated: {{ formatDateTimeFromIsoString({ isoDate: caseSummary.predictorScores.current.date, dateOnly: true }) }}
-        </div>
+
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.seriousViolentReoffending %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.seriousViolentReoffending,
+            includeScore: false,
+            includeVeryHigh: true,
+            includePercentage: false
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            Serious Violent Reoffending Predictor
+          </h2>
+          <p class='govuk-body' data-qa='seriousViolentReoffending-missing'>Data not available.</p>
         {% endif %}
-        <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-section-break--visible">
-            <div class="govuk-grid-column-three-quarters-from-desktop">
-                {% if caseSummary.predictorScores.current.scores.OVP %}
-                <div class="flex-mobile">
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>1 year</h3>
-                        <div class='govuk-body' data-qa='ovp-1yr'>{{ caseSummary.predictorScores.current.scores.OVP.oneYear }}%</div>
-                    </div>
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>2 year</h3>
-                        <div class='govuk-body' data-qa='ovp-2yr'>{{ caseSummary.predictorScores.current.scores.OVP.twoYears }}%</div>
-                    </div>
-                    <div class='flex__item-one-third-mobile'>
-                        <h3 class='govuk-heading-s govuk-!-margin-bottom-1'>Level</h3>
-                        <div class='govuk-body' data-qa='ovp-level'>{{ riskLevelLabel(caseSummary.predictorScores.current.scores.OVP.level) }}</div>
-                    </div>
-                </div>
-                {% else %}
-                    <p class='govuk-body' data-qa='ovp-missing'>Data not available.</p>
-                {% endif %}
-            </div>
-        </div>
+
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.combinedSerious %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.combinedSerious,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            Combined Serious Reoffending Predictor
+          </h2>
+          <p class='govuk-body' data-qa='combinedSerious-missing'>Data not available.</p>
+        {% endif %}
+      {% else %}
+        <!-- V1 scores-->
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.ogrs %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.ogrs,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            OGRS3
+          </h2>
+          <p class='govuk-body' data-qa='ogrs-missing'>Data not available.</p>
+        {% endif %}
+
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.rsr %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.rsr,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            RSR
+          </h2>
+          <p class='govuk-body' data-qa='rsr-missing'>Data not available.</p>
+        {% endif %}
+
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.ogp %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.ogp,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            OGP
+          </h2>
+          <p class='govuk-body' data-qa='ogp-missing'>Data not available.</p>
+        {% endif %}
+
+        {% if caseSummary.predictorScales and caseSummary.predictorScales.ovp %}
+          {{ predictorScale({
+            predictorScore: caseSummary.predictorScales.ovp,
+            includeScore: true,
+            includeVeryHigh: true,
+            includePercentage: true
+          }) }}
+        {% else %}
+          <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+            OVP
+          </h2>
+          <p class='govuk-body' data-qa='ovp-missing'>Data not available.</p>
+        {% endif %}
+
+        {% set hasOldPair = (caseSummary.predictorScales.ospc) or (caseSummary.predictorScales.ospi) %}
+        {% set hasNewPair = (caseSummary.predictorScales.ospdc) or (caseSummary.predictorScales.ospiic) %}
+
+        {% if hasNewPair or not hasOldPair %}
+          {% if caseSummary.predictorScales.ospiic %}
+            {{ predictorScale({
+              predictorScore: caseSummary.predictorScales.ospiic,
+              includeScore: true,
+              includeVeryHigh: false,
+              includePercentage: true
+            }) }}
+          {% else %}
+            <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+              OSP/IIC
+            </h2>
+            <p class='govuk-body' data-qa='ospiic-missing'>Data not available.</p>
+          {% endif %}
+
+          {% if caseSummary.predictorScales.ospdc %}
+            {{ predictorScale({
+              predictorScore: caseSummary.predictorScales.ospdc,
+              includeScore: true,
+              includeVeryHigh: false,
+              includePercentage: true
+            }) }}
+          {% else %}
+            <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+              OSP/DC
+            </h2>
+            <p class='govuk-body' data-qa='ospdc-missing'>Data not available.</p>
+          {% endif %}
+        {% else %}
+          {% if caseSummary.predictorScales and caseSummary.predictorScales.ospc %}
+            {{ predictorScale({
+              predictorScore: caseSummary.predictorScales.ospc,
+              includeScore: false,
+              includeVeryHigh: true,
+              includePercentage: true
+            }) }}
+          {% else %}
+            <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+              OSPC
+            </h2>
+            <p class='govuk-body' data-qa='ospc-missing'>Data not available.</p>
+          {% endif %}
+
+          {% if caseSummary.predictorScales and caseSummary.predictorScales.ospi %}
+            {{ predictorScale({
+              predictorScore: caseSummary.predictorScales.ospi,
+              includeScore: true,
+              includeVeryHigh: false,
+              includePercentage: true
+            }) }}
+          {% else %}
+            <h2 class="govuk-heading-m score-header govuk-!-margin-bottom-0">
+              OSPI
+            </h2>
+            <p class='govuk-body' data-qa='ospi-missing'>Data not available.</p>
+          {% endif %}
+        {% endif %}
+      {% endif %}
     </div>
-    <div class="flex__item-one-third-desktop">
-        <div data-qa='roshTable'>
-            {{ roshWidget({ riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm, notifications: notifications, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true }) }) }}
-        </div>
-        <div class="govuk-!-margin-bottom-4 side-bar" data-qa='mappa'>
-            {{ mappaWidget({ mappa: caseSummary.mappa, lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true }) }) }}
-        </div>
-        <div class="govuk-body predictor-timeline__heading">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Scores history</h2>
-            {% if caseSummary.predictorScores.error and caseSummary.roshHistory.error %}
-                <p class='govuk-body' data-qa='timeline-missing'>RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.</p>
-            {% elseif caseSummary.predictorScores.error %}
-                <p class='govuk-body' data-qa='score-history-missing'>Predictor scores cannot be retrieved from OASys. Double-check OASys.</p>
-            {% elseif caseSummary.roshHistory.error %}
-                <p class='govuk-body' data-qa='rosh-history-missing'>Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.</p>
-            {% endif %}
-            {% if caseSummary.timeline.length %}
-                <div>
-                    <button type='button' data-js="predictor-timeline__toggle-all" class="reset-button link-button govuk-link">Open all<span class='govuk-visually-hidden'> scores in timeline</span> </button>
-                </div>
-            {% endif %}
-        </div>
-        {% if caseSummary.timeline.length %}
-            {{ predictorTimeline(caseSummary.timeline, pageUrlBase) }}
-        {% endif %}
+  </div>
+
+  <div class="flex__item-one-third-desktop">
+    <div data-qa='roshTable'>
+      {{ roshWidget({
+        riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm,
+        notifications: notifications,
+        lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true })
+      }) }}
     </div>
+
+    <div class="govuk-!-margin-bottom-4 side-bar" data-qa='mappa'>
+      {{ mappaWidget({
+        mappa: caseSummary.mappa,
+        lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true })
+      }) }}
+    </div>
+
+    <div class="govuk-body predictor-timeline__heading">
+      {% if caseSummary.predictorScores.error and caseSummary.roshHistory.error %}
+        <p class='govuk-body' data-qa='timeline-missing'>
+          RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.
+        </p>
+      {% elseif caseSummary.predictorScores.error %}
+        <p class='govuk-body' data-qa='score-history-missing'>
+          Predictor scores cannot be retrieved from OASys. Double-check OASys.
+        </p>
+      {% elseif caseSummary.roshHistory.error %}
+        <p class='govuk-body' data-qa='rosh-history-missing'>
+          Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.
+        </p>
+      {% endif %}
+    </div>
+
+    {% if caseSummary.timeline.length %}
+      {{ predictorV2Timeline(caseSummary.timeline, pageUrlBase) }}
+    {% endif %}
+  </div>
 </div>
