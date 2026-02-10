@@ -170,6 +170,41 @@ context('Risk page', () => {
     cy.contains('.predictor-scale', 'OSP-DC').should('not.exist')
   })
 
+  it('shows predictor scores with new OSP values', () => {
+    const currentScore = {
+      date: '2021-10-24',
+      scores: {
+        OSPDC: {
+          level: 'LOW',
+          type: 'OSP-DC',
+        },
+        OSPIIC: {
+          level: 'MEDIUM',
+          type: 'OSP-IIC',
+        },
+      },
+    }
+    const predictorScores = {
+      current: currentScore,
+      historical: [currentScore],
+    }
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+        predictorScores,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+
+    assertPredictorScale(OSP_IIC_EXPECTED)
+    assertPredictorScale(OSP_DC_EXPECTED)
+    cy.contains('.predictor-scale', 'OSP-C').should('not.exist')
+    // using regex: /^OSP-I$/ rather than 'OSP-I' to avoid false positives from the string containing 'OSP-I' due to OSP-IIC is present
+    cy.contains('.predictor-scale', /^OSP-I$/).should('not.exist')
+  })
+
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
     cy.task('getCase', {
       sectionId: 'risk',
