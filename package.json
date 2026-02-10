@@ -179,7 +179,7 @@
     "audit-ci": "^7.0.0",
     "axe-core": "4.10.0",
     "concurrently": "^9.0.0",
-    "cypress": "^13.7.2",
+    "cypress": "14.5.4",
     "cypress-axe": "^1.5.0",
     "cypress-multi-reporters": "^2.0.4",
     "cypress-terminal-report": "^7.0.0",
