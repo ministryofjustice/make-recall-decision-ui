@@ -225,6 +225,13 @@ const TEMPLATE = {
   paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
 }
 
+// Ignore the Probation Components API fallback header as it shouldn't
+// ever be presented to the end user
+const A11Y_ELEMENTS_TO_CHECK = {
+  include: [['body']],
+  exclude: [['.probation-common-fallback-header']],
+}
+
 context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
@@ -264,7 +271,7 @@ context('Accessibility (a11y) Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -302,7 +309,7 @@ context('Accessibility (a11y) SPO Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -341,7 +348,7 @@ context('Accessibility (a11y) AP Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -531,7 +538,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
 
       cy.visit(item.url)
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
