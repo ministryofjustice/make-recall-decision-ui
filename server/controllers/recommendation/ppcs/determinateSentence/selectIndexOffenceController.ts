@@ -45,6 +45,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       court: indexSentence.courtDescription,
       dateOfSentence: indexSentence.sentenceDate,
       startDate: indexSentence.sentenceStartDate,
+      endDate: indexSentence.sentenceEndDate,
       sentenceSequenceExpiryDate: indexSentence.sentenceSequenceExpiryDate,
       terms:
         indexSentence.terms.length < 2
@@ -107,6 +108,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
             sentenceDate: seq.indexSentence.sentenceDate,
             courtDescription: seq.indexSentence.courtDescription,
             sentenceStartDate: seq.indexSentence.sentenceStartDate,
+            sentenceEndDate: seq.indexSentence.sentenceEndDate,
             sentenceSequenceExpiryDate: seq.indexSentence.sentenceSequenceExpiryDate,
             bookingId: seq.indexSentence.bookingId,
             terms: seq.indexSentence.terms,

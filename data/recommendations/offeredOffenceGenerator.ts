@@ -17,6 +17,7 @@ const generateInternal = (options?: OfferedOffenceOptions): OfferedOffence => ({
   sentenceDate: faker.date.past().toISOString(),
   courtDescription: `${faker.location.city()} Court`,
   sentenceStartDate: faker.date.past().toISOString(),
+  sentenceEndDate: faker.date.future().toISOString(),
   sentenceSequenceExpiryDate: faker.date.future().toISOString(),
   bookingId: faker.number.int(),
   terms: TermGenerator.generateSeries(options?.terms ?? [{ chronos: 'all' }]),

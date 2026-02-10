@@ -10,6 +10,7 @@ export type PrisonSentence = {
   sentenceTypeDescription: string;
   sentenceDate: string;
   sentenceStartDate: string;
+  sentenceEndDate: string;
   sentenceSequenceExpiryDate: string;
   terms: Term[];
   offences: SentenceOffence[];

@@ -30,8 +30,9 @@ const expectedOptionForSentence = (sentence: PrisonSentence, expectedConsecutive
     offenceStatute: sentence.offences.at(0).offenceStatute,
     offenderChargeId: sentence.offences.at(0).offenderChargeId,
     sentenceDate: sentence.sentenceDate,
-    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceStartDate: sentence.sentenceStartDate,
+    sentenceEndDate: sentence.sentenceEndDate,
+    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceTypeDescription: sentence.sentenceTypeDescription,
     terms: sentence.terms,
     releaseDate: sentence.releaseDate,
@@ -46,6 +47,7 @@ const expectedNomisOffenceForSentence = (sentence: PrisonSentence) => ({
   court: sentence.courtDescription,
   dateOfSentence: sentence.sentenceDate,
   startDate: sentence.sentenceStartDate,
+  endDate: sentence.sentenceEndDate,
   sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
 })
 
@@ -147,6 +149,7 @@ describe('Select Index Offence Controller', () => {
             it(' - dateOfSentence', async () =>
               expect(offenceData().dateOfSentence).toEqual(expectedNomisOffenceData.dateOfSentence))
             it(' - startDate', async () => expect(offenceData().startDate).toEqual(expectedNomisOffenceData.startDate))
+            it(' - endDate', async () => expect(offenceData().endDate).toEqual(expectedNomisOffenceData.endDate))
             it(' - sentenceSequenceExpiryDate', async () =>
               expect(offenceData().sentenceSequenceExpiryDate).toEqual(
                 expectedNomisOffenceData.sentenceSequenceExpiryDate

@@ -28,6 +28,7 @@ export function offeredOffence(
     sentenceDate = randomUUID(),
     courtDescription = randomUUID(),
     sentenceStartDate = randomUUID(),
+    sentenceEndDate = randomUUID(),
     sentenceSequenceExpiryDate = randomUUID(),
     bookingId = randomInt(10000),
     terms = [term()],
@@ -43,6 +44,7 @@ export function offeredOffence(
     sentenceDate?: string;
     courtDescription?: string;
     sentenceStartDate?: string;
+    sentenceEndDate?: string;
     sentenceSequenceExpiryDate?: string;
     bookingId?: number;
     terms?: Term[];
@@ -59,6 +61,7 @@ export function offeredOffence(
     sentenceDate,
     courtDescription,
     sentenceStartDate,
+    sentenceEndDate,
     sentenceSequenceExpiryDate,
     bookingId,
     terms,
