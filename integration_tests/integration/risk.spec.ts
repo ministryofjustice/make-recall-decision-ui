@@ -21,7 +21,15 @@ context('Risk page', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
   })
 
-  it('shows RoSH, MAPPA and predictor scores', () => {
+  it('shows RoSH, MAPPA and v1 predictor scores', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+      },
+    })
+
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
@@ -43,11 +51,25 @@ context('Risk page', () => {
     cy.viewDetails('View more detail on Factors that will reduce the risk').should('contain', riskMitigationFactors)
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
-    // predictor scores
+    // v1 predictor scores
     const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
 
     v1Predictors.forEach(predictor => {
       assertPredictorScale(predictor)
+    })
+
+    // v2 predictor scores don't exist in the mocked response
+    const v2Predictors = [
+      ALL_REOFFENDING_EXPECTED,
+      VIOLENT_REOFFENDING_EXPECTED,
+      SERIOUS_VIOLENT_REOFFENDING_EXPECTED,
+      DIRECT_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      INDIRECT_IMAGE_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      COMBINED_SERIOUS_REOFFENDING_EXPECTED,
+    ]
+
+    v2Predictors.forEach(predictor => {
+      cy.contains('.predictor-scale', predictor.name).should('not.exist')
     })
 
     // RoSH table
