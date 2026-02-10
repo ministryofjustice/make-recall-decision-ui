@@ -60,6 +60,7 @@ export default function createApp(userService: UserService): express.Application
     pdsComponents.getPageComponents({
       pdsUrl: config.apis.probationApi.url,
       logger,
+      useFallbacksByDefault: process.env.ENVIRONMENT === 'local',
     })
   )
 
