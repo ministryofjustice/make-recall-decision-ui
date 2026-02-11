@@ -29,19 +29,23 @@ context('Risk page', () => {
     // Content panels
     const { whoIsAtRisk, natureOfRisk, riskIncreaseFactors, riskImminence, riskMitigationFactors } =
       getCaseRiskResponse.roshSummary
-    cy.viewDetails('View more detail on Who is at risk').should('contain', whoIsAtRisk)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on Details of the risk').should('contain', natureOfRisk)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on When the risk will be highest').should('contain', riskImminence)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskImminence"]' }).should('exist')
-    cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
-      'contain',
-      riskIncreaseFactors
-    )
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
-    cy.viewDetails('View more detail on Factors that will reduce the risk').should('contain', riskMitigationFactors)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
+
+    cy.getElement('ROSH Summary').should('exist')
+
+    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
+    cy.getElement(whoIsAtRisk, { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
+
+    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
+    cy.getElement(natureOfRisk, { parent: '[data-qa="natureOfRisk"]' }).should('exist')
+
+    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskImminence"]' }).should('exist')
+    cy.getElement(riskImminence, { parent: '[data-qa="riskImminence"]' }).should('exist')
+
+    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
+    cy.getElement(riskIncreaseFactors, { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
+
+    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
+    cy.getElement(riskMitigationFactors, { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
     // predictor scores
     const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
