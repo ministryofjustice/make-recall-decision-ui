@@ -114,12 +114,6 @@ export type TimelineItem = {
   scores: Record<string, TimelinePredictor>
 }
 
-const V1_PREDICTOR_LABELS: Record<string, string> = {
-  OGRS: 'OGRS3',
-  OSPDC: 'OSP-DC',
-  OSPIIC: 'OSP-IIC',
-}
-
 const V2_PREDICTOR_LABELS: Record<string, string> = {
   allReoffendingPredictor: 'All Reoffending Predictor',
   violentReoffendingPredictor: 'Violent Reoffending Predictor',
@@ -146,7 +140,7 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
 
       normalised[key] = {
         level: v1.level,
-        type: V1_PREDICTOR_LABELS[key] ?? v1.type,
+        type: v1.type,
         score: key === 'OGRS' || key === 'OGP' || key === 'OVP' ? v1.twoYears?.toString() : v1.score?.toString(),
       }
 
@@ -274,23 +268,32 @@ export const transformRisk = (caseSummary: RiskResponse) => {
 
         // V1 (legacy) scores
         rsr: scores.RSR
-          ? buildV1Predictor('RSR', scores.RSR.level, scores.RSR.score, lastUpdated, ['0%', '3%', '6.9%', '25%'])
+          ? buildV1Predictor(scores.RSR.type, scores.RSR.level, scores.RSR.score, lastUpdated, [
+              '0%',
+              '3%',
+              '6.9%',
+              '25%',
+            ])
           : undefined,
 
-        ospc: scores.OSPC ? buildV1Predictor('OSPC', scores.OSPC.level, scores.OSPC.score, lastUpdated) : undefined,
+        ospc: scores.OSPC
+          ? buildV1Predictor(scores.OSPC.type, scores.OSPC.level, scores.OSPC.score, lastUpdated)
+          : undefined,
 
-        ospi: scores.OSPI ? buildV1Predictor('OSPI', scores.OSPI.level, scores.OSPI.score, lastUpdated) : undefined,
+        ospi: scores.OSPI
+          ? buildV1Predictor(scores.OSPI.type, scores.OSPI.level, scores.OSPI.score, lastUpdated)
+          : undefined,
 
         ospdc: scores.OSPDC
-          ? buildV1Predictor('OSP/DC', scores.OSPDC.level, scores.OSPDC.score, lastUpdated)
+          ? buildV1Predictor(scores.OSPDC.type, scores.OSPDC.level, scores.OSPDC.score, lastUpdated)
           : undefined,
 
         ospiic: scores.OSPIIC
-          ? buildV1Predictor('OSP/IIC', scores.OSPIIC.level, scores.OSPIIC.score, lastUpdated)
+          ? buildV1Predictor(scores.OSPIIC.type, scores.OSPIIC.level, scores.OSPIIC.score, lastUpdated)
           : undefined,
 
         ogrs: scores.OGRS
-          ? buildV1Predictor('OGRS3', scores.OGRS.level, scores.OGRS.twoYears, lastUpdated, [
+          ? buildV1Predictor(scores.OGRS.type, scores.OGRS.level, scores.OGRS.twoYears, lastUpdated, [
               '0%',
               '50%',
               '75%',
@@ -300,7 +303,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
           : undefined,
 
         ogp: scores.OGP
-          ? buildV1Predictor('OGP', scores.OGP.level, scores.OGP.twoYears, lastUpdated, [
+          ? buildV1Predictor(scores.OGP.type, scores.OGP.level, scores.OGP.twoYears, lastUpdated, [
               '0%',
               '34%',
               '67%',
@@ -310,7 +313,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
           : undefined,
 
         ovp: scores.OVP
-          ? buildV1Predictor('OVP', scores.OVP.level, scores.OVP.twoYears, lastUpdated, [
+          ? buildV1Predictor(scores.OVP.type, scores.OVP.level, scores.OVP.twoYears, lastUpdated, [
               '0%',
               '30%',
               '60%',

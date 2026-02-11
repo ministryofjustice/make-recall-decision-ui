@@ -79,17 +79,17 @@
         },
         "OSPDC": {
           "level": "LOW",
-          "type": "OSP/DC"
+          "type": "OSP-DC"
         },
         "OSPIIC": {
           "level": "MEDIUM",
-          "type": "OSP/IIC"
+          "type": "OSP-IIC"
         },
         "OGRS": {
           "level": "MEDIUM",
           "oneYear": 10,
           "twoYears": 20,
-          "type": "OGRS"
+          "type": "OGRS3"
         },
         "OGP": {
           "level": "HIGH",
@@ -116,17 +116,17 @@
           },
           "OSPDC": {
             "level": "LOW",
-            "type": "OSP/DC"
+            "type": "OSP-DC"
           },
           "OSPIIC": {
             "level": "MEDIUM",
-            "type": "OSP/IIC"
+            "type": "OSP-IIC"
           },
           "OGRS": {
             "level": "MEDIUM",
             "oneYear": 10,
             "twoYears": 20,
-            "type": "OGRS"
+            "type": "OGRS3"
           },
           "OGP": {
             "level": "HIGH",
@@ -152,17 +152,17 @@
           },
           "OSPC": {
             "level": "MEDIUM",
-            "type": "OSP/C"
+            "type": "OSP-C"
           },
           "OSPI": {
             "level": "LOW",
-            "type": "OSP/I"
+            "type": "OSP-I"
           },
           "OGRS": {
             "level": "HIGH",
             "oneYear": 45,
             "twoYears": 55,
-            "type": "OGRS"
+            "type": "OGRS3"
           },
           "OGP": {
             "level": "VERY_HIGH",
