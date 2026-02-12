@@ -21,7 +21,15 @@ context('Risk page', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
   })
 
-  it('shows RoSH, MAPPA and predictor scores', () => {
+  it('shows RoSH, MAPPA and v1 predictor scores', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+      },
+    })
+
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
@@ -47,15 +55,26 @@ context('Risk page', () => {
     cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
     cy.getElement(riskMitigationFactors, { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
-    // predictor scores
+    // v1 predictor scores
     const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
 
     v1Predictors.forEach(predictor => {
       assertPredictorScale(predictor)
     })
 
-    cy.contains('.predictor-scale', 'OSPI').should('not.exist')
-    cy.contains('.predictor-scale', 'OSPC').should('not.exist')
+    // v2 predictor scores don't exist in the mocked response
+    const v2Predictors = [
+      ALL_REOFFENDING_EXPECTED,
+      VIOLENT_REOFFENDING_EXPECTED,
+      SERIOUS_VIOLENT_REOFFENDING_EXPECTED,
+      DIRECT_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      INDIRECT_IMAGE_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      COMBINED_SERIOUS_REOFFENDING_EXPECTED,
+    ]
+
+    v2Predictors.forEach(predictor => {
+      cy.contains('.predictor-scale', predictor.name).should('not.exist')
+    })
 
     // RoSH table
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
@@ -149,11 +168,11 @@ context('Risk page', () => {
       scores: {
         OSPC: {
           level: 'LOW',
-          type: 'OSP/C',
+          type: 'OSP-C',
         },
         OSPI: {
           level: 'MEDIUM',
-          type: 'OSP/I',
+          type: 'OSP-I',
         },
       },
     }
@@ -173,8 +192,43 @@ context('Risk page', () => {
 
     assertPredictorScale(OSPC_EXPECTED)
     assertPredictorScale(OSPI_EXPECTED)
-    cy.contains('.predictor-scale', 'OSP/IIC').should('not.exist')
-    cy.contains('.predictor-scale', 'OSP/DC').should('not.exist')
+    cy.contains('.predictor-scale', 'OSP-IIC').should('not.exist')
+    cy.contains('.predictor-scale', 'OSP-DC').should('not.exist')
+  })
+
+  it('shows predictor scores with new OSP values', () => {
+    const currentScore = {
+      date: '2021-10-24',
+      scores: {
+        OSPDC: {
+          level: 'LOW',
+          type: 'OSP-DC',
+        },
+        OSPIIC: {
+          level: 'MEDIUM',
+          type: 'OSP-IIC',
+        },
+      },
+    }
+    const predictorScores = {
+      current: currentScore,
+      historical: [currentScore],
+    }
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+        predictorScores,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+
+    assertPredictorScale(OSP_IIC_EXPECTED)
+    assertPredictorScale(OSP_DC_EXPECTED)
+    cy.contains('.predictor-scale', 'OSP-C').should('not.exist')
+    // using regex: /^OSP-I$/ rather than 'OSP-I' to avoid false positives from the string containing 'OSP-I' due to OSP-IIC is present
+    cy.contains('.predictor-scale', /^OSP-I$/).should('not.exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
@@ -388,10 +442,10 @@ context('Risk page', () => {
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '12%').should('be.visible')
 
-      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP/C').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP-C').should('be.visible')
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
 
-      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP/I').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP-I').should('be.visible')
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'LOW').should('be.visible')
 
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OGRS3').should('be.visible')
@@ -497,7 +551,7 @@ context('Risk page', () => {
                   OSPC: {
                     level: 'LOW',
                     score: 6.8,
-                    type: 'OSP/C',
+                    type: 'OSP-C',
                   },
                 },
               },
@@ -509,7 +563,7 @@ context('Risk page', () => {
       const opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.get('#predictor-timeline__toggle-all').click()
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
-      cy.getElement('OSP/C LOW', opts).should('be.visible')
+      cy.getElement('OSP-C LOW', opts).should('be.visible')
     })
   })
 
@@ -633,7 +687,7 @@ const OVP_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSP_IIC_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSP/IIC',
+  name: 'OSP-IIC',
   level: 'MEDIUM',
   score: '',
   lastUpdated: '24 October 2021',
@@ -642,7 +696,7 @@ const OSP_IIC_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSP_DC_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSP/DC',
+  name: 'OSP-DC',
   level: 'LOW',
   score: '',
   lastUpdated: '24 October 2021',
@@ -651,7 +705,7 @@ const OSP_DC_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSPC_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSPC',
+  name: 'OSP-C',
   level: 'LOW',
   score: '',
   lastUpdated: '24 October 2021',
@@ -660,7 +714,7 @@ const OSPC_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSPI_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSPI',
+  name: 'OSP-I',
   level: 'MEDIUM',
   score: '',
   lastUpdated: '24 October 2021',

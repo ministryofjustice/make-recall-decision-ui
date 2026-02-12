@@ -126,9 +126,9 @@ describe('transformRisk predictorScales', () => {
           date: baseDate,
           scores: {
             RSR: { level: 'HIGH', type: 'RSR', score: '5' },
-            OSPC: { level: 'MEDIUM', type: 'OSPC', score: '3' },
-            OSPI: { level: 'LOW', type: 'OSPI', score: '1' },
-            OGRS: { level: 'VERY_HIGH', type: 'OGRS', oneYear: '2.0', twoYears: '4.0' },
+            OSPC: { level: 'MEDIUM', type: 'OSP-C', score: '3' },
+            OSPI: { level: 'LOW', type: 'OSP-I', score: '1' },
+            OGRS: { level: 'VERY_HIGH', type: 'OGRS3', oneYear: '2.0', twoYears: '4.0' },
             OGP: { level: 'MEDIUM', type: 'OGP', oneYear: '1.0', twoYears: '2.0' },
             OVP: { level: 'LOW', type: 'OVP', oneYear: '0.5', twoYears: '1.0' },
           },
@@ -150,7 +150,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.ospc).toEqual({
-      type: 'OSPC',
+      type: 'OSP-C',
       level: 'MEDIUM',
       score: '3',
       lastUpdated: '1 January 2026',
@@ -158,7 +158,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.ospi).toEqual({
-      type: 'OSPI',
+      type: 'OSP-I',
       level: 'LOW',
       score: '1',
       lastUpdated: '1 January 2026',
@@ -201,9 +201,9 @@ describe('transformRisk predictorScales', () => {
           date: '2026-01-01',
           scores: {
             RSR: { level: 'HIGH', score: '5', type: 'RSR' },
-            OSPDC: { level: 'MEDIUM', score: '4', type: 'OSP/DC' },
-            OSPIIC: { level: 'HIGH', score: '6', type: 'OSP/IIC' },
-            OGRS: { level: 'VERY_HIGH', twoYears: '4.0', type: 'OGRS' },
+            OSPDC: { level: 'MEDIUM', score: '4', type: 'OSP-DC' },
+            OSPIIC: { level: 'HIGH', score: '6', type: 'OSP-IIC' },
+            OGRS: { level: 'VERY_HIGH', twoYears: '4.0', type: 'OGRS3' },
             OGP: { level: 'MEDIUM', twoYears: '2.0', type: 'OGP' },
             OVP: { level: 'LOW', twoYears: '1.0', type: 'OVP' },
           },
@@ -228,7 +228,7 @@ describe('transformRisk predictorScales', () => {
     expect(predictorScales?.ospi).toBeUndefined()
 
     expect(predictorScales?.ospdc).toEqual({
-      type: 'OSP/DC',
+      type: 'OSP-DC',
       level: 'MEDIUM',
       score: '4',
       lastUpdated: '1 January 2026',
@@ -236,7 +236,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.ospiic).toEqual({
-      type: 'OSP/IIC',
+      type: 'OSP-IIC',
       level: 'HIGH',
       score: '6',
       lastUpdated: '1 January 2026',
@@ -443,8 +443,8 @@ describe('transformRisk predictorScales', () => {
 describe('normaliseTimelineScores', () => {
   it('normalises V1 predictors and uses correct score fields', () => {
     const input = {
-      OGRS: { level: 'HIGH', type: 'OGRS', twoYears: 4.5 },
-      OSPDC: { level: 'MEDIUM', type: 'OSP/DC', score: 3 },
+      OGRS: { level: 'HIGH', type: 'OGRS3', twoYears: 4.5 },
+      OSPDC: { level: 'MEDIUM', type: 'OSP-DC', score: 3 },
       RSR: { level: 'LOW', type: 'RSR', score: 1 },
     }
 
@@ -527,7 +527,7 @@ describe('normaliseTimelineScores', () => {
 
   it('handles missing scores safely', () => {
     const input = {
-      OGRS: { level: 'HIGH', type: 'OGRS' }, // no twoYears
+      OGRS: { level: 'HIGH', type: 'OGRS3' }, // no twoYears
       allReoffendingPredictor: { band: 'LOW' }, // no score
     }
 
