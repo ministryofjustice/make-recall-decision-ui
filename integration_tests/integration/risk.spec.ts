@@ -662,6 +662,7 @@ const RSR_EXPECTED: PredictorScaleExpectation = {
   lastUpdated: '24 October 2021',
   positionClass: 'scale-marker-wrapper--position-three-of-four',
   bandPercentages: ['3%', '6.9%', '25%', ''],
+  staticOrDynamic: 'Dynamic',
 }
 
 const OGP_EXPECTED: PredictorScaleExpectation = {
