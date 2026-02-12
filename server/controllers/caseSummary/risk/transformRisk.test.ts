@@ -125,7 +125,7 @@ describe('transformRisk predictorScales', () => {
         current: {
           date: baseDate,
           scores: {
-            RSR: { level: 'HIGH', type: 'RSR', score: '5' },
+            RSR: { level: 'HIGH', type: 'RSR', score: '5', staticOrDynamic: StaticOrDynamic.DYNAMIC },
             OSPC: { level: 'MEDIUM', type: 'OSP-C', score: '3' },
             OSPI: { level: 'LOW', type: 'OSP-I', score: '1' },
             OGRS: { level: 'VERY_HIGH', type: 'OGRS3', oneYear: '2.0', twoYears: '4.0' },
@@ -145,6 +145,7 @@ describe('transformRisk predictorScales', () => {
       type: 'RSR',
       level: 'HIGH',
       score: '5',
+      staticOrDynamic: StaticOrDynamic.DYNAMIC,
       lastUpdated: '1 January 2026',
       bandPercentages: ['0%', '3%', '6.9%', '25%'],
     })
@@ -200,7 +201,7 @@ describe('transformRisk predictorScales', () => {
         current: {
           date: '2026-01-01',
           scores: {
-            RSR: { level: 'HIGH', score: '5', type: 'RSR' },
+            RSR: { level: 'HIGH', score: '5', type: 'RSR', staticOrDynamic: StaticOrDynamic.STATIC },
             OSPDC: { level: 'MEDIUM', score: '4', type: 'OSP-DC' },
             OSPIIC: { level: 'HIGH', score: '6', type: 'OSP-IIC' },
             OGRS: { level: 'VERY_HIGH', twoYears: '4.0', type: 'OGRS3' },
@@ -220,6 +221,7 @@ describe('transformRisk predictorScales', () => {
       type: 'RSR',
       level: 'HIGH',
       score: '5',
+      staticOrDynamic: StaticOrDynamic.STATIC,
       lastUpdated: '1 January 2026',
       bandPercentages: ['0%', '3%', '6.9%', '25%'],
     })
@@ -423,7 +425,7 @@ describe('transformRisk predictorScales', () => {
         current: {
           date: baseDate,
           scores: {
-            RSR: { level: null, type: 'RSR', score: null },
+            RSR: { level: null, type: 'RSR', score: null, staticOrDynamic: null },
             allReoffendingPredictor: { band: null, score: null, staticOrDynamic: null } as StaticOrDynamicPredictor,
           },
         },
@@ -445,7 +447,7 @@ describe('normaliseTimelineScores', () => {
     const input = {
       OGRS: { level: 'HIGH', type: 'OGRS3', twoYears: 4.5 },
       OSPDC: { level: 'MEDIUM', type: 'OSP-DC', score: 3 },
-      RSR: { level: 'LOW', type: 'RSR', score: 1 },
+      RSR: { level: 'LOW', type: 'RSR', score: 1, staticOrDynamic: StaticOrDynamic.STATIC },
     }
 
     const result = normaliseTimelineScores(input)
@@ -465,6 +467,7 @@ describe('normaliseTimelineScores', () => {
         level: 'LOW',
         type: 'RSR',
         score: '1',
+        staticOrDynamic: StaticOrDynamic.STATIC,
       },
     })
   })

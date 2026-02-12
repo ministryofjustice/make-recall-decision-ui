@@ -75,7 +75,8 @@
         "RSR": {
           "level": "HIGH",
           "score": 18,
-          "type": "RSR"
+          "type": "RSR",
+          "staticOrDynamic": "DYNAMIC"
         },
         "OSPDC": {
           "level": "LOW",
@@ -112,7 +113,8 @@
           "RSR": {
             "level": "HIGH",
             "score": 18,
-            "type": "RSR"
+            "type": "RSR",
+            "staticOrDynamic": "DYNAMIC"
           },
           "OSPDC": {
             "level": "LOW",
@@ -148,7 +150,8 @@
           "RSR": {
             "level": "MEDIUM",
             "score": 12,
-            "type": "RSR"
+            "type": "RSR",
+            "staticOrDynamic": "STATIC"
           },
           "OSPC": {
             "level": "MEDIUM",

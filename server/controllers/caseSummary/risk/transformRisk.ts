@@ -42,13 +42,21 @@ const mapLevel = (level?: string | null): string => {
   }
 }
 
-const buildV1Predictor = (
-  label: string,
-  level?: string,
-  score?: string,
-  lastUpdated?: string,
-  bandPercentages: string[] = []
-): PredictorScaleViewModel => {
+const buildV1Predictor = ({
+  label,
+  level,
+  score,
+  staticOrDynamic,
+  lastUpdated,
+  bandPercentages = [],
+}: {
+  label: string
+  level: string
+  score: string
+  staticOrDynamic?: string
+  lastUpdated: string
+  bandPercentages?: string[]
+}): PredictorScaleViewModel => {
   if (!level) {
     return { type: label, level: 'NOT_APPLICABLE', bandPercentages }
   }
@@ -57,6 +65,7 @@ const buildV1Predictor = (
     type: label,
     level: mapLevel(level),
     score,
+    staticOrDynamic,
     lastUpdated,
     bandPercentages,
   }
@@ -135,6 +144,7 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
         level: string
         type: string
         score?: string | number
+        staticOrDynamic?: string
         twoYears?: string | number
       }
 
@@ -142,6 +152,7 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
         level: v1.level,
         type: v1.type,
         score: key === 'OGRS' || key === 'OGP' || key === 'OVP' ? v1.twoYears?.toString() : v1.score?.toString(),
+        staticOrDynamic: v1.staticOrDynamic,
       }
 
       return
@@ -268,58 +279,80 @@ export const transformRisk = (caseSummary: RiskResponse) => {
 
         // V1 (legacy) scores
         rsr: scores.RSR
-          ? buildV1Predictor(scores.RSR.type, scores.RSR.level, scores.RSR.score, lastUpdated, [
-              '0%',
-              '3%',
-              '6.9%',
-              '25%',
-            ])
+          ? buildV1Predictor({
+              label: scores.RSR.type,
+              level: scores.RSR.level,
+              score: scores.RSR.score,
+              staticOrDynamic: scores.RSR.staticOrDynamic,
+              lastUpdated,
+              bandPercentages: ['0%', '3%', '6.9%', '25%'],
+            })
           : undefined,
 
         ospc: scores.OSPC
-          ? buildV1Predictor(scores.OSPC.type, scores.OSPC.level, scores.OSPC.score, lastUpdated)
+          ? buildV1Predictor({
+              label: scores.OSPC.type,
+              level: scores.OSPC.level,
+              score: scores.OSPC.score,
+              lastUpdated,
+            })
           : undefined,
 
         ospi: scores.OSPI
-          ? buildV1Predictor(scores.OSPI.type, scores.OSPI.level, scores.OSPI.score, lastUpdated)
+          ? buildV1Predictor({
+              label: scores.OSPI.type,
+              level: scores.OSPI.level,
+              score: scores.OSPI.score,
+              lastUpdated,
+            })
           : undefined,
 
         ospdc: scores.OSPDC
-          ? buildV1Predictor(scores.OSPDC.type, scores.OSPDC.level, scores.OSPDC.score, lastUpdated)
+          ? buildV1Predictor({
+              label: scores.OSPDC.type,
+              level: scores.OSPDC.level,
+              score: scores.OSPDC.score,
+              lastUpdated,
+            })
           : undefined,
 
         ospiic: scores.OSPIIC
-          ? buildV1Predictor(scores.OSPIIC.type, scores.OSPIIC.level, scores.OSPIIC.score, lastUpdated)
+          ? buildV1Predictor({
+              label: scores.OSPIIC.type,
+              level: scores.OSPIIC.level,
+              score: scores.OSPIIC.score,
+              lastUpdated,
+            })
           : undefined,
 
         ogrs: scores.OGRS
-          ? buildV1Predictor(scores.OGRS.type, scores.OGRS.level, scores.OGRS.twoYears, lastUpdated, [
-              '0%',
-              '50%',
-              '75%',
-              '90%',
-              '100%',
-            ])
+          ? buildV1Predictor({
+              label: scores.OGRS.type,
+              level: scores.OGRS.level,
+              score: scores.OGRS.twoYears,
+              lastUpdated,
+              bandPercentages: ['0%', '50%', '75%', '90%', '100%'],
+            })
           : undefined,
 
         ogp: scores.OGP
-          ? buildV1Predictor(scores.OGP.type, scores.OGP.level, scores.OGP.twoYears, lastUpdated, [
-              '0%',
-              '34%',
-              '67%',
-              '85%',
-              '100%',
-            ])
+          ? buildV1Predictor({
+              label: scores.OGP.type,
+              level: scores.OGP.level,
+              score: scores.OGP.twoYears,
+              lastUpdated,
+              bandPercentages: ['0%', '34%', '67%', '85%', '100%'],
+            })
           : undefined,
 
         ovp: scores.OVP
-          ? buildV1Predictor(scores.OVP.type, scores.OVP.level, scores.OVP.twoYears, lastUpdated, [
-              '0%',
-              '30%',
-              '60%',
-              '80%',
-              '100%',
-            ])
+          ? buildV1Predictor({
+              label: scores.OVP.type,
+              level: scores.OVP.level,
+              score: scores.OVP.twoYears,
+              lastUpdated,
+              bandPercentages: ['0%', '30%', '60%', '80%', '100%'],
+            })
           : undefined,
       }
     : undefined
