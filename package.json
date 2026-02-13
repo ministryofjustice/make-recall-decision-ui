@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "copy-views": "cp -R server/views dist/server/",
-    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css --style compressed",
+    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css --style compressed",
     "watch-ts": "tsc -w",
     "watch-views": "nodemon --watch server/views -e html,njk -x npm run copy-views",
     "watch-node": "DEBUG=gov-starter-server* nodemon --watch dist/ --inspect=0.0.0.0 dist/server.js | bunyan -o short",
@@ -107,6 +107,7 @@
     "@faker-js/faker": "^9.7.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "8.0.0",
+    "@ministryofjustice/hmpps-probation-frontend-components": "1.0.1",
     "@sentry/node": "^7.109.0",
     "@sentry/tracing": "^7.109.0",
     "@types/express-serve-static-core": "^4.19.0",

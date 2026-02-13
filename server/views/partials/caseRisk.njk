@@ -1,5 +1,6 @@
 {% from "components/predictor-scale/macro.njk" import predictorScale %}
 {% from "components/predictor-v2-timeline/macro.njk" import predictorV2Timeline %}
+{%- from "components/oasys-summary-entry/macro.njk" import oasysSummaryEntry -%}
 
 <h1 class='govuk-heading-m govuk-visually-hidden'>
   Risk<span class='govuk-visually-hidden'> for {{ caseSummary.personalDetailsOverview.name }}</span>
@@ -13,74 +14,57 @@
       </div>
     {% endif %}
 
-    <div class='govuk-!-margin-bottom-8'>
-      {{ oasysCard({
-        cardHeading: 'Who is at risk',
-        oasysHeading: 'OASys R10.1 Who is at risk?',
-        error: caseSummary.roshSummary.error,
-        notifications: notifications,
-        content: { text: caseSummary.roshSummary.whoIsAtRisk },
-        lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Who is at risk'
-        },
-        dataQaAttr: 'whoIsAtRisk'
-      }) }}
+    {{ heading('ROSH Summary', 2, 'm') }}
 
-      {{ oasysCard({
-        cardHeading: 'Details of the risk',
-        oasysHeading: 'OASys R10.2 What is the nature of the risk?',
+    <div class='govuk-!-margin-bottom-8'>
+      {{
+        oasysSummaryEntry({
+          heading: 'Who is at risk?',
+          subtitle: 'OASys R10.1 Who is at risk?',
+          content: caseSummary.roshSummary.whoIsAtRisk,
+          lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
+          error: caseSummary.roshSummary.error,
+          notifications: notifications,
+          dataQaAttr: 'whoIsAtRisk'
+        })
+      }}
+      {{ oasysSummaryEntry({
+        heading: 'Details of the risk',
+        subtitle: 'OASys R10.2 What is the nature of the risk?',
         error: caseSummary.roshSummary.error,
         notifications: notifications,
-        content: { text: caseSummary.roshSummary.natureOfRisk },
+        content: caseSummary.roshSummary.natureOfRisk,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Details of the risk'
-        },
         dataQaAttr: 'natureOfRisk'
       }) }}
 
-      {{ oasysCard({
-        cardHeading: 'When the risk will be highest',
-        oasysHeading: 'OASys R10.3 When is the risk likely to be greatest?',
+      {{ oasysSummaryEntry({
+        heading: 'When the risk will be highest',
+        subtitle: 'OASys R10.3 When is the risk likely to be greatest?',
         error: caseSummary.roshSummary.error,
         notifications: notifications,
-        content: { text: caseSummary.roshSummary.riskImminence },
+        content: caseSummary.roshSummary.riskImminence,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'When the risk will be highest'
-        },
         dataQaAttr: 'riskImminence'
       }) }}
 
-      {{ oasysCard({
-        cardHeading: 'Circumstances that will increase the risk',
-        oasysHeading: 'OASys R10.4 What circumstances are likely to increase the risk?',
+      {{ oasysSummaryEntry({
+        heading: 'Circumstances that will increase the risk',
+        subtitle: 'OASys R10.4 What circumstances are likely to increase the risk?',
         error: caseSummary.roshSummary.error,
         notifications: notifications,
-        content: { text: caseSummary.roshSummary.riskIncreaseFactors },
+        content: caseSummary.roshSummary.riskIncreaseFactors,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Circumstances that will increase the risk'
-        },
         dataQaAttr: 'riskIncreaseFactors'
       }) }}
 
-      {{ oasysCard({
-        cardHeading: 'Factors that will reduce the risk',
-        oasysHeading: 'OASys R10.5 What factors are likely to reduce the risk?',
+      {{ oasysSummaryEntry({
+        heading: 'Factors that will reduce the risk',
+        subtitle: 'OASys R10.5 What factors are likely to reduce the risk?',
         error: caseSummary.roshSummary.error,
         notifications: notifications,
-        content: { text: caseSummary.roshSummary.riskMitigationFactors },
+        content: caseSummary.roshSummary.riskMitigationFactors,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Factors that will reduce the risk'
-        },
         dataQaAttr: 'riskMitigationFactors'
       }) }}
     </div>
