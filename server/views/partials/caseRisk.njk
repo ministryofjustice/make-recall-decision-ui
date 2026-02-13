@@ -25,10 +25,6 @@
           lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
           error: caseSummary.roshSummary.error,
           notifications: notifications,
-          attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Who is at risk'
-          },
           dataQaAttr: 'whoIsAtRisk'
         })
       }}
@@ -39,10 +35,6 @@
         notifications: notifications,
         content: caseSummary.roshSummary.natureOfRisk,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Details of the risk'
-        },
         dataQaAttr: 'natureOfRisk'
       }) }}
 
@@ -53,10 +45,6 @@
         notifications: notifications,
         content: caseSummary.roshSummary.riskImminence,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'When the risk will be highest'
-        },
         dataQaAttr: 'riskImminence'
       }) }}
 
@@ -67,10 +55,6 @@
         notifications: notifications,
         content: caseSummary.roshSummary.riskIncreaseFactors,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Circumstances that will increase the risk'
-        },
         dataQaAttr: 'riskIncreaseFactors'
       }) }}
 
@@ -81,10 +65,6 @@
         notifications: notifications,
         content: caseSummary.roshSummary.riskMitigationFactors,
         lastUpdated: caseSummary.roshSummary.lastUpdatedDate,
-        attributes: {
-          'data-analytics-event-category': caseSummary.roshSummary.lastUpdatedDate,
-          'data-analytics-event-label': 'Factors that will reduce the risk'
-        },
         dataQaAttr: 'riskMitigationFactors'
       }) }}
     </div>

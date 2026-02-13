@@ -1,11 +1,7 @@
 {%- from "components/heading/macro.njk" import heading -%}
 {%- from "components/alert-borderless/macro.njk" import alertBorderless -%}
 
-<div
-    class="car-oasys-summary-entry"
-    data-qa="{{ params.dataQaAttr }}"
-    data-analytics-event-scroll="{{ params.subtitle }}"
->
+<div class="car-oasys-summary-entry" data-qa="{{ params.dataQaAttr }}">
     {{ heading(params.heading, 3, 's', 'govuk-!-margin-bottom-1')}}
 
     <div class="govuk-grid-row">
@@ -33,11 +29,7 @@
         {% endif %}
 
         {% if (params.error == "NOT_FOUND_LATEST_COMPLETE" or not params.error) and params.content %}
-            <pre
-                class="govuk-body"
-                data-analytics-event-category="{{ params.attributes['data-analytics-event-category'] }}"
-                data-analytics-event-label="{{ params.attributes['data-analytics-event-label'] }}"
-            >
+            <pre class="govuk-body">
                 {{ params.content }}
             </pre>
         {% endif %}
