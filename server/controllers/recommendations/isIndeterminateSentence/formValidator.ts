@@ -2,6 +2,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
 export const validateIsIndeterminateSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -19,17 +20,17 @@ export const validateIsIndeterminateSentence = async ({ requestBody }: FormValid
     ]
   }
   if (!errors) {
-    const isNo = isIndeterminateSentence === 'NO'
-    const isYes = isIndeterminateSentence === 'YES'
-    const changedToNo = isNo && currentSavedValue === 'YES'
-    const changedToYes = isYes && currentSavedValue === 'NO'
+    const isNo = isIndeterminateSentence === YesNoValues.NO
+    const isYes = isIndeterminateSentence === YesNoValues.YES
+    const changedToNo = isNo && currentSavedValue === YesNoValues.YES
+    const changedToYes = isYes && currentSavedValue === YesNoValues.NO
     valuesToSave = {
       isIndeterminateSentence: isYes,
       indeterminateSentenceType: undefined,
     }
     if (isNo) {
       valuesToSave.indeterminateSentenceType = {
-        selected: 'NO',
+        selected: YesNoValues.NO,
       }
     }
     if (changedToNo || changedToYes) {

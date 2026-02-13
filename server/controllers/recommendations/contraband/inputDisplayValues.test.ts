@@ -1,4 +1,5 @@
 import { inputDisplayValuesContraband } from './inputDisplayValues'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesContraband', () => {
   const apiValues = {
@@ -31,11 +32,11 @@ describe('inputDisplayValuesContraband', () => {
       },
     }
     const unsavedValues = {
-      hasContrabandRisk: 'NO',
+      hasContrabandRisk: YesNoValues.NO,
     }
     const inputDisplayValues = inputDisplayValuesContraband({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'NO',
+      value: YesNoValues.NO,
       details: '',
     })
   })
@@ -45,7 +46,7 @@ describe('inputDisplayValuesContraband', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesContraband({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'YES',
+      value: YesNoValues.YES,
       details: 'Details...',
     })
   })

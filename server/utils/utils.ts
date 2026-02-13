@@ -181,12 +181,6 @@ export const isPreprodOrProd = (env?: string) => {
   return ['preprod', 'prod'].includes(env)
 }
 
-export const booleanToYesNo = (val: boolean) => {
-  if (val === true) return 'YES'
-  if (val === false) return 'NO'
-  return undefined
-}
-
 export function isMandatoryTextValue(val: unknown): boolean {
   if (typeof val === 'string') {
     return (val as string).trim().length > 0

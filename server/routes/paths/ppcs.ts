@@ -7,6 +7,7 @@ export const ppcsPaths = {
   // determinate
   selectIndexOffence: 'select-index-offence',
   consecutiveSentenceDetails: 'consecutive-sentence-details',
+  areOffenceChangesNeeded: 'are-offence-changes-needed',
   matchIndexOffence: 'match-index-offence',
   determinatePpudSentences: 'determinate-ppud-sentences',
   editCustodyType: 'custody-type',

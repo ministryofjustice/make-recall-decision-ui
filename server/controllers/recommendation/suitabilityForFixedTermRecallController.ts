@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
-import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import { strings } from '../../textStrings/en'
@@ -12,6 +11,7 @@ import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
 } from '../../utils/fixedTermRecallUtils'
+import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {

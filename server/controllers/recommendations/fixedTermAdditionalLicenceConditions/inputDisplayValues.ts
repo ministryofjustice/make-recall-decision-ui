@@ -1,6 +1,7 @@
-import { booleanToYesNo, getProperty, isDefined } from '../../../utils/utils'
+import { getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types/pagesForms'
+import { booleanToYesNo } from '../formOptions/yesNo'
 
 export const inputDisplayValuesFixedTermLicenceConditions = ({
   errors = {},

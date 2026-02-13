@@ -86,6 +86,7 @@ function removeOffenceAndSentenceData(bookRecallToPpud: BookRecallToPpud) {
   delete bookRecallToPpud.ppudSentenceId
   delete bookRecallToPpud.ppudIndeterminateSentenceData
   delete bookRecallToPpud.custodyType
+  delete bookRecallToPpud.changeOffenceOrAddComment
   /* eslint-enable no-param-reassign */
 }
 

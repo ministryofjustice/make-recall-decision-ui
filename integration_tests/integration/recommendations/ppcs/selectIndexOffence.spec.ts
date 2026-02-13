@@ -4,13 +4,12 @@ import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentence
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { TermOptions } from '../../../../data/common/termGenerator'
 import { SentenceOffenceOptions } from '../../../../data/prisonSentences/sentenceOffenceGenerator'
-import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
 import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
 import { defaultUpdateRecommendationResponse } from '../_data'
 import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { ConvictionDetail } from '../../../../server/@types/make-recall-decision-api'
+import { setUpSessionForPpcs } from './util'
 
 context('Determinate Sentence - Select Index Offence Page', () => {
   const crn = 'X34983'
@@ -19,9 +18,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
   const testPageUrl = `/recommendations/123456789/select-index-offence`
 
   beforeEach(() => {
-    cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-    cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+    setUpSessionForPpcs()
   })
 
   const defaultRecommendationResponse = RecommendationResponseGenerator.generate({

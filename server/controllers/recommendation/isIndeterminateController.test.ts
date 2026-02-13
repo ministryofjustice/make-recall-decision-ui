@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import isIndeterminateSentenceController from './isIndeterminateController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { YesNoValues } from '../recommendations/formOptions/yesNo'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -18,7 +19,7 @@ describe('get', () => {
     const next = mockNext()
     await isIndeterminateSentenceController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'YES' })
+    expect(res.locals.inputDisplayValues).toEqual({ value: YesNoValues.YES })
   })
 
   it('initial load with error data', async () => {
@@ -75,7 +76,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        isIndeterminateSentence: 'YES',
+        isIndeterminateSentence: YesNoValues.YES,
       },
     })
 
