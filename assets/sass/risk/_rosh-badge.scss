@@ -1,0 +1,29 @@
+
+/* Alternative - target any flex container in RoSH timeline items */
+.predictor-timeline__item .flex {
+  border: none !important;
+  background: none !important;
+  outline: none !important;
+}
+
+.predictor-timeline__item .flex.flex--align-center {
+  display: block !important;
+}
+
+/* Make items inline and align at the same level */
+.predictor-timeline__description .predictor-timeline-item {
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.predictor-timeline__description .govuk-\!-padding-left-2 {
+  display: inline;
+  padding-left: 0 !important;
+  vertical-align: middle;
+}
+
+/* Add space between "RoSH" and "VERY HIGH" */
+.predictor-timeline__item .predictor-timeline-item__level strong {
+  margin-right: 0.25rem;
+}

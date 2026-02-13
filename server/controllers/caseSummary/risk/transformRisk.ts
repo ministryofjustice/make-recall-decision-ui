@@ -37,8 +37,10 @@ const mapLevel = (level?: string | null): string => {
     case 'HIGH':
     case 'VERY_HIGH':
       return level
+    case 'NOT_APPLICABLE':
+      return level
     default:
-      return 'NOT_APPLICABLE'
+      return 'UNKNOWN'
   }
 }
 
@@ -84,7 +86,7 @@ const buildV2StaticOrDynamicPredictor = (
   return {
     type: label,
     level: mapLevel(predictor.band),
-    score: predictor.score.toString(),
+    score: predictor.score?.toString(),
     staticOrDynamic: predictor.staticOrDynamic,
     lastUpdated,
     bandPercentages,
@@ -161,13 +163,13 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
     // V2 predictors
     if (key in V2_PREDICTOR_LABELS) {
       const v2 = value as {
-        band: string
+        band: string | null
         score?: number
         staticOrDynamic?: string
       }
 
       normalised[key] = {
-        level: v2.band,
+        level: v2.band ?? undefined,
         type: V2_PREDICTOR_LABELS[key],
         score: v2.score?.toString(),
         staticOrDynamic: v2.staticOrDynamic,
@@ -245,7 +247,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
           ? buildV2Predictor(
               'Direct Contact - Sexual Reoffending Predictor',
               scores.directContactSexualReoffendingPredictor.band,
-              scores.directContactSexualReoffendingPredictor.score.toString(),
+              scores.directContactSexualReoffendingPredictor.score?.toString(),
               lastUpdated
             )
           : undefined,
@@ -254,7 +256,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
           ? buildV2Predictor(
               'Images and Indirect Contact - Sexual Reoffending Predictor',
               scores.indirectImageContactSexualReoffendingPredictor.band,
-              scores.indirectImageContactSexualReoffendingPredictor.score.toString(),
+              scores.indirectImageContactSexualReoffendingPredictor.score?.toString(),
               lastUpdated
             )
           : undefined,

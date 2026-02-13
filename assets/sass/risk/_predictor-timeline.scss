@@ -10,6 +10,9 @@ $medium-score-colour__text: #a34e00;
 $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
+$default-colour: govuk-colour("mid-grey");
+$default-colour--light: govuk-colour("light-grey");
+$default-colour__text: govuk-colour("black");
 
 .predictor-timeline {
   margin-bottom: govuk-spacing(4);
@@ -146,17 +149,11 @@ $low-score-colour__text: #485b10;
     background-color: #E5E6E7;
 
     padding: 2px 5px;
-
-    line-height: 1.2;
-    display: inline-flex;
-    align-items: center;
   }
 
   & .predictor-timeline-item__wrapped_static_or_dynamic {
+    display: inline-block;
     margin-top: 3px;
-    line-height: 1.2;
-    display: inline-flex;
-    align-items: center;
   }
 }
 
@@ -180,10 +177,14 @@ $low-score-colour__text: #485b10;
   @include predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
+.predictor-timeline-item--default {
+  @include predictor-timeline-item-base($default-colour, $default-colour--light, $default-colour__text);
+}
+
 .predictor-timeline-link-btn {
   @include govuk-font($size: 19);
-  text-decoration-thickness: max(3px,.1875rem,.12em);
-  text-underline-offset: 3px;
+  text-decoration-thickness: $govuk-link-underline-thickness;
+  text-underline-offset: $govuk-link-underline-offset;
   background: none;
   border: none;
   color: $govuk-link-colour;
@@ -192,6 +193,15 @@ $low-score-colour__text: #485b10;
   cursor: pointer;
   text-decoration-skip-ink: none;
   text-decoration-skip: none
+}
+
+.predictor-timeline-link-btn:hover {
+  color: $govuk-link-hover-colour;
+  text-decoration-thickness: $govuk-link-hover-underline-thickness;
+  // Disable ink skipping on underlines on hover. Browsers haven't
+  // standardised on this part of the spec yet, so set both properties
+  text-decoration-skip-ink: none; // Chromium, Firefox
+  text-decoration-skip: none; // Safari
 }
 
 .predictor-timeline-link-btn:focus {
@@ -257,45 +267,6 @@ $low-score-colour__text: #485b10;
   @include legacy-predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
-.predictor-timeline__description > .flex--align-center .predictor-timeline-item {
-  flex: 0 0 auto;
-  width: auto;
-  min-width: auto;
-}
-
-.predictor-timeline__description > .flex.flex--align-center.govuk-\!-margin-bottom-2 {
-  border: none !important;
-  background: none !important;
-  padding: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Alternative - target any flex container in RoSH timeline items */
-.predictor-timeline__item .flex {
-  border: none !important;
-  background: none !important;
-  outline: none !important;
-}
-
-.predictor-timeline__item .flex.flex--align-center {
-  display: block !important;
-}
-
-/* Make items inline and align at the same level */
-.predictor-timeline__description .predictor-timeline-item {
-  display: inline-block;
-  margin-right: 0.5rem;
-  vertical-align: middle;
-}
-
-.predictor-timeline__description .govuk-\!-padding-left-2 {
-  display: inline;
-  padding-left: 0 !important;
-  vertical-align: middle;
-}
-
-/* Add space between "RoSH" and "VERY HIGH" */
-.predictor-timeline__item .predictor-timeline-item__level strong {
-  margin-right: 0.25rem;
+.legacy-predictor-timeline-item--default {
+  @include legacy-predictor-timeline-item-base($default-colour, $default-colour--light, $default-colour__text);
 }

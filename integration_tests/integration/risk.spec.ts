@@ -455,8 +455,10 @@ context('Risk page', () => {
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '85%').should('be.visible')
 
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OVP').should('be.visible')
-      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '91%').should('be.visible')
-
+      cy.get(opts.parent)
+        .find('span.legacy-predictor-timeline-item__type_and_level strong')
+        .contains('UNKNOWN')
+        .should('be.visible')
       cy.get('.predictor-timeline__item')
         .contains('.predictor-timeline__byline', '23 February 2026 at 09:00')
         .parents('.predictor-timeline__item')

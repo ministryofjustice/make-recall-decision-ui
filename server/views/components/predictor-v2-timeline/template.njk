@@ -11,25 +11,34 @@
     {% if isLegacy %}
 
       {% switch predictor.level %}
-      {% case 'VERY_HIGH' %}
-        {% set timelineItemClass = 'legacy-predictor-timeline-item--very-high' %}
-      {% case 'HIGH' %}
-        {% set timelineItemClass = 'legacy-predictor-timeline-item--high' %}
-      {% case 'MEDIUM' %}
-        {% set timelineItemClass = 'legacy-predictor-timeline-item--medium' %}
-      {% case 'LOW' %}
-        {% set timelineItemClass = 'legacy-predictor-timeline-item--low' %}
+          {% case 'VERY_HIGH' %}
+            {% set timelineItemClass = 'legacy-predictor-timeline-item--very-high' %}
+          {% case 'HIGH' %}
+            {% set timelineItemClass = 'legacy-predictor-timeline-item--high' %}
+          {% case 'MEDIUM' %}
+            {% set timelineItemClass = 'legacy-predictor-timeline-item--medium' %}
+          {% case 'LOW' %}
+            {% set timelineItemClass = 'legacy-predictor-timeline-item--low' %}
+          {% default %}
+            {% set timelineItemClass = 'legacy-predictor-timeline-item--default' %}
       {% endswitch %}
+
+      {% if predictor.level is undefined %}
+          {% set band = 'UNKNOWN' %}
+          {% set timelineItemClass = 'legacy-predictor-timeline-item--default' %}
+      {% else %}
+          {% set band = predictor.level | replace('_', ' ') %}
+      {% endif %}
 
       <div class="{{ timelineItemClass }}">
         <span
-          class="legacy-predictor-timeline-item__type_and_level">{{ predictor.type | upper }} <strong>{{ predictor.level | replace('_', ' ') }}</strong></span>
+          class="legacy-predictor-timeline-item__type_and_level">{{ predictor.type | upper }} <strong>{{ band }}</strong></span>
 
-        {% if predictor.score %}
+        {% if predictor.score and timelineItemClass != 'legacy-predictor-timeline-item--default' %}
           <span class="legacy-predictor-timeline-item__score">{{ predictor.score }}%</span>
         {% endif %}
 
-        {% if predictor.staticOrDynamic %}
+        {% if predictor.staticOrDynamic and timelineItemClass != 'legacy-predictor-timeline-item--default' %}
           <span
             class="legacy-predictor-timeline-item__static_or_dynamic">{{ predictor.staticOrDynamic | capitalize }}</span>
         {% endif %}
@@ -39,15 +48,24 @@
     {% else %}
 
       {% switch predictor.level %}
-      {% case 'VERY_HIGH' %}
-        {% set timelineItemClass = 'predictor-timeline-item--very-high' %}
-      {% case 'HIGH' %}
-        {% set timelineItemClass = 'predictor-timeline-item--high' %}
-      {% case 'MEDIUM' %}
-        {% set timelineItemClass = 'predictor-timeline-item--medium' %}
-      {% case 'LOW' %}
-        {% set timelineItemClass = 'predictor-timeline-item--low' %}
+          {% case 'VERY_HIGH' %}
+            {% set timelineItemClass = 'predictor-timeline-item--very-high' %}
+          {% case 'HIGH' %}
+            {% set timelineItemClass = 'predictor-timeline-item--high' %}
+          {% case 'MEDIUM' %}
+            {% set timelineItemClass = 'predictor-timeline-item--medium' %}
+          {% case 'LOW' %}
+            {% set timelineItemClass = 'predictor-timeline-item--low' %}
+          {% default %}
+            {% set timelineItemClass = 'predictor-timeline-item--default' %}
       {% endswitch %}
+
+      {% if predictor.level is undefined %}
+          {% set band = 'UNKNOWN' %}
+          {% set timelineItemClass = 'predictor-timeline-item--default' %}
+      {% else %}
+          {% set band = predictor.level | replace('_', ' ') %}
+      {% endif %}
 
       {% set staticOrDynamicClass = 'predictor-timeline-item__static_or_dynamic' %}
       {% if predictor.score and predictor.level in ['VERY_HIGH', 'MEDIUM'] and predictor.staticOrDynamic === 'DYNAMIC' %}
@@ -58,13 +76,13 @@
         <span class="predictor-timeline-item__type">{{ predictor.type | title }}</span>
 
         <div class="predictor-timeline-item__stats">
-          <span class="predictor-timeline-item__level">{{ predictor.level | replace('_', ' ') }}</span>
+          <span class="predictor-timeline-item__level">{{ band }}</span>
 
-          {% if predictor.score %}
+          {% if predictor.score and timelineItemClass != 'predictor-timeline-item--default' %}
             <span class="predictor-timeline-item__score">{{ predictor.score }}%</span>
           {% endif %}
 
-          {% if predictor.staticOrDynamic %}
+          {% if predictor.staticOrDynamic and timelineItemClass != 'predictor-timeline-item--default' %}
             <span class="{{ staticOrDynamicClass }}">{{ predictor.staticOrDynamic | capitalize }}</span>
           {% endif %}
         </div>
