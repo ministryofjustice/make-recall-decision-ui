@@ -1,9 +1,13 @@
+{%- from "components/heading/macro.njk" import heading -%}
+{%- from "components/alert-borderless/macro.njk" import alertBorderless -%}
+
 <div
     class="car-oasys-summary-entry"
     data-qa="{{ params.dataQaAttr }}"
     data-analytics-event-scroll="{{ params.subtitle }}"
 >
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ params.heading }}</h3>
+    {{ heading(params.heading, 3, 's', 'govuk-!-margin-bottom-1')}}
+
     <div class="govuk-grid-row">
         <span class="govuk-caption-m govuk-grid-column-two-thirds">{{ params.subtitle }}</span>
         <span class="govuk-caption-m govuk-!-text-align-right govuk-grid-column-one-third">Last updated: {{ formatDateTimeFromIsoString({ isoDate: params.lastUpdated, dateOnly: true, shortDate: true }) | safe }}</span>
@@ -11,20 +15,21 @@
 
     <div class="govuk-!-margin-top-2">
         {% if params.error %}
-            <p class="govuk-body car-oasys-summary-entry__error">
-                <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20.1777 2.5H9.82233L2.5 9.82233V20.1777L9.82233 27.5H20.1777L27.5 20.1777V9.82233L20.1777 2.5ZM10.9155 8.87769L15.0001 12.9623L19.0847 8.87771L21.1224 10.9154L17.0378 15L21.1224 19.0846L19.0847 21.1222L15.0001 17.0376L10.9155 21.1223L8.87782 19.0846L12.9624 15L8.87783 10.9153L10.9155 8.87769Z" fill="#D4351C"/>
-                </svg>
-                <span class="car-oasys-summary-entry__error__text">
-                    {% if params.error == 'NOT_FOUND_LATEST_COMPLETE' %}
-                        {{ params.notifications.oasysNotFoundLatestComplete }}
-                    {% elseif params.error == 'MISSING_DATA' %}
-                        {{ params.notifications.oasysMissingRosh }}
-                    {% else %}
-                        {{ params.notifications.oasysApiError }}
-                    {% endif %}
-                </span>
-            </p>
+            {% if params.error == 'NOT_FOUND_LATEST_COMPLETE' -%}
+                {% set message = params.notifications.oasysNotFoundLatestComplete -%}
+            {% elseif params.error == 'MISSING_DATA' %}
+                {% set message = params.notifications.oasysMissingRosh -%}
+            {% else %}
+                {% set message = params.notifications.oasysApiError -%}
+            {% endif %}
+    
+            {{
+                alertBorderless({
+                    variant: "error",
+                    title: message,
+                    showTitleAsHeading: false
+                })
+            }}
         {% endif %}
 
         {% if (params.error == "NOT_FOUND_LATEST_COMPLETE" or not params.error) and params.content %}

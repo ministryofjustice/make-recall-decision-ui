@@ -21,7 +21,7 @@ context('Risk page', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
   })
 
-  it('shows RoSH, MAPPA and v1 predictor scores', () => {
+  it('shows a RoSH summary', () => {
     cy.task('getCase', {
       sectionId: 'risk',
       statusCode: 200,
@@ -40,20 +40,59 @@ context('Risk page', () => {
 
     cy.getElement('ROSH Summary').should('exist')
 
-    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
-    cy.getElement(whoIsAtRisk, { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
+    const summaries = [
+      {
+        title: 'Who is at risk?',
+        subtitle: 'OASys R10.1 Who is at risk?',
+        qrAttr: 'whoIsAtRisk',
+        body: whoIsAtRisk,
+      },
+      {
+        title: 'Details of the risk',
+        subtitle: 'OASys R10.2 What is the nature of the risk?',
+        qrAttr: 'natureOfRisk',
+        body: natureOfRisk,
+      },
+      {
+        title: 'When the risk will be highest',
+        subtitle: 'OASys R10.3 When is the risk likely to be greatest?',
+        qrAttr: 'riskImminence',
+        body: riskImminence,
+      },
+      {
+        title: 'Circumstances that will increase the risk',
+        subtitle: 'OASys R10.4 What circumstances are likely to increase the risk?',
+        qrAttr: 'riskIncreaseFactors',
+        body: riskIncreaseFactors,
+      },
+      {
+        title: 'Factors that will reduce the risk',
+        subtitle: 'OASys R10.5 What factors are likely to reduce the risk?',
+        qrAttr: 'riskMitigationFactors',
+        body: riskMitigationFactors,
+      },
+    ]
 
-    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
-    cy.getElement(natureOfRisk, { parent: '[data-qa="natureOfRisk"]' }).should('exist')
+    summaries.forEach(({ qrAttr, title, subtitle, body }) => {
+      const parent = `[data-qa="${qrAttr}"]`
 
-    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskImminence"]' }).should('exist')
-    cy.getElement(riskImminence, { parent: '[data-qa="riskImminence"]' }).should('exist')
+      cy.get(parent).should('exist').contains(title)
+      cy.get(parent).contains(subtitle)
+      cy.get(parent).contains('Last updated: 9 Oct 2021')
+      cy.get(parent).contains(body)
+    })
+  })
 
-    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
-    cy.getElement(riskIncreaseFactors, { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
+  it('shows RoSH, MAPPA and v1 predictor scores', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+      },
+    })
 
-    cy.getElement('Last updated: 9 Oct 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
-    cy.getElement(riskMitigationFactors, { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
 
     // v1 predictor scores
     const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
@@ -354,6 +393,18 @@ context('Risk page', () => {
     }).should('exist')
   })
 
+  it('shows a message if the assessment is incomplete', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.getText('banner-latest-complete-assessment')
+      .should('include', 'This information is from the latest complete OASys assessment.')
+      .should('include', 'Check OASys for new information. There is a more recent assessment that’s not complete.')
+  })
+
   describe('Timeline', () => {
     it('Predictor scores and RoSH history available', () => {
       cy.task('getCase', {
@@ -565,19 +616,6 @@ context('Risk page', () => {
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
       cy.getElement('OSP-C LOW', opts).should('be.visible')
     })
-  })
-
-  it('shows a message if the assessment is incomplete', () => {
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.getText('banner-latest-complete-assessment').should(
-      'equal',
-      'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
-    )
   })
 })
 
