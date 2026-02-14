@@ -30,8 +30,9 @@ const expectedOptionForSentence = (sentence: PrisonSentence, expectedConsecutive
     offenceStatute: sentence.offences.at(0).offenceStatute,
     offenderChargeId: sentence.offences.at(0).offenderChargeId,
     sentenceDate: sentence.sentenceDate,
-    sentenceEndDate: sentence.sentenceEndDate,
     sentenceStartDate: sentence.sentenceStartDate,
+    sentenceEndDate: sentence.sentenceEndDate,
+    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceTypeDescription: sentence.sentenceTypeDescription,
     terms: sentence.terms,
     releaseDate: sentence.releaseDate,
@@ -47,6 +48,7 @@ const expectedNomisOffenceForSentence = (sentence: PrisonSentence) => ({
   dateOfSentence: sentence.sentenceDate,
   startDate: sentence.sentenceStartDate,
   endDate: sentence.sentenceEndDate,
+  sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
 })
 
 const expectedConvictionDataForRecommendation = (recommendation: RecommendationResponse) => ({
@@ -148,6 +150,10 @@ describe('Select Index Offence Controller', () => {
               expect(offenceData().dateOfSentence).toEqual(expectedNomisOffenceData.dateOfSentence))
             it(' - startDate', async () => expect(offenceData().startDate).toEqual(expectedNomisOffenceData.startDate))
             it(' - endDate', async () => expect(offenceData().endDate).toEqual(expectedNomisOffenceData.endDate))
+            it(' - sentenceSequenceExpiryDate', async () =>
+              expect(offenceData().sentenceSequenceExpiryDate).toEqual(
+                expectedNomisOffenceData.sentenceSequenceExpiryDate
+              ))
             it(' - terms (to be defined, conditional)', async () => expect(offenceData().terms).toBeDefined())
             it(' - consecutiveCount (to be undefined, conditional)', async () =>
               expect(offenceData().consecutiveCount).toBeUndefined())

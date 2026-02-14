@@ -20,7 +20,7 @@ type SentenceInfo = {
   court: string
   dateOfSentence: string
   startDate: string
-  sentenceExpiryDate: string
+  sentenceSequenceExpiryDate?: string
   sentenceLength?: { key: string; value: Term }[]
 }
 
@@ -69,7 +69,7 @@ describe('Consecutive Sentence Details Controller', () => {
           court: sentence.courtDescription,
           dateOfSentence: sentence.sentenceDate,
           startDate: sentence.sentenceStartDate,
-          sentenceExpiryDate: sentence.sentenceEndDate,
+          sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
         }) as SentenceInfo
 
       it('- Prison Sentences correctly called', async () =>
@@ -91,9 +91,9 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Sentence type', async () => expect(actual(res).sentenceType).toEqual(expected.sentenceType))
               it('- Court', async () => expect(actual(res).court).toEqual(expected.court))
               it('- Date of sentence', async () => expect(actual(res).dateOfSentence).toEqual(expected.dateOfSentence))
-              it('- Date of sentence', async () => expect(actual(res).startDate).toEqual(expected.startDate))
+              it('- Start date', async () => expect(actual(res).startDate).toEqual(expected.startDate))
               it('- Sentence expiry date', async () =>
-                expect(actual(res).sentenceExpiryDate).toEqual(expected.sentenceExpiryDate))
+                expect(actual(res).sentenceSequenceExpiryDate).toEqual(expected.sentenceSequenceExpiryDate))
               it('- Sentence length (to be defined, conditional)', async () =>
                 expect(actual(res).sentenceLength).toBeDefined())
             }
@@ -208,7 +208,7 @@ describe('Consecutive Sentence Details Controller', () => {
             },
           ])
         })
-        it('- No terms, lists ket as "Sentence length" with an empty value', async () => {
+        it('- No terms, lists key as "Sentence length" with an empty value', async () => {
           const sentenceWithNoTerms = PrisonSentenceSequenceGenerator.generate({
             indexSentence: {
               offences: [
