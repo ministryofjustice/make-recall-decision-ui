@@ -9,7 +9,6 @@
   display: block !important;
 }
 
-/* FIX: Only remove fixed width for items INSIDE flex containers */
 .predictor-timeline__item .flex .predictor-timeline-item--very-high,
 .predictor-timeline__item .flex .predictor-timeline-item--high,
 .predictor-timeline__item .flex .predictor-timeline-item--medium,
@@ -19,7 +18,6 @@
   max-width: fit-content !important;
 }
 
-/* Make items inline and align at the same level */
 .predictor-timeline__description .predictor-timeline-item {
   display: inline-block;
   margin-right: 0.5rem;
@@ -32,7 +30,6 @@
   vertical-align: middle;
 }
 
-/* Add space between "RoSH" and "VERY HIGH" */
 .predictor-timeline__item .predictor-timeline-item__level strong {
   margin-right: 0.25rem;
 }
