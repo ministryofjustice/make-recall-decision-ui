@@ -1,5 +1,4 @@
-
-/* Alternative - target any flex container in RoSH timeline items */
+/* Remove border/background from flex container */
 .predictor-timeline__item .flex {
   border: none !important;
   background: none !important;
@@ -8,6 +7,16 @@
 
 .predictor-timeline__item .flex.flex--align-center {
   display: block !important;
+}
+
+/* FIX: Only remove fixed width for items INSIDE flex containers */
+.predictor-timeline__item .flex .predictor-timeline-item--very-high,
+.predictor-timeline__item .flex .predictor-timeline-item--high,
+.predictor-timeline__item .flex .predictor-timeline-item--medium,
+.predictor-timeline__item .flex .predictor-timeline-item--low,
+.predictor-timeline__item .flex .predictor-timeline-item--default {
+  width: auto !important;
+  max-width: fit-content !important;
 }
 
 /* Make items inline and align at the same level */
