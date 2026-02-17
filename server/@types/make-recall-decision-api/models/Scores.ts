@@ -4,10 +4,11 @@
 
 import type { LevelWithScore } from './LevelWithScore';
 import type { LevelWithTwoYearScores } from './LevelWithTwoYearScores';
+import { LevelWithStaticOrDynamicScore } from './LevelWithStaticOrDynamicScore'
 
 export type Scores = {
   // V1 assessment scores
-    RSR?: LevelWithScore;
+    RSR?: LevelWithStaticOrDynamicScore;
     OSPC?: LevelWithScore;
     OSPI?: LevelWithScore;
     OSPDC?: LevelWithScore;
