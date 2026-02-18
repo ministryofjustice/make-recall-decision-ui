@@ -59,11 +59,13 @@ export enum FourBandRiskScoreBand {
   MEDIUM = "MEDIUM",
   HIGH = "HIGH",
   VERY_HIGH = "VERY_HIGH",
+  NOT_APPLICABLE = "NOT_APPLICABLE",
 }
 
 export enum ThreeBandRiskScoreBand {
   LOW = "LOW",
   MEDIUM = "MEDIUM",
   HIGH = "HIGH",
+  NOT_APPLICABLE = "NOT_APPLICABLE"
 }
 

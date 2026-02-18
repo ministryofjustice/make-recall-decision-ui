@@ -7,16 +7,13 @@ $high-score-border-colour: #d4351c;
 $very-high-score-colour: #711a0d;
 $very-high-score-border-colour: #942514;
 $unknown-score-border-colour: #fd0;
-$mappa-colour: #4c2c92;
 
 .rosh-widget {
-  border: 2px solid govuk-colour("black");
+  border: 2px solid govuk-colour('black');
   padding: govuk-spacing(4);
   margin-bottom: govuk-spacing(4);
-  max-width: 570px;
-  min-width: 250px;
 
-  & h2 {
+  & h3 {
     margin-bottom: govuk-spacing(1);
     font-weight: 400;
   }
@@ -29,7 +26,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--low {
   border: 2px solid $low-score-border-colour;
 
-  & h2 {
+  & h3 {
     color: $low-score-colour;
   }
 }
@@ -37,7 +34,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--medium {
   border: 2px solid $medium-score-border-colour;
 
-  & h2 {
+  & h3 {
     color: $medium-score-colour;
   }
 }
@@ -45,7 +42,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--high {
   border: 2px solid $high-score-border-colour;
 
-  & h2 {
+  & h3 {
     color: $high-score-colour;
   }
 }
@@ -53,7 +50,7 @@ $mappa-colour: #4c2c92;
 .rosh-widget--very-high {
   border: 2px solid $very-high-score-border-colour;
 
-  & h2 {
+  & h3 {
     color: $very-high-score-colour;
   }
 }
@@ -71,10 +68,6 @@ $mappa-colour: #4c2c92;
       font-weight: bold;
     }
   }
-  thead,
-  tbody {
-    @include govuk-font($size: 16);
-  }
 }
 
 .rosh-widget__risk--low {
@@ -91,28 +84,4 @@ $mappa-colour: #4c2c92;
 
 .rosh-widget__risk--very-high {
   color: $very-high-score-colour;
-}
-
-.mappa-widget {
-  border: 2px solid $mappa-colour;
-  padding: govuk-spacing(4);
-
-  & h2 {
-    color: $mappa-colour;
-    margin-bottom: govuk-spacing(1);
-    font-weight: 400;
-  }
-}
-
-.side-bar {
-  .mappa-widget {
-    min-width: 250px;
-  }
-}
-
-.risk-flag-widget {
-  border: 2px solid #93afc3;
-  background-color: #ebf7ff;
-  padding: govuk-spacing(4);
-  margin-bottom: govuk-spacing(4);
 }

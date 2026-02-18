@@ -301,11 +301,11 @@ context('Risk page', () => {
         .should('exist')
     )
 
-    cy.getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
+    cy.getElement('Something went wrong. We are unable to show ROSH information at this time. Try again later.', {
       parent: `[data-qa="roshTable"]`,
     }).should('exist')
 
-    cy.getElement('Unknown RoSH').should('exist')
+    cy.getElement('UNKNOWN LEVEL ROSH').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement('No MAPPA data found in NDelius.', {
       parent: '[data-qa="mappa"]',
@@ -346,7 +346,7 @@ context('Risk page', () => {
         })
         .should('exist')
     )
-    cy.getElement('Unknown RoSH').should('exist')
+    cy.getElement('UNKNOWN LEVEL ROSH').should('exist')
     cy.getElement('This information cannot be retrieved from OASys.').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement('No MAPPA data found in NDelius.', {
@@ -388,7 +388,7 @@ context('Risk page', () => {
         })
         .should('exist')
     )
-    cy.getElement('The latest complete OASys assessment does not have full RoSH information.', {
+    cy.getElement('Something went wrong. We are unable to show ROSH information at this time. Try again later.', {
       parent: '[data-qa="roshTable"]',
     }).should('exist')
   })

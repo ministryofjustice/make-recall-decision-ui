@@ -1,4 +1,4 @@
-import { RiskResponse } from '../../../@types/make-recall-decision-api'
+import { RiskResponse, RiskTo, RoshSummary } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
 import { StaticOrDynamicPredictor } from '../../../@types/make-recall-decision-api/models/Scores'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
@@ -180,6 +180,71 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
   return normalised
 }
 
+export type RoshRiskRow = {
+  riskTo?: string
+  community?: string
+  custody?: string
+}
+
+export type RoshSummaryView = {
+  hasBeenCompleted?: boolean
+  overallRisk?: string
+  risks?: RoshRiskRow[]
+  lastUpdated?: string
+}
+
+const normalise = (value?: string): string => {
+  if (!value || value.trim() === '') return 'N/A'
+  return value
+}
+
+export const buildRoshSummary = (roshSummary?: RoshSummary): RoshSummaryView | undefined => {
+  if (!roshSummary || roshSummary.error) return undefined
+
+  const risk = roshSummary.riskOfSeriousHarm
+
+  const community: RiskTo | undefined = risk?.riskInCommunity
+  const custody: RiskTo | undefined = risk?.riskInCustody
+
+  const risks: RoshRiskRow[] = [
+    {
+      riskTo: 'Children',
+      community: normalise(community?.riskToChildren),
+      custody: normalise(custody?.riskToChildren),
+    },
+    {
+      riskTo: 'Public',
+      community: normalise(community?.riskToPublic),
+      custody: normalise(custody?.riskToPublic),
+    },
+    {
+      riskTo: 'Known Adult',
+      community: normalise(community?.riskToKnownAdult),
+      custody: normalise(custody?.riskToKnownAdult),
+    },
+    {
+      riskTo: 'Staff',
+      community: normalise(community?.riskToStaff),
+      custody: normalise(custody?.riskToStaff),
+    },
+    {
+      riskTo: 'Prisoners',
+      community: normalise(community?.riskToPrisoners),
+      custody: normalise(custody?.riskToPrisoners),
+    },
+  ]
+
+  return {
+    hasBeenCompleted: true,
+    overallRisk: normalise(risk?.overallRisk),
+    risks,
+    lastUpdated: formatDateTimeFromIsoString({
+      isoDate: roshSummary.lastUpdatedDate,
+      dateOnly: true,
+    }),
+  }
+}
+
 export const transformRisk = (caseSummary: RiskResponse) => {
   let timeline: unknown[] = []
 
@@ -359,8 +424,11 @@ export const transformRisk = (caseSummary: RiskResponse) => {
       }
     : undefined
 
+  const roshWidgetSummary = buildRoshSummary(caseSummary.roshSummary)
+
   return {
     ...caseSummary,
+    roshWidgetSummary,
     timeline,
     predictorScales,
   }

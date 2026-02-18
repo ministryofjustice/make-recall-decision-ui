@@ -1,0 +1,13 @@
+$mappa-colour: #4c2c92;
+
+.mappa-widget {
+  border: 2px solid $mappa-colour;
+  padding: govuk-spacing(4);
+  margin-bottom: govuk-spacing(4);
+
+  & h3 {
+    color: $mappa-colour;
+    margin-bottom: govuk-spacing(1);
+    font-weight: 400;
+  }
+}

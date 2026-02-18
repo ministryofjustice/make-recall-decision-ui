@@ -288,11 +288,7 @@
 
   <div class="flex__item-one-third-desktop">
     <div data-qa='roshTable'>
-      {{ roshWidget({
-        riskOfSeriousHarm: caseSummary.roshSummary if caseSummary.roshSummary.error else caseSummary.roshSummary.riskOfSeriousHarm,
-        notifications: notifications,
-        lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.roshSummary.lastUpdatedDate, dateOnly: true })
-      }) }}
+      {{ roshWidgetArns(caseSummary.roshWidgetSummary) }}
     </div>
 
     <div class="govuk-!-margin-bottom-4 side-bar" data-qa='mappa'>
