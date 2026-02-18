@@ -15,6 +15,7 @@ generic-service:
     MAKE_RECALL_DECISION_API_URL: "http://make-recall-decision-api.make-recall-decision-dev.svc.cluster.local"
     MANAGE_USERS_API_URL: "https://manage-users-api-dev.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-dev.hmpps.service.justice.gov.uk"
+    COMPONENT_API_URL: "https://probation-frontend-components-dev.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "dev"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true

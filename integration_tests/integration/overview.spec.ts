@@ -310,10 +310,9 @@ context('Overview', () => {
       cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
-      cy.getText('banner-latest-complete-assessment').should(
-        'contain',
-        'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
-      )
+      cy.getText('banner-latest-complete-assessment')
+        .should('include', 'This information is from the latest complete OASys assessment.')
+        .should('include', 'Check OASys for new information. There is a more recent assessment that’s not complete.')
     })
 
     it("main offences don't match", () => {

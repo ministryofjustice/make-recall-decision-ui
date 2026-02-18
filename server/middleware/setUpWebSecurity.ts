@@ -1,6 +1,7 @@
 import express, { Response, Router } from 'express'
 import helmet from 'helmet'
 import { randomBytes } from 'crypto'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -29,6 +30,10 @@ export default function setUpWebSecurity(): Router {
             '*.google-analytics.com',
             '*.analytics.google.com',
             '*.applicationinsights.azure.com',
+            // This removes sourcemap errors from the Probation Components API assets
+            // normally handled by the package's CSP settings, but it seems this config
+            // file is overwriting that, so we manually add it back in here
+            config.apis.probationApi.url,
           ],
           imgSrc: ["'self'", 'data:', '*.google-analytics.com', '*.analytics.google.com'],
           styleSrc: ["'self'"],

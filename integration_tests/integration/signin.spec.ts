@@ -14,12 +14,6 @@ context('SignIn', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
-  it('User name visible in header', () => {
-    cy.signIn()
-    cy.getText('header-user-name').should('contain', 'J. Bloggs')
-    cy.getText('env-tag').should('equal', 'test')
-  })
-
   it('User can log out', () => {
     cy.signIn()
     cy.pageHeading().should('equal', 'Consider a recall')
