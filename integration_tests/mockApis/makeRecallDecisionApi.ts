@@ -160,7 +160,7 @@ export const downloadSupportingDocument = ({ statusCode = 200, response }: { sta
 
 export const getRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockGet({
-    urlPathPattern: `${routes.recommendations}/(.*)`,
+    urlPathPattern: `${routes.recommendations}/((.[^/])*)`,
     statusCode,
     response,
   })
