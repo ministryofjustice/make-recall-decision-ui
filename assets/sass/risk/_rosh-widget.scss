@@ -12,6 +12,8 @@ $unknown-score-border-colour: #fd0;
   border: 2px solid govuk-colour('black');
   padding: govuk-spacing(4);
   margin-bottom: govuk-spacing(4);
+  max-width: 570px;
+  min-width: 250px;
 
   & h3 {
     margin-bottom: govuk-spacing(1);
