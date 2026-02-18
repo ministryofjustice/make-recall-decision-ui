@@ -1,7 +1,8 @@
 import triggerLeadingToRecallController from './triggerLeadingToRecallController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { ppPaths } from '../../routes/paths/pp'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -9,7 +10,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { crn: 'X123' },
+        recommendation: RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false }),
       },
     })
     const next = mockNext()
@@ -23,21 +24,23 @@ describe('get', () => {
   })
 
   it('load with existing data', async () => {
+    const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: true })
     const res = mockRes({
       locals: {
-        recommendation: { triggerLeadingToRecall: 'Trigger text' },
+        recommendation,
       },
     })
 
     triggerLeadingToRecallController.get(mockReq(), res, mockNext())
-    expect(res.locals.inputDisplayValues.value).toEqual('Trigger text')
+    expect(res.locals.inputDisplayValues.value).toEqual(recommendation.triggerLeadingToRecall)
   })
 
   it('initial load with error data', async () => {
+    const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: true })
     const res = mockRes({
       locals: {
         errors: { triggerLeadingToRecall: { text: 'val' } },
-        recommendation: { triggerLeadingToRecall: 'Trigger text' },
+        recommendation,
       },
     })
 
@@ -49,12 +52,14 @@ describe('get', () => {
 
 describe('post', () => {
   it('post with valid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(updateRecommendation as jest.Mock).mockResolvedValue({})
 
-    const basePath = `/recommendations/123/`
+    const recommendationId = '123'
+    const triggerLeadingToRecall = 'some value'
+    const basePath = `/recommendations/${recommendationId}/`
     const req = mockReq({
-      params: { recommendationId: '123' },
-      body: { triggerLeadingToRecall: 'some value' },
+      params: { recommendationId },
+      body: { triggerLeadingToRecall },
     })
 
     const res = mockRes({
@@ -69,24 +74,28 @@ describe('post', () => {
     await triggerLeadingToRecallController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
+      recommendationId,
+      token: res.locals.user.token,
       valuesToSave: {
-        triggerLeadingToRecall: 'some value',
+        triggerLeadingToRecall,
       },
       featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`
+    )
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
   it('post with invalid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(updateRecommendation as jest.Mock).mockResolvedValue({})
 
+    const recommendationId = '123'
     const req = mockReq({
       originalUrl: 'some-url',
-      params: { recommendationId: '123' },
+      params: { recommendationId },
       body: { triggerLeadingToRecall: '' },
     })
 
@@ -94,7 +103,7 @@ describe('post', () => {
       locals: {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
+        urlInfo: { basePath: `/recommendations/${recommendationId}/` },
       },
     })
 
@@ -111,6 +120,6 @@ describe('post', () => {
         values: undefined,
       },
     ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+    expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
   })
 })

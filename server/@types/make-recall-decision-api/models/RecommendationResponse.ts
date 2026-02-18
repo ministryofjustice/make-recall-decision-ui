@@ -44,6 +44,7 @@ export type RecommendationResponse = {
   recallType?: RecallType;
   decisionDateTime?: string;
   responseToProbation?: string;
+  triggerLeadingToRecall?: string;
   whatLedToRecall?: string;
   isThisAnEmergencyRecall?: boolean;
   isIndeterminateSentence?: boolean;
