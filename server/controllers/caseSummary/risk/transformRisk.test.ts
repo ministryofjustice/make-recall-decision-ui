@@ -1,5 +1,5 @@
-import { normaliseTimelineScores, transformRisk } from './transformRisk'
-import { RiskResponse } from '../../../@types/make-recall-decision-api'
+import { buildRoshSummary, normaliseTimelineScores, transformRisk } from './transformRisk'
+import { RiskResponse, RoshSummary } from '../../../@types/make-recall-decision-api'
 import {
   FourBandRiskScoreBand,
   StaticOrDynamic,
@@ -549,5 +549,92 @@ describe('normaliseTimelineScores', () => {
         staticOrDynamic: undefined,
       },
     })
+  })
+})
+
+describe('buildRoshSummaryView', () => {
+  it('returns undefined when roshSummary is undefined', () => {
+    const result = buildRoshSummary(undefined)
+    expect(result).toBeUndefined()
+  })
+
+  it('returns undefined when roshSummary contains an error', () => {
+    const input: RoshSummary = {
+      error: 'Service unavailable',
+    }
+
+    const result = buildRoshSummary(input)
+    expect(result).toBeUndefined()
+  })
+
+  it('builds a completed ROSH summary correctly', () => {
+    const input: RoshSummary = {
+      lastUpdatedDate: '2021-10-10T10:00:00Z',
+      riskOfSeriousHarm: {
+        overallRisk: 'HIGH',
+        riskInCommunity: {
+          riskToChildren: 'HIGH',
+          riskToPublic: 'HIGH',
+          riskToKnownAdult: 'MEDIUM',
+          riskToStaff: 'LOW',
+          riskToPrisoners: 'LOW',
+        },
+        riskInCustody: {
+          riskToChildren: 'LOW',
+          riskToPublic: 'LOW',
+          riskToKnownAdult: 'HIGH',
+          riskToStaff: 'VERY_HIGH',
+          riskToPrisoners: 'VERY_HIGH',
+        },
+      },
+    }
+
+    const result = buildRoshSummary(input)
+
+    expect(result).toEqual({
+      hasBeenCompleted: true,
+      overallRisk: 'HIGH',
+      risks: [
+        { riskTo: 'Children', community: 'HIGH', custody: 'LOW' },
+        { riskTo: 'Public', community: 'HIGH', custody: 'LOW' },
+        { riskTo: 'Known Adult', community: 'MEDIUM', custody: 'HIGH' },
+        { riskTo: 'Staff', community: 'LOW', custody: 'VERY_HIGH' },
+        { riskTo: 'Prisoners', community: 'LOW', custody: 'VERY_HIGH' },
+      ],
+      lastUpdated: '10 October 2021',
+    })
+  })
+
+  it('normalises missing values to N/A', () => {
+    const input: RoshSummary = {
+      riskOfSeriousHarm: {
+        overallRisk: 'MEDIUM',
+        riskInCommunity: {},
+        riskInCustody: {},
+      },
+    }
+
+    const result = buildRoshSummary(input)
+
+    expect(result?.risks).toEqual([
+      { riskTo: 'Children', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Public', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Known Adult', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Staff', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Prisoners', community: 'N/A', custody: 'N/A' },
+    ])
+  })
+
+  it('normalises blank overallRisk to N/A', () => {
+    const input: RoshSummary = {
+      riskOfSeriousHarm: {
+        overallRisk: '',
+      },
+    }
+
+    const result = buildRoshSummary(input)
+
+    expect(result?.hasBeenCompleted).toBe(true)
+    expect(result?.overallRisk).toBe('N/A')
   })
 })
