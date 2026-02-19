@@ -54,7 +54,7 @@
     <h3 class="govuk-heading-m"><strong>{{ getRiskLevelText(roshSummary.overallRisk) | upper }}</strong> ROSH</h3>
     <p class="govuk-body-m">Risk of serious harm</p>
     <p class="govuk-hint govuk-body-m">Last updated: {{ roshSummary.lastUpdated | default("Not known") }}</p>
-    <div class="moj-scrollable-pane">
+    <div class="moj-scrollable-pane" tabindex="0">
       <table class="govuk-table rosh-widget__table">
         <caption class="govuk-visually-hidden">Risk of serious harm in Community</caption>
         <thead class="govuk-table__head">
