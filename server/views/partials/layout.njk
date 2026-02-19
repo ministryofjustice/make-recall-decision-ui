@@ -65,9 +65,6 @@
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script src="/assets/js/vStyleDropdownArrow.js"></script>
   <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
-  {% for js in feComponents.jsIncludes %}
-    <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
-  {% endfor %}
   {% block headEnd %}{% endblock %}
 {% endblock %}
 {% block pageTitle %}
