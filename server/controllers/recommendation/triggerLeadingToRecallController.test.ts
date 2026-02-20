@@ -26,8 +26,8 @@ describe('Trigger Leading to Recall Controller', () => {
 
       describe('Res locals', () => {
         describe('Page Data is provided:', () => {
-          it('Page ID', () => expect(res.locals.page).toEqual({ id: 'triggerLeadingToRecall' }))
-          it('Recommendation', () => expect(res.locals.recommendation).toEqual(recommendation))
+          it('Page ID', () => expect(res.locals.pageData.page).toEqual({ id: 'triggerLeadingToRecall' }))
+          it('Recommendation', () => expect(res.locals.pageData.recommendation).toEqual(recommendation))
         })
       })
 
@@ -52,8 +52,8 @@ describe('Trigger Leading to Recall Controller', () => {
           })
           describe('Res locals', () => {
             describe('Page Data is provided:', () => {
-              it('No trigger value', () => expect(res.locals.inputDisplayValues.value).not.toBeDefined())
-              it('No errors', () => expect(res.locals.inputDisplayValues.errors).not.toBeDefined())
+              it('No trigger value', () => expect(res.locals.pageData.inputDisplayValues.value).not.toBeDefined())
+              it('No errors', () => expect(res.locals.pageData.inputDisplayValues.errors).not.toBeDefined())
             })
           })
         })
@@ -73,8 +73,8 @@ describe('Trigger Leading to Recall Controller', () => {
           describe('Res locals', () => {
             describe('Page Data is provided:', () => {
               it('Trigger value', () =>
-                expect(res.locals.inputDisplayValues.value).toEqual(recommendation.triggerLeadingToRecall))
-              it('No errors', () => expect(res.locals.inputDisplayValues.errors).not.toBeDefined())
+                expect(res.locals.pageData.inputDisplayValues.value).toEqual(recommendation.triggerLeadingToRecall))
+              it('No errors', () => expect(res.locals.pageData.inputDisplayValues.errors).not.toBeDefined())
             })
           })
         })
@@ -94,9 +94,9 @@ describe('Trigger Leading to Recall Controller', () => {
         })
         describe('Res locals', () => {
           describe('Page Data is provided:', () => {
-            it('No trigger value', () => expect(res.locals.inputDisplayValues.value).toEqual(''))
+            it('No trigger value', () => expect(res.locals.pageData.inputDisplayValues.value).toEqual(''))
             it('Errors for triggerLeadingToRecall', () =>
-              expect(res.locals.inputDisplayValues.errors.triggerLeadingToRecall).toEqual(error))
+              expect(res.locals.pageData.inputDisplayValues.errors.triggerLeadingToRecall).toEqual(error))
           })
         })
       })
