@@ -17,6 +17,7 @@ generic-service:
     ENVIRONMENT: "preprod"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
     FEATURE_FLAGRISKTOSELFENABLED: "2026-01-28T08:00Z" # same time in GMT
+    FEATURE_FLAGFTR56ENABLED: "2026-03-30T23:00Z" # Midnight BST on 31st March 2026
 
   allowlist:
     north_shields_user: 194.33.192.1/24
