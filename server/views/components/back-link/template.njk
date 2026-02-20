@@ -1,3 +1,8 @@
+{% set hrefValue = params.href if params.href else "/" %}
+{% set doBrowserBack = params.doBrowserBack if params.doBrowserBack else true %}
+{% set linkText = params.text if params.text else "Back" %}
+
 <nav>
-    <a href="/" data-js='backlink-btn' class="govuk-back-link">Back</a>
+    <a href={{ hrefValue }} {% if doBrowserBack %}data-js='backlink-btn'{% endif %}
+       class="govuk-back-link">{{ linkText }}</a>
 </nav>
