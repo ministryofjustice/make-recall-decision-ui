@@ -1,25 +1,44 @@
 {% extends "../../partials/layout.njk" %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[pageData.page.id], hasErrors: pageData.inputDisplayValues.errors }) %}
 {% block beforeContent %}
-    {{ backLink() }}
+    {% if pageData.flagFTR56Enabled %}
+        {{ backLink({ text: 'Back to Consider a recall questions', href: pageData.backLinkUrl, doBrowserBack: false }) }}
+    {% else %}
+        {{ backLink() }}
+    {% endif %}
 {% endblock %}
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             {% set hintText %}
-                <p class="govuk-body">You're thinking about whether
-                    {{ pageData.recommendation.personOnProbation.name }} should be recalled or not. Explain your
-                    concerns. Include details of:
-                </p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>what you're worried about</li>
-                    <li>protective factors that are still in place</li>
-                    <li>protective factors that have broken down</li>
-                </ul>
-                <p class="govuk-body">
-                    This explanation will be recorded in NDelius.
-                </p>
+                {% if pageData.flagFTR56Enabled %}
+                    <p class="govuk-body">
+                        Explain the circumstances and behaviour leading you to consider recall, analysing:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>any alleged further offending or charges, and the behaviour around them</li>
+                        <li>how they breached licence conditions</li>
+                        <li>why the risk they pose is not manageable in the community</li>
+                        <li>their response to supervision so far</li>
+                        <li>if the behaviour seems out of character</li>
+                    </ul>
+                    <p class="govuk-body">
+                        Give as much information as possible. This explanation will be recorded in NDelius.
+                    </p>
+                {% else %}
+                    <p class="govuk-body">You're thinking about whether
+                        {{ pageData.recommendation.personOnProbation.name }} should be recalled or not. Explain your
+                        concerns. Include details of:
+                    </p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>what you're worried about</li>
+                        <li>protective factors that are still in place</li>
+                        <li>protective factors that have broken down</li>
+                    </ul>
+                    <p class="govuk-body">
+                        This explanation will be recorded in NDelius.
+                    </p>
+                {% endif %}
             {% endset %}
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
