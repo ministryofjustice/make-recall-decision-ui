@@ -10,12 +10,15 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    page: {
-      id: 'triggerLeadingToRecall',
-    },
-    inputDisplayValues: {
-      errors: res.locals.errors,
-      value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
+    pageData: {
+      page: {
+        id: 'triggerLeadingToRecall',
+      },
+      inputDisplayValues: {
+        errors: res.locals.errors,
+        value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
+      },
+      recommendation,
     },
   }
 
