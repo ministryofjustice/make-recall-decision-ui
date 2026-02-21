@@ -9,7 +9,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const recommendationResponse = recommendation as RecommendationResponse
 
-  const offence = recommendationResponse.nomisIndexOffence.allOptions.find(
+  const offence = recommendationResponse.nomisIndexOffence?.allOptions?.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
   )
 
