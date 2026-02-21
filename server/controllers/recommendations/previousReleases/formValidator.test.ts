@@ -1,4 +1,5 @@
 import { validatePreviousReleases } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validatePreviousReleases', () => {
   const recommendationId = '34'
@@ -60,7 +61,7 @@ describe('validatePreviousReleases', () => {
       const requestBody = {
         crn: 'X34534',
         continueButton: '1', // set to 1 if there are previous release dates
-        releaseUnderECSL: 'YES',
+        releaseUnderECSL: YesNoValues.YES,
         'dateOfRelease-day': '12',
         'dateOfRelease-month': '11',
         'dateOfRelease-year': '2012',
@@ -85,7 +86,7 @@ describe('validatePreviousReleases', () => {
       const requestBody = {
         crn: 'X34534',
         continueButton: '0', // set to 0 if there are previous release dates
-        releaseUnderECSL: 'YES',
+        releaseUnderECSL: YesNoValues.YES,
         'dateOfRelease-day': '12',
         'dateOfRelease-month': '11',
         'dateOfRelease-year': '2012',
@@ -133,7 +134,7 @@ describe('validatePreviousReleases', () => {
       const requestBody = {
         crn: 'X34534',
         continueButton: '0',
-        releaseUnderECSL: 'YES',
+        releaseUnderECSL: YesNoValues.YES,
       }
       const { errors, valuesToSave, nextPagePath, unsavedValues } = await validatePreviousReleases({
         requestBody,
@@ -163,14 +164,14 @@ describe('validatePreviousReleases', () => {
       expect(unsavedValues).toStrictEqual({
         conditionalReleaseDate: { day: undefined, month: undefined, year: undefined },
         dateOfRelease: { day: undefined, month: undefined, year: undefined },
-        releaseUnderECSL: 'YES',
+        releaseUnderECSL: YesNoValues.YES,
       })
     })
     it('returns no errors if  release under ECSL is false, and no dates are supplied', async () => {
       const requestBody = {
         crn: 'X34534',
         continueButton: '0',
-        releaseUnderECSL: 'NO',
+        releaseUnderECSL: YesNoValues.NO,
       }
       const { errors, valuesToSave, unsavedValues } = await validatePreviousReleases({ requestBody, recommendationId })
 

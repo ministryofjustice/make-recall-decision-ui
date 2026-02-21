@@ -16,6 +16,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     ...{
       custodyType: ppudSentence.custodyType,
       offenceDescription: ppudSentence.offence.indexOffence,
+      offenceDescriptionComment: ppudSentence.offence.indexOffenceComment,
       releaseDate: ppudSentence.releaseDate,
       sentencingCourt: ppudSentence.sentencingCourt,
       dateOfSentence: ppudSentence.dateOfSentence,

@@ -4,12 +4,13 @@ import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
 export const validateAddress = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { isMainAddressWherePersonCanBeFound, isMainAddressWherePersonCanBeFoundDetailsNo, addressCount } = requestBody
   const noMainAddresses = addressCount === '0'
   const invalidSelection = !isValueValid(isMainAddressWherePersonCanBeFound as string, 'yesNo')
-  const isNo = isMainAddressWherePersonCanBeFound === 'NO' || noMainAddresses
+  const isNo = isMainAddressWherePersonCanBeFound === YesNoValues.NO || noMainAddresses
   const missingNoDetail = isNo && isEmptyStringOrWhitespace(isMainAddressWherePersonCanBeFoundDetailsNo)
 
   const hasError = noMainAddresses
@@ -51,7 +52,7 @@ export const validateAddress = async ({ requestBody, recommendationId }: FormVal
   // valid
   const valuesToSave = {
     isMainAddressWherePersonCanBeFound: {
-      selected: isMainAddressWherePersonCanBeFound === 'YES',
+      selected: isMainAddressWherePersonCanBeFound === YesNoValues.YES,
       details: isNo ? stripHtmlTags(isMainAddressWherePersonCanBeFoundDetailsNo as string) : null,
     },
   }

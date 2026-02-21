@@ -11,6 +11,7 @@ const expected = {
     id: faker.helpers.replaceSymbols('********************'),
     custodyType: faker.helpers.arrayElement(['IPP', 'DPP']),
     indexOffence: faker.lorem.words(),
+    indexOffenceComment: faker.lorem.paragraph(),
     releaseDate: releaseDate.toISOString(),
     sentencingCourt: `${faker.location.city} Court`,
     dateOfSentence: faker.date.past().toISOString(),
@@ -39,6 +40,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
                 custodyType: expected.sentence.custodyType,
                 offence: {
                   indexOffence: expected.sentence.indexOffence,
+                  indexOffenceComment: expected.sentence.indexOffenceComment,
                 },
                 releaseDate: expected.sentence.releaseDate,
                 sentencingCourt: expected.sentence.sentencingCourt,
@@ -68,6 +70,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
       expect(res.locals.pageData.sentenceSummary).toEqual({
         custodyType: expected.sentence.custodyType,
         offenceDescription: expected.sentence.indexOffence,
+        offenceDescriptionComment: expected.sentence.indexOffenceComment,
         releaseDate: expected.sentence.releaseDate,
         sentencingCourt: expected.sentence.sentencingCourt,
         dateOfSentence: expected.sentence.dateOfSentence,

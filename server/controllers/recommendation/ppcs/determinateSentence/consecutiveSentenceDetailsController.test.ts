@@ -5,9 +5,10 @@ import { prisonSentences } from '../../../../data/makeDecisionApiClient'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import consecutiveSentenceDetailsController from './consecutiveSentenceDetailsController'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
-import { Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { RecommendationResponse, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 import { TermGenerator } from '../../../../../data/common/termGenerator'
+import { ppcsPaths } from '../../../../routes/paths/ppcs'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
@@ -27,7 +28,7 @@ type SentenceInfo = {
 describe('Consecutive Sentence Details Controller', () => {
   describe('get', () => {
     const defaultGetRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: {
+      nomisIndexOffence: {
         selectedIndex: 0,
       },
     })
@@ -129,11 +130,6 @@ describe('Consecutive Sentence Details Controller', () => {
                 )
               })
             })
-          })
-          describe('Next Page Path:', () => {
-            it('- Is provided', async () => expect(res.locals.pageData.nextPagePath).toBeDefined())
-            it('- Is the expected path', async () =>
-              expect(res.locals.pageData.nextPagePath).toEqual('/recommendations/123/match-index-offence'))
           })
         })
       })
@@ -294,6 +290,65 @@ describe('Consecutive Sentence Details Controller', () => {
             const term = res.locals.pageData.sentenceInfo.indexSentence.sentenceLength[1]
             expect(term.key).toEqual('Extended term')
             expect(term.value).toEqual(termLIC)
+          })
+        })
+      })
+      describe('Res locals', () => {
+        describe('Page Data:', () => {
+          describe('Next Page Path:', () => {
+            const testCases: {
+              useCaseDescription: string
+              recommendation: RecommendationResponse
+              redirectionPageId: string
+            }[] = [
+              {
+                useCaseDescription: 'When no PPUD offender was selected',
+                recommendation: RecommendationResponseGenerator.generate({
+                  nomisIndexOffence: {
+                    selectedIndex: 0,
+                  },
+                  ppudOffender: 'none',
+                }),
+                redirectionPageId: ppcsPaths.matchIndexOffence,
+              },
+              {
+                useCaseDescription: 'When a PPUD offender with no sentences was selected',
+                recommendation: RecommendationResponseGenerator.generate({
+                  nomisIndexOffence: {
+                    selectedIndex: 0,
+                  },
+                  ppudOffender: {
+                    sentences: [],
+                  },
+                }),
+                redirectionPageId: ppcsPaths.matchIndexOffence,
+              },
+              {
+                useCaseDescription: 'When a PPUD offender with sentences was selected',
+                recommendation: RecommendationResponseGenerator.generate({
+                  nomisIndexOffence: {
+                    selectedIndex: 0,
+                  },
+                }),
+                redirectionPageId: ppcsPaths.selectPpudSentence,
+              },
+            ]
+            const basePath = '/recommendations/123/'
+            it.each(testCases)('$useCaseDescription', async ({ recommendation, redirectionPageId }) => {
+              ;(prisonSentences as jest.Mock).mockResolvedValue(defaultGetSentenceSequence)
+              const resForTestCase = mockRes({
+                locals: {
+                  recommendation,
+                  urlInfo: {
+                    basePath,
+                  },
+                },
+              })
+              await consecutiveSentenceDetailsController.get(req, resForTestCase, next)
+
+              expect(resForTestCase.locals.pageData.nextPagePath).toBeDefined()
+              expect(resForTestCase.locals.pageData.nextPagePath).toEqual(`${basePath}${redirectionPageId}`)
+            })
           })
         })
       })

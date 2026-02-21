@@ -1,3 +1,4 @@
+import { YesNoValues } from '../formOptions/yesNo'
 import { inputDisplayValuesIsExtendedSentence } from './inputDisplayValues'
 
 describe('inputDisplayValuesIsExtendedSentence', () => {
@@ -24,7 +25,7 @@ describe('inputDisplayValuesIsExtendedSentence', () => {
     const unsavedValues = {}
     const inputDisplayValues = inputDisplayValuesIsExtendedSentence({ errors, unsavedValues, apiValues })
     expect(inputDisplayValues).toEqual({
-      value: 'YES',
+      value: YesNoValues.YES,
     })
   })
 })

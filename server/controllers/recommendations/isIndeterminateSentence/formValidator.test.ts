@@ -1,4 +1,5 @@
 import { validateIsIndeterminateSentence } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateIsIndeterminateSentence', () => {
   const recommendationId = '34'
@@ -10,7 +11,7 @@ describe('validateIsIndeterminateSentence', () => {
 
   it('if No selected, sets indeterminateSentenceType, saves value and redirects', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'NO',
+      isIndeterminateSentence: YesNoValues.NO,
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsIndeterminateSentence({
@@ -21,14 +22,14 @@ describe('validateIsIndeterminateSentence', () => {
     expect(valuesToSave).toEqual({
       isIndeterminateSentence: false,
       indeterminateSentenceType: {
-        selected: 'NO',
+        selected: YesNoValues.NO,
       },
     })
   })
 
   it('if Yes selected, saves value and redirects', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'YES',
+      isIndeterminateSentence: YesNoValues.YES,
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsIndeterminateSentence({
@@ -43,8 +44,8 @@ describe('validateIsIndeterminateSentence', () => {
 
   it('if answer changes from Yes to No, resets isExtendedSentence / indeterminateSentenceType / recallType / indeterminateOrExtendedSentenceDetails / fixedTermAdditionalLicenceConditions', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'NO',
-      currentSavedValue: 'YES',
+      isIndeterminateSentence: YesNoValues.NO,
+      currentSavedValue: YesNoValues.YES,
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsIndeterminateSentence({
@@ -55,7 +56,7 @@ describe('validateIsIndeterminateSentence', () => {
     expect(valuesToSave).toEqual({
       isIndeterminateSentence: false,
       indeterminateSentenceType: {
-        selected: 'NO',
+        selected: YesNoValues.NO,
       },
       recallType: null,
       indeterminateOrExtendedSentenceDetails: null,
@@ -66,8 +67,8 @@ describe('validateIsIndeterminateSentence', () => {
 
   it('if answer changes from No to Yes, resets isExtendedSentence / indeterminateSentenceType / recallType / indeterminateOrExtendedSentenceDetails / fixedTermAdditionalLicenceConditions', async () => {
     const requestBody = {
-      isIndeterminateSentence: 'YES',
-      currentSavedValue: 'NO',
+      isIndeterminateSentence: YesNoValues.YES,
+      currentSavedValue: YesNoValues.NO,
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsIndeterminateSentence({

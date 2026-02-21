@@ -1,4 +1,5 @@
 import { validateEmergencyRecall } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateEmergencyRecall', () => {
   const recommendationId = '34'
@@ -10,7 +11,7 @@ describe('validateEmergencyRecall', () => {
 
   it('returns valuesToSave and no errors if valid', async () => {
     const requestBody = {
-      isThisAnEmergencyRecall: 'YES',
+      isThisAnEmergencyRecall: YesNoValues.YES,
       recallType: 'STANDARD',
       crn: 'X34534',
     }
@@ -24,7 +25,7 @@ describe('validateEmergencyRecall', () => {
 
   it("redirects to fixed term licence conditions if it's a fixed term recall", async () => {
     const requestBody = {
-      isThisAnEmergencyRecall: 'YES',
+      isThisAnEmergencyRecall: YesNoValues.YES,
       recallType: 'FIXED_TERM',
       crn: 'X34534',
     }
@@ -72,7 +73,7 @@ describe('validateEmergencyRecall', () => {
 
   it('if "from page" is set to recall task list, redirect to it', async () => {
     const requestBody = {
-      isThisAnEmergencyRecall: 'YES',
+      isThisAnEmergencyRecall: YesNoValues.YES,
       crn: 'X34534',
     }
     const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-circumstances' }

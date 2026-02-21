@@ -1,4 +1,5 @@
 import { validateArrestIssues } from './formValidator'
+import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateArrestIssues', () => {
   const recommendationId = '456'
@@ -23,7 +24,7 @@ describe('validateArrestIssues', () => {
 
     it('strips HTML tags from details', async () => {
       const requestBody = {
-        hasArrestIssues: 'YES',
+        hasArrestIssues: YesNoValues.YES,
         hasArrestIssuesDetailsYes: '<p>Details...</p>',
         crn: 'X34534',
       }
@@ -33,7 +34,7 @@ describe('validateArrestIssues', () => {
 
     it('returns valuesToSave and no errors if No selected, and resets details', async () => {
       const requestBody = {
-        hasArrestIssues: 'NO',
+        hasArrestIssues: YesNoValues.NO,
         crn: 'X34534',
       }
       const { errors, valuesToSave, nextPagePath } = await validateArrestIssues({ requestBody, recommendationId })
@@ -68,14 +69,14 @@ describe('validateArrestIssues', () => {
 
     it('errors if Yes is selected but no detail sent', async () => {
       const requestBody = {
-        hasArrestIssues: 'YES',
+        hasArrestIssues: YesNoValues.YES,
         hasArrestIssuesDetailsYes: ' ', // whitespace
         crn: 'X34534',
       }
       const { errors, valuesToSave, unsavedValues } = await validateArrestIssues({ requestBody, recommendationId })
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
-        hasArrestIssues: 'YES',
+        hasArrestIssues: YesNoValues.YES,
       })
       expect(errors).toEqual([
         {

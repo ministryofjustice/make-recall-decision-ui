@@ -1,23 +1,18 @@
 import { faker } from '@faker-js/faker'
-import searchMappedUserResponse from '../../../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
 import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
 import { determinateCustodyTypes } from '../../../../../../server/helpers/ppudSentence/custodyTypes'
 import { determinateCustodyTypeLabels } from '../../../../../../server/controllers/recommendations/custody-type/formOptions'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
+import { setUpSessionForPpcs } from '../../util'
 
 context('Determinate sentence - edit custody type page', () => {
   const recommendationId = '123'
   const testPageUrl = `/recommendations/${recommendationId}/custody-type`
 
   beforeEach(() => {
-    cy.session('login', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
-    })
+    setUpSessionForPpcs()
   })
 
   const randomRadioOption = faker.number.int({ min: 0, max: determinateCustodyTypes.length - 1 })

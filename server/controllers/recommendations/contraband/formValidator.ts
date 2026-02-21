@@ -4,12 +4,13 @@ import { isValueValid } from '../formOptions/formOptions'
 import { strings } from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
 export const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { hasContrabandRisk, hasContrabandRiskDetailsYes } = requestBody
   const invalidContraband = !isValueValid(hasContrabandRisk as string, 'yesNo')
   const missingYesDetail =
-    hasContrabandRisk === 'YES' && isEmptyStringOrWhitespace(hasContrabandRiskDetailsYes as string)
+    hasContrabandRisk === YesNoValues.YES && isEmptyStringOrWhitespace(hasContrabandRiskDetailsYes as string)
   const hasError = !hasContrabandRisk || invalidContraband || missingYesDetail
   if (hasError) {
     const errors = []
@@ -46,8 +47,8 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
   // valid
   const valuesToSave = {
     hasContrabandRisk: {
-      selected: hasContrabandRisk === 'YES',
-      details: hasContrabandRisk === 'YES' ? stripHtmlTags(hasContrabandRiskDetailsYes as string) : null,
+      selected: hasContrabandRisk === YesNoValues.YES,
+      details: hasContrabandRisk === YesNoValues.YES ? stripHtmlTags(hasContrabandRiskDetailsYes as string) : null,
     },
   }
   return {
