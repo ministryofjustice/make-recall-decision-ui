@@ -104,7 +104,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     court: 'Court',
     dateOfSentence: 'Date of sentence',
     startDate: 'Start date',
-    expiryDate: 'Sentence expiry date',
+    latestExpiryDate: 'Latest sentence expiry date',
     sentenceLength: 'Sentence length',
     impTerm: 'Custodial term',
     licTerm: 'Extended term',
@@ -125,12 +125,16 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
       })
 
       it('Page Heading and pre-sentences body', () => {
-        cy.pageHeading().should('contain', 'View the index offence and its consecutive sentences')
+        cy.pageHeading().should('contain', 'Check the index offence and its consecutive sentences')
+        cy.get('.govuk-body').should(
+          'contain.text',
+          'View the index offence selected from NOMIS and the sentences that run consecutively to it.'
+        )
+        cy.get('h2').should('exist').should('contain', 'Offence sequence')
         cy.get('.govuk-body').should(
           'contain.text',
           'The index offence is the first sentence in the consecutive sequence.'
         )
-        cy.get('h2').should('exist').should('contain', 'Offence sequence')
       })
       it('Continue link as button', () => {
         cy.get('a#continue')
@@ -263,17 +267,23 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     expectedTerms: { key: string; value: string }[]
   ) => {
     cy.get(`dl#${id}`).should('exist').as('sentenceSummary')
+    const expectedRows = [
+      { key: expectedOffenceLabel, value: expectedSentence.offences.at(0).offenceDescription },
+      { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
+      { key: expectedLabels.court, value: expectedSentence.courtDescription },
+      { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },
+      { key: expectedLabels.startDate, value: expectedSentence.sentenceStartDate },
+    ]
+    if (id === 'indexSentence') {
+      expectedRows.push({
+        key: expectedLabels.latestExpiryDate,
+        value: expectedSentence.sentenceSequenceExpiryDate,
+      })
+    }
+    expectedRows.push(...expectedTerms)
     testSummaryList(cy.get('@sentenceSummary'), {
       matchLength: true,
-      rows: [
-        { key: expectedOffenceLabel, value: expectedSentence.offences.at(0).offenceDescription },
-        { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
-        { key: expectedLabels.court, value: expectedSentence.courtDescription },
-        { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },
-        { key: expectedLabels.startDate, value: expectedSentence.sentenceStartDate },
-        { key: expectedLabels.expiryDate, value: expectedSentence.sentenceEndDate },
-        ...expectedTerms,
-      ],
+      rows: expectedRows,
     })
   }
 

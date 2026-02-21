@@ -1,3 +1,4 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { testSummaryList } from '../../../componentTests/summaryList.tests'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
@@ -32,7 +33,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
   const anyTwoOffencesOptions: SentenceOffenceOptions[] = [{}, {}]
   const anyOneOffenceOptions: SentenceOffenceOptions[] = [{}]
-  const defaultPrisonSentenceSequence = PrisonSentenceSequenceGenerator.generateSeries([
+  const defaultPrisonSentenceSequences = PrisonSentenceSequenceGenerator.generateSeries([
     {
       indexSentence: {
         sentenceType: 'Determinate',
@@ -46,7 +47,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       },
     },
   ])
-  const expectedIndexOffenceCount = defaultPrisonSentenceSequence.length
+  const expectedIndexOffenceCount = defaultPrisonSentenceSequences.length
 
   describe('Page Data', () => {
     it('Standard page load', () => {
@@ -56,7 +57,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         statusCode: 200,
         response: defaultUpdateRecommendationResponse(crn, recommendationId),
       })
-      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
+      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequences })
 
       cy.visit(testPageUrl)
 
@@ -81,11 +82,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       cy.get('@radioGroup').get('div.govuk-radios__item').as('radios')
       cy.get('@radios').should('have.length', expectedIndexOffenceCount)
       cy.get('@radios').each((radio, index) => {
-        const expectedSentenceAndOffence = {
-          expectedSentence: defaultPrisonSentenceSequence.at(index).indexSentence,
-          expectedOffence: defaultPrisonSentenceSequence.at(index).indexSentence.offences.at(0),
-        }
-        const { expectedSentence, expectedOffence } = expectedSentenceAndOffence
+        const expectedOffence = defaultPrisonSentenceSequences.at(index).indexSentence.offences.at(0)
         const expectedInputId = `indexOffence-${index + 1}-input`
         const expectedHintId = `indexOffence-${index + 1}-input-item-hint`
         const expectedSummaryId = `indexOffence-${index + 1}-summary`
@@ -107,20 +104,6 @@ context('Determinate Sentence - Select Index Offence Page', () => {
           .should('exist')
           .should('have.class', 'govuk-radios__hint')
           .should('contain.html', `dl id="${expectedSummaryId}"`)
-        cy.wrap(radio).find(`dl#${expectedSummaryId}`).should('exist').as('hintSummaryList')
-        const expectedTerm = defaultPrisonSentenceSequence.at(index).indexSentence.terms.at(0)
-        const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
-        testSummaryList(cy.get('@hintSummaryList'), {
-          matchLength: false,
-          rows: [
-            { key: 'Sentence type', value: expectedSentence.sentenceTypeDescription },
-            { key: 'Court', value: expectedSentence.courtDescription },
-            { key: 'Date of sentence', value: expectedSentence.sentenceDate },
-            { key: 'Start date', value: expectedSentence.sentenceStartDate },
-            { key: 'Sentence expiry date', value: expectedSentence.sentenceEndDate },
-            { key: 'Sentence length', value: expectedTermText },
-          ],
-        })
       })
 
       // Part A summary
@@ -170,7 +153,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
             { key: 'Court', value: sentence.courtDescription },
             { key: 'Date of sentence', value: sentence.sentenceDate },
             { key: 'Start date', value: sentence.sentenceStartDate },
-            { key: 'Sentence expiry date', value: sentence.sentenceEndDate },
+            { key: 'Latest sentence expiry date', value: sentence.sentenceSequenceExpiryDate },
             ...termsRows,
           ],
         })
@@ -280,7 +263,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
           statusCode: 200,
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
-        cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
+        cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequences })
 
         cy.visit(testPageUrl)
 
@@ -313,7 +296,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
           statusCode: 200,
           response: defaultUpdateRecommendationResponse(crn, recommendationId),
         })
-        cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
+        cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequences })
 
         cy.visit(testPageUrl)
 
@@ -337,35 +320,93 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         cy.get('@consecutivePanel').should('contain.text', `${groupLength} consecutive sentences`)
         cy.get('@consecutivePanel').find('p.govuk-body-s').should('exist').and('have.text', 'More details on next page')
       }
-      it('A sentence without consecutive group data - does not render a consecutive data panel', () => {
-        cy.task('getRecommendation', { statusCode: 200, response: defaultRecommendationResponse })
-        cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
-        cy.task('updateRecommendation', {
-          statusCode: 200,
-          response: defaultUpdateRecommendationResponse(crn, recommendationId),
+      describe('A sentence without consecutive group data (i.e. with sentenceEndDate)', () => {
+        const prisonSentenceSequenceWithoutConsecutiveGroup = PrisonSentenceSequenceGenerator.generate({
+          indexSentence: {
+            sentenceEndDate: faker.date.future().toDateString(),
+          },
         })
-        const prisonSentenceSequenceWithoutConsecutiveGroup = PrisonSentenceSequenceGenerator.generate()
-        cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceSequenceWithoutConsecutiveGroup] })
 
-        cy.visit(testPageUrl)
+        beforeEach(() => {
+          cy.task('getRecommendation', { statusCode: 200, response: defaultRecommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
+          cy.task('updateRecommendation', {
+            statusCode: 200,
+            response: defaultUpdateRecommendationResponse(crn, recommendationId),
+          })
+          cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceSequenceWithoutConsecutiveGroup] })
+        })
 
-        testConsecutivePanelNotRendered('indexOffence-1-consecutive')
+        it('renders the index offence with the sentence expiry date and no latest sentence expiry date (sequence expiry date)', () => {
+          cy.visit(testPageUrl)
+
+          cy.get('.govuk-form-group').get('fieldset').get('.govuk-radios').get('div.govuk-radios__item').as('radios')
+          cy.get('@radios').should('have.length', 1)
+          cy.get('@radios').eq(0).find('dl#indexOffence-1-summary').should('exist').as('hintSummaryList')
+          const expectedSentence = prisonSentenceSequenceWithoutConsecutiveGroup.indexSentence
+          const expectedTerm = expectedSentence.terms.at(0)
+          const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
+          testSummaryList(cy.get('@hintSummaryList'), {
+            matchLength: false,
+            rows: [
+              { key: 'Sentence type', value: expectedSentence.sentenceTypeDescription },
+              { key: 'Court', value: expectedSentence.courtDescription },
+              { key: 'Date of sentence', value: expectedSentence.sentenceDate },
+              { key: 'Start date', value: expectedSentence.sentenceStartDate },
+              { key: 'Sentence expiry date', value: expectedSentence.sentenceEndDate },
+              { key: 'Sentence length', value: expectedTermText },
+            ],
+          })
+        })
+
+        it('does not render a consecutive data panel', () => {
+          cy.visit(testPageUrl)
+
+          testConsecutivePanelNotRendered('indexOffence-1-consecutive')
+        })
       })
-      it('A sentence with consecutive group data - renders a consecutive data panel', () => {
-        cy.task('getRecommendation', { statusCode: 200, response: defaultRecommendationResponse })
-        cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
-        cy.task('updateRecommendation', {
-          statusCode: 200,
-          response: defaultUpdateRecommendationResponse(crn, recommendationId),
-        })
+      describe('A sentence with consecutive group data', () => {
         const prisonSentenceSequenceWithConsecutiveGroup = PrisonSentenceSequenceGenerator.generate({
           sentencesInSequence: new Map([[1, [{}, {}]]]),
         })
-        cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceSequenceWithConsecutiveGroup] })
 
-        cy.visit(testPageUrl)
+        beforeEach(() => {
+          cy.task('getRecommendation', { statusCode: 200, response: defaultRecommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
+          cy.task('updateRecommendation', {
+            statusCode: 200,
+            response: defaultUpdateRecommendationResponse(crn, recommendationId),
+          })
+          cy.task('prisonSentences', { statusCode: 200, response: [prisonSentenceSequenceWithConsecutiveGroup] })
+        })
 
-        testConsecutivePanel('indexOffence-1-consecutive', 2)
+        it('renders the index offence with the latest sentence expiry date (sequence expiry date) and no sentence expiry date', () => {
+          cy.visit(testPageUrl)
+
+          cy.get('.govuk-form-group').get('fieldset').get('.govuk-radios').get('div.govuk-radios__item').as('radios')
+          cy.get('@radios').should('have.length', 1)
+          cy.get('@radios').eq(0).find('dl#indexOffence-1-summary').should('exist').as('hintSummaryList')
+          const expectedSentence = prisonSentenceSequenceWithConsecutiveGroup.indexSentence
+          const expectedTerm = expectedSentence.terms.at(0)
+          const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
+          testSummaryList(cy.get('@hintSummaryList'), {
+            matchLength: false,
+            rows: [
+              { key: 'Sentence type', value: expectedSentence.sentenceTypeDescription },
+              { key: 'Court', value: expectedSentence.courtDescription },
+              { key: 'Date of sentence', value: expectedSentence.sentenceDate },
+              { key: 'Start date', value: expectedSentence.sentenceStartDate },
+              { key: 'Latest sentence expiry date', value: expectedSentence.sentenceSequenceExpiryDate },
+              { key: 'Sentence length', value: expectedTermText },
+            ],
+          })
+        })
+
+        it('renders a consecutive data panel', () => {
+          cy.visit(testPageUrl)
+
+          testConsecutivePanel('indexOffence-1-consecutive', 2)
+        })
       })
     })
   })
@@ -379,7 +420,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         statusCode: 200,
         response: defaultUpdateRecommendationResponse(crn, recommendationId),
       })
-      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
+      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequences })
 
       cy.visit(testPageUrl)
       cy.get('button').click()

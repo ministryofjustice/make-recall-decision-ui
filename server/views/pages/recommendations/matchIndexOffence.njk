@@ -26,11 +26,19 @@
                             <div class="govuk-text-list__value"
                                  data-qa="sentenceStartDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceStartDate, dateOnly: true}) }} </div>
                         </div>
-                        <div class="govuk-text-list__row">
-                            <div class="govuk-text-list__key">Sentence expiry date</div>
-                            <div class="govuk-text-list__value"
-                                 data-qa="sentenceEndDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </div>
-                        </div>
+                        {% if offence.sentenceEndDate %}
+                            <div class="govuk-text-list__row">
+                                <div class="govuk-text-list__key">Sentence expiry date</div>
+                                <div class="govuk-text-list__value"
+                                     data-qa="sentenceEndDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceEndDate, dateOnly: true}) }} </div>
+                            </div>
+                        {% else %}
+                            <div class="govuk-text-list__row">
+                                <div class="govuk-text-list__key">Latest sentence expiry date</div>
+                                <div class="govuk-text-list__value"
+                                     data-qa="sentenceSequenceExpiryDate"> {{ formatDateTimeFromIsoString({isoDate: offence.sentenceSequenceExpiryDate, dateOnly: true}) }} </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
