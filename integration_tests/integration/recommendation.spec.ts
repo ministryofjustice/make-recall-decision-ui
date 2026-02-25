@@ -1818,7 +1818,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Who completed this Part A?')
 
       cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.com')
+      cy.fillInput('Email', 'bloggs@me.gov.uk')
       cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
@@ -1838,7 +1838,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs?')
 
       cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.com')
+      cy.fillInput('Email', 'bloggs@me.gov.uk')
 
       cy.clickButton('Continue')
       cy.pageHeading().should('equal', 'Create a Part A form')
