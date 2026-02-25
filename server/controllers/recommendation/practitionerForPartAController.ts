@@ -82,7 +82,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'email',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
