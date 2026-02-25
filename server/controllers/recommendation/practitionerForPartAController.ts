@@ -5,7 +5,7 @@ import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import regionEnum from '../recommendations/formOptions/region'
-import { isEmailValid } from '../../utils/validate-formats'
+import { isEmailValid, isGovUkEmail } from '../../utils/validate-formats'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -74,6 +74,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
         text: strings.errors[errorId],
         errorId,
       }),
+    )
+  } else if (!isGovUkEmail(email)) {
+    const errorId = 'nonGovUkPractitionerForPartAEmail'
+    errors.push(
+      makeErrorObject({
+        id: 'email',
+        text: strings.errors[errorId],
+        errorId,
+      })
     )
   }
 

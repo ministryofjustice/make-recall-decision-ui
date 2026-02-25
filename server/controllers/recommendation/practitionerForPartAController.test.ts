@@ -97,7 +97,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         name: 'jane',
-        email: 'jane@here.com',
+        email: 'jane@test.gov.uk',
         telephone: '5555555',
         region: 'region C',
         localDeliveryUnit: 'place A',
@@ -122,7 +122,7 @@ describe('post', () => {
       valuesToSave: {
         practitionerForPartA: {
           name: 'jane',
-          email: 'jane@here.com',
+          email: 'jane@test.gov.uk',
           telephone: '5555555',
           region: 'region C',
           localDeliveryUnit: 'place A',
@@ -176,7 +176,7 @@ describe('post', () => {
         href: '#email',
         invalidParts: undefined,
         name: 'email',
-        text: 'Enter the email of the probation practitioner for {{ fullName }}',
+        text: 'Enter the GOV.UK email for the probation practitioner for {{ fullName }}',
         values: undefined,
       },
     ])
@@ -216,7 +216,47 @@ describe('post', () => {
         href: '#email',
         invalidParts: undefined,
         name: 'email',
-        text: 'Enter an email address in the correct format, like name@example.com',
+        text: 'Enter the email in the correct format, like name@justice.gov.uk',
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with valid but non gov.uk email', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        name: 'jane',
+        email: 'test@non.govuk.email.com',
+        telephone: '5555555',
+        region: 'region C',
+        localDeliveryUnit: 'place A',
+        isPersonProbationPractitionerForOffender: 'YES',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    await practitionerForPartAController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'nonGovUkPractitionerForPartAEmail',
+        href: '#email',
+        invalidParts: undefined,
+        name: 'email',
+        text: 'You can only use an email ending in ‘GOV.UK’ for the probation practitioner for {{ fullName }}',
         values: undefined,
       },
     ])
