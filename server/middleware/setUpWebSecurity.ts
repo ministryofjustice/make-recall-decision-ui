@@ -46,7 +46,7 @@ export default function setUpWebSecurity(): Router {
           ],
         },
       },
-    })
+    }),
   )
   router.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }))
   return router

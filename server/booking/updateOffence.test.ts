@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { ppudUpdateOffence, updateRecommendation } from '../data/makeDecisionApiClient'
 import updateOffence from './updateOffence'
 import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
 import BookingMemento from './BookingMemento'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -16,7 +16,7 @@ describe('update offence', () => {
   describe('not in expected stage', () => {
     const bookingMemento = BookingMementoGenerator.generate({
       stage: faker.helpers.arrayElement(
-        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.SENTENCE_BOOKED)
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.SENTENCE_BOOKED),
       ),
     })
     let returnedMemento: BookingMemento
@@ -84,7 +84,7 @@ describe('update offence', () => {
         bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
       })
       recommendation.bookRecallToPpud.ppudSentenceId = faker.helpers.arrayElement(
-        recommendation.ppudOffender.sentences
+        recommendation.ppudOffender.sentences,
       ).id
 
       let returnedMemento: BookingMemento
@@ -95,7 +95,7 @@ describe('update offence', () => {
       })
       it('updates the PPUD offence', () => {
         const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
-          s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+          s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
         )
         expect(ppudUpdateOffence).toHaveBeenCalledWith(token, bookingMemento.offenderId, bookingMemento.sentenceId, {
           indexOffence: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescription,

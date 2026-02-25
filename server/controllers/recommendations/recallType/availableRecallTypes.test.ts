@@ -9,7 +9,7 @@ jest.mock('../../../utils/fixedTermRecallUtils')
 describe('availableRecallTypes', () => {
   it('only FTR and No Recall available when FTR is mandatory', () => {
     const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
     )
 
     const actualAvailableRecallTypes = availableRecallTypes(true)
@@ -29,7 +29,7 @@ describe('availableRecallTypesForRecommendation', () => {
 
   it('only FTR and No Recall available when FTR is mandatory', () => {
     const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value)
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
     )
     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
 

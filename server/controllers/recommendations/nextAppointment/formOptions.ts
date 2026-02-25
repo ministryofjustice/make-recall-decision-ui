@@ -1,4 +1,4 @@
-export const howWillAppointmentHappen = [
+const howWillAppointmentHappen = [
   {
     value: 'TELEPHONE',
     text: 'Telephone',
@@ -16,3 +16,5 @@ export const howWillAppointmentHappen = [
     text: 'Home visit',
   },
 ]
+
+export default howWillAppointmentHappen

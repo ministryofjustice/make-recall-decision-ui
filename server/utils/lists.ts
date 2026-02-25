@@ -37,7 +37,7 @@ export const groupListByValue = <T>({ list, groupByKey }: { list: T[]; groupByKe
       group.items.push(current)
       return prev
     },
-    { groupedByKey: groupByKey, items: [] }
+    { groupedByKey: groupByKey, items: [] },
   )
 }
 

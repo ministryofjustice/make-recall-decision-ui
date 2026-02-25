@@ -1,4 +1,4 @@
-import { inputDisplayValuesAddress } from './inputDisplayValues'
+import inputDisplayValuesAddress from './inputDisplayValues'
 
 describe('inputDisplayValuesAddress', () => {
   const apiValues = {

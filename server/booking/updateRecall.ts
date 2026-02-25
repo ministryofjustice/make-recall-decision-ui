@@ -1,14 +1,14 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 
 export default async function updateRecall(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 

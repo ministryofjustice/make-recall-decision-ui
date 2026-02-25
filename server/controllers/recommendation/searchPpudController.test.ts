@@ -111,7 +111,7 @@ describe('post', () => {
         pageUrlSlug: 'no-ppud-search-results',
         region: 'en-uk',
       },
-      { xyz: true }
+      { xyz: true },
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/no-search-ppud-results`)

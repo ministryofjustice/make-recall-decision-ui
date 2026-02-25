@@ -8,7 +8,7 @@ export const isFixedTermRecallMandatoryForRecommendation = (recommendation: Reco
     recommendation?.isMappaLevel2Or3,
     recommendation?.isRecalledOnNewChargedOffence,
     recommendation?.isServingFTSentenceForTerroristOffence,
-    recommendation?.hasBeenChargedWithTerroristOrStateThreatOffence
+    recommendation?.hasBeenChargedWithTerroristOrStateThreatOffence,
   )
 
 export const isFixedTermRecallMandatoryForValueKeys = (values: Record<string, boolean>) =>
@@ -19,7 +19,7 @@ export const isFixedTermRecallMandatoryForValueKeys = (values: Record<string, bo
     values.isMappaLevel2Or3,
     values.isRecalledOnNewChargedOffence,
     values.isServingFTSentenceForTerroristOffence,
-    values.hasBeenChargedWithTerroristOrStateThreatOffence
+    values.hasBeenChargedWithTerroristOrStateThreatOffence,
   )
 
 export const isFixedTermRecallMandatory = (
@@ -29,7 +29,7 @@ export const isFixedTermRecallMandatory = (
   isMappaLevel2Or3?: boolean,
   isRecalledOnNewChargedOffence?: boolean,
   isServingFTSentenceForTerroristOffence?: boolean,
-  hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
+  hasBeenChargedWithTerroristOrStateThreatOffence?: boolean,
 ) =>
   !(
     (isSentence48MonthsOrOver ?? true) ||

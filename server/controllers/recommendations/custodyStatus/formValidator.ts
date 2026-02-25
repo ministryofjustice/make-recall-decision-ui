@@ -1,11 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
   const { custodyStatus, custodyStatusDetailsYesPolice } = requestBody
@@ -21,7 +21,7 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
           id: 'custodyStatus',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingPoliceCustodyAddress) {
@@ -31,7 +31,7 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
           id: 'custodyStatusDetailsYesPolice',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     return {
@@ -54,3 +54,5 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
     nextPagePath,
   }
 }
+
+export default validateCustodyStatus

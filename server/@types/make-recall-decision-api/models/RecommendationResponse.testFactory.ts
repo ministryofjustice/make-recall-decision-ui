@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { randomInt } from 'crypto'
-import { CUSTODY_GROUP } from './ppud/CustodyGroup'
+import CUSTODY_GROUP from './ppud/CustodyGroup'
 import { BookRecallToPpud, NomisIndexOffence, OfferedOffence, Term } from './RecommendationResponse'
-import { randomEnum } from '../../enum.testFactory'
+import randomEnum from '../../enum.testFactory'
 
 export function nomisIndexOffence(
   {

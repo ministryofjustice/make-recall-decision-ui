@@ -1,5 +1,5 @@
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
-import { generateBooleanCombinations } from '../testUtils/booleanUtils'
+import generateBooleanCombinations from '../testUtils/booleanUtils'
 import {
   isFixedTermRecallMandatoryForRecommendation,
   isFixedTermRecallMandatoryForValueKeys,
@@ -18,8 +18,8 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isRecalledOnNewChargedOffence: undefined,
           isServingFTSentenceForTerroristOffence: undefined,
           hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
-        })
-      )
+        }),
+      ),
     ).toBeFalsy()
   })
   it(' Returns true when all exclusion criteria fields are false', () => {
@@ -33,8 +33,8 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isRecalledOnNewChargedOffence: false,
           isServingFTSentenceForTerroristOffence: false,
           hasBeenChargedWithTerroristOrStateThreatOffence: false,
-        })
-      )
+        }),
+      ),
     ).toBeTruthy()
   })
   it(' Returns false when all exclusion criteria fields are true', () => {
@@ -48,8 +48,8 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isRecalledOnNewChargedOffence: true,
           isServingFTSentenceForTerroristOffence: true,
           hasBeenChargedWithTerroristOrStateThreatOffence: true,
-        })
-      )
+        }),
+      ),
     ).toBeFalsy()
   })
   describe(' Returns false when any exclusion criteria fields are true', () => {
@@ -67,8 +67,8 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
                 isRecalledOnNewChargedOffence: combination[4],
                 isServingFTSentenceForTerroristOffence: combination[5],
                 hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-              })
-            )
+              }),
+            ),
           ).toBeFalsy()
         })
       })
@@ -86,7 +86,7 @@ describe('isFixedTermMandatoryForValueKeys', () => {
         isRecalledOnNewChargedOffence: undefined,
         isServingFTSentenceForTerroristOffence: undefined,
         hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
-      })
+      }),
     ).toBeFalsy()
   })
   it(' Returns true when all exclusion criteria fields are false', () => {
@@ -99,7 +99,7 @@ describe('isFixedTermMandatoryForValueKeys', () => {
         isRecalledOnNewChargedOffence: false,
         isServingFTSentenceForTerroristOffence: false,
         hasBeenChargedWithTerroristOrStateThreatOffence: false,
-      })
+      }),
     ).toBeTruthy()
   })
   it(' Returns false when all exclusion criteria fields are true', () => {
@@ -112,7 +112,7 @@ describe('isFixedTermMandatoryForValueKeys', () => {
         isRecalledOnNewChargedOffence: true,
         isServingFTSentenceForTerroristOffence: true,
         hasBeenChargedWithTerroristOrStateThreatOffence: true,
-      })
+      }),
     ).toBeFalsy()
   })
   describe(' Returns false when any exclusion criteria fields are true', () => {
@@ -129,7 +129,7 @@ describe('isFixedTermMandatoryForValueKeys', () => {
               isRecalledOnNewChargedOffence: combination[4],
               isServingFTSentenceForTerroristOffence: combination[5],
               hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-            })
+            }),
           ).toBeFalsy()
         })
       })
@@ -139,7 +139,7 @@ describe('isFixedTermMandatoryForValueKeys', () => {
 describe('isFixedTermRecallMandatory', () => {
   it(' Returns false when no exclusion criteria fields are set', () => {
     expect(
-      isFixedTermRecallMandatory(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+      isFixedTermRecallMandatory(undefined, undefined, undefined, undefined, undefined, undefined, undefined),
     ).toBeFalsy()
   })
   it(' Returns true when all exclusion criteria fields are false', () => {
@@ -161,8 +161,8 @@ describe('isFixedTermRecallMandatory', () => {
               combination[3],
               combination[4],
               combination[5],
-              combination[6]
-            )
+              combination[6],
+            ),
           ).toBeFalsy()
         })
       })

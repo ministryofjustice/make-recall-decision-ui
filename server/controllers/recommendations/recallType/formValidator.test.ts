@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
-import { validateRecallType } from './formValidator'
-import { EVENTS } from '../../../utils/constants'
-import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
-import { strings } from '../../../textStrings/en'
+import validateRecallType from './formValidator'
+import EVENTS from '../../../utils/constants'
+import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
+import strings from '../../../textStrings/en'
 import { availableRecallTypes } from './availableRecallTypes'
 
 jest.mock('../../../utils/automatedFieldValues/binding')
@@ -24,7 +24,7 @@ describe('validateRecallType', () => {
           text: faker.lorem.word(),
         }
       },
-      { count: 3 }
+      { count: 3 },
     )
 
     beforeEach(() => {

@@ -13,14 +13,14 @@ import updateOffence from '../../booking/updateOffence'
 import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
 import BookingMemento from '../../booking/BookingMemento'
-import { StageEnum } from '../../booking/StageEnum'
+import StageEnum from '../../booking/StageEnum'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import { generateRecallMinuteText } from '../recommendations/helpers/ppudMinutes'
+import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -81,7 +81,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         PPUDLicenceDocument?.id,
         'PPUDLicenceDocument',
         token,
-        flags
+        flags,
       )
     }
 
@@ -93,7 +93,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         PPUDProbationEmail?.id,
         'PPUDProbationEmail',
         token,
-        flags
+        flags,
       )
     }
 
@@ -120,15 +120,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
         PPUDChargeSheet?.id,
         'PPUDChargeSheet',
         token,
-        flags
+        flags,
       )
     }
 
     const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
 
-    for (const id of additional) {
-      memento = await uploadAdditionalDocument(memento, recommendationId, id, token, flags)
-    }
+    memento = await additional.reduce<Promise<BookingMemento>>(
+      (mementoPromise, id) =>
+        mementoPromise.then(currentMemento =>
+          uploadAdditionalDocument(currentMemento, recommendationId, id, token, flags),
+        ),
+      Promise.resolve(memento),
+    )
 
     memento = await createMinute(
       memento,
@@ -136,7 +140,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       'BACKGROUND INFO...',
       generateRecallMinuteText(recommendation),
       token,
-      flags
+      flags,
     )
 
     await updateStatuses({
@@ -154,7 +158,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   } catch (err) {
     if (err.status !== undefined) {
@@ -178,7 +182,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           recommendationId,
           region,
         },
-        flags
+        flags,
       )
 
       return res.redirect(303, req.originalUrl)
@@ -187,7 +191,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   }
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'booked-to-ppud', urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

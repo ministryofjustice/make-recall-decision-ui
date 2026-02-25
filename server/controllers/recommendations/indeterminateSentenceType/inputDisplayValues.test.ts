@@ -1,4 +1,4 @@
-import { inputDisplayValuesIndeterminateSentenceType } from './inputDisplayValues'
+import inputDisplayValuesIndeterminateSentenceType from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
 

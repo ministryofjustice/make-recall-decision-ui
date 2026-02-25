@@ -3,16 +3,11 @@ import {
   replaceMissingNDeliusInfoWithBlank,
   replaceMissingNDeliusInfoWithNotSpecified,
 } from './utils'
+import UserType from '../server/@types/usertypes'
 
 Cypress.Keyboard.defaults({
   keystrokeDelay: 0,
 })
-
-export enum UserType {
-  PO = 'PO',
-  SPO = 'SPO',
-  ACO = 'ACO',
-}
 
 const userName = Cypress.env('USERNAME')
 const password = Cypress.env('PASSWORD')
@@ -23,7 +18,7 @@ const passwordSpo = Cypress.env('PASSWORD_SPO')
 const userNameAco = Cypress.env('USERNAME_ACO')
 const passwordAco = Cypress.env('PASSWORD_ACO')
 
-const getUserDetails = function (userType: UserType) {
+const getUserDetails = (userType: UserType) => {
   const userDetails = {
     name: '',
     username: '',
@@ -53,7 +48,7 @@ Cypress.Commands.add('visitPage', (url, isSpoUser = false) => {
   getUserDetails(isSpoUser ? UserType.SPO : UserType.PO)
 })
 
-Cypress.Commands.add('visitPageAndLogin', function (url, userType = UserType.PO) {
+Cypress.Commands.add('visitPageAndLogin', (url, userType = UserType.PO) => {
   cy.clearCookies()
   cy.visit(url)
   cy.pageHeading().should('equal', 'Sign in')
@@ -86,7 +81,7 @@ Cypress.Commands.add('pageHeading', () =>
   cy
     .get('h1')
     .invoke('text')
-    .then(text => text.trim())
+    .then(text => text.trim()),
 )
 
 Cypress.Commands.add('fillInput', (label, text, opts = {}) => {
@@ -97,20 +92,20 @@ Cypress.Commands.add('fillInput', (label, text, opts = {}) => {
       cy
         .get(`#${id}`)
         .then($input =>
-          opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text)
-        )
+          opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text),
+        ),
     )
 })
 
 Cypress.Commands.add('fillInputByName', (name, text, opts = {}) => {
   cy.get(`input[name='${name}']`).then($input =>
-    opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text)
+    opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text),
   )
 })
 
 Cypress.Commands.add('fillTextareaByName', (name, text, opts = {}) => {
   cy.get(`textarea[name='${name}']`).then($input =>
-    opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text)
+    opts.clearExistingText ? cy.wrap($input).clear({ force: true }).type(text) : cy.wrap($input).type(text),
   )
 })
 
@@ -140,11 +135,11 @@ Cypress.Commands.add('clickLink', (label, opts = { parent: 'body' }) => {
 Cypress.Commands.add('getElement', (selector, opts = { parent: 'body' }) =>
   (selector as Cypress.Selector).qaAttr
     ? cy.get(`[data-qa="${(selector as Cypress.Selector).qaAttr}"]`)
-    : cy.get(opts.parent).contains(selector as string)
+    : cy.get(opts.parent).contains(selector as string),
 )
 
 Cypress.Commands.add('getLinkHref', (selector, opts = { parent: 'body' }) =>
-  cy.getElement(selector as string, opts).invoke('attr', 'href')
+  cy.getElement(selector as string, opts).invoke('attr', 'href'),
 )
 
 Cypress.Commands.add(
@@ -165,8 +160,10 @@ Cypress.Commands.add(
             .parent('tr')
             .find('.govuk-table__cell')
         }
+
+        return cy
       })
-      .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
+      .then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim())),
 )
 
 Cypress.Commands.add(
@@ -207,7 +204,7 @@ Cypress.Commands.add(
           })
       })
     return cy.wrap(tableData)
-  }
+  },
 )
 
 Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>
@@ -215,7 +212,7 @@ Cypress.Commands.add('getText', (qaAttr, opts = { parent: 'body' }) =>
     .get(opts.parent)
     .find(`[data-qa="${qaAttr}"]`)
     .invoke('text')
-    .then(text => text.trim())
+    .then(text => text.trim()),
 )
 
 Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 'body' }) =>
@@ -225,11 +222,11 @@ Cypress.Commands.add('getDefinitionListValue', (label: string, opts = { parent: 
     .filter(`:contains("${label}")`)
     .next('.govuk-summary-list__value')
     .invoke('text')
-    .then(text => text.trim().replace(/\n/g, '').replace(/\s\s+/g, ','))
+    .then(text => text.trim().replace(/\n/g, '').replace(/\s\s+/g, ',')),
 )
 
 Cypress.Commands.add('getListLabels', (labelQaAttr: string, opts = { parent: 'body' }) =>
-  cy.getElement({ qaAttr: labelQaAttr }, opts).then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim()))
+  cy.getElement({ qaAttr: labelQaAttr }, opts).then($els => Cypress.$.makeArray($els).map(el => el.innerText.trim())),
 )
 
 Cypress.Commands.add('assertErrorMessage', ({ fieldGroupId, fieldName, errorText }) => {
@@ -304,7 +301,7 @@ Cypress.Commands.add('contactTypeFiltersTotalCount', () => {
       .map(el => parseInt(el.innerText.trim(), 10))
       .reduce((sum, current) => {
         return sum + current
-      }, 0)
+      }, 0),
   )
 })
 
@@ -337,7 +334,7 @@ Cypress.Commands.add('getSelectableOptionByLabel', (groupLabel, value, opts = {}
         .wrap($fieldset)
         .contains('label', value)
         .invoke('attr', 'for')
-        .then(id => cy.get(`#${id}`))
+        .then(id => cy.get(`#${id}`)),
     )
 })
 
@@ -355,7 +352,7 @@ Cypress.Commands.add('downloadFile', linkText => {
 Cypress.Commands.add('downloadPdf', linkText =>
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  cy.downloadFile(linkText).then(response => cy.task('readPdf', response.body).then(pdf => pdf.text))
+  cy.downloadFile(linkText).then(response => cy.task('readPdf', response.body).then(pdf => pdf.text)),
 )
 
 Cypress.Commands.add(
@@ -364,7 +361,7 @@ Cypress.Commands.add(
     cy
       .downloadFile(linkText)
       .then(response => cy.task('readDocX', response.body))
-      .then(({ value }) => value.replace(/[\r\n]/gm, '')) // strip line breaks
+      .then(({ value }) => value.replace(/[\r\n]/gm, '')), // strip line breaks
 )
 
 Cypress.Commands.add('readBase64File', fileName => {
@@ -382,12 +379,12 @@ Cypress.Commands.add('interceptGoogleAnalyticsEvent', (query, id) => {
         ...query,
       },
     },
-    { statusCode: 200 }
+    { statusCode: 200 },
   ).as(id)
 })
 
 Cypress.Commands.add('getDateAttribute', propertyName =>
-  cy.getElement({ qaAttr: propertyName }).invoke('attr', 'data-date')
+  cy.getElement({ qaAttr: propertyName }).invoke('attr', 'data-date'),
 )
 
 Cypress.Commands.add('getTextFromClipboard', () =>
@@ -395,7 +392,7 @@ Cypress.Commands.add('getTextFromClipboard', () =>
     .window()
     .its('navigator.clipboard')
     .invoke('readText')
-    .then(text => text)
+    .then(text => text),
 )
 
 Cypress.Commands.add('logPageTitle', pageTitle => cy.log(`On page "${pageTitle}"`))

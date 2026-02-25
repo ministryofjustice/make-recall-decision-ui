@@ -2,7 +2,7 @@ import { Notification } from '../@types/notification'
 import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 
 // TODO: Update start dates to match those in MRD-2788 after this has been tested on dev
-export const notifications: Notification[] = [
+const notifications: Notification[] = [
   {
     headerText: 'Out-of-hours recalls started on 1 September 2025 will need to be completed by 11:59pm',
     bodyContent: 'This is because the service needs to be updated in line with FTR48 rules.',
@@ -19,3 +19,5 @@ export const notifications: Notification[] = [
     visibleToRoles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.ODM],
   },
 ]
+
+export default notifications

@@ -1,4 +1,4 @@
-import { inputDisplayValuesAddPreviousRecall } from './inputDisplayValues'
+import inputDisplayValuesAddPreviousRecall from './inputDisplayValues'
 
 describe('inputDisplayValuesAddPreviousRecall', () => {
   it("should use empty strings for value if there's an error for value", () => {

@@ -1,4 +1,4 @@
-export const indeterminateOrExtendedSentenceDetails = [
+const indeterminateOrExtendedSentenceDetails = [
   {
     text: '{{ fullName }} has shown behaviour similar to the index offence',
     value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
@@ -15,3 +15,5 @@ export const indeterminateOrExtendedSentenceDetails = [
     detailsLabel: 'Give details',
   },
 ]
+
+export default indeterminateOrExtendedSentenceDetails

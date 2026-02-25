@@ -1,4 +1,4 @@
-import { inputDisplayValuesFixedTermLicenceConditions } from './inputDisplayValues'
+import inputDisplayValuesFixedTermLicenceConditions from './inputDisplayValues'
 
 describe('inputDisplayValuesFixedTermLicenceConditions', () => {
   const apiValues = {

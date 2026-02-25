@@ -85,14 +85,14 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     createdBy: 'INTEGRATION_TEST_DATA_GENERATOR',
     activeCustodialConvictionCount: faker.number.int({ min: 1, max: 9 }),
     alternativesToRecallTried:
-      options?.alternativesToRecallTried ?? true
+      (options?.alternativesToRecallTried ?? true)
         ? {
             selected: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
             allOptions: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
           }
         : undefined,
     custodyStatus:
-      options?.custodyStatus ?? true
+      (options?.custodyStatus ?? true)
         ? {
             selected: CustodyStatus.selected.YES_POLICE,
             details: faker.location.streetAddress(),
@@ -101,31 +101,31 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         : undefined,
     dateVloInformed: faker.date.future().toDateString(),
     fixedTermAdditionalLicenceConditions:
-      options?.fixedTermAdditionalLicenceConditions ?? true
+      (options?.fixedTermAdditionalLicenceConditions ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.fixedTermAdditionalLicenceConditions)
         : undefined,
     hasArrestIssues:
-      options?.hasArrestIssues ?? true ? SelectedWithDetailsGenerator.generate(options?.hasArrestIssues) : undefined,
+      (options?.hasArrestIssues ?? true) ? SelectedWithDetailsGenerator.generate(options?.hasArrestIssues) : undefined,
     hasContrabandRisk:
-      options?.hasContrabandRisk ?? true
+      (options?.hasContrabandRisk ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.hasContrabandRisk)
         : undefined,
     hasVictimsInContactScheme:
-      options?.hasVictimsInContactScheme ?? true
+      (options?.hasVictimsInContactScheme ?? true)
         ? {
             selected: VictimsInContactScheme.selected.YES,
             allOptions: [],
           }
         : undefined,
     indeterminateOrExtendedSentenceDetails:
-      options?.indeterminateOrExtendedSentenceDetails ?? true
+      (options?.indeterminateOrExtendedSentenceDetails ?? true)
         ? {
             selected: [],
             allOptions: [],
           }
         : undefined,
     indeterminateSentenceType:
-      options?.indeterminateSentenceType ?? true
+      (options?.indeterminateSentenceType ?? true)
         ? {
             selected: IndeterminateSentenceType.selected.LIFE,
             allOptions: [],
@@ -134,19 +134,19 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isExtendedSentence: options?.isExtendedSentence ?? faker.datatype.boolean(),
     isIndeterminateSentence: options?.isIndeterminateSentence ?? faker.datatype.boolean(),
     isMainAddressWherePersonCanBeFound:
-      options?.isMainAddressWherePersonCanBeFound ?? true
+      (options?.isMainAddressWherePersonCanBeFound ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)
         : undefined,
     isThisAnEmergencyRecall: options?.isThisAnEmergencyRecall ?? faker.datatype.boolean(),
     isUnderIntegratedOffenderManagement:
-      options?.isUnderIntegratedOffenderManagement ?? true
+      (options?.isUnderIntegratedOffenderManagement ?? true)
         ? {
             selected: 'YES',
             allOptions: [],
           }
         : undefined,
     licenceConditionsBreached:
-      options?.licenceConditionsBreached ?? true
+      (options?.licenceConditionsBreached ?? true)
         ? {
             standardLicenceConditions: {
               selected: [faker.lorem.sentence()],
@@ -159,7 +159,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     localPoliceContact:
-      options?.localPoliceContact ?? true
+      (options?.localPoliceContact ?? true)
         ? {
             contactName: faker.person.fullName(),
             phoneNumber: faker.phone.number(),
@@ -169,11 +169,11 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         : undefined,
     personOnProbation: PersonOnProbationGenerator.generate(options?.personOnProbation ?? 'any'),
     convictionDetail:
-      options?.convictionDetail ?? true ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
-    indexOffenceDetails: options?.indexOffenceDetails ?? true ? faker.lorem.sentence() : undefined,
-    offenceAnalysis: options?.offenceAnalysis ?? true ? faker.lorem.sentence() : undefined,
+      (options?.convictionDetail ?? true) ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
+    indexOffenceDetails: (options?.indexOffenceDetails ?? true) ? faker.lorem.sentence() : undefined,
+    offenceAnalysis: (options?.offenceAnalysis ?? true) ? faker.lorem.sentence() : undefined,
     previousReleases:
-      options?.previousReleases ?? true
+      (options?.previousReleases ?? true)
         ? {
             lastReleaseDate: faker.date.past().toDateString(),
             lastReleasingPrisonOrCustodialEstablishment: `${faker.location.city()} UT Prison`,
@@ -182,7 +182,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     previousRecalls:
-      options?.previousRecalls ?? true
+      (options?.previousRecalls ?? true)
         ? {
             lastRecallDate: faker.date.past().toDateString(),
             hasBeenRecalledPreviously: faker.datatype.boolean(),
@@ -190,20 +190,20 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     recallType: RecallTypeGenerator.generate(options?.recallType ?? 'none'),
-    decisionDateTime: options?.decisionDateTime ?? true ? faker.date.past().toISOString() : undefined,
-    responseToProbation: options?.responseToProbation ?? true ? faker.lorem.sentence() : undefined,
+    decisionDateTime: (options?.decisionDateTime ?? true) ? faker.date.past().toISOString() : undefined,
+    responseToProbation: (options?.responseToProbation ?? true) ? faker.lorem.sentence() : undefined,
     vulnerabilities: VulnerabilitiesGenerator.generate(options?.vulnerabilities ?? 'any'),
-    triggerLeadingToRecall: options?.triggerLeadingToRecall ?? true ? faker.lorem.word() : undefined,
-    whatLedToRecall: options?.whatLedToRecall ?? true ? faker.lorem.sentence() : undefined,
-    recallConsideredList: options?.recallConsideredList ?? true ? [] : undefined,
+    triggerLeadingToRecall: (options?.triggerLeadingToRecall ?? true) ? faker.lorem.word() : undefined,
+    whatLedToRecall: (options?.whatLedToRecall ?? true) ? faker.lorem.sentence() : undefined,
+    recallConsideredList: (options?.recallConsideredList ?? true) ? [] : undefined,
     managerRecallDecision:
-      options?.managerRecallDecision ?? true
+      (options?.managerRecallDecision ?? true)
         ? {
             isSentToDelius: faker.datatype.boolean(),
           }
         : undefined,
     currentRoshForPartA:
-      options?.currentRoshForPartA ?? true
+      (options?.currentRoshForPartA ?? true)
         ? {
             riskToChildren: faker.helpers.enumValue(RoshEnum),
             riskToPublic: faker.helpers.enumValue(RoshEnum),
@@ -213,7 +213,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     roshSummary:
-      options?.roshSummary ?? true
+      (options?.roshSummary ?? true)
         ? {
             lastUpdatedDate: faker.date.past().toISOString(),
             natureOfRisk: faker.lorem.sentence(),
@@ -241,13 +241,13 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     spoCancelRecommendationRationale:
-      options?.spoCancelRecommendationRationale ?? true ? faker.lorem.sentence() : undefined,
+      (options?.spoCancelRecommendationRationale ?? true) ? faker.lorem.sentence() : undefined,
     spoDeleteRecommendationRationale:
-      options?.spoDeleteRecommendationRationale ?? true ? faker.lorem.sentence() : undefined,
-    spoRecallType: options?.spoRecallType ?? true ? faker.lorem.sentence() : undefined,
+      (options?.spoDeleteRecommendationRationale ?? true) ? faker.lorem.sentence() : undefined,
+    spoRecallType: (options?.spoRecallType ?? true) ? faker.lorem.sentence() : undefined,
     whoCompletedPartA: WhoCompletedPartAGenerator.generate(options?.whoCompletedPartA ?? 'any'),
     practitionerForPartA:
-      options?.practitionerForPartA ?? true
+      (options?.practitionerForPartA ?? true)
         ? {
             name: faker.person.fullName(),
             email: faker.internet.email(),
@@ -256,8 +256,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             localDeliveryUnit: faker.location.city(),
           }
         : undefined,
-    revocationOrderRecipients: options?.revocationOrderRecipients ?? true ? [faker.internet.email()] : undefined,
-    ppcsQueryEmails: options?.ppcsQueryEmails ?? true ? [faker.internet.email()] : undefined,
+    revocationOrderRecipients: (options?.revocationOrderRecipients ?? true) ? [faker.internet.email()] : undefined,
+    ppcsQueryEmails: (options?.ppcsQueryEmails ?? true) ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
       options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),

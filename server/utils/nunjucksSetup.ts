@@ -23,7 +23,7 @@ import {
   isBeforeDate,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
-import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
+import getDisplayValueForOption from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 import { defaultName } from '../monitoring/azureAppInsights'
@@ -63,7 +63,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     {
       autoescape: true,
       express: app,
-    }
+    },
   )
 
   njkEnv.addFilter('initialiseName', (fullName: string) => {

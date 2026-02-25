@@ -3,7 +3,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 import { SupportingDocumentType } from '../../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 
 const typeLookup: Record<string, SupportingDocumentType> = {
   'part-a': SupportingDocumentType.PPUDPartA,
@@ -49,7 +49,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
@@ -60,7 +60,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
@@ -94,7 +94,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return res.redirect(303, req.originalUrl)
     }
   }
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
 }
 
 export default { get, post }

@@ -1,5 +1,5 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
-import { filterContactsByContactType } from './filterContactsByContactType'
+import filterContactsByContactType from './filterContactsByContactType'
 
 describe('filterContactsByContactType', () => {
   const filteredContacts = [

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesEmergencyRecall } from '../recommendations/emergencyRecall/inputDisplayValues'
-import { validateEmergencyRecall } from '../recommendations/emergencyRecall/formValidator'
+import inputDisplayValuesEmergencyRecall from '../recommendations/emergencyRecall/inputDisplayValues'
+import validateEmergencyRecall from '../recommendations/emergencyRecall/formValidator'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -65,10 +65,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'indeterminate-details'
   }
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
-
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
-
   if (valuesToSave.isThisAnEmergencyRecall) {
     appInsightsEvent(
       EVENTS.MRD_RECALL_TYPE,
@@ -79,9 +75,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

@@ -1,4 +1,4 @@
-import { inputDisplayValuesNextAppointment } from './inputDisplayValues'
+import inputDisplayValuesNextAppointment from './inputDisplayValues'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesNextAppointment', () => {

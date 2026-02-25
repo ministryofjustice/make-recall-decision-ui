@@ -1,9 +1,9 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { updateRecommendationStatus } from './updateRecommendationStatus'
+import updateRecommendationStatus from './updateRecommendationStatus'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -61,7 +61,7 @@ describe('updateRecommendationStatus', () => {
         recommendationId,
         region: { code: 'N07', name: 'London' },
       },
-      featureFlags
+      featureFlags,
     )
   })
 

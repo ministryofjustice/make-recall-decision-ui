@@ -3,7 +3,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import suitabilityForFixedTermRecallController from './suitabilityForFixedTermRecallController'
-import { getCaseSection } from '../caseSummary/getCaseSection'
+import getCaseSection from '../caseSummary/getCaseSection'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
 import {

@@ -1,5 +1,5 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
@@ -298,7 +298,7 @@ context('Risk page', () => {
         .getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
           parent: `[data-qa="${id}"]`,
         })
-        .should('exist')
+        .should('exist'),
     )
 
     cy.getElement('Something went wrong. We are unable to show ROSH information at this time. Try again later.', {
@@ -344,7 +344,7 @@ context('Risk page', () => {
         .getElement('This information cannot be retrieved from OASys.', {
           parent: `[data-qa="${id}"]`,
         })
-        .should('exist')
+        .should('exist'),
     )
     cy.getElement('UNKNOWN LEVEL ROSH').should('exist')
     cy.getElement('This information cannot be retrieved from OASys.').should('exist')
@@ -386,7 +386,7 @@ context('Risk page', () => {
         .getElement('The latest complete OASys assessment does not have full RoSH information.', {
           parent: `[data-qa="${id}"]`,
         })
-        .should('exist')
+        .should('exist'),
     )
     cy.getElement('Something went wrong. We are unable to show ROSH information at this time. Try again later.', {
       parent: '[data-qa="roshTable"]',
@@ -420,14 +420,14 @@ context('Risk page', () => {
       cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
       cy.getLinkHref({ qaAttr: 'view-contacts' }, { parent: '[data-qa="timeline-item-1"]' }).should(
         'contain',
-        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022&includeSystemGenerated=YES'
+        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022&includeSystemGenerated=YES',
       )
 
       cy.get('[data-qa="timeline-item-3"]').should('contain', '23 June 2021')
       cy.get('[data-qa="timeline-item-3"]').should('contain', 'RoSH HIGH')
       cy.viewDetails('View notes on RoSH history on 23 June 2021').should(
         'contain',
-        'Registering Staff ID re-assigned in TR Migration'
+        'Registering Staff ID re-assigned in TR Migration',
       )
       //  Step 0: Open all hidden sections
       cy.get('#predictor-timeline__toggle-all').click()
@@ -545,7 +545,7 @@ context('Risk page', () => {
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.getText('timeline-missing').should(
         'equal',
-        'RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.'
+        'RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.',
       )
     })
 
@@ -563,7 +563,7 @@ context('Risk page', () => {
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.getText('score-history-missing').should(
         'equal',
-        'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
+        'Predictor scores cannot be retrieved from OASys. Double-check OASys.',
       )
       cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
       cy.get('[data-qa="timeline-item-2"]').should('contain', 'RoSH HIGH')
@@ -583,7 +583,7 @@ context('Risk page', () => {
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.getText('rosh-history-missing').should(
         'equal',
-        'Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.'
+        'Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.',
       )
       cy.get('[data-qa="timeline-item-1"]').should('contain', '13 July 2021')
       cy.get('[data-qa="timeline-item-2"]').should('contain', '4 May 2019')

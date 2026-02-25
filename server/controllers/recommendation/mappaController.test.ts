@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
+import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
 import mappaController from './mappaController'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -19,7 +19,7 @@ describe('get', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({

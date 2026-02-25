@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 import type { CaseDocumentType } from './CaseDocumentType';
 

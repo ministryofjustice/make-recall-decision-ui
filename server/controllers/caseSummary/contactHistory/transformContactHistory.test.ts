@@ -1,4 +1,4 @@
-import { transformContactHistory } from './transformContactHistory'
+import transformContactHistory from './transformContactHistory'
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
 
 describe('transformContactHistory', () => {
@@ -357,7 +357,7 @@ describe('transformContactHistory', () => {
         value: 'ABC',
         description: 'Arrest attempt',
         systemGenerated: false,
-      })
+      }),
     )
     expect(data.filters.contactTypes.contactTypeGroups[0].contactTypeCodesSystemGenerated).toHaveLength(3)
     const [first, second, third] = data.filters.contactTypes.contactTypeGroups[0].contactTypeCodesSystemGenerated
@@ -366,21 +366,21 @@ describe('transformContactHistory', () => {
         value: 'IVSP',
         description: 'Management Oversight - Recall',
         systemGenerated: true,
-      })
+      }),
     )
     expect(second).toEqual(
       expect.objectContaining({
         value: 'DEF',
         description: 'Planned Office Visit (NS)',
         systemGenerated: true,
-      })
+      }),
     )
     expect(third).toEqual(
       expect.objectContaining({
         value: 'ROC',
         description: 'Responsible officer change',
         systemGenerated: true,
-      })
+      }),
     )
   })
 })

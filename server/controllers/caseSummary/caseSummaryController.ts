@@ -7,11 +7,11 @@ import {
   validateCrn,
 } from '../../utils/utils'
 
-import { getCaseSection } from './getCaseSection'
+import getCaseSection from './getCaseSection'
 import { transformErrorMessages } from '../../utils/errors'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 import { AppError } from '../../AppError'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { CaseSectionId } from '../../@types/pagesForms'
 import {
   getActiveRecommendation,
@@ -27,9 +27,9 @@ import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { RecommendationDecorated } from '../../@types/api'
 import { PrisonOffenderSearchResponse } from '../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 import { Status } from '../../@types/caseSummary'
-import { createRecommendationBanner } from '../../utils/bannerUtils'
+import createRecommendationBanner from '../../utils/bannerUtils'
 import { ActiveRecommendation } from '../../@types/make-recall-decision-api'
-import { getActiveNotificationBanner } from '../../utils/notifications'
+import getActiveNotificationBanner from '../../utils/notifications'
 
 interface RecommendationButton {
   display: boolean
@@ -86,7 +86,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
     token,
     userId,
     req.query,
-    flags
+    flags,
   )
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
@@ -102,7 +102,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
   if (isOutOfHoursWorker) {
     nomisPrisonOffender = (await searchForPrisonOffender(
       token,
-      caseSection.caseSummary.personalDetailsOverview?.nomsNumber
+      caseSection.caseSummary.personalDetailsOverview?.nomsNumber,
     )) as PrisonOffenderSearchResponse
   }
 
@@ -143,7 +143,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
     } else {
       const recommendation: RecommendationDecorated = await getRecommendation(
         String(activeRecommendation.recommendationId),
-        user.token
+        user.token,
       )
 
       const statuses = await getActiveStatuses(activeRecommendation, token)
@@ -159,7 +159,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
             personOnProbation: { name: recommendation.personOnProbation.name },
           },
           String(activeRecommendation.recommendationId),
-          isSpo
+          isSpo,
         )
       }
 
@@ -266,7 +266,7 @@ async function get(req: Request, res: Response, _: NextFunction) {
       res.locals.caseSummary.hasAllConvictionsReleasedOnLicence,
       user,
       normalizedCrn,
-      flags
+      flags,
     )
   }
 

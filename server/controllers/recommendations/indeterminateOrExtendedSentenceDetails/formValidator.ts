@@ -1,6 +1,6 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
@@ -19,23 +19,20 @@ const missingDetailsError = (optionId: string) => {
   }
 }
 
-export const validateIndeterminateDetails = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { indeterminateOrExtendedSentenceDetails } = requestBody
   const selected = Array.isArray(indeterminateOrExtendedSentenceDetails)
     ? indeterminateOrExtendedSentenceDetails
     : [indeterminateOrExtendedSentenceDetails]
   const invalidAlternative = selected.some(
-    selectionId => !isValueValid(selectionId, 'indeterminateOrExtendedSentenceDetails')
+    selectionId => !isValueValid(selectionId, 'indeterminateOrExtendedSentenceDetails'),
   )
   const missingDetails = selected.filter(selectionId => {
     const optionShouldHaveDetails = Boolean(
       findListItemByValue<UiFormOption>({
         items: formOptions.indeterminateOrExtendedSentenceDetails,
         value: selectionId,
-      })?.detailsLabel
+      })?.detailsLabel,
     )
     if (
       optionShouldHaveDetails &&
@@ -56,7 +53,7 @@ export const validateIndeterminateDetails = async ({
           id: 'indeterminateOrExtendedSentenceDetails',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingDetails.length) {
@@ -67,7 +64,7 @@ export const validateIndeterminateDetails = async ({
             id: `indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`,
             text: missingDetailsError(selectionId),
             errorId,
-          })
+          }),
         )
       })
     }
@@ -102,3 +99,5 @@ export const validateIndeterminateDetails = async ({
     nextPagePath,
   }
 }
+
+export default validateIndeterminateDetails

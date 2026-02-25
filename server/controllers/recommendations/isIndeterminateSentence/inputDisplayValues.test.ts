@@ -1,4 +1,4 @@
-import { inputDisplayValuesIsIndeterminateSentence } from './inputDisplayValues'
+import inputDisplayValuesIsIndeterminateSentence from './inputDisplayValues'
 
 describe('inputDisplayValuesIsIndeterminateSentence', () => {
   const apiValues = {

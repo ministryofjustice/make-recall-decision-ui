@@ -1,4 +1,4 @@
-import { validateIsIndeterminateSentence } from './formValidator'
+import validateIsIndeterminateSentence from './formValidator'
 
 describe('validateIsIndeterminateSentence', () => {
   const recommendationId = '34'

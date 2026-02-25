@@ -25,7 +25,7 @@ context('SignIn', () => {
     cy.signIn()
     cy.getText('banner-text').should(
       'equal',
-      'This version of the service is for testing purposes only. It is a replica of the live service to help you get familiar with it.'
+      'This version of the service is for testing purposes only. It is a replica of the live service to help you get familiar with it.',
     )
   })
 })

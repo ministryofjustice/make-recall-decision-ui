@@ -414,7 +414,7 @@ describe('get', () => {
         vulnerability2 = faker.helpers.enumValue(VULNERABILITY)
       } while (vulnerability1 === vulnerability2)
       ;(vulnerabilityRequiresDetails as jest.Mock).mockImplementation(
-        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1
+        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1,
       )
 
       const res = mockRes({

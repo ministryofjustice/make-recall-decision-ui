@@ -27,7 +27,7 @@ import {
   updateStatuses,
 } from './mockApis/makeRecallDecisionApi'
 import { readBase64File, readPdf } from './plugins/readFiles'
-import { readDocX } from '../cypress_shared/plugins'
+import readDocX from '../cypress_shared/plugins'
 import { resetStubs } from './mockApis/wiremock'
 import auth from './mockApis/auth'
 import tokenVerification from './mockApis/tokenVerification'

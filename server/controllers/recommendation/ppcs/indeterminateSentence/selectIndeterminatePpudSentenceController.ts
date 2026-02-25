@@ -6,7 +6,7 @@ import {
   getIndeterminateSentences,
 } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
+import strings from '../../../../textStrings/en'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
@@ -90,7 +90,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const { urlInfo } = res.locals
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
 }
 
 export default { get, post }

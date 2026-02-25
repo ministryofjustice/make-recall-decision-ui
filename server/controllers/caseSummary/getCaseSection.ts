@@ -7,30 +7,30 @@ import { ContactHistoryResponse } from '../../@types/make-recall-decision-api/mo
 import { RiskResponse } from '../../@types/make-recall-decision-api/models/RiskResponse'
 import { PersonDetailsResponse } from '../../@types/make-recall-decision-api/models/PersonDetailsResponse'
 import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
-import { transformContactHistory } from './contactHistory/transformContactHistory'
+import transformContactHistory from './contactHistory/transformContactHistory'
 import { isCaseRestrictedOrExcluded } from '../../utils/utils'
 import { AppError } from '../../AppError'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
-import { transformRiskManagementPlan } from './overview/transformRiskManagementPlan'
+import transformRiskManagementPlan from './overview/transformRiskManagementPlan'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { VulnerabilitiesResponse } from '../../@types/make-recall-decision-api/models/VulnerabilitiesResponse'
-import { transformVulnerabilities } from './vulnerabilities/transformVulnerabilities'
+import transformVulnerabilities from './vulnerabilities/transformVulnerabilities'
 import { transformRisk } from './risk/transformRisk'
 import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
-import { transformRecommendations } from './recommendations/transformRecommendations'
+import transformRecommendations from './recommendations/transformRecommendations'
 import { ContactHistoryFilters } from '../../@types/contacts'
 import { CaseSectionId } from '../../@types/pagesForms'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { LastCompletedRecommendationsResponse } from '../../@types/make-recall-decision-api/models/LastCompletedRecommendationsResponse'
 
-export const getCaseSection = async (
+const getCaseSection = async (
   sectionId: CaseSectionId,
   crn: string,
   token: string,
   userId: string,
   reqQuery: ParsedQs,
-  _: Record<string, boolean>
+  _: Record<string, boolean>,
 ) => {
   let sectionLabel
   let caseSummary
@@ -129,7 +129,7 @@ export const getCaseSection = async (
           recommendations: caseSummaryRaw.recommendations?.map(recommendation => ({
             ...recommendation,
             completedDate: recommendation.statuses.find(
-              status => status.active && status.name === STATUSES.PP_DOCUMENT_CREATED
+              status => status.active && status.name === STATUSES.PP_DOCUMENT_CREATED,
             ).created,
             recallType: recommendation.recallType.selected.value,
           })),
@@ -149,3 +149,5 @@ export const getCaseSection = async (
     },
   }
 }
+
+export default getCaseSection

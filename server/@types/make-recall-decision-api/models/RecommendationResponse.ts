@@ -27,7 +27,7 @@ import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendat
 import type { WhyConsideredRecall } from './WhyConsideredRecall'
 import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
 import BookingMemento from '../../../booking/BookingMemento'
-import { CUSTODY_GROUP } from './ppud/CustodyGroup'
+import CUSTODY_GROUP from './ppud/CustodyGroup'
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;

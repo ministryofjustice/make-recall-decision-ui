@@ -1,4 +1,4 @@
-import { inputDisplayValuesRecallTypeIndeterminate } from './inputDisplayValues'
+import inputDisplayValuesRecallTypeIndeterminate from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api'
 

@@ -1,5 +1,5 @@
-import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../server/middleware/recommendationStatus'
 import completeRecommendationResponse from '../../../../../api/responses/get-recommendation.json'
 import { testSummaryList } from '../../../../componentTests/summaryList.tests'
 import searchMappedUserResponse from '../../../../../api/responses/searchMappedUsers.json'
@@ -99,7 +99,7 @@ context('Determinate Ppud Sentences', () => {
       cy.pageHeading().should('equals', 'Determinate sentences in PPUD')
       cy.get('p.govuk-body').should(
         'contain.text',
-        'Jane Bloggs has indeterminate and determinate sentences in PPUD. View the determinate sentences and then return to the indeterminate sentences to continue your booking.'
+        'Jane Bloggs has indeterminate and determinate sentences in PPUD. View the determinate sentences and then return to the indeterminate sentences to continue your booking.',
       )
 
       // verify court case header and date of sentence for Court case: Glasgow

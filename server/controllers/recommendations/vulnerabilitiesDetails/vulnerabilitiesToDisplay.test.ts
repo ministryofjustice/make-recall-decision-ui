@@ -1,6 +1,6 @@
 import { VulnerabilitiesRecommendation } from '../../../@types/make-recall-decision-api'
 import { formOptions } from '../formOptions/formOptions'
-import { vulnerabilitiesToDisplay } from './vulnerabilitiesToDisplay'
+import vulnerabilitiesToDisplay from './vulnerabilitiesToDisplay'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 
 describe('vulnerabilitiesToDisplay', () => {

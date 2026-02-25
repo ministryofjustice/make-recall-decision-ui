@@ -1,5 +1,5 @@
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 
 export type Check = (locals: Record<string, unknown>) => boolean

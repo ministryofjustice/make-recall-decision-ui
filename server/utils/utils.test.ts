@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { productionEnvValues } from '../testUtils/testConstants'
+import productionEnvValues from '../testUtils/testConstants'
 import {
   convertToTitleCase,
   getProperty,
@@ -37,7 +37,7 @@ describe('listToString', () => {
 
   it('accepts empty string as the conjunction', () => {
     expect(listToString(['5 Oak Crescent', 'Southampton', 'S12 345'], '')).toEqual(
-      '5 Oak Crescent, Southampton S12 345'
+      '5 Oak Crescent, Southampton S12 345',
     )
   })
 
@@ -274,14 +274,14 @@ describe('isDateTimeRangeCurrent', () => {
       dateToday.getHours() - 1,
       dateToday.getMinutes(),
       dateToday.getSeconds(),
-      dateToday.getMilliseconds()
+      dateToday.getMilliseconds(),
     )
     const endDateTime = new Date()
     endDateTime.setHours(
       dateToday.getHours() + 1,
       dateToday.getMinutes(),
       dateToday.getSeconds(),
-      dateToday.getMilliseconds()
+      dateToday.getMilliseconds(),
     )
 
     const result = isDateTimeRangeCurrent(startDateTime.toISOString(), endDateTime.toISOString())

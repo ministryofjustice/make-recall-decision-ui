@@ -5,7 +5,7 @@ import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateRecallReceived = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateRecallReceived = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
   const dateTimeParts = {
@@ -32,7 +32,7 @@ export const validateRecallReceived = async ({ requestBody, urlInfo }: FormValid
           errorId: (dateTimeIso as ValidationError).errorId,
           invalidParts: (dateTimeIso as ValidationError).invalidParts,
           values: dateTimeParts as Record<string, string>,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -51,4 +51,8 @@ export const validateRecallReceived = async ({ requestBody, urlInfo }: FormValid
       nextPagePath,
     }
   }
+
+  return { errors }
 }
+
+export default validateRecallReceived

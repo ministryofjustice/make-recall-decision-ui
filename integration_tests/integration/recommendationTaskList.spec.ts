@@ -1,12 +1,12 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
-import { setResponsePropertiesToNull } from '../support/commands'
+import setResponsePropertiesToNull from '../support/commands'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
 import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
-import { RECOMMENDATION_STATUS } from '../../server/middleware/recommendationStatus'
-import { strings } from '../../server/textStrings/en'
+import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
+import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 import recallTypeValues = RecallTypeSelectedValue.value
 
@@ -21,7 +21,7 @@ context('Recommendation - task list', () => {
       name: string
       active: boolean
     }[],
-    enabledFlags?: string[]
+    enabledFlags?: string[],
   ) {
     cy.task('getRecommendation', {
       statusCode: 200,
@@ -172,16 +172,16 @@ context('Recommendation - task list', () => {
       function checkSuitabilityLink() {
         checkLink(
           suitabilityLinkText,
-          `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`
+          `/recommendations/${recommendationId}/suitability-for-fixed-term-recall?fromPageId=task-list&fromAnchor=heading-recommendation`,
         )
       }
 
       function checkRecallTypeLink(
-        recallTypePath: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended'
+        recallTypePath: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended',
       ) {
         checkLink(
           'What you recommend',
-          `/recommendations/${recommendationId}/${recallTypePath}?fromPageId=task-list&fromAnchor=heading-recommendation`
+          `/recommendations/${recommendationId}/${recallTypePath}?fromPageId=task-list&fromAnchor=heading-recommendation`,
         )
       }
 
@@ -228,7 +228,7 @@ context('Recommendation - task list', () => {
                 it('shows SPO agreement link', () => {
                   checkSpoAgreementLink()
                 })
-              }
+              },
             )
           })
         })
@@ -246,21 +246,21 @@ context('Recommendation - task list', () => {
       function checkResponseToProbationLink(personOnProbationName: string) {
         checkLink(
           `How has ${personOnProbationName} responded to probation so far?`,
-          `/recommendations/${recommendationId}/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkLicenceConditionsLink(personOnProbationName: string) {
         checkLink(
           `What licence conditions has ${personOnProbationName} breached?`,
-          `/recommendations/${recommendationId}/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/licence-conditions?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkAlternativesTriedLink() {
         checkLink(
           'What alternatives to recall have been tried already?',
-          `/recommendations/${recommendationId}/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives`
+          `/recommendations/${recommendationId}/alternatives-tried?fromPageId=task-list&fromAnchor=heading-alternatives`,
         )
       }
 
@@ -271,42 +271,42 @@ context('Recommendation - task list', () => {
       function checkEmergencyRecallLink() {
         checkLink(
           emergencyRecallLinkText,
-          `/recommendations/${recommendationId}/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/emergency-recall?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkIsIndeterminateLink(personOnProbationName: string) {
         checkLink(
           `Is ${personOnProbationName} on an indeterminate sentence?`,
-          `/recommendations/${recommendationId}/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkIndeterminateTypeLink() {
         checkLink(
           indeterminateTypeLinkText,
-          `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkIsExtendedLink(personOnProbationName: string) {
         checkLink(
           `Is ${personOnProbationName} on an extended sentence?`,
-          `/recommendations/${recommendationId}/is-extended?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/is-extended?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkFTRAdditionalLicenceConditionsLink() {
         checkLink(
           ftrAdditionalLicenceConditionsLinkText,
-          `/recommendations/${recommendationId}/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
       function checkIndeterminateOrExtendedDetailsLink() {
         checkLink(
           indeterminateOrExtendedDetailsLinkText,
-          `/recommendations/${recommendationId}/indeterminate-details?fromPageId=task-list&fromAnchor=heading-circumstances`
+          `/recommendations/${recommendationId}/indeterminate-details?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
@@ -393,7 +393,7 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(indeterminateOrExtendedDetailsLinkText)
                   })
                 }
-              }
+              },
             )
           })
         })
@@ -406,42 +406,42 @@ context('Recommendation - task list', () => {
       function checkPersonalDetailsLink() {
         checkLink(
           'Personal details',
-          `/recommendations/${recommendationId}/personal-details?fromPageId=task-list&fromAnchor=heading-person-details`
+          `/recommendations/${recommendationId}/personal-details?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
 
       function checkOffenceDetailsLink() {
         checkLink(
           'Offence details',
-          `/recommendations/${recommendationId}/offence-details?fromPageId=task-list&fromAnchor=heading-person-details`
+          `/recommendations/${recommendationId}/offence-details?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
 
       function checkOffenceAnalysisLink() {
         checkLink(
           'Offence analysis',
-          `/recommendations/${recommendationId}/offence-analysis?fromPageId=task-list&fromAnchor=heading-person-details`
+          `/recommendations/${recommendationId}/offence-analysis?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
 
       function checkPreviousReleasesLink() {
         checkLink(
           'Previous releases',
-          `/recommendations/${recommendationId}/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details`
+          `/recommendations/${recommendationId}/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
 
       function checkPreviousRecallsLink() {
         checkLink(
           `Previous recalls`,
-          `/recommendations/${recommendationId}/previous-recalls?fromPageId=task-list&fromAnchor=heading-person-details`
+          `/recommendations/${recommendationId}/previous-recalls?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
 
       function checkAddressDetailsLink() {
         checkLink(
           addressDetailsLinkText,
-          `/recommendations/${recommendationId}/address-details?fromPageId=task-list&fromAnchor=heading-person-details`
+          `/recommendations/${recommendationId}/address-details?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
 
@@ -503,7 +503,7 @@ context('Recommendation - task list', () => {
           VULNERABILITY.NOT_KNOWN,
         ]
         const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
+          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
         )
 
         it('with no vulnerabilities selected', () => {
@@ -514,11 +514,11 @@ context('Recommendation - task list', () => {
               },
             }),
             [],
-            [riskToSelfFlag]
+            [riskToSelfFlag],
           )
           checkLink(
             linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-            `/recommendations/${recommendationId}/vulnerabilities`
+            `/recommendations/${recommendationId}/vulnerabilities`,
           )
           checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
         })
@@ -532,15 +532,15 @@ context('Recommendation - task list', () => {
                 },
               }),
               [],
-              [riskToSelfFlag]
+              [riskToSelfFlag],
             )
             checkLink(
               linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities`
+              `/recommendations/${recommendationId}/vulnerabilities`,
             )
             checkLink(
               linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities-details`
+              `/recommendations/${recommendationId}/vulnerabilities-details`,
             )
           })
         })
@@ -554,11 +554,11 @@ context('Recommendation - task list', () => {
                 },
               }),
               [],
-              [riskToSelfFlag]
+              [riskToSelfFlag],
             )
             checkLink(
               linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities`
+              `/recommendations/${recommendationId}/vulnerabilities`,
             )
             checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
           })
@@ -570,7 +570,7 @@ context('Recommendation - task list', () => {
       setUp(RecommendationResponseGenerator.generate())
       checkLink(
         'Are there any victims in the victim contact scheme?',
-        `/recommendations/${recommendationId}/victim-contact-scheme`
+        `/recommendations/${recommendationId}/victim-contact-scheme`,
       )
     })
 
@@ -582,7 +582,7 @@ context('Recommendation - task list', () => {
       function checkCustodyStatusLink(personOnProbationName: string) {
         checkLink(
           `Is ${personOnProbationName} in custody now?`,
-          `/recommendations/${recommendationId}/custody-status?fromPageId=task-list&fromAnchor=heading-custody`
+          `/recommendations/${recommendationId}/custody-status?fromPageId=task-list&fromAnchor=heading-custody`,
         )
       }
 
@@ -593,7 +593,7 @@ context('Recommendation - task list', () => {
       function checkIsUnderIOMLink(personOnProbationName: string) {
         checkLink(
           `Is ${personOnProbationName} under Integrated Offender Management (IOM)?`,
-          `/recommendations/${recommendationId}/iom`
+          `/recommendations/${recommendationId}/iom`,
         )
       }
 
@@ -604,7 +604,7 @@ context('Recommendation - task list', () => {
       function checkContrabandLink(personOnProbationName: string) {
         checkLink(
           `Do you think ${personOnProbationName} is using recall to bring contraband into prison?`,
-          `/recommendations/${recommendationId}/contraband`
+          `/recommendations/${recommendationId}/contraband`,
         )
       }
 
@@ -636,14 +636,14 @@ context('Recommendation - task list', () => {
       function checkRoshLink() {
         checkLink(
           `Indicative risk assessment pending OASys review`,
-          `/recommendations/${recommendationId}/rosh?fromPageId=task-list&fromAnchor=heading-risk-profile`
+          `/recommendations/${recommendationId}/rosh?fromPageId=task-list&fromAnchor=heading-risk-profile`,
         )
       }
 
       function checkMappaLink(personOnProbationName: string) {
         checkLink(
           `MAPPA for ${personOnProbationName}`,
-          `/recommendations/${recommendationId}/mappa?fromPageId=task-list&fromAnchor=heading-risk-profile`
+          `/recommendations/${recommendationId}/mappa?fromPageId=task-list&fromAnchor=heading-risk-profile`,
         )
       }
 
@@ -670,7 +670,7 @@ context('Recommendation - task list', () => {
       function checkRevocationOrderRecipientsLink() {
         checkLink(
           'Where should the revocation order be sent?',
-          `/recommendations/${recommendationId}/revocation-order-recipients`
+          `/recommendations/${recommendationId}/revocation-order-recipients`,
         )
       }
 
@@ -732,14 +732,14 @@ context('Recommendation - task list', () => {
       function checkRequestSpoCountersignatureLink() {
         checkLink(
           requestSpoCountersignatureLinkText,
-          `/recommendations/${recommendationId}/request-spo-countersign?fromPageId=task-list&fromAnchor=countersign`
+          `/recommendations/${recommendationId}/request-spo-countersign?fromPageId=task-list&fromAnchor=countersign`,
         )
       }
 
       function checkRequestAcoCountersignatureLink() {
         checkLink(
           requestAcoCountersignatureLinkText,
-          `/recommendations/${recommendationId}/request-aco-countersign?fromPageId=task-list&fromAnchor=countersign`
+          `/recommendations/${recommendationId}/request-aco-countersign?fromPageId=task-list&fromAnchor=countersign`,
         )
       }
 
@@ -754,7 +754,7 @@ context('Recommendation - task list', () => {
             personOnProbation: {
               hasBeenReviewed: false,
             },
-          })
+          }),
         )
         checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
         checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
@@ -830,7 +830,7 @@ context('Recommendation - task list', () => {
           setUp(
             RecommendationResponseGenerator.generate({
               vulnerabilities: 'none',
-            })
+            }),
           )
           hasToDoLabel(linkTexts.vulnerabilities)
           checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
@@ -852,7 +852,7 @@ context('Recommendation - task list', () => {
           VULNERABILITY.NOT_KNOWN,
         ]
         const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
+          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
         )
 
         it('with no vulnerabilities selected', () => {
@@ -863,7 +863,7 @@ context('Recommendation - task list', () => {
               },
             }),
             [],
-            [riskToSelfFlag]
+            [riskToSelfFlag],
           )
           hasToDoLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
           checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
@@ -878,7 +878,7 @@ context('Recommendation - task list', () => {
                 },
               }),
               [],
-              [riskToSelfFlag]
+              [riskToSelfFlag],
             )
 
             hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
@@ -895,7 +895,7 @@ context('Recommendation - task list', () => {
                 },
               }),
               [],
-              [riskToSelfFlag]
+              [riskToSelfFlag],
             )
             hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
             hasCompletedLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
@@ -911,7 +911,7 @@ context('Recommendation - task list', () => {
                 },
               }),
               [],
-              [riskToSelfFlag]
+              [riskToSelfFlag],
             )
             hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
             checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)

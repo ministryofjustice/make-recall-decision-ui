@@ -1,7 +1,7 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { hasData, hasValue, isEmptyStringOrWhitespace } from '../../../utils/utils'
-import { FeatureFlags } from '../../../@types/featureFlags'
+import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 
@@ -53,7 +53,7 @@ export const hasAllRequiredVulnerabilityDetails = (recommendation: Recommendatio
     !selectedVulnerabilities.some(
       valueWithDetails =>
         vulnerabilityRequiresDetails(valueWithDetails.value as VULNERABILITY) &&
-        isEmptyStringOrWhitespace(valueWithDetails?.details)
+        isEmptyStringOrWhitespace(valueWithDetails?.details),
     )
   )
 }

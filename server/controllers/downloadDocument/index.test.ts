@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { downloadDocument } from './index'
+import downloadDocument from './index'
 import { getDocumentContents } from '../../data/makeDecisionApiClient'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 

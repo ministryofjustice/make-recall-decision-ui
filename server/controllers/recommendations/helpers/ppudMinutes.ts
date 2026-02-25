@@ -1,7 +1,7 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { riskOfSeriousHarmLevel } from './rosh'
 
-export const generateRecallMinuteText = (recommendationResponse: RecommendationResponse) => {
+const generateRecallMinuteText = (recommendationResponse: RecommendationResponse) => {
   const extended = recommendationResponse.isExtendedSentence ? 'YES' : 'NO'
   const custody = recommendationResponse.prisonOffender?.status === 'ACTIVE IN' ? 'YES at HMP' : 'NO'
   const rosh = riskOfSeriousHarmLevel(recommendationResponse.currentRoshForPartA)?.toUpperCase()
@@ -16,3 +16,5 @@ export const generateRecallMinuteText = (recommendationResponse: RecommendationR
     `In custody: ${custody}${docMinute}`
   )
 }
+
+export default generateRecallMinuteText

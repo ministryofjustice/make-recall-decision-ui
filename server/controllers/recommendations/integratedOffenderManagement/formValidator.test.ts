@@ -1,4 +1,4 @@
-import { validateIntegratedOffenderManagement } from './formValidator'
+import validateIntegratedOffenderManagement from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 
 describe('validateIntegratedOffenderManagement', () => {

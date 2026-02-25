@@ -1,4 +1,4 @@
-import { validateResponseToProbation } from './formValidator'
+import validateResponseToProbation from './formValidator'
 
 describe('validateResponseToProbation', () => {
   const recommendationId = '34'

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
-import { isInCustody } from '../recommendations/helpers/isInCustody'
+import isInCustody from '../recommendations/helpers/isInCustody'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
@@ -118,15 +118,15 @@ async function get(req: Request, res: Response, next: NextFunction) {
   if (featureFlags.flagRiskToSelfEnabled) {
     const selectedVulnerabilities =
       recommendation.vulnerabilities?.selected?.map(
-        (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value
+        (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value,
       ) || []
     res.locals.selectedVulnerabilitiesRequireDetails = selectedVulnerabilities.some(
-      (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability)
+      (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability),
     )
   }
 
   res.render(`pages/recommendations/taskList`)
-  next()
+  return next()
 }
 
 export default { get }

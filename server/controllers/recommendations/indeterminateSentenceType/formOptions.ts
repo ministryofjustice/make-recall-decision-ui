@@ -1,4 +1,4 @@
-export const indeterminateSentenceType = [
+const indeterminateSentenceType = [
   {
     value: 'LIFE',
     text: 'Life sentence',
@@ -12,3 +12,5 @@ export const indeterminateSentenceType = [
     text: 'Detention for Public Protection (DPP) sentence',
   },
 ]
+
+export default indeterminateSentenceType

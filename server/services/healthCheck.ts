@@ -2,7 +2,7 @@ import promClient from 'prom-client'
 import { serviceCheckFactory } from '../data/healthCheck'
 import config from '../config'
 import type { AgentConfig } from '../config'
-import { routes } from '../../api/routes'
+import routes from '../../api/routes'
 
 const healthCheckGauge = new promClient.Gauge({
   name: 'upstream_healthcheck',
@@ -45,9 +45,9 @@ function addAppInfo(result: HealthCheckResult): HealthCheckResult {
 
 function getBuild() {
   try {
-    // eslint-disable-next-line import/no-unresolved,global-require
+    // eslint-disable-next-line n/global-require, @typescript-eslint/no-require-imports
     return require('../../build-info.json')
-  } catch (ex) {
+  } catch (err) {
     return null
   }
 }
@@ -61,14 +61,14 @@ const apiChecks = [
   service(
     'makeRecallDecisionApi',
     `${config.apis.makeRecallDecisionApi.url}${routes.healthCheck}`,
-    config.apis.makeRecallDecisionApi.agent
+    config.apis.makeRecallDecisionApi.agent,
   ),
   ...(config.apis.tokenVerification.enabled
     ? [
         service(
           'tokenVerification',
           `${config.apis.tokenVerification.url}/health/ping`,
-          config.apis.tokenVerification.agent
+          config.apis.tokenVerification.agent,
         ),
       ]
     : []),

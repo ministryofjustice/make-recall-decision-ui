@@ -107,7 +107,7 @@ describe('get', () => {
       ...TEMPLATE,
       licenceConvictions: {
         activeCustodial: TEMPLATE.activeConvictions.filter(
-          conviction => conviction.sentence && conviction.sentence.isCustodial
+          conviction => conviction.sentence && conviction.sentence.isCustodial,
         ),
         hasMultipleActiveCustodial: false,
       },

@@ -1,7 +1,7 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn, UiFormOption } from '../../../@types/pagesForms'
@@ -56,7 +56,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
           name: 'vulnerabilities',
           text: strings.errors.noVulnerabilitiesSelectedRiskToSelf,
           errorId: 'noVulnerabilitiesSelected',
-        })
+        }),
       )
     }
 
@@ -67,7 +67,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
             id,
             text: strings.errors.normalAndExclusiveSelected,
             errorId: id,
-          })
+          }),
         )
       })
     } else if (missingExclusiveRadioSelection) {
@@ -76,7 +76,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
           id: VULNERABILITY.NONE_OR_NOT_KNOWN,
           text: strings.errors.missingExclusive,
           errorId: VULNERABILITY.NONE_OR_NOT_KNOWN,
-        })
+        }),
       )
     }
 
@@ -125,7 +125,7 @@ export const validateVulnerabilities = async ({
       findListItemByValue<UiFormOption>({
         items: formOptions.vulnerabilities,
         value: id,
-      })?.detailsLabel
+      })?.detailsLabel,
     )
     if (optionShouldHaveDetails && isEmptyStringOrWhitespace(requestBody[`vulnerabilitiesDetail-${id}`])) {
       return id
@@ -143,7 +143,7 @@ export const validateVulnerabilities = async ({
           id: 'vulnerabilities',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingDetails.length) {
@@ -154,7 +154,7 @@ export const validateVulnerabilities = async ({
             id: `vulnerabilitiesDetail-${id}`,
             text: `${strings.errors.missingDetail} for ${optionTextFromValue(id, 'vulnerabilities').toLowerCase()}`,
             errorId,
-          })
+          }),
         )
       })
     }

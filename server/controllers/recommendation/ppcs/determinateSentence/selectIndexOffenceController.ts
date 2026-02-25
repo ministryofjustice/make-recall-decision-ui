@@ -4,10 +4,10 @@ import { getRecommendation, prisonSentences, updateRecommendation } from '../../
 import { NamedFormError } from '../../../../@types/pagesForms'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
+import strings from '../../../../textStrings/en'
 import { isDefined, isEmptyStringOrWhitespace } from '../../../../utils/utils'
 import { OfferedOffence, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../routes/paths/ppcs'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -157,7 +157,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
         id: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -168,11 +168,11 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
   const indexOffenceData = recommendation.nomisIndexOffence.allOptions.find(
-    option => option.offenderChargeId === Number(indexOffence)
+    option => option.offenderChargeId === Number(indexOffence),
   )
   const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
   const sentenceForOffence = sentences.find(
-    s => s.indexSentence.offences?.at(0)?.offenderChargeId === indexOffenceData.offenderChargeId
+    s => s.indexSentence.offences?.at(0)?.offenderChargeId === indexOffenceData.offenderChargeId,
   )
   const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
 
@@ -197,7 +197,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
-  next()
+  return next()
 }
 
 export default { get, post }

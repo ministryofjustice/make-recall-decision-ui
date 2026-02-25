@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 import {DeliusOffence} from "./Offence";
 import {Sentence} from "./Sentence";

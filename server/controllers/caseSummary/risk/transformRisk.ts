@@ -77,7 +77,7 @@ const buildV2StaticOrDynamicPredictor = (
   label: string,
   predictor?: StaticOrDynamicPredictor,
   lastUpdated?: string,
-  bandPercentages: string[] = []
+  bandPercentages: string[] = [],
 ): PredictorScaleViewModel => {
   if (!predictor?.band) {
     return { type: label, level: 'NOT_APPLICABLE', bandPercentages }
@@ -98,7 +98,7 @@ const buildV2Predictor = (
   band?: string,
   score?: string,
   lastUpdated?: string,
-  bandPercentages: string[] = []
+  bandPercentages: string[] = [],
 ): PredictorScaleViewModel => {
   if (!band) {
     return { type: label, level: 'NOT_APPLICABLE', bandPercentages }
@@ -304,7 +304,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Violent Reoffending Predictor',
               scores.violentReoffendingPredictor,
               lastUpdated,
-              ['0%', '30%', '60%', '80%', '100%']
+              ['0%', '30%', '60%', '80%', '100%'],
             )
           : undefined,
 
@@ -313,7 +313,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Direct Contact - Sexual Reoffending Predictor',
               scores.directContactSexualReoffendingPredictor.band,
               scores.directContactSexualReoffendingPredictor.score?.toString(),
-              lastUpdated
+              lastUpdated,
             )
           : undefined,
 
@@ -322,7 +322,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Images and Indirect Contact - Sexual Reoffending Predictor',
               scores.indirectImageContactSexualReoffendingPredictor.band,
               scores.indirectImageContactSexualReoffendingPredictor.score?.toString(),
-              lastUpdated
+              lastUpdated,
             )
           : undefined,
 
@@ -331,7 +331,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Serious Violent Reoffending Predictor',
               scores.seriousViolentReoffendingPredictor,
               lastUpdated,
-              ['0%', '0.99%', '2.99%', '6.89%', '99%']
+              ['0%', '0.99%', '2.99%', '6.89%', '99%'],
             )
           : undefined,
 
@@ -340,7 +340,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Combined Serious Reoffending Predictor',
               scores.combinedSeriousReoffendingPredictor,
               lastUpdated,
-              ['0%', '1%', '3%', '6.9%', '25%']
+              ['0%', '1%', '3%', '6.9%', '25%'],
             )
           : undefined,
 

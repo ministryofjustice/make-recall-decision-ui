@@ -37,7 +37,7 @@ export interface TransformedLicenceConditionsResponse {
 }
 
 export const transformLicenceConditions = (
-  caseSummary: LicenceConditionsResponse | CaseSummaryOverviewResponse
+  caseSummary: LicenceConditionsResponse | CaseSummaryOverviewResponse,
 ): TransformedLicenceConditionsResponse => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
@@ -46,7 +46,7 @@ export const transformLicenceConditions = (
     activeConvictions = caseSummary.activeConvictions.map(conviction => transformConviction(conviction))
     activeCustodialConvictions = activeConvictions.filter(conviction => conviction.sentence?.isCustodial)
     hasAllConvictionsReleasedOnLicence = activeCustodialConvictions.every(
-      conviction => conviction.sentence?.custodialStatusCode === 'B'
+      conviction => conviction.sentence?.custodialStatusCode === 'B',
     )
     activeConvictions = sortListByDateField({
       list: activeConvictions as Record<string, unknown>[],

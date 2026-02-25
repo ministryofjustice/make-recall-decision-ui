@@ -36,7 +36,7 @@ export default class RestClient {
   constructor(
     private readonly name: string,
     protected readonly config: ApiConfig,
-    private readonly token: string
+    private readonly token: string,
   ) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
   }
@@ -195,7 +195,7 @@ export default class RestClient {
             reject(error)
           } else if (response) {
             const s = new Readable()
-            // eslint-disable-next-line no-underscore-dangle,@typescript-eslint/no-empty-function
+            // eslint-disable-next-line no-underscore-dangle
             s._read = () => {}
             s.push(response.body)
             s.push(null)

@@ -73,7 +73,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
     expect(next).not.toHaveBeenCalled()
@@ -118,7 +118,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
     expect(next).not.toHaveBeenCalled()

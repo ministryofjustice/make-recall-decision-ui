@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { inputDisplayValuesVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
+import inputDisplayValuesVulnerabilitiesDetails from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
+import routeUrls from '../../routes/routeUrls'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { validateVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 import { ValueWithDetails } from '../../@types/make-recall-decision-api'
-import { vulnerabilitiesToDisplay } from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
+import vulnerabilitiesToDisplay from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, flags, urlInfo } = res.locals
@@ -78,7 +78,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

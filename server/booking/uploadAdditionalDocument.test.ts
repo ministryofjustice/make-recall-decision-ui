@@ -1,4 +1,4 @@
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import {
   ppudUploadAdditionalDocument,
   ppudUploadMandatoryDocument,

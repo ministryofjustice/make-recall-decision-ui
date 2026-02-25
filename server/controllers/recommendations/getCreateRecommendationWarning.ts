@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
-import { AuditService } from '../../services/auditService'
+import EVENTS from '../../utils/constants'
+import AuditService from '../../services/auditService'
 
 const auditService = new AuditService()
 
-export const getCreateRecommendationWarning = async (req: Request, res: Response): Promise<void> => {
+const getCreateRecommendationWarning = async (req: Request, res: Response): Promise<void> => {
   const { crn } = req.params
   const {
     env,
@@ -25,7 +25,7 @@ export const getCreateRecommendationWarning = async (req: Request, res: Response
       pageUrlSlug,
       region,
     },
-    flags
+    flags,
   )
   await auditService.recommendationView({
     crn: normalizedCrn,
@@ -34,3 +34,5 @@ export const getCreateRecommendationWarning = async (req: Request, res: Response
     logErrors: isPreprodOrProd(env) && process.env.NODE_ENV !== 'test',
   })
 }
+
+export default getCreateRecommendationWarning

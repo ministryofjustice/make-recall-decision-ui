@@ -1,10 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateVictimContactScheme = async ({
+const validateVictimContactScheme = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -41,3 +41,5 @@ export const validateVictimContactScheme = async ({
     nextPagePath,
   }
 }
+
+export default validateVictimContactScheme
