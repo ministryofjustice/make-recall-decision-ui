@@ -6,7 +6,7 @@ const validEmailRegex =
 export const isEmailValid = (email: string) => validEmailRegex.test(email)
 
 export const isGovUkEmail = (email: string): boolean => {
-  const domain = email?.split('@')[1]
+  const domain = email.trim().split('@')[1]
   return !!domain && domain.toLowerCase().endsWith('.gov.uk')
 }
 
