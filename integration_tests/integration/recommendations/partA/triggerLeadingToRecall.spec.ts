@@ -2,7 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 import { testBackLink, testStandardBackLink } from '../../../componentTests/backLink.tests'
-import { ppPaths } from '../../../../server/routes/paths/pp'
+import ppPaths from '../../../../server/routes/paths/pp'
 import config from '../../../../server/config'
 
 context('Trigger leading to recall Page', () => {
@@ -30,13 +30,13 @@ context('Trigger leading to recall Page', () => {
         testBackLink(
           `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
           'Back to Consider a recall questions',
-          false
+          false,
         )
 
         // Page Heading
         cy.pageHeading().should(
           'equal',
-          `What has made you consider recalling ${recommendation.personOnProbation.name}?`
+          `What has made you consider recalling ${recommendation.personOnProbation.name}?`,
         )
 
         // Main content
@@ -75,7 +75,7 @@ context('Trigger leading to recall Page', () => {
         // Page Heading
         cy.pageHeading().should(
           'equal',
-          `What has made you consider recalling ${recommendation.personOnProbation.name}?`
+          `What has made you consider recalling ${recommendation.personOnProbation.name}?`,
         )
 
         // Main content
@@ -85,7 +85,7 @@ context('Trigger leading to recall Page', () => {
           .find('p')
           .eq(0)
           .contains(
-            `You're thinking about whether ${recommendation.personOnProbation.name} should be recalled or not. Explain your concerns. Include details of:`
+            `You're thinking about whether ${recommendation.personOnProbation.name} should be recalled or not. Explain your concerns. Include details of:`,
           )
 
         cy.get('@hint')

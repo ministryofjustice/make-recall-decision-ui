@@ -4,8 +4,8 @@ import triggerLeadingToRecallController from './triggerLeadingToRecallController
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { ppPaths } from '../../routes/paths/pp'
-import { strings } from '../../textStrings/en'
+import ppPaths from '../../routes/paths/pp'
+import strings from '../../textStrings/en'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
 
@@ -40,7 +40,7 @@ describe('Trigger Leading to Recall Controller', () => {
               if (flagFTR56Enabled) {
                 it('Back link URL', () =>
                   expect(res.locals.pageData.backLinkUrl).toEqual(
-                    `${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`
+                    `${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`,
                   ))
               }
             })

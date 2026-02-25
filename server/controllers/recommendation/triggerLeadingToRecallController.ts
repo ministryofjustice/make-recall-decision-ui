@@ -75,7 +75,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageLinkUrl({
       nextPageId: res.locals.flags.flagFTR56Enabled ? ppPaths.licenceConditions : ppPaths.taskListConsiderRecall,
       urlInfo,
-    })
+    }),
   )
 }
 
