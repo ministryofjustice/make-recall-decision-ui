@@ -61,6 +61,7 @@ services:
       - MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL=http://fake-delius-integration-api:8080
       - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:9090/verification
       - FEATURE_FLAGRISKTOSELFENABLED=2026-01-28T00:00Z # set for testing e2e & integration in advance
+      - FEATURE_FLAGFTR56ENABLED=2026-03-30T23:00Z # TODO set to an earlier date for testing e2e & integration in advance once we have enough to start testing at this level
       # These will need to match new creds in the seed auth service auth
       - API_CLIENT_ID=make-recall-decision-ui
       - API_CLIENT_SECRET=clientsecret

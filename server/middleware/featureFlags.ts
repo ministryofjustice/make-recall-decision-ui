@@ -21,6 +21,11 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
     description: 'Content updates to vulnerabilities page',
     default: false,
   },
+  flagFTR56Enabled: {
+    label: 'FTR56/ISR changes',
+    description: 'Enables the behaviour required for the FTR56/ISR policy',
+    default: false,
+  },
 }
 
 export const determineEnvFeatureOverride = (key: string) => {
