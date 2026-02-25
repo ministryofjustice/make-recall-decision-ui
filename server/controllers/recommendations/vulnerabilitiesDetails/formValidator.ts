@@ -3,7 +3,7 @@ import { FormOption, formOptions, optionTextFromValue } from '../formOptions/for
 import { FormValidatorArgs, FormValidatorReturn, NamedFormError, UiFormOption } from '../../../@types/pagesForms'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { makeErrorObject } from '../../../utils/errors'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 
 interface FormOptionWithOptionalSubValues extends FormOption {
@@ -44,7 +44,7 @@ export const validateVulnerabilitiesDetails = async ({ requestBody }: FormValida
           id: `vulnerabilitiesDetails-${id}`,
           text: `${strings.errors.missingDetail} for ${optionTextFromValue(id.toString(), 'vulnerabilities').toLowerCase()}`,
           errorId: 'missingVulnerabilitiesDetails',
-        })
+        }),
       )
     })
 

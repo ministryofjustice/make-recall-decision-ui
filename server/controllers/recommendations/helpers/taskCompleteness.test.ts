@@ -11,7 +11,7 @@ import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formVali
 
 jest.mock('../vulnerabilitiesDetails/formValidator')
 
-export const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) => {
+const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) => {
   const copy = { ...object }
   Object.keys(object).forEach(key => {
     copy[key] = valueToSet
@@ -127,7 +127,7 @@ describe('taskCompleteness', () => {
   describe('Recall', () => {
     it('all complete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-        recommendationResponse as RecommendationResponse
+        recommendationResponse as RecommendationResponse,
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
@@ -169,7 +169,7 @@ describe('taskCompleteness', () => {
   describe('No recall', () => {
     it('all complete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-        noRecallResponse as RecommendationResponse
+        noRecallResponse as RecommendationResponse,
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
@@ -208,7 +208,7 @@ describe('taskCompleteness', () => {
 
     it('all incomplete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-        emptyNoRecall as RecommendationResponse
+        emptyNoRecall as RecommendationResponse,
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
@@ -509,7 +509,7 @@ describe('taskCompleteness', () => {
               selected: [{ value: vulnerability, details: undefined }],
             },
           },
-          { flagRiskToSelfEnabled: true }
+          { flagRiskToSelfEnabled: true },
         )
         expect(statuses.vulnerabilities).toEqual(false)
         expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
@@ -525,7 +525,7 @@ describe('taskCompleteness', () => {
               selected: [{ value: vulnerability, details: faker.lorem.sentence() }],
             },
           },
-          { flagRiskToSelfEnabled: true }
+          { flagRiskToSelfEnabled: true },
         )
         expect(statuses.vulnerabilities).toEqual(true)
         expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
@@ -541,7 +541,7 @@ describe('taskCompleteness', () => {
               selected: [{ value: vulnerability, details: undefined }],
             },
           },
-          { flagRiskToSelfEnabled: true }
+          { flagRiskToSelfEnabled: true },
         )
         expect(statuses.vulnerabilities).toEqual(true)
         expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
@@ -782,7 +782,7 @@ describe('taskCompleteness', () => {
           bookRecallToPpud: null,
           whoCompletedPartA: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(false)
@@ -801,7 +801,7 @@ describe('taskCompleteness', () => {
           ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -821,7 +821,7 @@ describe('taskCompleteness', () => {
           ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -840,7 +840,7 @@ describe('taskCompleteness', () => {
           bookRecallToPpud: null,
           practitionerForPartA: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)

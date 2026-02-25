@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../api/responses/get-case-restricted.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
@@ -177,7 +177,7 @@ context('Excluded and restricted cases', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'User not found')
       cy.contains(
-        'There is a problem with your NDelius account. Contact support on the HMPPS Technology Portal for help.'
+        'There is a problem with your NDelius account. Contact support on the HMPPS Technology Portal for help.',
       ).should('exist')
     })
   })

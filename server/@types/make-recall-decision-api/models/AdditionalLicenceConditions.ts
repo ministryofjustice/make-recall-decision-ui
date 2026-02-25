@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 import type { AdditionalLicenceConditionOption } from './AdditionalLicenceConditionOption';
 import type { SelectedOption } from './SelectedOption';

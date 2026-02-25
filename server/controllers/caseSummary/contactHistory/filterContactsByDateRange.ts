@@ -29,7 +29,7 @@ const parseDateParts = ({
   })
 }
 
-export const filterContactsByDateRange = ({
+const filterContactsByDateRange = ({
   contacts,
   filters,
 }: {
@@ -59,7 +59,7 @@ export const filterContactsByDateRange = ({
           id: invalidDateInputPart(dateFromIso as ValidationError, 'dateFrom'),
           text: formatValidationErrorMessage(dateFromIso as ValidationError, 'from date'),
           errorId: (dateFromIso as ValidationError).errorId,
-        })
+        }),
       )
     }
     if (dateHasError(dateToIso)) {
@@ -69,7 +69,7 @@ export const filterContactsByDateRange = ({
           id: invalidDateInputPart(dateToIso as ValidationError, 'dateTo'),
           text: formatValidationErrorMessage(dateToIso as ValidationError, 'to date'),
           errorId: (dateToIso as ValidationError).errorId,
-        })
+        }),
       )
     }
     return {
@@ -118,3 +118,5 @@ export const filterContactsByDateRange = ({
     selected: selectedFilterTags,
   }
 }
+
+export default filterContactsByDateRange

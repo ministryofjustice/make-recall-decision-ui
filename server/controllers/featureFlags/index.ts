@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { determineEnvFeatureOverride, featureFlagsDefaults } from '../../middleware/featureFlags'
 
-export const getFeatureFlags = async (req: Request, res: Response): Promise<Response | void> => {
+const getFeatureFlags = async (req: Request, res: Response): Promise<Response | void> => {
   res.locals.flagsList = Object.keys(res.locals.flags).map(key => {
     const globalyEnabled = determineEnvFeatureOverride(key)
     return {
@@ -15,3 +15,5 @@ export const getFeatureFlags = async (req: Request, res: Response): Promise<Resp
   })
   res.render('pages/featureFlags')
 }
+
+export default getFeatureFlags

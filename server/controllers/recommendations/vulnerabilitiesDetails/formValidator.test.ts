@@ -10,7 +10,7 @@ describe('vulnerabilityRequiresDetails', () => {
     VULNERABILITY.NOT_KNOWN,
   ]
   const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-    (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
+    (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
   ) as VULNERABILITY[]
 
   vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {

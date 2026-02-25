@@ -1,8 +1,8 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, normalizeCrn } from '../../../utils/utils'
 
-export const validatePersonSearch = (crn?: string) => {
+const validatePersonSearch = (crn?: string) => {
   let errors
   let unsavedValues
   const invalidType = !isString(crn)
@@ -23,3 +23,5 @@ export const validatePersonSearch = (crn?: string) => {
 
   return { errors, searchValue, unsavedValues }
 }
+
+export default validatePersonSearch

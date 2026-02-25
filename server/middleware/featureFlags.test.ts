@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import { faker } from '@faker-js/faker'
-import { productionEnvValues } from '../testUtils/testConstants'
+import productionEnvValues from '../testUtils/testConstants'
 import { determineEnvFeatureOverride, readFeatureFlags } from './featureFlags'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
 
@@ -130,7 +130,7 @@ describe('readFeatureFlags', () => {
                   readFeatureFlags(testFlag(def))(
                     cookieAndQueryReq(cookieQueryValue, cookieQueryValue),
                     resultRes,
-                    next
+                    next,
                   )
                   expect(resultRes.locals.flags).toEqual({
                     testFlag: def,

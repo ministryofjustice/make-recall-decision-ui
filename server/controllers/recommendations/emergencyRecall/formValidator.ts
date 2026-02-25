@@ -1,10 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -33,3 +33,5 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
     nextPagePath,
   }
 }
+
+export default validateEmergencyRecall

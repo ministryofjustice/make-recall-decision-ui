@@ -1,4 +1,4 @@
-import { VulnerabilityCategory } from './VulnerabilityCategory'
+import VulnerabilityCategory from './VulnerabilityCategory'
 
 export enum VULNERABILITY {
   NONE_OR_NOT_KNOWN = 'NONE_OR_NOT_KNOWN',

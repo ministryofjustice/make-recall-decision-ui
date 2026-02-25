@@ -1,13 +1,13 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
 import searchMappedUserResponse from '../../api/responses/searchMappedUsers.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
-import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { ppcsPaths } from '../../server/routes/paths/ppcs'
+import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../server/routes/paths/ppcs'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -193,7 +193,7 @@ function recommendationEndpoint(
   resource: string,
   statuses = [],
   fullRecommendationData: boolean = false,
-  bookRecallToPpud = {}
+  bookRecallToPpud = {},
 ) {
   return {
     url: `${routeUrls.recommendations}/456/${resource}`,
@@ -246,10 +246,10 @@ context('Accessibility (a11y) Checks', () => {
         .withActiveConviction(
           standardActiveConvictionTemplate()
             .withDescription('Robbery - 05714')
-            .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+            .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
         )
         .withAllConvictionsReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('updateStatuses', { statusCode: 200, response: [] })
     cy.mockCaseSummaryData()

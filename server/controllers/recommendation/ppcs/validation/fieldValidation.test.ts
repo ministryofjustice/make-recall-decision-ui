@@ -4,8 +4,8 @@ import { determineErrorId, reloadPageWithError } from './fieldValidation'
 import { makeErrorObject } from '../../../../utils/errors'
 import { NamedFormError } from '../../../../@types/pagesForms'
 import { mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
-import { strings } from '../../../../textStrings/en'
-import { randomErrorId } from '../../../../textStrings/en.testFactory'
+import strings from '../../../../textStrings/en'
+import randomErrorId from '../../../../textStrings/en.testFactory'
 
 jest.mock('../../../../utils/errors')
 

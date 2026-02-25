@@ -148,7 +148,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: regionCode, name: regionName },
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)
@@ -200,7 +200,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: regionCode, name: regionName },
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/countersign-confirmation`)

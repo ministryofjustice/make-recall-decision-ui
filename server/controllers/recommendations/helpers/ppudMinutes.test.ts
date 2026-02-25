@@ -1,5 +1,5 @@
 import { RecommendationResponse, RoshData } from '../../../@types/make-recall-decision-api'
-import { generateRecallMinuteText } from './ppudMinutes'
+import generateRecallMinuteText from './ppudMinutes'
 
 const recommendationResponse: RecommendationResponse = {
   id: '1',
@@ -29,7 +29,7 @@ describe('generate recall minute text', () => {
         `Risk of Serious Harm Level: VERY HIGH\n` +
         `In custody: YES at HMP\n` +
         `Notes regarding documents added from Consider a Recall:\n` +
-        `an example minute`
+        `an example minute`,
     )
   })
 
@@ -51,7 +51,7 @@ describe('generate recall minute text', () => {
         `Risk of Serious Harm Level: HIGH\n` +
         `In custody: NO\n` +
         `Notes regarding documents added from Consider a Recall:\n` +
-        `another minute`
+        `another minute`,
     )
   })
 
@@ -62,7 +62,7 @@ describe('generate recall minute text', () => {
     recommendationResponse.bookRecallToPpud = null
 
     expect(generateRecallMinuteText(recommendationResponse)).toEqual(
-      'BACKGROUND INFO \nExtended sentence: NO\nRisk of Serious Harm Level: undefined\nIn custody: NO'
+      'BACKGROUND INFO \nExtended sentence: NO\nRisk of Serious Harm Level: undefined\nIn custody: NO',
     )
   })
 })

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { routeUrls } from '../routes/routeUrls'
+import routeUrls from '../routes/routeUrls'
 
-export function guardAgainstModifyingClosedRecommendation(req: Request, res: Response, next: NextFunction) {
+function guardAgainstModifyingClosedRecommendation(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     urlInfo: { currentPageId },
@@ -18,5 +18,7 @@ export function guardAgainstModifyingClosedRecommendation(req: Request, res: Res
   if (recommendation.status === 'DOCUMENT_DOWNLOADED') {
     res.redirect(301, `${routeUrls.cases}/${recommendation.crn}/overview`)
   }
-  next()
+  return next()
 }
+
+export default guardAgainstModifyingClosedRecommendation

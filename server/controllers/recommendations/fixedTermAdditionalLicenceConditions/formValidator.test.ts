@@ -1,4 +1,4 @@
-import { validateFixedTermLicenceConditions } from './formValidator'
+import validateFixedTermLicenceConditions from './formValidator'
 
 describe('validateFixedTermLicenceConditions', () => {
   const recommendationId = '456'

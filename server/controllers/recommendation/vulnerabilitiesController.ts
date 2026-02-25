@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesVulnerabilities } from '../recommendations/vulnerabilities/inputDisplayValues'
+import inputDisplayValuesVulnerabilities from '../recommendations/vulnerabilities/inputDisplayValues'
 import {
   validateVulnerabilities,
   validateVulnerabilitiesRiskToSelf,
@@ -12,7 +12,7 @@ import {
   VULNERABILITY,
 } from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails, VulnerabilitiesRecommendation } from '../../@types/make-recall-decision-api'
-import { ppPaths } from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -97,8 +97,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     const vulnerabilitiesAreSelected = valuesToSaveVulnerabilities.selected.filter(
       vulnerability =>
         ![VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NOT_KNOWN, VULNERABILITY.NONE].includes(
-          vulnerability.value as VULNERABILITY
-        )
+          vulnerability.value as VULNERABILITY,
+        ),
     )
 
     if (vulnerabilitiesAreSelected.length) {
@@ -106,7 +106,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     }
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

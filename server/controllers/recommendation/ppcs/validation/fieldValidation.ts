@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { hasValue } from '../../../../utils/utils'
 import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
+import strings from '../../../../textStrings/en'
 
 /**
  * Determines the appropriate error ID, or undefined if no error should be raised.

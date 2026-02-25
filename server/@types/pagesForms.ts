@@ -1,4 +1,4 @@
-import { EVENTS } from '../utils/constants'
+import EVENTS from '../utils/constants'
 import { RecommendationResponse } from './make-recall-decision-api'
 
 export interface FormError {

@@ -2,7 +2,7 @@ import { isDefined } from '../../../utils/utils'
 import { splitIsoDateToParts } from '../../../utils/dates/conversion'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesDecisionDateTime = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {
+const inputDisplayValuesDecisionDateTime = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {
   if (isDefined(errors)) {
     return {
       dateTime: {
@@ -18,3 +18,5 @@ export const inputDisplayValuesDecisionDateTime = ({ errors, unsavedValues, apiV
     },
   }
 }
+
+export default inputDisplayValuesDecisionDateTime

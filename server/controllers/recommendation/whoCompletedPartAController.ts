@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { booleanToYesNo, isDefined, isMandatoryTextValue } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
-import { regionEnum } from '../recommendations/formOptions/region'
+import regionEnum from '../recommendations/formOptions/region'
 import { isEmailValid } from '../../utils/validate-formats'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -35,7 +35,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/whoCompletedPartA`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -57,7 +57,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'name',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -68,7 +68,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'email',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   } else if (!isEmailValid(email)) {
     const errorId = 'invalidWhoCompletedPartAEmail'
@@ -77,7 +77,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'email',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -91,7 +91,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'isPersonProbationPractitionerForOffender',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -127,7 +127,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPageId = isPersonProbationPractitionerForOffenderBool ? 'task-list' : 'practitioner-for-part-a'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

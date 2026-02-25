@@ -9,7 +9,7 @@ type SupportedDefaultType = 'boolean' | 'number' | 'string'
 
 export function randomiseCriteria<T extends Record<string, unknown>>(
   definitions: Array<CriteriaDefinition<T, unknown>>,
-  criteria: (t: T) => boolean
+  criteria: (t: T) => boolean,
 ): T {
   const resultMap: Map<keyof T, unknown> = new Map()
   definitions.map(d => resultMap.set(d.key, resolveData(d.generate)))

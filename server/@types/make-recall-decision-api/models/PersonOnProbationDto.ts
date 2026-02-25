@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 import type { Address } from './Address';
 import type { Mappa } from './Mappa';

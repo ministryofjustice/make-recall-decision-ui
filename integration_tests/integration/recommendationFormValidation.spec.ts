@@ -1,6 +1,6 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
-import { setResponsePropertiesToNull } from '../support/commands'
+import setResponsePropertiesToNull from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
@@ -49,7 +49,7 @@ context('Make a recommendation - form validation', () => {
       caseTemplate()
         .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
         .withAllConvictionsReleasedOnLicence()
-        .build()
+        .build(),
     )
 
     cy.task('getStatuses', { statusCode: 200, response: [] })

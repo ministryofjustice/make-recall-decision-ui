@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { StageEnum } from '../../server/booking/StageEnum'
+import StageEnum from '../../server/booking/StageEnum'
 import { DataGenerator } from '../@generators/dataGenerators'
 import BookingMemento from '../../server/booking/BookingMemento'
 

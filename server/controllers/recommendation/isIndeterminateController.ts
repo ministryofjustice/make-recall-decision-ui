@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
-import { validateIsIndeterminateSentence } from '../recommendations/isIndeterminateSentence/formValidator'
+import validateIsIndeterminateSentence from '../recommendations/isIndeterminateSentence/formValidator'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo.fromPageId = undefined
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'is-extended', urlInfo }))
 }
 
 export default { get, post }

@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import getRecommendationsResponse from '../../api/responses/get-case-recommendations.json'
 
 context('Recommendations tab in case summary', () => {
@@ -103,22 +103,22 @@ context('Recommendations tab in case summary', () => {
 
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="2"]' }).should(
       'contain',
-      '/recommendations/2/task-list'
+      '/recommendations/2/task-list',
     )
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="3"]' }).should(
       'contain',
-      '/recommendations/3/task-list'
+      '/recommendations/3/task-list',
     )
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="4"]' }).should(
       'contain',
-      '/recommendations/4/task-list-no-recall'
+      '/recommendations/4/task-list-no-recall',
     )
     cy.getLinkHref('Download Part A from 23 September 2021 at 14:59', {
       parent: '[data-qa="5"]',
     }).should('contain', '/recommendations/5/documents/part-a?crn=X514364')
     cy.getLinkHref('Download letter from 14 May 2019 at 14:59', { parent: '[data-qa="6"]' }).should(
       'contain',
-      '/recommendations/6/documents/no-recall-letter?crn=X514364'
+      '/recommendations/6/documents/no-recall-letter?crn=X514364',
     )
   })
 

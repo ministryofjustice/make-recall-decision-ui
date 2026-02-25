@@ -1,5 +1,5 @@
 import updateRecall from './updateRecall'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 

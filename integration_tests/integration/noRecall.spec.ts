@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import noRecallResponse from '../../api/responses/get-recommendation-no-recall.json'
-import { setResponsePropertiesToNull } from '../support/commands'
+import setResponsePropertiesToNull from '../support/commands'
 
 context('No recall', () => {
   beforeEach(() => {
@@ -117,15 +117,15 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getLinkHref('Why you considered recall').should(
         'contain',
-        '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter'
+        '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
       )
       cy.getLinkHref('Why Jane Bloggs should not be recalled').should(
         'contain',
-        '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter'
+        '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
       )
       cy.getLinkHref('Appointment date and time').should(
         'contain',
-        '/recommendations/123/appointment-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter'
+        '/recommendations/123/appointment-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
       )
       cy.getLinkHref('Preview of the letter').should('contain', '/recommendations/123/preview-no-recall')
     })

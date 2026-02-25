@@ -4,8 +4,8 @@ import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/
 import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { getCaseSection } from '../caseSummary/getCaseSection'
+import strings from '../../textStrings/en'
+import getCaseSection from '../caseSummary/getCaseSection'
 import { NamedFormError, UrlInfo } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
@@ -27,7 +27,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token,
     userId,
     req.query,
-    flags
+    flags,
   )
   const { caseSummary: caseSummaryRisk } = await getCaseSection(
     'risk',
@@ -35,7 +35,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token,
     userId,
     req.query,
-    flags
+    flags,
   )
 
   const caseSummary = {
@@ -143,7 +143,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: key,
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     } else {
       valuesToSave[key] = value === 'YES'
@@ -174,7 +174,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'recall-type', urlInfo }))
+  return res.redirect(303, nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'recall-type', urlInfo }))
 }
 
 export default { get, post }

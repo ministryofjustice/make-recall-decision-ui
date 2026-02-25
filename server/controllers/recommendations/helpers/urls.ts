@@ -1,8 +1,8 @@
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { routeUrls } from '../../../routes/routeUrls'
-import { FeatureFlags } from '../../../@types/featureFlags'
+import routeUrls from '../../../routes/routeUrls'
+import type { FeatureFlags } from '../../../@types/featureFlags'
 import { UrlInfo } from '../../../@types/pagesForms'
 
 export const nextPageLinkUrl = ({
@@ -78,7 +78,7 @@ export const checkForRedirectPath = ({
   // task lists / confirmation pages
   const recallType = recommendation?.recallType?.selected?.value
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
-    recallType
+    recallType,
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
   const isNotSet = !isDefined(recallType)
@@ -102,4 +102,6 @@ export const checkForRedirectPath = ({
   if (isNoRecallTaskListRequested && isRecall) {
     return `${basePathRecFlow}task-list`
   }
+
+  return null
 }

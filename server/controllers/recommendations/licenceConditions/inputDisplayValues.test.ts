@@ -1,4 +1,4 @@
-import { inputDisplayValuesLicenceConditions } from './inputDisplayValues'
+import inputDisplayValuesLicenceConditions from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
 
 describe('inputDisplayValuesLicenceConditions', () => {

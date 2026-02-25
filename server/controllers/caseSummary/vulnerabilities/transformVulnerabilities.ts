@@ -5,7 +5,7 @@ interface DecoratedVulnerabilitiesResponse extends VulnerabilitiesResponse {
   vulnerabilities?: Vulnerabilities & { noData?: boolean }
 }
 
-export const transformVulnerabilities = (caseSummary: VulnerabilitiesResponse): DecoratedVulnerabilitiesResponse => {
+const transformVulnerabilities = (caseSummary: VulnerabilitiesResponse): DecoratedVulnerabilitiesResponse => {
   if (caseSummary.vulnerabilities.error) {
     return caseSummary
   }
@@ -21,3 +21,5 @@ export const transformVulnerabilities = (caseSummary: VulnerabilitiesResponse): 
     },
   }
 }
+
+export default transformVulnerabilities

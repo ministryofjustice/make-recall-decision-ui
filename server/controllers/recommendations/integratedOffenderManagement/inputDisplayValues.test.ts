@@ -1,4 +1,4 @@
-import { inputDisplayValuesIntegratedOffenderManagement } from './inputDisplayValues'
+import inputDisplayValuesIntegratedOffenderManagement from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
 import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api'
 

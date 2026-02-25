@@ -20,7 +20,7 @@ context('Recall Type Page', () => {
     radioGroup: () => Cypress.Chainable<JQuery<HTMLElement>>,
     expectedId: string,
     expectedLabel: string,
-    conditional?: { idSuffix: string }
+    conditional?: { idSuffix: string },
   ) => {
     radioElement().find('input').should('exist').should('have.id', expectedId).should('have.attr', 'name', 'recallType')
     radioElement()
@@ -71,7 +71,7 @@ context('Recall Type Page', () => {
         'Fixed term recall',
         {
           idSuffix: 'FixedTerm',
-        }
+        },
       )
       testRecallTypeRadioButton(
         () => cy.get('@radios').eq(1),
@@ -80,13 +80,13 @@ context('Recall Type Page', () => {
         'Standard recall',
         {
           idSuffix: 'Standard',
-        }
+        },
       )
       testRecallTypeRadioButton(
         () => cy.get('@radios').eq(2),
         () => cy.get('@radioGroup'),
         'recallType-3',
-        'No recall - send a decision not to recall letter'
+        'No recall - send a decision not to recall letter',
       )
 
       // Continue button
@@ -119,13 +119,13 @@ context('Recall Type Page', () => {
           () => cy.get('@renderedRadios').eq(0),
           () => cy.get('@radiosGroup'),
           'recallType',
-          'Fixed term recall'
+          'Fixed term recall',
         )
         testRecallTypeRadioButton(
           () => cy.get('@renderedRadios').eq(1),
           () => cy.get('@radiosGroup'),
           'recallType-2',
-          'No recall'
+          'No recall',
         )
       })
 
@@ -154,7 +154,7 @@ context('Recall Type Page', () => {
         cy.get('@detailsText')
           .should(
             'contain.text',
-            'Sentences under 48 months must be given a fixed term recall unless the person being recalled is:'
+            'Sentences under 48 months must be given a fixed term recall unless the person being recalled is:',
           )
           .should('contain.text', 'This applies to people aged 18 and over.')
         cy.get('@detailsText')
@@ -166,7 +166,7 @@ context('Recall Type Page', () => {
           .should('contain.text', 'being recalled for a new charged offence')
           .should(
             'contain.text',
-            'serving a fixed term sentence for an offence within section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners) (opens in new tab)'
+            'serving a fixed term sentence for an offence within section 247A (2) of the Criminal Justice Act 2003 (terrorist prisoners) (opens in new tab)',
           )
           .should('contain.text', 'serving a sentence for a terrorist or state threat offence')
           .find('a')
@@ -197,7 +197,7 @@ context('Recall Type Page', () => {
           { key: 'isServingFTSentenceForTerroristOffence', generate: 'boolean' },
           { key: 'hasBeenChargedWithTerroristOrStateThreatOffence', generate: 'boolean' },
         ],
-        criteria => Object.keys(criteria).some(k => criteria[k] ?? false)
+        criteria => Object.keys(criteria).some(k => criteria[k] ?? false),
       )
 
       const recommendationWithExceptionCriteria = RecommendationResponseGenerator.generate({
@@ -228,7 +228,7 @@ context('Recall Type Page', () => {
           'Fixed term recall',
           {
             idSuffix: 'FixedTerm',
-          }
+          },
         )
         testRecallTypeRadioButton(
           () => cy.get('@renderedRadios').eq(1),
@@ -237,13 +237,13 @@ context('Recall Type Page', () => {
           'Standard recall',
           {
             idSuffix: 'Standard',
-          }
+          },
         )
         testRecallTypeRadioButton(
           () => cy.get('@renderedRadios').eq(2),
           () => cy.get('@radiosGroup'),
           'recallType-3',
-          'No recall'
+          'No recall',
         )
       })
 
@@ -263,7 +263,7 @@ context('Recall Type Page', () => {
             .should('have.class', 'govuk-body')
             .should(
               'have.text',
-              'Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.'
+              'Based on the information, if you decide to recommend a recall it can be either a fixed term or standard recall.',
             )
 
           cy.get('@panel').find('details').as('detailPanel')
@@ -281,7 +281,7 @@ context('Recall Type Page', () => {
             .should('have.class', 'govuk-body')
             .should(
               'have.text',
-              `You can recommend a fixed term recall if you think the risk ${expectedName} poses could be safely managed in the community when the fixed term period ends.`
+              `You can recommend a fixed term recall if you think the risk ${expectedName} poses could be safely managed in the community when the fixed term period ends.`,
             )
 
           cy.get('@detailPanel')
@@ -309,7 +309,7 @@ context('Recall Type Page', () => {
             .should('have.class', 'govuk-body')
             .should(
               'contain.text',
-              `If you think the risk ${expectedName} poses could not be managed in the community at the end of the fixed term period, you can recommend a standard recall.`
+              `If you think the risk ${expectedName} poses could not be managed in the community at the end of the fixed term period, you can recommend a standard recall.`,
             )
 
           cy.get('@detailPanel')
@@ -317,7 +317,7 @@ context('Recall Type Page', () => {
             .should('exist')
             .should(
               'contain.text',
-              'You need to provide a clear justification for the recall type you recommend, explaining why you think the risk can or cannot be managed in the community.'
+              'You need to provide a clear justification for the recall type you recommend, explaining why you think the risk can or cannot be managed in the community.',
             )
         })
       })

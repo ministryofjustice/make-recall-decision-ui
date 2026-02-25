@@ -2,8 +2,8 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import searchMappedUserResponse from '../../../../../../api/responses/searchMappedUsers.json'
 import searchActiveUsersResponse from '../../../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 
 context('Indeterminate Sentence - Edit Offence Page', () => {
@@ -59,7 +59,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
           textAreaId,
           ppudOffenceDescription,
           updatedPpudOffenceDescription,
-          updatedPpudOffenceDescriptionComment
+          updatedPpudOffenceDescriptionComment,
         )
       })
     })
@@ -94,7 +94,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
           textAreaId,
           ppudOffenceDescription,
           updatedPpudOffenceDescription,
-          updatedPpudOffenceDescriptionComment
+          updatedPpudOffenceDescriptionComment,
         )
       })
     })
@@ -133,7 +133,7 @@ function testPageContent(
   textAreaId: string,
   ppudOffenceDescription: string,
   updatedPpudOffenceDescription: string,
-  updatedPpudOffenceDescriptionComment: string
+  updatedPpudOffenceDescriptionComment: string,
 ) {
   // Page Headings and body content
   cy.pageHeading().should('contain', 'Edit offence')

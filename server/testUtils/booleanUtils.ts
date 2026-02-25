@@ -18,7 +18,7 @@
  * //   [false, true, true], [false, true, false], [false, false, true], [false, false, false]
  * // ]
  */
-export const generateBooleanCombinations = (n: number) => {
+const generateBooleanCombinations = (n: number) => {
   const p: Array<Array<boolean>> = []
   const forBothValues = (b: boolean, c: number, r: Array<boolean>) => {
     if (c > 0) {
@@ -33,3 +33,5 @@ export const generateBooleanCombinations = (n: number) => {
   })
   return p
 }
+
+export default generateBooleanCombinations

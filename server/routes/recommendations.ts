@@ -1,10 +1,10 @@
 import { RequestHandler, Router } from 'express'
 import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { createRecommendationController } from '../controllers/recommendations/createRecommendation'
-import { createAndDownloadDocument } from '../controllers/recommendations/createAndDownloadDocument'
-import { updateRecommendationStatus } from '../controllers/recommendations/updateRecommendationStatus'
-import { RouteBuilder } from './RouteBuilder'
+import createRecommendationController from '../controllers/recommendations/createRecommendation'
+import createAndDownloadDocument from '../controllers/recommendations/createAndDownloadDocument'
+import updateRecommendationStatus from '../controllers/recommendations/updateRecommendationStatus'
+import RouteBuilder from './RouteBuilder'
 import { STATUSES } from '../middleware/recommendationStatusCheck'
 import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
 import responseToProbationController from '../controllers/recommendation/responseToProbationController'
@@ -119,14 +119,14 @@ import additionalSupportingDocumentUploadController from '../controllers/recomme
 import additionalSupportingDocumentReplaceController from '../controllers/recommendation/additionalSupportingDocumentReplaceController'
 import additionalSupportingDocumentRemoveController from '../controllers/recommendation/additionalSupportingDocumentRemoveController'
 import recordConsiderationRationaleController from '../controllers/recommendation/recordConsiderationRationaleController'
-import { DOCUMENT_TYPE } from '../@types/make-recall-decision-api/models/DocumentType'
+import DOCUMENT_TYPE from '../@types/make-recall-decision-api/models/DocumentType'
 import editCurrentEstablishmentController from '../controllers/recommendation/ppcs/currentEstablishment/editCurrentEstablishmentController'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndeterminatePpudSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/selectIndeterminatePpudSentenceController'
 import determinateSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/determinateSentenceDetailsController'
 import editCustodyGroupController from '../controllers/recommendation/ppcs/custodyGroup/editCustodyGroupController'
-import { ppcsPaths } from './paths/ppcs'
-import { ppPaths } from './paths/pp'
+import ppcsPaths from './paths/ppcs'
+import ppPaths from './paths/pp'
 import consecutiveSentenceDetailsController from '../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import editReleaseDateController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
 import editDateOfSentenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
@@ -144,9 +144,9 @@ RouteBuilder.build(recommendations)
       and(not(hasRole(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
       and(
         hasRole(HMPPS_AUTH_ROLE.SPO),
-        or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
-      )
-    )
+        or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL)),
+      ),
+    ),
   )
   .get('', redirectController.get)
 
@@ -355,7 +355,7 @@ spoRationaleRouteBuilder
  * This journey includes the ACO as the ACOs do not currently have a distinct role assigned to them.
  */
 const spoCounterSigningCheckRouteBuilder = spoRationaleRouteBuilder.withCheck(
-  and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+  and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)),
 )
 
 spoCounterSigningCheckRouteBuilder.get('rationale-check', rationaleCheckController.get)
@@ -364,8 +364,8 @@ spoCounterSigningCheckRouteBuilder.post('rationale-check', rationaleCheckControl
 const spoCounterSigningRouteBuilder = spoRationaleRouteBuilder.withCheck(
   and(
     not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
-    or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
-  )
+    or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED)),
+  ),
 )
 
 spoCounterSigningRouteBuilder.get('countersigning-telephone', countersigningTelephoneController.get)
@@ -401,11 +401,11 @@ RouteBuilder.build(recommendations)
             statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
             statusIsActive(STATUSES.SPO_SIGNED),
             statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
-            statusIsActive(STATUSES.ACO_SIGNED)
-          )
-        )
-      )
-    )
+            statusIsActive(STATUSES.ACO_SIGNED),
+          ),
+        ),
+      ),
+    ),
   )
   .get('task-list', taskListController.get)
 
@@ -415,7 +415,7 @@ RouteBuilder.build(recommendations)
  */
 
 const spoDeleteRouteBuilder = spoRouteBuilder.withCheck(
-  or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))
+  or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED))),
 )
 
 spoDeleteRouteBuilder.get('spo-delete-recommendation-rationale', spoDeleteRecommendationController.get)
@@ -438,8 +438,8 @@ const ppcsRouteBuilder = ppcsBeforeSearchRouteBuilder.withCheck(
   and(
     statusIsActive(STATUSES.SENT_TO_PPCS),
     not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-    not(statusIsActive(STATUSES.REC_CLOSED))
-  )
+    not(statusIsActive(STATUSES.REC_CLOSED)),
+  ),
 )
 
 ppcsRouteBuilder.get('search-ppud-results', searchPpudResultsController.get)
@@ -526,8 +526,8 @@ const ppcsDeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
     statusIsActive(STATUSES.SENT_TO_PPCS),
     ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE),
     not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-    not(statusIsActive(STATUSES.REC_CLOSED))
-  )
+    not(statusIsActive(STATUSES.REC_CLOSED)),
+  ),
 )
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.selectIndexOffence, selectIndexOffenceController.get)
@@ -549,11 +549,11 @@ ppcsDeterminateSentenceRouteBuilder.post('sentence-to-commit', sentenceToCommitC
 
 ppcsDeterminateSentenceRouteBuilder.get(
   ppcsPaths.sentenceToCommitExistingOffender,
-  sentenceToCommitExistingOffender.get
+  sentenceToCommitExistingOffender.get,
 )
 ppcsDeterminateSentenceRouteBuilder.post(
   ppcsPaths.sentenceToCommitExistingOffender,
-  sentenceToCommitExistingOffender.post
+  sentenceToCommitExistingOffender.post,
 )
 
 const ppcsIndeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
@@ -561,17 +561,17 @@ const ppcsIndeterminateSentenceRouteBuilder = ppcsRouteBuilder.withCheck(
     statusIsActive(STATUSES.SENT_TO_PPCS),
     ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
     not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-    not(statusIsActive(STATUSES.REC_CLOSED))
-  )
+    not(statusIsActive(STATUSES.REC_CLOSED)),
+  ),
 )
 
 ppcsIndeterminateSentenceRouteBuilder.get(
   ppcsPaths.selectIndeterminatePpudSentence,
-  selectIndeterminatePpudSentenceController.get
+  selectIndeterminatePpudSentenceController.get,
 )
 ppcsIndeterminateSentenceRouteBuilder.post(
   ppcsPaths.selectIndeterminatePpudSentence,
-  selectIndeterminatePpudSentenceController.post
+  selectIndeterminatePpudSentenceController.post,
 )
 
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.sentenceToCommitIndeterminate, sentenceToCommitIndeterminate.get)
@@ -583,7 +583,7 @@ ppcsIndeterminateSentenceRouteBuilder.post(ppcsPaths.indeterminateEdit.releaseDa
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.indeterminateEdit.dateOfSentence, editDateOfSentenceController.get)
 ppcsIndeterminateSentenceRouteBuilder.post(
   ppcsPaths.indeterminateEdit.dateOfSentence,
-  editDateOfSentenceController.post
+  editDateOfSentenceController.post,
 )
 
 ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.determinatePpudSentences, determinateSentenceDetailsController.get)
@@ -591,7 +591,7 @@ ppcsIndeterminateSentenceRouteBuilder.get(ppcsPaths.determinatePpudSentences, de
 ppcsRouteBuilder.withCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD)).get('booked-to-ppud', bookedToPpudController.get)
 
 const ppcsBookingRouteBuilder = ppcsRouteBuilder.withCheck(
-  and(statusIsActive(STATUSES.SENT_TO_PPCS), not(statusIsActive(STATUSES.REC_CLOSED)))
+  and(statusIsActive(STATUSES.SENT_TO_PPCS), not(statusIsActive(STATUSES.REC_CLOSED))),
 )
 
 ppcsBookingRouteBuilder.get(ppcsPaths.bookToPpud, bookToPpudController.get)

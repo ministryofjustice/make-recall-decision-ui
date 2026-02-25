@@ -1,4 +1,4 @@
-export enum StageEnum {
+enum StageEnum {
   STARTED = 'STARTED',
   OFFENDER_BOOKED = 'OFFENDER_BOOKED',
   SENTENCE_BOOKED = 'SENTENCE_BOOKED',
@@ -7,3 +7,5 @@ export enum StageEnum {
   RECALL_BOOKED = 'RECALL_BOOKED',
   MINUTE_BOOKED = 'MINUTE_BOOKED',
 }
+
+export default StageEnum

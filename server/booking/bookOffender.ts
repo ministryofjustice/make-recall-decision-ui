@@ -1,15 +1,15 @@
 import { PpudAddress } from '../@types/make-recall-decision-api/models/PpudCreateOffenderRequest'
 import { PpudSentence, RecommendationResponse } from '../@types/make-recall-decision-api/models/RecommendationResponse'
 import { ppudCreateOffender, ppudUpdateOffender, updateRecommendation } from '../data/makeDecisionApiClient'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import BookingMemento from './BookingMemento'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 
 export default async function bookOffender(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 

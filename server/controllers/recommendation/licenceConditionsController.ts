@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesLicenceConditions } from '../recommendations/licenceConditions/inputDisplayValues'
+import inputDisplayValuesLicenceConditions from '../recommendations/licenceConditions/inputDisplayValues'
 import { CaseSummaryOverviewResponseV2 } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponseV2'
 import { formOptions, isValueValid } from '../recommendations/formOptions/formOptions'
 import { isCaseRestrictedOrExcluded, isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { transformLicenceConditions } from '../caseSummary/licenceConditions/transformLicenceConditions'
 import { cleanseUiList } from '../../utils/lists'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
@@ -40,7 +40,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...json,
     licenceConvictions: {
       activeCustodial: json.activeConvictions.filter(
-        conviction => conviction.sentence && conviction.sentence.isCustodial
+        conviction => conviction.sentence && conviction.sentence.isCustodial,
       ),
       hasMultipleActiveCustodial:
         json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
@@ -56,7 +56,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       region,
     },
     recommendation.crn,
-    featureFlags
+    featureFlags,
   )
 
   res.render(`pages/recommendations/licenceConditions`)
@@ -154,7 +154,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       })
 
     const invalidStandardCondition = selectedStandardConditions.some(
-      id => !isValueValid(id, 'standardLicenceConditions')
+      id => !isValueValid(id, 'standardLicenceConditions'),
     )
 
     if (
@@ -214,10 +214,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   if (req.originalUrl?.endsWith('/ap-licence-conditions')) {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
-  } else {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
   }
+
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 function error(errorId: string) {

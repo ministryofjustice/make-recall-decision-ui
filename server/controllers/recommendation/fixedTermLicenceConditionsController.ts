@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateFixedTermLicenceConditions } from '../recommendations/fixedTermAdditionalLicenceConditions/formValidator'
-import { inputDisplayValuesFixedTermLicenceConditions } from '../recommendations/fixedTermAdditionalLicenceConditions/inputDisplayValues'
+import validateFixedTermLicenceConditions from '../recommendations/fixedTermAdditionalLicenceConditions/formValidator'
+import inputDisplayValuesFixedTermLicenceConditions from '../recommendations/fixedTermAdditionalLicenceConditions/inputDisplayValues'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -55,7 +55,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const nextPageId = 'sensitive-info'
 
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

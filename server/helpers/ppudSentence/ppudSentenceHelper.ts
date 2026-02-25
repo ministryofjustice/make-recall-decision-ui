@@ -1,20 +1,20 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { determinateCustodyTypes, indeterminateCustodyTypes } from './custodyTypes'
 import { formatJSDate } from '../../utils/dates/formatting'
 
 export function getDeterminateSentences(sentences: PpudDetailsSentence[]): PpudDetailsSentence[] {
   return getSentencesByCustodyType(
     sentences,
-    determinateCustodyTypes.map(ct => ct.toString())
+    determinateCustodyTypes.map(ct => ct.toString()),
   )
 }
 
 export function getIndeterminateSentences(sentences: PpudDetailsSentence[]): PpudDetailsSentence[] {
   return getSentencesByCustodyType(
     sentences,
-    indeterminateCustodyTypes.map(ct => ct.toString())
+    indeterminateCustodyTypes.map(ct => ct.toString()),
   )
 }
 
@@ -49,7 +49,7 @@ export function groupSentencesByCourtAndDate(ppudSentences: PpudDetailsSentence[
       acc[court].push(s)
       return acc
     },
-    {} as Record<string, PpudDetailsSentence[]>
+    {} as Record<string, PpudDetailsSentence[]>,
   )
 
   return Object.entries(byCourt).map(([court, courtSentences]) => {

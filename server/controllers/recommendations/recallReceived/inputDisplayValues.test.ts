@@ -1,4 +1,4 @@
-import { inputDisplayValuesRecallReceived } from './inputDisplayValues'
+import inputDisplayValuesRecallReceived from './inputDisplayValues'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesRecallReceived', () => {

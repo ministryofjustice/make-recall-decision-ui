@@ -1,4 +1,4 @@
-import { validateIndeterminateDetails } from './formValidator'
+import validateIndeterminateDetails from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 import { cleanseUiList } from '../../../utils/lists'
 

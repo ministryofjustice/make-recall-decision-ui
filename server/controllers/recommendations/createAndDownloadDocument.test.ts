@@ -1,11 +1,11 @@
-import { createAndDownloadDocument } from './createAndDownloadDocument'
+import createAndDownloadDocument from './createAndDownloadDocument'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 import { createDocument, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { DOCUMENT_TYPE } from '../../@types/make-recall-decision-api/models/DocumentType'
+import DOCUMENT_TYPE from '../../@types/make-recall-decision-api/models/DocumentType'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -52,7 +52,7 @@ describe('createAndDownloadDocument', () => {
       { format: 'download-docx', userEmail },
       token,
       {},
-      false
+      false,
     )
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -71,7 +71,7 @@ describe('createAndDownloadDocument', () => {
         recommendationId,
         region: userRegion,
       },
-      featureFlags
+      featureFlags,
     )
     expect(AuditService.prototype.createPartA).toHaveBeenCalledWith({
       crn,
@@ -80,7 +80,7 @@ describe('createAndDownloadDocument', () => {
       username: userName,
     })
     expect(res.contentType).toHaveBeenCalledWith(
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     )
     expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
   })
@@ -114,7 +114,7 @@ describe('createAndDownloadDocument', () => {
       { format: 'download-docx', userEmail },
       token,
       {},
-      true
+      true,
     )
 
     expect(updateStatuses).not.toHaveBeenCalled()
@@ -123,7 +123,7 @@ describe('createAndDownloadDocument', () => {
     expect(appInsightsEvent).not.toHaveBeenCalled()
     expect(AuditService.prototype.createPartA).not.toHaveBeenCalled()
     expect(res.contentType).toHaveBeenCalledWith(
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     )
     expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
   })
@@ -205,7 +205,7 @@ describe('createAndDownloadDocument', () => {
       { format: 'download-docx' },
       token,
       {},
-      false
+      false,
     )
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -223,7 +223,7 @@ describe('createAndDownloadDocument', () => {
         crn,
         recommendationId,
       },
-      featureFlags
+      featureFlags,
     )
     expect(AuditService.prototype.createNoRecallLetter).toHaveBeenCalledWith({
       crn,
@@ -232,7 +232,7 @@ describe('createAndDownloadDocument', () => {
       username: userName,
     })
     expect(res.contentType).toHaveBeenCalledWith(
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     )
     expect(res.header).toHaveBeenCalledWith('Content-Disposition', `attachment; filename="${fileName}"`)
   })

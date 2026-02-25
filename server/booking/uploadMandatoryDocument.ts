@@ -1,4 +1,4 @@
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudUploadMandatoryDocument, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
 
@@ -8,7 +8,7 @@ export default async function uploadMandatoryDocument(
   id: string,
   category: string,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { uploaded: [] as string[], ...bookingMemento }
 

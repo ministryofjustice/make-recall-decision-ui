@@ -22,10 +22,10 @@ import setUpSentry from './middleware/setUpSentry'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
-import { appInsightsOperationId } from './middleware/appInsightsOperationId'
+import appInsightsOperationId from './middleware/appInsightsOperationId'
 import setUpCsrf from './middleware/setUpCsrf'
 import { setupRecommendationStatusCheck } from './middleware/recommendationStatusCheck'
-import { authorisationCheck } from './middleware/authorisationCheck'
+import authorisationCheck from './middleware/authorisationCheck'
 import { hasRole } from './middleware/check'
 import config from './config'
 import logger from '../logger'
@@ -61,7 +61,7 @@ export default function createApp(userService: UserService): express.Application
       pdsUrl: config.apis.probationApi.url,
       logger,
       useFallbacksByDefault: ['local', 'test'].includes(process.env.ENVIRONMENT),
-    })
+    }),
   )
 
   // setup mime multipart file support - before csrf

@@ -1,4 +1,4 @@
-import { inputDisplayValuesResponseToProbation } from './inputDisplayValues'
+import inputDisplayValuesResponseToProbation from './inputDisplayValues'
 
 describe('inputDisplayValuesResponseToProbation', () => {
   const apiValues = {

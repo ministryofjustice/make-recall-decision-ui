@@ -1,10 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateRosh = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateRosh = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { riskToChildren, riskToPublic, riskToKnownAdult, riskToStaff, riskToPrisoners } = requestBody
   const errorSuffixes: Record<string, string> = {
     riskToChildren: 'children',
@@ -49,3 +49,5 @@ export const validateRosh = async ({ requestBody, urlInfo }: FormValidatorArgs):
     nextPagePath,
   }
 }
+
+export default validateRosh

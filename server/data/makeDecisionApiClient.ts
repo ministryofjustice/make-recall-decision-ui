@@ -2,7 +2,7 @@ import { Response } from 'superagent'
 import RestClient from './restClient'
 import PpudRestClient from './ppudRestClient'
 import config from '../config'
-import { routes } from '../../api/routes'
+import routes from '../../api/routes'
 
 import {
   ActiveRecommendation,
@@ -11,7 +11,7 @@ import {
   PersonDetails,
   RecommendationResponse,
 } from '../@types/make-recall-decision-api'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { CaseSectionId } from '../@types/pagesForms'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { PpcsSearchResponse } from '../@types/make-recall-decision-api/models/PpcsSearchResponse'
@@ -70,7 +70,7 @@ export const searchForPrisonOffender = async (token: string, nomsId: string): Pr
   const body: Record<string, unknown> = {}
 
   if (!nomsId) {
-    return
+    return undefined
   }
 
   body.nomsId = nomsId
@@ -81,7 +81,7 @@ export const searchForPrisonOffender = async (token: string, nomsId: string): Pr
     })) as Promise<PrisonOffenderSearchResponse>
   } catch (err) {
     if (err.data?.status === 404) {
-      return
+      return undefined
     }
     throw err
   }
@@ -100,7 +100,7 @@ export const prisonSentences = async (token: string, nomsId: string): Promise<Pr
     })) as Promise<PrisonSentenceSequence[]>
   } catch (err) {
     if (err.data.status === 404) {
-      return
+      return undefined
     }
     throw err
   }
@@ -119,7 +119,7 @@ export const offenderMovements = async (token: string, nomisId: string): Promise
     })
   } catch (err) {
     if (err.data.status === 404) {
-      return
+      return null
     }
     throw err
   }
@@ -137,7 +137,7 @@ export const searchPpud = (
   croNumber: string,
   nomsId: string,
   familyName: string,
-  dateOfBirth: string
+  dateOfBirth: string,
 ): Promise<PpudSearchResponse> => {
   const body: Record<string, unknown> = {
     croNumber,
@@ -159,7 +159,7 @@ export const ppudDetails = (token: string, id: string): Promise<PpudDetailsRespo
 
 export const ppudCreateOffender = (
   token: string,
-  body: PpudCreateOffenderRequest
+  body: PpudCreateOffenderRequest,
 ): Promise<PpudCreateOffenderResponse> => {
   return ppudRestClient(token).post({
     path: `/ppud/offender`,
@@ -170,7 +170,7 @@ export const ppudCreateOffender = (
 export const ppudUpdateOffender = (
   token: string,
   offenderId: string,
-  body: PpudUpdateOffenderRequest
+  body: PpudUpdateOffenderRequest,
 ): Promise<void> => {
   return ppudRestClient(token).put({
     path: `/ppud/offender/${offenderId}`,
@@ -181,7 +181,7 @@ export const ppudUpdateOffender = (
 export const ppudCreateSentence = (
   token: string,
   offenderId: string,
-  body: PpudUpdateSentenceRequest
+  body: PpudUpdateSentenceRequest,
 ): Promise<PpudCreateSentenceResponse> => {
   return ppudRestClient(token).post({
     path: `/ppud/offender/${offenderId}/sentence`,
@@ -193,7 +193,7 @@ export const ppudUpdateSentence = (
   token: string,
   offenderId: string,
   sentenceId: string,
-  body: PpudUpdateSentenceRequest
+  body: PpudUpdateSentenceRequest,
 ): Promise<void> => {
   return ppudRestClient(token).put({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}`,
@@ -205,7 +205,7 @@ export const ppudUpdateOffence = (
   token: string,
   offenderId: string,
   sentenceId: string,
-  body: PpudUpdateOffenceRequest
+  body: PpudUpdateOffenceRequest,
 ): Promise<void> => {
   return ppudRestClient(token).put({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/offence`,
@@ -217,7 +217,7 @@ export const ppudUpdateRelease = (
   token: string,
   offenderId: string,
   sentenceId: string,
-  body: PpudUpdateReleaseRequest
+  body: PpudUpdateReleaseRequest,
 ): Promise<PpudUpdateReleaseResponse> => {
   return ppudRestClient(token).post({
     path: `/ppud/offender/${offenderId}/sentence/${sentenceId}/release`,
@@ -229,7 +229,7 @@ export const ppudCreateRecall = (
   token: string,
   offenderId: string,
   releaseId: string,
-  body: PpudCreateRecallRequest
+  body: PpudCreateRecallRequest,
 ): Promise<PpudCreateRecallResponse> => {
   return ppudRestClient(token).post({
     path: `/ppud/offender/${offenderId}/release/${releaseId}/recall`,
@@ -240,7 +240,7 @@ export const ppudCreateRecall = (
 export const ppudUploadMandatoryDocument = (
   token: string,
   recallId: string,
-  body: PpudUploadMandatoryDocument
+  body: PpudUploadMandatoryDocument,
 ): Promise<void> => {
   return ppudRestClient(token).put({
     path: `/ppud/recall/${recallId}/upload-mandatory-document`,
@@ -258,7 +258,7 @@ export const ppudCreateMinute = (token: string, recallId: string, body: PpudCrea
 export const ppudUploadAdditionalDocument = (
   token: string,
   recallId: string,
-  body: PpudUploadAdditionalDocument
+  body: PpudUploadAdditionalDocument,
 ): Promise<void> => {
   return ppudRestClient(token).put({
     path: `/ppud/recall/${recallId}/upload-additional-document`,
@@ -289,7 +289,7 @@ export const searchPersons = (
   pageSize: number,
   crn: string | undefined,
   firstName: string | undefined,
-  lastName: string | undefined
+  lastName: string | undefined,
 ): Promise<PersonDetails[]> => {
   const body: Record<string, unknown> = {}
   if (crn) {
@@ -312,7 +312,7 @@ export const getCaseSummary = <T>(
   crn: string,
   sectionId: CaseSectionId,
   token: string,
-  featureFlags?: FeatureFlags
+  featureFlags?: FeatureFlags,
 ): Promise<T> =>
   restClient(token).get({
     path: `${routes.getCaseSummary}/${crn}/${sectionId}`,
@@ -323,7 +323,7 @@ export const getCaseSummaryV2 = <T>(
   crn: string,
   sectionId: CaseSectionId,
   token: string,
-  featureFlags?: FeatureFlags
+  featureFlags?: FeatureFlags,
 ): Promise<T> =>
   restClient(token).get({
     path: `${routes.getCaseSummary}/${crn}/${sectionId}/v2`,
@@ -333,7 +333,7 @@ export const getCaseSummaryV2 = <T>(
 export const createRecommendation = (
   data: CreateRecommendationRequest,
   token: string,
-  featureFlags?: FeatureFlags
+  featureFlags?: FeatureFlags,
 ): Promise<RecommendationResponse> =>
   restClient(token).post({
     path: routes.recommendations,
@@ -417,7 +417,7 @@ export const createDocument = (
   data: Record<string, unknown>,
   token: string,
   featureFlags?: FeatureFlags,
-  preview?: boolean
+  preview?: boolean,
 ): Promise<DocumentResponse> =>
   restClient(token).post({
     path: `${routes.recommendations}/${recommendationId}/${pathSuffix}?preview=${String(preview)}`,

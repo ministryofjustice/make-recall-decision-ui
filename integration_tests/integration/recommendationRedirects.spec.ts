@@ -1,6 +1,6 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
-import { setResponsePropertiesToNull } from '../support/commands'
+import setResponsePropertiesToNull from '../support/commands'
 
 context('Make a recommendation - Branching / redirects', () => {
   const crn = 'X34983'
@@ -41,7 +41,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(
-      `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`
+      `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`,
     )
     cy.selectRadio('Select your recommendation', 'No recall')
     cy.task('getRecommendation', {
@@ -73,7 +73,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(
-      `${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`
+      `${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`,
     )
     cy.selectRadio('What do you recommend?', 'No recall')
     cy.task('getRecommendation', {
@@ -127,7 +127,7 @@ context('Make a recommendation - Branching / redirects', () => {
 
     cy.pageHeading().should(
       'equals',
-      `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`
+      `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`,
     )
   })
 })

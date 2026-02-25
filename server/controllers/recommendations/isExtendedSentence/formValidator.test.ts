@@ -1,4 +1,4 @@
-import { validateIsExtendedSentence } from './formValidator'
+import validateIsExtendedSentence from './formValidator'
 
 describe('validateIsExtendedSentence', () => {
   const recommendationId = '34'

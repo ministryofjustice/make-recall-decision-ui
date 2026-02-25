@@ -5,13 +5,13 @@ import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApi
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { inputDisplayValuesRecallType } from '../recommendations/recallType/inputDisplayValues'
+import inputDisplayValuesRecallType from '../recommendations/recallType/inputDisplayValues'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { validateRecallType } from '../recommendations/recallType/formValidator'
+import validateRecallType from '../recommendations/recallType/formValidator'
 import { formOptions } from '../recommendations/formOptions/formOptions'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
-import { generateBooleanCombinations } from '../../testUtils/booleanUtils'
+import generateBooleanCombinations from '../../testUtils/booleanUtils'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 jest.mock('../../monitoring/azureAppInsights')
@@ -78,7 +78,7 @@ describe('get', () => {
   })
   it("adds PoP's name to res.locals", async () => {
     expect(res.locals.personOnProbationName).toEqual(
-      (locals.recommendation as RecommendationResponse)?.personOnProbation?.fullName
+      (locals.recommendation as RecommendationResponse)?.personOnProbation?.fullName,
     )
   })
   it('adds FTR48 Mandatory to res.locals', async () => {
@@ -244,7 +244,7 @@ describe('post', () => {
         recommendationId: req.params.recommendationId,
         region: { code: res.locals.user.region.code, name: res.locals.user.region.name },
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)
@@ -324,7 +324,7 @@ describe('post', () => {
         recommendationId: req.params.recommendationId,
         region: { code: res.locals.user.region.code, name: res.locals.user.region.name },
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-no-recall`)

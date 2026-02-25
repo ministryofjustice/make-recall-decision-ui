@@ -6,8 +6,8 @@ import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions, isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { EVENTS } from '../../utils/constants'
+import strings from '../../textStrings/en'
+import EVENTS from '../../utils/constants'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -45,7 +45,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'recallType',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -87,9 +87,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-
   const crn = normalizeCrn(req.body.crn)
   if (!isEmptyStringOrWhitespace(crn)) {
     appInsightsEvent(
@@ -101,9 +98,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
+
+  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
+  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

@@ -1,4 +1,4 @@
-import { inputDisplayValuesLocalPoliceContactDetails } from './inputDisplayValues'
+import inputDisplayValuesLocalPoliceContactDetails from './inputDisplayValues'
 
 describe('inputDisplayValuesLocalPoliceContactDetails', () => {
   const apiValues = {

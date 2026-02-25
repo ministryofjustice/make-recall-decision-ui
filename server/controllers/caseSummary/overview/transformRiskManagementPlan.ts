@@ -7,7 +7,8 @@ interface Decorated extends RiskManagementPlan {
   lastCompletedAssessmentAtLeastTwentyTwoWeeksOld?: boolean
   incompleteAssessment?: boolean
 }
-export const transformRiskManagementPlan = (riskManagementPlan: RiskManagementPlan): Decorated => {
+
+const transformRiskManagementPlan = (riskManagementPlan: RiskManagementPlan): Decorated => {
   const { latestDateCompleted } = riskManagementPlan
   if (!latestDateCompleted) {
     return riskManagementPlan
@@ -26,3 +27,5 @@ export const transformRiskManagementPlan = (riskManagementPlan: RiskManagementPl
     return riskManagementPlan
   }
 }
+
+export default transformRiskManagementPlan

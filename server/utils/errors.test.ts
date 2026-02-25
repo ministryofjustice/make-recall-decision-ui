@@ -90,7 +90,7 @@ describe('Error messages', () => {
     it('renders "missingDateParts" error', () => {
       const error = formatValidationErrorMessage(
         { errorId: 'missingDateParts', invalidParts: ['month'] },
-        'date of sentence'
+        'date of sentence',
       )
       expect(error).toEqual('The date of sentence must include a month')
     })
@@ -123,7 +123,7 @@ describe('Error messages', () => {
     it('renders "outOfRangeValueDateParts" error', () => {
       const error = formatValidationErrorMessage(
         { errorId: 'outOfRangeValueDateParts', invalidParts: ['year'] },
-        'date of sentence'
+        'date of sentence',
       )
       expect(error).toEqual('The date of sentence must have a real year')
     })

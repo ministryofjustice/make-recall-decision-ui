@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import getCaseContactHistoryResponse from '../../api/responses/get-case-contact-history.json'
 import { europeLondon, sortListByDateField } from '../../server/utils/dates'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 import { dedupeList } from '../../server/utils/lists'
 import { removeSystemGenerated } from '../../server/controllers/caseSummary/contactHistory/filterContactsBySystemGenerated'
@@ -44,7 +44,7 @@ context('Contact history', () => {
         }
         cy.getText('time', opts).should(
           'contain',
-          formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true })
+          formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true }),
         )
         if (contact.notes) {
           cy.getText('notes', opts).should('equal', contact.notes)
@@ -90,7 +90,7 @@ context('Contact history', () => {
 
       // contacts
       const systemGeneratedRemoved = getCaseContactHistoryResponse.contactSummary.filter(
-        contact => contact.systemGenerated === false
+        contact => contact.systemGenerated === false,
       )
       const sortedByDate = sortListByDateField({
         list: systemGeneratedRemoved,

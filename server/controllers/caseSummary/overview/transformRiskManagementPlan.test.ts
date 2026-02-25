@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { transformRiskManagementPlan } from './transformRiskManagementPlan'
+import transformRiskManagementPlan from './transformRiskManagementPlan'
 
 describe('transformRiskManagementPlan', () => {
   const riskManagementPlan = {

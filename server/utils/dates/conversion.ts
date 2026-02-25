@@ -22,7 +22,7 @@ const filterPartsForMinimumLength = (parts: unknown[]): DatePartNames[] =>
 const filterPartsForValueRange = (parts: unknown[]): DatePartNames[] =>
   parts
     .map(({ name, numberValue, minValue, maxValue }) =>
-      numberValue < minValue || numberValue > maxValue ? name : undefined
+      numberValue < minValue || numberValue > maxValue ? name : undefined,
     )
     .filter(Boolean)
 
@@ -47,7 +47,7 @@ export const MIN_VALUE_YEAR = 1900
 
 export const convertGmtDatePartsToUtc = (
   { year, month, day, hour, minute }: Record<string, string | undefined>,
-  options: Options = {}
+  options: Options = {},
 ): string | ValidationError => {
   if ([year, month, day, hour, minute].every(part => !isDefined(part) || part === '')) {
     return {
@@ -121,7 +121,7 @@ export const convertGmtDatePartsToUtc = (
         month: m,
         day: d,
       },
-      { zone: europeLondon }
+      { zone: europeLondon },
     )
   } catch (err) {
     return { errorId: 'invalidDate' }
@@ -133,7 +133,7 @@ export const convertGmtDatePartsToUtc = (
           hour: h,
           minute: min,
         },
-        { zone: europeLondon }
+        { zone: europeLondon },
       )
     } catch (err) {
       return { errorId: 'invalidTime' }
@@ -147,7 +147,7 @@ export const convertGmtDatePartsToUtc = (
       hour: h,
       minute: min,
     },
-    { zone: europeLondon }
+    { zone: europeLondon },
   )
   if (options) {
     const now = DateTime.now()

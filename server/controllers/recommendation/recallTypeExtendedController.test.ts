@@ -149,7 +149,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)

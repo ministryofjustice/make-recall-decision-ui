@@ -1,12 +1,12 @@
 import { appInsightsEvent } from '../monitoring/azureAppInsights'
-import { EVENTS } from '../utils/constants'
+import EVENTS from '../utils/constants'
 
 export default function raiseWarningBannerEvents(
   numberOfCustodialConvictions: number | undefined,
   hasAllConvictionsReleasedOnLicence: boolean,
   user: { username: string; region: { code: string; name: string } },
   crn: string,
-  flags: Record<string, boolean>
+  flags: Record<string, boolean>,
 ) {
   // const numberOfCustodialConvictions = caseSummary?.licenceConvictions?.activeCustodial?.length
   if (numberOfCustodialConvictions > 1) {
@@ -19,7 +19,7 @@ export default function raiseWarningBannerEvents(
           crn,
           region: user.region,
         },
-        flags
+        flags,
       )
     } else {
       // This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.
@@ -30,7 +30,7 @@ export default function raiseWarningBannerEvents(
           crn,
           region: user.region,
         },
-        flags
+        flags,
       )
     }
   } else if (numberOfCustodialConvictions === 1) {
@@ -43,7 +43,7 @@ export default function raiseWarningBannerEvents(
           crn,
           region: user.region,
         },
-        flags
+        flags,
       )
     }
   }

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { isDefined, isMandatoryTextValue } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { regionEnum } from '../recommendations/formOptions/region'
+import regionEnum from '../recommendations/formOptions/region'
 import { isEmailValid } from '../../utils/validate-formats'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -53,7 +53,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'name',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -64,7 +64,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'email',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   } else if (!isEmailValid(email)) {
     const errorId = 'invalidPractitionerForPartAEmail'
@@ -73,7 +73,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'email',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -104,7 +104,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list', urlInfo }))
 }
 
 export default { get, post }

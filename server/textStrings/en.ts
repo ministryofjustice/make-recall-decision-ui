@@ -1,4 +1,4 @@
-export const strings: Record<string, Record<string, string>> = {
+const strings: Record<string, Record<string, string>> = {
   errors: {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
     missingDeleteDntrRationale: "Explain why you're deleting this decision not to recall",
@@ -295,3 +295,5 @@ export const strings: Record<string, Record<string, string>> = {
       '{{ personOnProbationName }} must get an automatic fixed term recall as they do not meet the exemption criteria.',
   },
 }
+
+export default strings

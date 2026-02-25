@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { isDefined, isMandatoryTextValue, isString } from '../../utils/utils'
 import { getSupportingDocuments, uploadSupportingDocument } from '../../data/makeDecisionApiClient'
 
@@ -41,7 +41,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'title',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     } else {
       const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'title',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       } else if (isString(title) && title.length > 250) {
         const errorId = 'titleLengthExceeded'
@@ -63,7 +63,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'title',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       }
     }
@@ -76,7 +76,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'file',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       }
 
@@ -87,7 +87,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
             id: 'file',
             text: strings.errors[errorId],
             errorId,
-          })
+          }),
         )
       }
     } else {
@@ -97,7 +97,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
@@ -134,7 +134,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return res.redirect(303, req.originalUrl)
     }
   }
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
 }
 
 export default { get, post }

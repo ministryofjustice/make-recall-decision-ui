@@ -10,7 +10,7 @@ import {
 } from '../../../../../data/prisonSentences/prisonSentenceGenerator'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
 import { TermGenerator } from '../../../../../data/common/termGenerator'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../routes/paths/ppcs'
 import { PrisonSentenceSequenceGenerator } from '../../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 import { OfferedOffence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
@@ -129,7 +129,7 @@ describe('Select Index Offence Controller', () => {
           describe('Offender name:', () => {
             it('- Correct value', async () =>
               expect(res.locals.pageData.offenderName).toEqual(
-                `${defaultGetRecommendation.bookRecallToPpud.firstNames} ${defaultGetRecommendation.bookRecallToPpud.lastName}`
+                `${defaultGetRecommendation.bookRecallToPpud.firstNames} ${defaultGetRecommendation.bookRecallToPpud.lastName}`,
               ))
           })
           describe('Nomis Offence Data', () => {
@@ -394,7 +394,7 @@ describe('Select Index Offence Controller', () => {
                 expect(resultTerms).toHaveLength(1)
                 expect(resultTerms[0].key).toEqual('Sentence length')
                 expect(resultTerms[0].value).toEqual(
-                  `${defaultGetRecommendation.convictionDetail.lengthOfSentence} ${defaultGetRecommendation.convictionDetail.lengthOfSentenceUnits}`
+                  `${defaultGetRecommendation.convictionDetail.lengthOfSentence} ${defaultGetRecommendation.convictionDetail.lengthOfSentenceUnits}`,
                 )
               })
             })
@@ -556,7 +556,7 @@ describe('Select Index Offence Controller', () => {
           it('Then the user is navigated to the Consecutive Sentence Details page', async () => {
             expect(navigationRes.redirect).toHaveBeenCalledWith(
               303,
-              `/recommendations/123/${ppcsPaths.consecutiveSentenceDetails}`
+              `/recommendations/123/${ppcsPaths.consecutiveSentenceDetails}`,
             )
           })
         })

@@ -1,4 +1,4 @@
-import { routes } from '../../api/routes'
+import routes from '../../api/routes'
 import { stubFor } from './wiremock'
 import { CaseSectionId } from '../../server/@types/pagesForms'
 

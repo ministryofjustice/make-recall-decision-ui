@@ -1,7 +1,7 @@
 // produce a flat list of all contact types in the current result set
 import { ContactGroupResponse, ContactSummaryResponse } from '../../../../@types/make-recall-decision-api'
 
-export const decorateAllContactTypes = ({
+const decorateAllContactTypes = ({
   contactTypeGroups,
   allContacts,
 }: {
@@ -15,3 +15,5 @@ export const decorateAllContactTypes = ({
       const contact = allContacts.find(({ code: c }) => c === code)
       return { code, count: 0, description: contact?.descriptionType, systemGenerated: contact?.systemGenerated }
     })
+
+export default decorateAllContactTypes

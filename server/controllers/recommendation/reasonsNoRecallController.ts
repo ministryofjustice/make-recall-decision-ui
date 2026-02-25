@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateReasonsForNoRecall } from '../recommendations/reasonsForNoRecall/formValidator'
-import { inputDisplayValuesReasonsForNoRecall } from '../recommendations/reasonsForNoRecall/inputDisplayValues'
+import validateReasonsForNoRecall from '../recommendations/reasonsForNoRecall/formValidator'
+import inputDisplayValuesReasonsForNoRecall from '../recommendations/reasonsForNoRecall/inputDisplayValues'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -52,7 +52,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'appointment-no-recall', urlInfo })
-  res.redirect(303, nextPagePath)
+  return res.redirect(303, nextPagePath)
 }
 
 export default { get, post }

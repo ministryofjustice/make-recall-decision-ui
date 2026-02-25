@@ -2,7 +2,7 @@ import { ContactHistoryFilters } from '../../../../@types/contacts'
 import { wrapValueInArray } from '../../../../utils/utils'
 
 // from the contact types that the user selected, make a single array of codes
-export const listSelectedContactTypeCodes = ({ filters }: { filters: ContactHistoryFilters }) => {
+const listSelectedContactTypeCodes = ({ filters }: { filters: ContactHistoryFilters }) => {
   const { contactTypes, contactTypesSystemGenerated } = filters
   let aggregated: string[]
   if (contactTypes) {
@@ -13,3 +13,5 @@ export const listSelectedContactTypeCodes = ({ filters }: { filters: ContactHist
   }
   return aggregated
 }
+
+export default listSelectedContactTypeCodes

@@ -5,9 +5,9 @@ import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
-import { randomEnum } from '../../../@types/enum.testFactory'
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { getRoute } from './custodyGroupRouter'
+import randomEnum from '../../../@types/enum.testFactory'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import getRoute from './custodyGroupRouter'
 
 jest.mock('../../../data/makeDecisionApiClient')
 jest.mock('../../../utils/dates/formatting')
@@ -180,7 +180,7 @@ describe('get', () => {
         },
         prisonOffender: expectedPrisonOffender,
       },
-      'token'
+      'token',
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -459,7 +459,7 @@ describe('get', () => {
             receivedDateTime: '2026-01-01T08:00:00',
           }),
         }),
-      })
+      }),
     )
   })
 })

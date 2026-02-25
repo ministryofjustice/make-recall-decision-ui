@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 
 context('Overview', () => {
@@ -20,7 +20,7 @@ context('Overview', () => {
     cy.getText('lastReleaseDate').should('equal', formatDateTimeFromIsoString({ isoDate: lastRelease.releaseDate }))
     cy.getText('licenceExpiryDate').should(
       'equal',
-      formatDateTimeFromIsoString({ isoDate: activeConvictions[1].sentence.licenceExpiryDate })
+      formatDateTimeFromIsoString({ isoDate: activeConvictions[1].sentence.licenceExpiryDate }),
     )
     // offence and sentence
     let opts = { parent: '[data-qa="conviction-1"]' }
@@ -40,7 +40,7 @@ context('Overview', () => {
     // offence analysis
     cy.getDefinitionListValue('Analysis', { parent: '[data-qa="offence-analysis"]' }).should(
       'contain',
-      'Mr Bloggs was recalled again on 13/12/2021.'
+      'Mr Bloggs was recalled again on 13/12/2021.',
     )
 
     // contingency plan
@@ -137,7 +137,7 @@ context('Overview', () => {
     cy.visit(`${routeUrls.cases}/${crn}/overview`)
     const date = formatDateTimeFromIsoString({ isoDate: latestDateCompleted, monthAndYear: true })
     cy.getElement(
-      `OASys was last updated in ${date}. There's a more recent assessment in OASys that's not complete. Double-check this for any new information.`
+      `OASys was last updated in ${date}. There's a more recent assessment in OASys that's not complete. Double-check this for any new information.`,
     ).should('exist')
   })
 
@@ -174,12 +174,12 @@ context('Overview', () => {
       cy.getDefinitionListValue('Sentence type', opts).should('contain', 'Not available')
       cy.getDefinitionListValue('Sentence expiry date', { parent: '[data-qa="conviction-2"]' }).should(
         'contain',
-        '16 June 2020'
+        '16 June 2020',
       )
       cy.getElement('Sentence expiry date', { parent: '[data-qa="conviction-3"]' }).should('not.exist')
       cy.getDefinitionListValue('Sentence expiry date', { parent: '[data-qa="conviction-4"]' }).should(
         'contain',
-        'Not available'
+        'Not available',
       )
     })
 
@@ -219,7 +219,7 @@ context('Overview', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getElement(
-        'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+        'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.',
       ).should('exist')
       cy.getElement({ qaAttr: 'lastReleaseDate' }).should('not.exist')
       cy.getElement({ qaAttr: 'licenceExpiryDate' }).should('not.exist')
@@ -270,7 +270,7 @@ context('Overview', () => {
       // banner
       cy.getElement(
         'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
-        { parent: '[data-qa="banner-multiple-active-custodial"]' }
+        { parent: '[data-qa="banner-multiple-active-custodial"]' },
       ).should('exist')
       cy.getElement({ qaAttr: 'lastReleaseDate' }).should('not.exist')
       cy.getElement({ qaAttr: 'licenceExpiryDate' }).should('not.exist')
@@ -329,7 +329,7 @@ context('Overview', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('banner-offence-mismatch').should(
         'contain',
-        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.',
       )
     })
 
@@ -347,7 +347,7 @@ context('Overview', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('offence-analysis-error').should(
         'contain',
-        'This information cannot be found in OASys. Double-check OASys for the latest description of the index offence.'
+        'This information cannot be found in OASys. Double-check OASys for the latest description of the index offence.',
       )
     })
   })
@@ -374,7 +374,7 @@ context('Overview', () => {
       cy.getElement('Started on: 1 September 2022', { parent: '[data-qa="contingency-plan"]' }).should('exist')
       cy.getText('banner-contingency-incomplete-assessment').should(
         'contain',
-        'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.'
+        'This contingency plan is from an assessment that’s not complete. Check OAsys if you need the last complete assessment.',
       )
     })
 
@@ -396,7 +396,7 @@ context('Overview', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
-        'This information cannot be found in OASys. Double-check OASys for the latest contingency plan.'
+        'This information cannot be found in OASys. Double-check OASys for the latest contingency plan.',
       )
     })
 
@@ -419,7 +419,7 @@ context('Overview', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.getText('contingency-plan-error').should(
         'contain',
-        'This information cannot be found in OASys. Double-check OASys.'
+        'This information cannot be found in OASys. Double-check OASys.',
       )
     })
   })

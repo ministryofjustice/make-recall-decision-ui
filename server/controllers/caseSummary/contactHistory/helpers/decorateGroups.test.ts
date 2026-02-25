@@ -1,4 +1,4 @@
-import { decorateGroups } from './decorateGroups'
+import decorateGroups from './decorateGroups'
 
 describe('decorateGroups', () => {
   const allContactTypes = [
@@ -238,7 +238,7 @@ describe('decorateGroups', () => {
         description: 'Arrest attempt',
         systemGenerated: true,
         value: 'IVSP',
-      })
+      }),
     )
   })
 })

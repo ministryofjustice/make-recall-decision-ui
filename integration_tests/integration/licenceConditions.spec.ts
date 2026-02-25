@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import { formOptions } from '../../server/controllers/recommendations/formOptions/formOptions'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import {
@@ -29,15 +29,15 @@ context('Licence conditions', () => {
           basicActiveConvictionTemplate()
             .withDescription('Burglary - 05714')
             .withLicenceCondition(deliusLicenceConditionDoNotPossess())
-            .withLicenceCondition(deliusLicenceConditionFreedomOfMovement())
+            .withLicenceCondition(deliusLicenceConditionFreedomOfMovement()),
         )
         .withActiveConviction(
           basicActiveConvictionTemplate()
             .withDescription('Robbery - 05727')
-            .withLicenceCondition(deliusLicenceConditionParticipateOrCoOperate())
+            .withLicenceCondition(deliusLicenceConditionParticipateOrCoOperate()),
         )
         .withAllConvictionsReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -68,7 +68,7 @@ context('Licence conditions', () => {
         .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
         .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
         .withAllConvictionsNotReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -84,7 +84,7 @@ context('Licence conditions', () => {
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
-      'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
+      'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
     ).should('exist')
   })
 
@@ -93,10 +93,10 @@ context('Licence conditions', () => {
       'getCaseV2',
       caseTemplate()
         .withActiveConviction(
-          standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNotReleasedOnLicence()
+          standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNotReleasedOnLicence(),
         )
         .withAllConvictionsNotReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -108,7 +108,7 @@ context('Licence conditions', () => {
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
-      'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+      'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.',
     ).should('exist')
   })
   it('shows no conditions for a multiple active custodial conviction which is not released on licence, and a banner', () => {
@@ -116,13 +116,13 @@ context('Licence conditions', () => {
       'getCaseV2',
       caseTemplate()
         .withActiveConviction(
-          standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNotReleasedOnLicence()
+          standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNotReleasedOnLicence(),
         )
         .withActiveConviction(
-          standardActiveConvictionTemplate().withDescription('Robbery - 05727').withReleasedOnLicence()
+          standardActiveConvictionTemplate().withDescription('Robbery - 05727').withReleasedOnLicence(),
         )
         .withAllConvictionsNotReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -134,7 +134,7 @@ context('Licence conditions', () => {
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
-      'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
+      'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
     ).should('exist')
   })
   it('shows no conditions for a single active custodial conviction which is not released on licence, and a banner', () => {
@@ -142,10 +142,10 @@ context('Licence conditions', () => {
       'getCaseV2',
       caseTemplate()
         .withActiveConviction(
-          standardActiveConvictionTemplate().withDescription('Robbery - 05727').withReleasedOnLicence()
+          standardActiveConvictionTemplate().withDescription('Robbery - 05727').withReleasedOnLicence(),
         )
         .withAllConvictionsNotReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -157,7 +157,7 @@ context('Licence conditions', () => {
     cy.getElement({ qaAttr: 'standard' }).should('not.exist')
     cy.getElement({ qaAttr: 'additional' }).should('not.exist')
     cy.getElement(
-      'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+      'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.',
     ).should('exist')
   })
 
@@ -169,11 +169,11 @@ context('Licence conditions', () => {
           basicActiveConvictionTemplate()
             .withDescription('Burglary - 05714')
             .withLicenceCondition(
-              deliusLicenceConditionFreedomOfMovement().withNotes('Must not enter Islington borough.')
-            )
+              deliusLicenceConditionFreedomOfMovement().withNotes('Must not enter Islington borough.'),
+            ),
         )
         .withNoCvlLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -200,7 +200,7 @@ context('Licence conditions', () => {
       caseTemplate()
         .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
         .withCvlLicence()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -229,7 +229,7 @@ context('Licence conditions', () => {
         .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
         .withCvlLicence()
         .withNoBespokeConditions()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {
@@ -249,7 +249,7 @@ context('Licence conditions', () => {
         .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
         .withCvlLicence()
         .withNoAdditionalCvlLicenceConditions()
-        .build()
+        .build(),
     )
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
     cy.task('getRecommendation', {

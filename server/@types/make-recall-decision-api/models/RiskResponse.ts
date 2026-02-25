@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 import type { ActiveRecommendation } from './ActiveRecommendation';
 import type { Mappa } from './Mappa';

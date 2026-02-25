@@ -3,7 +3,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { LocalPoliceContact } from '../../../@types/make-recall-decision-api/models/LocalPoliceContact'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesLocalPoliceContactDetails = ({
+const inputDisplayValuesLocalPoliceContactDetails = ({
   errors,
   unsavedValues = {},
   apiValues,
@@ -16,3 +16,5 @@ export const inputDisplayValuesLocalPoliceContactDetails = ({
   }
   return unsavedValues
 }
+
+export default inputDisplayValuesLocalPoliceContactDetails

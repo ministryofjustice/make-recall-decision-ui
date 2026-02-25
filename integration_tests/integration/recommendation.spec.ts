@@ -1,16 +1,16 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
 import searchMappedUserResponse from '../../api/responses/searchMappedUsers.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
-import { setResponsePropertiesToNull } from '../support/commands'
+import setResponsePropertiesToNull from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
-import { RECOMMENDATION_STATUS } from '../../server/middleware/recommendationStatus'
-import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { ppcsPaths } from '../../server/routes/paths/ppcs'
+import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../server/routes/paths/ppcs'
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -425,25 +425,25 @@ context('Make a recommendation', () => {
           .withActiveConviction(
             standardActiveConvictionTemplate()
               .withDescription('Robbery - 05714')
-              .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+              .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
           )
           .withAllConvictionsReleasedOnLicence()
-          .build()
+          .build(),
       )
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period'
+        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
       ).should('be.checked')
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'Not commit any offence'
+        'Not commit any offence',
       ).should('be.checked')
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'Poss, own, control, inspect specified items /docs'
+        'Poss, own, control, inspect specified items /docs',
       ).should('be.checked')
     })
 
@@ -480,7 +480,7 @@ context('Make a recommendation', () => {
           .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
           .withAllConvictionsNotReleasedOnLicence()
           .withCvlLicence()
-          .build()
+          .build(),
       )
 
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -488,16 +488,16 @@ context('Make a recommendation', () => {
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'This is a standard licence condition'
+        'This is a standard licence condition',
       ).should('be.checked')
 
       cy.getSelectableOptionByLabel('What licence conditions has Jane Bloggs breached?', 'Freedom of movement').should(
-        'be.checked'
+        'be.checked',
       )
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'This is a bespoke condition'
+        'This is a bespoke condition',
       ).should('be.checked')
     })
 
@@ -513,7 +513,7 @@ context('Make a recommendation', () => {
           .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
           .withAllConvictionsNotReleasedOnLicence()
           .withCvlLicenceMissingData()
-          .build()
+          .build(),
       )
 
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -533,11 +533,11 @@ context('Make a recommendation', () => {
           .withActiveConviction(
             standardActiveConvictionTemplate()
               .withDescription('Burglary - 05714')
-              .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+              .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
           )
           .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
           .withAllConvictionsNotReleasedOnLicence()
-          .build()
+          .build(),
       )
 
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -545,16 +545,16 @@ context('Make a recommendation', () => {
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period'
+        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
       ).should('be.checked')
 
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'Not commit any offence'
+        'Not commit any offence',
       ).should('be.checked')
       cy.getSelectableOptionByLabel(
         'What licence conditions has Jane Bloggs breached?',
-        'Poss, own, control, inspect specified items /docs'
+        'Poss, own, control, inspect specified items /docs',
       ).should('be.checked')
     })
 
@@ -568,12 +568,12 @@ context('Make a recommendation', () => {
           .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
           .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
           .withAllConvictionsNotReleasedOnLicence()
-          .build()
+          .build(),
       )
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
-        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
+        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
       ).should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
     })
@@ -587,19 +587,19 @@ context('Make a recommendation', () => {
         'getCaseV2',
         caseTemplate()
           .withActiveConviction(
-            standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial()
+            standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial(),
           )
           .withActiveConviction(
-            standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial()
+            standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial(),
           )
           .withAllConvictionsNotReleasedOnLicence()
-          .build()
+          .build(),
       )
 
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
       cy.getElement(
-        'This person has no active convictions. Double-check that the information in NDelius is correct.'
+        'This person has no active convictions. Double-check that the information in NDelius is correct.',
       ).should('exist')
     })
   })
@@ -681,7 +681,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getElement(
-        'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.'
+        'This person is not on licence in NDelius. Check the throughcare details in NDelius are correct.',
       ).should('exist')
       cy.getElement('Custodial term').should('not.exist')
       cy.getElement('Extended term').should('not.exist')
@@ -708,7 +708,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-details`)
       cy.getElement(
-        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.'
+        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
       ).should('exist')
     })
 
@@ -725,11 +725,11 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
       cy.getElement(
-        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete."
+        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete.",
       ).should('exist')
 
       cy.getElement(
-        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.',
       ).should('exist')
     })
 
@@ -746,11 +746,11 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
       cy.getElement(
-        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete."
+        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete.",
       ).should('exist')
 
       cy.getElement(
-        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.',
       ).should('not.exist')
     })
 
@@ -767,11 +767,11 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
       cy.getText('indexOffenceDetails').should('contain', 'Index offence details')
       cy.getElement(
-        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete."
+        "This is from the latest complete OASys assessment. There's a more recent assessment that's not complete.",
       ).should('not.exist')
 
       cy.getElement(
-        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.'
+        'The main offence in OASys does not match the main offence in NDelius. Double-check OASys and NDelius.',
       ).should('exist')
     })
 
@@ -848,7 +848,7 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`)
       cy.pageHeading().should(
         'equals',
-        `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`
+        `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`,
       )
       cy.getElement('9 November 2000 (age 21)').should('exist')
       cy.getElement('Robbery (other than armed robbery)').should('exist')
@@ -882,7 +882,7 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
       cy.getElement(
-        'These are the last known addresses for Jane Bloggs in NDelius. If they are incorrect, update NDelius.'
+        'These are the last known addresses for Jane Bloggs in NDelius. If they are incorrect, update NDelius.',
       )
       cy.getText('address-1').should('contain', '41 Newport Pagnell Rd')
       cy.getText('address-1').should('contain', 'Bethnal Green')
@@ -1017,7 +1017,7 @@ context('Make a recommendation', () => {
       cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Known adult' }).then(
         rowValues => {
           expect(rowValues).to.deep.eq(['High', 'Medium'])
-        }
+        },
       )
       cy.getRowValuesFromTable({ tableCaption: 'Risk of serious harm', firstColValue: 'Staff' }).then(rowValues => {
         expect(rowValues).to.deep.eq(['Very high', 'High'])
@@ -1654,7 +1654,7 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a`
+        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a`,
       )
 
       cy.pageHeading().should('equal', 'Enter your telephone number')
@@ -1770,7 +1770,7 @@ context('Make a recommendation', () => {
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
       cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a`
+        `${routeUrls.recommendations}/${recommendationId}/countersigning-telephone?fromPageId=task-list&fromAnchor=countersign-part-a`,
       )
 
       cy.pageHeading().should('equal', 'Enter your telephone number')
@@ -2857,7 +2857,7 @@ context('Make a recommendation', () => {
       cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
       cy.get('p.govuk-body')
         .contains(
-          'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.'
+          'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.',
         )
         .should('exist')
       // check the determinate sentence content is not present
@@ -2964,7 +2964,7 @@ context('Make a recommendation', () => {
       cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
       cy.get('.govuk-notification-banner__content').should(
         'contain.text',
-        'The sentence needs to be added to PPUD and the booking on completed there.'
+        'The sentence needs to be added to PPUD and the booking on completed there.',
       )
 
       cy.get('#return-to-booking-details-button')

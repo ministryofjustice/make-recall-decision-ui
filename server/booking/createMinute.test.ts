@@ -1,4 +1,4 @@
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { ppudCreateMinute, updateRecommendation } from '../data/makeDecisionApiClient'
 import createMinute from './createMinute'
 

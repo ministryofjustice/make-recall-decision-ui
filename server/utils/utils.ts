@@ -43,7 +43,7 @@ export const logMessage = (info: any) => {
 }
 
 export function wait(time: number) {
-  return new Promise<void>(function (resolve) {
+  return new Promise<void>(resolve => {
     setTimeout(() => {
       resolve()
     }, time)

@@ -4,8 +4,8 @@ import { setDateInput, verifyInputs } from '../../../../../componentTests/date.t
 import searchMappedUserResponse from '../../../../../../api/responses/searchMappedUsers.json'
 import searchActiveUsersResponse from '../../../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import { MIN_VALUE_YEAR } from '../../../../../../server/utils/dates/conversion'
 
@@ -61,7 +61,7 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
       ppudReleaseDateTime.setLocale('en-GB')
       cy.get('p.govuk-body').should(
         'contain.text',
-        `${ppudReleaseDateTime.day} ${ppudReleaseDateTime.monthLong} ${ppudReleaseDateTime.year}`
+        `${ppudReleaseDateTime.day} ${ppudReleaseDateTime.monthLong} ${ppudReleaseDateTime.year}`,
       )
 
       // Date input surrounds

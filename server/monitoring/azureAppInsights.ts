@@ -3,7 +3,7 @@ import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from '
 import { performance } from 'perf_hooks'
 import applicationVersion from '../applicationVersion'
 
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 
 export function defaultName(): string {
   const {
@@ -41,7 +41,7 @@ export const appInsightsEvent = (
   eventName: string,
   userName: string,
   eventData: Record<string, unknown>,
-  _: FeatureFlags
+  _: FeatureFlags,
 ) => {
   if (defaultClient && eventName) {
     defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })

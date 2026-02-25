@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
-import { fetchAndTransformLicenceConditions } from '../recommendations/licenceConditions/transform'
+import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
+import fetchAndTransformLicenceConditions from '../recommendations/licenceConditions/transform'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -47,7 +47,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       region,
     },
     recommendation.crn,
-    featureFlags
+    featureFlags,
   )
 
   res.render(`pages/recommendations/offenceDetails`)

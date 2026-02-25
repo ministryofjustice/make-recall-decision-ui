@@ -1,7 +1,7 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { getDeterminateSentences, getIndeterminateSentences, calculatePartACustodyGroup } from './ppudSentenceHelper'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
 
 const DETERMINATE_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({

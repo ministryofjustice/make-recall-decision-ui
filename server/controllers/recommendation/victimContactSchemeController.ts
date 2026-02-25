@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
-import { validateVictimContactScheme } from '../recommendations/victimContactScheme/formValidator'
-import { inputDisplayValuesVictimContactScheme } from '../recommendations/victimContactScheme/inputDisplayValues'
+import routeUrls from '../../routes/routeUrls'
+import validateVictimContactScheme from '../recommendations/victimContactScheme/formValidator'
+import inputDisplayValuesVictimContactScheme from '../recommendations/victimContactScheme/inputDisplayValues'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -57,7 +57,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     req.body.hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'task-list#heading-victim-liaison'
   const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
 
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

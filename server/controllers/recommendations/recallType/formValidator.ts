@@ -1,13 +1,13 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { EVENTS } from '../../../utils/constants'
+import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
-import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
+import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
 import { availableRecallTypes } from './availableRecallTypes'
 
-export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, recallTypeDetailsStandard, originalRecallType, ftrMandatory, personOnProbationName } = requestBody
   const ftrMandatoryResolved = ftrMandatory === 'true'
   const invalidRecallType =
@@ -36,7 +36,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
           id: 'recallType',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingDetailFixedTerm || missingDetailStandard) {
@@ -46,7 +46,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
           id: missingDetailFixedTerm ? 'recallTypeDetailsFixedTerm' : 'recallTypeDetailsStandard',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -99,3 +99,5 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
     },
   }
 }
+
+export default validateRecallType

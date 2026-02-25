@@ -24,7 +24,7 @@ export default function setUpStaticResources(): Router {
     '/node_modules/jquery/dist',
     '/node_modules/web-vitals/dist',
     '/node_modules/@microsoft/applicationinsights-web/dist/es5',
-    '/node_modules/accessible-autocomplete/dist'
+    '/node_modules/accessible-autocomplete/dist',
   ).forEach(dir => {
     router.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })

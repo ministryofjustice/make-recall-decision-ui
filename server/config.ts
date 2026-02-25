@@ -116,7 +116,7 @@ export default {
       url: get(
         'COMPONENT_API_URL',
         'https://probation-frontend-components-dev.hmpps.service.justice.gov.uk',
-        requiredInProduction
+        requiredInProduction,
       ),
       healthPath: '/health/ping',
     },
