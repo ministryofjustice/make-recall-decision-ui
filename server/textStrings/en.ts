@@ -51,7 +51,7 @@ const strings: Record<string, Record<string, string>> = {
     noIsSentence12MonthsOrOver: 'Select whether the sentence is 12 months or over',
     noIsMappaLevelAbove1: 'Select whether the MAPPA level is above 1',
     noHasBeenConvictedOfSeriousOffence: 'Select whether {{ fullName }} has been charged with a serious offence',
-    noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+    noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
     noVictimContactSchemeSelected: 'Select whether there are any victims in the victim contact scheme',
     noIntegratedOffenderManagementSelected: 'Select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'Select which alternatives to recall have been tried already',

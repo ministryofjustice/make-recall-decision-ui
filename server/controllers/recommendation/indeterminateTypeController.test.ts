@@ -132,9 +132,10 @@ describe('post', () => {
             { value: 'LIFE', text: 'Life sentence' },
             {
               value: 'IPP',
-              text: 'Imprisonment for Public Protection (IPP) sentence',
+              text: 'Imprisonment for public protection (IPP)',
             },
-            { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
+            { value: 'DPP', text: 'Detention for public protection (DPP)' },
+            { value: 'DHMP', text: 'Detention at His Majesty’s pleasure (DHMP)', hint: 'Youth indeterminate sentence' },
           ],
         },
       },
@@ -173,7 +174,7 @@ describe('post', () => {
       {
         errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         name: 'indeterminateSentenceType',
         invalidParts: undefined,
         values: undefined,
