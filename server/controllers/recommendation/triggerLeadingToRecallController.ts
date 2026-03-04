@@ -4,18 +4,29 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isMandatoryTextValue } from '../../utils/utils'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    urlInfo: { basePath },
+  } = res.locals
+
+  const backLinkUrl = res.locals.flags.flagFTR56Enabled ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
 
   res.locals = {
     ...res.locals,
-    page: {
-      id: 'triggerLeadingToRecall',
-    },
-    inputDisplayValues: {
-      errors: res.locals.errors,
-      value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
+    pageData: {
+      page: {
+        id: 'triggerLeadingToRecall',
+      },
+      inputDisplayValues: {
+        errors: res.locals.errors,
+        value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
+      },
+      flagFTR56Enabled: res.locals.flags.flagFTR56Enabled,
+      backLinkUrl,
+      recommendation,
     },
   }
 
@@ -59,7 +70,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+  return res.redirect(
+    303,
+    nextPageLinkUrl({
+      nextPageId: res.locals.flags.flagFTR56Enabled ? ppPaths.licenceConditions : ppPaths.taskListConsiderRecall,
+      urlInfo,
+    }),
+  )
 }
 
 export default { get, post }

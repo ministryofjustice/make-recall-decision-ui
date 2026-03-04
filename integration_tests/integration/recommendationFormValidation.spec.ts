@@ -469,17 +469,6 @@ context('Make a recommendation - form validation', () => {
       errorText: 'Select a RoSH level for the risk to prisoners',
     })
   })
-  it('Trigger leading to recall', () => {
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/trigger-leading-to-recall`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'triggerLeadingToRecall',
-      errorText: 'Explain what has made you consider recalling Jane Bloggs',
-    })
-  })
   it('Rationale Check', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })

@@ -17,7 +17,7 @@
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-whatLedToRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'trigger-leading-to-recall', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-whatLedToRecall' href="/recommendations/{{ recommendation.id }}/trigger-leading-to-recall">
                                     What has made you consider recalling {{ recommendation.personOnProbation.name }}?
                                 </a>
                             </span>
