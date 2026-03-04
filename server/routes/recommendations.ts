@@ -134,6 +134,7 @@ import editSentencingCourtController from '../controllers/recommendation/ppcs/in
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import checkMappaInformationController from '../controllers/recommendation/checkMappaInformationController'
 
 const recommendations = Router()
 
@@ -200,6 +201,8 @@ ppRouteBuilder.post('spo-agree-to-recall', whenDidSproAgreeToRecall.post)
 
 ppRouteBuilder.get('emergency-recall', emergencyRecallController.get)
 ppRouteBuilder.post('emergency-recall', emergencyRecallController.post)
+
+ppRouteBuilder.get(ppPaths.checkMappaInformation, checkMappaInformationController.get)
 
 ppRouteBuilder.get('suitability-for-fixed-term-recall', suitabilityForFixedTermRecallController.get)
 ppRouteBuilder.post('suitability-for-fixed-term-recall', suitabilityForFixedTermRecallController.post)

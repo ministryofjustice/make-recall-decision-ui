@@ -1,0 +1,56 @@
+{% extends "../../partials/layout.njk" %}
+
+{% from "components/heading/macro.njk" import heading %}
+{% from "components/mappa-widget/macro.njk" import mappaWidget %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set pageTitle = makePageTitle({
+    pageHeading: pageTitles[page.id],
+    hasErrors: errors
+}) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{%- set appCardHtml -%}
+    {{ heading('From NDelius', 3, 's') }}
+    {{ mappaWidget({
+            mappa: mappaData,
+            lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: mappaData.lastUpdatedDate, dateOnly: true })
+        }) }}
+
+    {{ heading('Recall type MAPPA criteria', 3, 's') }}
+    {{
+        govukSummaryList({
+            attributes: {
+              'data-qa': 'check-mappa-information-summary-list'
+            },
+            rows: [
+                {
+                    key: { text: 'MAPPA level 2 or 3' },
+                    value: { text: 'Yes' if (not mappaData.error and mappaData.level > 1) else 'No' }
+                },
+                {
+                    key: { text: 'MAPPA category 4' },
+                    value: { text: 'Yes' if (not mappaData.error and mappaData.category == 4) else 'No' }
+                }
+            ]
+        })
+    }}
+{%- endset -%}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {{ heading(pageHeadings[page.id]) }}
+            {{ appSummaryCard({
+                titleText: 'MAPPA Information',
+                headingLevel: 3,
+                classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
+                html: appCardHtml
+            }) }}
+            {{ linkAsButton('continue', 'Continue', page.nextPageId) }}
+        </div>
+    </div>
+{% endblock %}
