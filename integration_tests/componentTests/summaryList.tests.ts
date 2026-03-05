@@ -5,7 +5,8 @@ export interface SummaryList {
 
 interface SummaryListRow {
   key: string
-  value: string
+  value?: string
+  valueRegex?: RegExp
   editLink?: SummaryListEditLink
 }
 
@@ -25,7 +26,13 @@ export const testSummaryList = (element: Cypress.Chainable<JQuery<HTMLElement>>,
     const item = params.rows[index]
     const label = item.editLink?.label ?? 'Edit'
     cy.wrap(row).within(() => {
-      cy.get('dt').should('contain.text', item.key).next().get('dd').should('contain.text', item.value)
+      if (item.value) {
+        cy.get('dt').should('contain.text', item.key).next().get('dd').should('contain.text', item.value)
+      } else if (item.valueRegex) {
+        cy.get('dt').should('contain.text', item.key).next().get('dd').invoke('text').should('match', item.valueRegex)
+      } else {
+        throw new Error('Either value or valueRegex must be provided for each summary list row')
+      }
       if (item.editLink) {
         cy.wrap(row)
           .should('contain', label)

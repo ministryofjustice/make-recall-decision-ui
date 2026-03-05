@@ -18,7 +18,6 @@ context('Determinate Ppud Sentences', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
           bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
           ppudOffender: {
             id: '1',
@@ -222,7 +221,6 @@ context('Determinate Ppud Sentences', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
           bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
           ppudOffender: {
             id: '1',

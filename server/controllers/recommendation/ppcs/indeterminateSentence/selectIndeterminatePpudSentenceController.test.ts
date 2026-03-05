@@ -39,6 +39,7 @@ describe('get', () => {
           token: randomUUID(),
         },
         recommendation,
+        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const req = mockReq({
@@ -78,7 +79,7 @@ describe('get', () => {
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation, res.locals.flags.flagFTR56Enabled)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence',
     )
@@ -93,6 +94,7 @@ describe('get', () => {
           token: randomUUID(),
         },
         recommendation,
+        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const req = mockReq({
@@ -133,7 +135,7 @@ describe('get', () => {
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation, res.locals.flags.flagFTR56Enabled)
     expect(res.render).toHaveBeenCalledWith(
       'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence',
     )

@@ -28,6 +28,7 @@ import type { WhyConsideredRecall } from './WhyConsideredRecall'
 import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
 import BookingMemento from '../../../booking/BookingMemento'
 import CUSTODY_GROUP from './ppud/CustodyGroup'
+import { SentenceGroup } from '../../../controllers/recommendations/sentenceInformation/formOptions'
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -46,6 +47,7 @@ export type RecommendationResponse = {
   responseToProbation?: string;
   triggerLeadingToRecall?: string;
   whatLedToRecall?: string;
+  sentenceGroup?: SentenceGroup;
   isThisAnEmergencyRecall?: boolean;
   isIndeterminateSentence?: boolean;
   isExtendedSentence?: boolean;

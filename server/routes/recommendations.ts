@@ -134,6 +134,7 @@ import editSentencingCourtController from '../controllers/recommendation/ppcs/in
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import sentenceInformationController from '../controllers/recommendation/sentenceInformationController'
 
 const recommendations = Router()
 
@@ -173,6 +174,9 @@ ppRouteBuilder.post('licence-conditions', licenceConditionsController.post)
 
 ppRouteBuilder.get('alternatives-tried', alternativesToRecallTriedController.get)
 ppRouteBuilder.post('alternatives-tried', alternativesToRecallTriedController.post)
+
+ppRouteBuilder.get(ppPaths.sentenceInformation, sentenceInformationController.get)
+ppRouteBuilder.post(ppPaths.sentenceInformation, sentenceInformationController.post)
 
 ppRouteBuilder.get('indeterminate-type', indeterminateTypeController.get)
 ppRouteBuilder.post('indeterminate-type', indeterminateTypeController.post)

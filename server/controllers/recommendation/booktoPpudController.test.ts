@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, getSupportingDocuments, updateStatuses } from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
@@ -196,7 +197,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
     }
-    const flags = {}
+    const flags = { flagFTR56Enabled: faker.datatype.boolean() }
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -412,7 +413,7 @@ describe('post', () => {
       flags,
     )
 
-    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
+    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation, flags.flagFTR56Enabled)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],

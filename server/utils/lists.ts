@@ -51,6 +51,17 @@ export const dedupeList = <T>(list: T[]) => {
   return unique
 }
 
+/**
+ * Adds checked and conditional properties to a list of items for radio and checkbox components
+ *
+ * @param items - the list of items to add properties to
+ * @param currentValues - the current value or values to determine which items should be checked
+ * @param conditionalContent - a record of conditional content to add to items, where the key is
+ *                             the item value and the value is the HTML string of the conditional
+ *                             content. This HTML will be shown whenever the relevant item is
+ *                             checked.
+ * @returns a new list of items with checked and conditional properties added
+ */
 export const radioCheckboxItems = ({
   items,
   currentValues,
