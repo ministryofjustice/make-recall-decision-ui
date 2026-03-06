@@ -113,7 +113,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateSentenceType',
-      errorText: 'Select whether Jane Bloggs is on a life, IPP or DPP sentence',
+      errorText: 'Select whether Jane Bloggs is on a life, IPP, DPP or DHMP sentence',
     })
   })
 

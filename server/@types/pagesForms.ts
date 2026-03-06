@@ -140,6 +140,7 @@ export type InputDisplayValues = (args: InputDisplayValuesArgs) => unknown
 export interface UiListItem {
   value: string
   text: string
+  hint?: string
   active?: boolean
   selected?: boolean
 }

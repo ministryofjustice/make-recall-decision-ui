@@ -38,7 +38,7 @@ describe('validateIndeterminateSentenceType', () => {
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
@@ -55,7 +55,7 @@ describe('validateIndeterminateSentenceType', () => {
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
