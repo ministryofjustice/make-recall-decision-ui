@@ -10,7 +10,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const pageData = {
     custodyGroups: Object.values(CUSTODY_GROUP),
     selectedCustodyGroup: res.locals.recommendation.bookRecallToPpud.custodyGroup,
-    partACustodyGroup: calculatePartACustodyGroup(res.locals.recommendation),
+    partACustodyGroup: calculatePartACustodyGroup(res.locals.recommendation, res.locals.flags.flagFTR56Enabled),
   }
 
   res.locals = {

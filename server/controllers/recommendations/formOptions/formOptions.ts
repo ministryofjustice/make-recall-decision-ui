@@ -18,6 +18,7 @@ import whyConsideredRecall from '../whyConsideredRecall/formOptions'
 import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
 import yesNo from './yesNo'
+import sentenceGroup from '../sentenceInformation/formOptions'
 
 export type FormOption = {
   value: string
@@ -30,6 +31,7 @@ type FormOptionsType = {
 }
 
 export const formOptions: FormOptionsType = {
+  sentenceGroup,
   recallType,
   rationaleCheck,
   spoRecallTypeEnum,

@@ -1,0 +1,38 @@
+{#
+Summary card with information on a Person on Probation (PoP).
+
+This template will display a summary card with information on the PoP's active convictions.
+If there are none, a message will be shown to indicate this.
+
+Parameters (all within the main input params object):
+@param title:         the title to be shown at the top of the summary card
+@param classes:       any additional CSS classes to be added to the summary card section element
+@param caseSummary:   the summary information for the Person on Probation, including active
+                      convictions. This can be retrieved through the getCaseSection method being
+                      called with a sectionId value of 'overview'. The structure of the
+                      caseSummary object includes the following:
+                          {
+                              licenceConvictions: {
+                                  active: [
+                                      {
+                                          mainOffence: {
+                                              description: string
+                                          },
+                                          additionalOffences: [
+                                              {
+                                                  description: string
+                                              }
+                                          ],
+                                          sentence: {
+                                              description: string,
+                                              length: number,
+                                              lengthUnits: string
+                                          }
+                                      }
+                                  ]
+                              }
+                          }
+#}
+{% macro popSummaryCard(params) %}
+    {%- include "./template.njk" -%}
+{% endmacro %}

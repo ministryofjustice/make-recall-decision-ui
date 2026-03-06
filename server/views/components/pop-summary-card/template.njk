@@ -1,0 +1,40 @@
+{% from "components/summary-list/macro.njk" import summaryList %}
+{% from "components/summary-card/macro.njk" import appSummaryCard %}
+
+{% set caseSummary = params.caseSummary %}
+
+{% set offenceSentenceHtml %}
+    {% if not caseSummary.licenceConvictions.active.length %}
+        <p class='govuk-body'>This person has no active offences or convictions.</p>
+    {% else %}
+        {% for conviction in caseSummary.licenceConvictions.active %}
+            {% set additionalOffencesHtml %}
+                <ul class='govuk-list'>
+                    {% for offence in conviction.additionalOffences %}
+                        <li>{{ offence.description }}</li>
+                    {% endfor %}
+                </ul>
+            {% endset %}
+
+            <div {% if loop.index > 1 %}class='govuk-!-margin-top-2 govuk-!-padding-top-2 border-top'{% endif %}>
+
+                {{ summaryList({
+                    id: 'conviction-' + loop.index,
+                    classes: 'govuk-summary-list--no-border',
+                    rows: [
+                        { key: 'Main offence', value: conviction.mainOffence.description },
+                        { key: 'Additional offence(s)', value: additionalOffencesHtml } if conviction.additionalOffences.length else undefined,
+                        { key: 'Sentence type', value: conviction.sentence.description if conviction.sentence.description else 'Not available' },
+                        { key: 'Sentence length', value: conviction.sentence.length + " " + conviction.sentence.units if conviction.sentence.length and conviction.sentence.units else 'Not available' }
+                    ]
+                }) }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endset %}
+
+{{ appSummaryCard({
+    titleText: params.title,
+    classes: params.classes + " govuk-!-padding-bottom-3 app-summary-card--large-title",
+    html: offenceSentenceHtml
+}) }}

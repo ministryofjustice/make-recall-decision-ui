@@ -2,6 +2,8 @@ import reviewPractitionersConcernsController from './reviewPractitionersConcerns
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import randomEnum from '../../@types/enum.testFactory'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -177,64 +179,107 @@ describe('get', () => {
     expect(res.locals.alternativesToRecallTried).toEqual([])
   })
 
-  it('load 2, some variation of data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          isIndeterminateSentence: true,
-          isExtendedSentence: true,
-          triggerLeadingToRecall: 'some reason 1',
-          responseToProbation: 'some reason 2',
-          personOnProbation: { name: 'Joe Bloggs' },
-          crn: 'X123',
-          licenceConditionsBreached: {
-            standardLicenceConditions: {
-              selected: [],
-              allOptions: [],
-            },
-            additionalLicenceConditions: {
-              selectedOptions: [{ mainCatCode: 'NLC8', subCatCode: 'NSTT8' }],
-              allOptions: [
-                {
-                  subCatCode: 'NSTT8',
-                  mainCatCode: 'NLC8',
-                  title: 'Freedom of movement',
-                  details:
-                    'To only attend places of worship which have been previously agreed with your supervising officer.',
-                  note: 'some note',
+  const ftr56TestCases = [
+    {
+      description: 'with FTR56 flag enabled',
+      ftr56Enabled: true,
+    },
+    {
+      description: 'with FTR56 flag disabled',
+      ftr56Enabled: false,
+    },
+  ]
+  ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+    describe(description, () => {
+      ;[true, false].forEach(isIndeterminateSentence => {
+        ;[true, false].forEach(isExtendedSentence => {
+          let sentenceGroup: SentenceGroup
+          if (isIndeterminateSentence) {
+            sentenceGroup = SentenceGroup.INDETERMINATE
+          } else if (isExtendedSentence) {
+            sentenceGroup = SentenceGroup.EXTENDED
+          } else {
+            sentenceGroup = randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED])
+          }
+
+          let sentenceDescription: string
+          if (ftr56Enabled) {
+            sentenceDescription = `sentence group ${sentenceGroup}`
+          } else {
+            sentenceDescription = `isIndeterminateSentence ${isIndeterminateSentence}, isExtendedSentence ${isExtendedSentence}`
+          }
+          it(`load 2, some variation of data - ${sentenceDescription}`, async () => {
+            const res = mockRes({
+              locals: {
+                recommendation: {
+                  isIndeterminateSentence: ftr56Enabled ? undefined : isIndeterminateSentence,
+                  isExtendedSentence: ftr56Enabled ? undefined : isExtendedSentence,
+                  sentenceGroup: ftr56Enabled ? sentenceGroup : undefined,
+                  triggerLeadingToRecall: 'some reason 1',
+                  responseToProbation: 'some reason 2',
+                  personOnProbation: { name: 'Joe Bloggs' },
+                  crn: 'X123',
+                  licenceConditionsBreached: {
+                    standardLicenceConditions: {
+                      selected: [],
+                      allOptions: [],
+                    },
+                    additionalLicenceConditions: {
+                      selectedOptions: [{ mainCatCode: 'NLC8', subCatCode: 'NSTT8' }],
+                      allOptions: [
+                        {
+                          subCatCode: 'NSTT8',
+                          mainCatCode: 'NLC8',
+                          title: 'Freedom of movement',
+                          details:
+                            'To only attend places of worship which have been previously agreed with your supervising officer.',
+                          note: 'some note',
+                        },
+                      ],
+                    },
+                  },
+                  alternativesToRecallTried: {
+                    selected: [],
+                    allOptions: [],
+                  },
                 },
-              ],
-            },
-          },
-          alternativesToRecallTried: {
-            selected: [],
-            allOptions: [],
-          },
-        },
-      },
+                flags: { flagFTR56Enabled: ftr56Enabled },
+              },
+            })
+            const next = mockNext()
+            await reviewPractitionersConcernsController.get(mockReq(), res, next)
+
+            expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
+            expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
+
+            expect(res.locals.offenderName).toEqual('Joe Bloggs')
+            expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
+            expect(res.locals.responseToProbation).toEqual('some reason 2')
+            expect(res.locals.standardLicenceConditions).toEqual([])
+            expect(res.locals.additionalLicenceConditions).toEqual([
+              {
+                details:
+                  'To only attend places of worship which have been previously agreed with your supervising officer.',
+                note: 'some note',
+                title: 'Freedom of movement',
+              },
+            ])
+            expect(res.locals.alternativesToRecallTried).toEqual([])
+            if (ftr56Enabled) {
+              expect(res.locals.isIndeterminateSentence).toEqual(
+                sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
+              )
+              expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
+            } else {
+              expect(res.locals.isIndeterminateSentence).toEqual(isIndeterminateSentence ? 'Yes' : 'No')
+              expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence ? 'Yes' : 'No')
+            }
+
+            expect(next).toHaveBeenCalled()
+          })
+        })
+      })
     })
-    const next = mockNext()
-    await reviewPractitionersConcernsController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
-
-    expect(res.locals.offenderName).toEqual('Joe Bloggs')
-    expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
-    expect(res.locals.responseToProbation).toEqual('some reason 2')
-    expect(res.locals.standardLicenceConditions).toEqual([])
-    expect(res.locals.additionalLicenceConditions).toEqual([
-      {
-        details: 'To only attend places of worship which have been previously agreed with your supervising officer.',
-        note: 'some note',
-        title: 'Freedom of movement',
-      },
-    ])
-    expect(res.locals.alternativesToRecallTried).toEqual([])
-    expect(res.locals.isIndeterminateSentence).toEqual('Yes')
-    expect(res.locals.isExtendedSentence).toEqual('Yes')
-
-    expect(next).toHaveBeenCalled()
   })
 
   it('load cvl data', async () => {

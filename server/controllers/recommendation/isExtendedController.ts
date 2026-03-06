@@ -7,9 +7,19 @@ import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    flags,
+    urlInfo: { basePath },
+  } = res.locals
+
+  if (flags.flagFTR56Enabled) {
+    res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
+    return
+  }
 
   res.locals = {
     ...res.locals,

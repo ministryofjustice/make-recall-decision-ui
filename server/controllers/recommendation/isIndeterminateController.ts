@@ -3,9 +3,19 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
 import validateIsIndeterminateSentence from '../recommendations/isIndeterminateSentence/formValidator'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    flags,
+    urlInfo: { basePath },
+  } = res.locals
+
+  if (flags.flagFTR56Enabled) {
+    res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
+    return
+  }
 
   res.locals = {
     ...res.locals,

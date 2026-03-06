@@ -13,7 +13,7 @@ import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const custodyGroup = calculatePartACustodyGroup(recommendation)
+  const custodyGroup = calculatePartACustodyGroup(recommendation, res.locals.flags.flagFTR56Enabled)
   const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender?.sentences)
   const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
 
