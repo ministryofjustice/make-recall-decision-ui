@@ -12,6 +12,8 @@ const missingDetailsError = (optionId: string) => {
       return strings.errors.missingIndeterminateDetailIndexOffence
     case 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE':
       return strings.errors.missingIndeterminateDetailSexualViolent
+    case 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE':
+      return strings.errors.missingIndeterminateDetailLikelyResultSexualViolent
     case 'OUT_OF_TOUCH':
       return strings.errors.missingIndeterminateDetailContact
     default:

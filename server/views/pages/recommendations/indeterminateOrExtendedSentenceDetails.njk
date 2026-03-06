@@ -24,23 +24,30 @@
                   <p id="indeterminateOrExtendedSentenceDetails-error" class="govuk-error-message">
                       <span class="govuk-visually-hidden">Error:</span> {{ errors.indeterminateOrExtendedSentenceDetails.text }}
                   </p>
-                    <div id="contact-hint" class="govuk-hint">
-                        At least one of the following criteria must be met by law. Select all that apply and give details.
-                    </div>
+                   <div class='govuk-!-margin-bottom-2'>
+                        <p class="govuk-body">
+                            At least one of the following criteria must be met by law. Select all that apply and provide evidence in the ‘give details’ section that there’s:
+                        </p>
+                        <ul class='govuk-list govuk-list--bullet'>
+                            <li>a link between the behaviour or circumstances that led to the recall and the index offence</li>
+                            <li>an increased risk of serious harm to the public</li>
+                        </ul>
+                   </div>
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         {% for item in formOptions.indeterminateOrExtendedSentenceDetails %}
                             <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input" id="option-{{ loop.index }}" name="indeterminateOrExtendedSentenceDetails" type="checkbox" value="{{ item.value }}" data-aria-controls="conditional-{{ item.value }}" {% if findListItemByValue({ items: inputDisplayValues, value: item.value }) %}checked{% endif %}>
                                 <label class="govuk-label govuk-checkboxes__label" for="option-{{ loop.index }}">
-                                    {{ item.text }}
+                                    {{ item.text | safe }}
                                 </label>
                             </div>
                             <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-{{ item.value }}">
+                                {% set detailsLabel = renderString(item.detailsLabel, { fullName: fullName }) %}
                                 {{ govukTextarea({
                                     name: "indeterminateOrExtendedSentenceDetailsDetail-" + item.value,
                                     id: "indeterminateOrExtendedSentenceDetailsDetail-" + item.value,
                                     label: {
-                                        html: item.detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + '</span>'
+                                        html: detailsLabel + " <span class='govuk-visually-hidden'>on " + item.text + '</span>'
                                     },
                                     value: findListItemByValue({ items: inputDisplayValues, value: item.value }).details,
                                     errorMessage: errorMessage(errors["indeterminateOrExtendedSentenceDetailsDetail-" + item.value])

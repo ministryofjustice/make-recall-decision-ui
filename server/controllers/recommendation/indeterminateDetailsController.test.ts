@@ -34,11 +34,15 @@ describe('get', () => {
             allOptions: [
               {
                 value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-                text: '{{ fullName }} has shown behaviour similar to the index offence',
+                text: '{{ fullName }} has shown behaviour similar to the circumstances surrounding the index offence',
               },
               {
                 value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
                 text: '{{ fullName }} has shown behaviour that could lead to a sexual or violent offence',
+              },
+              {
+                value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+                text: '{{ fullName }} has shown behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
               },
               { value: 'OUT_OF_TOUCH', text: '{{ fullName }} is out of touch' },
             ],
@@ -109,9 +113,11 @@ describe('post', () => {
         indeterminateOrExtendedSentenceDetails: [
           'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
           'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+          'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
         ],
         'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE': 'test',
         'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE': 'test2',
+        'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE': 'test3',
         'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH': '',
       },
     })
@@ -134,17 +140,25 @@ describe('post', () => {
           selected: [
             { value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' },
             { value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test2' },
+            { value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test3' },
           ],
           allOptions: [
             {
               value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-              text: '{{ fullName }} has shown behaviour similar to the index offence',
+              text: '{{ fullName }} has shown behaviour similar to the circumstances surrounding the <strong>index offence</strong>',
             },
             {
               value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-              text: '{{ fullName }} has shown behaviour that could lead to a sexual or violent offence',
+              text: '{{ fullName }} has shown behaviour that <strong>has caused, or will cause, a sexual or violent offence</strong>',
             },
-            { value: 'OUT_OF_TOUCH', text: '{{ fullName }} is out of touch' },
+            {
+              value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+              text: '{{ fullName }} has shown behaviour <strong>likely to result in a sexual or violent offence</strong>, or that could be associated with committing one',
+            },
+            {
+              value: 'OUT_OF_TOUCH',
+              text: '{{ fullName }} is either <strong>out of touch</strong> with probation, or their current location is not known',
+            },
           ],
         },
       },
