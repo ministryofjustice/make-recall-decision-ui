@@ -112,6 +112,10 @@
         "Details": "Details..."
       },
       {
+        "value": "BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE",
+        "Details": "Details..."
+      },
+      {
         "value": "OUT_OF_TOUCH",
         "Details": "Details..."
       }
@@ -124,6 +128,10 @@
       {
         "text": "The person has shown behaviour that could lead to a sexual or violent offence",
         "value": "BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE"
+      },
+      {
+        "text": "The person has shown behaviour likely to result in a sexual or violent offence, or that could be associated with committing one",
+        "value": "BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE"
       },
       {
         "text": "The person is out of touch",
