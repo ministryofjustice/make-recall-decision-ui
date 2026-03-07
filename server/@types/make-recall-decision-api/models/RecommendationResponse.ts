@@ -151,6 +151,7 @@ export type OfferedOffence = {
   courtDescription: string;
   sentenceStartDate: string;
   sentenceEndDate: string;
+  sentenceSequenceExpiryDate: string;
   bookingId: number;
   terms: Term[];
   releaseDate: string;

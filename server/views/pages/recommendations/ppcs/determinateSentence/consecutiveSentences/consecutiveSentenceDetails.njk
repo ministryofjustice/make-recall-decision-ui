@@ -2,7 +2,7 @@
 {% from "./consecutiveSentenceSummary/macro.njk" import consecutiveSentenceSummary %}
 {% from "./concurrentSentencesSummary/macro.njk" import concurrentSentencesSummary %}
 
-{% set title = 'View the index offence and its consecutive sentences' %}
+{% set title = 'Check the index offence and its consecutive sentences' %}
 
 {% set pageTitle = makePageTitle({ pageHeading: title, hasErrors: errors }) %}
 
@@ -16,8 +16,8 @@
             {% include '../../../../../partials/error-summary.njk' %}
 
             {{ heading(title) }}
-            {{ bodyParagraph('The index offence is the first sentence in the consecutive sequence.') }}
-            
+            {{ bodyParagraph('View the index offence selected from NOMIS and the sentences that run consecutively to it.') }}
+
             {% if nomisError %}
                 {% set html %}
                     <h1 class="govuk-heading-m" data-qa='multiple-results'>NOMIS error</h1>
@@ -32,6 +32,7 @@
             {% endif %}
 
             {{ heading('Offence sequence', 2, 'm', 'govuk-!-margin-bottom-1') }}
+            {{ bodyParagraph('The index offence is the first sentence in the consecutive sequence.') }}
 
             <div class="govuk-grid-row wrap-reverse">
                 <div class="govuk-grid-column-two-thirds">
