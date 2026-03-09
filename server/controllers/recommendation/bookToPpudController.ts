@@ -138,7 +138,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       memento,
       recommendationId,
       'BACKGROUND INFO...',
-      generateRecallMinuteText(recommendation),
+      generateRecallMinuteText(recommendation, flags.flagFTR56Enabled),
       token,
       flags,
     )

@@ -3,6 +3,7 @@ import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
 import StageEnum from './StageEnum'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 export default async function updateRecall(
   bookingMemento: BookingMemento,
@@ -20,7 +21,9 @@ export default async function updateRecall(
 
   const createRecallResponse = await ppudCreateRecall(token, memento.offenderId, memento.releaseId, {
     decisionDateTime: recommendation.decisionDateTime,
-    isExtendedSentence: recommendation.isExtendedSentence,
+    isExtendedSentence: featureFlags.flagFTR56Enabled
+      ? recommendation.sentenceGroup === SentenceGroup.EXTENDED
+      : recommendation.isExtendedSentence,
     isInCustody,
     mappaLevel: recommendation.bookRecallToPpud.mappaLevel,
     policeForce: recommendation.bookRecallToPpud.policeForce,

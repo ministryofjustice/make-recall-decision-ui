@@ -5,6 +5,7 @@ import { RecommendationDecorated } from '../../@types/api'
 import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decision-api'
 import logger from '../../../logger'
 import { isDefined } from '../../utils/utils'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
   if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
@@ -151,8 +152,16 @@ async function get(req: Request, res: Response, next: NextFunction) {
     bespokeLicenceConditions,
     alternativesToRecallTried,
     additionalLicenceConditionsText: recommendation.additionalLicenceConditionsText,
-    isIndeterminateSentence: recommendation.isIndeterminateSentence ? 'Yes' : 'No',
-    isExtendedSentence: recommendation.isExtendedSentence ? 'Yes' : 'No',
+    isIndeterminateSentence:
+      (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
+      (!res.locals.flags.flagFTR56Enabled && recommendation.isIndeterminateSentence)
+        ? 'Yes'
+        : 'No',
+    isExtendedSentence:
+      (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) ||
+      (!res.locals.flags.flagFTR56Enabled && recommendation.isExtendedSentence)
+        ? 'Yes'
+        : 'No',
   }
 
   res.render(`pages/recommendations/reviewPractitionersConcerns`)

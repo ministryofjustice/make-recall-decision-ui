@@ -5,6 +5,7 @@ import inputDisplayValuesEmergencyRecall from '../recommendations/emergencyRecal
 import validateEmergencyRecall from '../recommendations/emergencyRecall/formValidator'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import EVENTS from '../../utils/constants'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -21,6 +22,12 @@ function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+
+  if (res.locals.flags.flagFTR56Enabled) {
+    res.locals.isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
+  } else {
+    res.locals.isExtendedSentence = recommendation.isExtendedSentence
+  }
 
   res.render(`pages/recommendations/emergencyRecall`)
   next()
