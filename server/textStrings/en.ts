@@ -59,6 +59,8 @@ const strings: Record<string, Record<string, string>> = {
     missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
     missingIndeterminateDetailSexualViolent:
       'Enter details about the behaviour that could lead to a sexual or violent offence',
+    missingIndeterminateDetailLikelyResultSexualViolent:
+      'Enter details about the behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     noVulnerabilitiesSelectedRiskToSelf:
