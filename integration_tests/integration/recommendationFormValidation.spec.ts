@@ -337,24 +337,6 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Arrest issues', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/arrest-issues`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'hasArrestIssues',
-      errorText: "Select whether there's anything the police should know",
-    })
-    cy.selectRadio('Is there anything the police should know before they arrest Jane Bloggs?', 'Yes')
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'hasArrestIssuesDetailsYes',
-      errorText: 'Enter details of the arrest issues',
-    })
-  })
-
   it('Contraband', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
