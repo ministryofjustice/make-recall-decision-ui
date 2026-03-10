@@ -12,6 +12,8 @@ const missingDetailsError = (optionId: string) => {
       return strings.errors.missingIndeterminateDetailIndexOffence
     case 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE':
       return strings.errors.missingIndeterminateDetailSexualViolent
+    case 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE':
+      return strings.errors.missingIndeterminateDetailLikelyResultSexualViolent
     case 'OUT_OF_TOUCH':
       return strings.errors.missingIndeterminateDetailContact
     default:
@@ -19,18 +21,26 @@ const missingDetailsError = (optionId: string) => {
   }
 }
 
-const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateIndeterminateDetails = async ({
+  requestBody,
+  urlInfo,
+  ftr56Enabled,
+}: FormValidatorArgs & { ftr56Enabled?: boolean }): FormValidatorReturn => {
   const { indeterminateOrExtendedSentenceDetails } = requestBody
   const selected = Array.isArray(indeterminateOrExtendedSentenceDetails)
     ? indeterminateOrExtendedSentenceDetails
     : [indeterminateOrExtendedSentenceDetails]
-  const invalidAlternative = selected.some(
-    selectionId => !isValueValid(selectionId, 'indeterminateOrExtendedSentenceDetails'),
-  )
+
+  const items = ftr56Enabled
+    ? formOptions.indeterminateOrExtendedSentenceDetailsFtr56
+    : formOptions.indeterminateOrExtendedSentenceDetails
+  const formId = ftr56Enabled ? 'indeterminateOrExtendedSentenceDetailsFtr56' : 'indeterminateOrExtendedSentenceDetails'
+
+  const invalidAlternative = selected.some(selectionId => !isValueValid(selectionId, formId))
   const missingDetails = selected.filter(selectionId => {
     const optionShouldHaveDetails = Boolean(
       findListItemByValue<UiFormOption>({
-        items: formOptions.indeterminateOrExtendedSentenceDetails,
+        items,
         value: selectionId,
       })?.detailsLabel,
     )
@@ -90,7 +100,7 @@ const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValida
           details: details ? stripHtmlTags(details as string) : undefined,
         }
       }),
-      allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
+      allOptions: cleanseUiList(items),
     },
   }
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
