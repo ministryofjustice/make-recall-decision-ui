@@ -12,6 +12,7 @@ const ppPaths = {
   vulnerabilities: 'vulnerabilities',
   vulnerabilitiesDetails: 'vulnerabilities-details',
   checkMappaInformation: 'check-mappa-information',
+  arrestIssues: 'arrest-issues',
 }
 
 export default ppPaths
