@@ -48,6 +48,22 @@ const strings: Record<string, Record<string, string>> = {
       'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
     noHasBeenChargedWithTerroristOrStateThreatOffence:
       'Select whether {{ fullName }} has been charged with a terrorist or state threat offence',
+    noIsChargedWithOffence: 'Select whether {{ fullName }} is being recalled because of being charged with an offence',
+    noIsServingTerroristOrNationalSecurityOffence:
+      'Select whether {{ fullName }} is serving a sentence for a terrorist or national security offence',
+    noIsAtRiskOfInvolvedInForeignPowerThreat:
+      'Select whether {{ fullName }} is considered to be a person at risk of being involved in foreign power threat activity',
+    noWasReferredToParoleBoard244ZB:
+      'Select whether {{ fullName }} was referred to the Parole Board under section 244ZB (power to detain) on this sentence',
+    noWasRepatriatedForMurder:
+      'Select whether {{ fullName }} has been repatriated to the UK following a sentence for murder',
+    noIsServingSOPCSentence:
+      'Select whether {{ fullName }} is serving a Sentence for offenders of particular concern (SOPC)',
+    noIsServingDCRSentence:
+      'Select whether {{ fullName }} is serving a Discretionary conditional release (DCR) sentence',
+    noIsYouthSentenceOver12Months: "Select whether {{ fullName }}'s sentence is 12 months or over",
+    noIsYouthChargedWithSeriousOffence:
+      'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
     noIsSentence12MonthsOrOver: 'Select whether the sentence is 12 months or over',
     noIsMappaLevelAbove1: 'Select whether the MAPPA level is above 1',
     noHasBeenConvictedOfSeriousOffence: 'Select whether {{ fullName }} has been charged with a serious offence',

@@ -1,0 +1,152 @@
+{% extends "../../partials/layout.njk" %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "components/mappa-widget/macro.njk" import mappaWidget %}
+{% from "components/heading/macro.njk" import heading %}
+{% from "components/bodyParagraph/macro.njk" import bodyParagraph %}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+
+{% set pageTitle = makePageTitle({
+    pageHeading: pageTitles[page.id],
+    hasErrors: errors
+}) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% set summaryCardHtml %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        {{ heading('Sentence Group', 3, 's', 'govuk-!-margin-bottom-1') }}
+        <p class="govuk-body">Selected in sentence information step</p>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        {{ sentenceGroupDetails.text }}
+    </div>
+</div>
+
+{% if recommendation.sentenceGroup == 'YOUTH_SDS' %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            {% if page.warningPanel %}
+                {% set bannerHtml%}
+                {{ heading(page.warningPanel.title, 2, 'm') }}
+                {{ bodyParagraph(page.warningPanel.body) }}
+                {% endset %}
+                {{ mojBanner({
+                    type: 'warning',
+                    html: bannerHtml
+                }) }}
+            {% endif %}
+
+            {% for key, field in inputDisplayValues %}
+                {{ govukRadios({
+                    classes: "govuk-radios--inline",
+                    idPrefix: key,
+                    name: key,
+                    hint: {
+                        text: field.hint
+                    },
+                    fieldset: {
+                        legend: {
+                            text: field.label,
+                            classes: "govuk-fieldset__legend--s",
+                            isPageHeading: false
+                        }
+                    },
+                    items: radioCheckboxItems({
+                        items: formOptions.yesNo,
+                        currentValues: field.value
+                    }),
+                    errorMessage: errorMessage(errors[key])
+                }) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endset %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+                {{ heading(pageHeadings[page.id]) }}
+
+                {% if recommendation.sentenceGroup == 'ADULT_SDS' %}
+                    <p class="govuk-body">Answer the following questions to assess what recall type is appropriate for {{ recommendation.personOnProbation.name }}</p>
+                {% else %}
+                    <p class="govuk-body">Check the following information to assess what recall type is appropriate for {{ recommendation.personOnProbation.name }}</p>
+                {% endif %}
+
+                {% if recommendation.sentenceGroup == 'YOUTH_SDS' %}
+                    {% set youthMappaHtml %}
+                    {{ heading('From NDelius', 3, 's') }}
+                    {{ mappaWidget({
+                            mappa: caseSummary.mappa,
+                            lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: caseSummary.mappa.lastUpdatedDate, dateOnly: true })
+                        }) }}
+
+                    {{ heading('Recall type MAPPA criteria', 3, 's') }}
+                    {{
+                        govukSummaryList({
+                            attributes: {
+                            'data-qa': 'check-mappa-information-summary-list'
+                            },
+                            rows: [
+                                {
+                                    key: { text: 'MAPPA level 2 or 3' },
+                                    value: { text: 'Yes' if (not caseSummary.mappa.error and caseSummary.mappa.level > 1) else 'No' }
+                                }
+                            ]
+                        })
+                    }}
+                    {% endset %}
+
+                    {{ appSummaryCard({ 
+                        titleText: 'MAPPA Information',
+                        classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
+                        html: youthMappaHtml
+                    }) }}
+                {% endif %}
+
+                {{ appSummaryCard({
+                    titleText: 'Fixed term recall exclusion criteria',
+                    classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
+                    html: summaryCardHtml
+                }) }}
+
+                {% if recommendation.sentenceGroup != 'YOUTH_SDS' %}
+                    {% for key, field in inputDisplayValues %}
+                        {{ govukRadios({
+                            classes: "govuk-radios--inline",
+                            idPrefix: key,
+                            name: key,
+                            hint: {
+                                text: field.hint
+                            },
+                            fieldset: {
+                                legend: {
+                                    text: field.label,
+                                    classes: "govuk-fieldset__legend--m",
+                                    isPageHeading: false
+                                }
+                            },
+                            items: radioCheckboxItems({
+                                items: formOptions.yesNo,
+                                currentValues: field.value
+                            }),
+                            errorMessage: errorMessage(errors[key])
+                        }) }}
+                    {% endfor %}
+                {% endif %}
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
