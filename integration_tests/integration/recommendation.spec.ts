@@ -11,6 +11,20 @@ import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceCon
 import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import ppcsPaths from '../../server/routes/paths/ppcs'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+
+// remove isIndeterminateSentence and isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
+// (can't add this comment to the json file, as json standard doesn't allow comments)
+const ftr56TestCases = [
+  {
+    description: 'with FTR56 flag enabled',
+    ftr56Enabled: true,
+  },
+  {
+    description: 'with FTR56 flag disabled',
+    ftr56Enabled: false,
+  },
+]
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -242,63 +256,86 @@ context('Make a recommendation', () => {
       cy.getElement('Emergency recall').should('exist')
     })
 
-    it('present discuss-with-manager', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, isIndeterminateSentence: false },
+    describe('present discuss-with-manager', () => {
+      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+        it(description, () => {
+          const recommendation = {
+            ...completeRecommendationResponse,
+            recallConsideredList: null,
+            isIndeterminateSentence: ftr56Enabled ? undefined : false,
+            isExtendedSentence: ftr56Enabled ? undefined : true,
+            sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+          }
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: recommendation,
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.visit(
+            `${routeUrls.recommendations}/${recommendationId}/share-case-with-manager?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+          )
+
+          cy.clickLink('Continue to make a recommendation')
+
+          cy.pageHeading().should('equal', 'Discuss with your manager')
+
+          cy.clickLink('Continue')
+
+          cy.pageHeading().should('equal', 'What do you recommend?')
+
+          cy.url().should('contain', 'recall-type-extended')
+
+          cy.getElement('No recall - send a decision not to recall letter').should('exist')
+        })
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
-
-      cy.clickLink('Continue to make a recommendation')
-
-      cy.pageHeading().should('equal', 'Discuss with your manager')
-
-      cy.clickLink('Continue')
-
-      cy.pageHeading().should('equal', 'What do you recommend?')
-
-      cy.url().should('contain', 'recall-type-extended')
-
-      cy.getElement('No recall - send a decision not to recall letter').should('exist')
     })
 
-    it('present what do you recommend for extended sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          recallConsideredList: null,
-          isIndeterminateSentence: false,
-        },
+    describe('present what do you recommend for extended sentence', () => {
+      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+        it(description, () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              recallConsideredList: null,
+              isIndeterminateSentence: ftr56Enabled ? undefined : false,
+              isExtendedSentence: ftr56Enabled ? undefined : true,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+            },
+          })
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.visit(
+            `${routeUrls.recommendations}/${recommendationId}/recall-type-extended?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+          )
+
+          cy.pageHeading().should('equal', 'What do you recommend?')
+
+          cy.selectRadio('What do you recommend?', 'No recall - send a decision not to recall letter')
+
+          cy.getElement('No recall - send a decision not to recall letter').should('exist')
+
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              recallConsideredList: null,
+              isIndeterminateSentence: ftr56Enabled ? undefined : false,
+              isExtendedSentence: ftr56Enabled ? undefined : true,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+              recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
+            },
+          })
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.clickButton('Continue')
+
+          cy.pageHeading().should('equal', 'Create a decision not to recall letter')
+        })
       })
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-extended`)
-
-      cy.pageHeading().should('equal', 'What do you recommend?')
-
-      cy.selectRadio('What do you recommend?', 'No recall - send a decision not to recall letter')
-
-      cy.getElement('No recall - send a decision not to recall letter').should('exist')
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          recallConsideredList: null,
-          isIndeterminateSentence: false,
-          recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
-        },
-      })
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.clickButton('Continue')
-
-      cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
 
     it('present task-list for all items completed', () => {
@@ -664,7 +701,7 @@ context('Make a recommendation', () => {
     it('offence details - banner if single conviction not on release', () => {
       cy.task('updateRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, isExtendedSentence: false },
+        response: { ...completeRecommendationResponse },
       })
       cy.task('getCase', {
         sectionId: 'licence-conditions',
@@ -2804,176 +2841,202 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Double check your booking')
     })
 
-    it('select indeterminate ppud sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          ppudOffender: {
-            id: '1',
-            sentences: [
-              {
+    describe('select indeterminate ppud sentence', () => {
+      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+        it(description, () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
+              isIndeterminateSentence: ftr56Enabled ? undefined : true,
+              bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+              ppudOffender: {
                 id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Mandatory (MLP)',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-                tariffExpiryDate: '1970-03-02',
+                sentences: [
+                  {
+                    id: '1',
+                    dateOfSentence: '2003-06-12',
+                    custodyType: 'Mandatory (MLP)',
+                    licenceExpiryDate: null,
+                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                    offence: {
+                      indexOffence: 'some offence',
+                      dateOfIndexOffence: null,
+                    },
+                    sentenceExpiryDate: '1969-03-02',
+                    tariffExpiryDate: '1970-03-02',
+                  },
+                ],
               },
-            ],
-          },
-          convictionDetail: {
-            indexOffenceDescription: 'Burglary',
-            sentenceExpiryDate: '2024-05-10',
-            dateOfSentence: '2022-03-11',
-          },
-        },
+              convictionDetail: {
+                indexOffenceDescription: 'Burglary',
+                sentenceExpiryDate: '2024-05-10',
+                dateOfSentence: '2022-03-11',
+              },
+            },
+          })
+          cy.task('getStatuses', {
+            statusCode: 200,
+            response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+          })
+
+          cy.visit(
+            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+          )
+          cy.pageHeading().should('contain', 'Select a sentence for your booking')
+
+          cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
+          cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
+          cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should(
+            'contain.text',
+            CUSTODY_GROUP.INDETERMINATE,
+          )
+          cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
+
+          cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
+          cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
+          cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
+          cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
+
+          cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
+          cy.get('p.govuk-body')
+            .contains(
+              'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.',
+            )
+            .should('exist')
+          // check the determinate sentence content is not present
+          cy.get('#determinateSentencesDetails').should('not.exist')
+        })
       })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select a sentence for your booking')
-
-      cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
-      cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
-      cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should('contain.text', CUSTODY_GROUP.INDETERMINATE)
-      cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
-
-      cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
-      cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
-      cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
-      cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
-
-      cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
-      cy.get('p.govuk-body')
-        .contains(
-          'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.',
-        )
-        .should('exist')
-      // check the determinate sentence content is not present
-      cy.get('#determinateSentencesDetails').should('not.exist')
     })
 
-    it('select indeterminate ppud sentence - show determinate sentence details', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          ppudOffender: {
-            id: '1',
-            sentences: [
-              {
+    describe('select indeterminate ppud sentence - show determinate sentence details', () => {
+      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+        it(description, () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              isIndeterminateSentence: ftr56Enabled ? undefined : true,
+              isExtendedSentence: ftr56Enabled ? undefined : true,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
+              bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+              ppudOffender: {
                 id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Mandatory (MLP)',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
+                sentences: [
+                  {
+                    id: '1',
+                    dateOfSentence: '2003-06-12',
+                    custodyType: 'Mandatory (MLP)',
+                    licenceExpiryDate: null,
+                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                    offence: {
+                      indexOffence: 'some offence',
+                      dateOfIndexOffence: null,
+                    },
+                    sentenceExpiryDate: '1969-03-02',
+                  },
+                  {
+                    id: '2',
+                    dateOfSentence: '2004-06-12',
+                    custodyType: 'Determinate', // determinate sentences
+                    licenceExpiryDate: null,
+                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                    offence: {
+                      indexOffence: 'some offence',
+                      dateOfIndexOffence: null,
+                    },
+                    sentenceExpiryDate: '1969-03-02',
+                  },
+                  {
+                    id: '3',
+                    dateOfSentence: '2004-06-12',
+                    custodyType: 'EDS', // determinate sentences
+                    licenceExpiryDate: null,
+                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                    offence: {
+                      indexOffence: 'another offence',
+                      dateOfIndexOffence: null,
+                    },
+                    sentenceExpiryDate: '1969-03-02',
+                  },
+                ],
               },
-              {
-                id: '2',
-                dateOfSentence: '2004-06-12',
-                custodyType: 'Determinate', // determinate sentences
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
+              convictionDetail: {
+                indexOffenceDescription: 'Burglary',
+                sentenceExpiryDate: '2024-05-10',
+                dateOfSentence: '2022-03-11',
               },
-              {
-                id: '3',
-                dateOfSentence: '2004-06-12',
-                custodyType: 'EDS', // determinate sentences
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'another offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-            ],
-          },
-          convictionDetail: {
-            indexOffenceDescription: 'Burglary',
-            sentenceExpiryDate: '2024-05-10',
-            dateOfSentence: '2022-03-11',
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
+            },
+          })
+          cy.task('getStatuses', {
+            statusCode: 200,
+            response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+          })
 
-      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select a sentence for your booking')
-      cy.get('#determinateSentencesDetails')
-        .find('.govuk-details__summary-text')
-        .should('contain.text', '2 determinate sentences')
+          cy.visit(
+            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+          )
+          cy.pageHeading().should('contain', 'Select a sentence for your booking')
+          cy.get('#determinateSentencesDetails')
+            .find('.govuk-details__summary-text')
+            .should('contain.text', '2 determinate sentences')
 
-      cy.get('#determinateSentencesDetails')
-        .find('.govuk-details__text')
-        .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
+          cy.get('#determinateSentencesDetails')
+            .find('.govuk-details__text')
+            .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
+        })
+      })
     })
 
     it('select indeterminate ppud sentence - show notification banner when there are no indeterminate sentences', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          ppudOffender: {
-            id: '1',
-            sentences: [],
-          },
-          convictionDetail: {
-            indexOffenceDescription: 'Burglary',
-            sentenceExpiryDate: '2024-05-10',
-            dateOfSentence: '2022-03-11',
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
+      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+        it(description, () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              isIndeterminateSentence: ftr56Enabled ? undefined : true,
+              isExtendedSentence: ftr56Enabled ? undefined : true,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
+              bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+              ppudOffender: {
+                id: '1',
+                sentences: [],
+              },
+              convictionDetail: {
+                indexOffenceDescription: 'Burglary',
+                sentenceExpiryDate: '2024-05-10',
+                dateOfSentence: '2022-03-11',
+              },
+            },
+          })
+          cy.task('getStatuses', {
+            statusCode: 200,
+            response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+          })
 
-      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select a sentence for your booking')
+          cy.visit(
+            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+          )
+          cy.pageHeading().should('contain', 'Select a sentence for your booking')
 
-      cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
-      cy.get('.govuk-notification-banner__content').should(
-        'contain.text',
-        'The sentence needs to be added to PPUD and the booking on completed there.',
-      )
+          cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
+          cy.get('.govuk-notification-banner__content').should(
+            'contain.text',
+            'The sentence needs to be added to PPUD and the booking on completed there.',
+          )
 
-      cy.get('#return-to-booking-details-button')
-        .should('have.attr', 'href', '/recommendations/1/check-booking-details')
-        .invoke('text')
-        .then(text => {
-          const normalized = text.replace(/\s+/g, ' ').trim()
-          expect(normalized).to.eq('Return to booking details')
+          cy.get('#return-to-booking-details-button')
+            .should('have.attr', 'href', '/recommendations/1/check-booking-details')
+            .invoke('text')
+            .then(text => {
+              const normalized = text.replace(/\s+/g, ' ').trim()
+              expect(normalized).to.eq('Return to booking details')
+            })
         })
+      })
     })
 
     it('book to ppud - create offender', () => {

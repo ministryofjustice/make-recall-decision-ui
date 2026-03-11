@@ -1,0 +1,48 @@
+{% extends "../../partials/layout.njk" %}
+{% from "components/pop-summary-card/macro.njk" import popSummaryCard %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[pageData.page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink({ text: 'Back to Consider a recall questions', href: pageData.backLinkUrl, doBrowserBack: false }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            {{ heading(pageHeadings[pageData.page.id]) }}
+
+            {{
+                popSummaryCard({
+                    title: 'Sentences in NDelius',
+                    caseSummary: pageData.caseSummary
+                })
+            }}
+
+            <form novalidate method="post" class="govuk-!-margin-top-7">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{
+                    govukRadios({
+                        name: "sentenceGroup",
+                        fieldset: {
+                            legend: {
+                                text: "Which sentence group does " + pageData.fullName + "'s sentence type fall into?",
+                                classes: "govuk-fieldset__legend--m"
+                            }
+                        },
+                        items: radioCheckboxItems({
+                            items: pageData.sentenceGroups,
+                            currentValues: pageData.inputDisplayValues.value
+                        }),
+                        errorMessage: errorMessage(errors.sentenceGroup)
+                    })
+                }}
+
+                {{ formSubmitButton({ label: "Continue", marginTop: "7" }) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

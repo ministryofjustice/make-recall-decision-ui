@@ -147,6 +147,43 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
+  it('Ftr56: Indeterminate or extended sentence details', () => {
+    cy.signIn()
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details?flagFTR56Enabled=1`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetails',
+      errorText: 'Select at least one of the criteria',
+    })
+
+    cy.selectCheckboxes('Indeterminate and extended sentences', [
+      'Jane Bloggs has shown behaviour similar to the circumstances surrounding the index offence',
+      'Jane Bloggs has shown behaviour that has caused, or will cause, a sexual or violent offence',
+      'Jane Bloggs has shown behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+      'Jane Bloggs is either out of touch with probation, or their current location is not known',
+    ])
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
+      errorText: 'Enter details about the behaviour similar to the index offence',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+      errorText: 'Enter details about the behaviour that could lead to a sexual or violent offence',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+      errorText:
+        'Enter details about the behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
+      errorText: 'Enter details about Jane Bloggs being out of touch',
+    })
+  })
+
   it('Recall type', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })

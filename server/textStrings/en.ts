@@ -59,6 +59,8 @@ const strings: Record<string, Record<string, string>> = {
     missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
     missingIndeterminateDetailSexualViolent:
       'Enter details about the behaviour that could lead to a sexual or violent offence',
+    missingIndeterminateDetailLikelyResultSexualViolent:
+      'Enter details about the behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     noVulnerabilitiesSelectedRiskToSelf:
@@ -71,6 +73,7 @@ const strings: Record<string, Record<string, string>> = {
     missingTriggerLeadingToRecall: 'Explain what has made you consider recalling {{ fullName }}',
     missingResponseToProbation: 'Explain how {{ fullName }} has responded to probation',
     missingWhatLedToRecall: 'Enter details of what has led to this recall',
+    missingSentenceGroup: 'Select a sentence group',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
     missingArrestIssuesDetail: 'Enter details of the arrest issues',
     noFixedTermLicenceConditionsSelected: 'Select whether there are additional licence conditions',
@@ -214,6 +217,7 @@ const strings: Record<string, Record<string, string>> = {
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
     victimLiaisonOfficer: 'Victim Liaison Officer (VLO)',
     whatLedToRecall: 'What has led to this recall?',
+    sentenceInformation: "{{ fullName }}'s sentence information",
     personalDetails: 'Personal details',
     offenceDetails: 'Offence details',
     offenceAnalysis: 'Offence analysis',

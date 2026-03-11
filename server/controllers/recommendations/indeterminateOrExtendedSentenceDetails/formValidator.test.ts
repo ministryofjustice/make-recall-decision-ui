@@ -104,6 +104,37 @@ describe('validateIndeterminateDetails', () => {
     ])
   })
 
+  it('ftr56: returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
+    const ftr56Enabled = true
+    const requestBody = {
+      crn: 'X514364',
+      indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE'],
+      'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE': ' ', // whitespace
+    }
+    const { errors, unsavedValues, valuesToSave } = await validateIndeterminateDetails({
+      requestBody,
+      urlInfo,
+      ftr56Enabled,
+    })
+    expect(valuesToSave).toBeUndefined()
+    expect(unsavedValues).toEqual({
+      indeterminateOrExtendedSentenceDetails: [
+        {
+          details: ' ',
+          value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+        },
+      ],
+    })
+    expect(errors).toEqual([
+      {
+        href: '#indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+        name: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+        text: 'Enter details about the behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+        errorId: 'missingIndeterminateDetail',
+      },
+    ])
+  })
+
   it('allows None to be selected without details required', async () => {
     const requestBody = {
       crn: 'X514364',

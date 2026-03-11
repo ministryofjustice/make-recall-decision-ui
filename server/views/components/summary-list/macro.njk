@@ -1,3 +1,38 @@
+{#
+CaR-specific implementation of the GOV.UK summary list component. Uses the standard component's classes and
+structure with some enhancements:
+    - An ID for the summary list.
+    - IDs generated for each row, based on the summary list's ID and the row's key value.
+    - An optional border at the top of the first row.
+    - Optional error display within the key element of each row, using the error-display component.
+    - Support for the value and visually hidden text of action links to be passed as HTML, in addition to plain text.
+
+Parameters (all within the main input params object):
+@param id:        the ID to be added to the summary list element and used as the basis for generating IDs for each row
+@param classes:   any additional CSS classes to be added to the summary list element
+@param borderTop: whether to add a border at the top of the first row
+@param rows:      the rows to be displayed in the summary list, as an array of objects
+                  with the following structure:
+                      {
+                          key: string (the text to be shown in the key element of the row),
+                          value: string (the text or HTML to be shown in the value element of the row),
+                          error (optional): {
+                              text: string (an error message to be shown within the key element, using the error-display component),
+                          }
+                          actions: optional array of action links to be shown in an actions element within the row,
+                                   each with the following structure:
+                                       {
+                                           id: string (the ID to be added to the link element),
+                                           text: string (the text to be shown for the link),
+                                           href: string (the URL that the link should point to),
+                                           visuallyHidden: optional string (the text to be included within a visually
+                                                           hidden span element within the link, for screen readers)
+                                       }
+                      }
+                  Note it is possible to provide undefined for some rows, which can be useful to make calls to this
+                  macro easier to read, allowing for inline conditional code within the list definition (which tends to
+                  be more readable than implementing the logic in njk script to insert/not insert certain rows).
+#}
 {% macro summaryList(params) %}
   {%- include "./template.njk" -%}
 {% endmacro %}

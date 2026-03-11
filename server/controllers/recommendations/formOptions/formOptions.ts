@@ -4,7 +4,10 @@ import recallType from '../recallType/formOptions'
 import { UiListItem } from '../../../@types/pagesForms'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import alternativesToRecallTried from '../alternativesToRecallTried/formOptions'
-import indeterminateOrExtendedSentenceDetails from '../indeterminateOrExtendedSentenceDetails/formOptions'
+import {
+  indeterminateOrExtendedSentenceDetails,
+  indeterminateOrExtendedSentenceDetailsFtr56,
+} from '../indeterminateOrExtendedSentenceDetails/formOptions'
 import indeterminateSentenceType from '../indeterminateSentenceType/formOptions'
 import isUnderIntegratedOffenderManagement from '../integratedOffenderManagement/formOptions'
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
@@ -18,6 +21,7 @@ import whyConsideredRecall from '../whyConsideredRecall/formOptions'
 import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
 import yesNo from './yesNo'
+import sentenceGroup from '../sentenceInformation/formOptions'
 
 export type FormOption = {
   value: string
@@ -30,6 +34,7 @@ type FormOptionsType = {
 }
 
 export const formOptions: FormOptionsType = {
+  sentenceGroup,
   recallType,
   rationaleCheck,
   spoRecallTypeEnum,
@@ -43,6 +48,7 @@ export const formOptions: FormOptionsType = {
   vulnerabilitiesRiskToSelf,
   indeterminateSentenceType,
   indeterminateOrExtendedSentenceDetails,
+  indeterminateOrExtendedSentenceDetailsFtr56,
   whyConsideredRecall,
   howWillAppointmentHappen,
   yesNo,

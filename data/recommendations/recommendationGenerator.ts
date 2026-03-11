@@ -16,6 +16,7 @@ import { PersonOnProbationGenerator, PersonOnProbationOptions } from './personOn
 import { WhoCompletedPartAGenerator, WhoCompletedPartAOptions } from './whoCompletedPartAGenerator'
 import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilitiesGenerator'
 import { BookingMementoGenerator, BookingMementoOptions } from './bookingMementoGenerator'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -33,8 +34,8 @@ export type RecommendationOptions = {
   hasVictimsInContactScheme?: boolean
   indeterminateOrExtendedSentenceDetails?: boolean
   indeterminateSentenceType?: boolean
-  isExtendedSentence?: boolean
-  isIndeterminateSentence?: boolean
+  isExtendedSentence?: NoneOrOption<boolean> // remove once FTR56 is live? or default to 'none'?
+  isIndeterminateSentence?: NoneOrOption<boolean> // remove once FTR56 is live? or default to 'none'?
   isMainAddressWherePersonCanBeFound?: SelectedWithDetailsOptions
   isThisAnEmergencyRecall?: boolean
   isUnderIntegratedOffenderManagement?: boolean
@@ -52,6 +53,7 @@ export type RecommendationOptions = {
   vulnerabilities?: AnyNoneOrOption<VulnerabilitiesOptions>
   triggerLeadingToRecall?: boolean
   whatLedToRecall?: boolean
+  sentenceGroup?: NoneOrOption<SentenceGroup>
   recallConsideredList?: boolean
   managerRecallDecision?: boolean
   currentRoshForPartA?: boolean
@@ -131,8 +133,12 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             allOptions: [],
           }
         : undefined,
-    isExtendedSentence: options?.isExtendedSentence ?? faker.datatype.boolean(),
-    isIndeterminateSentence: options?.isIndeterminateSentence ?? faker.datatype.boolean(),
+    isExtendedSentence:
+      options?.isExtendedSentence === 'none' ? undefined : (options?.isExtendedSentence ?? faker.datatype.boolean()), // remove once FTR56 is live
+    isIndeterminateSentence:
+      options?.isIndeterminateSentence === 'none'
+        ? undefined
+        : (options?.isIndeterminateSentence ?? faker.datatype.boolean()), // remove once FTR56 is live
     isMainAddressWherePersonCanBeFound:
       (options?.isMainAddressWherePersonCanBeFound ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)
@@ -195,6 +201,10 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     vulnerabilities: VulnerabilitiesGenerator.generate(options?.vulnerabilities ?? 'any'),
     triggerLeadingToRecall: (options?.triggerLeadingToRecall ?? true) ? faker.lorem.word() : undefined,
     whatLedToRecall: (options?.whatLedToRecall ?? true) ? faker.lorem.sentence() : undefined,
+    sentenceGroup:
+      options?.sentenceGroup === 'none'
+        ? undefined
+        : (options?.sentenceGroup ?? faker.helpers.enumValue(SentenceGroup)),
     recallConsideredList: (options?.recallConsideredList ?? true) ? [] : undefined,
     managerRecallDecision:
       (options?.managerRecallDecision ?? true)
