@@ -9,31 +9,36 @@
             <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
             <p class='govuk-body'>
                 You're thinking about whether
-                {{ recommendation.personOnProbation.name }} should be recalled or not. Answer these questions and discuss the case with
-                your manager.
+                {{ recommendation.personOnProbation.name }} should be recalled or not. Answer these questions and
+                discuss the case with your manager.
             </p>
             <ol class="moj-task-list govuk-!-margin-top-8">
                 <li>
                     <ul class="moj-task-list__items">
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-whatLedToRecall' href="/recommendations/{{ recommendation.id }}/trigger-leading-to-recall">
+                                <a aria-describedby='task-list-status-whatLedToRecall'
+                                   href="/recommendations/{{ recommendation.id }}/trigger-leading-to-recall">
                                     What has made you consider recalling {{ recommendation.personOnProbation.name }}?
                                 </a>
                             </span>
                             <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: triggerLeadingToRecallCompleted }) }}</span>
                         </li>
-                        <li class="moj-task-list__item">
+                        {% if not flagFTR56Enabled %}
+                            <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-responseToProbation' href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-responseToProbation'
+                                   href="/recommendations/{{ recommendation.id }}/response-to-probation">
                                     How has {{ recommendation.personOnProbation.name }} responded to probation so far?
                                 </a>
                             </span>
-                            <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: responseToProbationCompleted }) }}</span>
-                        </li>
+                                <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: responseToProbationCompleted }) }}</span>
+                            </li>
+                        {% endif %}
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-licenceConditionsBreached' href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-licenceConditionsBreached'
+                                   href="/recommendations/{{ recommendation.id }}/licence-conditions">
                                     What licence conditions has {{ recommendation.personOnProbation.name }} breached?
                                 </a>
                             </span>
@@ -41,35 +46,62 @@
                         </li>
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-alternativesToRecallTried' href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-alternativesToRecallTried'
+                                   href="/recommendations/{{ recommendation.id }}/alternatives-tried">
                                     What alternatives to recall have been tried already?
                                 </a>
                             </span>
                             <span id='task-list-status-alternativesToRecallTried'>{{ taskStatus({ hasData: alternativesToRecallTriedCompleted }) }}</span>
                         </li>
-                        <li class="moj-task-list__item">
+                        {% if flagFTR56Enabled %}
+                            <li class="moj-task-list__item">
+                                <span class="moj-task-list__task-name">
+                                    <a aria-describedby='task-list-status-sentenceInformation'
+                                       href="/recommendations/{{ recommendation.id }}/sentence-information">
+                                        {{ recommendation.personOnProbation.name }}'s sentence information
+                                    </a>
+                                </span>
+                                <span id='task-list-status-sentenceInformation'>{{ taskStatus({ hasData: sentenceGroupCompleted }) }}</span>
+                            </li>
+                            {% if isIndeterminateSentence %}
+                                <li class="moj-task-list__item">
+                                    <span class="moj-task-list__task-name">
+                                        <a aria-describedby='task-list-status-indeterminateSentenceType'
+                                           href="/recommendations/{{ recommendation.id }}/indeterminate-type">
+                                            What type of sentence is {{ recommendation.personOnProbation.name }} on?
+                                        </a>
+                                    </span>
+                                    <span id='task-list-status-indeterminateSentenceType'>{{ taskStatus({ hasData: indeterminateSentenceTypeCompleted }) }}</span>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-indeterminateSentence' href="{{ changeLinkUrl({ pageUrlSlug: 'is-indeterminate', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-indeterminateSentence'
+                                   href="/recommendations/{{ recommendation.id }}/is-indeterminate">
                                     Is {{ recommendation.personOnProbation.name }} on an indeterminate sentence?
                                 </a>
                             </span>
-                            <span id='task-list-status-indeterminateSentence'>{{ taskStatus({ hasData: isIndeterminateSentenceCompleted }) }}</span>
-                        </li>
-                        <li class="moj-task-list__item">
+                                <span id='task-list-status-indeterminateSentence'>{{ taskStatus({ hasData: isIndeterminateSentenceCompleted }) }}</span>
+                            </li>
+                            <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-extendedSentence' href="{{ changeLinkUrl({ pageUrlSlug: 'is-extended', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">
+                                <a aria-describedby='task-list-status-extendedSentence'
+                                   href="/recommendations/{{ recommendation.id }}/is-extended">
                                     Is {{ recommendation.personOnProbation.name }} on an extended sentence?
                                 </a>
                             </span>
-                            <span id='task-list-status-extendedSentence'>{{ taskStatus({ hasData: hasData(recommendation.isExtendedSentence) }) }}</span>
-                        </li>
+                                <span id='task-list-status-extendedSentence'>{{ taskStatus({ hasData: isExtendedSentenceCompleted }) }}</span>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
             </ol>
             {% if allTasksCompleted == true %}
                 <div>
                     <form novalidate method="post">
-                        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ formSubmitButton() }}
+                        <input type="hidden" name="_csrf"
+                               value="{{ csrfToken }}" /> {{ formSubmitButton({ marginTop: "7" }) }}
                     </form>
                 </div>
             {% endif %}
