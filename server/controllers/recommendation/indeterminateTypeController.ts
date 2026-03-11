@@ -7,6 +7,10 @@ import inputDisplayValuesIndeterminateSentenceType from '../recommendations/inde
 import validateIndeterminateSentenceType from '../recommendations/indeterminateSentenceType/formValidator'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import {
+  indeterminateSentenceType,
+  indeterminateSentenceTypeFtr56,
+} from '../recommendations/indeterminateSentenceType/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -30,6 +34,10 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
+  res.locals.indeterminateSentenceTypeOptions = res.locals.flags.flagFTR56Enabled
+    ? indeterminateSentenceTypeFtr56
+    : indeterminateSentenceType
+
   res.render(`pages/recommendations/indeterminateSentenceType`)
   next()
 }
@@ -48,6 +56,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
+    ftr56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {

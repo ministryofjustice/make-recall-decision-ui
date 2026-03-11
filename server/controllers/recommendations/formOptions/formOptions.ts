@@ -8,7 +8,7 @@ import {
   indeterminateOrExtendedSentenceDetails,
   indeterminateOrExtendedSentenceDetailsFtr56,
 } from '../indeterminateOrExtendedSentenceDetails/formOptions'
-import indeterminateSentenceType from '../indeterminateSentenceType/formOptions'
+import { indeterminateSentenceType, indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
 import isUnderIntegratedOffenderManagement from '../integratedOffenderManagement/formOptions'
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
 import rationaleCheck from '../rationaleCheck/formOptions'
@@ -47,6 +47,7 @@ export const formOptions: FormOptionsType = {
   vulnerabilities,
   vulnerabilitiesRiskToSelf,
   indeterminateSentenceType,
+  indeterminateSentenceTypeFtr56,
   indeterminateOrExtendedSentenceDetails,
   indeterminateOrExtendedSentenceDetailsFtr56,
   whyConsideredRecall,

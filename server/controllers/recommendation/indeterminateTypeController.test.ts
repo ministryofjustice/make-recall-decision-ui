@@ -146,6 +146,75 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
+  it('Ftr56: post with valid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        indeterminateSentenceType: 'IPP',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+          indeterminateSentenceType: {
+            selected: 'IPP',
+            allOptions: [
+              { value: 'LIFE', text: 'Life sentence' },
+              {
+                value: 'IPP',
+                text: 'Imprisonment for public protection (IPP)',
+              },
+              { value: 'DPP', text: 'Detention for public protection (DPP)' },
+              {
+                value: 'DHMP',
+                text: 'Detention at His Majesty’s pleasure (DHMP)',
+                hint: 'Youth indeterminate sentence',
+              },
+            ],
+          },
+        },
+        urlInfo: { basePath },
+        statuses: [],
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await indeterminateTypeController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      valuesToSave: {
+        indeterminateSentenceType: {
+          selected: 'IPP',
+          allOptions: [
+            { value: 'LIFE', text: 'Life sentence' },
+            {
+              value: 'IPP',
+              text: 'Imprisonment for public protection (IPP)',
+            },
+            { value: 'DPP', text: 'Detention for public protection (DPP)' },
+            { value: 'DHMP', text: 'Detention at His Majesty’s pleasure (DHMP)' },
+          ],
+        },
+      },
+      token: 'token1',
+      featureFlags: { flagFTR56Enabled: true },
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
   it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 

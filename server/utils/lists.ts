@@ -76,6 +76,7 @@ export const radioCheckboxItems = ({
     return {
       ...item,
       checked: valuesToMatch ? valuesToMatch.includes(item.value) : false,
+      ...(item.hint?.trim() ? { hint: { text: item.hint } } : {}),
       conditional:
         conditionalContent && conditionalContent[item.value] ? { html: conditionalContent[item.value] } : undefined,
     }
