@@ -73,14 +73,30 @@ export const radioCheckboxItems = ({
 }) => {
   const valuesToMatch = isDefined(currentValues) && !Array.isArray(currentValues) ? [currentValues] : currentValues
   return items.map(item => {
+    const hintText = getHintText(item.hint)
     return {
       ...item,
       checked: valuesToMatch ? valuesToMatch.includes(item.value) : false,
-      ...(item.hint?.trim() ? { hint: { text: item.hint } } : {}),
+      ...(hintText && { hint: { text: hintText } }),
       conditional:
         conditionalContent && conditionalContent[item.value] ? { html: conditionalContent[item.value] } : undefined,
     }
   })
+}
+
+interface HintObject {
+  text: string
+}
+
+export function getHintText(hint?: string | HintObject): string | undefined {
+  if (!hint) return undefined
+
+  if (typeof hint === 'string') return hint.trim()
+
+  // hint is an object
+  if ('text' in hint && typeof hint.text === 'string') return hint.text.trim()
+
+  return undefined
 }
 
 export interface ItemWithValue {

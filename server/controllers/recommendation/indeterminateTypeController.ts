@@ -11,12 +11,22 @@ import {
   indeterminateSentenceType,
   indeterminateSentenceTypeFtr56,
 } from '../recommendations/indeterminateSentenceType/formOptions'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    urlInfo: { basePath },
+  } = res.locals
 
   const stringRenderParams = {
     fullName: recommendation.personOnProbation.name,
+  }
+
+  if (!recommendation.sentenceGroup || recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE) {
+    res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
+    return
   }
 
   res.locals = {

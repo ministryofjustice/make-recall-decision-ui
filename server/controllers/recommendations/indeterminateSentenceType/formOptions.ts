@@ -1,33 +1,35 @@
+import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
+
 export const indeterminateSentenceType = [
   {
-    value: 'LIFE',
+    value: IndeterminateSentenceType.selected.LIFE,
     text: 'Life sentence',
   },
   {
-    value: 'IPP',
+    value: IndeterminateSentenceType.selected.IPP,
     text: 'Imprisonment for Public Protection (IPP) sentence',
   },
   {
-    value: 'DPP',
+    value: IndeterminateSentenceType.selected.DPP,
     text: 'Detention for Public Protection (DPP) sentence',
   },
 ]
 
 export const indeterminateSentenceTypeFtr56 = [
   {
-    value: 'LIFE',
+    value: IndeterminateSentenceType.selected.LIFE,
     text: 'Life sentence',
   },
   {
-    value: 'IPP',
+    value: IndeterminateSentenceType.selected.IPP,
     text: 'Imprisonment for public protection (IPP)',
   },
   {
-    value: 'DPP',
+    value: IndeterminateSentenceType.selected.DPP,
     text: 'Detention for public protection (DPP)',
   },
   {
-    value: 'DHMP',
+    value: IndeterminateSentenceType.selected.DHMP,
     text: 'Detention at His Majesty’s pleasure (DHMP)',
     hint: 'Youth indeterminate sentence',
   },

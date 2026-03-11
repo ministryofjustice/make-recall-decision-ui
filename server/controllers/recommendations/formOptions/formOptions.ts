@@ -27,6 +27,7 @@ export type FormOption = {
   value: string
   text: string
   detailsLabel?: string
+  hint?: string
 }
 
 type FormOptionsType = {
