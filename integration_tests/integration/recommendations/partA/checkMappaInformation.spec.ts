@@ -40,7 +40,7 @@ context('Check MAPPA information', () => {
       name: 'with level 3 and category 3',
       mappa: {
         level: 3,
-        lastUpdatedDate: '2026-09-20',
+        lastUpdatedDate: '2022-09-24',
         category: 3,
       },
       expected: {
@@ -52,7 +52,7 @@ context('Check MAPPA information', () => {
       name: 'with level 3 and category 4',
       mappa: {
         level: 3,
-        lastUpdatedDate: '2026-09-20',
+        lastUpdatedDate: '2022-09-24',
         category: 4,
       },
       expected: {

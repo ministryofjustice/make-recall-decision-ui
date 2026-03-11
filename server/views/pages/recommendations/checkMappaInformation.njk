@@ -2,7 +2,7 @@
 
 {% from "components/heading/macro.njk" import heading %}
 {% from "components/mappa-widget/macro.njk" import mappaWidget %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "components/summary-list/macro.njk" import summaryList %}
 
 {% set pageTitle = makePageTitle({
     pageHeading: pageTitles[page.id],
@@ -22,18 +22,16 @@
 
     {{ heading('Recall type MAPPA criteria', 3, 's') }}
     {{
-        govukSummaryList({
-            attributes: {
-              'data-qa': 'check-mappa-information-summary-list'
-            },
+        summaryList({
+            qaAttribute: "check-mappa-information-summary-list",
             rows: [
                 {
-                    key: { text: 'MAPPA level 2 or 3' },
-                    value: { text: 'Yes' if (not mappaData.error and mappaData.level > 1) else 'No' }
+                    key: 'MAPPA level 2 or 3',
+                    value: 'Yes' if (not mappaData.error and mappaData.level > 1) else 'No'
                 },
                 {
-                    key: { text: 'MAPPA category 4' },
-                    value: { text: 'Yes' if (not mappaData.error and mappaData.category == 4) else 'No' }
+                    key: 'MAPPA category 4',
+                    value: 'Yes' if (not mappaData.error and mappaData.category == 4) else 'No'
                 }
             ]
         })
@@ -43,6 +41,11 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
+          <form novalidate method="post">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <input type="hidden" name="isMappaCategory4" value="{{ true if (not mappaData.error and mappaData.category == 4) else false }}" />
+            <input type="hidden" name="isMappaLevel2Or3" value="{{ true if (not mappaData.error and mappaData.category == 4) else false }}" />
+
             {{ heading(pageHeadings[page.id]) }}
             {{ appSummaryCard({
                 titleText: 'MAPPA Information',
@@ -50,7 +53,9 @@
                 classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
                 html: appCardHtml
             }) }}
-            {{ linkAsButton('continue', 'Continue', page.nextPageId) }}
+
+            {{ formSubmitButton() }}
+          </form>
         </div>
     </div>
 {% endblock %}

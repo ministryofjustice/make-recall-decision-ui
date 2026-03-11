@@ -2,7 +2,11 @@
 
 {% set isFirstRow = true %}
 
-<dl id="{{ params.id }}" class="govuk-summary-list {{ params.classes }}">
+<dl
+  id="{{ params.id }}"
+  class="govuk-summary-list {{ params.classes }}"
+  {% if params.qaAttribute %} data-qa="{{ params.qaAttribute }}" {% endif %}
+>
     {% for row in params.rows %}
         {# Allow undefined rows, which can make calls to this macro easier to read #}
         {% if row %}

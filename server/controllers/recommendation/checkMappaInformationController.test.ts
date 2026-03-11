@@ -24,7 +24,6 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({
       id: 'checkMappaInformation',
-      nextPageId: '/recommendations/123/suitability-for-fixed-term-recall',
     })
     expect(res.locals.mappaData).toEqual(mockMappaData)
     expect(next).toHaveBeenCalled()

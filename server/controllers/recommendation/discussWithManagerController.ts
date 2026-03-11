@@ -18,7 +18,6 @@ function get(req: Request, res: Response, next: NextFunction) {
     nextPageId = 'recall-type-indeterminate'
   } else if (isExtendedSentence) {
     nextPageId = 'recall-type-extended'
-    // @todo - update this once Pablo's branch which sets custodyGroup is in place
   } else if (flags?.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
     nextPageId = ppPaths.checkMappaInformation
   }
