@@ -17,6 +17,7 @@ import ppPaths from '../../routes/paths/pp'
 function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
+    flags,
     urlInfo: { basePath },
   } = res.locals
 
@@ -24,7 +25,10 @@ function get(req: Request, res: Response, next: NextFunction) {
     fullName: recommendation.personOnProbation.name,
   }
 
-  if (!recommendation.sentenceGroup || recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE) {
+  if (
+    flags.flagFTR56Enabled &&
+    (!recommendation.sentenceGroup || recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE)
+  ) {
     res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
     return
   }

@@ -119,7 +119,10 @@ context('Make a recommendation - form validation', () => {
 
   it('Ftr56: Indeterminate sentence type', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, sentenceGroup: 'INDETERMINATE' },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type?flagFTR56Enabled=1`)
     cy.clickButton('Continue')
