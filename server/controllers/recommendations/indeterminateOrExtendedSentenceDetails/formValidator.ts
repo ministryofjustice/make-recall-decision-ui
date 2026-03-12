@@ -60,7 +60,8 @@ const validateIndeterminateDetails = async ({
       errorId = 'noIndeterminateDetailsSelected'
       errors.push(
         makeErrorObject({
-          id: 'indeterminateOrExtendedSentenceDetails',
+          id: 'option-1',
+          name: 'indeterminateOrExtendedSentenceDetails',
           text: strings.errors[errorId],
           errorId,
         }),
