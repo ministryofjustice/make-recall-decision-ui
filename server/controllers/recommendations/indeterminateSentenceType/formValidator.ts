@@ -14,7 +14,7 @@ const validateIndeterminateSentenceType = async ({
 
   const items = ftr56Enabled ? formOptions.indeterminateSentenceTypeFtr56 : formOptions.indeterminateSentenceType
   // api don't accept 'hint' so keep only value and text
-  const itemsWithHint = items.map(({ value, text }) => ({ value, text }))
+  const itemsWithoutHint = items.map(({ value, text }) => ({ value, text }))
 
   const formId = ftr56Enabled ? 'indeterminateSentenceTypeFtr56' : 'indeterminateSentenceType'
 
@@ -32,7 +32,7 @@ const validateIndeterminateSentenceType = async ({
     valuesToSave = {
       indeterminateSentenceType: {
         selected: indeterminateSentenceType,
-        allOptions: itemsWithHint,
+        allOptions: itemsWithoutHint,
       },
     }
   }

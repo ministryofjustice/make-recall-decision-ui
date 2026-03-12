@@ -53,7 +53,6 @@ describe('validateIndeterminateSentenceType', () => {
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
       ftr56Enabled,
-      recommendationId,
     })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
@@ -92,7 +91,6 @@ describe('validateIndeterminateSentenceType', () => {
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
       ftr56Enabled,
-      recommendationId,
     })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([

@@ -12,7 +12,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: 'INDETERMINATE' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         token: 'token1',
       },
     })
@@ -33,7 +33,6 @@ describe('get', () => {
       locals: {
         recommendation: {
           personOnProbation: { name: 'Joe Bloggs' },
-          sentenceGroup: 'INDETERMINATE',
           indeterminateSentenceType: {
             selected: 'IPP',
             allOptions: [
