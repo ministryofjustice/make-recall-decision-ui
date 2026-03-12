@@ -5,23 +5,23 @@
 {% from "components/summary-list/macro.njk" import summaryList %}
 
 {% set pageTitle = makePageTitle({
-    pageHeading: pageTitles[page.id],
-    hasErrors: errors
+  pageHeading: pageTitles[page.id],
+  hasErrors: errors
 }) %}
 
 {% block beforeContent %}
-    {{ backLink() }}
+  {{ backLink() }}
 {% endblock %}
 
 {%- set appCardHtml -%}
-    {{ heading('From NDelius', 3, 's') }}
-    {{ mappaWidget({
+{{ heading('From NDelius', 3, 's') }}
+{{ mappaWidget({
             mappa: mappaData,
             lastUpdatedDate: formatDateTimeFromIsoString({ isoDate: mappaData.lastUpdatedDate, dateOnly: true })
         }) }}
 
-    {{ heading('Recall type MAPPA criteria', 3, 's') }}
-    {{
+{{ heading('Recall type MAPPA criteria', 3, 's') }}
+{{
         summaryList({
             qaAttribute: "check-mappa-information-summary-list",
             rows: [
@@ -39,23 +39,17 @@
 {%- endset -%}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-          <form novalidate method="post">
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-            <input type="hidden" name="isMappaCategory4" value="{{ true if (not mappaData.error and mappaData.category == 4) else false }}" />
-            <input type="hidden" name="isMappaLevel2Or3" value="{{ true if (not mappaData.error and mappaData.category == 4) else false }}" />
-
-            {{ heading(pageHeadings[page.id]) }}
-            {{ appSummaryCard({
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {{ heading(pageHeadings[page.id]) }}
+      {{ appSummaryCard({
                 titleText: 'MAPPA Information',
                 headingLevel: 3,
                 classes: 'govuk-!-margin-bottom-6 app-summary-card--large-title',
                 html: appCardHtml
             }) }}
 
-            {{ formSubmitButton() }}
-          </form>
-        </div>
+      {{ linkAsButton('continue', 'Continue', page.nextPageId) }}
     </div>
+  </div>
 {% endblock %}

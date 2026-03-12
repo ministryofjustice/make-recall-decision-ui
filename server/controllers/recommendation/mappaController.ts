@@ -5,14 +5,23 @@ import updatePageReviewedStatus from '../recommendations/helpers/updatePageRevie
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
+    recommendation: {
+      personOnProbation: { mappa },
+    },
     user: { token },
     flags: featureFlags,
   } = res.locals
+
+  const valuesToSave = {
+    isMappaLevel2Or3: mappa?.mappaLevel >= 2,
+    isMappaCategory4: mappa?.category === 4,
+  }
 
   const recommendation = await updateRecommendation({
     recommendationId,
     token,
     featureFlags,
+    valuesToSave,
     propertyToRefresh: 'mappa',
   })
 
