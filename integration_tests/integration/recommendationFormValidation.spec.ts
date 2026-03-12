@@ -4,6 +4,8 @@ import setResponsePropertiesToNull from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
+import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
+import ppPaths from '../../server/routes/paths/pp'
 
 context('Make a recommendation - form validation', () => {
   const crn = 'X34983'
@@ -41,23 +43,45 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Licence conditions', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task(
-      'getCaseV2',
-      caseTemplate()
-        .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-        .withAllConvictionsReleasedOnLicence()
-        .build(),
-    )
+  describe('Licence conditions', () => {
+    ;[true, false].forEach(ftr56Enabled => {
+      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+        ;[true, false].forEach(hasFromPageId => {
+          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+            cy.signIn()
+            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+            cy.task(
+              'getCaseV2',
+              caseTemplate()
+                .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+                .withAllConvictionsReleasedOnLicence()
+                .build(),
+            )
 
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'licenceConditionsBreached',
-      errorText: 'Select one or more licence conditions',
+            cy.task('getStatuses', { statusCode: 200, response: [] })
+            cy.visit(
+              `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+            )
+
+            // Back link
+            if (ftr56Enabled && !hasFromPageId) {
+              testBackLink(
+                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                'Back to Consider a recall questions',
+                false,
+              )
+            } else {
+              testStandardBackLink()
+            }
+
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'licenceConditionsBreached',
+              errorText: 'Select one or more licence conditions',
+            })
+          })
+        })
+      })
     })
   })
 
