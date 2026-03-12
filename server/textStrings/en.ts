@@ -55,12 +55,13 @@ const strings: Record<string, Record<string, string>> = {
     noVictimContactSchemeSelected: 'Select whether there are any victims in the victim contact scheme',
     noIntegratedOffenderManagementSelected: 'Select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'Select which alternatives to recall have been tried already',
-    noIndeterminateDetailsSelected: 'Select at least one of the criteria',
-    missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
+    noIndeterminateDetailsSelected: 'Select all the criteria that apply to {{ fullName }}',
+    missingIndeterminateDetailIndexOffence:
+      'Enter details about the behaviour similar to the circumstances surrounding the index offence',
     missingIndeterminateDetailSexualViolent:
-      'Enter details about the behaviour that could lead to a sexual or violent offence',
+      'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
     missingIndeterminateDetailLikelyResultSexualViolent:
-      'Enter details about the behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+      'Enter details about the behaviour likely to result in a sexual or violent offence',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
     noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
     noVulnerabilitiesSelectedRiskToSelf:

@@ -289,8 +289,8 @@ describe('post', () => {
     expect(req.session.errors).toEqual([
       {
         errorId: 'noIndeterminateDetailsSelected',
-        href: '#indeterminateOrExtendedSentenceDetails',
-        text: 'Select at least one of the criteria',
+        href: '#option-1',
+        text: 'Select all the criteria that apply to {{ fullName }}',
         name: 'indeterminateOrExtendedSentenceDetails',
         invalidParts: undefined,
         values: undefined,
