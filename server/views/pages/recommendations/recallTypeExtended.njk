@@ -1,6 +1,16 @@
+{%- from "moj/components/ticket-panel/macro.njk" import mojTicketPanel -%}
+{%- from "components/heading/macro.njk" import heading %}
+
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: pageTitles.recallType, hasErrors: errors }) %}
+{% set pageTitle = makePageTitle({pageHeading: pageTitles.recallType, hasErrors: errors}) %}
+
+{% set ticketPanelHtml %}
+{{ heading(recommendation.personOnProbation.name + ' must be given a standard recall, if recalled', 3, 'm')}}
+<p class="govuk-body">
+        This is based on their sentence information. If this does not look right, you can go back to amend your answers.
+    </p>
+{% endset %}
 
 {% block beforeContent %}
     {{ backLink() }}
@@ -11,11 +21,40 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
             <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
 
+                {% if flags.flagFTR56Enabled %}
+                    {{ heading(pageHeadings.recallType) }}
 
-                {{ govukRadios({
+                    {{
+                        mojTicketPanel({
+                            items: [{
+                                html: ticketPanelHtml,
+                                classes: "moj-ticket-panel__content--blue"
+                            }]
+                        })
+                    }}
+
+                    {{ 
+                        govukRadios({
+                            idPrefix: "recallType",
+                            name: "recallType",
+                            fieldset: {
+                                legend: {
+                                    text: "Select your recommendation",
+                                    classes: "govuk-!-font-weight-bold"
+                                }
+                            },
+                            items: radioCheckboxItems({
+                                items: formOptions.recallTypeExtended,
+                                currentValues: inputDisplayValues.value
+                            }),
+                            errorMessage: errorMessage(errors.recallType)
+                        })
+                    }}
+                {% else %}
+                    {{ govukRadios({
                     idPrefix: "recallType",
                     name: "recallType",
                     fieldset: {
@@ -34,9 +73,10 @@
                     }),
                     errorMessage: errorMessage(errors.recallType)
                 }) }}
+
+                {% endif %}
                 {{ formSubmitButton() }}
             </form>
         </div>
     </div>
 {% endblock %}
-

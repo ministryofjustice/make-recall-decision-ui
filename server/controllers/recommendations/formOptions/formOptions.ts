@@ -13,7 +13,11 @@ import isUnderIntegratedOffenderManagement from '../integratedOffenderManagement
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
 import rationaleCheck from '../rationaleCheck/formOptions'
 import recallTypeExtended from '../recallTypeExtended/formOptions'
-import { recallTypeIndeterminate, recallTypeIndeterminateApi } from '../recallTypeIndeterminate/formOptions'
+import {
+  recallTypeIndeterminate,
+  recallTypeIndeterminateFTR56,
+  recallTypeIndeterminateApi,
+} from '../recallTypeIndeterminate/formOptions'
 import roshLevels from '../rosh/formOptions'
 import hasVictimsInContactScheme from '../victimContactScheme/formOptions'
 import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../vulnerabilities/formOptions'
@@ -40,6 +44,7 @@ export const formOptions: FormOptionsType = {
   rationaleCheck,
   spoRecallTypeEnum,
   recallTypeIndeterminate,
+  recallTypeIndeterminateFTR56,
   recallTypeExtended,
   recallTypeIndeterminateApi,
   standardLicenceConditions,
