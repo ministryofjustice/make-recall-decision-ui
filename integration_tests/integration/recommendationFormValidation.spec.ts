@@ -141,7 +141,7 @@ context('Make a recommendation - form validation', () => {
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',
       fieldName: 'indeterminateOrExtendedSentenceDetails',
-      errorText: 'Select all the criteria that apply to Jane Bloggs',
+      errorText: 'Select at least one of the criteria',
     })
     cy.selectCheckboxes('Indeterminate and extended sentences', [
       'Jane Bloggs has shown behaviour similar to the index offence',
@@ -151,11 +151,11 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-      errorText: 'Enter details about the behaviour similar to the circumstances surrounding the index offence',
+      errorText: 'Enter details about the behaviour similar to the index offence',
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-      errorText: 'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
+      errorText: 'Enter details about the behaviour that could lead to a sexual or violent offence',
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
