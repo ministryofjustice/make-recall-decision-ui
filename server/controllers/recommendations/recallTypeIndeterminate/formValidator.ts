@@ -4,7 +4,11 @@ import strings from '../../../textStrings/en'
 import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const validateRecallTypeIndeterminate = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateRecallTypeIndeterminate = async ({
+  requestBody,
+  urlInfo,
+  flagFTR56Enabled = false,
+}: FormValidatorArgs & { flagFTR56Enabled?: boolean }): FormValidatorReturn => {
   const { recallType } = requestBody
   const invalidRecallTypeIndeterminate = !isValueValid(recallType as string, 'recallTypeIndeterminate')
   const hasError = !recallType || invalidRecallTypeIndeterminate
@@ -12,7 +16,7 @@ const validateRecallTypeIndeterminate = async ({ requestBody, urlInfo }: FormVal
     const errors = []
     let errorId
     if (!recallType || invalidRecallTypeIndeterminate) {
-      errorId = 'noRecallTypeIndeterminateSelected'
+      errorId = flagFTR56Enabled ? 'noRecallTypeIndeterminateSelectedFTR56' : 'noRecallTypeIndeterminateSelected'
       errors.push(
         makeErrorObject({
           id: 'recallType',
